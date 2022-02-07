@@ -138,6 +138,7 @@ global abstract class TDTM_Runnable {
     * kind will be performed at the end of the transaction.
     */     
     global class DmlWrapper {
+        global List<ErrorRecord> objectsWithError = new List<ErrorRecord>();
         global List<SObject> objectsToInsert = new List<SObject>(); 
         global List<SObject> objectsToUpdate = new List<SObject>();
         global List<SObject> objectsToDelete = new List<SObject>();
@@ -195,6 +196,81 @@ global abstract class TDTM_Runnable {
         }
     }
     
+    /**
+    * @description ErrorRecord class with all the validation errors
+    */
+    global class ErrorRecord {
+        SObject sObjectRecord;
+        List<String> errors = new List<String>();
+
+        /**
+        * @descripion Construct the Error Record class
+        * @param record The Record that will be tracked 
+        */
+        public ErrorRecord(SObject record) {
+            this.sObjectRecord = record;
+        }
+
+        /**
+        * @description Append a single error to the collection
+        * @param error The specific error message that will be added
+        * @return ErrorRecord
+        */
+        public ErrorRecord addError(String error) {
+            if (String.isNotBlank(error)) {
+                this.errors.add(error);
+            }
+
+            return this;
+        }
+
+        /**
+        * @description Append a colleciton of errors to the collection
+        * @param errors The specific error messages that will be added
+        * @return ErrorRecord
+        */
+        public ErrorRecord addErrors(List<String> errors) {
+            if (errors != null) {
+                this.errors?.addAll(errors);
+            }
+
+            return this;
+        }
+
+        /**
+        * @description Returns Sobject record
+        * @return SObject
+        */
+        public SObject getRecord() {
+            return this.sObjectRecord;
+        }
+
+        /**
+        * @description Check if the current tracked record has any validation error
+        */
+        public Boolean hasError() {
+            return !this.errors.isEmpty();
+        }
+
+        /***
+        * @description Returns errors
+        * @return List<String>
+        */
+        public List<String> getErrors() {
+            return this.errors?.clone();
+        }
+
+        /***
+        * @description Returns the first added error
+        * @return String
+        */
+        public String getFirstError() {
+            return this.errors.isEmpty()
+                ? null
+                : this.errors[0];
+        }
+    }
+
     /*******************************************************************************************************
     * @description Different type of actions to run classes for from triggers. Equivalent to trigger events,
     * but used in our TDTM design.

@@ -175,8 +175,8 @@ public with sharing class RD2_ValidationService {
     * @description Validates Recurring Donation records
     * @return List<RD2_ValidationService.ErrorRecord>
     */
-    public List<RD2_ValidationService.ErrorRecord> validate() {
-        List<RD2_ValidationService.ErrorRecord> errorRds = new List<RD2_ValidationService.ErrorRecord>();
+    public List<TDTM_Runnable.ErrorRecord> validate() {
+        List<TDTM_Runnable.ErrorRecord> errorRds = new List<TDTM_Runnable.ErrorRecord>();
 
         Boolean isNew = oldRds == null || oldRds.isEmpty();
 
@@ -194,11 +194,11 @@ public with sharing class RD2_ValidationService {
     * @description Validate RD data on insert
     * @return void
     */
-    public List<ErrorRecord> validateOnInsert() {
-        List<ErrorRecord> errorRecords = new List<ErrorRecord>();
+    public List<TDTM_Runnable.ErrorRecord> validateOnInsert() {
+        List<TDTM_Runnable.ErrorRecord> errorRecords = new List<TDTM_Runnable.ErrorRecord>();
 
         for (npe03__Recurring_Donation__c rd : rds) {
-            ErrorRecord errorCollection = new ErrorRecord(rd);
+            TDTM_Runnable.ErrorRecord errorCollection = new TDTM_Runnable.ErrorRecord(rd);
 
             validateActiveRecurringDonation(rd, errorCollection);
             validateInstallmentFrequency(rd, errorCollection);
@@ -218,13 +218,13 @@ public with sharing class RD2_ValidationService {
     * @description Validates Recurring Donation on update DML
     * @return void
     */
-    public List<ErrorRecord> validateOnChange() {
-        List<ErrorRecord> errorRecords = new List<ErrorRecord>();
+    public List<TDTM_Runnable.ErrorRecord> validateOnChange() {
+        List<TDTM_Runnable.ErrorRecord> errorRecords = new List<TDTM_Runnable.ErrorRecord>();
 
         for (Integer i = 0; i < rds.size(); i++) {
             npe03__Recurring_Donation__c rd = rds[i];
             npe03__Recurring_Donation__c oldRd = oldRds[i];
-            ErrorRecord errorCollection = new ErrorRecord(rd);
+            TDTM_Runnable.ErrorRecord errorCollection = new TDTM_Runnable.ErrorRecord(rd);
 
             if (elevateService.isElevateRecordReactivated(rd, oldRd)) {
                 errorCollection.addError(System.Label.RD2_ElevateRDClosedStatusCannotBeChanged);
@@ -258,7 +258,7 @@ public with sharing class RD2_ValidationService {
         return errorRecords;
     }
 
-    private void validateClosedElevateRecurringDonation(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, ErrorRecord errorCollection) {
+    private void validateClosedElevateRecurringDonation(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, TDTM_Runnable.ErrorRecord errorCollection) {
         RD2_RecurringDonation recurringDonation = new RD2_RecurringDonation(rd);
         if (recurringDonation.isClosed()
             && recurringDonation.isElevateRecord()
@@ -280,7 +280,7 @@ public with sharing class RD2_ValidationService {
         || rd.Day_of_Month__c != oldRd.Day_of_Month__c;
     }
 
-    private void validatePaymentMethod(RD2_RecurringDonation recurringDonation, ErrorRecord errorCollection) {
+    private void validatePaymentMethod(RD2_RecurringDonation recurringDonation, TDTM_Runnable.ErrorRecord errorCollection) {
         if (!recurringDonation.hasValidRecurringDonationPaymentMethod()) {
             errorCollection.addError(System.Label.RD2_ElevatePaymentMethodChangeError);
         }
@@ -302,7 +302,7 @@ public with sharing class RD2_ValidationService {
     * @param errorCollection Error wrapper which contains all error related to the RD
     * @return void
     */
-    private void validateRD2MetadataDeployed(npe03__Recurring_Donation__c rd, ErrorRecord errorCollection) {
+    private void validateRD2MetadataDeployed(npe03__Recurring_Donation__c rd, TDTM_Runnable.ErrorRecord errorCollection) {
         if (!RD2_EnablementService.isMetadataDeployed) {
             errorCollection.addError(System.Label.RD2_EnablementIncomplete);
         }
@@ -314,7 +314,7 @@ public with sharing class RD2_ValidationService {
     * @param errorCollection Error wrapper which contains all error related to the RD
     * @return void
     */
-    private void validateActiveRecurringDonation(npe03__Recurring_Donation__c rd, ErrorRecord errorCollection) {
+    private void validateActiveRecurringDonation(npe03__Recurring_Donation__c rd, TDTM_Runnable.ErrorRecord errorCollection) {
         RD2_RecurringDonation recurringDonation = new RD2_RecurringDonation(rd);
         if (recurringDonation.isClosed()) {
             return;
@@ -332,7 +332,7 @@ public with sharing class RD2_ValidationService {
     * @param rd The Recurring Donation to validate
     * @param errorCollection Error wrapper which contains all error related to the RD
     */
-    private void validateAmount(npe03__Recurring_Donation__c rd, ErrorRecord errorCollection) {
+    private void validateAmount(npe03__Recurring_Donation__c rd, TDTM_Runnable.ErrorRecord errorCollection) {
         if (RD2_ElevateIntegrationService.isIntegrationEnabled()
             && String.isNotBlank(rd.CommitmentId__c)
             && (rd.npe03__Amount__c == null || rd.npe03__Amount__c < 1)) {
@@ -349,7 +349,7 @@ public with sharing class RD2_ValidationService {
     * @param rd The Recurring Donation to validate
     * @param errorCollection Error wrapper which contains all error related to the RD
     */
-    private void validateInstallmentPeriod(npe03__Recurring_Donation__c rd, ErrorRecord errorCollection) {
+    private void validateInstallmentPeriod(npe03__Recurring_Donation__c rd, TDTM_Runnable.ErrorRecord errorCollection) {
         if (!RD2_Constants.allInstallmentPeriods.contains(rd.npe03__Installment_Period__c)) {
             errorCollection.addError(
                 String.format(
@@ -359,7 +359,7 @@ public with sharing class RD2_ValidationService {
         }
     }
 
-    private void validateElevateInstallmentPeriod(RD2_RecurringDonation rdRecord, ErrorRecord errorCollection) {
+    private void validateElevateInstallmentPeriod(RD2_RecurringDonation rdRecord, TDTM_Runnable.ErrorRecord errorCollection) {
         if (RD2_ElevateIntegrationService.isIntegrationEnabled() && rdRecord.isElevateRecord()) {
             if (rdRecord.isFirstAndFifteenthPeriod()) {
                 String errorMessage = String.format(
@@ -376,7 +376,7 @@ public with sharing class RD2_ValidationService {
     * @param rd The Recurring Donation to validate
     * @param errorCollection Error wrapper which contains all error related to the RD
     */
-    private void validateInstallmentFrequency(npe03__Recurring_Donation__c rd, ErrorRecord errorCollection) {
+    private void validateInstallmentFrequency(npe03__Recurring_Donation__c rd, TDTM_Runnable.ErrorRecord errorCollection) {
         if (!(new RD2_RecurringDonation(rd)).isValidInstallmentFrequency()) {
             errorCollection.addError(System.Label.RD2_InstallmentFrequencyMustBeValid);
         }
@@ -389,7 +389,7 @@ public with sharing class RD2_ValidationService {
     * @param errorCollection Error wrapper which contains all error related to the RD
     * @return void
     */
-    private void validateDonor(npe03__Recurring_Donation__c rd, Account acct, ErrorRecord errorCollection) {
+    private void validateDonor(npe03__Recurring_Donation__c rd, Account acct, TDTM_Runnable.ErrorRecord errorCollection) {
         //either Account or Contact must be specified
         if (rd.npe03__Organization__c == null && rd.npe03__Contact__c == null) {
             errorCollection.addError(System.Label.RD_DonorIsRequired);
@@ -415,7 +415,7 @@ public with sharing class RD2_ValidationService {
     * @param errorCollection Error wrapper which contains all error related to the RD
     * @return Boolean True when the validation pass, otherwise, false
     */
-    private Boolean validateDonorChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, ErrorRecord errorCollection) {
+    private Boolean validateDonorChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, TDTM_Runnable.ErrorRecord errorCollection) {
         if (rd.npe03__Organization__c == oldRd.npe03__Organization__c
             && rd.npe03__Contact__c == oldRd.npe03__Contact__c
         ) {
@@ -442,7 +442,7 @@ public with sharing class RD2_ValidationService {
     * @param errorCollection Error wrapper which contains all error related to the RD
     * @return void
     */
-    private void validateCurrencyChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, ErrorRecord errorCollection) {
+    private void validateCurrencyChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, TDTM_Runnable.ErrorRecord errorCollection) {
         if (!isMultiCurrencyEnabled) {
             return;
         }
@@ -461,7 +461,7 @@ public with sharing class RD2_ValidationService {
     * @param errorCollection Error wrapper which contains all error related to the RD
     * @return void
     */
-    private void validateElevateRDScheduleCannotBeInTheFuture(npe03__Recurring_Donation__c rd, ErrorRecord errorCollection) {
+    private void validateElevateRDScheduleCannotBeInTheFuture(npe03__Recurring_Donation__c rd, TDTM_Runnable.ErrorRecord errorCollection) {
         if (RD2_ElevateIntegrationService.isIntegrationEnabled()
             && String.isNotBlank(rd.CommitmentId__c)) {
             if (rd.StartDate__c > currentDate) {
@@ -476,7 +476,7 @@ public with sharing class RD2_ValidationService {
     * @param errorCollection Error wrapper which contains all error related to the RD
     * @return void
     */
-    private void validateElevateRDCampaignCannotUpdateToEmpty(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, ErrorRecord errorCollection) {
+    private void validateElevateRDCampaignCannotUpdateToEmpty(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, TDTM_Runnable.ErrorRecord errorCollection) {
         if (RD2_ElevateIntegrationService.isIntegrationEnabled()
             && String.isNotBlank(rd.CommitmentId__c)) {
             if (String.isNotBlank(oldRd.npe03__Recurring_Donation_Campaign__c) 
@@ -492,7 +492,7 @@ public with sharing class RD2_ValidationService {
     * @param errorCollection Error wrapper which contains all error related to the RD
     * @return void
     */
-    private void validateRecurringDonationEndDate(npe03__Recurring_Donation__c rd, ErrorRecord errorCollection) {
+    private void validateRecurringDonationEndDate(npe03__Recurring_Donation__c rd, TDTM_Runnable.ErrorRecord errorCollection) {
         if (rd.EndDate__c == null) {
             return;
         }
@@ -531,7 +531,7 @@ public with sharing class RD2_ValidationService {
     * @return void
     */
     @TestVisible
-    private void validateStatus(npe03__Recurring_Donation__c rd, ErrorRecord errorCollection) {
+    private void validateStatus(npe03__Recurring_Donation__c rd, TDTM_Runnable.ErrorRecord errorCollection) {
         if (String.isBlank((new RD2_RecurringDonation(rd)).getState())) {
             errorCollection.addError(
                 String.format(
@@ -582,7 +582,7 @@ public with sharing class RD2_ValidationService {
     * @param rd The Recurring Donation to validate
     * @return void
     */
-    private void validateDayOfMonth(npe03__Recurring_Donation__c rd, ErrorRecord errorCollection) {
+    private void validateDayOfMonth(npe03__Recurring_Donation__c rd, TDTM_Runnable.ErrorRecord errorCollection) {
         if (rd.npe03__Installment_Period__c != RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
             return;
         }
@@ -619,7 +619,7 @@ public with sharing class RD2_ValidationService {
     * @param oldRd The previous version of the Recurring Donation
     * @return void
     */
-    private void validateDayOfMonthChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, ErrorRecord errorCollection) {
+    private void validateDayOfMonthChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, TDTM_Runnable.ErrorRecord errorCollection) {
         if (RD2_ElevateIntegrationService.isIntegrationEnabled()
             && String.isNotBlank(rd.CommitmentId__c)
             && (rd.npe03__Installment_Period__c == RD_Constants.INSTALLMENT_PERIOD_MONTHLY
@@ -634,7 +634,7 @@ public with sharing class RD2_ValidationService {
      * Open Recurring Donations
      * @param rd The recurring donation to validate
      */
-    private void validateFixedLength(npe03__Recurring_Donation__c rd, ErrorRecord errorCollection) {
+    private void validateFixedLength(npe03__Recurring_Donation__c rd, TDTM_Runnable.ErrorRecord errorCollection) {
         RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
         if (rdRecord.isOpenEnded()
             && rd.npe03__Installments__c > 1
@@ -732,80 +732,4 @@ public with sharing class RD2_ValidationService {
 
         return closeWonDateByRdId;
     }
-
-    /**
-    * @description ErrorRecord class with all the validation errors related to the Recurring Donation
-    */
-    public class ErrorRecord {
-        npe03__Recurring_Donation__c recurringDonation;
-        List<String> errors = new List<String>();
-
-        /**
-        * @descripion Construct the Error Record class
-        * @param rd The Recurring Donation that will be tracked 
-        */
-        public ErrorRecord(npe03__Recurring_Donation__c rd) {
-            this.recurringDonation = rd;
-        }
-
-        /**
-        * @description Append a single error to the collection
-        * @param error The specific error message that will be added
-        * @return ErrorRecord
-        */
-        public ErrorRecord addError(String error) {
-            if (String.isNotBlank(error)) {
-                this.errors.add(error);
-            }
-
-            return this;
-        }
-
-        /**
-        * @description Append a colleciton of errors to the collection
-        * @param errors The specific error messages that will be added
-        * @return ErrorRecord
-        */
-        public ErrorRecord addErrors(List<String> errors) {
-            if (errors != null) {
-                this.errors?.addAll(errors);
-            }
-
-            return this;
-        }
-
-        /**
-        * @description Returns Recurring Donation record
-        * @return npe03__Recurring_Donation__c
-        */
-        public npe03__Recurring_Donation__c getRecord() {
-            return this.recurringDonation;
-        }
-
-        /**
-        * @description Check if the current Recurring Donation has any validation error
-        */
-        public Boolean hasError() {
-            return !this.errors.isEmpty();
-        }
-
-        /***
-        * @description Returns errors
-        * @return List<String>
-        */
-        public List<String> getErrors() {
-            return this.errors?.clone();
-        }
-
-        /***
-        * @description Returns the first added error
-        * @return String
-        */
-        public String getFirstError() {
-            return this.errors.isEmpty()
-                ? null
-                : this.errors[0];
-        }
-    }
-
 }

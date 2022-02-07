@@ -416,7 +416,7 @@ public with sharing class RD2_EntryFormController {
             regulationService.adjust(newRds, oldRds);
             regulationService.markRDsAsElevate(newRds);
             
-            List<RD2_ValidationService.ErrorRecord> errorRds = new RD2_ValidationService(newRds, oldRds)
+            List<TDTM_Runnable.ErrorRecord> errorRds = new RD2_ValidationService(newRds, oldRds)
                 .validate();
 
             regulationService.removeElevateMarker(newRds);

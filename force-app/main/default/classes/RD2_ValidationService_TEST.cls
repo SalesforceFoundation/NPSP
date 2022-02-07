@@ -837,7 +837,7 @@ private with sharing class RD2_ValidationService_TEST {
         );
 
         Test.startTest();
-        List<RD2_ValidationService.ErrorRecord> errorRecords = validationService.validate();
+        List<TDTM_Runnable.ErrorRecord> errorRecords = validationService.validate();
         Test.stopTest();
 
         System.assertEquals(System.Label.RD2_ElevateRDDayOfMonthCannotChange, errorRecords[0].getFirstError(),
@@ -872,7 +872,7 @@ private with sharing class RD2_ValidationService_TEST {
         );
 
         Test.startTest();
-        List<RD2_ValidationService.ErrorRecord> errorRecords = validationService.validate();
+        List<TDTM_Runnable.ErrorRecord> errorRecords = validationService.validate();
         Test.stopTest();
 
         System.assertEquals(System.Label.RD2_ElevateRDAmountMustBeValid, errorRecords[0].getFirstError(),
@@ -911,7 +911,7 @@ private with sharing class RD2_ValidationService_TEST {
         );
 
         Test.startTest();
-        List<RD2_ValidationService.ErrorRecord> errorRecords = validationService.validate();
+        List<TDTM_Runnable.ErrorRecord> errorRecords = validationService.validate();
         Test.stopTest();
 
         System.assertEquals(System.Label.RD2_ElevateRDEffectiveDateMustBeValid, errorRecords[0].getFirstError(),
@@ -944,7 +944,7 @@ private with sharing class RD2_ValidationService_TEST {
         );
 
         Test.startTest();
-        List<RD2_ValidationService.ErrorRecord> errorRecords = validationService.validate();
+        List<TDTM_Runnable.ErrorRecord> errorRecords = validationService.validate();
         Test.stopTest();
 
         String expectedLabel = String.format(System.Label.RD2_ElevateInstallmentPeriodMustBeValid, new List<String>{RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH});
@@ -995,7 +995,7 @@ private with sharing class RD2_ValidationService_TEST {
 
         Test.startTest();
         rd.npe03__Recurring_Donation_Campaign__c = null;
-        List<RD2_ValidationService.ErrorRecord> errorRecords = validationService.validate();
+        List<TDTM_Runnable.ErrorRecord> errorRecords = validationService.validate();
         Test.stopTest();
 
         System.assertEquals(System.Label.RD2_ElevateRDCampaignCannotUpdateToNull, errorRecords[0].getFirstError(),
@@ -1274,14 +1274,14 @@ private with sharing class RD2_ValidationService_TEST {
         RD2_ValidationService validationService = new RD2_ValidationService(recurringDonations);
 
         Test.startTest();
-        List<RD2_ValidationService.ErrorRecord> validationServiceErrors = validationService.validate();
+        List<TDTM_Runnable.ErrorRecord> validationServiceErrors = validationService.validate();
         Test.stopTest();
 
         System.assertEquals(1, validationServiceErrors.size(), 'The validation service should only return one error ' +
                 'record.');
         System.assertNotEquals(null, validationServiceErrors, 'The validation service error record list should not be' +
                 ' null');
-        for (RD2_ValidationService.ErrorRecord errorRecord : validationServiceErrors) {
+        for (TDTM_Runnable.ErrorRecord errorRecord : validationServiceErrors) {
             System.assertEquals(System.Label.RD2_ElevatePaymentMethodChangeError, errorRecord.getFirstError(), 'The ' +
                     'error returned on the record should be the RD2_ElevatePaymentMethodChangeError label.');
         }
@@ -1314,14 +1314,14 @@ private with sharing class RD2_ValidationService_TEST {
         );
 
         Test.startTest();
-            List<RD2_ValidationService.ErrorRecord> validationServiceErrors = validationService.validate();
+            List<TDTM_Runnable.ErrorRecord> validationServiceErrors = validationService.validate();
         Test.stopTest();
 
         System.assertEquals(1, validationServiceErrors.size(), 'The validation service should only return one error ' +
                 'record.');
         System.assertNotEquals(null, validationServiceErrors, 'The validation service error record list should not be' +
                 ' null');
-        for (RD2_ValidationService.ErrorRecord errorRecord : validationServiceErrors) {
+        for (TDTM_Runnable.ErrorRecord errorRecord : validationServiceErrors) {
             System.assertEquals(System.Label.RD2_ElevatePaymentMethodChangeError, errorRecord.getFirstError(), 'The ' +
                     'error returned on the record should be the RD2_ElevatePaymentMethodChangeError label.');
         }
@@ -1355,7 +1355,7 @@ private with sharing class RD2_ValidationService_TEST {
         );
 
         Test.startTest();
-        List<RD2_ValidationService.ErrorRecord> errorRecords = validationService.validate();
+        List<TDTM_Runnable.ErrorRecord> errorRecords = validationService.validate();
         Test.stopTest();
 
         System.assertEquals(System.Label.RD2_ElevateRDCannotChangeElevateFields, errorRecords[0].getFirstError(),
@@ -1390,7 +1390,7 @@ private with sharing class RD2_ValidationService_TEST {
         );
 
         Test.startTest();
-        List<RD2_ValidationService.ErrorRecord> errorRecords = validationService.validate();
+        List<TDTM_Runnable.ErrorRecord> errorRecords = validationService.validate();
         Test.stopTest();
 
         System.assertEquals(0, errorRecords.size(),

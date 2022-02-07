@@ -1115,6 +1115,35 @@ private with sharing class RD2_RecurringDonations_TEST {
         System.assertEquals(nextDonationDate, rd.npe03__Next_Payment_Date__c, 'Next Donation Date should be unchanged');
     }
 
+    @IsTest
+    private static void shouldUpdateSchedulesOnGoodRDUpdate() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
+
+        npe03__Recurring_Donation__c badRd = getRecurringDonationMonthlyBuilder().build();
+        npe03__Recurring_Donation__c goodRd = getRecurringDonationMonthlyBuilder().build();
+        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>{ badRd, goodRd };
+        
+        insert recurringDonations;
+        List<RecurringDonationSchedule__c> schedules = rdScheduleGateway.getRecords(goodRd);
+        
+        System.assertEquals(goodRd.npe03__Amount__c, schedules[0].InstallmentAmount__c, 'RD should have the correct schedule setup');
+        
+        badRd.npe03__Amount__c = 0;
+        goodRd.npe03__Amount__c = goodRd.npe03__Amount__c + 10;
+
+        Test.startTest();
+        Database.update(recurringDonations, false);
+        Test.stopTest();
+        
+        schedules = rdScheduleGateway.getRecords(goodRd);
+        for (RecurringDonationSchedule__c schedule : schedules) {
+            if (schedule.Active__c) {
+                System.assertEquals(goodRd.npe03__Amount__c, schedule.InstallmentAmount__c, 'RD should have the correct schedule setup');
+            }
+        }
+    }   
+
 
     // Helpers
     ///////////////////

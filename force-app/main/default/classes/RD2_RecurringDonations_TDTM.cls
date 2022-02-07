@@ -127,7 +127,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         // Insert/Update any pending RecurringDonationSchedule records before the
         // evaluation service is called so that the full schedule is available to the
         // service to determine what Opportunities to insert or modify
-        TDTM_TriggerHandler.processDML(dmlActions);
+        TDTM_TriggerHandler.processDMLWithErrors(dmlActions);
         dmlActions = null;
 
         findMatchingElevateOpps(rds, triggerAction);
@@ -280,12 +280,10 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         new RD2_DataRegulationService(currentDate)
             .adjust(rds, oldRds);
 
-        List<RD2_ValidationService.ErrorRecord> errorRds = new RD2_ValidationService(rds, oldRds)
+        List<TDTM_Runnable.ErrorRecord> errorRds = new RD2_ValidationService(rds, oldRds)
             .validate();
-
-        for (RD2_ValidationService.ErrorRecord errorRd : errorRds) {
-            errorRd.getRecord().addError(errorRd.getFirstError());
-        }
+        
+        dmlActions.objectsWithError.addAll(errorRds);
     }
 
     /**

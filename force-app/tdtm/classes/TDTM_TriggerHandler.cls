@@ -40,6 +40,8 @@ public class TDTM_TriggerHandler {
     
     private static Boolean defaultRecordsInserted = false;
     
+    private static Boolean preventCachingFalseTransaction = false;
+
     public static Boolean suppressDebugAssertAfterErrorLogging = false;
 
     public static Boolean disableTDTM = false;
@@ -280,6 +282,28 @@ public class TDTM_TriggerHandler {
     }
     
     /*******************************************************************************************************
+    * @description Performs pending Errors and DML operations, on the records stored in the DMLWrapper that it gets as parameter.
+    * We want this method to be static so that it can be called from the future method in TDTM_Runnable.
+    * @param dmlWrapper The class that contains the records that need to have DML performed on.
+    * @return void
+    */
+    public static void processDMLWithErrors(TDTM_Runnable.DmlWrapper dmlWrapper) {
+        processDMLAllOrNothing(dmlWrapper, true);
+        processDMLError(dmlWrapper);
+    }
+
+    public static void processDMLError(TDTM_Runnable.DmlWrapper dmlWrapper) {
+        if (dmlWrapper.objectsWithError?.isEmpty()) {
+            return;
+        }
+
+        preventCachingFalseTransaction = true;
+
+        for (TDTM_Runnable.ErrorRecord errorRecord : dmlWrapper.objectsWithError) {
+            errorRecord.getRecord()?.addError(errorRecord.getFirstError());
+        }
+    }
+    /*******************************************************************************************************
     * @description Performs pending DML operations, on the records stored in the DMLWrapper that it gets as parameter.
     * We want this method to be static so that it can be called from the future method in TDTM_Runnable.
     * @param dmlWrapper The class that contains the records that need to have DML performed on.
@@ -332,7 +356,7 @@ public class TDTM_TriggerHandler {
     /*******************************************************************************************************
     * @description a cache of SObject maps for each object type, used by FixupOldList()
     */
-    private static Map<Schema.DescribeSobjectResult, Map<Id, SObject>> mapDescObjToMapOldForUpdates = new Map<Schema.DescribeSobjectResult, Map<Id, SObject>>();
+    public static Map<Schema.DescribeSobjectResult, Map<Id, SObject>> mapDescObjToMapOldForUpdates = new Map<Schema.DescribeSobjectResult, Map<Id, SObject>>();
 
     /*******************************************************************************************************
     * @description Returns the correct old list of objects for the trigger, for the current context.  By
@@ -351,37 +375,41 @@ public class TDTM_TriggerHandler {
     */
     private static List<SObject> fixupOldList(TDTM_Runnable.Action triggerAction, List<SObject> newList, List<SObject> oldList,
         Schema.DescribeSObjectResult describeObj) {
-
         // return cached objects if we have them
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            List<SObject> listSObj = new List<SObject>();
-            Map<Id, SObject> mapIdToSObj = mapDescObjToMapOldForUpdates.get(describeObj);
-            if (mapIdToSObj != null) {
-
-                for (SObject sobj : oldList) {
-                    SObject sobjCached = mapIdToSObj.get(sobj.Id);
-                    if (sobjCached != null) {
-                        listSObj.add(sobjCached);
-                    } else {
-                        listSObj.add(sobj);
+            if (!preventCachingFalseTransaction) {
+                List<SObject> listSObj = new List<SObject>();
+                Map<Id, SObject> mapIdToSObj = mapDescObjToMapOldForUpdates.get(describeObj);
+                if (mapIdToSObj != null) {
+        
+                    for (SObject sobj : oldList) {
+                        SObject sobjCached = mapIdToSObj.get(sobj.Id);
+                        if (sobjCached != null) {
+                            listSObj.add(sobjCached);
+                        } else {
+                            listSObj.add(sobj);
+                        }
                     }
+        
+                    // update oldList with the correct cached state of the objects
+                    oldList = listSObj;
+                    //UTIL_Debug.debug(LoggingLevel.WARN, '**** fixup oldList to : ' + oldList);
+                } else {
+                    //UTIL_Debug.debug(LoggingLevel.WARN, '**** fixup not done since mapIdToSobj was null. mapDescObjToMapOldForUpdates:  ' + mapDescObjToMapOldForUpdates);
                 }
-
-                // update oldList with the correct cached state of the objects
-                oldList = listSObj;
-                //UTIL_Debug.debug(LoggingLevel.WARN, '**** fixup oldList to : ' + oldList);
-            } else {
-                //UTIL_Debug.debug(LoggingLevel.WARN, '**** fixup not done since mapIdToSobj was null. mapDescObjToMapOldForUpdates:  ' + mapDescObjToMapOldForUpdates);
             }
         }
 
         // now cache objects for future Update calls
         if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-            mapDescObjToMapOldForUpdates.put(describeObj, new Map<Id, SObject>(newList));
+            if (!preventCachingFalseTransaction) {
+                mapDescObjToMapOldForUpdates.put(describeObj, new Map<Id, SObject>(newList));
+            }
+
+            preventCachingFalseTransaction = false;
             //UTIL_Debug.debug(LoggingLevel.WARN, '**** cached newList: ' + newList);
         }
 
         return oldList;
     }
-
 }
