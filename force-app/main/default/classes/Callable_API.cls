@@ -42,6 +42,29 @@ global with sharing class Callable_API implements System.Callable {
     ********************************************************************************************************/
     public class MalformedMethodInvocationException extends Exception {}
 
+
+    @TestVisible
+    private AdvancedMappingEnablementService advancedMappingEnablementService {
+        get {
+            if (advancedMappingEnablementService == null) {
+                advancedMappingEnablementService = new AdvancedMappingEnablementService();
+            }
+            return advancedMappingEnablementService;
+        }
+        set;
+    }
+
+    @TestVisible
+    private GiftEntryEnablementService giftEntryEnablementService {
+        get {
+            if (giftEntryEnablementService == null) {
+                giftEntryEnablementService = new GiftEntryEnablementService();
+            }
+            return giftEntryEnablementService;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description call function implementation of the callable Interface will dispatch to the appropriate
     * action handler based on the action text
@@ -159,7 +182,25 @@ global with sharing class Callable_API implements System.Callable {
                 // It returns the Job ID of the Scheduled Job.
                 return CallableApiApexDelegationService.handleApexScheduleJob(params);
 
-            } when else {
+            } when 'settings.enableadvancedmapping' {
+                if (advancedMappingEnablementService.isEnabled()) {
+                    return null;
+                }
+
+                advancedMappingEnablementService.enable();
+
+                return null;
+
+            } when 'settings.enablegiftentry' {
+                if (giftEntryEnablementService.isEnabled()) {
+                    return null;
+                }
+
+                giftEntryEnablementService.enable();
+
+                return null;
+            }
+            when else {
                 throw new MalformedMethodInvocationException(
                     String.format(System.Label.CallableApiMethodNotImplemented, new List<String> { action })
                 );
@@ -169,5 +210,4 @@ global with sharing class Callable_API implements System.Callable {
         // if the action does not return a value then return success
         return true;
     }
-
 }
