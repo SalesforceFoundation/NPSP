@@ -136,7 +136,7 @@ describe("existing recurring account donation", () => {
         assertDonorTypeFieldValue(element, "Account");
     });
 
-    it("clears values in Account lookup when donor type changed to Contact", async () => {
+    it("lookup values are not cleared when donor type is changed", async () => {
         const rd2Service = new Rd2Service();
         changeDonorType(element, "Contact");
 
@@ -159,7 +159,7 @@ describe("existing recurring account donation", () => {
 
         const accountLookup = getAccountLookup(element);
         expect(accountLookup).toBeTruthy();
-        expect(accountLookup.value).toBeFalsy();
+        expect(accountLookup.value).toBe("001fakeAccountId");
     });
 });
 

@@ -82,10 +82,9 @@ describe('c-rd2-entry-form-schedule-section', () => {
            expect(controller.customPeriod().value).toBe('Monthly');
         });
 
-        it('day of month picklist defaults to current date', async () => {
+        it('day of month picklist defaults to value provided from back-end', async () => {
             await flushPromises();
-            const today = new Date().getDate().toString();
-            const expectedDay = today === '31' ? 'Last_Day' : today;
+            const expectedDay = initialViewResponse.record.dayOfMonth;
             expect(controller.dayOfMonth().value).toBe(expectedDay);
         });
 
