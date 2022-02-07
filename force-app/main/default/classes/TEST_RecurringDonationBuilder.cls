@@ -316,6 +316,11 @@ public without sharing class TEST_RecurringDonationBuilder {
         return this;
     }
 
+    public TEST_RecurringDonationBuilder withLastPaymentDate(Date paymentDate) {
+        valuesByFieldName.put('npe03__Last_Payment_Date__c', paymentDate);
+        return this;
+    }
+
     /***
     * @description Sets Number of Planned Installments for a Fixed Length RD
     * @param numberOfInstallments Number of Planned Installments
