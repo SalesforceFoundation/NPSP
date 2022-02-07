@@ -292,7 +292,7 @@ public class TDTM_TriggerHandler {
         processDMLError(dmlWrapper);
     }
 
-    public static void processDMLError(TDTM_Runnable.DmlWrapper dmlWrapper) {
+    private static void processDMLError(TDTM_Runnable.DmlWrapper dmlWrapper) {
         if (dmlWrapper.objectsWithError?.isEmpty()) {
             return;
         }
@@ -377,26 +377,24 @@ public class TDTM_TriggerHandler {
         Schema.DescribeSObjectResult describeObj) {
         // return cached objects if we have them
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            if (!preventCachingFalseTransaction) {
-                List<SObject> listSObj = new List<SObject>();
-                Map<Id, SObject> mapIdToSObj = mapDescObjToMapOldForUpdates.get(describeObj);
-                if (mapIdToSObj != null) {
-        
-                    for (SObject sobj : oldList) {
-                        SObject sobjCached = mapIdToSObj.get(sobj.Id);
-                        if (sobjCached != null) {
-                            listSObj.add(sobjCached);
-                        } else {
-                            listSObj.add(sobj);
-                        }
+            List<SObject> listSObj = new List<SObject>();
+            Map<Id, SObject> mapIdToSObj = mapDescObjToMapOldForUpdates.get(describeObj);
+            if (mapIdToSObj != null) {
+    
+                for (SObject sobj : oldList) {
+                    SObject sobjCached = mapIdToSObj.get(sobj.Id);
+                    if (sobjCached != null) {
+                        listSObj.add(sobjCached);
+                    } else {
+                        listSObj.add(sobj);
                     }
-        
-                    // update oldList with the correct cached state of the objects
-                    oldList = listSObj;
-                    //UTIL_Debug.debug(LoggingLevel.WARN, '**** fixup oldList to : ' + oldList);
-                } else {
-                    //UTIL_Debug.debug(LoggingLevel.WARN, '**** fixup not done since mapIdToSobj was null. mapDescObjToMapOldForUpdates:  ' + mapDescObjToMapOldForUpdates);
                 }
+    
+                // update oldList with the correct cached state of the objects
+                oldList = listSObj;
+                //UTIL_Debug.debug(LoggingLevel.WARN, '**** fixup oldList to : ' + oldList);
+            } else {
+                //UTIL_Debug.debug(LoggingLevel.WARN, '**** fixup not done since mapIdToSobj was null. mapDescObjToMapOldForUpdates:  ' + mapDescObjToMapOldForUpdates);
             }
         }
 
