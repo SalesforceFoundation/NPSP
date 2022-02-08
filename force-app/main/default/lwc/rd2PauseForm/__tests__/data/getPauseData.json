@@ -1,0 +1,40 @@
+{
+  "startDate": null,
+  "scheduleId": null,
+  "resumeAfterDate": null,
+  "rdId": "a091100000TTkhwAAD",
+  "pausedReason": {
+    "value": null,
+    "placeholder": "Select an Option",
+    "options": [
+      {
+        "value": "Card Expired",
+        "label": "Card Expired"
+      },
+      {
+        "value": "Commitment Completed",
+        "label": "Commitment Completed"
+      },
+      {
+        "value": "Deceased Donor",
+        "label": "Deceased Donor"
+      },
+      {
+        "value": "Financial Difficulty",
+        "label": "Financial Difficulty"
+      },
+      {
+        "value": "No Longer Interested",
+        "label": "No Longer Interested"
+      },
+      {
+        "value": "Unknown",
+        "label": "Unknown"
+      }
+    ],
+    "label": "Paused Reason"
+  },
+  "isRDClosed": false,
+  "isElevateRecord": false,
+  "hasAccess": true
+}

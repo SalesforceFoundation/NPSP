@@ -1,7 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
-import { isNull } from 'c/utilCommon';
-import { PERIOD, RECURRING_PERIOD_ADVANCED } from 'c/rd2Service';
+import { isEmpty, isNull } from 'c/utilCommon';
+import { PERIOD, RECURRING_PERIOD_ADVANCED, RECURRING_TYPE_OPEN, RECURRING_TYPE_FIXED } from 'c/rd2Service';
 import getRecurringSettings from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
 import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 
@@ -24,7 +24,6 @@ import FIELD_START_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.St
 
 
 // Constants from RD2_Constants class
-const RECURRING_TYPE_FIXED = 'Fixed';
 const LAST_DAY_OF_MONTH = 'Last_Day';
 
 export default class rd2EntryFormScheduleSection extends LightningElement {
@@ -62,6 +61,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     rdObjectInfo;
     defaultDayOfMonthValue;
     defaultInstallmentPeriodValue;
+    recurringType;
 
     @track disablePeriodPicklistField;
     @track disableInstallmentFrequencyField;
@@ -96,6 +96,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
             getRecurringData({recordId: this.recordId})
                 .then(response => {
                     this.customPeriod = response.Period;
+                    this.recurringType = response.RecurringType;
                     this.inputFieldInstallmentFrequency = response.Frequency;
                     if (response.Period !== PERIOD.MONTHLY
                         || (response.Period === PERIOD.MONTHLY && this.inputFieldInstallmentFrequency > 1)
@@ -103,7 +104,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
                         this.customPeriod = RECURRING_PERIOD_ADVANCED;
                     }
                     this.updateScheduleFieldVisibility(this.customPeriod, response.Period);
-                    this.updatePlannedInstallmentsVisibility(response.RecurringType);
+                    this.updatePlannedInstallmentsVisibility();
                 })
                 .catch((error) => {
                     this.hasError = true;
@@ -121,6 +122,11 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
 
                 this.disableInstallmentFrequencyField = this.shouldDisableField(response.InstallmentFrequencyPermissions);
                 this.hideInstallmentFrequencyField = this.shouldHideField(response.InstallmentFrequencyPermissions);
+
+                if (isEmpty(this.recurringType)) {
+                    this.recurringType = response.defaultRecurringType;
+                }
+                this.updatePlannedInstallmentsVisibility();
             })
             .catch((error) => {
                 // handleError(error);
@@ -282,10 +288,10 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     * @return String Current day
     */
     getCurrentDayOfMonth() {
-        let currentDay = new Date().getDate().toString();
+        const currentDay = new Date().getDate().toString();
 
-        let matchingPicklistValue = this.dayOfMonthPicklistValues.find(value => {
-            return value.value == currentDay;
+        const matchingPicklistValue = this.dayOfMonthPicklistValues.find(({value}) => {
+            return value === currentDay;
         });
 
         return (matchingPicklistValue)
@@ -297,14 +303,14 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      * @description Automatically Show/Hide the NumberOfPlannedInstallments field based on the Recurring Type value
      * @param event
      */
-    onHandleRecurringTypeChange(event) {
-        let recurringType = event.target.value;
-        this.updatePlannedInstallmentsVisibility(recurringType);
+    handleRecurringTypeChange(event) {
+        this.recurringType = event.target.value;
+        this.updatePlannedInstallmentsVisibility();
 
         // Notify the main entry form about the Recurring Type value change
         this.dispatchEvent(new CustomEvent(
             'typechange', 
-            { detail: { 'recurringType': recurringType }}
+            { detail: { 'recurringType': this.recurringType }}
         ));
     }
 
@@ -313,7 +319,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      * page: Monthly - just day of month; Advanced: Show the full period picklist and other fields.
      * @param event
      */
-    onHandleRecurringPeriodChange(event) {
+    handleRecurringPeriodChange(event) {
         let recurringPeriod = event.target.value;
         this.updateScheduleFieldVisibility(recurringPeriod, this.customPeriodAdvancedMode);
         this.dispatchEvent(new CustomEvent(
@@ -327,7 +333,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      * any of the supported (and active) installment periods. If Monthly is selected, enable the DayOfMonth field visibility.
      * @param event
      */
-    onHandleAdvancedPeriodChange(event) {
+    handleAdvancedPeriodChange(event) {
         const period = event.target.value;
         this.updateScheduleFieldVisibility(this.customPeriod, period);
         this.dispatchEvent(new CustomEvent(
@@ -340,7 +346,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      * @description When the frequency changes, we need to check if the Annual Value changed
      * @param event
      */
-     onHandleRecurringFrequencyChange(event) {
+     handleRecurringFrequencyChange(event) {
         this.dispatchEvent(new CustomEvent('frequencychange'));
     }
 
@@ -386,8 +392,8 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      * @description Update the visibility of the Planned Installments field based on the Recurring Type
      * @param recurringType
      */
-    updatePlannedInstallmentsVisibility(recurringType) {
-        if (recurringType === RECURRING_TYPE_FIXED) {
+    updatePlannedInstallmentsVisibility() {
+        if (this.recurringType === RECURRING_TYPE_FIXED) {
             this.showNumPlannedInstallments = true;
             this.recurringTypeColumnSize = 4;
         } else {
@@ -552,6 +558,10 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
                         break;
                 }
             });
+
+        if(data[this.fields.recurringType.apiName] === RECURRING_TYPE_OPEN) {
+            data[this.fields.plannedInstallments.apiName] = null;
+        }
 
         return data;
     }

@@ -4,6 +4,7 @@ import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
 import { getRecord } from 'lightning/uiRecordApi';
 import { mockGetIframeReply } from "c/psElevateTokenHandler";
 
+import getInitialView from "@salesforce/apex/RD2_EntryFormController.getInitialView";
 import getRecurringSettings from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
 import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 import hasRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions';
@@ -18,7 +19,7 @@ import CONTACT_OBJECT from '@salesforce/schema/Contact';
 
 
 const recurringSettingsResponse = require('./data/getRecurringSettings.json');
-const recurringDonationObjectInfo = require('./data/recurringDonationObjectInfo.json');
+const recurringDonationObjectInfo = require('../../../../../../tests/__mocks__/apex/data/recurringDonationObjectInfo.json');
 const installmentPeriodPicklistValues = require('./data/installmentPeriodPicklistValues.json');
 const dayOfMonthPicklistValues = require('./data/dayOfMonthPicklistValues.json');
 const contactPartialDescribe = require('./data/contactPartialDescribe.json');
@@ -31,6 +32,14 @@ const rd2WithoutCommitmentCard = require('./data/rd2WithoutCommitmentCard.json')
 const recurringDataContactResponse = require('./data/recurringDataContactResponse.json');
 const handleCommitmentResponseBody = require('./data/handleCommitmentResponseBody.json');
 const handleCommitmentResponseBodyACH = require('./data/handleCommitmentResponseBodyACH.json');
+const initialViewResponse = require("../../../../../../tests/__mocks__/apex/data/getInitialView.json");
+const rd2WithCardCommitmentInitialView = require("./data/rd2WithCardCommitmentInitialView.json");
+const rd2WithACHCommitmentInitialView = require("./data/rd2WithACHCommitmentInitialView.json");
+const rd2WithoutCommitmentInitialView = require("./data/rd2WithoutCommitmentInitialView.json");
+
+jest.mock("@salesforce/apex/RD2_EntryFormController.getInitialView",
+    () => ({ default: jest.fn() }),
+    { virtual: true });
 
 const mockScrollIntoView = jest.fn();
 const mockRecordEditFormSubmit = jest.fn();
@@ -85,6 +94,7 @@ jest.mock('@salesforce/apex/RD2_EntryFormController.handleCommitment',
 describe('c-rd2-entry-form', () => {
 
     beforeEach(() => {
+        getInitialView.mockResolvedValue(initialViewResponse);
         getRecurringSettings.mockResolvedValue(recurringSettingsResponse);
         hasRequiredFieldPermissions.mockResolvedValue(true);
         window.HTMLElement.prototype.scrollIntoView = mockScrollIntoView;
@@ -103,7 +113,7 @@ describe('c-rd2-entry-form', () => {
 
             await flushPromises();
 
-            expect(mockScrollIntoView).toHaveBeenCalledTimes(1);
+            expect(mockScrollIntoView).toHaveBeenCalled();
 
             const saveButton = controller.saveButton();
             expect(saveButton.disabled).toBe(true);
@@ -179,6 +189,7 @@ describe('c-rd2-entry-form', () => {
     describe('tokenization', () => {
 
         beforeEach(() => {
+            getInitialView.mockResolvedValue(initialViewResponse);
             setupIframeReply();
         });
 
@@ -242,7 +253,8 @@ describe('c-rd2-entry-form', () => {
                 "npe03__Amount__c": 1,
                 "npe03__Contact__c": "001fakeContactId",
                 "npe03__Date_Established__c": "2021-02-03",
-                "npe03__Installment_Period__c": "Monthly"
+                "npe03__Installment_Period__c": "Monthly",
+                "npe03__Installments__c": null
             });
         });
 
@@ -260,7 +272,6 @@ describe('c-rd2-entry-form', () => {
             controller.donorType().changeValue('Account');
             controller.paymentMethod().changeValue('ACH');
             await flushPromises();
-
 
             controller.accountLookup().changeValue('001fakeAccountId');
             await flushPromises();
@@ -307,18 +318,19 @@ describe('c-rd2-entry-form', () => {
         })
 
         it('rd2 record with card payment, when editing, displays card information', async () => {
-
+            getInitialView.mockResolvedValue(rd2WithCardCommitmentInitialView);
             const element = createRd2EditForm(FAKE_CARD_RD2_ID);
             const controller = new RD2FormController(element);
             await flushPromises();
+
+            await setupWireMocksForElevate();
 
             getRecord.emit(rd2WithCardCommitment, config => {
                 return config.recordId === FAKE_CARD_RD2_ID;
             });
 
-            await setupWireMocksForElevate();
-            controller.setDefaultInputFieldValuesEdit();
             await flushPromises();
+            controller.setDefaultInputFieldValuesEdit();
 
             const elevateWidget = controller.elevateWidget();
             expect(elevateWidget).toBeTruthy();
@@ -330,18 +342,18 @@ describe('c-rd2-entry-form', () => {
 
 
         it('rd2 record with ACH payment, when editing, displays ACH last 4', async () => {
-
+            getInitialView.mockResolvedValue(rd2WithACHCommitmentInitialView);
             const element = createRd2EditForm(FAKE_ACH_RD2_ID);
             const controller = new RD2FormController(element);
             await flushPromises();
+            await setupWireMocksForElevate();
 
             getRecord.emit(rd2WithACHCommitment, config => {
                 return config.recordId === FAKE_ACH_RD2_ID;
             });
-
-            await setupWireMocksForElevate();
-            controller.setDefaultInputFieldValuesEdit();
             await flushPromises();
+
+            controller.setDefaultInputFieldValuesEdit();
 
             const elevateWidget = controller.elevateWidget();
             expect(elevateWidget).toBeTruthy();
@@ -354,6 +366,7 @@ describe('c-rd2-entry-form', () => {
             const element = createRd2EditForm(FAKE_CARD_RD2_ID);
             const controller = new RD2FormController(element);
             await flushPromises();
+            await setupWireMocksForElevate();
 
             getRecord.emit(rd2WithoutCommitmentCard, config => {
                 return config.recordId === FAKE_CARD_RD2_ID;
@@ -365,7 +378,6 @@ describe('c-rd2-entry-form', () => {
                 return config.recordId === '001fakeContactId';
             });
 
-            await setupWireMocksForElevate();
             controller.setDefaultInputFieldValuesEdit();
             await flushPromises();
 
@@ -380,6 +392,7 @@ describe('c-rd2-entry-form', () => {
 
             const rd2WithoutCommitmentCheck = generateMockFrom(rd2WithoutCommitmentCard)
                 .withFieldValue('PaymentMethod__c', 'Check');
+            await setupWireMocksForElevate();
 
             getRecord.emit(rd2WithoutCommitmentCheck, config => {
                 return config.recordId === FAKE_CARD_RD2_ID;
@@ -391,7 +404,6 @@ describe('c-rd2-entry-form', () => {
                 return config.recordId === '001fakeContactId';
             });
 
-            await setupWireMocksForElevate();
             controller.setDefaultInputFieldValues();
 
             expect(controller.elevateWidget()).toBeNull();
@@ -406,10 +418,12 @@ describe('c-rd2-entry-form', () => {
         });
 
         it('rd2 record, when editing, uses existing contact information in tokenization', async () => {
+            getInitialView.mockResolvedValue(rd2WithoutCommitmentInitialView);
 
             const element = createRd2EditForm(FAKE_CARD_RD2_ID);
             const controller = new RD2FormController(element);
             await flushPromises();
+            await setupWireMocksForElevate();
 
             getRecord.emit(rd2WithoutCommitmentCard, config => {
                 return config.recordId === FAKE_CARD_RD2_ID;
@@ -421,7 +435,8 @@ describe('c-rd2-entry-form', () => {
                 return config.recordId === '001fakeContactId';
             });
 
-            await setupWireMocksForElevate();
+            await flushPromises();
+
             controller.setDefaultInputFieldValuesEdit();
 
             controller.paymentMethod().changeValue('ACH');
@@ -450,19 +465,22 @@ describe('c-rd2-entry-form', () => {
                 "Status__c": "Active",
                 "npe03__Amount__c": 0.5,
                 "Id": "a0963000008oxZnAAI",
-                "InstallmentFrequency__c": 1
+                "InstallmentFrequency__c": 1,
+                "npe03__Installments__c": null
             };
 
             validateCommitmentMessage(EXPECTED_RECORD);
         });
 
         it('clears credit card fields when payment method changed to ACH', async () => {
+            getInitialView.mockResolvedValue(rd2WithCardCommitmentInitialView);
             setupCommitmentResponse(handleCommitmentResponseBodyACH);
             const element = createRd2EditForm(FAKE_CARD_RD2_ID);
             const controller = new RD2FormController(element);
             await flushPromises();
             const rd2WithCommitmentCard = generateMockFrom(rd2WithoutCommitmentCard)
                 .withFieldValue('CommitmentId__c', 'fake-commitment-uuid');
+            await setupWireMocksForElevate();
 
             getRecord.emit(rd2WithCommitmentCard, config => {
                 return config.recordId === FAKE_CARD_RD2_ID;
@@ -474,7 +492,6 @@ describe('c-rd2-entry-form', () => {
                 return config.recordId === '001fakeContactId';
             });
 
-            await setupWireMocksForElevate();
             controller.setDefaultInputFieldValuesEdit();
             controller.setupSubmitMock();
             await flushPromises();
@@ -510,16 +527,20 @@ describe('c-rd2-entry-form', () => {
                 "npe03__Amount__c": 0.5,
                 "npe03__Contact__c": "001fakeContactId",
                 "npe03__Date_Established__c": "2021-02-03",
-                "npe03__Installment_Period__c": "Monthly"
+                "npe03__Installment_Period__c": "Monthly",
+                "npe03__Installments__c": null
             });
         });
 
 
         it('clears ACH fields when payment method changed to Card', async () => {
+            getInitialView.mockResolvedValue(rd2WithACHCommitmentInitialView);
+
             setupCommitmentResponse(handleCommitmentResponseBody);
             const element = createRd2EditForm(FAKE_ACH_RD2_ID);
             const controller = new RD2FormController(element);
             await flushPromises();
+            await setupWireMocksForElevate();
 
             getRecord.emit(rd2WithACHCommitment, config => {
                 return config.recordId === FAKE_ACH_RD2_ID;
@@ -531,7 +552,6 @@ describe('c-rd2-entry-form', () => {
                 return config.recordId === '001fakeContactId';
             });
 
-            await setupWireMocksForElevate();
             controller.setDefaultInputFieldValuesEdit();
             controller.setupSubmitMock();
             await flushPromises();
@@ -566,7 +586,8 @@ describe('c-rd2-entry-form', () => {
                 "npe03__Amount__c": 0.5,
                 "npe03__Contact__c": "001fakeContactId",
                 "npe03__Date_Established__c": "2021-02-03",
-                "npe03__Installment_Period__c": "Monthly"
+                "npe03__Installment_Period__c": "Monthly",
+                "npe03__Installments__c": null
             });
         });
     });
@@ -582,6 +603,7 @@ describe('c-rd2-entry-form', () => {
             controller = new RD2FormController(element);
             await flushPromises();
 
+            await setupWireMocksForElevate();
 
             getRecord.emit(rd2WithoutCommitmentCard, config => {
                 return config.recordId === FAKE_CARD_RD2_ID;
@@ -592,7 +614,6 @@ describe('c-rd2-entry-form', () => {
                 return config.recordId === '001fakeContactId';
             });
 
-            await setupWireMocksForElevate();
             controller.setDefaultInputFieldValuesEdit();
 
             await flushPromises();
@@ -653,13 +674,13 @@ describe('c-rd2-entry-form', () => {
             element = createRd2EditForm(FAKE_CARD_RD2_ID);
             controller = new RD2FormController(element);
             await flushPromises();
+            await setupWireMocksForElevate();
 
             const fields = {
                 ...rd2WithoutCommitmentCard.fields,
                 "RecurringType__c": { value: "Fixed" },
                 "npe03__Installments__c": { value: 12 }
             };
-            controller.installments
 
             getRecord.emit({...rd2WithoutCommitmentCard, fields}, config => {
                 return config.recordId === FAKE_CARD_RD2_ID;
@@ -670,7 +691,6 @@ describe('c-rd2-entry-form', () => {
                 return config.recordId === '001fakeContactId';
             });
 
-            await setupWireMocksForElevate();
             controller.setDefaultInputFieldValuesEdit('Fixed');
 
             await flushPromises();
@@ -810,8 +830,9 @@ class RD2FormController {
         element.submit = mockRecordEditFormSubmit;
     }
 
-    setDefaultInputFieldValues(recurringType = 'Open') {
-        this.recurringType().setValue(recurringType);
+    async setDefaultInputFieldValues(recurringType = 'Open') {
+        this.recurringType().changeValue(recurringType);
+        await flushPromises();
         if(recurringType === 'Fixed') {
             this.plannedInstallments().setValue(12);
         }
@@ -825,7 +846,6 @@ class RD2FormController {
         this.status().setValue('Active');
         this.amount().setValue(0.50);
         this.setDefaultInputFieldValues(recurringType);
-        this.contactLookup().setValue('001fakeContactId');
     }
 
     donorSection() {
@@ -959,6 +979,8 @@ class RD2FormController {
 }
 
 class RD2FormField {
+
+    element;
 
     constructor(element) {
         this.element = element;

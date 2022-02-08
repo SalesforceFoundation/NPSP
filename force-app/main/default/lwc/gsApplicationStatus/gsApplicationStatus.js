@@ -3,6 +3,7 @@ import Resources from '@salesforce/resourceUrl/CumulusStaticResources'
 import getApplicationStatus from '@salesforce/apex/GS_ApplicationStatusController.getApplicationStatus'
 import gsNoApplicationSubmitted from '@salesforce/label/c.gsNoApplicationSubmitted'
 import gsLearnMore from '@salesforce/label/c.gsLearnMore'
+import opensInNewLink from '@salesforce/label/c.opensInNewLink'
 import gsDaysRemainingInFreeTrial from '@salesforce/label/c.gsDaysRemainingInFreeTrial'
 import gsApplyForFreeLicenses from '@salesforce/label/c.gsApplyForFreeLicenses'
 import gsApplicationStatus from '@salesforce/label/c.gsApplicationStatus'
@@ -12,8 +13,9 @@ import gsCheckStatus from '@salesforce/label/c.gsCheckStatus'
 import gsApplicationStatusModalHeader from '@salesforce/label/c.gsApplicationStatusModalHeader'
 import gsClose from '@salesforce/label/c.commonClose'
 import gsFollowUpApplicationStatus from '@salesforce/label/c.gsFollowUpApplicationStatus'
+
 export default class GsApplicationStatus extends LightningElement {
-    
+
     @track errorMessage = "";
     @track diffInDays = null;
     @track isApplicationSubmitted = false;
@@ -34,8 +36,13 @@ export default class GsApplicationStatus extends LightningElement {
         gsCheckStatus,
         gsApplicationStatusModalHeader,
         gsClose,
-        gsFollowUpApplicationStatus
+        gsFollowUpApplicationStatus,
+        opensInNewLink
     }
+
+    learnMoreAriaLabel;
+    applyForFreeLicensesAriaLabel;
+    checkStatusAriaLabel;
 
     /**
      * Initialized the component with the data retrieved from Salesforce
@@ -50,6 +57,9 @@ export default class GsApplicationStatus extends LightningElement {
             this.img = this.isApplicationSubmitted ?  this.checkForStatusImg : this.applyForFreeLicensesImg; 
             this.isActiveInstance = result.trialExpirationDate == null;
             this.hideSpinner();
+            this.learnMoreAriaLabel = `${this.labels.gsLearnMore} ${this.labels.opensInNewLink}`;
+            this.applyForFreeLicensesAriaLabel = `${this.labels.gsApplyForFreeLicenses} ${this.labels.opensInNewLink}`;
+            this.checkStatusAriaLabel = `${this.labels.gsCheckStatus} ${this.labels.opensInNewLink}`;
         })
         .catch(error => {
             this.errorMessage = error;

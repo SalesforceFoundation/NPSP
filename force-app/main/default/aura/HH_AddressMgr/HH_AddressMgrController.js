@@ -28,9 +28,18 @@
     /*******************************************************************************************************
      * @description open the Change Address popup
      */
-    openChangeAddress : function(component /* , event, helper */) {
-        component.set('v.showChangeAddressPopup', true);
-        component.set('v.isExistingAddrSectionOpen', true);
+    openChangeAddress : function(component, event, helper) {
+        if (event.type === 'keydown' && (event.code === 'Enter' || event.code === 'Space')){
+            // If using keyboard controls, focus on Address Modal (the timeout makes this work consistently)
+            window.setTimeout(
+                $A.getCallback(function() {
+                    document.getElementById('searchPopupLabel').focus();
+                }), 0
+            );
+        } else if (event.type === 'click') {
+            component.set('v.showChangeAddressPopup', true);
+            component.set('v.isExistingAddrSectionOpen', true);
+        }
     },
 
     /*******************************************************************************************************

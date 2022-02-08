@@ -32,7 +32,7 @@
 * @date 2021
 * @description Contact repository responsible for retrieval and storing of Contacts for specified Accounts
 */
-public inherited sharing class Households extends fflib_SObjects {
+public inherited sharing class Households extends fflib_SObjects2 {
 
     private Map<Id, Contacts> membersByHouseholdId {
         get {
@@ -125,10 +125,10 @@ public inherited sharing class Households extends fflib_SObjects {
     }
 
     /*******************************************************************************************************
-    * @description Updates the accounts for contacts that have been deleted if they have other hh members
+    * @description Updates the accounts for contacts that have been deleted
     */
     public void handleContactDeletion(TDTM_Runnable.DmlWrapper dmlWrapper) {
-        householdsWithContactsOrOpportunities().updateHouseholds(dmlWrapper);
+        updateHouseholds(dmlWrapper);
     }
 
     public static void insertHouseholdAddressesFor(List<Contact>
@@ -143,13 +143,6 @@ public inherited sharing class Households extends fflib_SObjects {
                 (contactsNeedingAddressesCreated, true);
         TDTM_ProcessControl.toggleTriggerState('Address__c', 'ADDR_Addresses_TDTM',
                 true);
-    }
-
-    private Households householdsWithContactsOrOpportunities() {
-        List<Account> accountsWithContactsOrOpportunities = new List<Account>();
-        accountsWithContactsOrOpportunities.addAll(withContacts());
-        accountsWithContactsOrOpportunities.addAll(withOpportunities());
-        return new Households(accountsWithContactsOrOpportunities);
     }
 
     private List<Account> withOpportunities() {
@@ -199,7 +192,7 @@ public inherited sharing class Households extends fflib_SObjects {
     }
 
     private List<Id> ids() {
-        return new List<Id>(getIdFieldValues(Account.Id));
+        return new List<Id>(getIdFieldValues(Account.Id).getIds());
     }
 
     /*******************************************************************************************************

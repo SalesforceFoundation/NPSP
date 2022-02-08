@@ -201,6 +201,44 @@ private with sharing class BDI_DataImportService_TEST {
         }
     }
 
+    /*******************************************************************************************************************
+    * @description Tests utility methods that determine whether any fields for a given object mapping are populated with
+    * a value.
+    */
+    @isTest
+    private static void shouldReturnWhetherFieldsArePopulated (){
+        DataImport__c testDI1 = new DataImport__c(Donation_Amount__c = 10, 
+                                                    Donation_Date__c = System.Date.today(), 
+                                                    Account1_name__c = null);
+        DataImport__c testDI2 = new DataImport__c(Contact1_lastname__c = 'TestGuy');
+
+        // Using varied capitalizations for the test data to make sure the forcing to lowercase is working correctly.
+        Map<String,String> testFieldMap = new Map<String,String>{'donation_amount__c' =>'amount',
+                                                                'Donation_Date__c' => 'closedate',
+                                                                'donation_stage__c' => 'stagename',
+                                                                'account1_Name__c' => 'Name'};
+        String[] fieldsToIgnore1 = new String[]{'Donation_Amount__c'};
+        String[] fieldsToIgnore2 = new String[]{'Donation_Amount__c','Donation_Date__c'};
+
+        // Should be true since two fields are populated
+        System.assertEquals(true, BDI_DataImportService.anyFieldsPopulatedForObjectMapping(testDI1, testFieldMap));
+
+        // Should be false since none of the fields specified is populated
+        System.assertEquals(false, BDI_DataImportService.anyFieldsPopulatedForObjectMapping(testDI2, testFieldMap));
+
+        // Should still be true since one of the fields not being igorned is populated
+        System.assertEquals(true, 
+                    BDI_DataImportService.anyFieldsPopulatedForObjectMapping(testDI1, testFieldMap, fieldsToIgnore1));
+
+        // Should be false since populated field is not in the field map
+        System.assertEquals(false, 
+                    BDI_DataImportService.anyFieldsPopulatedForObjectMapping(testDI2, testFieldMap, fieldsToIgnore1));
+
+        // Should be false because both populated fields are now being ignored
+        System.assertEquals(false, 
+                    BDI_DataImportService.anyFieldsPopulatedForObjectMapping(testDI1, testFieldMap, fieldsToIgnore2));
+    }
+
     // Helpers
     ////////////
 

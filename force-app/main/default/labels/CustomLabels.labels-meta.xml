@@ -933,7 +933,7 @@
         <categories>Error, Delete</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>ConfirmDeleteAccount</shortDescription>
+        <shortDescription>ConfirmDeleteLeaveAccountEmpty</shortDescription>
         <value>{0} is the only Contact in the Account. Deleting this Contact would leave an empty Account.</value>
     </labels>
     <labels>
@@ -1362,6 +1362,38 @@
         <value>Add Dependent Task</value>
     </labels>
     <labels>
+        <fullName>donationHistoryGivingSummaryTitle</fullName>
+        <categories>Donors</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Component title</shortDescription>
+        <value>Giving Summary</value>
+    </labels>
+    <labels>
+        <fullName>donationHistoryLabelLifetime</fullName>
+        <categories>Donors</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>label for lifetime donations</shortDescription>
+        <value>Lifetime</value>
+    </labels>
+    <labels>
+        <fullName>donationHistoryLabelPreviousYear</fullName>
+        <categories>Donors</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>label for previous years donations</shortDescription>
+        <value>Previous Year</value>
+    </labels>
+    <labels>
+        <fullName>donationHistoryLabelThisYear</fullName>
+        <categories>Donors</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>label for this years donations</shortDescription>
+        <value>This Year</value>
+    </labels>
+    <labels>
         <fullName>EPAddTask</fullName>
         <categories>Engagement Plans</categories>
         <language>en_US</language>
@@ -1432,6 +1464,14 @@
         <protected>true</protected>
         <shortDescription>ErrorEmailMessage</shortDescription>
         <value>Salesforce encountered these NPSP errors. To learn more about common errors, see &quot;Troubleshoot the Nonprofit Success Pack&quot; on the Power of Us Hub. If you&apos;re unsure how to resolve the errors, post a message in the Nonprofit Success Pack group: https://powerofus.force.com/HUB_NPSP_Group</value>
+    </labels>
+    <labels>
+        <fullName>FieldSetRelatedFieldError</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when including Related Fields in a managed Field Set</shortDescription>
+        <value>Related field {0} not supported in field set {1}. You can only include fields directly on object {2}.</value>
     </labels>
     <labels>
         <fullName>HiddenForSecurity</fullName>
@@ -2709,6 +2749,118 @@
         <value>Upcoming Installments</value>
     </labels>
     <labels>
+        <fullName>RD2_StatusAutomationConfigurationSection</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Automation configuration section header</shortDescription>
+        <value>Number of Days for Lapsed or Closed</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationClosedDefinition</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Automation Closed definition</shortDescription>
+        <value>After the specified number of days, NPSP updates the Recurring Donation Status to the Closed Status Value if donations aren&apos;t being received as expected. This value must be higher than the Number of Days for Lapsed. NPSP does not create installment Opportunities for Closed Recurring Donations.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationDaysForClosed</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Automation Number of Days for Closed</shortDescription>
+        <value>Number of Days for Closed</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationDaysForLapsed</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Automation Number of Days for Lapsed</shortDescription>
+        <value>Number of Days for Lapsed</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationIntro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Automation introduction</shortDescription>
+        <value>These settings automate changing the Recurring Donation Status when donors miss installment payments.&lt;br/&gt;&lt;br/&gt;Using these settings, NPSP updates the Recurring Donation&apos;s Status when the current date exceeds the Last Donation Date plus the future expected installment date and the Number of Days for Lapsed or Number of Days for Closed.&lt;br/&gt;&lt;br/&gt;For example, given a monthly Recurring Donation started on January 1st, and Number of Days for Lapsed is set to 10 days, the Recurring Donation becomes Lapsed on February 10th if no installment payment is received.&lt;br/&gt;&lt;br/&gt;Elevate Recurring Donations are not included in this automation.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationInvalidClosedStatus</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Automation Closed Status is not mapped correctly</shortDescription>
+        <value>The Status Automation Closed Status should map to Closed State</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationInvalidLapsedStatus</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Automation Lapsed Status is not mapped correctly</shortDescription>
+        <value>The Status Automation Lapsed Status should map to Lapsed State</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationInvalidNumberOfDays</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Number of Days for Lapsed is smaller than Number of Days For Closed</shortDescription>
+        <value>Number of Days for Closed must be higher than the Number of Days for Lapsed.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationInvalidNumberOfDaysForClosed</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Number of Days for Closed is too small</shortDescription>
+        <value>Must be larger than Number of Days for Lapsed</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationInvalidNumberOfDaysForLapsed</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Number of Days for Lapsed is too large</shortDescription>
+        <value>Must be smaller than Number of Days for Closed</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationNegativeNumberOfDays</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Number of Days for Lapsed or Number of Days for Closed is negative.</shortDescription>
+        <value>Number of Days for Lapsed and Number of Days for Closed cannot be negative.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationLapsedDefinition</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Automation Lapsed definition</shortDescription>
+        <value>After the specified number of days, NPSP updates the Recurring Donation Status to the Lapsed Status Value if donations aren&apos;t being received as expected. NPSP continues to create installment Opportunities for Lapsed Recurring Donations as defined by the schedule.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationSetClosedStatus</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Automation Closed Status Label</shortDescription>
+        <value>Closed Status Value</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationSetLapsedStatus</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Automation Lapsed Status Label</shortDescription>
+        <value>Lapsed Status Value</value>
+    </labels>
+    <labels>
         <fullName>RD2_StatusMappingColumnState</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -2991,6 +3143,22 @@
         <protected>false</protected>
         <shortDescription>Relationship Viewer - View Contact Record</shortDescription>
         <value>View Contact Record</value>
+    </labels>
+    <labels>
+        <fullName>REL_ViewerGraphical</fullName>
+        <categories>Relationships, relationship-viewer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header / A11y Text for loading graphical view</shortDescription>
+        <value>Graphical View</value>
+    </labels>
+    <labels>
+        <fullName>REL_ViewerTabular</fullName>
+        <categories>Relationships, relationship-viewer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header / A11y Text for loading tabular view</shortDescription>
+        <value>Tabular View</value>
     </labels>
     <labels>
         <fullName>RP_CustomerJourneyLinkLabel</fullName>
@@ -5606,6 +5774,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Batch Number Settings</value>
     </labels>
     <labels>
+        <fullName>commonAccessErrorMessage</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for database-level security check</shortDescription>
+        <value>You don&apos;t have the required permissions to perform this action. Contact your system administrator for assistance.</value>
+    </labels>
+    <labels>
         <fullName>commonActivate</fullName>
         <categories>Auto Number</categories>
         <language>en_US</language>
@@ -5884,6 +6060,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Page-level error message about missing required fields</shortDescription>
         <value>These required fields must be completed: {0}</value>
+    </labels>
+    <labels>
+        <fullName>commonNoneSpecified</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>None specified</shortDescription>
+        <value>None specified</value>
     </labels>
     <labels>
         <fullName>commonNewGift</fullName>
@@ -6254,6 +6438,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Stage Complete</value>
     </labels>
     <labels>
+        <fullName>conMergeStageCurrent</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>conMergeStageCurrent</shortDescription>
+        <value>Current Stage</value>
+    </labels>
+    <labels>
+        <fullName>conMergeStageNotStarted</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>conMergeStageNotStarted</shortDescription>
+        <value>Stage Not Started</value>
+    </labels>
+    <labels>
         <fullName>conMergeWinnerAsstText</fullName>
         <categories>Contact Merge</categories>
         <language>en_US</language>
@@ -6476,6 +6676,56 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Add Soft Credit</value>
     </labels>
     <labels>
+        <fullName>geA11ySection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used as a part of a screen reader message when a form section is unnamed.</shortDescription>
+        <value>section</value>
+    </labels>
+    <labels>
+        <fullName>geA11yTemplateBuilderAddNamedSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Screen reader message when a form field/bundle is added to named section.</shortDescription>
+        <!-- {0} is a string. Label for a form field or field bundle e.g. Donation Donor, Account Name -->
+        <!-- {1} is a string. Label for a form section e.g. Donation Information, Donor Information -->
+        <value>{0} added to the {1} section.</value>
+    </labels>
+    <labels>
+        <fullName>geA11yTemplateBuilderAddUnnamedSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Screen reader message when a form field/bundle is added to unnamed section.</shortDescription>
+        <!-- {0} is a string. Label for a form field or field bundle e.g. Donation Donor, Account Name -->
+        <!-- {1} is a string. Custom label geA11ySection -->
+        <!-- {2} is a non-zero number. Index of the form section in an array e.g. 1, 5, 7 -->
+        <value>{0} added to {1} {2}.</value>
+    </labels>
+    <labels>
+        <fullName>geA11yTemplateBuilderRemoveNamedSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Screen reader message when a form field/bundle is removed from named section.</shortDescription>
+        <!-- {0} is a string. Label for a form field or field bundle e.g. Donation Donor, Account Name -->
+        <!-- {1} is a string. Label for a form section e.g. Donation Information, Donor Information -->
+        <value>{0} removed from the {1} section.</value>
+    </labels>
+    <labels>
+        <fullName>geA11yTemplateBuilderRemoveUnnamedSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Screen reader message when a form field/bundle is removed from unnamed section.</shortDescription>
+        <!-- {0} is a string. Label for a form field or field bundle e.g. Donation Donor, Account Name -->
+        <!-- {1} is a string. Custom label geA11ySection -->
+        <!-- {2} is a non-zero number. Index of the form section in an array e.g. 1, 5, 7 -->
+        <value>{0} removed from {1} {2}.</value>
+    </labels>
+    <labels>
         <fullName>geAssistiveActiveSection</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -6655,6 +6905,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Label for displaying the total value of the gifts in the batch</shortDescription>
         <value>Total Batch Amount</value>
+    </labels>
+    <labels>
+        <fullName>geBatchProcessingIncomplete</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Batch processing incomplete message</shortDescription>
+        <value>Import process stopped before it could complete. Contact your system administrator for assistance.</value>
     </labels>
     <labels>
         <fullName>geBatchProcessingSuccess</fullName>
@@ -8545,6 +8803,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>This feature requires both Advanced Mapping and Gift Entry. Please enable them in NPSP Settings.</value>
     </labels>
     <labels>
+        <fullName>geServiceLevelErrorAdvancedMapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Service-level error message when advanced mapping is not enabled.</shortDescription>
+        <value>You must enable Advanced Mapping before you can enable Gift Entry.</value>
+    </labels>
+    <labels>
         <fullName>geErrorPageLevelAdvancedMappingHeader</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -9487,6 +9753,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Explore Trailhead</value>
     </labels>
     <labels>
+        <fullName>gseuTrailheadLogoText</fullName>
+        <categories>End User Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text displayed in the trailhead component for logo</shortDescription>
+        <value>Trailhead Logo</value>
+    </labels>
+    <labels>
         <fullName>gseuTrailheadText</fullName>
         <categories>End User Get Started Page</categories>
         <language>en_US</language>
@@ -9509,6 +9783,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Learn more label for the application status component</shortDescription>
         <value>Learn More</value>
+    </labels>
+    <labels>
+        <fullName>opensInNewLink</fullName>
+        <categories>Accessibility</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Aria Label for the links which open in a new window</shortDescription>
+        <value>(opens in a new window)</value>
     </labels>
     <labels>
         <fullName>gsNoApplicationSubmitted</fullName>
@@ -10839,6 +11121,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Notify user component has been deprecated.</shortDescription>
         <value>This component has been deprecated.</value>
+    </labels>
+    <labels>
+        <fullName>lblEmpty</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to display Empty.</shortDescription>
+        <value>empty</value>
     </labels>
     <labels>
         <fullName>lblExtendedStatus</fullName>
@@ -14725,6 +15015,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Status to State Mapping</value>
     </labels>
     <labels>
+        <fullName>stgNavRD2StatusAutomation</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Menu name for the Status Automation settings</shortDescription>
+        <value>Status Automation</value>
+    </labels>
+    <labels>
         <fullName>stgNavRDBatch</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -15171,5 +15469,21 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>true</protected>
         <shortDescription>Community Group link label in Get Started Resources section for End Users</shortDescription>
         <value>Trailhead Community</value>
+    </labels>
+    <labels>
+        <fullName>donationHistoryDatatableAriaLabel</fullName>
+        <categories>Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to define aria-label on donation history datatable</shortDescription>
+        <value>Donation History</value>
+    </labels>
+    <labels>
+        <fullName>donationHistoryDonorLabel</fullName>
+        <categories>Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to define donor column for donation history datatable</shortDescription>
+        <value>Donor</value>
     </labels>
 </CustomLabels>

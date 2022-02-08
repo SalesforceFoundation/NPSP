@@ -154,5 +154,5 @@
         <members>Batch_Gift_Entry</members>
         <name>PermissionSet</name>
     </types>
-    <version>48.0</version>
+    <version>53.0</version>
 </Package>
