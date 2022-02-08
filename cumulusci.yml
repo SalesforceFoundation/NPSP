@@ -1281,10 +1281,7 @@ flows:
                     field: "%%%NAMESPACE%%%Customizable_Rollups_Enabled__c"
                     value: true
             3:
-                task: test_performance
-                options:
-                    include: bdi
-                    vars: persistent_org:False
+                task: test_insert_performance
 
     test_performance_LDV:
         description: 'Runs BDI performance tests against a pre-existing org'
