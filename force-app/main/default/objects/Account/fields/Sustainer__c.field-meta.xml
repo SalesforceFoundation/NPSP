@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Sustainer__c</fullName>
-    <description>Determine if the Account is a sustainer</description>
+    <description>Indicates if this Account is an active, lapsed, or former recurring donor. The value is based on the Status of the related Recurring Donations.</description>
     <externalId>false</externalId>
-    <inlineHelpText>Determine if the Account is a sustainer</inlineHelpText>
+    <inlineHelpText>Indicates if this Account is an active, lapsed, or former recurring donor. The value is based on the Status of the related Recurring Donations.</inlineHelpText>
     <label>Sustainer</label>
     <required>false</required>
     <trackTrending>false</trackTrending>
