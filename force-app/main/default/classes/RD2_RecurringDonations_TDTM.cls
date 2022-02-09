@@ -108,6 +108,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         List<SObject> rds, List<SObject> oldRds,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult
     ) {
+        TDTM_TriggerHandler.enableOldListCachingEvaluation(triggerAction, rds?.size());
 
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             return null;

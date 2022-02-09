@@ -40,7 +40,8 @@ public class TDTM_TriggerHandler {
     
     private static Boolean defaultRecordsInserted = false;
     
-    private static Boolean preventCachingFalseTransaction = false;
+    private static Boolean useDefaultCachingStrategry = true;
+    private static Integer cacheProcessRecordsCount;
 
     public static Boolean suppressDebugAssertAfterErrorLogging = false;
 
@@ -288,16 +289,14 @@ public class TDTM_TriggerHandler {
     * @return void
     */
     public static void processDMLWithErrors(TDTM_Runnable.DmlWrapper dmlWrapper) {
-        processDMLAllOrNothing(dmlWrapper, true);
         processDMLError(dmlWrapper);
+        processDMLAllOrNothing(dmlWrapper, true);
     }
 
     private static void processDMLError(TDTM_Runnable.DmlWrapper dmlWrapper) {
         if (dmlWrapper.objectsWithError?.isEmpty()) {
             return;
         }
-
-        preventCachingFalseTransaction = true;
 
         for (TDTM_Runnable.ErrorRecord errorRecord : dmlWrapper.objectsWithError) {
             errorRecord.getRecord()?.addError(errorRecord.getFirstError());
@@ -400,14 +399,23 @@ public class TDTM_TriggerHandler {
 
         // now cache objects for future Update calls
         if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-            if (!preventCachingFalseTransaction) {
+            if (useDefaultCachingStrategry
+                || (useDefaultCachingStrategry == false && cacheProcessRecordsCount == newList.size())
+            ) {
                 mapDescObjToMapOldForUpdates.put(describeObj, new Map<Id, SObject>(newList));
+            
             }
 
-            preventCachingFalseTransaction = false;
             //UTIL_Debug.debug(LoggingLevel.WARN, '**** cached newList: ' + newList);
         }
 
         return oldList;
+    }
+
+    public static void enableOldListCachingEvaluation(TDTM_Runnable.Action triggerAction, Integer recordCount) {
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            useDefaultCachingStrategry = false;
+            cacheProcessRecordsCount = recordCount;
+        }
     }
 }
