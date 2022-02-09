@@ -362,7 +362,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             }
         }
 
-        if (rdIds.isEmpty()) {
+        if (rdIds.isEmpty() || TDTM_TriggerHandler.hasErrorInCurrentTransaction(rds?.size())) {
             return;
         }
 

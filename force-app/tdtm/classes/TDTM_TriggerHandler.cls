@@ -418,4 +418,8 @@ public class TDTM_TriggerHandler {
             cacheProcessRecordsCount = recordCount;
         }
     }
+
+    public static Boolean hasErrorInCurrentTransaction(Integer currentProcessRecord) {
+        return useDefaultCachingStrategry == false && cacheProcessRecordsCount != currentProcessRecord;
+    }
 }
