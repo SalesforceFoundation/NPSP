@@ -207,6 +207,44 @@ public with sharing class RD2_ChangeLogService_TEST {
     }
 
     /**
+     * @description Verifies that creating and updating multiple Recurring Donations
+     * with Change Log Enabled does create Change Log records
+     */
+    @IsTest
+    private static void shouldCreateChangeLogOnGoodRDWhen1RDUpdateFail() {
+        configureRecurringDonationChangeLogEnabled();
+
+        npe03__Recurring_Donation__c goodRd = getRecurringDonationBuilder(getContact())
+            .withCalculateNextDonationDate()
+            .build();
+
+        npe03__Recurring_Donation__c badRd = goodRd.clone();
+
+        List<npe03__Recurring_Donation__c> rdList = new List<npe03__Recurring_Donation__c>{
+            goodRd, badRd
+        };
+        insert rdList;
+
+        rdList[0].npe03__Amount__c = RD_NEW_AMOUNT;
+        rdList[1].npe03__Amount__c = 0;
+
+        Test.startTest();
+        Database.update(rdList, false);
+        Test.stopTest();
+
+        // Check first change
+        List<RecurringDonationChangeLog__c> changeLogs = getRecurringDonationChangeLog(goodRd.Id);
+        RecurringDonationChangeLog__c changeLog = changeLogs[0];
+        System.assertEquals(1, changeLogs.size(), 'There should be 1 Change Log after the update');
+        System.assertEquals(RD_NEW_AMOUNT, changeLog.NewAmount__c, 'New Amount should be ' + RD_NEW_AMOUNT);
+        System.assertEquals(RD_AMOUNT, changeLog.PreviousAmount__c, 'Previous Amount should be ' + RD_AMOUNT);
+        System.assertEquals(RD_NEW_AMOUNT * 12, changeLog.NewAnnualValue__c, 'New Annual Value should be ' + RD_NEW_AMOUNT * 12);
+        System.assertEquals(RD_AMOUNT * 12, changeLog.PreviousAnnualValue__c, 'Previous Annual Value should be ' + RD_AMOUNT * 12);
+        System.assertEquals(RD2_Constants.CHANGE_TYPE_UPGRADE, changeLog.ChangeType__c, 
+            'The Change Type should be ' + RD2_Constants.CHANGE_TYPE_UPGRADE);
+    }
+
+    /**
      * @description Verifies that creating and updating a Recurring Donation Period
      * with Change Log Enabled does create Change Log records with Change Types
      */
