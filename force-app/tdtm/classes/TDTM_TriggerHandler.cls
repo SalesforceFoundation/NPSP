@@ -41,7 +41,7 @@ public class TDTM_TriggerHandler {
     private static Boolean defaultRecordsInserted = false;
     
     private static Boolean useDefaultCachingStrategry = true;
-    private static Integer cacheProcessRecordsCount;
+    private static Integer processedRecordsCount;
 
     public static Boolean suppressDebugAssertAfterErrorLogging = false;
 
@@ -400,7 +400,7 @@ public class TDTM_TriggerHandler {
         // now cache objects for future Update calls
         if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
             if (useDefaultCachingStrategry
-                || (useDefaultCachingStrategry == false && cacheProcessRecordsCount == newList.size())
+                || (useDefaultCachingStrategry == false && processedRecordsCount == newList.size())
             ) {
                 mapDescObjToMapOldForUpdates.put(describeObj, new Map<Id, SObject>(newList));
             
@@ -415,11 +415,11 @@ public class TDTM_TriggerHandler {
     public static void enableOldListCachingEvaluation(TDTM_Runnable.Action triggerAction, Integer recordCount) {
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             useDefaultCachingStrategry = false;
-            cacheProcessRecordsCount = recordCount;
+            processedRecordsCount = recordCount;
         }
     }
 
     public static Boolean hasErrorInCurrentTransaction(Integer currentProcessRecord) {
-        return useDefaultCachingStrategry == false && cacheProcessRecordsCount != currentProcessRecord;
+        return useDefaultCachingStrategry == false && processedRecordsCount != currentProcessRecord;
     }
 }
