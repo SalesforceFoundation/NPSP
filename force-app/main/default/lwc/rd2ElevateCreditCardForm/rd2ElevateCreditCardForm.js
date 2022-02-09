@@ -1,5 +1,6 @@
-import { api, track, LightningElement } from 'lwc';
+import { api, track, LightningElement, wire } from 'lwc';
 import { constructErrorMessage } from 'c/utilCommon';
+import { getObjectInfo } from "lightning/uiObjectInfoApi";
 
 import tokenHandler from 'c/psElevateTokenHandler';
 import getOrgDomainInfo from '@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo';
@@ -15,6 +16,12 @@ import elevateEnableButtonLabel from '@salesforce/label/c.RD2_ElevateEnableButto
 import updatePaymentButtonLabel from '@salesforce/label/c.commonEditPaymentInformation';
 import cancelButtonLabel from '@salesforce/label/c.commonCancel';
 import commonExpirationDate from '@salesforce/label/c.commonMMYY';
+import billingCityLabel from '@salesforce/label/c.lblCity';
+import billingPostalCodeLabel from '@salesforce/label/c.lblPostalCode';
+import billingStateLabel from '@salesforce/label/c.lblState';
+import billingStreetLabel from '@salesforce/label/c.lblStreet';
+import ACCOUNT_OBJECT from '@salesforce/schema/Account';
+
 import { isNull } from 'c/util';
 import {
     ACCOUNT_HOLDER_BANK_TYPES,
@@ -53,8 +60,21 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         cancelButtonLabel,
         nextPaymentDonationDateMessage,
         nextACHPaymentDonationDateMessage,
-        commonExpirationDate
+        commonExpirationDate,
+        billingCityLabel,
+        billingPostalCodeLabel,
+        billingStateLabel,
     };
+    billingAddressLabel;
+    billingStreetLabel1 = billingStreetLabel + ' 1';
+    billingStreetLabel2 = billingStreetLabel + ' 2';
+
+    billingCity;
+    billingPostalCode;
+    billingState;
+    billingStreet1;
+    billingStreet2;
+    cardholderName;
     
     rd2Service = new Rd2Service();
 
@@ -81,6 +101,13 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     @api payerFirstName;
     @api payerLastName;
     @api achAccountType;
+
+    @wire(getObjectInfo, { objectApiName: ACCOUNT_OBJECT })
+    accountInfo({ data, error }) {
+        if (data) {
+            this.billingAddressLabel = data.fields.BillingAddress.label;
+        }
+    }
 
     @api
     get paymentMethod() {
@@ -259,13 +286,25 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     requestCardToken(iframe) {
-        const params = { nameOnCard: this.getCardholderName() };
+        const params = JSON.stringify(this.getCardParams());
         return tokenHandler.requestToken({
             iframe: iframe,
             tokenizeParameters: params,
             eventAction: TOKENIZE_CREDIT_CARD_EVENT_ACTION,
             handleError: this.handleError,
         });
+    }
+
+    getCardParams() {
+        return {
+            billingAddrCity: this.billingCity,
+            billingAddrCountry: "US",
+            billingAddrLine1: this.billingStreet1,
+            billingAddrLine2: this.billingStreet2,
+            billingAddrPostalCode: this.billingPostalCode,
+            billingAddrState: this.billingState,
+            nameOnCard: this.cardholderName
+        };
     }
 
     requestAchToken(iframe) {
@@ -407,22 +446,13 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     /**
-     * @description Concatenate the cardholder first and last names if there are any
-     * @returns A concatenated Cardholder Name string from the First and Last Name fields
+     * Handles changes made to fields in the form
+     * @param event Event containing field change information
      */
-    getCardholderName() {
-        const nameField = this.template.querySelector('[data-id="cardholderName"]');
-        return nameField.value;
-    }
-
-    /**
-     * @description Concatenate the cardholder first and last names if there are any
-     * @returns A concatenated Cardholder Name string from the First and Last Name fields
-     */
-    @api
-    setCardholderName(donorName) {
-        const nameField = this.template.querySelector('[data-id="cardholderName"]');
-        nameField.value = donorName;
+    getFieldChange(event) {
+        let fieldName = event.target.name;
+        let newVal = event.detail.value;
+        this[fieldName] = newVal;
     }
 
     /**
