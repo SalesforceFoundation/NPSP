@@ -77,7 +77,7 @@
                     break;
 
                 case 'createToken':
-                    handleTokenCreation(event.data.params.nameOnCard || DEFAULT_NAME_ON_CARD);
+                    handleTokenCreation(event.data.params);
                     break;
 
                 case 'createAchToken':
@@ -127,15 +127,16 @@
         /*******************************************************************************
         * @description Creates a token and posts the response to a credit card widget LWC
         */
-        function handleTokenCreation(nameOnCard) {
+        function handleTokenCreation(params) {
             const auth = {
                 jwt: '{!jwtForToken}',
                 userName: '{!$User.Username}'
             };
-            const tokenConfig = {
+            const authConfig = {
                 auth: auth,
-                nameOnCard: nameOnCard
             };
+
+            const tokenConfig = {...authConfig, ...JSON.parse(params)}
 
             sfdo.createToken(tokenConfig)
                 .then((resp) => {
