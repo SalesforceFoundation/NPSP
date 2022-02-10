@@ -299,7 +299,7 @@ public class TDTM_TriggerHandler {
             return;
         }
 
-        for (TDTM_Runnable.ErrorRecord errorRecord : dmlWrapper.objectsWithError) {
+        for (ErrorRecord errorRecord : dmlWrapper.objectsWithError) {
             errorRecord.getRecord()?.addError(errorRecord.getFirstError());
         }
     }
