@@ -197,11 +197,32 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled(cacheable=true)
-    public static Boolean isRecurringGiftsEnabled() {
+    public static Boolean canAccessRecurringDonationFields() {
+/*        List<SObjectField> fields = new List<Schema.SObjectField>{
+            DataImport__c.SObjectType.fields.Recurring_Donation_Recurring_Type__c,
+            DataImport__c.SObjectType.fields.Recurring_Donation_Date_Established__c,
+            DataImport__c.SObjectType.fields.Recurring_Donation_Day_of_Month__c,
+            DataImport__c.SObjectType.fields.Recurring_Donation_Planned_Installments__c,
+            DataImport__c.SObjectType.fields.Recurring_Donation_Installment_Period__c,
+            DataImport__c.SObjectType.fields.Recurring_Donation_Installment_Frequency__c,
+            DataImport__c.SObjectType.fields.Recurring_Donation_Effective_Date__c
+        }*/
+        List<String> giftScheduleFieldApiNames = new List<String> {
+            String.valueOf(DataImport__c.Recurring_Donation_Recurring_Type__c),
+            String.valueOf(DataImport__c.Recurring_Donation_Date_Established__c),
+            String.valueOf(DataImport__c.Recurring_Donation_Day_of_Month__c),
+            String.valueOf(DataImport__c.Recurring_Donation_Planned_Installments__c),
+            String.valueOf(DataImport__c.Recurring_Donation_Installment_Period__c),
+            String.valueOf(DataImport__c.Recurring_Donation_Installment_Frequency__c),
+            String.valueOf(DataImport__c.Recurring_Donation_Effective_Date__c)
+        };
+
         try {
-            return geSettingsService.isRecurringGiftsEnabled();
-        } catch (AuraHandledException ex) {
-            throw new AuraHandledException(ex.getMessage());
+            fflib_SecurityUtils.checkRead(DataImportBatch__c.SObjectType, giftScheduleFieldApiNames);
+            fflib_SecurityUtils.checkUpdate(DataImportBatch__c.SObjectType, giftScheduleFieldApiNames);
+            return true;
+        } catch (fflib_SecurityUtils.SecurityException e) {
+            throw new AuraHandledException(e.getMessage());
         }
     }
 

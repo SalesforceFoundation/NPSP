@@ -38,6 +38,7 @@ import DATA_IMPORT_BATCH_DEFAULTS_INFO from '@salesforce/schema/DataImportBatch_
 import DATA_IMPORT_MATCHING_BEHAVIOR_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Behavior__c';
 import DATA_IMPORT_BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
 import DATA_IMPORT_BATCH_DONATION_MATCHING_RULE from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Rule__c';
+import DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS from '@salesforce/schema/DataImportBatch__c.Allow_Recurring_Donations__c';
 
 const NAME = 'name';
 const ID = 'id';
@@ -82,6 +83,24 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         first: 0,
         second: 1,
         third: 2
+    }
+
+    get allowRecurringDonations() {
+        return this
+            ?.dataImportBatchRecord
+            ?.fields[DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS.fieldApiName]
+            ?.value;
+    }
+
+    get allowRecurringDonationsField() {
+        return this.dataImportBatchInfo
+            .fields[DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS.fieldApiName];
+    }
+
+    get canAllowRecurringDonations() {
+        const allowRecurringDonations = this.dataImportBatchInfo
+            .fields[DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS.fieldApiName]
+        return allowRecurringDonations.createable && allowRecurringDonations.updateable;
     }
 
     get showBackButton() {

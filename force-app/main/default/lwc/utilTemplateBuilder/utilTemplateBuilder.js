@@ -42,6 +42,7 @@ import DI_BATCH_REQUIRED_TOTAL_TO_MATCH_INFO from '@salesforce/schema/DataImport
 import DI_BATCH_DEFAULTS_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Defaults__c';
 import DI_BATCH_GIFT_ENTRY_VERSION_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Gift_Entry_Version__c';
 import DI_BATCH_FORM_TEMPLATE_INFO from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
+import DI_BATCH_ALLOW_RECURRING_DONATIONS from '@salesforce/schema/DataImportBatch__c.Allow_Recurring_Donations__c';
 import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c';
 import GIFT_ENTRY_FEATURE_GATE_INFO from '@salesforce/schema/Gift_Entry_Settings__c.Enable_Gift_Entry__c';
 
@@ -152,6 +153,7 @@ const EXCLUDED_BATCH_HEADER_FIELDS = [
     DI_BATCH_LAST_REFERENCED_DATE.fieldApiName,
     DI_BATCH_LAST_VIEWED_DATE.fieldApiName,
     DI_BATCH_SYSTEM_MODSTAMP.fieldApiName,
+    DI_BATCH_ALLOW_RECURRING_DONATIONS,
     BATCH_CURRENCY_ISO_CODE
 ];
 Object.freeze(EXCLUDED_BATCH_HEADER_FIELDS);

@@ -54,6 +54,17 @@
                                           required={batchField.required}>
                             </c-util-input>
                         </template>
+                        <template if:true={canAllowRecurringDonations}>
+                            <c-util-input data-id='allowRecurringDonationsField'
+                                          type={allowRecurringDonationsField.dataType}
+                                          field-api-name={allowRecurringDonationsField.apiName}
+                                          object-api-name={dataImportBatchName}
+                                          label={allowRecurringDonationsField.label}
+                                          value={allowRecurringDonations}
+                            >
+                            </c-util-input>
+                        </template>
+
                     </div>
                     <div class={cssClassStep2}>
                         <lightning-layout vertical-align="stretch"

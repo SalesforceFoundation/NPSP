@@ -1,21 +1,21 @@
 import isElevateCustomer from "@salesforce/apex/GE_GiftEntryController.isElevateCustomer";
-import isRecurringGiftsEnabled from "@salesforce/apex/GE_GiftEntryController.isRecurringGiftsEnabled";
+import canAccessRecurringDonationFields from "@salesforce/apex/GE_GiftEntryController.canAccessRecurringDonationFields";
 
 class GeSettings {
     _isElevateCustomer = undefined;
-    _isRecurringGiftsEnabled = undefined;
+    _canAccessRecurringDonationFields = false;
 
     async init() {
         this._isElevateCustomer = await isElevateCustomer();
-        this._isRecurringGiftsEnabled = await isRecurringGiftsEnabled();
+        this._canAccessRecurringDonationFields = await canAccessRecurringDonationFields();
     }
 
     isElevateCustomer() {
         return this._isElevateCustomer;
     };
 
-    isRecurringGiftsEnabled() {
-        return this._isRecurringGiftsEnabled;
+    canAccessRecurringDonationFields() {
+        return this._canAccessRecurringDonationFields;
     }
 }
 
