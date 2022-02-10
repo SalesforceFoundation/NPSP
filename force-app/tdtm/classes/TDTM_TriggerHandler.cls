@@ -412,7 +412,6 @@ public class TDTM_TriggerHandler {
 
     public static void enableOldListCachingEvaluation() {
         useDefaultCachingStrategy = false;
-
     }
 
     public static Boolean noErrorInCurrentTransaction(Schema.DescribeSObjectResult describeObj, List<SObject> newList) {
@@ -423,7 +422,11 @@ public class TDTM_TriggerHandler {
         return useDefaultCachingStrategy || noErrorInCurrentTransaction(describeObj, newList);
     }
 
-    private static void storeCurrentProcessedRecordCount(TDTM_Runnable.Action triggerAction, List<SObject> newList, Schema.DescribeSObjectResult describeObj) {
+    private static void storeCurrentProcessedRecordCount(
+        TDTM_Runnable.Action triggerAction,
+        List<SObject> newList,
+        Schema.DescribeSObjectResult describeObj
+    ) {
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             processedRecordCountBySobjectType.put(describeObj, newList?.size());
         }
