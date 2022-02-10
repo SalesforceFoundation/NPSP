@@ -400,7 +400,7 @@ public class TDTM_TriggerHandler {
 
         // now cache objects for future Update calls
         if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-            if (shouldCacheNewList(describeObj, newList)) {
+            if (shouldCacheOldList(describeObj, newList)) {
                 mapDescObjToMapOldForUpdates.put(describeObj, new Map<Id, SObject>(newList));
             }
 
@@ -419,7 +419,7 @@ public class TDTM_TriggerHandler {
         return processedRecordCountBySobjectType.get(describeObj) == newList?.size();
     }
 
-    private static Boolean shouldCacheNewList(Schema.DescribeSObjectResult describeObj, List<SObject> newList) {
+    private static Boolean shouldCacheOldList(Schema.DescribeSObjectResult describeObj, List<SObject> newList) {
         return useDefaultCachingStrategy || noErrorInCurrentTransaction(describeObj, newList);
     }
 
