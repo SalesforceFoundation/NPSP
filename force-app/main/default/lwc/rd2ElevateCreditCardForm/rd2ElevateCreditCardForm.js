@@ -4,6 +4,7 @@ import { getObjectInfo } from "lightning/uiObjectInfoApi";
 
 import tokenHandler from 'c/psElevateTokenHandler';
 import getOrgDomainInfo from '@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo';
+import getDonorAddress from '@salesforce/apex/RD2_EntryFormController.getDonorAddress';
 
 import elevateWidgetLabel from '@salesforce/label/c.commonPaymentServices';
 import spinnerAltText from '@salesforce/label/c.geAssistiveSpinner';
@@ -20,6 +21,7 @@ import billingCityLabel from '@salesforce/label/c.lblCity';
 import billingPostalCodeLabel from '@salesforce/label/c.lblPostalCode';
 import billingStateLabel from '@salesforce/label/c.lblState';
 import billingStreetLabel from '@salesforce/label/c.lblStreet';
+import billingCountryLabel from '@salesforce/label/c.lblCountry';
 import ACCOUNT_ADDRESS_FIELD from '@salesforce/schema/Account.BillingAddress';
 
 import { isNull } from 'c/util';
@@ -64,6 +66,8 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         billingCityLabel,
         billingPostalCodeLabel,
         billingStateLabel,
+        billingStreetLabel,
+        billingCountryLabel
     };
     billingAddressLabel;
     billingStreetLabel1 = billingStreetLabel + ' 1';
@@ -74,7 +78,10 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     billingState;
     billingStreet1;
     billingStreet2;
+    billingCountry;
     cardholderName;
+
+    searchingForAddress = false;
     
     rd2Service = new Rd2Service();
 
@@ -298,7 +305,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     getCardParams() {
         return {
             billingAddrCity: this.billingCity,
-            billingAddrCountry: "US",
+            billingAddrCountry: this.billingAddrCountry,
             billingAddrLine1: this.billingStreet1,
             billingAddrLine2: this.billingStreet2,
             billingAddrPostalCode: this.billingPostalCode,
@@ -453,6 +460,34 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         const fieldName = event.target.name;
         const newVal = event.detail.value;
         this[fieldName] = newVal;
+    }
+
+    handleDefaultAddressButton(event) {
+        const donorId = this.rd2State.donorType === CONTACT_DONOR_TYPE
+            ? this.rd2State.contactId
+            : this.rd2State.accountId;
+        
+        if(!donorId) {
+            return;
+        }
+
+        this.searchingForAddress = true;
+        getDonorAddress({donorId: donorId})
+            .then((result) => {
+                if(result){
+                    this.billingCity= result.MailingCity__c;
+                    this.billingCountry = result.MailingCountry__c;
+                    this.billingPostalCode = result.MailingPostalCode__c;
+                    this.billingState = result.MailingState__c;
+                    this.billingStreet1 = result.MailingStreet__c;
+                    this.billingStreet2 = result.MailingStreet2__c;
+                }
+                this.searchingForAddress = false;
+            })
+            .catch(error => {
+                this.handleError(error);
+                this.searchingForAddress = false;
+            });
     }
 
     /**

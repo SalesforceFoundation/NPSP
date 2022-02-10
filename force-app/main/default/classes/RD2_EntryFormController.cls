@@ -164,6 +164,36 @@ public with sharing class RD2_EntryFormController {
         };
     }
 
+    /**
+    * @description Retrieve the donor address given an Account or Contact Id
+    * @param donorId Id of donor, Account or Contact
+    * @return Map<String, String> of address values
+    */
+    @AuraEnabled
+    public static Address__c getDonorAddress(Id donorId) {
+        if(donorId == null){
+            return null;
+        }
+        SObjectType donorObjectType = donorId.getSobjectType();
+        NPSP_Address donorAddress = new NPSP_Address(new Address__c());
+
+        if(donorObjectType == Account.SObjectType) {
+            Account donorAccount;
+            Map<Id, Account> accounts = Addresses.getAccountsByIds(new Set<Id>{donorId});
+            if(accounts != null){
+                donorAddress.copyFromSObject(accounts.get(donorId), 'Billing', null);
+            }
+        } else if(donorObjectType == Contact.SObjectType) {
+            List<Contact> contacts = ContactSelector.getContactAddressFieldsForContactsIn(new Set<Id>{donorId});
+            if(contacts != null){
+                donorAddress.copyFromSObject(contacts[0], 'Mailing', null);
+            }
+        }
+
+        Address__c address = donorAddress.getRecord();
+        return address;
+    }
+
     private static String getDonorType(npe03__Recurring_Donation__c rd) {
         String donorType = isContactDonor(rd) ? 'Contact' : 'Account';
         return donorType;
