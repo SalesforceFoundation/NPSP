@@ -48,7 +48,6 @@ import commonExpirationDate from '@salesforce/label/c.commonMMYY';
 
 import getAppConfigurationData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getAppConfigurationData';
 import getError from '@salesforce/apex/RD2_ElevateInformation_CTRL.getLatestErrorMessage';
-import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 
 const FIELDS = [
     FIELD_NAME,

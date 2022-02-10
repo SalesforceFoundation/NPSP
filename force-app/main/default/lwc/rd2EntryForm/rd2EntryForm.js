@@ -1,7 +1,7 @@
 import { LightningElement, api, track, wire } from "lwc";
 import CURRENCY from "@salesforce/i18n/currency";
 import { registerListener } from "c/pubsubNoPageRef";
-import { Rd2Service, PERIOD, RECURRING_TYPE_FIXED, RECURRING_TYPE_OPEN, ACTIONS } from "c/rd2Service";
+import { Rd2Service, PERIOD, RECURRING_TYPE_OPEN, ACTIONS } from "c/rd2Service";
 import {
     isNull,
     showToast,
@@ -9,7 +9,7 @@ import {
     format,
     extractFieldInfo,
     buildFieldDescribes,
-    isEmpty
+    isEmpty,
 } from "c/utilCommon";
 import { HTTP_CODES, PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD } from "c/geConstants";
 
@@ -22,23 +22,15 @@ import FIELD_NAME from "@salesforce/schema/npe03__Recurring_Donation__c.Name";
 import FIELD_CAMPAIGN from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Recurring_Donation_Campaign__c";
 import FIELD_AMOUNT from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Amount__c";
 import FIELD_PAYMENT_METHOD from "@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c";
-import FIELD_RECURRING_TYPE from "@salesforce/schema/npe03__Recurring_Donation__c.RecurringType__c";
 import FIELD_STATUS from "@salesforce/schema/npe03__Recurring_Donation__c.Status__c";
 import FIELD_STATUS_REASON from "@salesforce/schema/npe03__Recurring_Donation__c.ClosedReason__c";
 import FIELD_COMMITMENT_ID from "@salesforce/schema/npe03__Recurring_Donation__c.CommitmentId__c";
 import FIELD_ACH_LAST4 from "@salesforce/schema/npe03__Recurring_Donation__c.ACH_Last_4__c";
 import FIELD_CARD_LAST4 from "@salesforce/schema/npe03__Recurring_Donation__c.CardLast4__c";
-import FIELD_CARD_EXPIRY_MONTH from "@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationMonth__c";
-import FIELD_CARD_EXPIRY_YEAR from "@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationYear__c";
 import FIELD_INSTALLMENT_FREQUENCY from "@salesforce/schema/npe03__Recurring_Donation__c.InstallmentFrequency__c";
 import FIELD_INSTALLMENT_PERIOD from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c";
 import FIELD_NEXT_DONATION_DATE from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c";
-import FIELD_CONTACT_ID from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__c";
-import FIELD_ORGANIZATION_ID from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__c";
 import FIELD_CHANGE_TYPE from "@salesforce/schema/npe03__Recurring_Donation__c.ChangeType__c";
-import FIELD_PAID_AMOUNT from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Paid_Amount__c";
-import FIELD_PAID_INSTALLMENTS from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Total_Paid_Installments__c";
-import FIELD_INSTALLMENTS from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installments__c";
 
 import currencyFieldLabel from "@salesforce/label/c.lblCurrency";
 import cancelButtonLabel from "@salesforce/label/c.stgBtnCancel";
@@ -76,9 +68,6 @@ import CONTACT_LAST_NAME from "@salesforce/schema/Contact.LastName";
 import ACCOUNT_NAME from "@salesforce/schema/Account.Name";
 import ACCOUNT_PRIMARY_CONTACT_LAST_NAME from "@salesforce/schema/Account.npe01__One2OneContact__r.LastName";
 
-const CHANGE_TYPE_UPGRADE = "Upgrade";
-const CHANGE_TYPE_DOWNGRADE = "Downgrade";
-
 const ELEVATE_SUPPORTED_COUNTRIES = ["US", "USA", "United States", "United States of America"];
 const ELEVATE_SUPPORTED_CURRENCIES = ["USD"];
 
@@ -89,7 +78,6 @@ const ELEVATE_SUPPORTED_CURRENCIES = ["USD"];
 const ELEVATE_WIDGET_EVENT_NAME = "rd2ElevateCreditCardForm";
 
 export default class rd2EntryForm extends LightningElement {
-
     listenerEvent = "rd2EntryFormEvent";
 
     customLabels = Object.freeze({
@@ -112,57 +100,46 @@ export default class rd2EntryForm extends LightningElement {
         savingCommitmentMessage,
         commitmentFailedMessage,
         contactAdminMessage,
-        unknownError
+        unknownError,
     });
 
     @api parentId;
     @api recordId;
 
-    @track isEdit = false;
-    @track isCommitmentEdit = false;
+    _contactId;
+    _accountId;
+
+    isEdit = false;
+    isCommitmentEdit = false;
     @track record;
     recordName;
-    @track isMultiCurrencyEnabled = false;
+    isMultiCurrencyEnabled = false;
     @track fields = {};
     @track rdSettings = {};
     @track customFields = {};
     fieldInfos;
 
-    @track header = newHeaderLabel;
+    header = newHeaderLabel;
 
-    @track isAutoNamingEnabled;
-    @track isLoading = true;
-    @track loadingText = this.customLabels.loadingMessage;
-    @track hasCustomFields = false;
+    isAutoNamingEnabled;
+    isLoading = true;
+    loadingText = this.customLabels.loadingMessage;
+    hasCustomFields = false;
     isRecordReady = false;
-    @track isSettingReady = false;
-    @track isSaveButtonDisabled = true;
-    @track changeType;
-    @track showChangeTypeField = false;
-    isChangeLogEnabled = false;
-    periodToYearlyFrequencyMap;
-    donationValue;
-    recurringType;
+    isSettingReady = false;
+    isSaveButtonDisabled = true;
 
-    @track isElevateWidgetEnabled = false;
-    @track isElevateEditWidgetEnabled = false;
+    isElevateWidgetEnabled = false;
+    isElevateEditWidgetEnabled = false;
     hasUserDisabledElevateWidget = false;
     isElevateCustomer = false;
     commitmentId = null;
     paymentMethodToken;
     _paymentMethod;
 
-    contactId;
-    organizationAccountId;
     accountHolderType;
-    recurringPeriod;
-    periodType;
     recurringDonationStatus;
     closedStatusValues;
-
-    contact = {
-        MailingCountry: null
-    };
 
     rd2Service = new Rd2Service();
     @track rd2State = this.rd2Service.init();
@@ -184,21 +161,21 @@ export default class rd2EntryForm extends LightningElement {
     get cardExpDate() {
         const cardExpMonth = this.rd2State.cardExpirationMonth;
         const cardExpYear = this.rd2State.cardExpirationYear;
-        return (cardExpMonth && cardExpYear) ? cardExpMonth + "/" + cardExpYear : "";
+        return cardExpMonth && cardExpYear ? cardExpMonth + "/" + cardExpYear : "";
     }
 
     /***
      * @description Get the Label for the Card Last 4 field
      */
     get cardLastFourLabel() {
-        return (this.fields.cardLastFour) ? this.fields.cardLastFour.label : "";
+        return this.fields.cardLastFour ? this.fields.cardLastFour.label : "";
     }
 
     /***
      * @description Get the Label for the Card Last 4 field
      */
     get achLastFourLabel() {
-        return (this.fields.achLastFour) ? this.fields.achLastFour.label : "";
+        return this.fields.achLastFour ? this.fields.achLastFour.label : "";
     }
 
     /***
@@ -206,17 +183,21 @@ export default class rd2EntryForm extends LightningElement {
      * callouts to retrieve RD settings and other required data.
      */
     get cssEditForm() {
-        return (!this.isLoading && this.isSettingReady && this.isRecordReady)
-            ? ""
-            : "slds-hide";
+        return !this.isLoading && this.isSettingReady && this.isRecordReady ? "" : "slds-hide";
     }
 
     /***
      * @description Get settings required to enable or disable fields and populate their values
      */
     async connectedCallback() {
+        this.rd2State = await this.rd2Service.loadInitialView(this.state, this.recordId, this.parentId);
+
+        // avoid binding wires into state object
+        this._contactId = this.rd2State.contactId;
+        this._accountId = this.rd2State.accountId;
+
         getRecurringSettings({ parentId: this.parentId })
-            .then(response => {
+            .then((response) => {
                 this.isAutoNamingEnabled = response.isAutoNamingEnabled;
                 this.isMultiCurrencyEnabled = response.isMultiCurrencyEnabled;
                 this.isSettingReady = true;
@@ -225,8 +206,6 @@ export default class rd2EntryForm extends LightningElement {
                 this.customFields = response.customFieldSets;
                 this.hasCustomFields = Object.keys(this.customFields).length !== 0;
                 this.isElevateCustomer = response.isElevateCustomer;
-                this.isChangeLogEnabled = response.isChangeLogEnabled;
-                this.periodToYearlyFrequencyMap = response.periodToYearlyFrequencyMap;
                 this.closedStatusValues = response.closedStatusValues;
             })
             .catch((error) => {
@@ -235,26 +214,25 @@ export default class rd2EntryForm extends LightningElement {
             .finally(() => {
                 this.isLoading = false;
                 this.evaluateElevateEditWidget();
-                this.handleDonationValueChange();
             });
 
         /*
-        * Validate that the User has permissions to all required fields. If not, render a message at the top of the page
-        */
-        hasRequiredFieldPermissions()
-            .then(response => {
-                if (response === false) {
-                    this.handleError({
-                        header: this.customLabels.flsErrorHeader,
-                        detail: this.customLabels.flsErrorDetail
-                    });
-                }
-            });
-
-        const initialView = await this.rd2Service.loadInitialView(this.state, this.recordId, this.parentId);
-        this.rd2State = initialView;
+         * Validate that the User has permissions to all required fields. If not, render a message at the top of the page
+         */
+        hasRequiredFieldPermissions().then((response) => {
+            if (response === false) {
+                this.handleError({
+                    header: this.customLabels.flsErrorHeader,
+                    detail: this.customLabels.flsErrorDetail,
+                });
+            }
+        });
 
         registerListener(ELEVATE_WIDGET_EVENT_NAME, this.handleElevateWidgetDisplayState, this);
+    }
+
+    perform(action) {
+        this.rd2State = this.rd2Service.dispatch(this.rd2State, action);
     }
 
     /**
@@ -270,10 +248,12 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     shouldResetPaymentMethodOnStateChange(event) {
-        return event.isDisabled
-            && this.isEdit
-            && this._paymentMethod !== this.existingPaymentMethod
-            && this.isCommitmentEdit;
+        return (
+            event.isDisabled &&
+            this.isEdit &&
+            this._paymentMethod !== this.existingPaymentMethod &&
+            this.isCommitmentEdit
+        );
     }
 
     /***
@@ -284,10 +264,7 @@ export default class rd2EntryForm extends LightningElement {
         if (response.data) {
             let rdObjectInfo = response.data;
             this.setFields(rdObjectInfo.fields);
-            this.fieldInfos = buildFieldDescribes(
-                rdObjectInfo.fields,
-                rdObjectInfo.apiName
-            );
+            this.fieldInfos = buildFieldDescribes(rdObjectInfo.fields, rdObjectInfo.apiName);
 
             this.isRecordReady = true;
         }
@@ -325,20 +302,15 @@ export default class rd2EntryForm extends LightningElement {
             this.isEdit = true;
             this._paymentMethod = getFieldValue(this.record, FIELD_PAYMENT_METHOD);
             this.existingPaymentMethod = getFieldValue(this.record, FIELD_PAYMENT_METHOD);
-            this.contactId = getFieldValue(this.record, FIELD_CONTACT_ID);
-            this.organizationAccountId = getFieldValue(this.record, FIELD_ORGANIZATION_ID);
             this.commitmentId = getFieldValue(this.record, FIELD_COMMITMENT_ID);
             this.isCommitmentEdit = !isNull(this.commitmentId);
             this._nextDonationDate = getFieldValue(this.record, FIELD_NEXT_DONATION_DATE);
             this.cardLastFour = getFieldValue(this.record, FIELD_CARD_LAST4);
             this.achLastFour = getFieldValue(this.record, FIELD_ACH_LAST4);
-            this.recurringPeriod = getFieldValue(this.record, FIELD_INSTALLMENT_PERIOD);
             this.recurringDonationStatus = getFieldValue(this.record, FIELD_STATUS);
 
             this.evaluateElevateEditWidget();
             this.evaluateElevateWidget();
-            this.handleDonationValueChange();
-
         } else if (response.error) {
             this.handleError(response.error);
         }
@@ -350,30 +322,33 @@ export default class rd2EntryForm extends LightningElement {
      * Otherwise, contact data should not be retrieved from database.
      */
     handleContactChange(event) {
-        if (this.isElevateCustomer && !this.isEdit) {
-            this.contactId = event.detail && event.detail.value ? event.detail.value : event.detail;
-            this.contact.MailingCountry = null;
-        }
+        this._contactId = event.detail;
+        this.perform({
+            type: ACTIONS.SET_CONTACT_ID,
+            payload: event.detail,
+        });
     }
 
     handleAccountChange(event) {
-        this.organizationAccountId = event.detail;
+        this._accountId = event.detail;
+        this.perform({
+            type: ACTIONS.SET_ACCOUNT_ID,
+            payload: event.detail,
+        });
     }
 
     handleDonorTypeChange(event) {
-        this.rd2State = this.rd2Service.dispatch(this.rd2State,
-            {
-                type: ACTIONS.SET_DONOR_TYPE,
-                payload: event.detail
-            });
+        this.perform({
+            type: ACTIONS.SET_DONOR_TYPE,
+            payload: event.detail,
+        });
     }
 
     handleDateEstablishedChange(event) {
-        this.rd2State = this.rd2Service.dispatch(this.rd2State,
-            {
-                type: ACTIONS.SET_DATE_ESTABLISHED,
-                payload: event.detail
-            });
+        this.perform({
+            type: ACTIONS.SET_DATE_ESTABLISHED,
+            payload: event.detail,
+        });
     }
 
     /**
@@ -381,38 +356,35 @@ export default class rd2EntryForm extends LightningElement {
      * Data is not refreshed when the contact Id is null.
      */
     @wire(getRecord, {
-        recordId: "$contactId", fields: [
-            MAILING_COUNTRY_FIELD,
-            CONTACT_LAST_NAME,
-            CONTACT_FIRST_NAME
-        ]
+        recordId: "$_contactId",
+        fields: [MAILING_COUNTRY_FIELD, CONTACT_LAST_NAME, CONTACT_FIRST_NAME],
     })
     wiredGetRecord({ error, data }) {
         if (data) {
             const mailingCountry = getFieldValue(data, MAILING_COUNTRY_FIELD);
             const lastName = getFieldValue(data, CONTACT_LAST_NAME);
             const firstName = getFieldValue(data, CONTACT_FIRST_NAME);
-            this.rd2State = this.rd2Service.dispatch(this.rd2State, {
+            this.perform({
                 type: ACTIONS.SET_CONTACT_DETAILS,
-                payload: { firstName, lastName, mailingCountry }
+                payload: { firstName, lastName, mailingCountry },
             });
             this.handleElevateWidgetDisplay();
-
         } else if (error) {
             this.handleError(error);
         }
     }
 
     @wire(getRecord, {
-        recordId: "$organizationAccountId", fields: [ACCOUNT_NAME, ACCOUNT_PRIMARY_CONTACT_LAST_NAME]
+        recordId: "$_accountId",
+        fields: [ACCOUNT_NAME, ACCOUNT_PRIMARY_CONTACT_LAST_NAME],
     })
     wiredGetDonorAccount({ error, data }) {
         if (data) {
             const accountName = getFieldValue(data, ACCOUNT_NAME);
             const lastName = getFieldValue(data, ACCOUNT_PRIMARY_CONTACT_LAST_NAME);
-            this.rd2State = this.rd2Service.dispatch(this.rd2State, {
+            this.perform({
                 type: ACTIONS.SET_ACCOUNT_DETAILS,
-                payload: { lastName, accountName }
+                payload: { lastName, accountName },
             });
         } else if (error) {
             this.handleError(error);
@@ -441,31 +413,68 @@ export default class rd2EntryForm extends LightningElement {
      * - Recurring Type change might hide or display the credit card widget.
      * @param event
      */
-    handleRecurringTypeChange() {
+    handleRecurringTypeChange(event) {
+        this.perform({
+            type: ACTIONS.SET_RECURRING_TYPE,
+            payload: event.detail,
+        });
         this.handleElevateWidgetDisplay();
-        this.handleDonationValueChange();
     }
 
     handleRecurringPeriodChange(event) {
-        this.recurringPeriod = event.detail.period;
+        this.perform({
+            type: ACTIONS.SET_RECURRING_PERIOD,
+            payload: event.detail,
+        });
         this.handleElevateWidgetDisplay();
-        this.handleDonationValueChange();
     }
 
     handleRecurringPeriodTypeChange(event) {
-        this.periodType = event.detail.periodType;
         this.handleElevateWidgetDisplay();
-        this.handleDonationValueChange();
+        this.perform({
+            type: ACTIONS.SET_PERIOD_TYPE,
+            payload: event.detail,
+        });
     }
 
+    handleDayOfMonthChange(event) {
+        this.perform({
+            type: ACTIONS.SET_DAY_OF_MONTH,
+            payload: event.detail,
+        });
+    }
+
+    handleStartDateChange(event) {
+        this.perform({
+            type: ACTIONS.SET_START_DATE,
+            payload: event.detail,
+        });
+    }
+
+    handleFrequencyChange(event) {
+        this.perform({
+            type: ACTIONS.SET_RECURRING_FREQUENCY,
+            payload: event.detail,
+        });
+    }
+
+    handleInstallmentsChange(event) {
+        this.perform({
+            type: ACTIONS.SET_PLANNED_INSTALLMENTS,
+            payload: event.detail,
+        });
+    }
 
     /***
      * @description Currency change might hide or display the credit card widget
      * @param event
      */
-    handleCurrencyChange() {
+    handleCurrencyChange(event) {
+        this.perform({
+            type: ACTIONS.SET_CURRENCY,
+            payload: event.target.value,
+        });
         this.handleElevateWidgetDisplay();
-        this.handleDonationValueChange();
     }
 
     /***
@@ -477,107 +486,34 @@ export default class rd2EntryForm extends LightningElement {
         }
     }
 
-    /***
-     * @description Checks if Change Log is Enabled, then checks the Annual Value
-     */
-    handleDonationValueChange() {
-        if (this.isChangeLogEnabled) {
-            if (!this.donationValue) {
-                this.donationValue = this.returnDonationValue(true);
-            }
-            if (!this.recurringType) {
-                this.recurringType = this.getRecurringType();
-            }
-            this.showChangeTypeField = this.isEdit;
-            this.checkForDonationValueChange();
-        }
+    handleAmountChange(event) {
+        this.perform({
+            type: ACTIONS.SET_DONATION_AMOUNT,
+            payload: event.target.value,
+        });
     }
 
-    /***
-     * @description Get the Annual Value based on the current Amount and Schedule
-     */
-    getAnnualValue(duringInit) {
-        const allFields = this.getAllFields();
-        const amount = duringInit ? getFieldValue(this.record, FIELD_AMOUNT)
-            : allFields[FIELD_AMOUNT.fieldApiName];
-        const formFrequency = allFields[FIELD_INSTALLMENT_FREQUENCY.fieldApiName];
-        const frequency = (duringInit || !formFrequency)
-            ? getFieldValue(this.record, FIELD_INSTALLMENT_FREQUENCY) : formFrequency;
-        const period = duringInit ? getFieldValue(this.record, FIELD_INSTALLMENT_PERIOD)
-            : allFields[FIELD_INSTALLMENT_PERIOD.fieldApiName];
-        const yearlyFrequency = this.periodToYearlyFrequencyMap[period];
-        return amount * (yearlyFrequency / frequency);
-    }
-
-    /***
-     * @description Get the Expected Value based on the current Amount, Paid Amount and Installment Number
-     */
-    getExpectedTotalValue(duringInit) {
-        const allFields = this.getAllFields();
-        const amount = duringInit ? getFieldValue(this.record, FIELD_AMOUNT)
-            : allFields[FIELD_AMOUNT.fieldApiName];
-        const paidAmount = this.returnZeroIfNull(getFieldValue(this.record, FIELD_PAID_AMOUNT));
-        const paidInstallments = this.returnZeroIfNull(getFieldValue(this.record, FIELD_PAID_INSTALLMENTS));
-        const numberOfInstallments = duringInit ? getFieldValue(this.record, FIELD_INSTALLMENTS)
-            : allFields[FIELD_INSTALLMENTS.fieldApiName];
-        const remainingInstallments = numberOfInstallments - paidInstallments;
-        const expectedValue = paidAmount + remainingInstallments * amount;
-        return expectedValue;
-    }
-
-    /***
-     * @description Returns 0 if the provided value is null
-     */
-    returnZeroIfNull(numberField) {
-        return numberField != null ? numberField : 0;
-    }
-
-    /***
-     * @description Returns the Annual Value for Open Donations and Expected Value for Fixed
-     */
-    returnDonationValue(duringInit) {
-        if (this.getRecurringType() === RECURRING_TYPE_OPEN) {
-            return this.getAnnualValue(duringInit);
-        } else if (this.getRecurringType() === RECURRING_TYPE_FIXED) {
-            return this.getExpectedTotalValue(duringInit);
-        }
-    }
-
-    /***
-     * @description Checks if the Annual or Expected Total Value changed, which will update the Change Type
-     */
-    checkForDonationValueChange() {
-        let newChangeType = "";
-        let newdonationValue = this.returnDonationValue();
-
-        if (this.recurringType !== this.getRecurringType()) {
-            newChangeType = "";
-        } else if (newdonationValue > this.donationValue) {
-            newChangeType = CHANGE_TYPE_UPGRADE;
-        } else if (newdonationValue < this.donationValue) {
-            newChangeType = CHANGE_TYPE_DOWNGRADE;
-        }
-
-        this.changeType = newChangeType;
+    get showChangeTypeField() {
+        return !!this.rd2State.recordId && this.rd2State.isChangeLogEnabled;
     }
 
     /***
      * @description Checks if the Elevate Widget should be displayed on Edit
      */
     evaluateElevateEditWidget() {
-
         if (this.isElevateCustomer && this.isEdit) {
             const recurringType = this.getRecurringType();
 
             // Since the widget requires interaction to Edit, this should start as true
             this.hasUserDisabledElevateWidget = this.isCommitmentEdit;
 
-            this.isElevateEditWidgetEnabled = this.isElevatePaymentMethod()
-                && recurringType === RECURRING_TYPE_OPEN
-                && this.isScheduleSupported()
-                && this.isCurrencySupported()
-                && this.isCountrySupported()
-                && this.isValidStatusForElevate();
+            this.isElevateEditWidgetEnabled =
+                this.isElevatePaymentMethod() &&
+                recurringType === RECURRING_TYPE_OPEN &&
+                this.isScheduleSupported() &&
+                this.isCurrencySupported() &&
+                this.isCountrySupported() &&
+                this.isValidStatusForElevate();
 
             this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled;
         }
@@ -586,7 +522,6 @@ export default class rd2EntryForm extends LightningElement {
     /***
      * @description Checks if the Elevate widget should be displayed.
      * The Elevate widget is applicable to new RDs only for now.
-     * @param paymentMethod Payment method
      */
     evaluateElevateWidget() {
         const isScheduleSupported = this.isScheduleSupported();
@@ -594,26 +529,21 @@ export default class rd2EntryForm extends LightningElement {
         const currencySupported = this.isCurrencySupported();
         const countrySupported = this.isCountrySupported();
         const statusSupported = this.isValidStatusForElevate();
-        this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled
-            || (this.isElevateCustomer === true
-                && isValidPaymentMethod
-                && isScheduleSupported
-                && currencySupported
-                && countrySupported
-                && statusSupported);
+        this.isElevateWidgetEnabled =
+            this.isElevateEditWidgetEnabled ||
+            (this.isElevateCustomer === true &&
+                isValidPaymentMethod &&
+                isScheduleSupported &&
+                currencySupported &&
+                countrySupported &&
+                statusSupported);
     }
 
     isScheduleSupported() {
-        if (this.scheduleComponent) {
-            const recurringType = this.getRecurringType();
-            const isValidRecurringType = recurringType === RECURRING_TYPE_OPEN;
-            const isValidInstallmentPeriod = this.periodType === PERIOD.MONTHLY
-                || this.recurringPeriod !== PERIOD.FIRST_AND_FIFTEENTH;
-
-            return isValidRecurringType && isValidInstallmentPeriod;
-        }
-
-        return false;
+        const { recurringPeriod, recurringType } = this.rd2State;
+        const isValidRecurringType = recurringType === RECURRING_TYPE_OPEN;
+        const isValidInstallmentPeriod = recurringPeriod !== PERIOD.FIRST_AND_FIFTEENTH;
+        return isValidInstallmentPeriod && isValidRecurringType;
     }
 
     isElevatePaymentMethod() {
@@ -625,8 +555,7 @@ export default class rd2EntryForm extends LightningElement {
      * user did not click on the link to hide it
      */
     isElevateWidgetDisplayed() {
-        return this.isElevateWidgetEnabled === true
-            && this.hasUserDisabledElevateWidget !== true;
+        return this.isElevateWidgetEnabled === true && this.hasUserDisabledElevateWidget !== true;
     }
 
     /***
@@ -638,17 +567,14 @@ export default class rd2EntryForm extends LightningElement {
         const period = getFieldValue(this.record, FIELD_INSTALLMENT_PERIOD);
         const campaignId = getFieldValue(this.record, FIELD_CAMPAIGN);
 
-
         const hasFrequencyField = allFields.hasOwnProperty(FIELD_INSTALLMENT_FREQUENCY.fieldApiName);
         const amountChanged = amount !== Number(allFields[FIELD_AMOUNT.fieldApiName]);
-        const frequencyChanged = hasFrequencyField && (frequency !== Number(allFields[FIELD_INSTALLMENT_FREQUENCY.fieldApiName]));
+        const frequencyChanged =
+            hasFrequencyField && frequency !== Number(allFields[FIELD_INSTALLMENT_FREQUENCY.fieldApiName]);
         const installmentPeriodChanged = period !== allFields[FIELD_INSTALLMENT_PERIOD.fieldApiName];
         const campaignChanged = campaignId !== allFields[FIELD_CAMPAIGN.fieldApiName];
 
-        return amountChanged
-            || frequencyChanged
-            || installmentPeriodChanged
-            || campaignChanged;
+        return amountChanged || frequencyChanged || installmentPeriodChanged || campaignChanged;
     }
 
     /***
@@ -659,8 +585,7 @@ export default class rd2EntryForm extends LightningElement {
         let currencyCode;
 
         if (this.isMultiCurrencyEnabled) {
-            currencyCode = this.template.querySelector("lightning-input-field[data-id=\"currencyField\"]").value;
-
+            currencyCode = this.template.querySelector('lightning-input-field[data-id="currencyField"]').value;
         } else {
             currencyCode = CURRENCY;
         }
@@ -673,12 +598,9 @@ export default class rd2EntryForm extends LightningElement {
      * is supported by the Elevate credit card widget
      */
     isCountrySupported() {
-        const country = (this.contactId && this.contact && this.contact.MailingCountry)
-            ? this.contact.MailingCountry
-            : null;
+        const { mailingCountry } = this.rd2State;
 
-        return isNull(country)
-            || ELEVATE_SUPPORTED_COUNTRIES.includes(country);
+        return isNull(mailingCountry) || ELEVATE_SUPPORTED_COUNTRIES.includes(mailingCountry);
     }
 
     isValidStatusForElevate() {
@@ -710,17 +632,14 @@ export default class rd2EntryForm extends LightningElement {
             const allFields = this.getAllFields();
             if (this.shouldSendToElevate(allFields)) {
                 this.processCommitmentSubmit(allFields);
-
             } else {
                 this.processSubmit(allFields);
             }
-
         } else {
             this.isLoading = false;
             this.isSaveButtonDisabled = false;
         }
     }
-
 
     /***
      * @description Overrides the standard submit when an
@@ -731,11 +650,10 @@ export default class rd2EntryForm extends LightningElement {
             if (this.isElevateWidgetDisplayed()) {
                 this.loadingText = this.rd2Service.getPaymentProcessingMessage(this.paymentMethod);
 
-                const elevateWidget = this.template.querySelector("[data-id=\"elevateWidget\"]");
+                const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
 
                 this.paymentMethodToken = await elevateWidget.returnToken().payload;
             }
-
         } catch (error) {
             this.setSaveButtonDisabled(false);
             return;
@@ -744,18 +662,20 @@ export default class rd2EntryForm extends LightningElement {
         this.loadingText = this.customLabels.savingCommitmentMessage;
 
         try {
-            const rd = this.rd2Service.constructRecurringDonation(this.recordId, this.commitmentId)
+            const rd = this.rd2Service
+                .constructRecurringDonation(this.recordId, this.commitmentId)
                 .withInputFieldValues(allFields);
 
             handleCommitment({
                 jsonRecord: rd.asJSON(),
-                paymentMethodToken: this.paymentMethodToken
+                paymentMethodToken: this.paymentMethodToken,
             })
-                .then(jsonResponse => {
+                .then((jsonResponse) => {
                     const response = isNull(jsonResponse) ? null : JSON.parse(jsonResponse);
-                    const isSuccess = isNull(response)
-                        || response.statusCode === HTTP_CODES.Created
-                        || response.statusCode === HTTP_CODES.OK;
+                    const isSuccess =
+                        isNull(response) ||
+                        response.statusCode === HTTP_CODES.Created ||
+                        response.statusCode === HTTP_CODES.OK;
                     const responseBody = JSON.parse(response.body);
 
                     if (isSuccess) {
@@ -769,7 +689,6 @@ export default class rd2EntryForm extends LightningElement {
                 .catch((error) => {
                     this.handleSaveError(error);
                 });
-
         } catch (error) {
             this.handleSaveError(error);
         }
@@ -783,11 +702,12 @@ export default class rd2EntryForm extends LightningElement {
             return false;
         }
 
-        return this.isElevateWidgetDisplayed()
-            || (this.hasElevateFieldsChange(allFields)
-                && !isEmpty(this.getCommitmentId())
-                && !this.closedStatusValues.includes(getFieldValue(this.record, FIELD_STATUS))
-            );
+        return (
+            this.isElevateWidgetDisplayed() ||
+            (this.hasElevateFieldsChange(allFields) &&
+                !isEmpty(this.getCommitmentId()) &&
+                !this.closedStatusValues.includes(getFieldValue(this.record, FIELD_STATUS)))
+        );
     }
 
     /***
@@ -795,21 +715,11 @@ export default class rd2EntryForm extends LightningElement {
      * set by the user in the custom fields section
      */
     getCommitmentId() {
-        return !isEmpty(this.commitmentId)
-            ? this.commitmentId
-            : null;
+        return !isEmpty(this.commitmentId) ? this.commitmentId : null;
     }
 
     getRecurringType() {
-        let recurringType;
-        // Use value from record until schedule component is present
-        if (this.record) {
-            recurringType = getFieldValue(this.record, FIELD_RECURRING_TYPE);
-        }
-        if (this.scheduleComponent && this.scheduleComponent.getRecurringType()) {
-            recurringType = this.scheduleComponent.getRecurringType();
-        }
-        return recurringType;
+        return this.rd2State.recurringType;
     }
 
     /***
@@ -820,8 +730,7 @@ export default class rd2EntryForm extends LightningElement {
     processSubmit(rdRecord) {
         try {
             this.loadingText = this.customLabels.savingRDMessage;
-            this.template.querySelector("[data-id=\"outerRecordEditForm\"]").submit(rdRecord);
-
+            this.template.querySelector('[data-id="outerRecordEditForm"]').submit(rdRecord);
         } catch (error) {
             this.handleSaveError(error);
         }
@@ -844,17 +753,14 @@ export default class rd2EntryForm extends LightningElement {
             // Transform the error to a user-friendly error and log it when
             // the RD insert failed but the Elevate commitment has been created
             if (isNull(this.recordId) && !isEmpty(this.getCommitmentId())) {
+                this.error.detail = format(this.customLabels.commitmentFailedMessage, [
+                    this.getCommitmentId(),
+                    this.error.detail,
+                ]);
 
-                this.error.detail = format(
-                    this.customLabels.commitmentFailedMessage,
-                    [this.getCommitmentId(), this.error.detail]
-                );
-
-                logError({ recordId: this.recordId, errorMessage: this.error.detail })
-                    .catch((error) => {
-                    });
+                logError({ recordId: this.recordId, errorMessage: this.error.detail }).catch((error) => {});
             }
-        } catch (error) { }
+        } catch (error) {}
 
         this.setSaveButtonDisabled(false);
     }
@@ -863,9 +769,7 @@ export default class rd2EntryForm extends LightningElement {
      * @description Handle error and disable the Save button
      */
     handleError(error) {
-        this.error = (error && error.detail)
-            ? error
-            : constructErrorMessage(error);
+        this.error = error && error.detail ? error : constructErrorMessage(error);
 
         this.setSaveButtonDisabled(true);
     }
@@ -929,7 +833,7 @@ export default class rd2EntryForm extends LightningElement {
         this.resetAllValues();
 
         const closeModalEvent = new CustomEvent("closemodal", {
-            detail: { recordId: recordId }
+            detail: { recordId: recordId },
         });
         this.dispatchEvent(closeModalEvent);
     }
@@ -946,7 +850,7 @@ export default class rd2EntryForm extends LightningElement {
         this.clearError();
 
         const inputFields = this.template.querySelectorAll("lightning-input-field");
-        inputFields.forEach(field => {
+        inputFields.forEach((field) => {
             if (field.value) {
                 field.clean();
             }
@@ -957,7 +861,6 @@ export default class rd2EntryForm extends LightningElement {
         }
         if (!isNull(this.scheduleComponent)) {
             this.scheduleComponent.resetValues();
-            this.scheduleComponent.forceRefresh();
         }
         if (!isNull(this.customFieldsComponent)) {
             this.customFieldsComponent.resetValues();
@@ -965,7 +868,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     resetPaymentMethod() {
-        const field = this.template.querySelector("lightning-input-field[data-id=\"paymentMethod\"]");
+        const field = this.template.querySelector('lightning-input-field[data-id="paymentMethod"]');
         field.reset();
     }
 
@@ -974,7 +877,7 @@ export default class rd2EntryForm extends LightningElement {
      * @return rd2EntryFormScheduleSection component dom
      */
     get scheduleComponent() {
-        return this.template.querySelectorAll("[data-id=\"scheduleComponent\"]")[0];
+        return this.template.querySelectorAll('[data-id="scheduleComponent"]')[0];
     }
 
     /**
@@ -982,7 +885,7 @@ export default class rd2EntryForm extends LightningElement {
      * @return rd2EntryFormDonorSection component dom
      */
     get donorComponent() {
-        return this.template.querySelectorAll("[data-id=\"donorComponent\"]")[0];
+        return this.template.querySelectorAll('[data-id="donorComponent"]')[0];
     }
 
     /**
@@ -990,7 +893,7 @@ export default class rd2EntryForm extends LightningElement {
      * @return rd2EntryFormCustomFieldsSection component dom
      */
     get customFieldsComponent() {
-        return this.template.querySelectorAll("[data-id=\"customFieldsComponent\"]")[0];
+        return this.template.querySelectorAll('[data-id="customFieldsComponent"]')[0];
     }
 
     /**
@@ -998,7 +901,7 @@ export default class rd2EntryForm extends LightningElement {
      * @returns rd2ElevateCreditCardForm component dom
      */
     get creditCardComponent() {
-        return this.template.querySelector("[data-id=\"elevateWidget\"]");
+        return this.template.querySelector('[data-id="elevateWidget"]');
     }
 
     /**
@@ -1019,20 +922,14 @@ export default class rd2EntryForm extends LightningElement {
      * @description Collects fields displayed on the form and any integrated LWC
      */
     getAllFields() {
-        const donorFields = (isNull(this.donorComponent))
-            ? {}
-            : this.donorComponent.returnValues();
+        const donorFields = isNull(this.donorComponent) ? {} : this.donorComponent.returnValues();
 
-        const scheduleFields = (isNull(this.scheduleComponent))
-            ? {}
-            : this.scheduleComponent.returnValues();
+        const scheduleFields = isNull(this.scheduleComponent) ? {} : this.scheduleComponent.returnValues();
 
-        const customFields = (isNull(this.customFieldsComponent))
-            ? {}
-            : this.customFieldsComponent.returnValues();
+        const customFields = isNull(this.customFieldsComponent) ? {} : this.customFieldsComponent.returnValues();
 
         const paymentMethod = {
-            [FIELD_PAYMENT_METHOD.fieldApiName]: this.paymentMethod
+            [FIELD_PAYMENT_METHOD.fieldApiName]: this.paymentMethod,
         };
 
         return { ...scheduleFields, ...donorFields, ...customFields, ...paymentMethod, ...this.returnValues() };
@@ -1042,15 +939,11 @@ export default class rd2EntryForm extends LightningElement {
      * @description Validate all fields on the integrated LWC sections
      */
     isFormValid() {
-        const isDonorSectionValid = (isNull(this.donorComponent))
-            ? true
-            : this.donorComponent.isValid();
+        const isDonorSectionValid = isNull(this.donorComponent) ? true : this.donorComponent.isValid();
 
-        const isScheduleSectionValid = (isNull(this.scheduleComponent))
-            ? true
-            : this.scheduleComponent.isValid();
+        const isScheduleSectionValid = isNull(this.scheduleComponent) ? true : this.scheduleComponent.isValid();
 
-        const isCustomFieldSectionValid = (isNull(this.customFieldsComponent))
+        const isCustomFieldSectionValid = isNull(this.customFieldsComponent)
             ? true
             : this.customFieldsComponent.isValid();
 
@@ -1066,12 +959,11 @@ export default class rd2EntryForm extends LightningElement {
     isValid() {
         let isValid = true;
 
-        this.template.querySelectorAll("lightning-input-field")
-            .forEach(field => {
-                if (!field.reportValidity()) {
-                    isValid = false;
-                }
-            });
+        this.template.querySelectorAll("lightning-input-field").forEach((field) => {
+            if (!field.reportValidity()) {
+                isValid = false;
+            }
+        });
 
         return isValid;
     }
@@ -1084,7 +976,7 @@ export default class rd2EntryForm extends LightningElement {
         let data = {};
         const inputFields = this.template.querySelectorAll("lightning-input-field");
 
-        inputFields.forEach(field => {
+        inputFields.forEach((field) => {
             data[field.fieldName] = field.value;
         });
 
@@ -1106,7 +998,7 @@ export default class rd2EntryForm extends LightningElement {
     handleClosedButtonTrapFocus(event) {
         if (event.shiftKey && event.code === "Tab") {
             event.stopPropagation();
-            this.template.querySelector("[data-id=\"submitButton\"]").focus();
+            this.template.querySelector('[data-id="submitButton"]').focus();
         }
     }
 
@@ -1116,7 +1008,7 @@ export default class rd2EntryForm extends LightningElement {
     handleSaveButtonTrapFocus(event) {
         if (event.code === "Tab") {
             event.stopPropagation();
-            this.template.querySelector("[data-id=\"closeButton\"]").focus();
+            this.template.querySelector('[data-id="closeButton"]').focus();
         }
     }
 }
