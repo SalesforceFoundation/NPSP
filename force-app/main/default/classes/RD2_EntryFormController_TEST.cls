@@ -135,9 +135,9 @@ private with sharing class RD2_EntryFormController_TEST {
         insert rd;
 
         Test.startTest();
-        Map<String, Object> response = RD2_EntryFormController.getRecurringData(rd.Id);
-        String donorType = (String)response.get('DonorType');
-        String period = (String)response.get('Period');
+        RD2_EntryFormController.RD2AppView view = RD2_EntryFormController.getInitialView(a.Id, rd.Id);
+        String donorType = view.record.donorType;
+        String period = view.record.recurringPeriod;
         Test.stopTest();
 
         System.assertEquals('Account', donorType);
@@ -157,10 +157,10 @@ private with sharing class RD2_EntryFormController_TEST {
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
         Test.startTest();
-        Map<String, Object> response = RD2_EntryFormController.getRecurringData(rd.Id);
-        String donorType = (String)response.get('DonorType');
-        String period = (String)response.get('Period');
-        Integer frequency = Integer.valueOf(response.get('Frequency'));
+        RD2_EntryFormController.RD2AppView view = RD2_EntryFormController.getInitialView(null, rd.Id);
+        String donorType = view.record.donorType;
+        String period = view.record.recurringPeriod;
+        Integer frequency = view.record.recurringFrequency;
         Test.stopTest();
 
         System.assertEquals('Contact', donorType);
