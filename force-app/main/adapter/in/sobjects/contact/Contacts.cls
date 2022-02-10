@@ -32,7 +32,7 @@
 * @date 2021
 * @description Domain class for Contacts in NPSP.
 */
-public inherited sharing class Contacts extends fflib_SObjects {
+public inherited sharing class Contacts extends fflib_SObjects2 {
 
     public Map<Id, Contact> oldMap;
 
@@ -144,6 +144,19 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return householdIdsToRename;
     }
 
+    public List<Id> getHouseholdIdsToRenameAndCountMembers() {
+        Set<Id> uniqueAccountsToHandle = new Set<Id>(getHouseholdIdsToRename());
+
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            Contact oldContact = oldVersionOf(contactRecord);
+            if (needsHHDeceasedFlagUpdate(contactRecord, oldContact)) {
+                uniqueAccountsToHandle.add(contactRecord.AccountId);
+            }
+        }
+
+        return new List<Id>(uniqueAccountsToHandle);
+    }
+
     public void resetDeprecatedFields() {
         for (Contact contactRecord : (List<Contact>) getRecords()) {
             // always clear this deprecated field to avoid confusing users.
@@ -249,6 +262,10 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return setAccountId;
     }
 
+    private Boolean needsHHDeceasedFlagUpdate(Contact contactRecord, Contact oldContact) {
+        return contactRecord.Deceased__c != oldContact.Deceased__c;
+    }
+
     /*******************************************************************************************************
     * @description returns whether changes in the contact require a rename of a HH Account
     * @param contactRecord the new version of the Contact
@@ -333,7 +350,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     public Set<Id> ids() {
-       return getIdFieldValues(Contact.Id);
+       return getIdFieldValues(Contact.Id).getIds();
     }
 
 }

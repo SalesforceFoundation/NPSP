@@ -6907,6 +6907,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Total Batch Amount</value>
     </labels>
     <labels>
+        <fullName>geBatchProcessingIncomplete</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Batch processing incomplete message</shortDescription>
+        <value>Import process stopped before it could complete. Contact your system administrator for assistance.</value>
+    </labels>
+    <labels>
         <fullName>geBatchProcessingSuccess</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -8795,6 +8803,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>This feature requires both Advanced Mapping and Gift Entry. Please enable them in NPSP Settings.</value>
     </labels>
     <labels>
+        <fullName>geServiceLevelErrorAdvancedMapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Service-level error message when advanced mapping is not enabled.</shortDescription>
+        <value>You must enable Advanced Mapping before you can enable Gift Entry.</value>
+    </labels>
+    <labels>
         <fullName>geErrorPageLevelAdvancedMappingHeader</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -9769,12 +9785,12 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Learn More</value>
     </labels>
     <labels>
-        <fullName>gsLearnMoreAriaLabel</fullName>
-        <categories>Get Started Page</categories>
+        <fullName>opensInNewLink</fullName>
+        <categories>Accessibility</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Aria Label for the Learn more label for the application status component</shortDescription>
-        <value>Learn More (opens in a new window)</value>
+        <shortDescription>Aria Label for the links which open in a new window</shortDescription>
+        <value>(opens in a new window)</value>
     </labels>
     <labels>
         <fullName>gsNoApplicationSubmitted</fullName>
