@@ -108,7 +108,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         List<SObject> rds, List<SObject> oldRds,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult
     ) {
-        TDTM_TriggerHandler.enableOldListCachingEvaluation(triggerAction, rds?.size());
+        TDTM_TriggerHandler.enableOldListCachingEvaluation();
 
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             return null;
@@ -133,7 +133,9 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
         findMatchingElevateOpps(rds, triggerAction);
 
-        evaluateOpportunities(rds, oldRds, triggerAction);
+        if (TDTM_TriggerHandler.noErrorInCurrentTransaction(objResult, rds)) {
+            evaluateOpportunities(rds, oldRds, triggerAction);
+        }
 
         dispatchToIntegrationGateway(rds, oldRds, triggerAction);
 
@@ -362,7 +364,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             }
         }
 
-        if (rdIds.isEmpty() || TDTM_TriggerHandler.hasErrorInCurrentTransaction(rds?.size())) {
+        if (rdIds.isEmpty()) {
             return;
         }
 

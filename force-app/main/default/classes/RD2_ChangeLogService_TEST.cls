@@ -242,6 +242,9 @@ public with sharing class RD2_ChangeLogService_TEST {
         System.assertEquals(RD_AMOUNT * 12, changeLog.PreviousAnnualValue__c, 'Previous Annual Value should be ' + RD_AMOUNT * 12);
         System.assertEquals(RD2_Constants.CHANGE_TYPE_UPGRADE, changeLog.ChangeType__c, 
             'The Change Type should be ' + RD2_Constants.CHANGE_TYPE_UPGRADE);
+
+        System.assertEquals(0, getRecurringDonationChangeLog(badRd.Id)?.size(),
+            'There should be no Change Log created for the failed RD');
     }
 
     /**

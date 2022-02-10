@@ -40,8 +40,8 @@ public class TDTM_TriggerHandler {
     
     private static Boolean defaultRecordsInserted = false;
     
-    private static Boolean useDefaultCachingStrategry = true;
-    private static Integer processedRecordsCount;
+    private static Boolean useDefaultCachingStrategy = true;
+    private static Map<Schema.DescribeSobjectResult, Integer> processedRecordCountBySobjectType = new Map<Schema.DescribeSobjectResult, Integer>();
 
     public static Boolean suppressDebugAssertAfterErrorLogging = false;
 
@@ -105,6 +105,7 @@ public class TDTM_TriggerHandler {
         List<SObject> classesToCall = dao.getClassesToCallForObject(describeObj.getLocalName(), thisAction);
 //        UTIL_Debug.debug(LoggingLevel.WARN, '****Classes To Call for ' + describeObj.getLocalName() + ': ' + JSON.serializePretty(classesToCall));
 
+        storeCurrentProcessedRecordCount(thisAction, newList, describeObj);
         // fixup our trigger lists to deal with workflow rules
         oldList = fixupOldList(thisAction, newList, oldList, describeObj);
 
@@ -355,7 +356,7 @@ public class TDTM_TriggerHandler {
     /*******************************************************************************************************
     * @description a cache of SObject maps for each object type, used by FixupOldList()
     */
-    public static Map<Schema.DescribeSobjectResult, Map<Id, SObject>> mapDescObjToMapOldForUpdates = new Map<Schema.DescribeSobjectResult, Map<Id, SObject>>();
+    private static Map<Schema.DescribeSobjectResult, Map<Id, SObject>> mapDescObjToMapOldForUpdates = new Map<Schema.DescribeSobjectResult, Map<Id, SObject>>();
 
     /*******************************************************************************************************
     * @description Returns the correct old list of objects for the trigger, for the current context.  By
@@ -399,11 +400,8 @@ public class TDTM_TriggerHandler {
 
         // now cache objects for future Update calls
         if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-            if (useDefaultCachingStrategry
-                || (useDefaultCachingStrategry == false && processedRecordsCount == newList.size())
-            ) {
+            if (shouldCacheNewList(describeObj, newList)) {
                 mapDescObjToMapOldForUpdates.put(describeObj, new Map<Id, SObject>(newList));
-            
             }
 
             //UTIL_Debug.debug(LoggingLevel.WARN, '**** cached newList: ' + newList);
@@ -412,14 +410,22 @@ public class TDTM_TriggerHandler {
         return oldList;
     }
 
-    public static void enableOldListCachingEvaluation(TDTM_Runnable.Action triggerAction, Integer recordCount) {
-        if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            useDefaultCachingStrategry = false;
-            processedRecordsCount = recordCount;
-        }
+    public static void enableOldListCachingEvaluation() {
+        useDefaultCachingStrategy = false;
+
     }
 
-    public static Boolean hasErrorInCurrentTransaction(Integer currentProcessRecord) {
-        return useDefaultCachingStrategry == false && processedRecordsCount != currentProcessRecord;
+    public static Boolean noErrorInCurrentTransaction(Schema.DescribeSObjectResult describeObj, List<SObject> newList) {
+        return processedRecordCountBySobjectType.get(describeObj) == newList?.size();
+    }
+
+    private static Boolean shouldCacheNewList(Schema.DescribeSObjectResult describeObj, List<SObject> newList) {
+        return useDefaultCachingStrategy || noErrorInCurrentTransaction(describeObj, newList);
+    }
+
+    private static void storeCurrentProcessedRecordCount(TDTM_Runnable.Action triggerAction, List<SObject> newList, Schema.DescribeSObjectResult describeObj) {
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            processedRecordCountBySobjectType.put(describeObj, newList?.size());
+        }
     }
 }
