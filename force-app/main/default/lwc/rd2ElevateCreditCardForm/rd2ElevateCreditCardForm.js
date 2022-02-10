@@ -20,7 +20,7 @@ import billingCityLabel from '@salesforce/label/c.lblCity';
 import billingPostalCodeLabel from '@salesforce/label/c.lblPostalCode';
 import billingStateLabel from '@salesforce/label/c.lblState';
 import billingStreetLabel from '@salesforce/label/c.lblStreet';
-import ACCOUNT_OBJECT from '@salesforce/schema/Account';
+import ACCOUNT_ADDRESS_FIELD from '@salesforce/schema/Account.BillingAddress';
 
 import { isNull } from 'c/util';
 import {
@@ -102,10 +102,10 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     @api payerLastName;
     @api achAccountType;
 
-    @wire(getObjectInfo, { objectApiName: ACCOUNT_OBJECT })
+    @wire(getObjectInfo, { objectApiName: ACCOUNT_ADDRESS_FIELD.objectApiName })
     accountInfo({ data, error }) {
         if (data) {
-            this.billingAddressLabel = data.fields.BillingAddress.label;
+            this.billingAddressLabel = data.fields[ACCOUNT_ADDRESS_FIELD.fieldApiName].label;
         }
     }
 
@@ -449,9 +449,9 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
      * Handles changes made to fields in the form
      * @param event Event containing field change information
      */
-    getFieldChange(event) {
-        let fieldName = event.target.name;
-        let newVal = event.detail.value;
+    handleFieldChange(event) {
+        const fieldName = event.target.name;
+        const newVal = event.detail.value;
         this[fieldName] = newVal;
     }
 

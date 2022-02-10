@@ -127,7 +127,7 @@
                             <template if:true={currentPaymentIsCard}>
                                 <div class="slds-grid">
                                     <div class="slds-col slds-size_1-of-2">
-                                        <lightning-input onchange={getFieldChange}
+                                        <lightning-input onchange={handleFieldChange}
                                                          name="cardholderName" label={labels.cardholderNameLabel}
                                                          data-qa-locator="input Elevate Cardholder Name" data-id="cardholderName">
                                         </lightning-input>
@@ -151,25 +151,25 @@
                                         <h3 class='slds-text-heading_small'>{billingAddressLabel}</h3>
                                     </div>
                                     <div class="slds-col slds-size_1-of-2 slds-var-p-around_small">
-                                        <lightning-input onchange={getFieldChange}
+                                        <lightning-input onchange={handleFieldChange}
                                                          name="billingStreet1" label={billingStreetLabel1}
                                                          data-qa-locator="input Elevate Billing Street 1" data-id="billingStreet1">
                                         </lightning-input>
-                                        <lightning-input onchange={getFieldChange}
+                                        <lightning-input onchange={handleFieldChange}
                                                          name="billingCity" label={labels.billingCityLabel}
                                                          data-qa-locator="input Elevate Billing City" data-id="billingCity">
                                         </lightning-input>
-                                        <lightning-input onchange={getFieldChange}
+                                        <lightning-input onchange={handleFieldChange}
                                                          name="billingPostalCode" label={labels.billingPostalCodeLabel}
                                                          data-qa-locator="input Elevate Billing Postal Code" data-id="billingPostalCode">
                                         </lightning-input>
                                     </div>
                                     <div class="slds-col slds-size_1-of-2 slds-var-p-around_small">
-                                        <lightning-input onchange={getFieldChange}
+                                        <lightning-input onchange={handleFieldChange}
                                                         name="billingStreet2" label={billingStreetLabel2}
                                                         data-qa-locator="input Elevate Billing Street 2" data-id="billingStreet2">
                                         </lightning-input>
-                                        <lightning-input onchange={getFieldChange}
+                                        <lightning-input onchange={handleFieldChange}
                                                          name="billingState" label={labels.billingStateLabel}
                                                          data-qa-locator="input Elevate Billing State" data-id="billingState">
                                         </lightning-input>
