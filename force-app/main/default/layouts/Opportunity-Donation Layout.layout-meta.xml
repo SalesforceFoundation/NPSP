@@ -156,6 +156,10 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
+                <field>Honoree_Information__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
                 <field>Notification_Message__c</field>
             </layoutItems>
         </layoutColumns>
@@ -171,6 +175,10 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Notification_Recipient_Name__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Notification_Receipient_Email__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
