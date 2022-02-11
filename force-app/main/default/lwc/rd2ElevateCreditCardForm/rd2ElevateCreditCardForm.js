@@ -462,7 +462,10 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         this[fieldName] = newVal;
     }
 
-    handleDefaultAddressButton(event) {
+    /**
+     * Handles population of Credit Card Billing Address fields based on the current donor
+     */
+    handleDefaultAddressButton() {
         const donorId = this.rd2State.donorType === CONTACT_DONOR_TYPE
             ? this.rd2State.contactId
             : this.rd2State.accountId;

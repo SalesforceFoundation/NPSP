@@ -653,7 +653,54 @@ private with sharing class RD2_EntryFormController_TEST {
         System.assertEquals(UTIL_Http.STATUS_OK, status,
             'The response status should match: ' + response);
     }
- 
+
+    /**
+    * @description Verifies Donor Address is returned when a Contact Id is passed
+    */
+    @isTest
+    private static void shouldReturnAddressWhenDonorIsContact() {
+        Contact donorContact = getContact();
+        String streetLine1 = 'Test Street';
+        String streetLine2 = 'Test Line 2';
+
+        donorContact.MailingStreet = streetLine1 + '\n' + streetLine2;
+        donorContact.MailingCity = 'Test City';
+        donorContact.MailingState = 'Test State';
+        donorContact.MailingCountry = 'Test Country';
+        update donorContact;
+
+        Address__c donorAddress = RD2_EntryFormController.getDonorAddress(donorContact.Id);
+
+        System.assertEquals(donorAddress.MailingCity__c, donorContact.MailingCity, 'Contact and Address do not match');
+        System.assertEquals(donorAddress.MailingState__c, donorContact.MailingState, 'Contact and Address do not match');
+        System.assertEquals(donorAddress.MailingCountry__c, donorContact.MailingCountry, 'Contact and Address do not match');
+        System.assertEquals(donorAddress.MailingStreet__c, streetLine1, 'Contact and Address do not match');
+        System.assertEquals(donorAddress.MailingStreet2__c, streetLine2, 'Contact and Address do not match');
+    }
+    
+    /**
+    * @description Verifies Donor Address is returned when an Account Id is passed
+    */
+    @isTest
+    private static void shouldReturnAddressWhenDonorIsAccount() {
+        Account donorAccount = UTIL_UnitTestData_TEST.buildOrganizationAccount();
+        String streetLine1 = 'Test Street';
+        String streetLine2 = 'Test Line 2';
+
+        donorAccount.BillingStreet = streetLine1 + '\n' + streetLine2;
+        donorAccount.BillingCity = 'Test City';
+        donorAccount.BillingState = 'Test State';
+        donorAccount.BillingCountry = 'Test Country';
+        insert donorAccount;
+
+        Address__c donorAddress = RD2_EntryFormController.getDonorAddress(donorAccount.Id);
+
+        System.assertEquals(donorAddress.MailingCity__c, donorAccount.BillingCity, 'Account and Address do not match');
+        System.assertEquals(donorAddress.MailingState__c, donorAccount.BillingState, 'Account and Address do not match');
+        System.assertEquals(donorAddress.MailingCountry__c, donorAccount.BillingCountry, 'Account and Address do not match');
+        System.assertEquals(donorAddress.MailingStreet__c, streetLine1, 'Account and Address do not match');
+        System.assertEquals(donorAddress.MailingStreet2__c, streetLine2, 'Account and Address do not match');
+    }
 
     // Helpers
     ////////////////
