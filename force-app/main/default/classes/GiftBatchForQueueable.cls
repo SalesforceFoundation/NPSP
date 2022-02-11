@@ -61,6 +61,26 @@ public inherited sharing class GiftBatchForQueueable {
         }
         set;
     }
+    @TestVisible
+    private ElevateBatchService elevateBatchService {
+        get {
+            if (elevateBatchService == null) {
+                elevateBatchService = new ElevateBatchService();
+            }
+            return elevateBatchService;
+        }
+        set;
+    }
+    @TestVisible
+    private PS_IntegrationServiceConfig paymentIntegrationServiceConfig {
+        get {
+            if (paymentIntegrationServiceConfig == null) {
+                paymentIntegrationServiceConfig = new PS_IntegrationServiceConfig();
+            }
+            return paymentIntegrationServiceConfig;
+        }
+        set;
+    }
 
     public GiftBatchForQueueable(GiftBatchId giftBatchId) {
         this.giftBatchId = giftBatchId;
@@ -78,6 +98,13 @@ public inherited sharing class GiftBatchForQueueable {
         List<Id> giftIdsToSelect = chunkedIds.get(0);
         gifts = new Gifts(giftsSelector.getGiftsReadyToMoveToProcessing(giftIdsToSelect, CHUNK_LIMIT));
         gifts.prepareForProcessing();
+    }
+
+    public void captureElevateBatches() {
+        if (paymentIntegrationServiceConfig.isIntegrationEnabled()) {
+            elevateBatchService.enqueuePaymentCaptureJobFor(id().value(), gifts?.elevateBatchIds());
+            gifts.authorizedToPaymentProcessingStatus();
+        }
     }
 
     public void updateGiftsInChunk() {

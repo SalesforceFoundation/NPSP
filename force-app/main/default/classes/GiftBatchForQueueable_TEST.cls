@@ -35,6 +35,66 @@
 @IsTest
 private class GiftBatchForQueueable_TEST {
 
+    @isTest
+    static void shouldAttemptToCaptureElevatePaymentsWhenServiceUnavailable() {
+        // Arrange
+        Id dummyDataImportBatchId = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.SObjectType);
+        GiftBatchForQueueable dummyGiftBatchForQueueable = buildGiftBatch(dummyDataImportBatchId);
+        List<DataImport__c> authorizedGift = new List<DataImport__c> {
+            new DataImport__c(
+                Id = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType),
+                Payment_Status__c = ElevateTransactionStatus.AUTHORIZED.name(),
+                Status__c = BDI_DataImport_API.bdiDryRunValidated
+            )
+        };
+
+        GiftsMock giftsMock = new GiftsMock().with(authorizedGift);
+        dummyGiftBatchForQueueable.gifts = stubFor(giftsMock);
+
+        ElevateBatchServiceMock elevateBatchServiceMock = new ElevateBatchServiceMock();
+        dummyGiftBatchForQueueable.elevateBatchService = stubFor(elevateBatchServiceMock);
+
+        PS_IntegrationServiceConfigMock integrationServiceConfigMock = new PS_IntegrationServiceConfigMock(true);
+        dummyGiftBatchForQueueable.paymentIntegrationServiceConfig = stubFor(integrationServiceConfigMock);
+
+        // Act
+        dummyGiftBatchForQueueable.captureElevateBatches();
+
+        // Assert
+        System.assertEquals(true, elevateBatchServiceMock.enqueuePaymentCaptureJobForCalled);
+        System.assertEquals(true, giftsMock.authorizedToPaymentProcessingStatusWasCalled);
+    }
+
+    @isTest
+    static void shouldNotAttemptToCaptureElevatePaymentsWhenServiceAvailable() {
+        // Arrange
+        Id dummyDataImportBatchId = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.SObjectType);
+        GiftBatchForQueueable dummyGiftBatchForQueueable = buildGiftBatch(dummyDataImportBatchId);
+        List<DataImport__c> authorizedGift = new List<DataImport__c> {
+            new DataImport__c(
+                Id = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType),
+                Payment_Status__c = ElevateTransactionStatus.AUTHORIZED.name(),
+                Status__c = BDI_DataImport_API.bdiDryRunValidated
+            )
+        };
+
+        GiftsMock giftsMock = new GiftsMock().with(authorizedGift);
+        dummyGiftBatchForQueueable.gifts = stubFor(giftsMock);
+
+        ElevateBatchServiceMock elevateBatchServiceMock = new ElevateBatchServiceMock();
+        dummyGiftBatchForQueueable.elevateBatchService = stubFor(elevateBatchServiceMock);
+
+        PS_IntegrationServiceConfigMock integrationServiceConfigMock = new PS_IntegrationServiceConfigMock(false);
+        dummyGiftBatchForQueueable.paymentIntegrationServiceConfig = stubFor(integrationServiceConfigMock);
+
+        // Act
+        dummyGiftBatchForQueueable.captureElevateBatches();
+
+        // Assert
+        System.assertEquals(false, elevateBatchServiceMock.enqueuePaymentCaptureJobForCalled);
+        System.assertEquals(false, giftsMock.authorizedToPaymentProcessingStatusWasCalled);
+    }
+
     @IsTest
     static void shouldReturn14ChunksOfGiftsWhen700GiftsAreProcessable() {
         // Arrange
@@ -226,29 +286,13 @@ private class GiftBatchForQueueable_TEST {
             List<Object> listOfArgs) {
 
             switch on (stubbedMethodName) {
-                when 'getProcessableGiftsFor' {
-                    List<DataImport__c> giftsToReturn = new List<DataImport__c>();
-                    giftsToReturn.addAll(processingGifts);
-                    giftsToReturn.addAll(dryRunValidatedGifts);
-                    giftsToReturn.addAll(failedGifts);
-                    return giftsToReturn;
-                }
-
                 when 'getGiftsReadyToMoveToProcessing' {
                     List<DataImport__c> giftsToReturn = new List<DataImport__c>();
                     giftsToReturn.addAll(dryRunValidatedGifts);
                     giftsToReturn.addAll(failedGifts);
                     return giftsToReturn;
                 }
-
-                when 'selectGiftsThatCanMoveToProcessing' {
-                    List<DataImport__c> giftsToReturn = new List<DataImport__c>();
-                    giftsToReturn.addAll(dryRunValidatedGifts);
-                    giftsToReturn.addAll(failedGifts);
-                    return giftsToReturn;
-                }
             }
-
             return null;
         }
     }
@@ -265,6 +309,7 @@ private class GiftBatchForQueueable_TEST {
         public List<DataImport__c> gifts = new List<DataImport__c>();
         private Boolean prepareForProcessingWasCalled = false;
         private Boolean updateRecordsWasCalled = false;
+        private Boolean authorizedToPaymentProcessingStatusWasCalled = false;
 
         public GiftsMock() {}
 
@@ -296,6 +341,10 @@ private class GiftBatchForQueueable_TEST {
                 when 'updateRecords' {
                     updateRecordsWasCalled = true;
                 }
+
+                when 'authorizedToPaymentProcessingStatus' {
+                    authorizedToPaymentProcessingStatusWasCalled = true;
+                }
             }
 
             return null;
@@ -303,10 +352,62 @@ private class GiftBatchForQueueable_TEST {
     }
 
     private static Gifts stubFor(GiftsMock giftsMock) {
-        return (Gifts) Test.createStub(
-            Gifts.class,
-            giftsMock
+        return (Gifts) Test.createStub(Gifts.class, giftsMock);
+    }
+
+    public class PS_IntegrationServiceConfigMock implements StubProvider {
+        public Boolean isIntegrationEnabled = false;
+
+        public PS_IntegrationServiceConfigMock(Boolean isIntegrationEnabled) {
+            this.isIntegrationEnabled = isIntegrationEnabled;
+        }
+
+        public Object handleMethodCall(Object stubbedObject,
+            String stubbedMethodName,
+            Type returnType,
+            List<Type> listOfParamTypes,
+            List<String> listOfParamNames,
+            List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'isIntegrationEnabled' {
+                    return isIntegrationEnabled;
+                }
+            }
+
+            return null;
+        }
+    }
+
+    private static PS_IntegrationServiceConfig stubFor(PS_IntegrationServiceConfigMock integrationServiceConfigMock) {
+        return (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            integrationServiceConfigMock
         );
+    }
+
+    private class ElevateBatchServiceMock implements StubProvider {
+        public Boolean enqueuePaymentCaptureJobForCalled = false;
+
+        public Object handleMethodCall(Object stubbedObject,
+            String stubbedMethodName,
+            Type returnType,
+            List<Type> listOfParamTypes,
+            List<String> listOfParamNames,
+            List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'enqueuePaymentCaptureJobFor' {
+                    enqueuePaymentCaptureJobForCalled = true;
+                }
+            }
+
+            return null;
+        }
+    }
+
+    private static ElevateBatchService stubFor(ElevateBatchServiceMock elevateBatchServiceMock) {
+        return (ElevateBatchService) Test.createStub(ElevateBatchService.class, elevateBatchServiceMock);
     }
 
     private static GiftBatchForQueueable buildGiftBatch(Id dummyId) {
