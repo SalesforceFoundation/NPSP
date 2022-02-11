@@ -14,8 +14,7 @@ module.exports = {
         "^@salesforce/apex/GE_GiftEntryController.getGiftBatchView": "<rootDir>/tests/__mocks__/apex/GE_GiftEntryController.getGiftBatchView",
         "^@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel": "<rootDir>/tests/__mocks__/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel",
         "^@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues": "<rootDir>/tests/__mocks__/apex/GE_PaymentServices.getPaymentTransactionStatusValues",
-        "^@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo": "<rootDir>/tests/__mocks__/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo",
-        "^@salesforce/apex/RD2_EntryFormController.getRecurringData": "<rootDir>/tests/__mocks__/apex/RD2_EntryFormController.getRecurringData"
+        "^@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo": "<rootDir>/tests/__mocks__/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo"
     },
     testPathIgnorePatterns: [
         '<rootDir>/node_modules/',

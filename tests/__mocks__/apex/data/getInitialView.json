@@ -31,6 +31,7 @@
   "record": {
     "contactId": "fake-contact-record-id",
     "recurringPeriod": "Monthly",
-    "recurringType": "Open"
+    "recurringType": "Open",
+    "dayOfMonth": "15"
   }
 }
