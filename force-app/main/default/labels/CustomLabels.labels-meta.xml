@@ -6552,7 +6552,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Help text for Credit Card Billing Address</shortDescription>
-        <value>Depending on your Elevate Payment Gateway, Billing address may be required to process Credit Card transactions</value>
+        <value>Billing Address is required only for certain Elevate Payment Gateways.</value>
     </labels>
     <labels>
         <fullName>elevateClearAddress</fullName>
@@ -6566,7 +6566,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error text for empty donor address</shortDescription>
-        <value>Donor does not have an address</value>
+        <value>This donor doesn&apos;t have address information in Salesforce.</value>
     </labels>
     <labels>
         <fullName>elevateUseDonorAddress</fullName>

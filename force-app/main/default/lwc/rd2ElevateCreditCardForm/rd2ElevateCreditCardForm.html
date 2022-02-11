@@ -148,10 +148,10 @@
                             <template if:true={currentPaymentIsCard}>
                                 <div class="slds-grid slds-wrap slds-gutters slds-var-p-bottom_medium">
                                     <div class="slds-col slds-size_1-of-1 slds-var-p-horizontal_x-small">
-                                        <strong class="slds-form-element__label">
+                                        <strong class="slds-form-element__label slds-var-p-bottom_x-small">
                                             {billingAddressLabel}
                                         </strong>
-                                        <lightning-helptext class="slds-var-p-bottom_small slds-clearfix" 
+                                        <lightning-helptext class="slds-clearfix" 
                                             content={labels.billingAddressHelpLabel}>
                                         </lightning-helptext>
                                         <lightning-button label={labels.useDonorAddressLabel}
@@ -161,6 +161,7 @@
                                                           data-qa-locator='button Use Donor Address'>
                                         </lightning-button>
                                         <lightning-button label={labels.clearAddressLabel}
+                                                          variant="base"
                                                           onclick={handleClearAddressButton}
                                                           class="slds-button"
                                                           disabled={searchingForAddress}
