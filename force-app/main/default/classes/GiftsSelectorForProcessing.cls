@@ -52,7 +52,7 @@ public with sharing class GiftsSelectorForProcessing {
 
     public GiftsSelectorForProcessing() {}
 
-    public List<DataImport__c> getGiftsReadyToMoveToProcessing(List<Id> giftIds) {
+    public List<DataImport__c> getGiftsReadyToMoveToProcessing(List<Id> giftIds, Integer chunkSize) {
         String dataImportBatchLookup = String.valueOf(DataImport__c.NPSP_Data_Import_Batch__c);
         String status = String.valueOf(DataImport__c.Status__c);
 
@@ -68,7 +68,7 @@ public with sharing class GiftsSelectorForProcessing {
             .withFrom(DataImport__c.SObjectType)
             .withWhere(whereClauses)
             .withOrderBy(CREATED_DATE)
-            .withLimit(25)
+            .withLimit(chunkSize)
             .build();
 
         return Database.query(queryString);            

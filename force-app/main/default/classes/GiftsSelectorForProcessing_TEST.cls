@@ -82,7 +82,7 @@ private class GiftsSelectorForProcessing_TEST {
         // Act
         GiftsSelectorForProcessing giftsSelector = new GiftsSelectorForProcessing();
         GiftBatchId giftBatchId = new GiftBatchId(giftBatch.Id);
-        List<DataImport__c> readyToMoveToProcessing = giftsSelector.getGiftsReadyToMoveToProcessing(giftIds);
+        List<DataImport__c> readyToMoveToProcessing = giftsSelector.getGiftsReadyToMoveToProcessing(giftIds, 50);
 
         // Assert
         System.assertEquals(3, readyToMoveToProcessing.size(),
