@@ -52,14 +52,14 @@ public with sharing class GiftsSelectorForProcessing {
 
     public GiftsSelectorForProcessing() {}
 
-    public List<DataImport__c> getProcessableGiftsFor(GiftBatchId giftBatchId) {
+    public List<DataImport__c> getGiftsReadyToMoveToProcessing(List<Id> giftIds) {
         String dataImportBatchLookup = String.valueOf(DataImport__c.NPSP_Data_Import_Batch__c);
         String status = String.valueOf(DataImport__c.Status__c);
-        Id giftBatchIdValue = giftBatchId.value();
 
         List<String> whereClauses = new List<String>{
             status + ' != \'' + BDI_DataImport_API.bdiImported + '\'',
-            dataImportBatchLookup + ' =: giftBatchIdValue'
+            status + ' != \'' + BDI_DataImport_API.bdiProcessing + '\'',
+            'Id IN :giftIds'
         };
 
         String queryString =
@@ -87,34 +87,13 @@ public with sharing class GiftsSelectorForProcessing {
 
         String queryString =
             new UTIL_Query()
-            .withSelectFields(giftFields)
+            .withSelectFields(new List<String> { 'Id' })
             .withFrom(DataImport__c.SObjectType)
             .withWhere(whereClauses)
             .withOrderBy(CREATED_DATE)
-            .withLimit(25)
+            .withLimit(50000)
             .build();
 
         return Database.query(queryString);            
-    }
-
-    public Integer getProcessableGiftsCount(GiftBatchId giftBatchId) {
-        Id giftBatchIdValue = giftBatchId.value();
-        return [
-            SELECT count()
-            FROM DataImport__c
-            WHERE Status__c != :BDI_DataImport_API.bdiImported
-            AND NPSP_Data_Import_Batch__c = :giftBatchIdValue
-        ];
-    }
-
-    public Integer getGiftsReadyToMoveToProcessingCount(GiftBatchId giftBatchId) {
-        Id giftBatchIdValue = giftBatchId.value();
-        return [
-            SELECT count()
-            FROM DataImport__c
-            WHERE Status__c != :BDI_DataImport_API.bdiImported
-            AND Status__c != :BDI_DataImport_API.bdiProcessing
-            AND NPSP_Data_Import_Batch__c = :giftBatchIdValue
-        ];
     }
 }

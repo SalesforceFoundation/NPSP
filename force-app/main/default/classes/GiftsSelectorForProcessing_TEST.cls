@@ -36,54 +36,66 @@
 private class GiftsSelectorForProcessing_TEST {
 
     @IsTest
+    static void shouldReturn10GiftsThatCanBeMovedToProcessingStatus() {
+        // Arrange
+        DataImportBatch__c giftBatch = new DataImportBatch__c();
+        insert giftBatch;
+
+        List<DataImport__c> giftsToInsert = new List<DataImport__c>();
+        // These gifts can not move into the processing status
+        giftsToInsert.addAll(buildGifts(5, BDI_DataImport_API.bdiImported, giftBatch.Id));
+        giftsToInsert.addAll(buildGifts(4, BDI_DataImport_API.bdiProcessing, giftBatch.Id));
+
+        // These gifts can move into the processing status
+        giftsToInsert.addAll(buildGifts(10, BDI_DataImport_API.bdiDryRunValidated, giftBatch.Id));
+        insert giftsToInsert;
+
+        List<Id> giftIds = getIdsFrom(giftsToInsert);
+
+        // Act
+        GiftsSelectorForProcessing giftsSelector = new GiftsSelectorForProcessing();
+        GiftBatchId giftBatchId = new GiftBatchId(giftBatch.Id);
+        List<DataImport__c> readyToMoveToProcessing = giftsSelector.getGiftsReadyToMoveToProcessing(giftBatchId);
+
+        // Assert
+        System.assertEquals(10, readyToMoveToProcessing.size(),
+            'Should return a count of 10 for dry-ran validated gifts that can move into processing status');
+    }
+
+    @IsTest
     static void shouldReturn3GiftsThatCanBeMovedToProcessingStatus() {
         // Arrange
         DataImportBatch__c giftBatch = new DataImportBatch__c();
         insert giftBatch;
 
         List<DataImport__c> giftsToInsert = new List<DataImport__c>();
+        // These gifts can not move into the processing status
         giftsToInsert.addAll(buildGifts(5, BDI_DataImport_API.bdiImported, giftBatch.Id));
         giftsToInsert.addAll(buildGifts(4, BDI_DataImport_API.bdiProcessing, giftBatch.Id));
+
+        // These gifts can move into the processing status
         giftsToInsert.addAll(buildGifts(3, BDI_DataImport_API.bdiDryRunValidated, giftBatch.Id));
         insert giftsToInsert;
+
+        List<Id> giftIds = getIdsFrom(giftsToInsert);
 
         // Act
         GiftsSelectorForProcessing giftsSelector = new GiftsSelectorForProcessing();
         GiftBatchId giftBatchId = new GiftBatchId(giftBatch.Id);
-        List<DataImport__c> readyToMoveToProcessing = giftsSelector.getGiftsReadyToMoveToProcessing(giftBatchId);
-        Integer readyToMoveToProcessingCount = giftsSelector.getGiftsReadyToMoveToProcessingCount(giftBatchId);
+        List<DataImport__c> readyToMoveToProcessing = giftsSelector.getGiftsReadyToMoveToProcessing(giftIds);
 
         // Assert
         System.assertEquals(3, readyToMoveToProcessing.size(),
             'Should return a count of 3 for dry-ran validated gifts that can move into processing status');
-        System.assertEquals(3, readyToMoveToProcessingCount,
-            'Should return a count of 3 for dry-ran validated gifts that can move into processing status');
     }
 
-    @IsTest
-    static void shouldReturn9ProcessableGifts() {
-        // Arrange
-        DataImportBatch__c giftBatch = new DataImportBatch__c();
-        insert giftBatch;
 
-        List<DataImport__c> giftsToInsert = new List<DataImport__c>();
-        giftsToInsert.addAll(buildGifts(5, BDI_DataImport_API.bdiImported, giftBatch.Id));
-        giftsToInsert.addAll(buildGifts(4, BDI_DataImport_API.bdiProcessing, giftBatch.Id));
-        giftsToInsert.addAll(buildGifts(3, BDI_DataImport_API.bdiDryRunValidated, giftBatch.Id));
-        giftsToInsert.addAll(buildGifts(2, BDI_DataImport_API.bdiFailed, giftBatch.Id));
-        insert giftsToInsert;
-
-        // Act
-        GiftsSelectorForProcessing giftsSelector = new GiftsSelectorForProcessing();
-        GiftBatchId giftBatchId = new GiftBatchId(giftBatch.Id);
-        List<DataImport__c> processableGifts = giftsSelector.getProcessableGiftsFor(giftBatchId);
-        Integer processableGiftsCount = giftsSelector.getProcessableGiftsCount(giftBatchId);
-
-        // Assert
-        System.assertEquals(9, processableGifts.size(),
-            'Should return a count of 9 for gifts that can be processed');
-        System.assertEquals(9, processableGiftsCount,
-            'Should return a count of 9 for gifts that can be processed');
+    private static List<Id> getIdsFrom(List<DataImport__c> gifts) {
+        List<Id> ids = new List<Id>();
+        for (DataImport__c gift : gifts) {
+            ids.add(gift.Id);
+        }
+        return ids;
     }
 
     private static List<DataImport__c> buildGifts(Integer count, String status, Id giftBatchId) {
