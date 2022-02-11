@@ -22,7 +22,17 @@ import billingPostalCodeLabel from '@salesforce/label/c.lblPostalCode';
 import billingStateLabel from '@salesforce/label/c.lblState';
 import billingStreetLabel from '@salesforce/label/c.lblStreet';
 import billingCountryLabel from '@salesforce/label/c.lblCountry';
+import billingAddressHelpLabel from '@salesforce/label/c.elevateBillingAddressHelp';
+import donorAddressEmptyLabel from '@salesforce/label/c.elevateDonorAddressEmpty';
+import clearAddressLabel from '@salesforce/label/c.elevateClearAddress';
+import useDonorAddressLabel from '@salesforce/label/c.elevateUseDonorAddress';
 import ACCOUNT_ADDRESS_FIELD from '@salesforce/schema/Account.BillingAddress';
+import ADDRESS_CITY_FIELD from '@salesforce/schema/Address__c.MailingCity__c';
+import ADDRESS_COUNTRY_FIELD from '@salesforce/schema/Address__c.MailingCountry__c';
+import ADDRESS_POSTAL_FIELD from '@salesforce/schema/Address__c.MailingPostalCode__c';
+import ADDRESS_STATE_FIELD from '@salesforce/schema/Address__c.MailingState__c';
+import ADDRESS_STREET_FIELD from '@salesforce/schema/Address__c.MailingStreet__c';
+import ADDRESS_STREET2_FIELD from '@salesforce/schema/Address__c.MailingStreet2__c';
 
 import { isNull } from 'c/util';
 import {
@@ -67,7 +77,11 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         billingPostalCodeLabel,
         billingStateLabel,
         billingStreetLabel,
-        billingCountryLabel
+        billingCountryLabel,
+        billingAddressHelpLabel,
+        clearAddressLabel,
+        donorAddressEmptyLabel,
+        useDonorAddressLabel
     };
     billingAddressLabel;
     billingStreetLabel1 = billingStreetLabel + ' 1';
@@ -82,6 +96,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     cardholderName;
 
     searchingForAddress = false;
+    showEmptyAddressError = false;
     
     rd2Service = new Rd2Service();
 
@@ -474,16 +489,19 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
             return;
         }
 
+        this.showEmptyAddressError = false;
         this.searchingForAddress = true;
         getDonorAddress({donorId: donorId})
             .then((result) => {
-                if(result){
-                    this.billingCity= result.MailingCity__c;
-                    this.billingCountry = result.MailingCountry__c;
-                    this.billingPostalCode = result.MailingPostalCode__c;
-                    this.billingState = result.MailingState__c;
-                    this.billingStreet1 = result.MailingStreet__c;
-                    this.billingStreet2 = result.MailingStreet2__c;
+                if (Object.keys(result).length === 0) {
+                    this.showEmptyAddressError = true;
+                } else if(result) {
+                    this.billingCity = result[ADDRESS_CITY_FIELD.fieldApiName];
+                    this.billingCountry = result[ADDRESS_COUNTRY_FIELD.fieldApiName];
+                    this.billingPostalCode = result[ADDRESS_POSTAL_FIELD.fieldApiName];
+                    this.billingState = result[ADDRESS_STATE_FIELD.fieldApiName];
+                    this.billingStreet1 = result[ADDRESS_STREET_FIELD.fieldApiName];
+                    this.billingStreet2 = result[ADDRESS_STREET2_FIELD.fieldApiName];
                 }
                 this.searchingForAddress = false;
             })
@@ -491,6 +509,18 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
                 this.handleError(error);
                 this.searchingForAddress = false;
             });
+    }
+
+    /**
+     * Handles clearing of Credit Card Billing Address fields
+     */
+    handleClearAddressButton() {
+        this.billingCity = "";
+        this.billingCountry =  "";
+        this.billingPostalCode =  "";
+        this.billingState =  "";
+        this.billingStreet1 =  "";
+        this.billingStreet2 =  "";
     }
 
     /**
