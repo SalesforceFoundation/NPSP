@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Notification_Receipient_Email__c</fullName>
+    <fullName>Notification_Recipient_Email__c</fullName>
     <description>The email address for the person receiving the honor/memorial notification.</description>
     <externalId>false</externalId>
     <inlineHelpText>The email address for the person receiving the honor/memorial notification.</inlineHelpText>
