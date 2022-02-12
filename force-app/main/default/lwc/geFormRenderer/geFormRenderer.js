@@ -189,7 +189,7 @@ export default class GeFormRenderer extends LightningElement{
     cardholderNamesNotInTemplate = {};
     _openedGiftId;
     currentElevateBatch = new ElevateBatch();
-    _batch = {};
+   @track _batch = {};
 
     erroredFields = [];
     CUSTOM_LABELS = {
