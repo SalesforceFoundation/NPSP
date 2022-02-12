@@ -134,8 +134,8 @@ describe('c-rd2-entry-form', () => {
             await flushPromises();
 
             const elevateWidget = controller.elevateWidget();
-            expect(controller.disableElevateButton()).toBeTruthy();
             expect(elevateWidget).toBeTruthy();
+            expect(controller.disableElevateButton()).toBeTruthy();
 
         });
 
@@ -360,6 +360,11 @@ describe('c-rd2-entry-form', () => {
 
 
         it('rd2 record with credit card payment type but no commitment, when editing, displays widget', async () => {
+            getInitialView.mockResolvedValue({
+                ...rd2WithoutCommitmentInitialView,
+                paymentMethod: 'Credit Card'
+            });
+
             const element = createRd2EditForm(FAKE_CARD_RD2_ID);
             const controller = new RD2FormController(element);
             await flushPromises();

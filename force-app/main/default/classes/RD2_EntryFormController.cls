@@ -561,6 +561,7 @@ public with sharing class RD2_EntryFormController {
         @AuraEnabled public String cardLastFour;
         @AuraEnabled public String cardExpirationMonth;
         @AuraEnabled public String cardExpirationYear;
+        @AuraEnabled public String paymentMethod;
         @AuraEnabled public Map<String, Object> customFieldValues;
 
         public RD2RecordView() {
@@ -586,6 +587,7 @@ public with sharing class RD2_EntryFormController {
             this.dayOfMonth = record.Day_of_Month__c;
             this.plannedInstallments = record.npe03__Installments__c?.intValue();
             this.paidInstallments = record.npe03__Total_Paid_Installments__c?.intValue();
+            this.paymentMethod = record.PaymentMethod__c;
             this.recurringType = record.RecurringType__c;
             this.commitmentId = record.CommitmentId__c;
             this.achLastFour = record.ACH_Last_4__c;

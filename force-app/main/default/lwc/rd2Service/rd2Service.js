@@ -134,6 +134,10 @@ class Rd2Service {
     isACH(paymentMethod) {
         return paymentMethod === PAYMENT_METHOD_ACH;
     }
+
+    getOriginalPaymentMethod({ initialViewState }) {
+        return initialViewState.paymentMethod;
+    }
 }
 
 class RecurringDonation {

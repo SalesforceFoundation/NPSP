@@ -36,6 +36,7 @@
     "recurringFrequency": 1,
     "recordId": "a0963000008pebAAAQ",
     "plannedInstallments": null,
+    "paymentMethod": "ACH",
     "paymentToken": null,
     "donorType": "Contact",
     "donationValue": 0.5,

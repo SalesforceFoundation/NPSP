@@ -113,7 +113,6 @@ export default class rd2EntryForm extends LightningElement {
     isCommitmentEdit = false;
     @track record;
     recordName;
-    isMultiCurrencyEnabled = false;
     @track fields = {};
     @track rdSettings = {};
     @track customFields = {};
@@ -156,15 +155,6 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-     * @description Get the Credit Card expiration date, formated as MM/YYYY
-     */
-    get cardExpDate() {
-        const cardExpMonth = this.rd2State.cardExpirationMonth;
-        const cardExpYear = this.rd2State.cardExpirationYear;
-        return cardExpMonth && cardExpYear ? cardExpMonth + "/" + cardExpYear : "";
-    }
-
-    /***
      * @description Get the Label for the Card Last 4 field
      */
     get cardLastFourLabel() {
@@ -198,8 +188,6 @@ export default class rd2EntryForm extends LightningElement {
 
         getRecurringSettings({ parentId: this.parentId })
             .then((response) => {
-                this.isAutoNamingEnabled = response.isAutoNamingEnabled;
-                this.isMultiCurrencyEnabled = response.isMultiCurrencyEnabled;
                 this.isSettingReady = true;
                 this.isSaveButtonDisabled = false;
                 this.rdSettings = response;
@@ -251,7 +239,7 @@ export default class rd2EntryForm extends LightningElement {
         return (
             event.isDisabled &&
             this.isEdit &&
-            this._paymentMethod !== this.existingPaymentMethod &&
+            this._paymentMethod !== this.originalPaymentMethod &&
             this.isCommitmentEdit
         );
     }
@@ -300,8 +288,6 @@ export default class rd2EntryForm extends LightningElement {
             this.header = editHeaderLabel + " " + this.record.fields.Name.value;
             this.isRecordReady = true;
             this.isEdit = true;
-            this._paymentMethod = getFieldValue(this.record, FIELD_PAYMENT_METHOD);
-            this.existingPaymentMethod = getFieldValue(this.record, FIELD_PAYMENT_METHOD);
             this.commitmentId = getFieldValue(this.record, FIELD_COMMITMENT_ID);
             this.isCommitmentEdit = !isNull(this.commitmentId);
             this._nextDonationDate = getFieldValue(this.record, FIELD_NEXT_DONATION_DATE);
@@ -347,6 +333,27 @@ export default class rd2EntryForm extends LightningElement {
     handleDateEstablishedChange(event) {
         this.perform({
             type: ACTIONS.SET_DATE_ESTABLISHED,
+            payload: event.detail,
+        });
+    }
+
+    handleNameChange(event) {
+        this.perform({
+            type: ACTIONS.SET_RECORD_NAME,
+            payload: event.detail,
+        });
+    }
+
+    handleCampaignChange(event) {
+        this.perform({
+            type: ACTIONS.SET_CAMPAIGN_ID,
+            payload: event.detail,
+        });
+    }
+
+    handleChangeTypeChange(event) {
+        this.perform({
+            type: ACTIONS.SET_CHANGE_TYPE,
             payload: event.detail,
         });
     }
@@ -397,13 +404,20 @@ export default class rd2EntryForm extends LightningElement {
      */
     handlePaymentChange(event) {
         //reset the widget and the form related to the payment method
+        this.perform({
+            type: ACTIONS.SET_PAYMENT_METHOD,
+            payload: event.detail.value
+        });
         this.hasUserDisabledElevateWidget = this.isCommitmentEdit;
-        this._paymentMethod = event.detail.value;
         this.isElevateEditWidgetEnabled = false;
         this.evaluateElevateWidget();
     }
 
     handleStatusChange(event) {
+        this.perform({
+            type: ACTIONS.SET_STATUS,
+            payload: event.detail.value
+        });
         this.recurringDonationStatus = event.detail.value;
         this.evaluateElevateEditWidget();
     }
@@ -547,7 +561,10 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     isElevatePaymentMethod() {
-        return this._paymentMethod === PAYMENT_METHOD_CREDIT_CARD || this._paymentMethod === PAYMENT_METHOD_ACH;
+        return (
+            this.rd2State.paymentMethod === PAYMENT_METHOD_CREDIT_CARD ||
+            this.rd2State.paymentMethod === PAYMENT_METHOD_ACH
+        );
     }
 
     /***
@@ -584,7 +601,7 @@ export default class rd2EntryForm extends LightningElement {
     isCurrencySupported() {
         let currencyCode;
 
-        if (this.isMultiCurrencyEnabled) {
+        if (this.rd2State.isMultiCurrencyEnabled) {
             currencyCode = this.template.querySelector('lightning-input-field[data-id="currencyField"]').value;
         } else {
             currencyCode = CURRENCY;
@@ -648,7 +665,7 @@ export default class rd2EntryForm extends LightningElement {
     async processCommitmentSubmit(allFields) {
         try {
             if (this.isElevateWidgetDisplayed()) {
-                this.loadingText = this.rd2Service.getPaymentProcessingMessage(this.paymentMethod);
+                this.loadingText = this.rd2Service.getPaymentProcessingMessage(this.rd2State.paymentMethod);
 
                 const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
 
@@ -918,6 +935,10 @@ export default class rd2EntryForm extends LightningElement {
         return this._paymentMethod;
     }
 
+    get originalPaymentMethod() {
+        return this.rd2State.initialViewState.paymentMethod;
+    }
+
     /***
      * @description Collects fields displayed on the form and any integrated LWC
      */
@@ -929,7 +950,7 @@ export default class rd2EntryForm extends LightningElement {
         const customFields = isNull(this.customFieldsComponent) ? {} : this.customFieldsComponent.returnValues();
 
         const paymentMethod = {
-            [FIELD_PAYMENT_METHOD.fieldApiName]: this.paymentMethod,
+            [FIELD_PAYMENT_METHOD.fieldApiName]: this.rd2State.paymentMethod,
         };
 
         return { ...scheduleFields, ...donorFields, ...customFields, ...paymentMethod, ...this.returnValues() };

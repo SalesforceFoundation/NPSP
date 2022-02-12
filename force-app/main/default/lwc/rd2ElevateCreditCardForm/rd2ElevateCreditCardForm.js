@@ -98,11 +98,8 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     @api rd2RecordId;
     @api existingPaymentMethod;
     @api isEditMode;
-    @api cardLastFour;
     @api cardLastFourLabel;
-    @api cardExpDate;
     @api achLastFourLabel;
-    @api achLastFour;
 
     @api payerOrganizationName;
     @api payerFirstName;
@@ -168,12 +165,31 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         return this.rd2Service.isACH(this.paymentMethod);
     }
 
-    get existingPaymentIsAch() {
-        return this.isEditMode && this.rd2Service.isACH(this.existingPaymentMethod);
+    /***
+     * @description Get the Credit Card expiration date, formated as MM/YYYY
+     */
+    get cardExpDate() {
+        const cardExpMonth = this.rd2State.cardExpirationMonth;
+        const cardExpYear = this.rd2State.cardExpirationYear;
+        return cardExpMonth && cardExpYear ? cardExpMonth + "/" + cardExpYear : "";
     }
 
-    get existingPaymentIsCard() {
-        return this.isEditMode && this.rd2Service.isCard(this.existingPaymentMethod);
+    get showExistingACHInfo() {
+        return this.isEditMode && this.originalPaymentMethodIsACH();
+    }
+
+    get showExistingCardInfo() {
+        return this.isEditMode && this.originalPaymentMethodIsCard();
+    }
+
+    originalPaymentMethodIsACH() {
+        const originalPaymentMethod = this.rd2Service.getOriginalPaymentMethod(this.rd2State);
+        return this.rd2Service.isACH(originalPaymentMethod);
+    }
+
+    originalPaymentMethodIsCard() {
+        const originalPaymentMethod = this.rd2Service.getOriginalPaymentMethod(this.rd2State);
+        return this.rd2Service.isCard(originalPaymentMethod);
     }
 
     get nextPaymentDateMessage() {
@@ -210,7 +226,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     * in order to determine the Visualforce origin URL so that origin source can be verified.
     */
     async connectedCallback() {
-        if(this.shouldLoadInDisabledMode()) {
+        if (this.shouldLoadInDisabledMode()) {
             this.isDisabled = true;
         }
 
@@ -223,7 +239,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     shouldLoadInDisabledMode() {
-        if(this.updatePaymentMode) {
+        if (this.updatePaymentMode) {
             return false;
         } else {
             return !this.isPaymentMethodChanged() && this.rd2RecordId;
@@ -281,9 +297,9 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         this.clearError();
 
         const iframe = this.selectIframe();
-        if(this.rd2Service.isCard(this.paymentMethod)) {
+        if (this.rd2Service.isCard(this.paymentMethod)) {
             return this.requestCardToken(iframe);
-        } else if(this.rd2Service.isACH(this.paymentMethod)) {
+        } else if (this.rd2Service.isACH(this.paymentMethod)) {
             return this.requestAchToken(iframe);
         }
     }

@@ -15,7 +15,7 @@ import updateSuccessMessage from '@salesforce/label/c.RD2_EntryFormUpdateSuccess
 import savingCommitmentMessage from '@salesforce/label/c.RD2_EntryFormSaveCommitmentMessage';
 import savingRDMessage from '@salesforce/label/c.RD2_EntryFormSaveRecurringDonationMessage';
 import FIELD_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.Name';
-import FIELD_LAST_DONATION_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c';
+import FIELD_NEXT_PAYMENT_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c';
 import FIELD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
 import FIELD_COMMITMENT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.CommitmentId__c';
 import FIELD_CONTACT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__c';
@@ -98,7 +98,7 @@ export default class rd2EditPaymentInformationModal extends LightningElement {
     }
 
     get nextDonationDate() {
-        return this.getValue(FIELD_LAST_DONATION_DATE);
+        return this.getValue(FIELD_NEXT_PAYMENT_DATE);
     }
 
     get commitmentId() {
