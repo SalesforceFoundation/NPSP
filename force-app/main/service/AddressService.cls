@@ -176,16 +176,8 @@ public inherited sharing class AddressService {
                 if (orgConfig.validStatesByLabel().containsKey(addr.MailingState__c
                         .toUpperCase())) {
                     sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
-                    sobjDst.put(strFieldPrefix + 'StateCode', orgConfig.validStatesByLabel()
-                            .get(addr
-                                    .MailingState__c.toUpperCase()));
-                } else {
-                    // too expensive for us to create the map of CountryCode|StateCode to StateLabel
-                    // so we will just try to save any state that isn't a label as a code.
-                    sobjDst.put(strFieldPrefix + 'StateCode', addr.MailingState__c.toUpperCase());
                 }
             } else { // MailingState = null
-                sobjDst.put(strFieldPrefix + 'StateCode', null);
                 sobjDst.put(strFieldPrefix + 'State', null);
             }
         }
