@@ -59,12 +59,16 @@ public class CON_DoNotContact_TDTM extends TDTM_Runnable {
             Contact con = (Contact)newlist[i];
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
                 if(con.Deceased__c && con.AccountID!=null) {
+                    AccountAdapter.setAllMembersDeceasedUpdateEnabled(true);
                     setAccountIds.add(con.AccountId);
                 }
             } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
                 Contact oldCon = (Contact)oldlist[i];
                 if (con.Deceased__c != oldCon.Deceased__c && con.AccountId!=null) {
                     setAccountIds.add(con.AccountId);
+                }
+                if (isUpdatedAccountIdOrDeceasedFlag(con, oldCon)) {
+                    AccountAdapter.setAllMembersDeceasedUpdateEnabled(true);
                 }
             }
         }
@@ -105,7 +109,14 @@ public class CON_DoNotContact_TDTM extends TDTM_Runnable {
         
         return dmlWrapper;
 	}
-    
+
+    private Boolean isUpdatedAccountIdOrDeceasedFlag(Contact newContact, Contact oldContact) {
+        if (newContact.Deceased__c != oldContact.Deceased__c || newContact.AccountId != oldContact.AccountId) {
+            return true;
+        }
+        return false;
+    }
+
     /*******************************************************************************************************
     * @description Sets Do Not Contact and related fields when a contact is flagged as deceased. Removes from
     * Household name if there are other non-deceased members in the household.

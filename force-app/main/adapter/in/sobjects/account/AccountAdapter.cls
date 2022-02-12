@@ -100,6 +100,25 @@ public inherited sharing class AccountAdapter extends fflib_SObjects2 {
             setCustomNamingField();
             setNameAndGreetingsToReplacementText();
         }
+        revertAllMembersDeceased();
+    }
+
+    @TestVisible
+    public static Boolean isAllMembersDeceasedUpdateEnabled = false;
+    public static void setAllMembersDeceasedUpdateEnabled(Boolean enabled) {
+        isAllMembersDeceasedUpdateEnabled = enabled;
+    }
+
+    private void revertAllMembersDeceased() {
+        if (isAllMembersDeceasedUpdateEnabled) {
+            return;
+        }
+
+        List<Account> householdAccounts = householdAccounts();
+        for (Integer i = 0; i < householdAccounts.size(); i++) {
+            Account acc = householdAccounts[i];
+            acc.All_Members_Deceased__c = oldVersionOf(acc).All_Members_Deceased__c;
+        }
     }
 
     public void onBeforeUpdate_ADDR_Account_TDTM() {

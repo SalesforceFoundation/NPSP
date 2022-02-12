@@ -1506,11 +1506,28 @@ private class ACCT_IndividualAccounts_TEST {
             System.assertEquals(c.Account.OwnerId, currUserId, 'The Account owner should be the same as the Contact Owner');
         }
     }
+
     /**
      * @description Validate that Account is updated when Contact.Deceased__c is set.
      */
     @IsTest
-    private static void shouldUpdateAllMembersDeceased() {
+    private static void shouldSetAllMembersDeceasedOnDeceasedContactInsert() {
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        con.Deceased__c = true;
+        insert con;
+
+        Contact queryCon = [SELECT Id, AccountId FROM Contact WHERE Id = :con.id];
+        Account queryAccount = [SELECT Id, All_Members_Deceased__c FROM Account WHERE Id = :queryCon.AccountId];
+
+        System.assertEquals(true, queryAccount.All_Members_Deceased__c,
+            'All Members Deceased should be true when Contact Deceased flag is updated to true');
+    }
+
+    /**
+     * @description Validate that Account is updated when Contact.Deceased__c is set.
+     */
+    @IsTest
+    private static void shouldSetAllMembersDeceasedOnDeceasedContactUpdate() {
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
 
@@ -1531,6 +1548,108 @@ private class ACCT_IndividualAccounts_TEST {
             'All Members Deceased should be true when Contact Deceased flag is updated to true');
     }
 
+    /**
+     * @description Validate that Account is updated when Contact.Deceased__c is set.
+     */
+    @IsTest
+    private static void shouldClearAllMembersDeceasedOnHouseholdUpdate() {
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        Contact con2 = con.clone();
+        con.Deceased__c = true;
+        insert con;
+        insert con2;
+
+        Contact queryCon = [SELECT Id, AccountId FROM Contact WHERE Id = :con.id];
+        Contact queryCon2 = [SELECT Id, AccountId FROM Contact WHERE Id = :con2.id];
+        Account queryAccount = [SELECT Id, All_Members_Deceased__c FROM Account WHERE Id = :queryCon.AccountId];
+        Account queryAccount2 = [SELECT Id, All_Members_Deceased__c FROM Account WHERE Id = :queryCon2.AccountId];
+
+        System.assertEquals(true, queryAccount.All_Members_Deceased__c,
+            'All Members Deceased should be true when Contact Deceased flag is true');
+        System.assertEquals(false, queryAccount2.All_Members_Deceased__c,
+            'All Members Deceased should be false when Contact Deceased flag is false');
+
+        Test.startTest();
+        con.AccountId = queryCon2.AccountId;
+        update con;
+        Test.stopTest();
+
+        queryAccount = [SELECT Id, Name, All_Members_Deceased__c, Number_of_Household_Members__c FROM Account WHERE Id = :queryCon.AccountId];
+        queryAccount2 = [SELECT Id, Name, All_Members_Deceased__c, Number_of_Household_Members__c FROM Account WHERE Id = :queryCon2.AccountId];
+
+        System.assertEquals(0, queryAccount.Number_of_Household_Members__c,
+            'There should be zero members in the previous household');
+        System.assertEquals(false, queryAccount.All_Members_Deceased__c,
+            'All Members Deceased should be false when Household has zero members');
+        System.assertEquals(2, queryAccount2.Number_of_Household_Members__c,
+            'There should be two members in the combined household');
+        System.assertEquals(false, queryAccount2.All_Members_Deceased__c,
+            'All Members Deceased should be false when Household Account includes both deceased and non-deceased contacts');
+    }
+
+    /**
+     * @description Validate that Account is updated when Contact.Deceased__c is set.
+     */
+    @IsTest
+    private static void shouldNotClearAllMembersDeceasedOnHouseholdUpdate() {
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        con.Deceased__c = true;
+        Contact con2 = con.clone();
+        insert con;
+        insert con2;
+
+        Contact queryCon = [SELECT Id, AccountId FROM Contact WHERE Id = :con.id];
+        Contact queryCon2 = [SELECT Id, AccountId FROM Contact WHERE Id = :con2.id];
+        Account queryAccount = [SELECT Id, All_Members_Deceased__c FROM Account WHERE Id = :queryCon.AccountId];
+        Account queryAccount2 = [SELECT Id, All_Members_Deceased__c FROM Account WHERE Id = :queryCon2.AccountId];
+
+        System.assertEquals(true, queryAccount.All_Members_Deceased__c,
+            'All Members Deceased should be true when Contact Deceased flag is true');
+        System.assertEquals(true, queryAccount2.All_Members_Deceased__c,
+            'All Members Deceased should be true when Contact Deceased flag is true');
+
+        Test.startTest();
+        con.AccountId = queryCon2.AccountId;
+        update con;
+        Test.stopTest();
+
+        queryAccount = [SELECT Id, Name, All_Members_Deceased__c, Number_of_Household_Members__c FROM Account WHERE Id = :queryCon.AccountId];
+        queryAccount2 = [SELECT Id, Name, All_Members_Deceased__c, Number_of_Household_Members__c FROM Account WHERE Id = :queryCon2.AccountId];
+
+        System.assertEquals(0, queryAccount.Number_of_Household_Members__c,
+            'There should be zero members in the previous household');
+        System.assertEquals(false, queryAccount.All_Members_Deceased__c,
+            'All Members Deceased should be false when Household has zero members');
+        System.assertEquals(2, queryAccount2.Number_of_Household_Members__c,
+            'There should be two members in the combined household');
+        System.assertEquals(true, queryAccount2.All_Members_Deceased__c,
+            'All Members Deceased should still be true when Household Account includes two deceased contacts');
+    }
+
+    /**
+     * @description Validate that Account is not updated when direct update of Account is attempted.
+     */
+    @IsTest
+    private static void shouldNotUpdateAllMembersDeceasedOnDirectAccountUpdate() {
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        insert con;
+
+        Contact queryCon = [SELECT Id, AccountId FROM Contact WHERE Id = :con.id];
+        Account queryAccount = [SELECT Id, npe01__SYSTEM_AccountType__c, All_Members_Deceased__c FROM Account WHERE Id = :queryCon.AccountId];
+
+        System.assertEquals(false, queryAccount.All_Members_Deceased__c,
+            'All Members Deceased should be false when Contact Deceased flag is false');
+
+        Test.startTest();
+        queryAccount.All_Members_Deceased__c = true;
+        update queryAccount;
+        Test.stopTest();
+
+        queryAccount = [SELECT Id, All_Members_Deceased__c FROM Account WHERE Id = :queryCon.AccountId];
+
+        System.assertEquals(false, queryAccount.All_Members_Deceased__c,
+            'All Members Deceased should still be false when Account All_Members_Deceased__c is directly updated');
+    }
 
 
 
