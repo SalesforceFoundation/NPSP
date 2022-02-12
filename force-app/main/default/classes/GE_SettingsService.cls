@@ -50,6 +50,44 @@ public with sharing class GE_SettingsService {
     }
 
     public Boolean isRecurringGiftsEnabled() {
-        return UTIL_CustomSettings_API.getGiftEntrySettings().Enable_Recurring_Donations_in_Gift_Entry__c;
+        AdvancedMappingEnablementService advancedMappingEnablementService = new AdvancedMappingEnablementService();
+        GiftEntryEnablementService giftEntryEnablementService = new GiftEntryEnablementService();
+
+        return advancedMappingEnablementService.isEnabled()
+            && giftEntryEnablementService.isEnabled()
+            && RD2_EnablementService.getInstance().isRecurringDonations2Enabled()
+            && canAccessRecurringDonationFields();
+    }
+
+    public Boolean canMakeGiftsRecurring() {
+        try {
+            fflib_SecurityUtils.checkFieldIsUpdateable(DataImportBatch__c.SObjectType,
+                DataImportBatch__c.SObjectType.fields.Allow_Recurring_Donations__c);
+        } catch (fflib_SecurityUtils.SecurityException e) {
+            return false;
+        }
+        return true;
+    }
+
+    private Boolean canAccessRecurringDonationFields() {
+        List<SObjectField> giftScheduleFieldApiNames = new List<Schema.SObjectField>{
+            DataImport__c.SObjectType.fields.Recurring_Donation_Recurring_Type__c,
+            DataImport__c.SObjectType.fields.Recurring_Donation_Date_Established__c,
+            DataImport__c.SObjectType.fields.Recurring_Donation_Day_of_Month__c,
+            DataImport__c.SObjectType.fields.Recurring_Donation_Planned_Installments__c,
+            DataImport__c.SObjectType.fields.Recurring_Donation_Installment_Period__c,
+            DataImport__c.SObjectType.fields.Recurring_Donation_Installment_Frequency__c,
+            DataImport__c.SObjectType.fields.Recurring_Donation_Effective_Date__c,
+            DataImport__c.SObjectType.fields.Recurring_Donation_Amount__c,
+            DataImport__c.SObjectType.fields.Recurring_Donation_End_Date__c
+        };
+
+        try {
+            fflib_SecurityUtils.checkRead(DataImportBatch__c.SObjectType, giftScheduleFieldApiNames);
+            fflib_SecurityUtils.checkUpdate(DataImportBatch__c.SObjectType, giftScheduleFieldApiNames);
+        } catch (fflib_SecurityUtils.SecurityException e) {
+            return false;
+        }
+        return true;
     }
 }

@@ -33,7 +33,7 @@ describe('c-ge-form-renderer', () => {
             const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
             element.batchId = 'dummyBatchId';
 
-            Settings.isRecurringGiftsEnabled = jest.fn(() => true);
+            Settings.canMakeGiftsRecurring = jest.fn(() => true);
             element.Settings = Settings;
             document.body.appendChild(element);
             await flushPromises();
@@ -48,7 +48,7 @@ describe('c-ge-form-renderer', () => {
             const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
             element.batchId = 'dummyBatchId';
 
-            Settings.isRecurringGiftsEnabled = jest.fn(() => false);
+            Settings.canMakeGiftsRecurring = jest.fn(() => false);
             element.Settings = Settings;
             document.body.appendChild(element);
             await flushPromises();
@@ -77,7 +77,7 @@ describe('c-ge-form-renderer', () => {
             const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
             element.batchId = 'dummyBatchId';
 
-            Settings.isRecurringGiftsEnabled = jest.fn(() => true);
+            Settings.canMakeGiftsRecurring = jest.fn(() => true);
             element.Settings = Settings;
             document.body.appendChild(element);
             await flushPromises();

@@ -299,9 +299,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     get isRecurringGiftsEnabled() {
-        console.log('Settings.canAccessRecurringDonationFields() '+ Settings.canAccessRecurringDonationFields());
-        return Settings.canAccessRecurringDonationFields()
-            && this._batch[
+        return this._batch[
                 apiNameFor(DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS)
                 ];
     }
@@ -535,8 +533,8 @@ export default class GeFormRenderer extends LightningElement{
     @wire(getRecord, {
         recordId: '$batchId',
         fields: [FORM_TEMPLATE_FIELD,
-            BATCH_DEFAULTS_FIELD,
-            DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS]
+            BATCH_DEFAULTS_FIELD],
+        optionalFields: [DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS]
     })
     wiredBatch({data, error}) {
         if (data) {
@@ -545,8 +543,8 @@ export default class GeFormRenderer extends LightningElement{
                     ].value;
             this._batch[
                 apiNameFor(DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS)] =
-                data.fields[apiNameFor(DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS)
-                    ].value;
+                data?.fields[apiNameFor(DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS)
+                    ]?.value;
             GeFormService.getFormTemplateById(
                 data.fields[apiNameFor(FORM_TEMPLATE_FIELD)].value)
                 .then(formTemplate => {
