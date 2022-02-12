@@ -702,6 +702,23 @@ private with sharing class RD2_EntryFormController_TEST {
         System.assertEquals(donorAddress.MailingStreet2__c, streetLine2, 'Account and Address do not match');
     }
 
+    @IsTest
+    private static void shouldThrowExceptionWhenGetDonorAddressWithoutPermissions() {
+        RD2_EntryFormController.permissions = 
+            (UTIL_Permissions) Test.createStub(UTIL_Permissions.class, new UTIL_PermissionsMock(false, false));
+        Contact donorContact = getContact();
+
+        AuraHandledException caughtException;
+        try {
+            RD2_EntryFormController.getDonorAddress(donorContact.Id);
+        } catch (AuraHandledException ex) {
+            caughtException = ex;
+        }
+        System.assertNotEquals(null, caughtException, 'There should be an Exception');
+        System.assertEquals(Label.commonPermissionErrorMessage, caughtException.getMessage(), 
+            'The Exception message does not match');
+    }
+
     // Helpers
     ////////////////
 
@@ -774,4 +791,31 @@ private with sharing class RD2_EntryFormController_TEST {
             return this.rd;
         }
     }
+
+    private class UTIL_PermissionsMock implements StubProvider {
+
+        Boolean canRead;
+        Boolean canCreate;
+
+        public UTIL_PermissionsMock(Boolean canRead, Boolean canCreate) {
+            this.canCreate = canCreate;
+            this.canRead = canRead;
+        }
+
+        public Object handleMethodCall(Object stubbedObject, String stubbedMethodName,
+                Type returnType, List<Type> listOfParamTypes, List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+
+            switch on stubbedMethodName {
+                when 'canRead' {
+                    return this.canRead;
+                }
+                when 'canCreate' {
+                    return this.canCreate;
+                }
+            }
+            return null;
+        }
+    }
+
 }

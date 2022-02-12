@@ -71,6 +71,20 @@ public with sharing class RD2_EntryFormController {
     }
 
     /***
+    * @description Permissions class used to determine if the running user has permissions
+    */
+    @TestVisible
+    private static UTIL_Permissions permissions {
+        get {
+            if (permissions == null) {
+                permissions = new UTIL_Permissions();
+            }
+            return permissions;
+        }
+        set;
+    }
+
+    /***
     * @description Retrieves the record type id for the household account record type
     */
     @TestVisible
@@ -177,7 +191,9 @@ public with sharing class RD2_EntryFormController {
 
         SObjectType donorObjectType = donorId.getSobjectType();
         if (!hasDonorAddressPermissions(donorObjectType)) {
-            throw new UTIL_Permissions.InsufficientPermissionException(Label.commonPermissionErrorMessage);
+            AuraHandledException ex = new AuraHandledException(Label.commonPermissionErrorMessage);
+            ex.setMessage(Label.commonPermissionErrorMessage);
+            throw ex;
         }
 
         NPSP_Address donorAddress = new NPSP_Address(new Address__c());
@@ -201,9 +217,9 @@ public with sharing class RD2_EntryFormController {
     private static Boolean hasDonorAddressPermissions(SObjectType donorObjectType) {
         Boolean hasAccess = false;
         if (donorObjectType == Account.SObjectType) {
-            hasAccess = UTIL_Permissions.canRead(String.valueOf(Account.SObjectType), 'BillingAddress');
+            hasAccess = permissions.canRead(Account.SObjectType, new Set<SObjectField>{Account.BillingAddress});
         } else if(donorObjectType == Contact.SObjectType) {
-            hasAccess = UTIL_Permissions.canRead(String.valueOf(Contact.SObjectType), 'MailingAddress');
+            hasAccess = permissions.canRead(Contact.SObjectType, new Set<SObjectField>{Contact.MailingAddress});
         }
         return hasAccess;
     }
