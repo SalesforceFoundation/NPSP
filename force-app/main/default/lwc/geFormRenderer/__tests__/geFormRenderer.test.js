@@ -28,14 +28,22 @@ describe('c-ge-form-renderer', () => {
     });
 
     describe('render behavior', () => {
-/*        it('renders make recurring button, when in batch mode and feature is enabled', async () => {
+        it('renders make recurring button, when in batch mode and feature is enabled', async () => {
             retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
             getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
             const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
-            element.batchId = 'dummyBatchId';
 
-            getRecord.emit(dataImportBatchRecord);
+            const DUMMY_BATCH_ID = 'a0T11000007F8WQEA0';
+
+            element.batchId = DUMMY_BATCH_ID;
             document.body.appendChild(element);
+            await flushPromises();
+
+            // simulate getting back data for DUMMY_CONTACT_ID
+            getRecord.emit(dataImportBatchRecord, config => {
+                return config.recordId === DUMMY_BATCH_ID;
+            });
+
             await flushPromises();
 
             const button = element.shadowRoot.querySelectorAll('[data-id="recurringButton"]');
@@ -46,12 +54,21 @@ describe('c-ge-form-renderer', () => {
             retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
             getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
             const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
-            element.batchId = 'dummyBatchId';
+            const DUMMY_BATCH_ID = 'a0T11000007F8WQEA0';
 
-            Settings.canMakeGiftsRecurring = jest.fn(() => false);
-            element.Settings = Settings;
-            document.body.appendChild(element);
+            element.batchId = DUMMY_BATCH_ID;
+
+            dataImportBatchRecord.fields['Allow_Recurring_Donations__c'].value = 'false';
+
             await flushPromises();
+
+            // simulate getting back data for DUMMY_CONTACT_ID
+            getRecord.emit(dataImportBatchRecord, config => {
+                return config.recordId === DUMMY_BATCH_ID;
+            });
+
+            await flushPromises();
+
 
             const button = element.shadowRoot.querySelectorAll('[data-id="recurringButton"]');
             expect(button).toHaveLength(0);
@@ -67,19 +84,30 @@ describe('c-ge-form-renderer', () => {
 
             const button = element.shadowRoot.querySelectorAll('[data-id="recurringButton"]');
             expect(button).toHaveLength(0);
-        });*/
+        });
     });
 
     describe('events', () => {
-/*        it('dispatches an event to display recurring donation schedule modal', async () => {
+        it('dispatches an event to display recurring donation schedule modal', async () => {
             retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
             getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
             const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
-            element.batchId = 'dummyBatchId';
+            const DUMMY_BATCH_ID = 'a0T11000007F8WQEA0';
 
-            Settings.canMakeGiftsRecurring = jest.fn(() => true);
-            element.Settings = Settings;
+            element.batchId = DUMMY_BATCH_ID;
+
             document.body.appendChild(element);
+
+            await flushPromises();
+
+            // simulate getting back data for DUMMY_CONTACT_ID
+            getRecord.emit(dataImportBatchRecord, config => {
+                return config.recordId === DUMMY_BATCH_ID;
+            });
+
+            await flushPromises();
+
+
             await flushPromises();
 
             const dispatchEventSpy = jest.spyOn(element, 'dispatchEvent');
@@ -90,7 +118,7 @@ describe('c-ge-form-renderer', () => {
             expect(dispatchEventSpy).toHaveBeenCalledTimes(1);
             const componentName = dispatchEventSpy.mock.calls[0][0].detail.modalProperties.componentName;
             expect(componentName).toBe('geModalRecurringDonation');
-        });*/
+        });
     });
 
     it('loads a template with four sections', async () => {
