@@ -92,7 +92,10 @@ jest.mock('@salesforce/apex/RD2_EntryFormController.handleCommitment',
 describe('c-rd2-entry-form', () => {
 
     beforeEach(() => {
-        getInitialView.mockResolvedValue(initialViewResponse);
+        getInitialView.mockResolvedValue({
+            ...initialViewResponse,
+            isElevateCustomer: true
+        });
         getRecurringSettings.mockResolvedValue(recurringSettingsResponse);
         hasRequiredFieldPermissions.mockResolvedValue(true);
         window.HTMLElement.prototype.scrollIntoView = mockScrollIntoView;
@@ -187,7 +190,7 @@ describe('c-rd2-entry-form', () => {
     describe('tokenization', () => {
 
         beforeEach(() => {
-            getInitialView.mockResolvedValue(initialViewResponse);
+            getInitialView.mockResolvedValue({ ...initialViewResponse, isElevateCustomer: true });
             setupIframeReply();
         });
 
