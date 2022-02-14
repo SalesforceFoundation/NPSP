@@ -146,6 +146,22 @@
                             </div>
 
                             <template if:true={currentPaymentIsCard}>
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <template if:false={showBillingAddress}>
+                                            <lightning-button label={labels.addBillingAddressButtonLabel}
+                                                            variant="base"
+                                                            onclick={handleAddBillingAddressFields}
+                                                            class="slds-button slds-var-m-bottom_small"
+                                                            disabled={searchingForAddress}
+                                                            data-qa-locator='button Clear Address'>
+                                            </lightning-button>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <template if:true={showBillingAddress}>
                                 <div class="slds-grid slds-wrap slds-gutters slds-var-p-bottom_medium">
                                     <div class="slds-col slds-size_1-of-1 slds-var-p-horizontal_x-small">
                                         <strong class="slds-form-element__label slds-var-p-bottom_x-small">
@@ -167,6 +183,13 @@
                                                           disabled={searchingForAddress}
                                                           data-qa-locator='button Clear Address'>
                                         </lightning-button>
+                                        <lightning-button label={labels.removeBillingAddressButtonLabel}
+                                                          variant="base"
+                                                          onclick={handleRemoveBillingAddressFields}
+                                                          class="slds-button slds-float_right"
+                                                          disabled={searchingForAddress}
+                                                          data-qa-locator='button Clear Address'>
+                                            </lightning-button>
                                         <template if:true={showEmptyAddressError}>
                                             <div class="slds-text-color_error slds-var-p-top_small">
                                                 {labels.donorAddressEmptyLabel}
