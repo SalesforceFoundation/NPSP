@@ -2786,7 +2786,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Status Automation introduction</shortDescription>
-        <value>These settings automate changing the Recurring Donation Status when donors miss installment payments.&lt;br/&gt;&lt;br/&gt;Using these settings, NPSP updates the Recurring Donation&apos;s Status when the current date exceeds the Last Donation Date plus the future expected installment date and the Number of Days for Lapsed or Number of Days for Closed.&lt;br/&gt;&lt;br/&gt;For example, given a monthly Recurring Donation started on January 1st, and Number of Days for Lapsed is set to 10 days, the Recurring Donation becomes Lapsed on February 10th if no installment payment is received.&lt;br/&gt;&lt;br/&gt;Elevate Recurring Donations are not included in this automation.</value>
+        <value>These settings automate changing the Recurring Donation Status when donors miss installment payments.&lt;br/&gt;&lt;br/&gt;For example, given a monthly Recurring Donation started on January 1st, and Number of Days for Lapsed is set to 10 days, the Recurring Donation becomes Lapsed on February 10th if no installment payment is received. If Number of Days for Closed is set to 20 days, the Recurring Donation becomes Closed on February 20th.&lt;br/&gt;&lt;br/&gt;Elevate Recurring Donations are not included in this automation.</value>
     </labels>
     <labels>
         <fullName>RD2_StatusAutomationInvalidClosedStatus</fullName>
