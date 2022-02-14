@@ -103,7 +103,6 @@ public inherited sharing class AccountAdapter extends fflib_SObjects2 {
         revertAllMembersDeceased();
     }
 
-    @TestVisible
     public static Boolean isAllMembersDeceasedUpdateEnabled = false;
     public static void setAllMembersDeceasedUpdateEnabled(Boolean enabled) {
         isAllMembersDeceasedUpdateEnabled = enabled;
