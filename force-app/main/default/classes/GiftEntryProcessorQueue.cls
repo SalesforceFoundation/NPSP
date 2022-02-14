@@ -63,13 +63,15 @@ public with sharing class GiftEntryProcessorQueue implements Queueable, Database
             queueableGiftBatch.prepareNextChunk();
             queueableGiftBatch.captureElevateBatches();
             queueableGiftBatch.updateGiftsInChunk();
+
+            queueableGiftBatch.preprocessRecurringGifts();
             queueableGiftBatch.processChunk();
         }
 
         if (queueableGiftBatch.hasChunksToProcess()) {
             chainNextQueueable();
         } else {
-            terminateChain();
+            giftBatchService.clearLatestJobIdFrom(queueableGiftBatch.id());
         }
     }
 
@@ -96,14 +98,10 @@ public with sharing class GiftEntryProcessorQueue implements Queueable, Database
     private void chainNextQueueable() {
         if (hasJobBeenAborted()) {
             giftBatchService.failGiftsInProcessing(queueableGiftBatch.id());
-            terminateChain();
+            giftBatchService.clearLatestJobIdFrom(queueableGiftBatch.id());
         } else {
             giftBatchService.chainNextQueueable(queueableGiftBatch);
         }
-    }
-
-    private void terminateChain() {
-        giftBatchService.clearLatestJobIdFrom(queueableGiftBatch.id());
     }
 
     private Boolean hasJobBeenAborted() {
