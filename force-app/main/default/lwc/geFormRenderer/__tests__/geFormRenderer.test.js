@@ -232,7 +232,7 @@ describe('c-ge-form-renderer', () => {
             document.body.appendChild(element);
 
             getObjectInfo.emit(dataImportObjectInfo, config => {
-                return config.objectApiName.objectApiName === 'DataImport__c';
+                return config?.objectApiName?.objectApiName === 'DataImport__c';
             });
 
             await flushPromises();
@@ -304,7 +304,7 @@ describe('c-ge-form-renderer', () => {
             document.body.appendChild(element);
 
             getObjectInfo.emit(dataImportObjectInfo, config => {
-                return config.objectApiName.objectApiName === 'DataImport__c';
+                return config?.objectApiName?.objectApiName === 'DataImport__c';
             });
 
             await flushPromises();
