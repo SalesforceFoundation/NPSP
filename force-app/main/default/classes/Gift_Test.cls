@@ -32,6 +32,75 @@
 private class Gift_Test {
 
     @isTest
+    static void shouldReturnTrueWhenGiftHasRecurringFieldsPopulated() {
+        // Arrange
+        DataImport__c dataImport = new DataImport__c(
+            Id = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType),
+            Donation_Amount__c = 10.00,
+            Donation_Date__c = Date.today(),
+            Recurring_Donation_Recurring_Type__c = 'Open',
+            Recurring_Donation_Installment_Period__c = 'Monthly',
+            Recurring_Donation_Effective_Date__c = Date.today(),
+            Recurring_Donation_Day_of_Month__c = '5'
+        );
+        Gift gift = new Gift(dataImport);
+
+        // Act
+        Boolean isRecurring = gift.hasPopulatedRecurringFields();
+
+        // Assert
+        System.assertEquals(true, isRecurring,
+            'Should be true when gift has populated recurring fields');
+    }
+
+    @isTest
+    static void shouldReturnFalseWhenGiftDoesNotHaveRecurringFieldsPopulated() {
+        // Arrange
+        DataImport__c dataImport = new DataImport__c(
+            Id = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType),
+            Donation_Amount__c = 10.00,
+            Donation_Date__c = Date.today()
+        );
+        Gift gift = new Gift(dataImport);
+
+        // Act
+        Boolean isRecurring = gift.hasPopulatedRecurringFields();
+
+        // Assert
+        System.assertEquals(false, isRecurring,
+            'Should be false when gift does not have populated recurring fields');
+    }
+
+    @isTest
+    static void shouldPopulatedRecurringDonationFieldsAndNullDonationFields() {
+        // Arrange
+        Date today = Date.today();
+        DataImport__c dataImport = new DataImport__c(
+            Id = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType),
+            Recurring_Donation_Installment_Period__c = 'Monthly',
+            Recurring_Donation_Effective_Date__c = today,
+            Recurring_Donation_Recurring_Type__c = 'Open',
+            Recurring_Donation_Day_of_Month__c = '5',
+            Donation_Amount__c = 25.00,
+            Donation_Date__c = today
+        );
+        Gift gift = new Gift(dataImport);
+
+        // Act
+        gift.preprocessForRecurringGift();
+
+        // Assert
+        System.assert(dataImport.Donation_Amount__c == null);
+        System.assert(dataImport.Donation_Date__c == null);
+        System.assert(dataImport.Recurring_Donation_Amount__c == 25.00);
+        System.assert(dataImport.Recurring_Donation_Date_Established__c == today);
+        System.assert(dataImport.Recurring_Donation_Installment_Period__c == 'Monthly');
+        System.assert(dataImport.Recurring_Donation_Effective_Date__c == today);
+        System.assert(dataImport.Recurring_Donation_Recurring_Type__c == 'Open');
+        System.assert(dataImport.Recurring_Donation_Day_of_Month__c == '5');
+    }
+
+    @isTest
     static void shouldPopulateDonationInGift(){
         // Arrange
         Id dummyDataImportId = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType);

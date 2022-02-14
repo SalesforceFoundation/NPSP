@@ -157,6 +157,33 @@ public with sharing class Gift {
         this.dataImport.Additional_Object_JSON__c = additionalObjectJSONHelper.asJSON();
     }
 
+    public Boolean hasPopulatedRecurringFields() {
+        return this.dataImport.Recurring_Donation_Recurring_Type__c != null
+            || this.dataImport.Recurring_Donation_Installment_Period__c != null
+            || this.dataImport.Recurring_Donation_Effective_Date__c != null
+            || this.dataImport.Recurring_Donation_Day_of_Month__c != null
+
+            || this.dataImport.Recurring_Donation_Amount__c != null
+            || this.dataImport.Recurring_Donation_Date_Established__c != null
+            || this.dataImport.Recurring_Donation_Name__c != null
+            || this.dataImport.Recurring_Donation_Installment_Frequency__c != null
+            || this.dataImport.RecurringDonationImported__c != null
+            || this.dataImport.RecurringDonationImportStatus__c != null;
+    }
+
+    public void preprocessForRecurringGift() {
+        // TODO: Look at Opportunity Object Mappping
+        // TODO: Collect all field mappings
+        // TODO: Move Donation Amount
+        // TODO: Move Donation Date
+        // TODO: Null all other opportunity fields
+        // TODO: Remove net new recurring donations
+        this.dataImport.Recurring_Donation_Amount__c = this.dataImport.Donation_Amount__c;
+        this.dataImport.Recurring_Donation_Date_Established__c = this.dataImport.Donation_Date__c;
+        this.dataImport.Donation_Amount__c = null;
+        this.dataImport.Donation_Date__c = null;
+    }
+
     public Boolean isImported() {
         return this.status() == BDI_DataImport_API.bdiImported;
     }
