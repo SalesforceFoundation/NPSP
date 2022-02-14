@@ -541,12 +541,10 @@ export default class GeFormRenderer extends LightningElement{
     wiredBatch({data, error}) {
         if (data) {
             this._batch[apiNameFor(BATCH_DEFAULTS_FIELD)] =
-                data.fields[apiNameFor(BATCH_DEFAULTS_FIELD)
-                    ].value;
-            this._batch[
-                apiNameFor(DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS)] =
-                data?.fields[apiNameFor(DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS)
-                    ]?.value;
+                data.fields[apiNameFor(BATCH_DEFAULTS_FIELD)].value;
+            this._batch[apiNameFor(DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS)] =
+                data?.fields[apiNameFor(DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS)]?.value;
+
             GeFormService.getFormTemplateById(
                 data.fields[apiNameFor(FORM_TEMPLATE_FIELD)].value)
                 .then(formTemplate => {
