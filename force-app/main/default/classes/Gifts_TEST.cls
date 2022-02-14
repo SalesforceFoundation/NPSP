@@ -125,7 +125,7 @@ private class Gifts_TEST {
             new PS_IntegrationServiceConfigMock(false);
         gifts.paymentIntegrationServiceConfig = stubFor(integrationServiceConfigMock);
 
-        gifts.prepareForProcessing();
+        gifts.moveProcessableToProcessingStatus();
 
         Integer numberOfFailedGifts = 0;
         Integer numberOfProcessingGifts = 0;
@@ -160,7 +160,7 @@ private class Gifts_TEST {
             new PS_IntegrationServiceConfigMock(true);
         gifts.paymentIntegrationServiceConfig = stubFor(integrationServiceConfigMock);
 
-        gifts.prepareForProcessing();
+        gifts.moveProcessableToProcessingStatus();
         System.assertEquals(5, gifts.giftsToUpdate.size());
 
         Integer numberOfFailedGifts = 0;
@@ -330,6 +330,65 @@ private class Gifts_TEST {
         System.assertEquals(1 ,processingGifts.size());
     }
 
+    @IsTest
+    static void shouldPreprocessGiftsWhenGiftsHasRecurringGift() {
+        // Arrange
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        Date today = Date.today();
+        DataImport__c recurringGift = new DataImport__c(
+            Recurring_Donation_Installment_Period__c = 'Monthly',
+            Recurring_Donation_Effective_Date__c = today,
+            Recurring_Donation_Recurring_Type__c = 'Open',
+            Recurring_Donation_Day_of_Month__c = '5',
+            Donation_Amount__c = 25.00,
+            Donation_Date__c = today
+        );
+        dataImports.add(recurringGift);
+        Gifts gifts = new Gifts(dataImports);
+
+        // Act
+        gifts.preprocessRecurringGifts();
+
+        // Assert
+        List<DataImport__c> imports = gifts.asDataImports();
+        System.assertEquals('Monthly', imports[0].Recurring_Donation_Installment_Period__c);
+        System.assertEquals(today, imports[0].Recurring_Donation_Effective_Date__c);
+        System.assertEquals('Open', imports[0].Recurring_Donation_Recurring_Type__c);
+        System.assertEquals('5', imports[0].Recurring_Donation_Day_of_Month__c);
+        System.assertEquals(25.00, imports[0].Recurring_Donation_Amount__c);
+        System.assertEquals(today, imports[0].Recurring_Donation_Date_Established__c);
+
+        System.assertEquals(null, imports[0].Donation_Amount__c);
+        System.assertEquals(null, imports[0].Donation_Date__c);
+    }
+
+    @IsTest
+    static void shouldPreprocessGiftsWhenGiftsHasStandardGift() {
+        // Arrange
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        Date today = Date.today();
+        DataImport__c recurringGift = new DataImport__c(
+            Donation_Amount__c = 15.00,
+            Donation_Date__c = today
+        );
+        dataImports.add(recurringGift);
+        Gifts gifts = new Gifts(dataImports);
+
+        // Act
+        gifts.preprocessRecurringGifts();
+
+        // Assert
+        List<DataImport__c> imports = gifts.asDataImports();
+        System.assertEquals(null, imports[0].Recurring_Donation_Installment_Period__c);
+        System.assertEquals(null, imports[0].Recurring_Donation_Effective_Date__c);
+        System.assertEquals(null, imports[0].Recurring_Donation_Recurring_Type__c);
+        System.assertEquals(null, imports[0].Recurring_Donation_Day_of_Month__c);
+        System.assertEquals(null, imports[0].Recurring_Donation_Amount__c);
+        System.assertEquals(null, imports[0].Recurring_Donation_Date_Established__c);
+
+        System.assertEquals(15.00, imports[0].Donation_Amount__c);
+        System.assertEquals(today, imports[0].Donation_Date__c);
+    }
 
     private static List<DataImport__c> buildGifts(
         Integer numberOfGifts,

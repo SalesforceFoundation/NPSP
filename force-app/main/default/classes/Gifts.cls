@@ -133,7 +133,7 @@ public with sharing class Gifts {
         return giftsToReturn;
     }
 
-    public void prepareForProcessing() {
+    public void moveProcessableToProcessingStatus() {
         giftsToUpdate.clear();
 
         giftsToProcessingStatus();
@@ -144,6 +144,15 @@ public with sharing class Gifts {
                 Label.gePaymentServicesUnavailableFailureMessage,
                 new List<String> { Label.commonPaymentServices });
             failGiftsWithAuthorizedPaymentsWith(failReason);
+        }
+    }
+
+    public void preprocessRecurringGifts() {
+        for (DataImport__c dataImport : dataImportsById.values()) {
+            Gift gift = new Gift(dataImport);
+            if (gift.hasPopulatedRecurringFields()) {
+                gift.preprocessForRecurringGift();
+            }
         }
     }
 
