@@ -120,7 +120,7 @@ private class GiftEntryProcessorQueue_TEST {
         // Assert
         System.assertEquals(false, mockService.chainNextQueueableWasCalled);
         System.assertEquals(true, mockService.clearLatestJobIdFromWasCalled);
-        System.assertEquals(false, mockService.failGiftsInProcessingWasCalled);
+        System.assertEquals(true, mockService.failGiftsInProcessingWasCalled);
     }
 
     public class GiftBatchServiceMock implements StubProvider {
