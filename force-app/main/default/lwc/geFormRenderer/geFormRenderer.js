@@ -532,8 +532,10 @@ export default class GeFormRenderer extends LightningElement{
 
     @wire(getRecord, {
         recordId: '$batchId',
-        fields: [FORM_TEMPLATE_FIELD,
-            BATCH_DEFAULTS_FIELD],
+        fields: [
+            FORM_TEMPLATE_FIELD,
+            BATCH_DEFAULTS_FIELD
+        ],
         optionalFields: [DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS]
     })
     wiredBatch({data, error}) {
