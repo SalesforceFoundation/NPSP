@@ -2754,7 +2754,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Status Automation configuration section header</shortDescription>
-        <value>Number of Days for Lapsed or Closed</value>
+        <value>Status Automation Settings</value>
     </labels>
     <labels>
         <fullName>RD2_StatusAutomationClosedDefinition</fullName>
@@ -2818,7 +2818,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error when Number of Days for Closed is too small</shortDescription>
-        <value>Must be larger than Number of Days for Lapsed</value>
+        <value>Must be greater than Number of Days for Lapsed</value>
     </labels>
     <labels>
         <fullName>RD2_StatusAutomationInvalidNumberOfDaysForLapsed</fullName>
@@ -2826,7 +2826,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error when Number of Days for Lapsed is too large</shortDescription>
-        <value>Must be smaller than Number of Days for Closed</value>
+        <value>Must be less than Number of Days for Closed</value>
     </labels>
     <labels>
         <fullName>RD2_StatusAutomationNegativeNumberOfDays</fullName>
