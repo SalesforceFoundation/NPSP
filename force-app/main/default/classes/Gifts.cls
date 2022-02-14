@@ -56,9 +56,10 @@ public with sharing class Gifts {
     }
 
     @TestVisible
-    private Gifts(List<DataImport__c> dataImports) {
-        this.giftSelector = new GiftSelector();
-        this.donationSelector = new DonationSelector();
+    public Gifts(List<DataImport__c> dataImports) {
+        // this.giftSelector = new GiftSelector();
+        // this.donationSelector = new DonationSelector();
+        // init(dataImports);
         init(dataImports);
     }
 
@@ -112,6 +113,10 @@ public with sharing class Gifts {
             gifts.add(currentGift);
         }
         return gifts;
+    }
+
+    public List<DataImport__c> asDataImports() {
+        return dataImportsById.values();
     }
 
     public Integer size() {

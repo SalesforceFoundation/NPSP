@@ -428,7 +428,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     get isBatchProcessing() {
-        return this._isBatchProcessing;
+        return this._isBatchProcessing || this.giftBatchState.isProcessingGifts;
     }
 
     async processBatch() {
@@ -453,6 +453,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         const poll = setInterval(() => {
             Promise.resolve(true).then(() => {
                 this.refreshBatchTotals();
+                console.info('polling');
             }).then(() => {
                 if (!this._isBatchProcessing) {
                     clearInterval(poll);
