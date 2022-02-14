@@ -300,8 +300,8 @@ export default class GeFormRenderer extends LightningElement{
 
     get isRecurringGiftsEnabled() {
         return this._batch[
-                apiNameFor(DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS)
-                ];
+            apiNameFor(DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS)
+        ];
     }
 
     @wire(getRecord, {recordId: '$donorRecordId', optionalFields: '$fieldNames'})
