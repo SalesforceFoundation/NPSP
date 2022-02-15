@@ -59,8 +59,11 @@ public inherited sharing class RD2_SustainerEvaluationService {
     }
 
     public List<SObject> evaulateSustainersFor(String sObjectType, Set<Id> recordIds) {
-        List<SObject> evaulatedRecords = queryService.getSObjectWithActiveRecurringDonations(sObjectType,  recordIds);
         List<SObject> toUpdate = new List<SObject>();
+        if (recordIds.isEmpty()) {
+            return toUpdate;
+        }
+        List<SObject> evaulatedRecords = queryService.getSObjectWithActiveRecurringDonations(sObjectType,  recordIds);
         
         List<SObject> noneActiveSustainers = calculateSustainerFor(SustainerType.Active, evaulatedRecords, toUpdate);
 

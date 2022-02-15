@@ -501,9 +501,11 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         List<Contact> contactsToUpdate = sustainerService.evaulateSustainersFor('Contact', contactIds);
         List<Account> accountsToUpdate = sustainerService.evaulateSustainersFor('Account', accountIds);
 
-        TDTM_Config_API.disableAllTriggers();
+        //TDTM_Config_API.disableAllTriggers();
+        RD2_SustainerEvaluationService.setSustainerUpdateEnabled(true);
         dbService.updateRecords(contactsToUpdate);
         dbService.updateRecords(accountsToUpdate);
+        RD2_SustainerEvaluationService.setSustainerUpdateEnabled(false);
     }
 
     /**
