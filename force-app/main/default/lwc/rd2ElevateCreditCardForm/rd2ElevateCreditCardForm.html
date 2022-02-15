@@ -2,12 +2,12 @@
     <lightning-layout vertical-align='center' multiple-rows='true'>
 
         <lightning-layout-item size='12' padding='horizontal-small'>
-            <article class='credit-card-container slds-m-top_small'>
+            <article class='credit-card-container slds-var-m-top_small'>
 
                 <lightning-layout vertical-align='center' multiple-rows='true'>
 
                     <lightning-layout-item size='12'>
-                        <div class='credit-card-header slds-p-vertical_small slds-p-horizontal_x-small'>
+                        <div class='credit-card-header slds-var-p-vertical_small slds-var-p-horizontal_x-small'>
                             <lightning-layout vertical-align='center'>
                                 <lightning-layout-item size='6'>
                                     <h1 class='slds-text-body_regular' data-qa-locator='heading'>{labels.elevateWidgetLabel}</h1>
@@ -18,7 +18,7 @@
                                             <lightning-button variant="base"
                                                 label={labels.updatePaymentButtonLabel}
                                                 onclick={handleUserEnabledWidget}
-                                                class='slds-button slds-button_base slds-float_right hide-card-button'
+                                                class='slds-button slds-float_right hide-card-button'
                                                 data-qa-locator='button Update Payment Information'>
                                             </lightning-button>
                                         </template>
@@ -29,7 +29,7 @@
                                                     icon-name='utility:close'
                                                     icon-position="right"
                                                     onclick={handleUserCancelledWidget}
-                                                    class='slds-button slds-button_base slds-float_right hide-card-button'
+                                                    class='slds-button slds-float_right hide-card-button'
                                                     data-qa-locator='button Cancel Update Payment Information'>
                                                 </lightning-button>
                                             </template>
@@ -43,7 +43,7 @@
                                                     icon-name='utility:close'
                                                     icon-position="right"
                                                     onclick={handleUserDisabledWidget}
-                                                    class='slds-button slds-button_base slds-float_right hide-card-button'
+                                                    class='slds-button slds-float_right hide-card-button'
                                                     data-qa-locator='button Do Not Use Elevate'>
                                                 </lightning-button>
                                             </template>
@@ -54,11 +54,11 @@
                         </div>
                     </lightning-layout-item>
 
-                    <lightning-layout-item size="12" class='slds-p-horizontal_small slds-p-top_small'>
+                    <lightning-layout-item size="12" class='slds-var-p-horizontal_small slds-var-p-top_small'>
                         <template if:true={isDisabled}>
                             <template if:true={showExistingCardInfo}>
                                 <lightning-layout vertical-align='center' multiple-rows='true'>
-                                    <lightning-layout-item size="4" class=" slds-text-color_weak slds-p-bottom_small">
+                                    <lightning-layout-item size="4" class=" slds-text-color_weak slds-var-p-bottom_small">
                                         <label for="last4CreditCard" id="creditCardLast4Label"
                                             class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none slds-m-bottom_x-small">
                                             {cardLastFourLabel}
@@ -70,7 +70,7 @@
                                             aria-labelledby="creditCardLast4Label">
                                         </lightning-formatted-text>
                                     </lightning-layout-item>
-                                    <lightning-layout-item size="4" class="slds-text-color_weak slds-p-bottom_small">
+                                    <lightning-layout-item size="4" class="slds-text-color_weak slds-var-p-bottom_small">
                                         <label for="expirationDate" id="expirationDateLabel"
                                             class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none slds-m-bottom_x-small">
                                             {labels.commonExpirationDate}
@@ -85,7 +85,7 @@
                             </template>
                             <template if:true={showExistingACHInfo}>
                                 <lightning-layout vertical-align='center' multiple-rows='true'>
-                                    <lightning-layout-item size="4" class=" slds-text-color_weak slds-p-bottom_small">
+                                    <lightning-layout-item size="4" class=" slds-text-color_weak slds-var-p-bottom_small">
                                         <label for="last4ACH"
                                                class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none slds-m-bottom_x-small">
                                             {achLastFourLabel}
@@ -107,20 +107,20 @@
                                     </span>
                                     <lightning-button variant='base' label={labels.elevateEnableButtonLabel}
                                         title={labels.elevateEnableButtonLabel} onclick={handleUserEnabledWidget}
-                                        class='slds-m-left_xx-small' data-qa-locator='button Use Elevate Now'>
+                                        class='slds-var-m-left_xx-small' data-qa-locator='button Use Elevate Now'>
                                     </lightning-button>
                                 </p>
                             </template>
                         </template>
 
                         <template if:false={isDisabled}>
-                            <div if:true={alert.show} class='slds-p-bottom_medium'>
+                            <div if:true={alert.show} class='slds-var-p-bottom_medium'>
                                 <c-util-alert-banner if:true={alert.show} theme={alert.theme} variant={alert.variant}
                                                      icon={alert.icon} message={alert.message} data-qa-locator='alert Message'>
                                 </c-util-alert-banner>
                             </div>
                             <template if:true={updatePaymentMode}>
-                                <div class="slds-p-bottom_medium">
+                                <div class="slds-var-p-bottom_medium">
                                     <c-formatted-text-with-date value={nextPaymentDateMessage} date={nextDonationDate}></c-formatted-text-with-date>
                                 </div>
                             </template>
@@ -146,51 +146,87 @@
                             </div>
 
                             <template if:true={currentPaymentIsCard}>
-                                <div class="slds-grid slds-wrap slds-gutters">
-                                    <div class="slds-col slds-size_1-of-1 slds-var-p-horizontal_small">
-                                        <h3 class='slds-text-heading_small slds-var-p-bottom_small'>{billingAddressLabel}</h3>
-                                        <lightning-button label="Use Donor Address"
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <template if:false={showBillingAddress}>
+                                            <lightning-button label={labels.addBillingAddressButtonLabel}
+                                                            variant="base"
+                                                            onclick={handleAddBillingAddressFields}
+                                                            class="slds-button slds-var-m-bottom_small"
+                                                            disabled={searchingForAddress}
+                                                            data-qa-locator='button Clear Address'>
+                                            </lightning-button>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <template if:true={showBillingAddress}>
+                                <div class="slds-grid slds-wrap slds-gutters slds-var-p-bottom_medium">
+                                    <div class="slds-col slds-size_1-of-1 slds-var-p-horizontal_x-small">
+                                        <strong class="slds-form-element__label slds-var-p-bottom_x-small">
+                                            {billingAddressLabel}
+                                        </strong>
+                                        <lightning-helptext class="slds-clearfix" 
+                                            content={labels.billingAddressHelpLabel}>
+                                        </lightning-helptext>
+                                        <lightning-button label={labels.useDonorAddressLabel}
                                                           onclick={handleDefaultAddressButton}
                                                           class="slds-button"
                                                           disabled={searchingForAddress}
                                                           data-qa-locator='button Use Donor Address'>
                                         </lightning-button>
-                                        <!-- <template if:true={searchingForAddress}>
-                                            <lightning-spinner alternative-text={labels.spinnerAltText}>
-                                            </lightning-spinner>
-                                        </template> -->
+                                        <lightning-button label={labels.clearAddressLabel}
+                                                          variant="base"
+                                                          onclick={handleClearAddressButton}
+                                                          class="slds-button"
+                                                          disabled={searchingForAddress}
+                                                          data-qa-locator='button Clear Address'>
+                                        </lightning-button>
+                                        <lightning-button label={labels.removeBillingAddressButtonLabel}
+                                                          variant="base"
+                                                          onclick={handleRemoveBillingAddressFields}
+                                                          class="slds-button slds-float_right"
+                                                          disabled={searchingForAddress}
+                                                          data-qa-locator='button Clear Address'>
+                                            </lightning-button>
+                                        <template if:true={showEmptyAddressError}>
+                                            <div class="slds-text-color_error slds-var-p-top_small">
+                                                {labels.donorAddressEmptyLabel}
+                                            </div>
+                                        </template>
                                     </div>
-                                    <div class="slds-col slds-size_1-of-2 slds-var-p-around_small">
+                                    <div class="slds-col slds-size_1-of-2 slds-var-p-around_x-small">
                                         <lightning-input onchange={handleFieldChange} value={billingStreet1}
                                                          name="billingStreet1" label={billingStreetLabel1}
                                                          data-qa-locator="input Elevate Billing Street 1" data-id="billingStreet1">
                                         </lightning-input>
                                     </div>
-                                    <div class="slds-col slds-size_1-of-2 slds-var-p-around_small">
+                                    <div class="slds-col slds-size_1-of-2 slds-var-p-around_x-small">
                                         <lightning-input onchange={handleFieldChange} value={billingStreet2}
                                                         name="billingStreet2" label={billingStreetLabel2}
                                                         data-qa-locator="input Elevate Billing Street 2" data-id="billingStreet2">
                                         </lightning-input>
                                     </div>
-                                    <div class="slds-col slds-size_1-of-2 slds-var-p-around_small">
+                                    <div class="slds-col slds-size_1-of-2 slds-var-p-around_x-small">
                                         <lightning-input onchange={handleFieldChange} value={billingCity}
                                                          name="billingCity" label={labels.billingCityLabel}
                                                          data-qa-locator="input Elevate Billing City" data-id="billingCity">
                                         </lightning-input>
                                     </div>
-                                    <div class="slds-col slds-size_1-of-3 slds-var-p-around_small">
+                                    <div class="slds-col slds-size_1-of-2 slds-var-p-around_x-small">
                                         <lightning-input onchange={handleFieldChange} value={billingState}
                                                          name="billingState" label={labels.billingStateLabel}
                                                          data-qa-locator="input Elevate Billing State" data-id="billingState">
                                         </lightning-input>
                                     </div>
-                                    <div class="slds-col slds-size_1-of-3 slds-var-p-around_small">
+                                    <div class="slds-col slds-size_1-of-2 slds-var-p-around_x-small">
                                         <lightning-input onchange={handleFieldChange} value={billingPostalCode}
                                                          name="billingPostalCode" label={labels.billingPostalCodeLabel}
                                                          data-qa-locator="input Elevate Billing Postal Code" data-id="billingPostalCode">
                                         </lightning-input>
                                     </div>
-                                    <div class="slds-col slds-size_1-of-3 slds-var-p-around_small">
+                                    <div class="slds-col slds-size_1-of-2 slds-var-p-around_x-small">
                                         <lightning-input onchange={handleFieldChange} value={billingCountry}
                                                          name="billingCountry" label={labels.billingCountryLabel}
                                                          data-qa-locator="input Elevate Billing Country" data-id="billingCountry">

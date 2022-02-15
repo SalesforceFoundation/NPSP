@@ -71,6 +71,20 @@ public with sharing class RD2_EntryFormController {
     }
 
     /***
+    * @description Permissions class used to determine if the running user has permissions
+    */
+    @TestVisible
+    private static UTIL_Permissions permissions {
+        get {
+            if (permissions == null) {
+                permissions = new UTIL_Permissions();
+            }
+            return permissions;
+        }
+        set;
+    }
+
+    /***
     * @description Retrieves the record type id for the household account record type
     */
     @TestVisible
@@ -136,31 +150,47 @@ public with sharing class RD2_EntryFormController {
     /**
     * @description Retrieve the donor address given an Account or Contact Id
     * @param donorId Id of donor, Account or Contact
-    * @return Map<String, String> of address values
+    * @return Address__c of the Account's BillingAddress or Contact's MailingAddress
     */
     @AuraEnabled
     public static Address__c getDonorAddress(Id donorId) {
-        if(donorId == null){
+        if (donorId == null) {
             return null;
         }
-        SObjectType donorObjectType = donorId.getSobjectType();
-        NPSP_Address donorAddress = new NPSP_Address(new Address__c());
 
+        SObjectType donorObjectType = donorId.getSobjectType();
+        if (!hasDonorAddressPermissions(donorObjectType)) {
+            AuraHandledException ex = new AuraHandledException(Label.commonPermissionErrorMessage);
+            ex.setMessage(Label.commonPermissionErrorMessage);
+            throw ex;
+        }
+
+        NPSP_Address donorAddress = new NPSP_Address(new Address__c());
         if(donorObjectType == Account.SObjectType) {
             Account donorAccount;
             Map<Id, Account> accounts = Addresses.getAccountsByIds(new Set<Id>{donorId});
-            if(accounts != null){
+            if (accounts != null) {
                 donorAddress.copyFromSObject(accounts.get(donorId), 'Billing', null);
             }
         } else if(donorObjectType == Contact.SObjectType) {
             List<Contact> contacts = ContactSelector.getContactAddressFieldsForContactsIn(new Set<Id>{donorId});
-            if(contacts != null){
+            if (contacts != null) {
                 donorAddress.copyFromSObject(contacts[0], 'Mailing', null);
             }
         }
 
         Address__c address = donorAddress.getRecord();
         return address;
+    }
+
+    private static Boolean hasDonorAddressPermissions(SObjectType donorObjectType) {
+        Boolean hasAccess = false;
+        if (donorObjectType == Account.SObjectType) {
+            hasAccess = permissions.canRead(Account.SObjectType, new Set<SObjectField>{Account.BillingAddress});
+        } else if(donorObjectType == Contact.SObjectType) {
+            hasAccess = permissions.canRead(Contact.SObjectType, new Set<SObjectField>{Contact.MailingAddress});
+        }
+        return hasAccess;
     }
 
     private static String getDonorType(npe03__Recurring_Donation__c rd) {
