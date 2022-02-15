@@ -108,7 +108,6 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         List<SObject> rds, List<SObject> oldRds,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult
     ) {
-        System.debug('I am in '+ triggerAction);
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             return null;
         }
@@ -137,14 +136,14 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         dispatchToIntegrationGateway(rds, oldRds, triggerAction);
 
         cancelCommitments(rds, oldRds, triggerAction);
-        System.debug('hi i am before call');
-        handleSustainerUpdateInDeleteContext(rds, oldRds, triggerAction);
+
+        updateSustainerForDeleteAndUndelete(rds, oldRds, triggerAction);
         
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
         return dmlActions;
     }
 
-    private void handleSustainerUpdateInDeleteContext(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
+    private void updateSustainerForDeleteAndUndelete(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
         if (triggerAction != TDTM_Runnable.Action.AfterDelete && triggerAction != TDTM_Runnable.Action.AfterUndelete) {
             return;
         }
