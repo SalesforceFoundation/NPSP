@@ -100,7 +100,9 @@ public inherited sharing class AccountAdapter extends fflib_SObjects2 {
             setCustomNamingField();
             setNameAndGreetingsToReplacementText();
         }
-        revertAllMembersDeceased();
+        if (!isAllMembersDeceasedUpdateEnabled) {
+            revertAllMembersDeceased();
+        }
     }
 
     public static Boolean isAllMembersDeceasedUpdateEnabled = false;
@@ -109,10 +111,6 @@ public inherited sharing class AccountAdapter extends fflib_SObjects2 {
     }
 
     private void revertAllMembersDeceased() {
-        if (isAllMembersDeceasedUpdateEnabled) {
-            return;
-        }
-
         List<Account> householdAccounts = householdAccounts();
         for (Integer i = 0; i < householdAccounts.size(); i++) {
             Account acc = householdAccounts[i];

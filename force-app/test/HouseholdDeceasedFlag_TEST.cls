@@ -59,7 +59,7 @@ private class HouseholdDeceasedFlag_TEST {
         Contact queryContact = [SELECT Id, AccountId FROM Contact WHERE Id = :con.id];
         Account queryAccount = getAccount(queryContact);
         System.assertEquals(true, queryAccount.All_Members_Deceased__c,
-            'All Members Deceased should be true when Contact Deceased flag is updated to true');
+            'All Members Deceased should be true when household is created with single deceased contact');
     }
 
     /**
