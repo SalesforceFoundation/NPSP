@@ -181,6 +181,11 @@ public with sharing class Gift {
         clearNetNewSoftCredits();
     }
 
+    public void remapFieldsForView() {
+        this.dataImport.Donation_Amount__c = this.dataImport.Recurring_Donation_Amount__c;
+        this.dataImport.Donation_Date__c = this.dataImport.Recurring_Donation_Date_Established__c;
+    }
+
     public Boolean isImported() {
         return this.status() == BDI_DataImport_API.bdiImported;
     }
