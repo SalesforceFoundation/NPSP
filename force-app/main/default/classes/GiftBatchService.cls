@@ -61,11 +61,27 @@ public with sharing class GiftBatchService {
     }
 
     public void processGiftsFor(GiftBatchId giftBatchId) {
-
+        System.debug('processGiftsFor');
+        GiftBatchForQueueable queueableGiftBatch = new GiftBatchForQueueable(giftBatchId);
+        queueableGiftBatch.chunkGiftsThatCanBeProcessed();
+        GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(queueableGiftBatch);
+        System.debug('About to enqueue job');
+        Id jobId = System.enqueueJob(processorQueue);
+        AsyncApexJobId asyncApexJobId = new AsyncApexJobId(jobId);
+        System.debug('Job enqueued' + asyncApexJobId);
+        updateGiftBatchWith(giftBatchId, asyncApexJobId);
     }
 
     public void chainNextQueueable(GiftBatchForQueueable queueableGiftBatch) {
-
+        if (Test.isRunningTest()) {
+            AsyncApexJobId queueableId = new AsyncApexJobId(UTIL_UnitTestData_TEST.mockId(AsyncApexJob.SObjectType));
+            updateGiftBatchWith(queueableGiftBatch.id(), queueableId);
+        } else {
+            GiftEntryProcessorQueue giftEntryProcessorQueue = new GiftEntryProcessorQueue(queueableGiftBatch);
+            Id jobId = System.enqueueJob(giftEntryProcessorQueue);
+            AsyncApexJobId asyncApexJobId = new AsyncApexJobId(jobId);
+            updateGiftBatchWith(queueableGiftBatch.id(), asyncApexJobId);
+        }
     }
 
     public void giftsFailedCaptureFor(Id batchId, Map<String, String> failReasonByElevateBatchId) {
