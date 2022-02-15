@@ -133,37 +133,6 @@ public with sharing class RD2_EntryFormController {
         return UTIL_Describe.getLightningSelectOptions('npe03__Recurring_Donation__c','npe03__Installment_Period__c');
     }
 
-
-    /**
-    * @description  Gather the org, object and environment setting for Recurring Donation Entry/Edit Form
-    * @param parentId The parentId of the new RD
-    * @return Map<String, Object>
-    */
-    @AuraEnabled(Cacheable=true)
-    public static Map<String, Object> getRecurringSettings(Id parentId) {
-        String parentSObjectType = (parentId == null)
-            ? null
-            : parentId.getSobjectType().getDescribe().getName();
-
-        String defaultRecurringType = UTIL_Describe.getDefaultSelectOption(
-            'npe03__Recurring_Donation__c', String.valueOf(npe03__Recurring_Donation__c.RecurringType__c)
-        );
-
-        return new Map<String, Object> {
-            'isAutoNamingEnabled' => RD2_NamingService.isAutomaticNamingEnabled,
-            'isMultiCurrencyEnabled' => UserInfo.isMultiCurrencyOrganization(),
-            'parentSObjectType' => parentSObjectType,
-            'InstallmentPeriodPermissions' => getFieldPermissionsMap('npe03__Installment_Period__c'),
-            'InstallmentFrequencyPermissions' => getFieldPermissionsMap(UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c')),
-            'customFieldSets' => getCustomFieldSectionFields(),
-            'isElevateCustomer' => RD2_ElevateIntegrationService.isIntegrationEnabled(),
-            'isChangeLogEnabled' => RD2_ChangeLogService.isChangeLogEnabled,
-            'periodToYearlyFrequencyMap' => RD2_Constants.PERIOD_TO_YEARLY_FREQUENCY,
-            'closedStatusValues' => RD2_StatusMapper.getInstance().getClosedStatusValues(),
-            'defaultRecurringType' => defaultRecurringType
-        };
-    }
-
     /**
     * @description Retrieve the donor address given an Account or Contact Id
     * @param donorId Id of donor, Account or Contact

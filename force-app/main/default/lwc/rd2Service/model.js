@@ -9,6 +9,7 @@ import {
     SET_DONATION_AMOUNT,
     SET_DONOR_TYPE,
     SET_DATE_ESTABLISHED,
+    SET_ERROR,
     SET_PERIOD_TYPE,
     SET_START_DATE,
     SET_RECURRING_TYPE,
@@ -78,7 +79,7 @@ const DEFAULT_INITIAL_STATE = {
     //Recurring Settings
     isAutoNamingEnabled: null,
     isMultiCurrencyEnabled: false,
-    isElevateCustomer: null,
+    isElevateCustomer: false,
     isChangeLogEnabled: null,
     periodToYearlyFrequencyMap: null,
     closedStatusValues: [],
@@ -272,6 +273,10 @@ const setDateEstablished = (state, dateEstablished) => {
     };
 };
 
+const setError = (state, error) => {
+    console.log(JSON.stringify(error));
+}
+
 const setPaymentMethod = (state, paymentMethod) => {
     return {
         ...state,
@@ -327,6 +332,8 @@ export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
             return setDonorType(state, action.payload);
         case SET_DATE_ESTABLISHED:
             return setDateEstablished(state, action.payload);
+        case SET_ERROR:
+            return setError(state, action.payload);
         case SET_PLANNED_INSTALLMENTS:
             return setPlannedInstallments(state, action.payload);
         case SET_RECURRING_PERIOD:

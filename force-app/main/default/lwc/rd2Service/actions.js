@@ -6,6 +6,7 @@ export const SET_DONOR_TYPE = "set_donor_type";
 export const SET_DONATION_AMOUNT = "set_donation_amount";
 export const SET_DAY_OF_MONTH = "set_day_of_month";
 export const SET_DATE_ESTABLISHED = "set_date_established";
+export const SET_ERROR = "set_error";
 export const SET_PERIOD_TYPE = "set_period_type";
 export const SET_PLANNED_INSTALLMENTS = "set_planned_installments";
 export const SET_PAYMENT_METHOD = "set_payment_method";

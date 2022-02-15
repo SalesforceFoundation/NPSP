@@ -176,7 +176,6 @@
                                             payer-organization-name={rd2State.accountName}
                                             payer-first-name={rd2State.contactFirstName}
                                             payer-last-name={rd2State.contactLastName}
-                                            ach-account-type={accountHolderType}
                                             existing-payment-method={originalPaymentMethod}
                                             payment-method={rd2State.paymentMethod}>
                                         </c-rd2-elevate-credit-card-form>
@@ -233,8 +232,11 @@
                                     </h3>
                                     <div aria-hidden="false" class="slds-section__content">
 
-                                        <c-rd2-entry-form-custom-fields-section record-id={recordId} fields={customFields}
-                                            data-id="customFieldsComponent"></c-rd2-entry-form-custom-fields-section>
+                                        <c-rd2-entry-form-custom-fields-section
+                                            record-id={recordId}
+                                            fields={rd2State.customFields}
+                                            data-id="customFieldsComponent">
+                                        </c-rd2-entry-form-custom-fields-section>
 
                                     </div>
                                 </div>

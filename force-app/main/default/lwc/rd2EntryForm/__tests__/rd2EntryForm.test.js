@@ -5,7 +5,6 @@ import { getRecord } from 'lightning/uiRecordApi';
 import { mockGetIframeReply } from "c/psElevateTokenHandler";
 
 import getInitialView from "@salesforce/apex/RD2_EntryFormController.getInitialView";
-import getRecurringSettings from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
 import hasRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions';
 import handleCommitment from '@salesforce/apex/RD2_EntryFormController.handleCommitment';
 
@@ -17,7 +16,6 @@ import ACCOUNT_OBJECT from '@salesforce/schema/Account';
 import CONTACT_OBJECT from '@salesforce/schema/Contact';
 
 
-const recurringSettingsResponse = require('./data/getRecurringSettings.json');
 const recurringDonationObjectInfo = require('../../../../../../tests/__mocks__/apex/data/recurringDonationObjectInfo.json');
 const installmentPeriodPicklistValues = require('./data/installmentPeriodPicklistValues.json');
 const dayOfMonthPicklistValues = require('./data/dayOfMonthPicklistValues.json');
@@ -67,13 +65,6 @@ const EXPECTED_INDIVIDUAL_ACH_PARAMS = {
     achCode: 'WEB'
 };
 
-jest.mock('@salesforce/apex/RD2_EntryFormController.getRecurringSettings',
-    () => {
-        return { default: jest.fn() }
-    },
-    { virtual: true }
-);
-
 jest.mock('@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions',
     () => {
         return { default: jest.fn() }
@@ -96,7 +87,6 @@ describe('c-rd2-entry-form', () => {
             ...initialViewResponse,
             isElevateCustomer: true
         });
-        getRecurringSettings.mockResolvedValue(recurringSettingsResponse);
         hasRequiredFieldPermissions.mockResolvedValue(true);
         window.HTMLElement.prototype.scrollIntoView = mockScrollIntoView;
     });

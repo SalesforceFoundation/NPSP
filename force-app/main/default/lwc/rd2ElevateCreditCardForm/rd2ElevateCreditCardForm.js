@@ -104,7 +104,6 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     @api payerOrganizationName;
     @api payerFirstName;
     @api payerLastName;
-    @api achAccountType;
 
     @wire(getObjectInfo, { objectApiName: ACCOUNT_ADDRESS_FIELD.objectApiName })
     accountInfo({ data, error }) {

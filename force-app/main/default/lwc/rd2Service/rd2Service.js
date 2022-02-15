@@ -138,6 +138,14 @@ class Rd2Service {
     getOriginalPaymentMethod({ initialViewState }) {
         return initialViewState.paymentMethod;
     }
+
+    isOriginalStatusClosed({initialViewState}) {
+        return this.isClosedStatus(initialViewState);
+    }
+
+    isClosedStatus({ closedStatusValues, recurringStatus }) {
+        return closedStatusValues.includes(recurringStatus);
+    }
 }
 
 class RecurringDonation {
