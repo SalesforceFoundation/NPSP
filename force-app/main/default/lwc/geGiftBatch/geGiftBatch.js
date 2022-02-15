@@ -3,6 +3,7 @@ import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGif
 import updateGiftBatchWith from '@salesforce/apex/GE_GiftEntryController.updateGiftBatchWith';
 import deleteGiftFromGiftBatch from '@salesforce/apex/GE_GiftEntryController.deleteGiftFromGiftBatch';
 import addGiftTo from '@salesforce/apex/GE_GiftEntryController.addGiftTo';
+import hasQueueableId from '@salesforce/apex/GE_GiftEntryController.hasQueueableId';
 
 // Methods below still need to be replaced/updated to go through service x domain. These were only moved.
 import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
@@ -22,6 +23,7 @@ class GiftBatch {
     _currencyIsoCode = '';
     _lastModifiedDate;
     _gifts = [];
+    _isProcessing = false;
     _totals = {
         processedGiftsCount: 0,
         failedGiftsCount: 0,
@@ -36,6 +38,7 @@ class GiftBatch {
 
     async init(dataImportBatchId) {
         this._id = dataImportBatchId;
+        this._isProcessing = await hasQueueableId({ batchId: this._id });
         const viewModel = await getGiftBatchViewWithLimitsAndOffsets({
             dataImportBatchId: this._id,
             giftsLimit: DEFAULT_MEMBER_GIFTS_QUERY_LIMIT,
@@ -68,6 +71,7 @@ class GiftBatch {
 
     async refreshTotals() {
         this._totals = await getGiftBatchTotalsBy({ batchId: this._id });
+        this._isProcessing = await hasQueueableId({ batchId: this._id });
         return this.state();
     }
 
@@ -174,7 +178,7 @@ class GiftBatch {
     }
 
     isProcessingGifts() {
-        return Number(this._totals.PROCESSING) > 0;
+        return Number(this._totals.PROCESSING) > 0 || this._isProcessing;
     }
 
     state() {
