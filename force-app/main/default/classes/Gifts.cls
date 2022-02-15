@@ -55,8 +55,7 @@ public with sharing class Gifts {
         set;
     }
 
-    @TestVisible
-    private Gifts(List<DataImport__c> dataImports) {
+    public Gifts(List<DataImport__c> dataImports) {
         this.giftSelector = new GiftSelector();
         this.donationSelector = new DonationSelector();
         init(dataImports);
@@ -140,6 +139,18 @@ public with sharing class Gifts {
                 new List<String> { Label.commonPaymentServices });
             failGiftsWithAuthorizedPaymentsWith(failReason);
         }
+    }
+
+    public void moveProcessableToProcessingStatus() {
+        prepareForProcessing();
+    }
+
+    public void preprocessRecurringGifts() {
+
+    }
+
+    public List<DataImport__c> asDataImports() {
+        return this.dataImportsById.values();
     }
 
     public void updateRecords() {
