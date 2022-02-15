@@ -89,12 +89,6 @@ private with sharing class RD2_EntryFormController_TEST {
 
         System.assertEquals(true, initialView.InstallmentPeriodPermissions.get('Createable'),
             'Installment_Period__c.IsCreatable should return true');
-        System.assert(initialView.customFieldSets instanceof List<RD2_EntryFormController.CustomField>,
-            'A list of Custom Fields should be returned');
-        System.assert(initialView.periodToYearlyFrequencyMap instanceof Map<String, Integer>,
-            'A map of String to Integer should be returned');
-        System.assert(initialView.defaultRecurringType instanceof String,
-            'A String value should be returned');
     }
 
     /***
