@@ -113,6 +113,10 @@ public with sharing class Gifts {
         return gifts;
     }
 
+    public List<DataImport__c> asDataImports() {
+        return dataImportsById.values();
+    }
+
     public Integer size() {
         return this.dataImportsById.values().size();
     }
@@ -146,11 +150,13 @@ public with sharing class Gifts {
     }
 
     public void preprocessRecurringGifts() {
-
-    }
-
-    public List<DataImport__c> asDataImports() {
-        return this.dataImportsById.values();
+        System.debug('preprocessRecurringGifts');
+        for (DataImport__c dataImport : dataImportsById.values()) {
+            Gift gift = new Gift(dataImport);
+            if (gift.hasPopulatedRecurringFields()) {
+                gift.preprocessForRecurringGift();
+            }
+        }
     }
 
     public void updateRecords() {
