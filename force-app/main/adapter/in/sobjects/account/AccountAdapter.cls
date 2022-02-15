@@ -91,6 +91,8 @@ public inherited sharing class AccountAdapter extends fflib_SObjects2 {
         if (AddressService.isOrgAccountAddressesEnabled()) {
             normalizeLineBreaksFor(orgAccounts());
         }
+
+        resetSustainerFields();
     }
 
     public void onBeforeUpdate_ACCT_Accounts_TDTM() {
@@ -100,6 +102,8 @@ public inherited sharing class AccountAdapter extends fflib_SObjects2 {
             setCustomNamingField();
             setNameAndGreetingsToReplacementText();
         }
+
+        resetSustainerFields();
     }
 
     public void onBeforeUpdate_ADDR_Account_TDTM() {
@@ -137,6 +141,12 @@ public inherited sharing class AccountAdapter extends fflib_SObjects2 {
                     updatedAccountsWithAddressesToCreateOrUpdate,
                     dmlWrapper,
                     false);
+        }
+    }
+
+    private void resetSustainerFields() {
+        for (Account acc : (List<Account>) getRecords()) {
+            acc.Sustainer__c = oldVersionOf(acc)?.Sustainer__c;
         }
     }
 

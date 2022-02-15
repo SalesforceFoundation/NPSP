@@ -99,6 +99,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
     public void onBeforeInsert(List<Contact> newSObjects) {
         Contacts contacts = new Contacts(newSObjects);
         contacts.resetDeprecatedFields();
+        contacts.resetSustainerFields();
 
         if (CAO_Constants.isHHAccountModel()) {
             householdServiceInstance.createOneToOneAndHouseholdAccountsFor(
@@ -241,6 +242,8 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
                     contacts.publicContactsWithNonNullAccountIds()
             );
         }
+
+        contacts.resetSustainerFields();
     }
 
     private List<Contact> getContactsWithAccountAndAddressFields() {
