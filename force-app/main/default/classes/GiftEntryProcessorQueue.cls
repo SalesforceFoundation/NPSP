@@ -33,28 +33,79 @@
 * @description Processor Queue for all gifts entered and processed through the Gift Entry App.
 */
 
-public with sharing class GiftEntryProcessorQueue implements Queueable, Database.AllowsCallouts{
+public with sharing class GiftEntryProcessorQueue implements Queueable, Database.AllowsCallouts {
 
-    private GiftBatchId giftBatchId;
-    private String jobId;
-    @TestVisible private GiftBatchService giftBatchService = new GiftBatchService();
+    private final String ABORTED = 'ABORTED';
+    private GiftBatchForQueueable queueableGiftBatch;
+    private AsyncApexJobId queueableId;
 
-    public GiftEntryProcessorQueue (GiftBatchId giftBatchId){
-        this.giftBatchId = giftBatchId;
+    @TestVisible
+    private GiftBatchService giftBatchService {
+        get {
+            if (giftBatchService == null) {
+                return new GiftBatchService();
+            }
+            return giftBatchService;
+        }
+        set;
+    }
+
+    public GiftEntryProcessorQueue(GiftBatchForQueueable giftBatchForProcessing) {
+        this.queueableGiftBatch = giftBatchForProcessing;
     }
 
     public void execute(QueueableContext queueableContext) {
-        if (Test.isRunningTest()){
-            jobId = UTIL_UnitTestData_TEST.mockId(AsyncApexJob.getSObjectType());
-        } else {
-            System.attachFinalizer(new GiftEntryProcessorQueueFinalizer(this.giftBatchId));
-            BDI_DataImport_BATCH batch = new BDI_DataImport_BATCH(giftBatchId.value(), false);
-            jobId = Database.executeBatch(batch, Integer.valueOf(batch.diSettings.Batch_Size__c));
+        attachFinalizer();
+        queueableId(queueableContext);
+        updateGiftBatchWithQueueableId();
+
+        if (queueableGiftBatch.hasChunksToProcess()) {
+            queueableGiftBatch.prepareNextChunk();
+            queueableGiftBatch.captureElevateBatches();
+            queueableGiftBatch.updateGiftsInChunk();
+
+            queueableGiftBatch.preprocessRecurringGifts();
+            queueableGiftBatch.processChunk();
         }
-        updateGiftBatchWith(new AsyncApexJobId(jobId));
+
+        if (queueableGiftBatch.hasChunksToProcess()) {
+            chainNextQueueable();
+        } else {
+            giftBatchService.clearLatestJobIdFrom(queueableGiftBatch.id());
+        }
     }
 
-    private void updateGiftBatchWith(AsyncApexJobId asyncApexJobId) {
-        giftBatchService.updateGiftBatchWith(giftBatchId, asyncApexJobId);
+    private void attachFinalizer() {
+        if (!Test.isRunningTest()) {
+            GiftEntryProcessorQueueFinalizer finalizer =
+                new GiftEntryProcessorQueueFinalizer(queueableGiftBatch.id());
+            System.attachFinalizer(finalizer);
+        }
+    }
+
+    private void queueableId(QueueableContext queueableContext) {
+        if (Test.isRunningTest()) {
+            queueableId = new AsyncApexJobId(UTIL_UnitTestData_TEST.mockId(AsyncApexJob.SObjectType));
+        } else {
+            queueableId = new AsyncApexJobId(queueableContext.getJobId());
+        }
+    }
+
+    private void updateGiftBatchWithQueueableId() {
+        giftBatchService.updateGiftBatchWith(queueableGiftBatch.id(), queueableId);
+    }
+
+    private void chainNextQueueable() {
+        if (hasJobBeenAborted()) {
+            giftBatchService.failGiftsInProcessing(queueableGiftBatch.id());
+            giftBatchService.clearLatestJobIdFrom(queueableGiftBatch.id());
+        } else {
+            giftBatchService.chainNextQueueable(queueableGiftBatch);
+        }
+    }
+
+    private Boolean hasJobBeenAborted() {
+        String status = giftBatchService.getStatusFor(queueableId);
+        return status == ABORTED;
     }
 }

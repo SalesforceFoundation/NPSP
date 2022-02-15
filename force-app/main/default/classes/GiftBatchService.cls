@@ -61,11 +61,11 @@ public with sharing class GiftBatchService {
     }
 
     public void processGiftsFor(GiftBatchId giftBatchId) {
-        GiftBatch giftBatch = new GiftBatch(giftBatchId);
-        giftBatch.asyncApexJob = giftBatchServicePrivilegedHelper.getAsyncApexJob(giftBatchId);
-        if (giftBatch.canBeEnqueued()) {
-            giftBatch.processGifts();
-        }
+
+    }
+
+    public void chainNextQueueable(GiftBatchForQueueable queueableGiftBatch) {
+
     }
 
     public void giftsFailedCaptureFor(Id batchId, Map<String, String> failReasonByElevateBatchId) {
@@ -120,6 +120,30 @@ public with sharing class GiftBatchService {
 
     }
 
+    public String getStatusFor(AsyncApexJobId jobId) {
+        return giftBatchServicePrivilegedHelper.getStatusFor(jobId);
+    }
+
+    public Boolean hasQueueableJob(GiftBatchId giftBatchId) {
+        Id asyncApexJob = giftBatchServicePrivilegedHelper.getLatestAsyncApexJobId(giftBatchId);
+        if (asyncApexJob != null) {
+            return true;
+        }
+        return false;
+    }
+
+    public void clearLatestJobIdFrom(GiftBatchId giftBatchId) {
+        giftBatchServicePrivilegedHelper.updateGiftBatchWith(null, giftBatchId);
+    }
+
+    public void failGiftsInProcessing(GiftBatchId giftBatchId) {
+        GiftBatch giftBatch = new GiftBatch(giftBatchId);
+        if (giftBatch.hasStandardGiftsToResolve()) {
+            giftBatch.resolveStandardGiftsRemainingInProcessing();
+            giftBatch.updateRecords();
+        }
+    }
+
     private class GiftBatchServicePrivilegedHelper {
         private DataImportBatch__c batch;
         private AsyncApexJob asyncApexJob;
@@ -170,6 +194,15 @@ public with sharing class GiftBatchService {
             this.batch = selectGiftBatchBy(giftBatchId);
             this.asyncApexJob = selectAsyncApexJobBy(this.batch.Latest_Apex_Job_Id__c);
             return this.asyncApexJob;
+        }
+
+        public String getStatusFor(AsyncApexJobId jobId) {
+            return selectAsyncApexJobBy(jobId.value())?.Status;
+        }
+
+        public Id getLatestAsyncApexJobId(GiftBatchId giftBatchId){
+            this.batch = selectGiftBatchBy(giftBatchId);
+            return this.batch.Latest_Apex_Job_Id__c;
         }
     }
 
