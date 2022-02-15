@@ -100,7 +100,7 @@ public without sharing class HouseholdNamingService {
     @future
     public static void updateHouseholdNameAndMemberCountAsynchronously(List<Id> hhids, Boolean isDeceasedUpdateEnabled) {
         //set our process control to avoid recursive updating on household records
-        AccountAdapter.setAllMembersDeceasedUpdateEnabled(isDeceasedUpdateEnabled);
+        AccountAdapter.enableHouseholdDeceasedUpdate(isDeceasedUpdateEnabled);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
         HouseholdNamingService householdNamingService = new HouseholdNamingService();
         householdNamingService.updateHouseholdNameAndMemberCount(hhids);

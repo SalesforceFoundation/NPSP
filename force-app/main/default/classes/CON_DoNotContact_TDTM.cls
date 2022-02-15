@@ -59,7 +59,7 @@ public class CON_DoNotContact_TDTM extends TDTM_Runnable {
             Contact con = (Contact)newlist[i];
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
                 if(con.Deceased__c && con.AccountID!=null) {
-                    AccountAdapter.setAllMembersDeceasedUpdateEnabled(true);
+                    AccountAdapter.enableHouseholdDeceasedUpdate(true);
                     setAccountIds.add(con.AccountId);
                 }
             } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
@@ -67,8 +67,8 @@ public class CON_DoNotContact_TDTM extends TDTM_Runnable {
                 if (con.Deceased__c != oldCon.Deceased__c && con.AccountId!=null) {
                     setAccountIds.add(con.AccountId);
                 }
-                if (isUpdatedAccountIdOrDeceasedFlag(con, oldCon)) {
-                    AccountAdapter.setAllMembersDeceasedUpdateEnabled(true);
+                if (shouldEnableHouseholdDeceasedUpdate(con, oldCon)) {
+                    AccountAdapter.enableHouseholdDeceasedUpdate(true);
                 }
             }
         }
@@ -110,7 +110,7 @@ public class CON_DoNotContact_TDTM extends TDTM_Runnable {
         return dmlWrapper;
 	}
 
-    private Boolean isUpdatedAccountIdOrDeceasedFlag(Contact newContact, Contact oldContact) {
+    private Boolean shouldEnableHouseholdDeceasedUpdate(Contact newContact, Contact oldContact) {
         if (newContact.Deceased__c != oldContact.Deceased__c || newContact.AccountId != oldContact.AccountId) {
             return true;
         }

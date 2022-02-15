@@ -101,16 +101,16 @@ public inherited sharing class AccountAdapter extends fflib_SObjects2 {
             setNameAndGreetingsToReplacementText();
         }
         if (!isAllMembersDeceasedUpdateEnabled) {
-            revertAllMembersDeceased();
+            revertHouseholdDeceasedUpdate();
         }
     }
 
     public static Boolean isAllMembersDeceasedUpdateEnabled = false;
-    public static void setAllMembersDeceasedUpdateEnabled(Boolean enabled) {
+    public static void enableHouseholdDeceasedUpdate(Boolean enabled) {
         isAllMembersDeceasedUpdateEnabled = enabled;
     }
 
-    private void revertAllMembersDeceased() {
+    private void revertHouseholdDeceasedUpdate() {
         List<Account> householdAccounts = householdAccounts();
         for (Integer i = 0; i < householdAccounts.size(); i++) {
             Account acc = householdAccounts[i];
