@@ -108,7 +108,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         List<SObject> rds, List<SObject> oldRds,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult
     ) {
-
+        System.debug('I am in '+ triggerAction);
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             return null;
         }
@@ -128,7 +128,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         // evaluation service is called so that the full schedule is available to the
         // service to determine what Opportunities to insert or modify
         TDTM_TriggerHandler.processDML(dmlActions);
-        dmlActions = null;
+        dmlActions =  null;
 
         findMatchingElevateOpps(rds, triggerAction);
 
@@ -137,9 +137,41 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         dispatchToIntegrationGateway(rds, oldRds, triggerAction);
 
         cancelCommitments(rds, oldRds, triggerAction);
-
+        System.debug('hi i am before call');
+        handleSustainerUpdateInDeleteContext(rds, oldRds, triggerAction);
+        
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
         return dmlActions;
+    }
+
+    private void handleSustainerUpdateInDeleteContext(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
+        if (triggerAction != TDTM_Runnable.Action.AfterDelete && triggerAction != TDTM_Runnable.Action.AfterUndelete) {
+            return;
+        }
+
+        Set<Id> contactIds = new Set<Id>();
+        Set<Id> accountIds = new Set<Id>();
+
+        if (rds != null) {
+            contactIds.addAll(UTIL_SObject.extractId(rds, npe03__Recurring_Donation__c.npe03__Contact__c));
+            accountIds.addAll(UTIL_SObject.extractId(rds, npe03__Recurring_Donation__c.npe03__Organization__c));
+        }
+        if (oldRds != null) {
+            contactIds.addAll(UTIL_SObject.extractId(oldRds, npe03__Recurring_Donation__c.npe03__Contact__c));
+            accountIds.addAll(UTIL_SObject.extractId(oldRds, npe03__Recurring_Donation__c.npe03__Organization__c));
+        }
+
+        RD2_SustainerEvaluationService sustainerService = new RD2_SustainerEvaluationService();
+        List<Contact> contactsToUpdate = sustainerService.evaulateSustainersFor('Contact', contactIds);
+        List<Account> accountsToUpdate = sustainerService.evaulateSustainersFor('Account', accountIds);
+
+        RD2_SustainerEvaluationService.setSustainerUpdateEnabled(true);
+        DmlWrapper sustainerDMLAction = new DmlWrapper();
+        sustainerDMLAction.objectsToUpdate = contactsToUpdate;
+        TDTM_TriggerHandler.processDML(sustainerDMLAction);
+
+        sustainerDMLAction.objectsToUpdate = accountsToUpdate;
+        TDTM_TriggerHandler.processDML(sustainerDMLAction);
     }
 
     /***
