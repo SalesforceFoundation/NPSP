@@ -173,17 +173,12 @@ public with sharing class Gift {
     }
 
     public void preprocessForRecurringGift() {
-        System.debug('preprocessForRecurringGift');
-        // TODO: Look at Opportunity Object Mappping
-        // TODO: Collect all field mappings
-        // TODO: Move Donation Amount
-        // TODO: Move Donation Date
-        // TODO: Null all other opportunity fields
-        // TODO: Remove net new recurring donations
         this.dataImport.Recurring_Donation_Amount__c = this.dataImport.Donation_Amount__c;
         this.dataImport.Recurring_Donation_Date_Established__c = this.dataImport.Donation_Date__c;
         this.dataImport.Donation_Amount__c = null;
         this.dataImport.Donation_Date__c = null;
+        this.dataImport.DonationImported__c = null;
+        clearNetNewSoftCredits();
     }
 
     public Boolean isImported() {
@@ -281,6 +276,14 @@ public with sharing class Gift {
             dataImportSettings,
             new List<DataImport__c> { this.dataImport },
             true);
+    }
+
+    private void clearNetNewSoftCredits() {
+        AdditionalObjectJSON additionalObjectJSONHelper =
+            new AdditionalObjectJSON(additionalObjectString());
+        additionalObjectJSONHelper.clearSoftCreditsFromDynamicSourceGroup();
+        this.dataImport.Additional_Object_JSON__c = additionalObjectJSONHelper.asJSON();
+        this.softCredits = null;
     }
 
     @TestVisible

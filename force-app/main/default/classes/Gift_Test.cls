@@ -320,6 +320,29 @@ private class Gift_Test {
         System.assertEquals(BDI_DataImport_API.bdiImported, gift.status());
     }
 
+    @isTest
+    static void shouldRemoveNetNewSoftCredits() {
+        // Arrange
+        String additionalObjectStringWithSoftCredits =
+            new UTIL_AdditionalObjectData_TEST()
+            .withOpportunityContactRoles(2)
+            .build();
+
+        DataImport__c dataImport = new DataImport__c(
+            Donation_Amount__c = 10,
+            Donation_Date__c = Date.today(),
+            Additional_Object_JSON__c = additionalObjectStringWithSoftCredits
+        );
+        Gift gift = new Gift(dataImport);
+
+        // Act
+        gift.preprocessForRecurringGift();
+
+        // Assert
+        System.assertEquals(0, gift.softCredits().size(),
+            'Should not have any soft credits after preprocessing for recurring gift');
+    }
+
     private class GiftSelectorMock implements StubProvider {
 
         private Decimal newDonationAmount;
