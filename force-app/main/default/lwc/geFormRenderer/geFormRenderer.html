@@ -61,6 +61,18 @@
                     </lightning-layout-item>
                 </template>
 
+                <template if:true={hasSchedule}>
+                    <lightning-layout-item size='12'>
+                        <c-ge-recurring-gift-info
+                            data-id='recurringGiftInfo'
+                            gift-in-view={giftInView}
+                            oneditschedule={handleEditSchedule}
+                            onremoveschedule={handleRemoveSchedule}>
+                            >
+                        </c-ge-recurring-gift-info>
+                    </lightning-layout-item>
+                </template>
+
                 <lightning-layout-item size='12'
                                        class='slds-card slds-p-around_small'>
                     <div if:true={showSpinner}
@@ -168,20 +180,6 @@
                                         >
                                     </lightning-button>
                                 </lightning-layout-item>
-                            </lightning-layout>
-                        </template>
-                        <template if:true={hasSchedule}>
-                            <lightning-layout>
-                                <lightning-layout-item size='9'>
-                                    <c-ge-recurring-gift-info
-                                        data-id='recurringGiftInfo'
-                                        gift-in-view={giftInView}
-                                        oneditschedule={handleEditSchedule}
-                                        onremoveschedule={handleRemoveSchedule}>
-                                        >
-                                    </c-ge-recurring-gift-info>
-                                </lightning-layout-item>
-                                <lightning-layout-item size='3'></lightning-layout-item>
                             </lightning-layout>
                         </template>
                         <c-util-expandable-section class='slds-card slds-card_extension slds-m-bottom_large'
