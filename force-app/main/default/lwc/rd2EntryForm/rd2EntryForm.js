@@ -1,7 +1,6 @@
 import { LightningElement, api, track, wire } from "lwc";
-import CURRENCY from "@salesforce/i18n/currency";
 import { registerListener } from "c/pubsubNoPageRef";
-import { Rd2Service, PERIOD, RECURRING_TYPE_OPEN, ACTIONS } from "c/rd2Service";
+import { Rd2Service, ACTIONS } from "c/rd2Service";
 import {
     isNull,
     showToast,
@@ -11,7 +10,7 @@ import {
     buildFieldDescribes,
     isEmpty,
 } from "c/utilCommon";
-import { HTTP_CODES, PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD } from "c/geConstants";
+import { HTTP_CODES } from "c/geConstants";
 
 import { getObjectInfo } from "lightning/uiObjectInfoApi";
 import { getRecord, getFieldValue } from "lightning/uiRecordApi";
@@ -57,7 +56,6 @@ import commitmentFailedMessage from "@salesforce/label/c.RD2_EntryFormSaveCommit
 import contactAdminMessage from "@salesforce/label/c.commonContactSystemAdminMessage";
 import unknownError from "@salesforce/label/c.commonUnknownError";
 
-import hasRequiredFieldPermissions from "@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions";
 import handleCommitment from "@salesforce/apex/RD2_EntryFormController.handleCommitment";
 import logError from "@salesforce/apex/RD2_EntryFormController.logError";
 
@@ -66,9 +64,6 @@ import CONTACT_FIRST_NAME from "@salesforce/schema/Contact.FirstName";
 import CONTACT_LAST_NAME from "@salesforce/schema/Contact.LastName";
 import ACCOUNT_NAME from "@salesforce/schema/Account.Name";
 import ACCOUNT_PRIMARY_CONTACT_LAST_NAME from "@salesforce/schema/Account.npe01__One2OneContact__r.LastName";
-
-const ELEVATE_SUPPORTED_COUNTRIES = ["US", "USA", "United States", "United States of America"];
-const ELEVATE_SUPPORTED_CURRENCIES = ["USD"];
 
 /***
  * @description Event name fired when the Elevate credit card widget
@@ -190,17 +185,12 @@ export default class rd2EntryForm extends LightningElement {
 
         this.evaluateElevateEditWidget();
 
-        /*
-         * Validate that the User has permissions to all required fields. If not, render a message at the top of the page
-         */
-        hasRequiredFieldPermissions().then((response) => {
-            if (response === false) {
-                this.handleError({
-                    header: this.customLabels.flsErrorHeader,
-                    detail: this.customLabels.flsErrorDetail,
-                });
-            }
-        });
+        if (!this.rd2State.hasRequiredPermissions) {
+            this.handleError({
+                header: this.customLabels.flsErrorHeader,
+                detail: this.customLabels.flsErrorDetail,
+            });
+        }
 
         registerListener(ELEVATE_WIDGET_EVENT_NAME, this.handleElevateWidgetDisplayState, this);
     }
@@ -502,18 +492,10 @@ export default class rd2EntryForm extends LightningElement {
      */
     evaluateElevateEditWidget() {
         if (this.rd2State.isElevateCustomer && this.isEdit) {
-            const recurringType = this.getRecurringType();
-
             // Since the widget requires interaction to Edit, this should start as true
             this.hasUserDisabledElevateWidget = this.isCommitmentEdit;
 
-            this.isElevateEditWidgetEnabled =
-                this.isElevatePaymentMethod() &&
-                recurringType === RECURRING_TYPE_OPEN &&
-                this.isScheduleSupported() &&
-                this.isCurrencySupported() &&
-                this.isCountrySupported() &&
-                this.isValidStatusForElevate();
+            this.isElevateEditWidgetEnabled = this.rd2Service.isValidForElevate(this.rd2State);
 
             this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled;
         }
@@ -524,33 +506,8 @@ export default class rd2EntryForm extends LightningElement {
      * The Elevate widget is applicable to new RDs only for now.
      */
     evaluateElevateWidget() {
-        const isScheduleSupported = this.isScheduleSupported();
-        const isValidPaymentMethod = this.isElevatePaymentMethod();
-        const currencySupported = this.isCurrencySupported();
-        const countrySupported = this.isCountrySupported();
-        const statusSupported = this.isValidStatusForElevate();
-        this.isElevateWidgetEnabled =
-            this.isElevateEditWidgetEnabled ||
-            (this.rd2State.isElevateCustomer === true &&
-                isValidPaymentMethod &&
-                isScheduleSupported &&
-                currencySupported &&
-                countrySupported &&
-                statusSupported);
-    }
-
-    isScheduleSupported() {
-        const { recurringPeriod, recurringType } = this.rd2State;
-        const isValidRecurringType = recurringType === RECURRING_TYPE_OPEN;
-        const isValidInstallmentPeriod = recurringPeriod !== PERIOD.FIRST_AND_FIFTEENTH;
-        return isValidInstallmentPeriod && isValidRecurringType;
-    }
-
-    isElevatePaymentMethod() {
-        return (
-            this.rd2State.paymentMethod === PAYMENT_METHOD_CREDIT_CARD ||
-            this.rd2State.paymentMethod === PAYMENT_METHOD_ACH
-        );
+        const isStateValidForElevate = this.rd2Service.isValidForElevate(this.rd2State);
+        this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled || (isStateValidForElevate);
     }
 
     /***
@@ -578,41 +535,6 @@ export default class rd2EntryForm extends LightningElement {
         const campaignChanged = campaignId !== allFields[FIELD_CAMPAIGN.fieldApiName];
 
         return amountChanged || frequencyChanged || installmentPeriodChanged || campaignChanged;
-    }
-
-    /***
-     * @description Returns true if the currency code on the Recurring Donatation
-     * is supported by the Elevate credit card widget
-     */
-    isCurrencySupported() {
-        let currencyCode;
-
-        if (this.rd2State.isMultiCurrencyEnabled) {
-            currencyCode = this.template.querySelector('lightning-input-field[data-id="currencyField"]').value;
-        } else {
-            currencyCode = CURRENCY;
-        }
-
-        return ELEVATE_SUPPORTED_CURRENCIES.includes(currencyCode);
-    }
-
-    /***
-     * @description Returns true if the Contact.MailingCountry
-     * is supported by the Elevate credit card widget
-     */
-    isCountrySupported() {
-        const { mailingCountry } = this.rd2State;
-
-        return isNull(mailingCountry) || ELEVATE_SUPPORTED_COUNTRIES.includes(mailingCountry);
-    }
-
-    isValidStatusForElevate() {
-        if (this.isEdit) {
-            if (this.rd2Service.isOriginalStatusClosed(this.rd2State)) {
-                return false;
-            }
-        }
-        return !this.rd2Service.isClosedStatus(this.rd2State);
     }
 
     /***
@@ -714,10 +636,6 @@ export default class rd2EntryForm extends LightningElement {
      */
     getCommitmentId() {
         return !isEmpty(this.commitmentId) ? this.commitmentId : null;
-    }
-
-    getRecurringType() {
-        return this.rd2State.recurringType;
     }
 
     /***

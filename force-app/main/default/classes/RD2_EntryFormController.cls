@@ -101,6 +101,13 @@ public with sharing class RD2_EntryFormController {
     @AuraEnabled
     public static RD2AppView getInitialView(Id parentId, Id recordId) {
         RD2AppView view = new RD2AppView();
+
+        view.hasRequiredPermissions = hasRequiredFieldPermissions();
+        if(!view.hasRequiredPermissions) {
+            return view;
+        }
+
+
         view.isAutoNamingEnabled = RD2_NamingService.isAutomaticNamingEnabled;
         view.isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
         view.parentSObjectType = (parentId == null) ? null : UTIL_Describe.objectNameFromId(parentId);
@@ -217,8 +224,8 @@ public with sharing class RD2_EntryFormController {
      * false, the custom UI will display a warning message at the top of the page.
      * @return True if the User has Read access to all required fields in the UI
      */
-    @AuraEnabled(Cacheable=true)
-    public static Boolean hasRequiredFieldPermissions() {
+    @TestVisible
+    private static Boolean hasRequiredFieldPermissions() {
         Set<String> requiredFields = new Set<String>{
             'npe03__Amount__c',
             'npe03__Contact__c',
@@ -615,6 +622,7 @@ public with sharing class RD2_EntryFormController {
         @AuraEnabled public String defaultInstallmentPeriod;
         @AuraEnabled public List<Map<String, String>> installmentPeriodOptions;
         @AuraEnabled public Id parentId;
+        @AuraEnabled public Boolean hasRequiredPermissions;
 
         @AuraEnabled public RD2RecordView record;
 

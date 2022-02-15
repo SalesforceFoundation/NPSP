@@ -5,7 +5,6 @@ import { getRecord } from 'lightning/uiRecordApi';
 import { mockGetIframeReply } from "c/psElevateTokenHandler";
 
 import getInitialView from "@salesforce/apex/RD2_EntryFormController.getInitialView";
-import hasRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions';
 import handleCommitment from '@salesforce/apex/RD2_EntryFormController.handleCommitment';
 
 import RD2_EntryFormMissingPermissions from '@salesforce/label/c.RD2_EntryFormMissingPermissions';
@@ -65,13 +64,6 @@ const EXPECTED_INDIVIDUAL_ACH_PARAMS = {
     achCode: 'WEB'
 };
 
-jest.mock('@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions',
-    () => {
-        return { default: jest.fn() }
-    },
-    { virtual: true }
-);
-
 jest.mock('@salesforce/apex/RD2_EntryFormController.handleCommitment',
     () => {
         return { default: jest.fn() }
@@ -87,7 +79,6 @@ describe('c-rd2-entry-form', () => {
             ...initialViewResponse,
             isElevateCustomer: true
         });
-        hasRequiredFieldPermissions.mockResolvedValue(true);
         window.HTMLElement.prototype.scrollIntoView = mockScrollIntoView;
     });
 
@@ -98,7 +89,10 @@ describe('c-rd2-entry-form', () => {
 
     describe('creating new records', () => {
         it('displays an error when user does not have required permissions', async () => {
-            hasRequiredFieldPermissions.mockResolvedValue(false);
+            getInitialView.mockResolvedValue({
+                hasRequiredFieldPermissions: false
+            });
+
             const element = createRd2EntryForm();
             const controller = new RD2FormController(element);
 

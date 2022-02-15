@@ -5,6 +5,7 @@
   "customFieldSets": [],
   "defaultInstallmentPeriod": "Monthly",
   "defaultRecurringType": "Open",
+  "hasRequiredPermissions": true,
   "InstallmentFrequencyPermissions": {
     "Createable": true,
     "Updateable": true,
