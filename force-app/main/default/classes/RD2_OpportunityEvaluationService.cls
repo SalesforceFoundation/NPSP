@@ -431,6 +431,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         toggleTriggerState(true);
 
+        evaluateSustainers();
+
         dbService.processErrors();
 
         return this;
@@ -486,6 +488,24 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         changeLogService.insertChangeLogRecords();
     }
 
+    private void evaluateSustainers() {
+        Set<Id> contactIds = UTIL_SObject.extractId(rds, npe03__Recurring_Donation__c.npe03__Contact__c);
+        Set<Id> accountIds = UTIL_SObject.extractId(rds, npe03__Recurring_Donation__c.npe03__Organization__c);
+
+        if (oldRds != null) {
+            contactIds.addAll(UTIL_SObject.extractId(oldRds, npe03__Recurring_Donation__c.npe03__Contact__c));
+            accountIds.addAll(UTIL_SObject.extractId(oldRds, npe03__Recurring_Donation__c.npe03__Organization__c));
+        }
+
+        RD2_SustainerEvaluationService sustainerService = new RD2_SustainerEvaluationService();
+        List<Contact> contactsToUpdate = sustainerService.evaulateSustainersFor('Contact', contactIds);
+        List<Account> accountsToUpdate = sustainerService.evaulateSustainersFor('Account', accountIds);
+
+        TDTM_Config_API.disableAllTriggers();
+        dbService.updateRecords(contactsToUpdate);
+        dbService.updateRecords(accountsToUpdate);
+    }
+
     /**
      * @description Activate or deactive RD2 triggers
      * @param isActive Indicates if triggers are active
@@ -494,6 +514,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     private void toggleTriggerState(Boolean isActive) {
         TDTM_ProcessControl.toggleTriggerState('npe03__Recurring_Donation__c', 'RD2_RecurringDonations_TDTM', isActive);
         TDTM_ProcessControl.toggleTriggerState('Opportunity', 'RD2_RecurringDonationsOpp_TDTM', isActive);
+
     }
 
     /**
