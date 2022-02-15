@@ -113,7 +113,7 @@
                                         <lightning-input-field
                                                 field-name={fields.amount.apiName}
                                                 data-id="amountField"
-                                                onchange={handleDonationValueChange}
+                                                onchange={handleAmountChange}
                                                 required
                                         >
                                         </lightning-input-field>
@@ -125,10 +125,13 @@
                                             <div class="slds-p-horizontal_xx-small slds-m-bottom_x-small">
                                                 <label for="currencyField"
                                                     class="slds-form-element__label slds-no-flex">{fields.currency.label}</label>
-                                                <lightning-input-field id="currencyField" data-id="currencyField"
-                                                    field-name={fields.currency.apiName} variant="label-hidden"
-                                                    required onchange={handleCurrencyChange}>
-                                                </lightning-input-field>
+                                                <lightning-input-field id="currencyField"
+                                                                       data-id="currencyField"
+                                                                       field-name={fields.currency.apiName}
+                                                                       variant="label-hidden"
+                                                                       onchange={handleCurrencyChange}
+                                                                       required
+                                                ></lightning-input-field>
                                             </div>
                                         </lightning-layout-item>
                                     </template>
@@ -136,14 +139,16 @@
                                 </lightning-layout>
 
                                 <c-rd2-entry-form-schedule-section
-                                        record-id={recordId}
+                                        rd2-state={rd2State}
                                         data-id="scheduleComponent"
                                         onerrorevent={handleChildComponentError}
                                         ontypechange={handleRecurringTypeChange}
+                                        ondayofmonthchange={handleDayOfMonthChange}
+                                        onstartdatechange={handleStartDateChange}
                                         onperiodchange={handleRecurringPeriodChange}
                                         onperiodtypechange={handleRecurringPeriodTypeChange}
-                                        onfrequencychange={handleDonationValueChange}
-                                        oninstallmentschange={handleDonationValueChange}
+                                        onfrequencychange={handleFrequencyChange}
+                                        oninstallmentschange={handleInstallmentsChange}
                                         if:true={isSettingReady}>
                                 </c-rd2-entry-form-schedule-section>
 
@@ -208,7 +213,7 @@
                                             <lightning-input-field
                                                 data-id="changeType"
                                                 field-name={fields.changeType.apiName}
-                                                value={changeType}
+                                                value={rd2State.changeType}
                                             >
                                             </lightning-input-field>
                                         </lightning-layout-item>
