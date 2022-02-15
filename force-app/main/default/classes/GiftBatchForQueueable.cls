@@ -94,7 +94,7 @@ public inherited sharing class GiftBatchForQueueable {
         return chunkedIds.size() > 0;
     }
 
-    public void prepareNextChunk() {
+    public void prepareChunk() {
         List<Id> giftIdsToSelect = chunkedIds.get(0);
         gifts = new Gifts(giftsSelector.getGiftsReadyToMoveToProcessing(giftIdsToSelect, CHUNK_LIMIT));
         gifts.moveProcessableToProcessingStatus();

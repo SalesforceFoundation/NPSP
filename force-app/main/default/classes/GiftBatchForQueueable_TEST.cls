@@ -147,7 +147,7 @@ private class GiftBatchForQueueable_TEST {
         dummyGiftBatchForQueueable.chunkGiftsThatCanBeProcessed();
 
         // Act
-        dummyGiftBatchForQueueable.prepareNextChunk();
+        dummyGiftBatchForQueueable.prepareChunk();
 
         // Assert
         List<DataImport__c> gifts = dummyGiftBatchForQueueable.gifts.giftsToUpdate.values();
