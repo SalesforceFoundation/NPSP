@@ -191,16 +191,6 @@ public inherited sharing class Contacts extends fflib_SObjects2 {
         set;
     }
 
-    public List<Contact> contactsWithoutAccounts() {
-        List<Contact> contactsWithoutAccounts = new List<Contact>();
-        for (Contact contactRecord : (List<Contact>) getRecords()) {
-            if (isMissingAccount(contactRecord)) {
-                contactsWithoutAccounts.add(contactRecord);
-            }
-        }
-        return contactsWithoutAccounts;
-    }
-
     public Map<Id, Contact> getNewOwnerContactById() {
         Map<Id, Contact> newOwnerContactById = new Map<Id, Contact>();
         for (Contact contactRecord : (List<Contact>) getRecords()) {
@@ -210,6 +200,45 @@ public inherited sharing class Contacts extends fflib_SObjects2 {
             }
         }
         return newOwnerContactById;
+    }
+
+    public Set<Id> ids() {
+        return getIdFieldValues(Contact.Id).getIds();
+    }
+
+
+    public Set<Id> accountIds() {
+        Set<Id> setAccountId = new Set<Id>();
+        for (Integer i = 0; i < getRecords().size(); i++) {
+            Contact newRecord = (Contact) getRecords()[i];
+
+            // need to query account fields we need to look at
+            if (newRecord.AccountId != null) {
+                setAccountId.add(newRecord.AccountId);
+            }
+        }
+        return setAccountId;
+    }
+
+    public Contacts contactsWithNonNullAccountIds() {
+        List<Contact> contactsWithNonNullAccountId = new List<Contact>();
+        for (Contact contact :(List<Contact>)  getRecords()) {
+            if (contact.AccountId != null) {
+                contactsWithNonNullAccountId.add(contact);
+            }
+        }
+        return new Contacts(contactsWithNonNullAccountId);
+    }
+
+    public List<Contact> publicContactsWithNonNullAccountIds() {
+        List<Contact> contactsWithoutAccounts = new List<Contact>();
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            if (contactRecord.AccountId == null
+                    && contactRecord.npe01__Private__c != true) {
+                contactsWithoutAccounts.add(contactRecord);
+            }
+        }
+        return contactsWithoutAccounts;
     }
 
     /*******************************************************************************************************
@@ -247,19 +276,6 @@ public inherited sharing class Contacts extends fflib_SObjects2 {
                 contactRecord.OtherCountry != oldContact.OtherCountry ||
                 contactRecord.Phone != oldContact.Phone ||
                 contactRecord.Fax != oldContact.Fax);
-    }
-
-    public Set<Id> accountIds() {
-        Set<Id> setAccountId = new Set<Id>();
-        for (Integer i = 0; i < getRecords().size(); i++) {
-            Contact newRecord = (Contact) getRecords()[i];
-
-            // need to query account fields we need to look at
-            if (newRecord.AccountId != null) {
-                setAccountId.add(newRecord.AccountId);
-            }
-        }
-        return setAccountId;
     }
 
     private Boolean needsHHDeceasedFlagUpdate(Contact contactRecord, Contact oldContact) {
@@ -326,12 +342,6 @@ public inherited sharing class Contacts extends fflib_SObjects2 {
         return false;
     }
 
-
-
-    private Boolean isMissingAccount(Contact contactRecord) {
-        return contactRecord.AccountId == null && contactRecord.npe01__Private__c != true;
-    }
-
     private Account accountFor(Contact contactRecord) {
         return accountById.get(contactRecord.AccountId);
     }
@@ -347,10 +357,6 @@ public inherited sharing class Contacts extends fflib_SObjects2 {
                 FROM Account
                 WHERE Id IN :accountIds
         ]);
-    }
-
-    public Set<Id> ids() {
-       return getIdFieldValues(Contact.Id).getIds();
     }
 
 }
