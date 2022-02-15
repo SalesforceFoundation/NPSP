@@ -243,7 +243,9 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
             );
         }
 
-        contacts.resetSustainerFields();
+        if (RD2_SustainerEvaluationService.isSustainerUpdateEnabled == false) {
+            contacts.resetSustainerFields();
+        }
     }
 
     private List<Contact> getContactsWithAccountAndAddressFields() {

@@ -103,7 +103,9 @@ public inherited sharing class AccountAdapter extends fflib_SObjects2 {
             setNameAndGreetingsToReplacementText();
         }
 
-        resetSustainerFields();
+        if (RD2_SustainerEvaluationService.isSustainerUpdateEnabled == false) {
+            resetSustainerFields();
+        }
     }
 
     public void onBeforeUpdate_ADDR_Account_TDTM() {

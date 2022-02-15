@@ -53,6 +53,11 @@ public inherited sharing class RD2_SustainerEvaluationService {
         Former
     }
 
+    public static Boolean isSustainerUpdateEnabled = false;
+    public static void setSustainerUpdateEnabled(Boolean enabled) {
+        isSustainerUpdateEnabled = enabled;
+    }
+
     public List<SObject> evaulateSustainersFor(String sObjectType, Set<Id> recordIds) {
         List<SObject> evaulatedRecords = queryService.getSObjectWithActiveRecurringDonations(sObjectType,  recordIds);
         List<SObject> toUpdate = new List<SObject>();
