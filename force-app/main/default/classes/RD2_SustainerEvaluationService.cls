@@ -35,7 +35,9 @@
 */
 public inherited sharing class RD2_SustainerEvaluationService {
     private static final String SUSTAINER_FIELD = UTIL_Namespace.StrTokenNSPrefix('Sustainer__c');
-    private RD2_QueryService queryService {
+
+    @TestVisible
+    private static RD2_QueryService queryService {
         get {
             if (queryService == null) {
                 queryService = new RD2_QueryService();

@@ -81,14 +81,9 @@ public inherited sharing class TEST_ContactBuilder {
     }
 
     @TestVisible
-    private static Contact dummContactWithActiveRecurringDonation() {
+    private static Contact dummContactWithRecurringDonation(npe03__Recurring_Donation__c rd) {
         Contact con = dummyContactWithId();
-        npe03__Recurring_Donation__c rd =  TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-        .withDefaultValues()
-        .withContact(con.Id)
-        .withStatusActive()
-        .build();
-
+        rd.npe03__Contact__c = con.Id;
         con = addRelatedList(con, 'npe03__R00N80000002bOmREAU__r', new List<npe03__Recurring_Donation__c>{rd});
         return con;
     }
