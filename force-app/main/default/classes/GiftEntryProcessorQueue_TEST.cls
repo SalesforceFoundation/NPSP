@@ -39,6 +39,13 @@ private class GiftEntryProcessorQueue_TEST {
     @isTest
     static void shouldCreateRecurringDonationWhenGiftBatchHasRecurringGift() {
         // Arrange
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dataImportSettings.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dataImportSettings.Default_Data_Import_Field_Mapping_Set__c =
+            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        UTIL_CustomSettingsFacade.setDataImportSettings(dataImportSettings);
+
         DataImportBatch__c giftBatch = new DataImportBatch__c();
         insert giftBatch;
 
@@ -50,7 +57,9 @@ private class GiftEntryProcessorQueue_TEST {
             Recurring_Donation_Day_of_Month__c = '5',
             Donation_Amount__c = 25.00,
             Donation_Date__c = Date.today(),
-            NPSP_Data_Import_Batch__c = giftBatch.Id
+            NPSP_Data_Import_Batch__c = giftBatch.Id,
+            Contact1_Lastname__c = 'Dummy Last Name',
+            Donation_Donor__c = 'Contact1'
         ));
         insert giftsToInsert;
 
@@ -64,15 +73,40 @@ private class GiftEntryProcessorQueue_TEST {
         Test.stopTest();
 
         // Assert
-        DataImport__c dataImport = [
-            SELECT Id, Status__c, FailureInformation__c
-            FROM DataImport__c
-            WHERE NPSP_Data_Import_Batch__c = :giftBatch.Id];
-        System.assertEquals(1, [SELECT count() FROM DataImport__c WHERE Status__c = :BDI_DataImport_API.bdiFailed]);
-        System.assertEquals('Failed', dataImport.Status__c);
-        System.assertEquals('Test', dataImport.FailureInformation__c);
-        System.assertEquals(0, [SELECT count() FROM Opportunity]);
-        System.assertEquals(1, [SELECT count() FROM npe03__Recurring_Donation__c]);
+        npe03__Recurring_Donation__c[] resultingRDs =
+            [SELECT Id,
+                npe03__Amount__c,
+                npe03__Installment_Period__c,
+                RecurringType__c,
+                StartDate__c,
+                npe03__Date_Established__c,
+                Day_of_Month__c
+            FROM npe03__Recurring_Donation__c];
+
+        System.assertEquals(1, resultingRDs.size(),
+            'Should result in one recurring donation record');
+        System.assertEquals(25.00, resultingRDs[0].npe03__Amount__c,
+            'Should have the correct amount');
+        System.assertEquals(Date.today(), resultingRDs[0].npe03__Date_Established__c,
+            'Should have the correct date established');
+        System.assertEquals('Monthly', resultingRDs[0].npe03__Installment_Period__c,
+            'Should have the correct installment period');
+        System.assertEquals('Open', resultingRDs[0].RecurringType__c,
+            'Should have the correct recurring type');
+        System.assertEquals('5', resultingRDs[0].Day_of_Month__c,
+            'Should have the correct day of month');
+
+        Opportunity[] resultingOpportunities =
+            [SELECT Id,
+                Amount,
+                npe03__Recurring_Donation__c
+            FROM Opportunity];
+        System.assertEquals(1, resultingOpportunities.size(),
+            'Should result in one opportunity record');
+        System.assertEquals(resultingRDs[0].Id, resultingOpportunities[0].npe03__Recurring_Donation__c,
+            'Resulting opportunity should look up to the recurring donation');
+        System.assertEquals(25.00, resultingOpportunities[0].Amount,
+            'Should have the correct amount');
     }
 
     @IsTest
