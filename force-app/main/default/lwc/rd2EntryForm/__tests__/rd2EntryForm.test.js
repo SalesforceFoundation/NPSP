@@ -6,7 +6,6 @@ import { mockGetIframeReply } from "c/psElevateTokenHandler";
 
 import getInitialView from "@salesforce/apex/RD2_EntryFormController.getInitialView";
 import getRecurringSettings from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
-import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 import hasRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions';
 import handleCommitment from '@salesforce/apex/RD2_EntryFormController.handleCommitment';
 
@@ -29,7 +28,6 @@ const accountGetRecord = require('./data/accountGetRecord.json');
 const rd2WithCardCommitment = require('./data/rd2WithCardCommitment.json');
 const rd2WithACHCommitment = require('./data/rd2WithACHCommitment.json');
 const rd2WithoutCommitmentCard = require('./data/rd2WithoutCommitmentCard.json');
-const recurringDataContactResponse = require('./data/recurringDataContactResponse.json');
 const handleCommitmentResponseBody = require('./data/handleCommitmentResponseBody.json');
 const handleCommitmentResponseBodyACH = require('./data/handleCommitmentResponseBodyACH.json');
 const initialViewResponse = require("../../../../../../tests/__mocks__/apex/data/getInitialView.json");
@@ -313,7 +311,6 @@ describe('c-rd2-entry-form', () => {
     describe('edit mode', () => {
 
         beforeEach(() => {
-            getRecurringData.mockResolvedValue(recurringDataContactResponse);
             setupIframeReply();
         })
 
@@ -473,7 +470,10 @@ describe('c-rd2-entry-form', () => {
         });
 
         it('clears credit card fields when payment method changed to ACH', async () => {
-            getInitialView.mockResolvedValue(rd2WithCardCommitmentInitialView);
+            getInitialView.mockResolvedValue({
+                ...rd2WithCardCommitmentInitialView,
+                isChangeLogEnabled: true
+            });
             setupCommitmentResponse(handleCommitmentResponseBodyACH);
             const element = createRd2EditForm(FAKE_CARD_RD2_ID);
             const controller = new RD2FormController(element);
@@ -534,7 +534,10 @@ describe('c-rd2-entry-form', () => {
 
 
         it('clears ACH fields when payment method changed to Card', async () => {
-            getInitialView.mockResolvedValue(rd2WithACHCommitmentInitialView);
+            getInitialView.mockResolvedValue({
+                ...rd2WithACHCommitmentInitialView,
+                isChangeLogEnabled: true
+            });
 
             setupCommitmentResponse(handleCommitmentResponseBody);
             const element = createRd2EditForm(FAKE_ACH_RD2_ID);
@@ -598,7 +601,11 @@ describe('c-rd2-entry-form', () => {
         let controller;
 
         beforeEach(async () => {
-            getRecurringData.mockResolvedValue(recurringDataContactResponse);
+
+            getInitialView.mockResolvedValue({
+                ...rd2WithoutCommitmentInitialView,
+                isChangeLogEnabled: true
+            });
             element = createRd2EditForm(FAKE_CARD_RD2_ID);
             controller = new RD2FormController(element);
             await flushPromises();
@@ -621,6 +628,7 @@ describe('c-rd2-entry-form', () => {
 
         it('open donation, when form loads, change type picklist is empty', async () => {
             const changeTypePicklist = controller.changeTypePicklist();
+            expect(changeTypePicklist).toBeTruthy();
             expect(changeTypePicklist.value).toBe('');
         });
 
@@ -632,7 +640,9 @@ describe('c-rd2-entry-form', () => {
         });
 
         it('open donation, when frequency changed from monthly to weekly, sets change type to upgrade', async () => {
-            controller.recurringPeriod().changeValue('Weekly');
+            controller.recurringPeriod().changeValue('Advanced');
+            await flushPromises();
+            controller.installmentPeriod().changeValue('Weekly');
             await flushPromises();
             const changeTypePicklist = controller.changeTypePicklist();
             expect(changeTypePicklist.value).toBe('Upgrade');
@@ -665,11 +675,14 @@ describe('c-rd2-entry-form', () => {
         let controller;
 
         beforeEach(async () => {
-            getRecurringData.mockResolvedValue({
-                "DonorType": "Contact",
-                "Period": "Monthly",
-                "Frequency": 1,
-                "RecurringType": "Fixed"
+            getInitialView.mockResolvedValue({
+                ...rd2WithoutCommitmentInitialView,
+                record: {
+                    ...rd2WithoutCommitmentInitialView.record,
+                    recurringType: "Fixed",
+                    plannedInstallments: 12
+                },
+                isChangeLogEnabled: true
             });
             element = createRd2EditForm(FAKE_CARD_RD2_ID);
             controller = new RD2FormController(element);
@@ -833,7 +846,7 @@ class RD2FormController {
     async setDefaultInputFieldValues(recurringType = 'Open') {
         this.recurringType().changeValue(recurringType);
         await flushPromises();
-        if(recurringType === 'Fixed') {
+        if (recurringType === 'Fixed') {
             this.plannedInstallments().setValue(12);
         }
         this.recurringPeriod().changeValue('Monthly');

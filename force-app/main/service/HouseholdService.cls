@@ -386,7 +386,14 @@ public inherited sharing class HouseholdService {
         }
 
         if (!contactsNeedingAddressesCreated.isEmpty()) {
-            Households.insertHouseholdAddressesFor(contactsNeedingAddressesCreated);
+            Contacts contactsDomain = new Contacts(contactsNeedingAddressesCreated);
+            List<Contact> contactsWithNonNullAccountIdsRecords =
+                    contactsDomain.contactsWithNonNullAccountIds().getRecords();
+            if (!contactsWithNonNullAccountIdsRecords.isEmpty()) {
+                Households.insertHouseholdAddressesFor(
+                        contactsWithNonNullAccountIdsRecords
+                );
+            }
         }
     }
 

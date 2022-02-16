@@ -1098,7 +1098,6 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
     */
     @isTest
     private static void shouldCloseOpenRDWhenEndDatePass() {
-
         Date startDate = Date.newInstance(2020, 1, 1);
         Date endDate = Date.newInstance(2020, 3, 1);
         RD2_ScheduleService.currentDate = startDate;
@@ -1122,6 +1121,54 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         for (Opportunity opp : oppGateway.getRecords(rd)) {
             System.assertEquals(true, opp.IsClosed, 'All Opportunities should be closed');
         }
+    }
+
+    @isTest
+    private static void shouldChangeRDStatusToLapsedWhenAutomationThresholdDaysReach() {
+        Date startDate = Date.newInstance(2020, 1, 1);
+        Date currentDate = Date.newInstance(2020, 2, 26);
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_StatusAutomationService_TEST.setupStatusAutomationSettings(10, 20);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withStartDate(startDate)
+            .withStatusActive()
+            .withLastPaymentDate(Date.newInstance(2020, 1, 15))
+            .build();
+        insert rd;
+
+        runBatch(new RD2_OpportunityEvaluation_BATCH(currentDate));
+
+        assertBatchJobIteration(1);
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(RD2_Constants.STATUS_LAPSED, rd.Status__c,
+            'RD should be updated to Lapsed when the threshold days has psased (2/15 + 10 days + 1 day)');
+    }
+
+    @isTest
+    private static void shouldChangeRDStatusToClosedWhenAutomationThresholdDaysReach() {
+        Date startDate = Date.newInstance(2020, 1, 1);
+        Date currentDate = Date.newInstance(2020, 3, 7);
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_StatusAutomationService_TEST.setupStatusAutomationSettings(10, 20);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withStartDate(startDate)
+            .withStatusActive()
+            .withLastPaymentDate(Date.newInstance(2020, 1, 15))
+            .build();
+        insert rd;
+
+        runBatch(new RD2_OpportunityEvaluation_BATCH(currentDate));
+
+        assertBatchJobIteration(1);
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(RD2_Constants.STATUS_CLOSED, rd.Status__c,
+            'RD should be updated to Closed when the threshold days has psased (2/15 + 20 days + 1 day)');
     }
 
 
