@@ -339,11 +339,6 @@ public inherited sharing class NPSP_Address implements IAddress {
         address.Geolocation__Latitude__s = (Decimal) getSObjectField(sobjSrc, fieldPrefixSrc, 'Latitude');
         address.Geolocation__Longitude__s = (Decimal) getSObjectField(sobjSrc, fieldPrefixSrc, 'Longitude');
 
-        if (orgConfig.isStateCountryPicklistsEnabled()) {
-            populateAddressCountryFromCountryCode(sobjSrc, fieldPrefixSrc);
-            populateAddressStateFromStateCode(sobjSrc, fieldPrefixSrc);
-        }
-
         // if specified, also include Address Type
         if (addrType != null) {
             address.Address_Type__c = addrType;
