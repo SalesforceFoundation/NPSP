@@ -6,7 +6,7 @@ import INSTALLMENT_PERIOD from '@salesforce/schema/npe03__Recurring_Donation__c.
 import PLANNED_INSTALLMENTS from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installments__c';
 import EFFECTIVE_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.StartDate__c';
 
-// Import fields from Data Import SObject
+// Import Recurring Donation related fields from Data Import SObject
 import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_DATE from '@salesforce/schema/DataImport__c.Donation_Date__c';
 import DONATION_RECURRING_TYPE from '@salesforce/schema/DataImport__c.Recurring_Donation_Recurring_Type__c';
@@ -17,6 +17,7 @@ import DONATION_PLANNED_INSTALLMENTS from '@salesforce/schema/DataImport__c.Recu
 import DONATION_EFFECTIVE_DATE from '@salesforce/schema/DataImport__c.Recurring_Donation_Effective_Date__c';
 import DONATION_RECURRING_AMOUNT from '@salesforce/schema/DataImport__c.Recurring_Donation_Amount__c';
 import DONATION_DATE_ESTABLISHED from '@salesforce/schema/DataImport__c.Recurring_Donation_Date_Established__c';
+import RECURRING_DONATION_IMPORT_STATUS from '@salesforce/schema/DataImport__c.RecurringDonationImportStatus__c';
 
 class GiftScheduleService {
     addScheduleTo(fields, scheduleData) {
@@ -44,7 +45,8 @@ class GiftScheduleService {
             [DONATION_EFFECTIVE_DATE.fieldApiName]: null,
             [DONATION_RECURRING_AMOUNT.fieldApiName]: null,
             [DONATION_DATE_ESTABLISHED.fieldApiName]: null,
-        } 
+            [RECURRING_DONATION_IMPORT_STATUS.fieldApiName]: null
+        }
     }
 
     retrieveScheduleFromFields(fields) {
