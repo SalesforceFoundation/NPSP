@@ -575,6 +575,7 @@ export default class rd2EntryForm extends LightningElement {
             }
         } catch (error) {
             this.enableSaveButton();
+            this.isLoading = false;
             return;
         }
 
@@ -678,6 +679,7 @@ export default class rd2EntryForm extends LightningElement {
         } catch (error) {}
 
         this.enableSaveButton();
+        this.isLoading = false;
     }
 
     /***
