@@ -32,7 +32,7 @@
 * @date 2021
 * @description Domain class for Households in NPSP.
 */
-public inherited sharing class LegacyHouseholds extends fflib_SObjects {
+public inherited sharing class LegacyHouseholds extends fflib_SObjects2 {
 
     private Map<Id, npo02__Household__c> oldMap;
     @TestVisible
@@ -171,7 +171,7 @@ public inherited sharing class LegacyHouseholds extends fflib_SObjects {
     }
 
     public Set<Id> ids() {
-        return getIdFieldValues(npo02__Household__c.Id);
+        return getIdFieldValues(npo02__Household__c.Id).getIds();
     }
 
     /*******************************************************************************************************
@@ -286,9 +286,10 @@ public inherited sharing class LegacyHouseholds extends fflib_SObjects {
         List<Id> householdIdsToUpdate =
                 contactService.moveOppsForContactsSwitchingAccounts(contactsInstance);
         householdService.updateHouseholds(householdIdsToUpdate, dmlWrapper);
-        Households.updateNameAndMemberCount(
-                contactsInstance.getHouseholdIdsToRename());
-       updateOwners(contactsInstance.getNewOwnerContactById(), dmlWrapper);
+
+        Households.updateNameAndMemberCount(contactsInstance.getHouseholdIdsToRenameAndCountMembers());
+
+        updateOwners(contactsInstance.getNewOwnerContactById(), dmlWrapper);
     }
 
 

@@ -67,6 +67,11 @@ public with sharing class Gift {
     }
 
     public Gift(DataImport__c dataImport) {
+        this(dataImport, null);
+    }
+
+    public Gift(DataImport__c dataImport, Donation donation) {
+        this.donation = donation;
         this.dataImport = dataImport;
         this.populateAvailableFields();
         this.populateSoftCredits();
@@ -94,6 +99,10 @@ public with sharing class Gift {
 
     public SoftCredits softCredits() {
         return this.softCredits;
+    }
+
+    public Donation donation() {
+        return this.donation;
     }
 
     public Map<String, Object> fields() {
@@ -148,8 +157,20 @@ public with sharing class Gift {
         this.dataImport.Additional_Object_JSON__c = additionalObjectJSONHelper.asJSON();
     }
 
+    public Boolean isImported() {
+        return this.status() == BDI_DataImport_API.bdiImported;
+    }
+
+    public Boolean isProcessing() {
+        return this.status() == BDI_DataImport_API.bdiProcessing;
+    }
+
     public Boolean hasAuthorizedPayment() {
         return this.dataImport.Payment_Status__c == ElevateTransactionStatus.AUTHORIZED.name();
+    }
+
+    public Boolean isPaymentProcessing() {
+        return this.dataImport.Payment_Status__c == ElevateTransactionStatus.PAYMENTPROCESSING.name();
     }
 
     public Boolean isDryRunValidated() {
@@ -176,8 +197,7 @@ public with sharing class Gift {
 
     private void populateSoftCreditsFromDonation() {
         if (hasDonation()) {
-            donation = new Donation(this.dataImport.DonationImported__c);
-            this.softCredits.addAll(donation.softCredits().all());
+            this.softCredits.addAll(this.donation.softCredits().all());
         }
     }
 
@@ -191,7 +211,7 @@ public with sharing class Gift {
     }
 
     private Boolean hasDonation() {
-        return this.dataImport.DonationImported__c != null;
+        return this.dataImport.DonationImported__c != null && this.donation != null;
     }
 
     private Boolean hasPaymentFieldsChanged() {
