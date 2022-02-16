@@ -1,5 +1,19 @@
 import { createElement } from 'lwc';
 import GeModalRecurringDonation from 'c/geModalRecurringDonation';
+import { Rd2Service } from "c/rd2Service";
+import getInitialView from "@salesforce/apex/RD2_EntryFormController.getInitialView";
+
+const initialViewResponse = require("../../../../../../tests/__mocks__/apex/data/getInitialView.json");
+
+jest.mock("@salesforce/apex/RD2_EntryFormController.getInitialView", () => ({ default: jest.fn() }), { virtual: true });
+
+jest.mock(
+    "@salesforce/apex/RD2_EntryFormController.getRecurringSettings",
+    () => {
+        return { default: jest.fn() };
+    },
+    { virtual: true }
+);
 
 describe('c-ge-modal-recurring-donation', () => {
     afterEach(() => {
@@ -42,6 +56,8 @@ describe('c-ge-modal-recurring-donation', () => {
         });
 
         it('renders update schedule button', async () => {
+            const rd2Service = new Rd2Service();
+            getInitialView.mockResolvedValue(initialViewResponse);
             const modalElement = setup();
             modalElement.schedule = {
                 RecurringType__c: 'Open',
