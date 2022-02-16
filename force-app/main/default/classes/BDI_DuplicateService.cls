@@ -10,18 +10,19 @@ public with sharing class BDI_DuplicateService {
      * @description returns duplicate matching details for the records passed by param
      * @param List<sObject> records, records to find duplicates
      * @param decimal threshold, minimum threashold 
-     * @return 
+     * @return Map<String, BDI_DuplicateService.DataStagingDuplicate>
      */
-    public static List<DataStagingDuplicate> findDuplicates(List<sObject> records, decimal threshold) {
+    public static Map<String, DataStagingDuplicate> findDuplicates(List<sObject> records, decimal threshold) {
 
         // result init
-        List<DataStagingDuplicate> stagingDuplicates = new List<DataStagingDuplicate>();
+        Map<String, DataStagingDuplicate> stagingDuplicates = new Map<String, DataStagingDuplicate>();
         // validations 
+        // TODO: add threshold validations > 0 && <= 100 
         if (records == null || 
             records.size() == 0 || 
             records.size() > MAX_RECORDS_LIMIT)
         {
-            // TODO?: for size>50 we probably want to rise an exception
+            // TODO?: we probably want to thow an exception when size > 50
             return stagingDuplicates;
         }
 
@@ -42,15 +43,13 @@ public with sharing class BDI_DuplicateService {
         
         // analyze results
         for (Datacloud.FindDuplicatesResult findDupeResult : results) {
-            for (Datacloud.DuplicateResult dupeResult : findDupeResult.getDuplicateResults()) {
-                // TODO?: Duplicate Result Name Filtering
+            for (Datacloud.DuplicateResult dupeResult : findDupeResult.getDuplicateResults()) {                
                 for (Datacloud.MatchResult matchResult : dupeResult.getMatchResults()) {
                     for (Datacloud.MatchRecord matchRecord : matchResult.getMatchRecords()) {
-                        // TODO?: Threshold Management
-                        //if (matchRecord.getMatchConfidence() > threshold ) {
-
-                            DataStagingDuplicate stagingDup = new DataStagingDuplicate();
-                            // stagingDup.dataStagingId = stagingRecordId;
+                        // threshold control
+                        if (matchRecord.getMatchConfidence() > threshold ) {
+                            // init wrapper class
+                            DataStagingDuplicate stagingDup = new DataStagingDuplicate();                            
                             stagingDup.duplicateId = matchRecord.getRecord().Id;
                             stagingDup.duplicateUrl = baseURL + '/' + stagingDup.duplicateId;
                             stagingDup.confidenceScore = matchRecord.getMatchConfidence();
@@ -59,23 +58,23 @@ public with sharing class BDI_DuplicateService {
                             // create comparsion results
                             List<ComparsionResult> auxComparsionList = new List<ComparsionResult>();
                             ComparsionResult auxComparsion;
-
+                            // analyze match details
                             for(Datacloud.FieldDiff diff : matchRecord.getFieldDiffs()){
                                 // create comparsion record
                                 auxComparsion = new ComparsionResult();
-                                auxComparsion.Difference = diff.getDifference();
-                                auxComparsion.Name = diff.getName();
+                                auxComparsion.difference = diff.getDifference();
+                                auxComparsion.fieldName = diff.getName();
                                 // add to list of comparsions
                                 auxComparsionList.add(auxComparsion);                                                        
                             }
 
-                            // TODO? do we really want to make this a string instead of leaving it as list?
+                            // match details results
                             stagingDup.matchDetails = JSON.serialize(auxComparsionList);
+                            stagingDup.comparsionResults = auxComparsionList;
 
-                            // add details to result
-                            // TODO? maybe we can return Map<String, DataStagingDuplicate> instead of List<DataStagingDuplicate> by using rule-name as key                            
-                            stagingDuplicates.add(stagingDup);
-                        //}
+                            // add details to result map                            
+                            stagingDuplicates.put(stagingDup.matchingRuleName, stagingDup);
+                        }
                     }
                 }
             }                        
@@ -84,10 +83,7 @@ public with sharing class BDI_DuplicateService {
         return stagingDuplicates;
     }
 
-    public class DataStagingDuplicate {
-        Id id;
-        // the id of the data staging record, this must be provided as a parameter:
-        Id dataStagingId;
+    public class DataStagingDuplicate {        
         // the found duplicate record id returned by the Datacloud.MatchRecord.getRecord method:
         Id duplicateId;
         // the link to the found duplicate record:
@@ -99,16 +95,22 @@ public with sharing class BDI_DuplicateService {
         // the JSON string structure containing the result of Datacloud.FieldDiff.getName and Datacloud.FieldDiff.getDifference
         // we can use List<ComparsionResult> to deserlialize this json string into something easier to handle
         String matchDetails;
+        // match details as list 
+        List<ComparsionResult> comparsionResults;
     }
 
     public class ComparsionResult {
-        String Name;
-        String Difference;
+        String fieldName;
+        String difference;
     }
 
     public static void testExactMatch() {        
 
-        Contact c = [SELECT FirstName, LastName, npe01__HomeEmail__c FROM Contact LIMIT 1];
+        Contact c = [
+            SELECT Id, FirstName, LastName, npe01__HomeEmail__c 
+            FROM Contact 
+            LIMIT 1
+        ];
 
         Contact newDupContact = new Contact();
         newDupContact.FirstName = c.FirstName;
@@ -116,13 +118,21 @@ public with sharing class BDI_DuplicateService {
         newDupContact.npe01__HomeEmail__c = c.npe01__HomeEmail__c;
 
         //For this script we pass 80.0 as the confidence level, but that can be changed here.
-        List<BDI_DuplicateService.DataStagingDuplicate> duplicates = BDI_DuplicateService.findDuplicates(
+        Map<String, BDI_DuplicateService.DataStagingDuplicate> duplicates = BDI_DuplicateService.findDuplicates(
             new List<sObject>{newDupContact}, 
             80.0
         );
         System.debug('duplicates size: ' + duplicates.size());
-        for (BDI_DuplicateService.DataStagingDuplicate d: duplicates){
-            System.debug(d);
+        System.debug('analyzed rules: ' + duplicates.keySet());
+        for (BDI_DuplicateService.DataStagingDuplicate d: duplicates.values()){
+            System.debug('Duplicate Rule Name: ' + d.matchingRuleName);
+            System.debug('Confidence Score: ' + d.confidenceScore);
+            System.debug('Duplicate Id: ' + d.duplicateId);
+            System.debug('Duplicate URL: ' + d.duplicateUrl);
+            System.debug('Match details: ');
+            for(BDI_DuplicateService.ComparsionResult cr: d.comparsionResults) {
+                System.debug(' -' + cr.fieldName + ': ' + cr.difference);
+            }
         }
 
     }
@@ -134,7 +144,12 @@ public with sharing class BDI_DuplicateService {
         String sEmail = 'robert.test@mailinator.net';
         Contact c;
 
-        List<Contact> lContacts = [SELECT Id FROM Contact WHERE FirstName = 'Robert' AND LastName = 'Test' AND npe01__HomeEmail__c = 'robert.test@mailinator.net' LIMIT 1];
+        List<Contact> lContacts = [
+            SELECT Id, FirstName, LastName, npe01__HomeEmail__c 
+            FROM Contact 
+            WHERE FirstName = :sName AND LastName =:sLastName AND npe01__HomeEmail__c =:sEmail 
+            LIMIT 1
+        ];
         if (lContacts.size()==0) {
             c = new Contact(
                 FirstName = sName,
@@ -152,13 +167,21 @@ public with sharing class BDI_DuplicateService {
         newDupContact.npe01__HomeEmail__c = c.npe01__HomeEmail__c;
 
         //For this script we pass 80.0 as the confidence level, but that can be changed here.
-        List<BDI_DuplicateService.DataStagingDuplicate> duplicates = BDI_DuplicateService.findDuplicates(
+        Map<String, BDI_DuplicateService.DataStagingDuplicate> duplicates = BDI_DuplicateService.findDuplicates(
             new List<sObject>{newDupContact}, 
             80.0
         );
         System.debug('duplicates size: ' + duplicates.size());
-        for (BDI_DuplicateService.DataStagingDuplicate d: duplicates){
-            System.debug(d);
+        System.debug('analyzed rules: ' + duplicates.keySet());
+        for (BDI_DuplicateService.DataStagingDuplicate d: duplicates.values()){
+            System.debug('Duplicate Rule Name: ' + d.matchingRuleName);
+            System.debug('Confidence Score: ' + d.confidenceScore);
+            System.debug('Duplicate Id: ' + d.duplicateId);
+            System.debug('Duplicate URL: ' + d.duplicateUrl);
+            System.debug('Match details: ');
+            for(BDI_DuplicateService.ComparsionResult cr: d.comparsionResults) {
+                System.debug(' -' + cr.fieldName + ': ' + cr.difference);
+            }
         }
 
     }
