@@ -96,33 +96,4 @@ private class AddressServiceTests_TEST {
         System.assertEquals(true, aContact.Undeliverable_Address__c,
                 'The copyOntoSObject method should map the Addresses undeliverable status.');
     }
-
-    @IsTest
-    static void shouldMapState(){
-        // Arrange
-        Contact aContact = new Contact();
-        IAddress anUndeliverableAddress = new NPSP_Address(
-                new Address__c(
-                        Undeliverable__c = true
-                )
-        );
-        AddressService addressService = new AddressService();
-
-        // Act
-        addressService.copyOntoSObject(
-                anUndeliverableAddress,
-                aContact,
-                'Mailing',
-                null
-        );
-
-        // Assert
-        System.assertEquals(true, aContact.Undeliverable_Address__c,
-                'The copyOntoSObject method should map the Addresses undeliverable status.');
-    }
-
-    @IsTest
-    static void shouldNotMapStateCode(){
-
-    }
 }
