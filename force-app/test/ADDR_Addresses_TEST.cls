@@ -1412,41 +1412,6 @@ public with sharing class ADDR_Addresses_TEST {
         System.assertEquals(false, newAddress.Default_Address__c);
     }
 
-
-    /*********************************************************************************************************
-    @description
-        Update Address' Mailing Country when it is empty and State & Country Picklists are enabled.
-    verify:
-        Does not populate the Address' Mailing Country if the source sObject's CountryCode is empty
-        Populates the Address' Mailing Country with the source sObject's CountryCode value if the Mailing Country is empty
-    **********************************************************************************************************/
-    @IsTest
-    private static void testEmptyAddressCountryIsPopulatedFromCountryCode() {
-        if (!orgConfig.isStateCountryPicklistsEnabled()) {
-
-            return;
-        }
-
-        Contact con = new Contact();
-        con.put('MailingCountryCode', null);
-        Address__c addressEmptyCountry = new Address__c(MailingCountry__c = null);
-
-        Test.startTest();
-
-        String countryCode = 'US';
-        String country = 'United States';
-
-        NPSP_Address npspAddressEmptyCountry = new NPSP_Address(addressEmptyCountry);
-        npspAddressEmptyCountry.populateAddressCountryFromCountryCode(con, 'Mailing');
-        System.assertEquals(null, npspAddressEmptyCountry.country());
-
-        con.put('MailingCountryCode', countryCode);
-        npspAddressEmptyCountry.populateAddressCountryFromCountryCode(con, 'Mailing');
-        System.assertEquals(country, npspAddressEmptyCountry.country());
-
-        Test.stopTest();
-    }
-
     /*********************************************************************************************************
     @description
         update contacts' mailing address to cause an update to default Address object

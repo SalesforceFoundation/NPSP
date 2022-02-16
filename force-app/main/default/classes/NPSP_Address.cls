@@ -388,27 +388,6 @@ public inherited sharing class NPSP_Address implements IAddress {
     }
 
     /*******************************************************************************************************
-    * @description Updates the Address record's MailingCountry field when it is empty
-    *              with the Account's BillingCountryCode or Contact's MailingCountryCode value.
-    * @param sobjSrc the source Account or Contact
-    * @param fieldPrefixSrc the address field to copy from, ie., Mailing, Other, Billing, Shipping
-    * @param addr the Address object to update accordingly
-    * @return void
-    */
-    @TestVisible
-    private void populateAddressCountryFromCountryCode(SObject sobjSrc, String fieldPrefixSrc) {
-        String countryCode = (String) sobjSrc.get(fieldPrefixSrc + 'CountryCode');
-        if (String.isBlank(countryCode)) {
-            return;
-        }
-
-        if (String.isEmpty(address.MailingCountry__c)) {
-            address.MailingCountry__c = orgConfig.validCountriesByCode().get(countryCode
-                    .toUpperCase());
-        }
-    }
-
-    /*******************************************************************************************************
     * @description utility to see if the address has seasonal fields set
     * @param addr the Address to look at
     * @return boolean
