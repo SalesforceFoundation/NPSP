@@ -148,8 +148,8 @@ public inherited sharing class AddressService {
         sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
         sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
 
-        if (strFieldAddrType != null)
+        if (strFieldAddrType != null) {
             sobjDst.put(strFieldAddrType, addr.Address_Type__c);
-
+        }
     }
 }
