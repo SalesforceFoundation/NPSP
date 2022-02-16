@@ -275,19 +275,19 @@ const setDateEstablished = (state, dateEstablished) => {
 
 const setError = (state, error) => {
     console.log(JSON.stringify(error));
-}
+};
 
 const setPaymentMethod = (state, paymentMethod) => {
     return {
         ...state,
-        paymentMethod
+        paymentMethod,
     };
 };
 
 const setCampaignId = (state, campaignId) => {
     return {
         ...state,
-        campaignId
+        campaignId,
     };
 };
 
@@ -308,7 +308,7 @@ const loadInitialView = (state, payload) => {
 
     return {
         ...initialViewState,
-        initialViewState
+        initialViewState,
     };
 };
 

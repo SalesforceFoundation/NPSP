@@ -127,7 +127,6 @@ export default class rd2EntryForm extends LightningElement {
     paymentMethodToken;
     _paymentMethod;
 
-
     rd2Service = new Rd2Service();
     @track rd2State = this.rd2Service.init();
 
@@ -173,7 +172,7 @@ export default class rd2EntryForm extends LightningElement {
         } catch (ex) {
             this.perform({
                 type: ACTIONS.SET_ERROR,
-                payload: ex
+                payload: ex,
             });
         }
         this._contactId = this.rd2State.contactId;
@@ -507,7 +506,7 @@ export default class rd2EntryForm extends LightningElement {
      */
     evaluateElevateWidget() {
         const isStateValidForElevate = this.rd2Service.isValidForElevate(this.rd2State);
-        this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled || (isStateValidForElevate);
+        this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled || isStateValidForElevate;
     }
 
     /***
@@ -782,7 +781,7 @@ export default class rd2EntryForm extends LightningElement {
     resetPaymentMethod() {
         this.perform({
             type: ACTIONS.SET_PAYMENT_METHOD,
-            payload: null
+            payload: null,
         });
         const field = this.template.querySelector('lightning-input-field[data-id="paymentMethod"]');
         field.reset();
