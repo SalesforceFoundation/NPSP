@@ -137,8 +137,13 @@ public inherited sharing class AddressService {
             String strFieldPrefix, String strFieldAddrType) {
         Address__c addr = (Address__c) anAddress.getRecord();
 
-        if (anAddress.getRecord().getPopulatedFieldsAsMap().keySet().contains('Undeliverable__c')) {
-            sobjDst.put('Undeliverable_Address__c', anAddress.isUndeliverable());
+        String undeliverableField = UTIL_Namespace.StrAllNSPrefix('Undeliverable__c');
+        Set<String> populatedFieldsAsMapKeySet =
+                anAddress.getRecord().getPopulatedFieldsAsMap().keySet();
+        if (populatedFieldsAsMapKeySet.contains(undeliverableField)) {
+            String undeliverableAddressField =
+                    UTIL_Namespace.StrAllNSPrefix('Undeliverable_Address__c');
+            sobjDst.put(undeliverableAddressField, anAddress.isUndeliverable());
         }
 
         sobjDst.put(strFieldPrefix + 'Street', anAddress.multilineStreet());
