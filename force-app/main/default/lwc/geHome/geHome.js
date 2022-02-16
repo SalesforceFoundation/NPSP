@@ -5,6 +5,7 @@ import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 import DataImport from '@salesforce/schema/DataImport__c';
 import { registerListener } from 'c/pubsubNoPageRef'
+import Settings from 'c/geSettings';
 
 const EVENT_TOGGLE_MODAL = 'togglemodal';
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
@@ -45,6 +46,7 @@ export default class geHome extends LightningElement {
             this.setInitialView();
         }
         this.isLoading = false;
+        await Settings.init();
     }
 
     /*******************************************************************************
