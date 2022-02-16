@@ -2786,7 +2786,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Status Automation introduction</shortDescription>
-        <value>These settings automate changing the Recurring Donation Status when donors miss installment payments.&lt;br/&gt;&lt;br/&gt;For example, given a monthly Recurring Donation started on January 1st, and Number of Days for Lapsed is set to 10 days, the Recurring Donation becomes Lapsed on February 10th if no installment payment is received. If Number of Days for Closed is set to 20 days, the Recurring Donation becomes Closed on February 20th.&lt;br/&gt;&lt;br/&gt;Elevate Recurring Donations are not included in this automation.</value>
+        <value>These settings automate changing the Recurring Donation Status when donors miss installment payments.&lt;br/&gt;&lt;br/&gt;For example, given a monthly Recurring Donation started on January 1st, and Number of Days for Lapsed is set to 10 days, the Recurring Donation becomes Lapsed on February 12th if no installment payment is received. If Number of Days for Closed is set to 20 days, the Recurring Donation becomes Closed on February 22th.&lt;br/&gt;&lt;br/&gt;Salesforce begins counting Number of Days for Lapsed and Number of Days for Closed on the day after the expected installment date -- February 2nd in our example.&lt;br/&gt;&lt;br/&gt;Elevate Recurring Donations are not included in this automation.</value>
     </labels>
     <labels>
         <fullName>RD2_StatusAutomationInvalidClosedStatus</fullName>
