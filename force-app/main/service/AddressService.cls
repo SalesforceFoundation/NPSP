@@ -47,7 +47,9 @@ public inherited sharing class AddressService {
 
     /*******************************************************************************************************
     * @description Utility to copy Address fields between Contacts and Accounts (or vice-versa).
-    * Handles instances where State and Country picklists are enabled, and multiline street addresses.
+    * Doesn't do anything special when State and Country picklists are enabled (the
+     * platform will fill out State and Country Code values using the values from the
+     * picklist fields), and multiline street addresses.
     * @param sobjSrc the source Contact or Account
     * @param strFieldPrefixSrc the address fields to copy from, ie., Mailing, Other, Shipping, Billing
     * @param sobjDst the destination Contact or Account
@@ -61,11 +63,6 @@ public inherited sharing class AddressService {
         sobjDst.put(strFieldPrefixDst + 'Country', sobjSrc.get(strFieldPrefixSrc + 'Country'));
         sobjDst.put(strFieldPrefixDst + 'Latitude', sobjSrc.get(strFieldPrefixSrc + 'Latitude'));
         sobjDst.put(strFieldPrefixDst + 'Longitude', sobjSrc.get(strFieldPrefixSrc + 'Longitude'));
-
-        if (orgConfig.isStateCountryPicklistsEnabled()) {
-            sobjDst.put(strFieldPrefixDst + 'StateCode', sobjSrc.get(strFieldPrefixSrc + 'StateCode'));
-            sobjDst.put(strFieldPrefixDst + 'CountryCode', sobjSrc.get(strFieldPrefixSrc + 'CountryCode'));
-        }
     }
 
     /*******************************************************************************************************
@@ -140,6 +137,7 @@ public inherited sharing class AddressService {
             String strFieldPrefix, String strFieldAddrType) {
         Address__c addr = (Address__c) anAddress.getRecord();
 
+        //todo: check for Contact or Account?
         sobjDst.put('Undeliverable_Address__c', anAddress.isUndeliverable());
 
         sobjDst.put(strFieldPrefix + 'Street', anAddress.multilineStreet());
