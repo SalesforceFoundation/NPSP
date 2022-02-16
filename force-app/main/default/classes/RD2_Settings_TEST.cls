@@ -47,7 +47,7 @@ public with sharing class RD2_Settings_TEST {
             new Map<String, Object>{ 'InstallmentOppStageName__c' => stageName }
         );
 
-        RD2_Settings settings = new RD2_Settings();
+        RD2_Settings settings = RD2_Settings.getInstance();
         System.assertEquals(stageName, settings.installmentStage, 'Installment Stage should match');
     }
 
@@ -61,7 +61,7 @@ public with sharing class RD2_Settings_TEST {
             new Map<String, Object>{ 'InstallmentOppStageName__c' => null }
         );
 
-        RD2_Settings settings = new RD2_Settings();
+        RD2_Settings settings = RD2_Settings.getInstance();
         System.assertEquals(System.Label.npe03.RecurringDonationStageName, settings.installmentStage, 
             'Installment Stage should match');
     }
@@ -77,7 +77,7 @@ public with sharing class RD2_Settings_TEST {
             'npe03__Record_Type__c' => recordTypeId
         });
 
-        RD2_Settings settings = new RD2_Settings();
+        RD2_Settings settings = RD2_Settings.getInstance();
         System.assertEquals(recordTypeId, settings.installmentRecordTypeId, 
             'Installment Record Type Id should match');
     }
@@ -91,7 +91,7 @@ public with sharing class RD2_Settings_TEST {
             'npe03__Record_Type__c' => null
         });
 
-        RD2_Settings settings = new RD2_Settings();
+        RD2_Settings settings = RD2_Settings.getInstance();
         System.assertEquals(null, settings.installmentRecordTypeId, 
             'Installment Record Type Id should not be set');
     }
@@ -101,7 +101,7 @@ public with sharing class RD2_Settings_TEST {
      */
     @IsTest
     private static void shouldReturnConfiguredInstallmentCampaignSettingsWhenTrue() {
-        RD2_Settings settings = new RD2_Settings();
+        RD2_Settings settings = RD2_Settings.getInstance();
 
         setUpConfiguration(new Map<String, Object>{
             'npe03__Add_Campaign_to_All_Opportunites__c' => true
@@ -115,7 +115,7 @@ public with sharing class RD2_Settings_TEST {
      */
     @IsTest
     private static void shouldReturnConfiguredInstallmentCampaignSettingsWhenFalse() {
-        RD2_Settings settings = new RD2_Settings();
+        RD2_Settings settings = RD2_Settings.getInstance();
 
         setUpConfiguration(new Map<String, Object>{
             'npe03__Add_Campaign_to_All_Opportunites__c' => false
@@ -129,7 +129,7 @@ public with sharing class RD2_Settings_TEST {
      */
     @IsTest
     private static void shouldReturnConfiguredCloseActionNoAction() {
-        RD2_Settings settings = new RD2_Settings();
+        RD2_Settings settings = RD2_Settings.getInstance();
         String closeAction  = RD2_Constants.CloseActions.No_Action.name();
 
         setUpConfiguration(new Map<String, Object>{
@@ -146,7 +146,7 @@ public with sharing class RD2_Settings_TEST {
      */
     @IsTest
     private static void shouldReturnConfiguredCloseActionDeletion() {
-        RD2_Settings settings = new RD2_Settings();
+        RD2_Settings settings = RD2_Settings.getInstance();
         String closeAction  = RD2_Constants.CloseActions.Delete_Open_Opportunities.name();
 
         setUpConfiguration(new Map<String, Object>{
@@ -163,7 +163,7 @@ public with sharing class RD2_Settings_TEST {
      */
     @IsTest
     private static void shouldReturnConfiguredCloseActionClosedLost() {
-        RD2_Settings settings = new RD2_Settings();
+        RD2_Settings settings = RD2_Settings.getInstance();
         String closeAction  = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name();
 
         setUpConfiguration(new Map<String, Object>{
@@ -181,7 +181,7 @@ public with sharing class RD2_Settings_TEST {
      */
     @IsTest
     private static void shouldEnableFirstAndNextInstallmentWhenOptionIsAlwaysCreate() {
-        RD2_Settings settings = new RD2_Settings();
+        RD2_Settings settings = RD2_Settings.getInstance();
 
         setUpConfiguration(new Map<String, Object>{
             'InstallmentOppAutoCreateOption__c' => RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name()
@@ -198,7 +198,7 @@ public with sharing class RD2_Settings_TEST {
      */
     @IsTest
     private static void shouldDisableFirstButEnableNextInstallmentWhenOptionIsDisableFirst() {
-        RD2_Settings settings = new RD2_Settings();
+        RD2_Settings settings = RD2_Settings.getInstance();
 
         setUpConfiguration(new Map<String, Object>{
             'InstallmentOppAutoCreateOption__c' => RD2_Constants.InstallmentCreateOptions.Disable_First_Installment.name()
@@ -215,7 +215,7 @@ public with sharing class RD2_Settings_TEST {
      */
     @IsTest
     private static void shouldDisableFirstAndNextInstallmentWhenOptionIsDisableAll() {
-        RD2_Settings settings = new RD2_Settings();
+        RD2_Settings settings = RD2_Settings.getInstance();
 
         setUpConfiguration(new Map<String, Object>{
             'InstallmentOppAutoCreateOption__c' => RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name()
@@ -232,7 +232,7 @@ public with sharing class RD2_Settings_TEST {
      */
     @isTest
     private static void shouldEnableFirstAndNextInstallmentWhenOptionIsRandomString() {
-        RD2_Settings settings = new RD2_Settings();
+        RD2_Settings settings = RD2_Settings.getInstance();
         String randomString = 'ABC';
 
         setUpConfiguration(new Map<String, Object>{
@@ -255,7 +255,7 @@ public with sharing class RD2_Settings_TEST {
             new Map<String, Object>{ 'NextDonationDateMatchRangeDays__c' => nextDonationDateMatchDays }
         );
 
-        RD2_Settings settings = new RD2_Settings();
+        RD2_Settings settings = RD2_Settings.getInstance();
         System.assertEquals(nextDonationDateMatchDays, settings.nextDonationDateMatchDays, 
             'Installment Next Donation Date Match Range Days should match');
     }
@@ -270,7 +270,7 @@ public with sharing class RD2_Settings_TEST {
             new Map<String, Object>{ 'NextDonationDateMatchRangeDays__c' => null }
         );
 
-        RD2_Settings settings = new RD2_Settings();
+        RD2_Settings settings = RD2_Settings.getInstance();
         System.assertEquals(3, settings.nextDonationDateMatchDays, 
             'Installment Next Donation Date Match Range Days default should be returned');
     }
@@ -285,7 +285,7 @@ public with sharing class RD2_Settings_TEST {
             new Map<String, Object>{ 'NextDonationDateMatchRangeDays__c' => -1 }
         );
 
-        RD2_Settings settings = new RD2_Settings();
+        RD2_Settings settings = RD2_Settings.getInstance();
         System.assertEquals(3, settings.nextDonationDateMatchDays, 
             'Installment Next Donation Date Match Range Days default should be returned');
     }
@@ -299,7 +299,7 @@ public with sharing class RD2_Settings_TEST {
             new Map<String, Object>{ 'UseFiscalYearForRecurringDonationValue__c' => true }
         );
 
-        RD2_Settings settings = new RD2_Settings();
+        RD2_Settings settings = RD2_Settings.getInstance();
         System.assertEquals(true, settings.useFiscalYear, 
             'Should use Fiscal Year (if configured) for the current/next year value calculations');
     }
@@ -313,7 +313,7 @@ public with sharing class RD2_Settings_TEST {
             new Map<String, Object>{ 'UseFiscalYearForRecurringDonationValue__c' => false }
         );
 
-        RD2_Settings settings = new RD2_Settings();
+        RD2_Settings settings = RD2_Settings.getInstance();
         System.assertEquals(false, settings.useFiscalYear, 
             'Should use Calendar Year for the current/next year value calculations');
     }
@@ -323,7 +323,7 @@ public with sharing class RD2_Settings_TEST {
      */
     @IsTest
     private static void shouldReturnFalseWhenUseFiscalYearIsNotConfigured() {
-        RD2_Settings settings = new RD2_Settings();
+        RD2_Settings settings = RD2_Settings.getInstance();
         System.assertEquals(false, settings.useFiscalYear, 
             'Should use Calendar Year for the current/next year value calculations');
     }

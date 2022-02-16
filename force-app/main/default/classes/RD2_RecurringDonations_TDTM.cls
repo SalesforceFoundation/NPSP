@@ -382,7 +382,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     */
     @TestVisible
     private Boolean shouldEvaluateOppsSynchronouslyOnInsert(Boolean isBulk) {
-        RD2_Settings settings = new RD2_Settings();
+        RD2_Settings settings = RD2_Settings.getInstance();
 
         if (settings.firstInstallmentCreateMode == RD2_Constants.FirstInstallmentOppCreateOptions.Synchronous.name()) {
             return true;

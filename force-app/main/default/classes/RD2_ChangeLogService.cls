@@ -42,7 +42,7 @@ public inherited sharing class RD2_ChangeLogService {
     public static Boolean isChangeLogEnabled {
         get {
             if (isChangeLogEnabled == null) {
-                isChangeLogEnabled = new RD2_Settings().isChangeLogEnabled();
+                isChangeLogEnabled = RD2_Settings.getInstance().isChangeLogEnabled();
             }
             return isChangeLogEnabled;
         }

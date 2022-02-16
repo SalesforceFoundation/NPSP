@@ -68,7 +68,7 @@ public inherited sharing class RD2_OpportunityMatcher {
     private Integer nextDonationDateMatchDays {
         get {
             if (nextDonationDateMatchDays == null) {
-                nextDonationDateMatchDays = new RD2_Settings().nextDonationDateMatchDays;
+                nextDonationDateMatchDays = RD2_Settings.getInstance().nextDonationDateMatchDays;
             }
             return nextDonationDateMatchDays;
         }

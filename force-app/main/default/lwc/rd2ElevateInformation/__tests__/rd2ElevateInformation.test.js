@@ -3,7 +3,6 @@ import rd2ElevateInformation from 'c/rd2ElevateInformation';
 import { getRecord } from 'lightning/uiRecordApi';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getNavigateCalledWith } from "lightning/navigation";
-import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getAppConfigurationData';
 import getError from '@salesforce/apex/RD2_ElevateInformation_CTRL.getLatestErrorMessage';
 
@@ -23,13 +22,6 @@ jest.mock(
         return {
             default: jest.fn(),
         };
-    },
-    { virtual: true }
-);
-
-jest.mock('@salesforce/apex/RD2_EntryFormController.getRecurringData',
-    () => {
-        return { default: jest.fn() }
     },
     { virtual: true }
 );
@@ -88,13 +80,6 @@ describe('c-rd2-elevate-information', () => {
 
             getData.mockResolvedValue(mockGetData);
             getError.mockResolvedValue(null);
-            getRecurringData.mockResolvedValue({
-                "DonorType": "Contact",
-                "Period": "Monthly",
-                "Frequency": 1,
-                "RecurringType": "Open",
-                "Status__c": "Active"
-            });
 
             getRecord.emit(mockGetRecord);
 
@@ -154,13 +139,6 @@ describe('c-rd2-elevate-information', () => {
 
             getData.mockResolvedValue(mockGetData);
             getError.mockResolvedValue(null);
-            getRecurringData.mockResolvedValue({
-                "DonorType": "Contact",
-                "Period": "Monthly",
-                "Frequency": 1,
-                "RecurringType": "Open",
-                "Status__c": "Active"
-            });
 
             getRecord.emit(mockGetAchRecord);
 
