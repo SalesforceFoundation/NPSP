@@ -105,10 +105,17 @@ public with sharing class RD2_EntryFormController {
                 'npe03__Recurring_Donation__c',
                 String.valueOf(npe03__Recurring_Donation__c.npe03__Installment_Period__c)
         );
+        view.defaultDayOfMonth = UTIL_Describe.getDefaultSelectOption(
+                'npe03__Recurring_Donation__c',
+                String.valueOf(npe03__Recurring_Donation__c.Day_of_Month__c)
+        );
 
         if (recordId != null) {
             npe03__Recurring_Donation__c rd = selector.getRecurringDonationForUI(recordId);
             view.withRecord(rd);
+            if (view.isMultiCurrencyEnabled) {
+                view.record.currencyIsoCode = (String)rd.get('CurrencyIsoCode');
+            }
         } else if (parentId != null) {
             view.withParentId(parentId);
         }
@@ -155,36 +162,6 @@ public with sharing class RD2_EntryFormController {
             'closedStatusValues' => RD2_StatusMapper.getInstance().getClosedStatusValues(),
             'defaultRecurringType' => defaultRecurringType
         };
-    }
-
-    /**
-    * @description Retrieve the donor type for an existing RD record
-    * @param recordId RecurringDonation.RecordId
-    * @return Map<String, Object> of specific type of RD data
-    */
-    @AuraEnabled
-    public static Map<String, Object> getRecurringData(String recordId) {
-        if (recordId == null) {
-            return null;
-        }
-
-        npe03__Recurring_Donation__c rd;
-        Map<String, Object> response = new Map<String, Object>();
-        try {
-            rd = selector.getRecurringDonationForUI(recordId);
-        } catch (Exception ex) {
-            throw new AuraHandledException(ex.getMessage());
-        }
-
-        String donorType = getDonorType(rd);
-        response.put('DonorType', donorType);
-
-        response.put('Period', rd.npe03__Installment_Period__c);
-        response.put('Frequency', rd.InstallmentFrequency__c);
-        response.put('RecurringType', rd.RecurringType__c);
-        response.put('NumInstallments', rd.npe03__Installments__c);
-
-        return response;
     }
 
     private static String getDonorType(npe03__Recurring_Donation__c rd) {
@@ -539,11 +516,14 @@ public with sharing class RD2_EntryFormController {
         @AuraEnabled public String donorType;
         @AuraEnabled public Date dateEstablished;
         @AuraEnabled public Decimal donationValue;
+        @AuraEnabled public String currencyIsoCode;
+        @AuraEnabled public Decimal paidAmount;
         @AuraEnabled public String recurringPeriod;
         @AuraEnabled public Integer recurringFrequency;
         @AuraEnabled public Date startDate;
         @AuraEnabled public String dayOfMonth;
         @AuraEnabled public Integer plannedInstallments;
+        @AuraEnabled public Integer paidInstallments;
         @AuraEnabled public String recurringType;
         @AuraEnabled public String paymentToken;
         @AuraEnabled public String commitmentId;
@@ -569,11 +549,13 @@ public with sharing class RD2_EntryFormController {
             this.donorType = getDonorType(record);
             this.dateEstablished = record.npe03__Date_Established__c;
             this.donationValue = record.npe03__Amount__c;
+            this.paidAmount = record.npe03__Paid_Amount__c;
             this.recurringPeriod = record.npe03__Installment_Period__c;
             this.recurringFrequency = record.InstallmentFrequency__c?.intValue();
             this.startDate = record.StartDate__c;
             this.dayOfMonth = record.Day_of_Month__c;
             this.plannedInstallments = record.npe03__Installments__c?.intValue();
+            this.paidInstallments = record.npe03__Total_Paid_Installments__c?.intValue();
             this.recurringType = record.RecurringType__c;
             this.commitmentId = record.CommitmentId__c;
             this.achLastFour = record.ACH_Last_4__c;
@@ -597,6 +579,7 @@ public with sharing class RD2_EntryFormController {
         @AuraEnabled public Boolean isChangeLogEnabled;
         @AuraEnabled public Map<String, Integer> periodToYearlyFrequencyMap;
         @AuraEnabled public List<String> closedStatusValues;
+        @AuraEnabled public String defaultDayOfMonth;
         @AuraEnabled public String defaultRecurringType;
         @AuraEnabled public String defaultInstallmentPeriod;
         @AuraEnabled public List<Map<String, String>> installmentPeriodOptions;
@@ -628,8 +611,15 @@ public with sharing class RD2_EntryFormController {
                 this.record.recurringPeriod = this.defaultInstallmentPeriod;
             }
 
-            if(this.defaultRecurringType != null && this.record.recurringType == null) {
+            if (this.defaultRecurringType != null && this.record.recurringType == null) {
                 this.record.recurringType = this.defaultRecurringType;
+            }
+
+            if (this.defaultDayOfMonth != null && this.record.dayOfMonth == null) {
+                this.record.dayOfMonth = this.defaultDayOfMonth;
+            } else if (this.record.dayOfMonth == null) {
+                String currentDay = String.valueOf(Date.today().day());
+                this.record.dayOfMonth = currentDay == '31' ? RD2_Constants.DAY_OF_MONTH_LAST_DAY : currentDay;
             }
         }
     }
