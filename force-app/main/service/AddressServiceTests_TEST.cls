@@ -71,10 +71,44 @@ private class AddressServiceTests_TEST {
                 'The copyOntoSObject method should not be setting State Code values.');
     }
 
+    @IsTest
+    static void shouldCopyUndeliverableStatus(){
+        // Arrange
+        Contact aContact = new Contact();
+        IAddress anUndeliverableAddress = new NPSP_Address(
+                new Address__c(
+                        Undeliverable__c = true
+                )
+        );
+        AddressService addressService = new AddressService();
+
+        // Act
+        addressService.copyOntoSObject(
+                anUndeliverableAddress,
+                aContact,
+                'Mailing',
+                null
+        );
+
+        // Assert
+        System.assertEquals(true, aContact.Undeliverable_Address__c,
+                'The copyOntoSObject method should map the Addresses undeliverable status.');
+    }
+
     private static Boolean stateAndCountryPicklistsEnabled() {
         fflib_SObjectDescribe accountDescribe =
                 fflib_SObjectDescribe.getDescribe(Account.SObjectType);
         SObjectField sObjectField = accountDescribe.getField('BillingStateCode');
         return sObjectField != null;
     }
+    @IsTest
+    static void shouldMapState(){
+
+    }
+
+    @IsTest
+    static void shouldNotMapStateCode(){
+
+    }
+
 }

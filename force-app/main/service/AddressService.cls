@@ -140,6 +140,8 @@ public inherited sharing class AddressService {
             String strFieldPrefix, String strFieldAddrType) {
         Address__c addr = (Address__c) anAddress.getRecord();
 
+        sobjDst.put('Undeliverable_Address__c', anAddress.isUndeliverable());
+
         sobjDst.put(strFieldPrefix + 'Street', anAddress.multilineStreet());
         sobjDst.put(strFieldPrefix + 'City', addr.MailingCity__c);
         sobjDst.put(strFieldPrefix + 'PostalCode', addr.MailingPostalCode__c);
