@@ -69,6 +69,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     _cardExpirationDate;
     _widgetDataFromState;
     _readOnlyData;
+    _showBillingAddressFields = false;
 
     constructor() {
         super();
@@ -85,6 +86,18 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             const domainInfo = await GeFormService.getOrgDomain();
             tokenHandler.setVisualforceOriginURLs(domainInfo);
         }
+    }
+
+    get showBillingAddressFields() {
+        return this._showBillingAddressFields;
+    }
+
+    handleShowBillingAddressFields() {
+        this._showBillingAddressFields = true;
+    }
+
+    handleRemoveBillingAddressFields() {
+        this._showBillingAddressFields = false;
     }
 
     get isElevateCustomer() {

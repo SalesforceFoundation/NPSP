@@ -1,0 +1,102 @@
+<!--
+ - Created by voduyemi on 2/14/22.
+ -->
+
+<!-- Elevate Address Fields -->
+<template>
+    <lightning-layout multiple-rows="false">
+        <lightning-layout-item size="8">
+            <div class="slds-p-bottom_none">
+                Billing Address
+                <lightning-helptext content="You'll receive weekly updates"></lightning-helptext>
+            </div>
+        </lightning-layout-item>
+    </lightning-layout>
+
+    <lightning-layout multiple-rows="true">
+        <lightning-layout-item size='12'
+                               class ='slds-p-vertical_small'>
+            <lightning-button label='Use Donor Address'
+                              title= ''
+                              onclick={handleClick}
+                              class='slds-m-left_x-small'
+                              data-qa-locator= ''>
+            </lightning-button>
+            <lightning-button label='Clear Address'
+                              title= ''
+                              onclick={handleClick}
+                              class='slds-m-left_x-small'
+                              data-qa-locator= ''>
+            </lightning-button>
+        </lightning-layout-item>
+    </lightning-layout>
+
+    <lightning-layout multiple-rows='true'>
+        <lightning-layout-item size='6'
+                               medium-device-size='3'>
+            <article class='slds-p-horizontal_small slds-p-vertical_xx-small'>
+                <lightning-input data-id='inputComponent'
+                                 value={addressFields.addressLine1}
+                                 type= 'text'
+                                 label='Street 1'
+                                 data-qa-locator='Street_1'>
+                </lightning-input>
+            </article>
+        </lightning-layout-item>
+        <lightning-layout-item size='6'
+                               medium-device-size='3'>
+            <article class='slds-p-horizontal_small slds-p-vertical_xx-small'>
+                <lightning-input data-id='inputComponent'
+                                 value={addressFields.addressLine2}
+                                 type= 'text'
+                                 label='Street 2'
+                                 data-qa-locator='Street_1'>
+                </lightning-input>
+            </article>
+        </lightning-layout-item>
+        <lightning-layout-item size='6'
+                               medium-device-size='3'>
+            <article class='slds-p-horizontal_small slds-p-vertical_xx-small'>
+                <lightning-input data-id='inputComponent'
+                                 value={addressFields.city}
+                                 type= 'text'
+                                 label='City'
+                                 data-qa-locator='Street_1'>
+                </lightning-input>
+            </article>
+        </lightning-layout-item>
+        <lightning-layout-item size='6'
+                               medium-device-size='3'>
+            <article class='slds-p-horizontal_small slds-p-vertical_xx-small'>
+                <lightning-input data-id='inputComponent'
+                                 value={addressFields.state}
+                                 type= 'text'
+                                 label='State'
+                                 data-qa-locator='Street_1'>
+                </lightning-input>
+            </article>
+        </lightning-layout-item>
+        <lightning-layout-item size='6'
+                               medium-device-size='3'>
+            <article class='slds-p-horizontal_small slds-p-vertical_xx-small'>
+                <lightning-input data-id='inputComponent'
+                                 value={addressFields.postalCode}
+                                 type= 'text'
+                                 label='Postal Code'
+                                 data-qa-locator='Street_1'>
+                </lightning-input>
+            </article>
+        </lightning-layout-item>
+        <lightning-layout-item size='6'
+                               medium-device-size='3'>
+            <article class='slds-p-horizontal_small slds-p-vertical_xx-small'>
+                <lightning-input data-id='inputComponent'
+                                 value={addressFields.country}
+                                 type= 'text'
+                                 label='Country'
+                                 data-qa-locator='Street_1'>
+                </lightning-input>
+            </article>
+        </lightning-layout-item>
+    </lightning-layout>
+</template>
