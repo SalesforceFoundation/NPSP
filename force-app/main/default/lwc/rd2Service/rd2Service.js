@@ -110,14 +110,6 @@ class Rd2Service {
         return recurringDonation;
     }
 
-    accountHolderTypeFor(donorType) {
-        if (donorType === CONTACT_DONOR_TYPE) {
-            return ACCOUNT_HOLDER_TYPES.INDIVIDUAL;
-        } else if (donorType === ACCOUNT_DONOR_TYPE) {
-            return ACCOUNT_HOLDER_TYPES.BUSINESS;
-        }
-    }
-
     getPaymentProcessingMessage(paymentMethod) {
         if (this.isCard(paymentMethod)) {
             return validatingCardMessage;
@@ -203,10 +195,6 @@ class RecurringDonation {
 
     constructor(record = {}) {
         this.record = record;
-    }
-
-    hasInstallmentFrequency() {
-        return !isBlank(this.record[FIELD_INSTALLMENT_FREQUENCY.fieldApiName]);
     }
 
     withCommitmentResponseBody(responseBody) {
