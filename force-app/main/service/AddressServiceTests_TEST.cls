@@ -35,6 +35,8 @@
 @IsTest
 private class AddressServiceTests_TEST {
 
+    private static OrgConfig orgConfig = new OrgConfig();
+
     /**
      * @description in order to be effective this test must be run in an Org that has State
      * & Country picklists enabled.
@@ -44,7 +46,7 @@ private class AddressServiceTests_TEST {
      */
     @IsTest
     static void shouldNotDirectlySetStateCodeValue() {
-        if (!stateAndCountryPicklistsEnabled()) {
+        if (!orgConfig.isStateCountryPicklistsEnabled()) {
             return;
         }
 
@@ -122,12 +124,5 @@ private class AddressServiceTests_TEST {
     @IsTest
     static void shouldNotMapStateCode(){
 
-    }
-
-    private static Boolean stateAndCountryPicklistsEnabled() {
-        fflib_SObjectDescribe accountDescribe =
-                fflib_SObjectDescribe.getDescribe(Account.SObjectType);
-        SObjectField sObjectField = accountDescribe.getField('BillingStateCode');
-        return sObjectField != null;
     }
 }
