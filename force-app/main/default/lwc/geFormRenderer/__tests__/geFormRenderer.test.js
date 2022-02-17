@@ -18,6 +18,7 @@ const mockWrapperWithNoNames = require('../../../../../../tests/__mocks__/apex/d
 const getRecordContact1Imported = require('./data/getRecordContact1Imported.json');
 const dataImportObjectInfo = require('../../../../../../tests/__mocks__/apex/data/dataImportObjectDescribeInfo.json');
 const allocationsSettingsNoDefaultGAU = require('../../../../../../tests/__mocks__/apex/data/allocationsSettingsNoDefaultGAU.json');
+const dataImportBatchRecord = require('../../../../../../tests/__mocks__/apex/data/getDataImportBatchRecord.json');
 
 describe('c-ge-form-renderer', () => {
 
@@ -31,11 +32,18 @@ describe('c-ge-form-renderer', () => {
             retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
             getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
             const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
-            element.batchId = 'dummyBatchId';
 
-            Settings.isRecurringGiftsEnabled = jest.fn(() => true);
-            element.Settings = Settings;
+            const DUMMY_BATCH_ID = 'a0T11000007F8WQEA0';
+
+            element.batchId = DUMMY_BATCH_ID;
             document.body.appendChild(element);
+            await flushPromises();
+
+            // simulate getting back data for DUMMY_CONTACT_ID
+            getRecord.emit(dataImportBatchRecord, config => {
+                return config.recordId === DUMMY_BATCH_ID;
+            });
+
             await flushPromises();
 
             const button = element.shadowRoot.querySelectorAll('[data-id="recurringButton"]');
@@ -46,12 +54,21 @@ describe('c-ge-form-renderer', () => {
             retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
             getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
             const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
-            element.batchId = 'dummyBatchId';
+            const DUMMY_BATCH_ID = 'a0T11000007F8WQEA0';
 
-            Settings.isRecurringGiftsEnabled = jest.fn(() => false);
-            element.Settings = Settings;
-            document.body.appendChild(element);
+            element.batchId = DUMMY_BATCH_ID;
+
+            dataImportBatchRecord.fields['Allow_Recurring_Donations__c'].value = 'false';
+
             await flushPromises();
+
+            // simulate getting back data for DUMMY_CONTACT_ID
+            getRecord.emit(dataImportBatchRecord, config => {
+                return config.recordId === DUMMY_BATCH_ID;
+            });
+
+            await flushPromises();
+
 
             const button = element.shadowRoot.querySelectorAll('[data-id="recurringButton"]');
             expect(button).toHaveLength(0);
@@ -75,11 +92,22 @@ describe('c-ge-form-renderer', () => {
             retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
             getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
             const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
-            element.batchId = 'dummyBatchId';
+            const DUMMY_BATCH_ID = 'a0T11000007F8WQEA0';
 
-            Settings.isRecurringGiftsEnabled = jest.fn(() => true);
-            element.Settings = Settings;
+            element.batchId = DUMMY_BATCH_ID;
+
             document.body.appendChild(element);
+
+            await flushPromises();
+
+            // simulate getting back data for DUMMY_CONTACT_ID
+            getRecord.emit(dataImportBatchRecord, config => {
+                return config.recordId === DUMMY_BATCH_ID;
+            });
+
+            await flushPromises();
+
+
             await flushPromises();
 
             const dispatchEventSpy = jest.spyOn(element, 'dispatchEvent');
@@ -204,7 +232,7 @@ describe('c-ge-form-renderer', () => {
             document.body.appendChild(element);
 
             getObjectInfo.emit(dataImportObjectInfo, config => {
-                return config.objectApiName.objectApiName === 'DataImport__c';
+                return config?.objectApiName?.objectApiName === 'DataImport__c';
             });
 
             await flushPromises();
@@ -276,7 +304,7 @@ describe('c-ge-form-renderer', () => {
             document.body.appendChild(element);
 
             getObjectInfo.emit(dataImportObjectInfo, config => {
-                return config.objectApiName.objectApiName === 'DataImport__c';
+                return config?.objectApiName?.objectApiName === 'DataImport__c';
             });
 
             await flushPromises();

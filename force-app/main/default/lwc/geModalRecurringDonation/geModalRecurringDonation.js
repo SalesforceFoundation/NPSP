@@ -23,7 +23,7 @@ export default class GeModalRecurringDonation extends LightningElement {
     @track rd2State = this.rd2Service.init();
 
     async connectedCallback() {
-        this.rd2State = await this.rd2Service.loadInitialView(this.state, null, null);
+        this.rd2State = await this.rd2Service.loadInitialView();
         if (!isEmpty(this.schedule)) {
             this._populateScheduleFromGift();
         }
