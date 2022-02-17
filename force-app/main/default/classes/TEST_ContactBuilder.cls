@@ -81,7 +81,7 @@ public inherited sharing class TEST_ContactBuilder {
     }
 
     @TestVisible
-    private static Contact dummContactWithRecurringDonation(List<npe03__Recurring_Donation__c> rds) {
+    private static Contact dummyContactWithRecurringDonation(List<npe03__Recurring_Donation__c> rds) {
         Contact con = dummyContactWithId();
         for (npe03__Recurring_Donation__c rd : rds) {
             rd.npe03__Contact__c = con.Id;

@@ -51,7 +51,7 @@ private with sharing class RD2_SustainerEvaluationService_TEST {
             activeRd, lapsedRd
         };
 
-        Contact contactRecord = TEST_ContactBuilder.dummContactWithRecurringDonation(rds);
+        Contact contactRecord = TEST_ContactBuilder.dummyContactWithRecurringDonation(rds);
         RD2_QueryService queryServiceStub = (RD2_QueryService)Test.createStub(
             RD2_QueryService.class,
             new RD2_QueryServiceMock(new List<Contact>{contactRecord}, null)
@@ -85,7 +85,7 @@ private with sharing class RD2_SustainerEvaluationService_TEST {
             lapsedRd, closedRd
         };
 
-        Contact contactRecord = TEST_ContactBuilder.dummContactWithRecurringDonation(rds);
+        Contact contactRecord = TEST_ContactBuilder.dummyContactWithRecurringDonation(rds);
         RD2_QueryService queryServiceStub = (RD2_QueryService)Test.createStub(
             RD2_QueryService.class,
             new RD2_QueryServiceMock(TEST_ContactBuilder.dummyContactListWithIds(), new List<Contact>{contactRecord})
