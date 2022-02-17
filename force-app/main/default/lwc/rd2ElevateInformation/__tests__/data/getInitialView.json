@@ -1,0 +1,48 @@
+{
+  "closedStatusValues": [
+    "Closed"
+  ],
+  "customFieldSets": [],
+  "defaultInstallmentPeriod": "Monthly",
+  "defaultRecurringType": "Open",
+  "hasRequiredPermissions": true,
+  "InstallmentFrequencyPermissions": {
+    "Createable": true,
+    "Updateable": true,
+    "Visible": true
+  },
+  "InstallmentPeriodPermissions": {
+    "Createable": true,
+    "Updateable": true,
+    "Visible": true
+  },
+  "isAutoNamingEnabled": true,
+  "isChangeLogEnabled": false,
+  "isElevateCustomer": true,
+  "isMultiCurrencyEnabled": false,
+  "parentSObjectType": "Contact",
+  "periodToYearlyFrequencyMap": {
+    "Yearly": 1,
+    "Quarterly": 4,
+    "Monthly": 12,
+    "1st and 15th": 24,
+    "Weekly": 52,
+    "Daily": 365
+  },
+  "record": {
+    "recordId": "a0900000008MR9bQAG",
+    "contactId": "003S000001WqpKSIAZ",
+    "accountId": "001S000001NAsRFIA1",
+    "achLastFour": null,
+    "cardExpirationYear": "2027",
+    "cardLastFour": "1234",
+    "cardExpirationMonth": "12",
+    "recordName": "John Smith $100 - Recurring",
+    "paymentMethod": "Credit Card",
+    "recurringStatus": "Active",
+    "commitmentId": "11a1c101-bcde-001-111f-g1dh00i0jk111",
+    "recurringPeriod": "Monthly",
+    "recurringType": "Open",
+    "dayOfMonth": "15"
+  }
+}
