@@ -183,11 +183,9 @@ private class HouseholdDeceasedFlag_TEST {
 
         Contact newContact = UTIL_UnitTestData_TEST.getContact();
         newContact.AccountId = queryContact.AccountId;
-        UTIL_Bugaboo.debugIt('shouldUpdateAllMembersDeceasedWhenNewNotDeceasedContactAdded', 'insert next');
         Test.startTest();
         insert newContact;
         Test.stopTest();
-        UTIL_Bugaboo.debugIt('shouldUpdateAllMembersDeceasedWhenNewNotDeceasedContactAdded', 'insert complete');
 
         queryAccount = getAccount(queryContact);
         System.assertEquals(false, queryAccount.All_Members_Deceased__c,
