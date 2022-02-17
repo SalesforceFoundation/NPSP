@@ -409,6 +409,23 @@ public with sharing class BDI_ContactService {
     */
     private void loadCandidateContacts() {
         List<Contact> listCon = queryCandidateContacts();
+        System.debug('BDI_ContactService.loadCandidateContacts contacts:');
+        System.debug(listCon);
+        // Map<String, BDI_DuplicateService.DataStagingDuplicate> duplicates = BDI_DuplicateService.findDuplicates(
+        //     listCon,
+        //     80.0
+        // );
+
+        // for (BDI_DuplicateService.DataStagingDuplicate d: duplicates.values()){
+        //     System.debug('Duplicate Rule Name: ' + d.matchingRuleName);
+        //     System.debug('Confidence Score: ' + d.confidenceScore);
+        //     System.debug('Duplicate Id: ' + d.duplicateId);
+        //     System.debug('Duplicate URL: ' + d.duplicateUrl);
+        //     System.debug('Match details: ');
+        //     for(BDI_DuplicateService.ComparsionResult cr: d.comparsionResults) {
+        //         System.debug(' -' + cr.fieldName + ': ' + cr.difference);
+        //     }
+        // }
 
         // put all candidate contacts into our map by each dikey
         for (Contact con : listCon) {

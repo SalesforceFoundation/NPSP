@@ -42,8 +42,6 @@ public with sharing class BDI_DuplicateService {
         }
         
         // analyze results
-        System.debug('records size: ' + records.size());
-        System.debug('results size: ' +results.size());
         for (Datacloud.FindDuplicatesResult findDupeResult : results) { 
             for (Datacloud.DuplicateResult dupeResult : findDupeResult.getDuplicateResults()) { 
                 for (Datacloud.MatchResult matchResult : dupeResult.getMatchResults()) { 
@@ -187,7 +185,75 @@ public with sharing class BDI_DuplicateService {
                 System.debug(' -' + cr.fieldName + ': ' + cr.difference);
             }
         }
+    }
 
+    public static void testMultipleContactsAndMatchings() {
+        Contact c = [
+            SELECT Id, FirstName, LastName, npe01__HomeEmail__c 
+            FROM Contact 
+            LIMIT 1
+        ];
+
+        String sName = 'Robert';
+        String sLastName = 'Test';
+        String sEmail = 'robert.test@mailinator.net';
+
+        Contact newDupContact = new Contact();
+        newDupContact.FirstName = c.FirstName;
+        newDupContact.LastName = c.LastName;
+        newDupContact.npe01__HomeEmail__c = c.npe01__HomeEmail__c;
+
+        Contact newDupContact1 = new Contact(
+            FirstName = sName,
+            LastName = sLastName,
+            npe01__HomeEmail__c = sEmail,
+            Phone = '8082801865'
+        );
+
+        Contact newDupContact2 = new Contact(
+            FirstName = 'Bob',
+            LastName = sLastName,
+            npe01__HomeEmail__c = sEmail,
+            Phone = '(808)280-1865'
+        );
+
+        Contact newDupContact3 = new Contact(
+            FirstName = 'Fred',
+            LastName = 'Durst',
+            npe01__HomeEmail__c = 'fred@mail.net',
+            Phone = '(808)280-1865'
+        );
+
+        Contact newDupContact4 = new Contact(
+            FirstName = 'Frederick',
+            LastName = 'Durst',
+            npe01__HomeEmail__c = 'freddy@mail.net',
+            Phone = '(411)888-1865'
+        );
+
+        Contact newDupContact5 = new Contact(
+            FirstName = 'Camilo',
+            LastName = 'Rojas',    
+            Phone = '(202)111-4040'
+        );
+
+        Map<String, BDI_DuplicateService.DataStagingDuplicate> duplicates = BDI_DuplicateService.findDuplicates(
+            new List<sObject>{newDupContact, newDupContact1, newDupContact2, newDupContact3, newDupContact4, newDupContact5}, 
+            80.0
+        );
+        System.debug('dup list: ' + duplicates.size());
+        System.debug('duplicates size: ' + duplicates.size());
+        System.debug('analyzed rules: ' + duplicates.keySet());
+        for (BDI_DuplicateService.DataStagingDuplicate d: duplicates.values()){
+            System.debug('Duplicate Rule Name: ' + d.matchingRuleName);
+            System.debug('Confidence Score: ' + d.confidenceScore);
+            System.debug('Duplicate Id: ' + d.duplicateId);
+            System.debug('Duplicate URL: ' + d.duplicateUrl);
+            System.debug('Match details: ');
+            for(BDI_DuplicateService.ComparsionResult cr: d.comparsionResults) {
+                System.debug(' -' + cr.fieldName + ': ' + cr.difference);
+            }
+        }
     }
 
 }
