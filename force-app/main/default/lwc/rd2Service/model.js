@@ -37,6 +37,7 @@ const DEFAULT_INITIAL_STATE = {
     recordId: null,
     parentId: null,
     recurringStatus: null, // Active, Lapsed, Closed
+    recordName: null, // only used when auto-naming disabled
 
     // donor
     contactId: null,

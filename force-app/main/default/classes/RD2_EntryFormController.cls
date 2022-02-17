@@ -546,6 +546,7 @@ public with sharing class RD2_EntryFormController {
 
     public class RD2RecordView {
         @AuraEnabled public Id recordId;
+        @AuraEnabled public String recordName;
         @AuraEnabled public String recurringStatus;
         @AuraEnabled public Id contactId;
         @AuraEnabled public Id accountId;
@@ -583,6 +584,7 @@ public with sharing class RD2_EntryFormController {
             this.contactId = record.npe03__Contact__c;
             this.accountId = record.npe03__Organization__c;
             this.recurringStatus = record.Status__c;
+            this.recordName = record.Name;
             this.donorType = getDonorType(record);
             this.dateEstablished = record.npe03__Date_Established__c;
             this.donationValue = record.npe03__Amount__c;
