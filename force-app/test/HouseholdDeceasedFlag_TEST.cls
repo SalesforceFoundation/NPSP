@@ -171,18 +171,70 @@ private class HouseholdDeceasedFlag_TEST {
             'All Members Deceased should still be false when Account All_Members_Deceased__c is directly updated');
     }
 
+    /**
+     * @description Validate that new Contact that is not deceased flips flag on Household Account to false.
+     */
+    @IsTest
+    private static void shouldUpdateAllMembersDeceasedWhenNewNotDeceasedContactAdded() {
+        Contact queryContact = [SELECT Id, AccountId FROM Contact WHERE Deceased__c = TRUE LIMIT 1];
+        Account queryAccount = getAccount(queryContact);
+        System.assertEquals(true, queryAccount.All_Members_Deceased__c,
+            'All Members Deceased should be true when Contact Deceased flag is true');
+
+        Contact newContact = UTIL_UnitTestData_TEST.getContact();
+        newContact.AccountId = queryContact.AccountId;
+        UTIL_Bugaboo.debugIt('shouldUpdateAllMembersDeceasedWhenNewNotDeceasedContactAdded', 'insert next');
+        Test.startTest();
+        insert newContact;
+        Test.stopTest();
+        UTIL_Bugaboo.debugIt('shouldUpdateAllMembersDeceasedWhenNewNotDeceasedContactAdded', 'insert complete');
+
+        queryAccount = getAccount(queryContact);
+        System.assertEquals(false, queryAccount.All_Members_Deceased__c,
+            'All Members Deceased should be false when new Contact with Deceased flag false is added.');
+    }
+
+    /**
+     * @description Validate that removing the last not deceased Contact leaving one deceased Contact
+     * updates the Household Account flag to deceased.
+     */
+    @IsTest
+    private static void shouldUpdateAllMembersDeceasedWhenNewNotDeceasedContactDeleted() {
+        Contact deceasedContact = [SELECT Id, LastName, AccountId FROM Contact WHERE Deceased__c = TRUE LIMIT 1];
+        Account queryAccount = getAccount(deceasedContact);
+        System.assertEquals(true, queryAccount.All_Members_Deceased__c,
+            'All Members Deceased should be true when Contact Deceased flag is true');
+
+        Contact notDeceasedContact = [SELECT Id, AccountId FROM Contact WHERE Deceased__c = FALSE LIMIT 1];
+        notDeceasedContact.AccountId = deceasedContact.AccountId;
+        update notDeceasedContact;
+        queryAccount = getAccount(deceasedContact);
+        System.assertEquals(false, queryAccount.All_Members_Deceased__c,
+            'All Members Deceased should be false when Household Account includes both deceased and not deceased members');
+
+        Test.startTest();
+        delete notDeceasedContact;
+        Test.stopTest();
+
+        queryAccount = getAccount(deceasedContact);
+        System.assertEquals(true, queryAccount.All_Members_Deceased__c,
+            'All Members Deceased should be true when last non deceased Contact is removed.');
+        System.assertEquals(true, queryAccount.Name.contains(deceasedContact.LastName),
+            'Household Account name should still contain deceased Contact Last Name.');
+    }
+
 
 
     // Helpers
     ////////////
 
     public static Account getAccount(Contact queryContact) {
-        return [SELECT Id, All_Members_Deceased__c FROM Account WHERE Id = :queryContact.AccountId];
+        return [SELECT Id, Name, All_Members_Deceased__c FROM Account WHERE Id = :queryContact.AccountId];
     }
 
     public static Map<Id, Account> getAccountsByIds(Contact contact1, Contact contact2) {
         return new Map<Id, Account>([
-            SELECT Id, All_Members_Deceased__c
+            SELECT Id, Name, All_Members_Deceased__c
             FROM Account
             WHERE Id IN (:contact1.AccountId, :contact2.AccountId)
         ]);

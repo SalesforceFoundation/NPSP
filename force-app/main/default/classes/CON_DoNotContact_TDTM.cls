@@ -58,8 +58,8 @@ public class CON_DoNotContact_TDTM extends TDTM_Runnable {
         for (integer i=0; i<newlist.size();i++) {
             Contact con = (Contact)newlist[i];
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+                AccountAdapter.enableHouseholdDeceasedUpdate(true);
                 if(con.Deceased__c && con.AccountID!=null) {
-                    AccountAdapter.enableHouseholdDeceasedUpdate(true);
                     setAccountIds.add(con.AccountId);
                 }
             } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
