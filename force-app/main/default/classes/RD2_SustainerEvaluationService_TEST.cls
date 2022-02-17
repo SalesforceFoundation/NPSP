@@ -42,7 +42,16 @@ private with sharing class RD2_SustainerEvaluationService_TEST {
         .withStatusActive()
         .build();
 
-        Contact contactRecord = TEST_ContactBuilder.dummContactWithRecurringDonation(activeRd);
+        npe03__Recurring_Donation__c lapsedRd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+        .withDefaultValues()
+        .withStatusLapsed()
+        .build();
+
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
+            activeRd, lapsedRd
+        };
+
+        Contact contactRecord = TEST_ContactBuilder.dummContactWithRecurringDonation(rds);
         RD2_QueryService queryServiceStub = (RD2_QueryService)Test.createStub(
             RD2_QueryService.class,
             new RD2_QueryServiceMock(new List<Contact>{contactRecord}, null)
@@ -50,8 +59,9 @@ private with sharing class RD2_SustainerEvaluationService_TEST {
         RD2_SustainerEvaluationService.queryService = queryServiceStub;
 
         Test.startTest();
-        RD2_SustainerEvaluationService sustainerService = new RD2_SustainerEvaluationService();
-        List<Contact> result = sustainerService.evaulateSustainersFor('Contact', new Set<Id>{contactRecord.Id});
+        List<Contact> result = new RD2_SustainerEvaluationService()
+            .withRecurringDonations(rds)
+            .getContactsWithSustainerChanged();
         Test.stopTest();
 
         System.assertEquals(contactRecord.Id, result[0].Id, 'The expected Contact should be returned');
@@ -66,7 +76,16 @@ private with sharing class RD2_SustainerEvaluationService_TEST {
         .withStatusLapsed()
         .build();
 
-        Contact contactRecord = TEST_ContactBuilder.dummContactWithRecurringDonation(lapsedRd);
+        npe03__Recurring_Donation__c closedRd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+        .withDefaultValues()
+        .withStatusClosed()
+        .build();
+
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
+            lapsedRd, closedRd
+        };
+
+        Contact contactRecord = TEST_ContactBuilder.dummContactWithRecurringDonation(rds);
         RD2_QueryService queryServiceStub = (RD2_QueryService)Test.createStub(
             RD2_QueryService.class,
             new RD2_QueryServiceMock(TEST_ContactBuilder.dummyContactListWithIds(), new List<Contact>{contactRecord})
@@ -74,8 +93,9 @@ private with sharing class RD2_SustainerEvaluationService_TEST {
         RD2_SustainerEvaluationService.queryService = queryServiceStub;
 
         Test.startTest();
-        RD2_SustainerEvaluationService sustainerService = new RD2_SustainerEvaluationService();
-        List<Contact> result = sustainerService.evaulateSustainersFor('Contact', new Set<Id>{contactRecord.Id});
+        List<Contact> result = new RD2_SustainerEvaluationService()
+            .withRecurringDonations(rds)
+            .getContactsWithSustainerChanged();
         Test.stopTest();
 
         System.assertEquals(contactRecord.Id, result[0].Id, 'The expected Contact should be returned');
@@ -85,15 +105,17 @@ private with sharing class RD2_SustainerEvaluationService_TEST {
 
     @IsTest
     private static void verifyContactWithNoAcitveAndLapsedRDShouldSetSustainerToFormer() {
+        List<Contact> contactList = TEST_ContactBuilder.dummyContactListWithIds();
         RD2_QueryService queryServiceStub = (RD2_QueryService)Test.createStub(
             RD2_QueryService.class,
-            new RD2_QueryServiceMock(TEST_ContactBuilder.dummyContactListWithIds(), TEST_ContactBuilder.dummyContactListWithIds())
+            new RD2_QueryServiceMock(contactList, contactList)
         );
         RD2_SustainerEvaluationService.queryService = queryServiceStub;
 
         Test.startTest();
-        RD2_SustainerEvaluationService sustainerService = new RD2_SustainerEvaluationService();
-        List<Contact> result = sustainerService.evaulateSustainersFor('Contact', new Set<Id>{UTIL_UnitTestData_TEST.mockId(Contact.SObjectType)});
+        List<Contact> result = new RD2_SustainerEvaluationService()
+            .withContacts(contactList)
+            .getContactsWithSustainerChanged();
         Test.stopTest();
 
         System.assertEquals(RD2_SustainerEvaluationService.SustainerType.Former.name(), result[0].Sustainer__c,

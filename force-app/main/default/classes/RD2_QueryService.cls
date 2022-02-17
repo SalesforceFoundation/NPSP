@@ -252,19 +252,19 @@ public inherited sharing class RD2_QueryService {
 
     public List<SObject> getSObjectWithActiveRecurringDonations(String sObjectType, Set<Id> recordIds) {
         Set<String> statusValues = statusMapper.getActiveStatusValues();
-        String queryString = getSObjectWithReucrringDonationsQuery(sObjectType);
+        String queryString = getSObjectWithRecurringDonationsQuery(sObjectType);
 
         return Database.query(queryString);
     }
 
     public List<SObject> getSObjectWithLapsedRecurringDonations(String sObjectType, Set<Id> recordIds) {
         Set<String> statusValues = statusMapper.getLapsedStatusValues();
-        String queryString = getSObjectWithReucrringDonationsQuery(sObjectType);
+        String queryString = getSObjectWithRecurringDonationsQuery(sObjectType);
 
         return Database.query(queryString);
     }
 
-    private String getSObjectWithReucrringDonationsQuery(String sObjectType) {
+    private String getSObjectWithRecurringDonationsQuery(String sObjectType) {
         Set<String> selectedField = new Set<String>{
             UTIL_Namespace.StrTokenNSPrefix('Sustainer__c'),
             getRecurringDonationSubQuery(sObjectType)

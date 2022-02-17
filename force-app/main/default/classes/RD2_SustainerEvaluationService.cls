@@ -58,33 +58,71 @@ public inherited sharing class RD2_SustainerEvaluationService {
         isSustainerUpdateEnabled = enabled;
     }
 
-    public List<SObject> evaulateSustainersFor(String sObjectType, Set<Id> recordIds) {
-        List<SObject> toUpdate = new List<SObject>();
+    private Set<Id> contactIds = new Set<Id>();
+    private Set<Id> accountIds = new Set<Id>();
+    private List<SObject> reocrdsToUpdate = new List<SObject>();
+
+    public RD2_SustainerEvaluationService withRecurringDonations(List<npe03__Recurring_Donation__c> rds) {
+        if (rds == null && rds.isEmpty()) {
+            return this;
+        }
+    
+        this.contactIds.addAll(UTIL_SObject.extractId(rds, npe03__Recurring_Donation__c.npe03__Contact__c));
+        this.accountIds.addAll(UTIL_SObject.extractId(rds, npe03__Recurring_Donation__c.npe03__Organization__c));
+        return this;
+    }
+
+    public RD2_SustainerEvaluationService withContacts(List<Contact> contacts) {
+        contactIds.addAll(UTIL_SObject.extractIds(contacts));
+        return this;
+    }
+
+    public RD2_SustainerEvaluationService withAccounts(List<Account> accounts) {
+        accountIds.addAll(UTIL_SObject.extractIds(accounts));
+        return this;
+    }
+
+    public List<Contact> getContactsWithSustainerChanged() {
+        evaulateSustainersFor('Contact', contactIds);
+        return (List<Contact>) reocrdsToUpdate;
+    }
+
+    public List<Account> getAccountsWithSustainerChanged() {
+        evaulateSustainersFor('Account', accountIds);
+        return (List<Account>) reocrdsToUpdate;
+    }
+
+    /**
+    * @description Evaluate what type of Donor the Account/Contact reocrd is. The Account/Contact records can be
+    * Active, Lapsed, or Former Sustainer.
+    * @param sObjectType The passed in record Ids' SObject type. The type can be either Account or Contact
+    * @param recordsIds A set of record Ids that will be evaluated
+    */
+    private void evaulateSustainersFor(String sObjectType, Set<Id> recordIds) {
+        this.reocrdsToUpdate = new List<SObject>();
         if (recordIds.isEmpty()) {
-            return toUpdate;
+            return;
         }
+    
         List<SObject> evaulatedRecords = queryService.getSObjectWithActiveRecurringDonations(sObjectType,  recordIds);
-        
-        List<SObject> noneActiveSustainers = calculateSustainerFor(SustainerType.Active, evaulatedRecords, toUpdate);
+        List<SObject> inactiveSustainers = evaluateCurrentSustainerTypeAndReturnNotMatchingRecords(SustainerType.Active, evaulatedRecords);
 
-        if (noneActiveSustainers.size() == 0) {
-            return toUpdate;
+        if (inactiveSustainers.size() == 0) {
+            return;
         }
 
-        List<SObject> lapsedSustainerCandidates = queryService.getSObjectWithLapsedRecurringDonations(sObjectType, UTIL_SObject.extractIds(noneActiveSustainers));
-        List<SObject> formerSustainers = calculateSustainerFor(SustainerType.Lapsed, lapsedSustainerCandidates, toUpdate);
+        List<SObject> lapsedSustainerCandidates = queryService.getSObjectWithLapsedRecurringDonations(sObjectType, UTIL_SObject.extractIds(inactiveSustainers));
+        List<SObject> formerSustainers = evaluateCurrentSustainerTypeAndReturnNotMatchingRecords(SustainerType.Lapsed, lapsedSustainerCandidates);
 
         for (SObject formerSustainer : formerSustainers) {
             if (formerSustainer.get(SUSTAINER_FIELD) != SustainerType.Former.name()) {
                 formerSustainer.put(SUSTAINER_FIELD,SustainerType.Former.name());
-                toUpdate.add(formerSustainer); 
+                this.reocrdsToUpdate.add(formerSustainer); 
             }
         }
-
-        return toUpdate;
     }
 
-    private List<SObject> calculateSustainerFor(SustainerType state, List<SObject> sustainerCandidates, List<SObject> toUpdate) {
+    private List<SObject> evaluateCurrentSustainerTypeAndReturnNotMatchingRecords(SustainerType state, List<SObject> sustainerCandidates) {
         List<SObject> needFurtherEvaluation = new List<SObject>();
         String lookupReference = sustainerCandidates[0].getSObjectType() == Schema.Account.getSObjectType()
             ? 'npe03__RecurringDonations__r'
@@ -97,7 +135,7 @@ public inherited sharing class RD2_SustainerEvaluationService {
             if (rdsWithSpecificState != null && rdsWithSpecificState.size() > 0) {
                 if (candidate.get(SUSTAINER_FIELD) != state.name()) {
                     candidate.put(SUSTAINER_FIELD, state.name());
-                    toUpdate.add(candidate);
+                    this.reocrdsToUpdate.add(candidate);
                 }
 
             } else {

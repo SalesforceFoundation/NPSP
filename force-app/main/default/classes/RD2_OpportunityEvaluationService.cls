@@ -489,24 +489,16 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     private void evaluateSustainers() {
-        Set<Id> contactIds = UTIL_SObject.extractId(rds, npe03__Recurring_Donation__c.npe03__Contact__c);
-        Set<Id> accountIds = UTIL_SObject.extractId(rds, npe03__Recurring_Donation__c.npe03__Organization__c);
-
-        if (oldRds != null) {
-            contactIds.addAll(UTIL_SObject.extractId(oldRds, npe03__Recurring_Donation__c.npe03__Contact__c));
-            accountIds.addAll(UTIL_SObject.extractId(oldRds, npe03__Recurring_Donation__c.npe03__Organization__c));
-        }
-
-        RD2_SustainerEvaluationService sustainerService = new RD2_SustainerEvaluationService();
-        List<Contact> contactsToUpdate = sustainerService.evaulateSustainersFor('Contact', contactIds);
-        List<Account> accountsToUpdate = sustainerService.evaulateSustainersFor('Account', accountIds);
-
+        RD2_SustainerEvaluationService sustainerService = new RD2_SustainerEvaluationService()
+            .withRecurringDonations(rds)
+            .withRecurringDonations(oldRds);
+    
         if (isBatchContext) {
             TDTM_Config_API.disableAllTriggers();
         }
         RD2_SustainerEvaluationService.setSustainerUpdateEnabled(true);
-        dbService.updateRecords(contactsToUpdate);
-        dbService.updateRecords(accountsToUpdate);
+        dbService.updateRecords(sustainerService.getContactsWithSustainerChanged());
+        dbService.updateRecords(sustainerService.getAccountsWithSustainerChanged());
         RD2_SustainerEvaluationService.setSustainerUpdateEnabled(false);
     }
 

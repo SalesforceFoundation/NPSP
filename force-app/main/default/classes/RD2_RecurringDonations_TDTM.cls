@@ -148,29 +148,19 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             return;
         }
 
-        Set<Id> contactIds = new Set<Id>();
-        Set<Id> accountIds = new Set<Id>();
-
-        if (rds != null) {
-            contactIds.addAll(UTIL_SObject.extractId(rds, npe03__Recurring_Donation__c.npe03__Contact__c));
-            accountIds.addAll(UTIL_SObject.extractId(rds, npe03__Recurring_Donation__c.npe03__Organization__c));
-        }
-        if (oldRds != null) {
-            contactIds.addAll(UTIL_SObject.extractId(oldRds, npe03__Recurring_Donation__c.npe03__Contact__c));
-            accountIds.addAll(UTIL_SObject.extractId(oldRds, npe03__Recurring_Donation__c.npe03__Organization__c));
-        }
-
-        RD2_SustainerEvaluationService sustainerService = new RD2_SustainerEvaluationService();
-        List<Contact> contactsToUpdate = sustainerService.evaulateSustainersFor('Contact', contactIds);
-        List<Account> accountsToUpdate = sustainerService.evaulateSustainersFor('Account', accountIds);
+        RD2_SustainerEvaluationService sustainerService = new RD2_SustainerEvaluationService()
+        .withRecurringDonations(rds)
+        .withRecurringDonations(oldRds);
 
         RD2_SustainerEvaluationService.setSustainerUpdateEnabled(true);
+
         DmlWrapper sustainerDMLAction = new DmlWrapper();
-        sustainerDMLAction.objectsToUpdate = contactsToUpdate;
+        sustainerDMLAction.objectsToUpdate = sustainerService.getContactsWithSustainerChanged();
         TDTM_TriggerHandler.processDML(sustainerDMLAction);
 
-        sustainerDMLAction.objectsToUpdate = accountsToUpdate;
+        sustainerDMLAction.objectsToUpdate = sustainerService.getAccountsWithSustainerChanged();
         TDTM_TriggerHandler.processDML(sustainerDMLAction);
+        RD2_SustainerEvaluationService.setSustainerUpdateEnabled(false);
     }
 
     /***
