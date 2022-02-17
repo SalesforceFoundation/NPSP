@@ -1,5 +1,7 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import { isEmpty } from 'c/utilCommon';
+
+import { Rd2Service } from "c/rd2Service";
 
 import commonCancel from '@salesforce/label/c.commonCancel';
 import geAddSchedule from '@salesforce/label/c.geAddSchedule';
@@ -9,6 +11,13 @@ export default class GeModalRecurringDonation extends LightningElement {
     @api schedule;
     @api cancelCallback;
     @api createRecurrenceCallback;
+
+    rd2Service = new Rd2Service();
+    @track rd2State = this.rd2Service.init();
+
+    async connectedCallback() {
+        this.rd2State = await this.rd2Service.loadInitialView();
+    }
 
     labels = {
         commonCancel,

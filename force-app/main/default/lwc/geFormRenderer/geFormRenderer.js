@@ -26,6 +26,7 @@ import PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID
     from '@salesforce/schema/DataImport__c.Payment_Elevate_Original_Payment_ID__c';
 import PAYMENT_TYPE from '@salesforce/schema/DataImport__c.Payment_Type__c';
 import PAYMENT_ACH_CONSENT from '@salesforce/schema/DataImport__c.ACH_Consent__c';
+import DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS from '@salesforce/schema/DataImportBatch__c.Allow_Recurring_Donations__c';
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { convertBDIToWidgetJson } from './geFormRendererHelper';
@@ -182,14 +183,13 @@ export default class GeFormRenderer extends LightningElement{
     @track description = '';
     @track mappingSet = '';
     @track version = '';
-    @track formTemplateId;
-    _batchDefaults;
     _isElevateWidgetInDisabledState = false;
     _hasPaymentWidget = false;
     latestElevateBatchId = null;
     cardholderNamesNotInTemplate = {};
     _openedGiftId;
     currentElevateBatch = new ElevateBatch();
+   @track _batch = {};
 
     erroredFields = [];
     CUSTOM_LABELS = {
@@ -299,7 +299,9 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     get isRecurringGiftsEnabled() {
-        return Settings.isRecurringGiftsEnabled();
+        return this._batch[
+            apiNameFor(DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS)
+        ];
     }
 
     @wire(getRecord, {recordId: '$donorRecordId', optionalFields: '$fieldNames'})
@@ -530,13 +532,21 @@ export default class GeFormRenderer extends LightningElement{
 
     @wire(getRecord, {
         recordId: '$batchId',
-        fields: [FORM_TEMPLATE_FIELD, BATCH_DEFAULTS_FIELD]
+        fields: [
+            FORM_TEMPLATE_FIELD,
+            BATCH_DEFAULTS_FIELD
+        ],
+        optionalFields: [DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS]
     })
     wiredBatch({data, error}) {
         if (data) {
-            this.formTemplateId = data.fields[apiNameFor(FORM_TEMPLATE_FIELD)].value;
-            this._batchDefaults = data.fields[apiNameFor(BATCH_DEFAULTS_FIELD)].value;
-            GeFormService.getFormTemplateById(this.formTemplateId)
+            this._batch[apiNameFor(BATCH_DEFAULTS_FIELD)] =
+                data.fields[apiNameFor(BATCH_DEFAULTS_FIELD)].value;
+            this._batch[apiNameFor(DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS)] =
+                data?.fields[apiNameFor(DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS)]?.value;
+
+            GeFormService.getFormTemplateById(
+                data.fields[apiNameFor(FORM_TEMPLATE_FIELD)].value)
                 .then(formTemplate => {
                     this.formTemplate = formTemplate;
 
@@ -1457,10 +1467,11 @@ export default class GeFormRenderer extends LightningElement{
      */
     prepareFormForBatchMode (templateSections) {
         let sections = deepClone(templateSections);
-        if (isNotEmpty(this._batchDefaults)) {
+        const batchDefaults = this._batch[apiNameFor(BATCH_DEFAULTS_FIELD)];
+        if (isNotEmpty(batchDefaults)) {
             let batchDefaultsObject;
             try {
-                batchDefaultsObject = JSON.parse(this._batchDefaults);
+                batchDefaultsObject = JSON.parse(batchDefaults);
                 sections.forEach(section => {
                     section.elements.forEach(element => {
                         for (let key in batchDefaultsObject) {

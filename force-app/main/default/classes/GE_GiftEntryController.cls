@@ -199,8 +199,17 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled(cacheable=true)
     public static Boolean isRecurringGiftsEnabled() {
         try {
-            return geSettingsService.isRecurringGiftsEnabled();
-        } catch (AuraHandledException ex) {
+            return GE_SettingsService.getInstance().isRecurringGiftsEnabled();
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static Boolean canMakeGiftsRecurring() {
+        try {
+            return GE_SettingsService.getInstance().canMakeGiftsRecurring();
+        } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
     }
