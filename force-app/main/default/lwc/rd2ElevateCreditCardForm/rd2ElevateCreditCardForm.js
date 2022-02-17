@@ -136,6 +136,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     set paymentMethod(value) {
         if (this.shouldNotifyIframe(value)) {
             this.notifyIframePaymentMethodChanged(value);
+            this.handleRemoveBillingAddressFields();
         }
         this._paymentMethod = value;
         this.enableWidgetOnPaymentMethodChange = true;
