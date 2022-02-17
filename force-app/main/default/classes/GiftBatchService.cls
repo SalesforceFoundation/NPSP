@@ -61,14 +61,13 @@ public with sharing class GiftBatchService {
     }
 
     public void processGiftsFor(GiftBatchId giftBatchId) {
-        System.debug('processGiftsFor');
         GiftBatchForQueueable queueableGiftBatch = new GiftBatchForQueueable(giftBatchId);
         queueableGiftBatch.chunkGiftsThatCanBeProcessed();
         GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(queueableGiftBatch);
-        System.debug('About to enqueue job');
+
         Id jobId = System.enqueueJob(processorQueue);
         AsyncApexJobId asyncApexJobId = new AsyncApexJobId(jobId);
-        System.debug('Job enqueued' + asyncApexJobId);
+
         updateGiftBatchWith(giftBatchId, asyncApexJobId);
     }
 

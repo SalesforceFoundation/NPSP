@@ -158,7 +158,6 @@ public with sharing class Gift {
     }
 
     public Boolean hasPopulatedRecurringFields() {
-        System.debug('hasPopulatedRecurringFields');
         return this.dataImport.Recurring_Donation_Recurring_Type__c != null
             || this.dataImport.Recurring_Donation_Installment_Period__c != null
             || this.dataImport.Recurring_Donation_Effective_Date__c != null

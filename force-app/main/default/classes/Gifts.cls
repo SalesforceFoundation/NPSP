@@ -150,7 +150,6 @@ public with sharing class Gifts {
     }
 
     public void preprocessRecurringGifts() {
-        System.debug('preprocessRecurringGifts');
         for (DataImport__c dataImport : dataImportsById.values()) {
             Gift gift = new Gift(dataImport);
             if (gift.hasPopulatedRecurringFields()) {

@@ -453,7 +453,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         const poll = setInterval(() => {
             Promise.resolve(true).then(() => {
                 this.refreshBatchTotals();
-                console.info('polling');
             }).then(() => {
                 if (!this._isBatchProcessing) {
                     clearInterval(poll);
