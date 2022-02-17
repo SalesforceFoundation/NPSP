@@ -227,13 +227,13 @@ public with sharing class RD2_EntryFormController {
     @TestVisible
     private static Boolean hasRequiredFieldPermissions() {
         Set<String> requiredFields = new Set<String>{
-            'npe03__Amount__c',
-            'npe03__Contact__c',
-            'npe03__Installment_Period__c',
-            'npe03__Date_Established__c',
-            UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c'),
-            UTIL_Namespace.StrTokenNSPrefix('Day_of_Month__c'),
-            UTIL_Namespace.StrTokenNSPrefix('StartDate__c')
+            String.valueOf(npe03__Recurring_Donation__c.npe03__Amount__c),
+            String.valueOf(npe03__Recurring_Donation__c.npe03__Contact__c),
+            String.valueOf(npe03__Recurring_Donation__c.npe03__Installment_Period__c),
+            String.valueOf(npe03__Recurring_Donation__c.npe03__Date_Established__c),
+            String.valueOf(npe03__Recurring_Donation__c.InstallmentFrequency__c),
+            String.valueOf(npe03__Recurring_Donation__c.Day_of_Month__c),
+            String.valueOf(npe03__Recurring_Donation__c.StartDate__c)
         };
 
         Boolean hasPermissions = true;
