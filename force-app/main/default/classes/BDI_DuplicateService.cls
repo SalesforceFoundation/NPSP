@@ -42,12 +42,14 @@ public with sharing class BDI_DuplicateService {
         }
         
         // analyze results
-        for (Datacloud.FindDuplicatesResult findDupeResult : results) {
-            for (Datacloud.DuplicateResult dupeResult : findDupeResult.getDuplicateResults()) {                
-                for (Datacloud.MatchResult matchResult : dupeResult.getMatchResults()) {
-                    for (Datacloud.MatchRecord matchRecord : matchResult.getMatchRecords()) {
+        System.debug('records size: ' + records.size());
+        System.debug('results size: ' +results.size());
+        for (Datacloud.FindDuplicatesResult findDupeResult : results) { 
+            for (Datacloud.DuplicateResult dupeResult : findDupeResult.getDuplicateResults()) { 
+                for (Datacloud.MatchResult matchResult : dupeResult.getMatchResults()) { 
+                    for (Datacloud.MatchRecord matchRecord : matchResult.getMatchRecords()) { 
                         // threshold control
-                        if (matchRecord.getMatchConfidence() > threshold ) {
+                        if (matchRecord.getMatchConfidence() >= threshold ) {
                             // init wrapper class
                             DataStagingDuplicate stagingDup = new DataStagingDuplicate();                            
                             stagingDup.duplicateId = matchRecord.getRecord().Id;
@@ -83,25 +85,27 @@ public with sharing class BDI_DuplicateService {
         return stagingDuplicates;
     }
 
+    
+
     public class DataStagingDuplicate {        
         // the found duplicate record id returned by the Datacloud.MatchRecord.getRecord method:
-        Id duplicateId;
+        public Id duplicateId;
         // the link to the found duplicate record:
-        String duplicateUrl;
+        public String duplicateUrl;
         // the decimal number returned by the Datacloud.MatchRecord.getMatchConfidence method:
-        Decimal confidenceScore;
+        public Decimal confidenceScore;
         // the matching rule name returned by the Datacloud.MatchResult.getRule method:
-        String matchingRuleName;
+        public String matchingRuleName;
         // the JSON string structure containing the result of Datacloud.FieldDiff.getName and Datacloud.FieldDiff.getDifference
         // we can use List<ComparsionResult> to deserlialize this json string into something easier to handle
-        String matchDetails;
+        public String matchDetails;
         // match details as list 
-        List<ComparsionResult> comparsionResults;
+        public List<ComparsionResult> comparsionResults;
     }
 
     public class ComparsionResult {
-        String fieldName;
-        String difference;
+        public String fieldName;
+        public String difference;
     }
 
     public static void testExactMatch() {        
