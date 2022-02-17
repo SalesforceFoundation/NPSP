@@ -38,14 +38,14 @@ private with sharing class RD2_SustainerEvaluationService_TEST {
     @IsTest
     private static void verifyContactWithActiveRDShouldSetSustainerToActive() {
         npe03__Recurring_Donation__c activeRd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-        .withDefaultValues()
-        .withStatusActive()
-        .build();
+            .withDefaultValues()
+            .withStatusActive()
+            .build();
 
         npe03__Recurring_Donation__c lapsedRd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-        .withDefaultValues()
-        .withStatusLapsed()
-        .build();
+            .withDefaultValues()
+            .withStatusLapsed()
+            .build();
 
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
             activeRd, lapsedRd
@@ -72,14 +72,14 @@ private with sharing class RD2_SustainerEvaluationService_TEST {
     @IsTest
     private static void verifyContactWithLapsedRDShouldSetSustainerToLapsed() {
         npe03__Recurring_Donation__c lapsedRd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-        .withDefaultValues()
-        .withStatusLapsed()
-        .build();
+            .withDefaultValues()
+            .withStatusLapsed()
+            .build();
 
         npe03__Recurring_Donation__c closedRd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-        .withDefaultValues()
-        .withStatusClosed()
-        .build();
+            .withDefaultValues()
+            .withStatusClosed()
+            .build();
 
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
             lapsedRd, closedRd
@@ -132,11 +132,11 @@ private with sharing class RD2_SustainerEvaluationService_TEST {
         }
 
         public Object handleMethodCall(Object stubbedObject,
-                String stubbedMethodName,
-                Type returnType,
-                List<Type> listOfParamTypes,
-                List<String> listOfParamNames,
-                List<Object> listOfArgs
+            String stubbedMethodName,
+            Type returnType,
+            List<Type> listOfParamTypes,
+            List<String> listOfParamNames,
+            List<Object> listOfArgs
         ) {
             switch on stubbedMethodName {
                 when 'getSObjectWithActiveRecurringDonations' {
