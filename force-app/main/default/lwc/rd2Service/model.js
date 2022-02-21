@@ -1,6 +1,7 @@
 import {
     SET_CONTACT_ID,
     SET_ACCOUNT_ID,
+    SET_CAMPAIGN_ID,
     SET_CONTACT_DETAILS,
     SET_CURRENCY,
     SET_ACCOUNT_DETAILS,
@@ -8,11 +9,13 @@ import {
     SET_DONATION_AMOUNT,
     SET_DONOR_TYPE,
     SET_DATE_ESTABLISHED,
+    SET_ERROR,
     SET_PERIOD_TYPE,
     SET_START_DATE,
     SET_RECURRING_TYPE,
     SET_RECURRING_PERIOD,
     SET_RECURRING_FREQUENCY,
+    SET_PAYMENT_METHOD,
     SET_PLANNED_INSTALLMENTS,
     INITIAL_VIEW_LOAD,
 } from "./actions";
@@ -27,13 +30,14 @@ import {
     CONTACT_DONOR_TYPE,
 } from "./constants";
 
-let initialViewState;
-
 const DEFAULT_INITIAL_STATE = {
+    initialViewState: {}, // snapshot of initial view state after first load
+
     // RD2 Record
     recordId: null,
     parentId: null,
     recurringStatus: null, // Active, Lapsed, Closed
+    recordName: null, // only used when auto-naming disabled
 
     // donor
     contactId: null,
@@ -75,8 +79,8 @@ const DEFAULT_INITIAL_STATE = {
 
     //Recurring Settings
     isAutoNamingEnabled: null,
-    isMultiCurrencyEnabled: null,
-    isElevateCustomer: null,
+    isMultiCurrencyEnabled: false,
+    isElevateCustomer: false,
     isChangeLogEnabled: null,
     periodToYearlyFrequencyMap: null,
     closedStatusValues: [],
@@ -88,7 +92,7 @@ const DEFAULT_INITIAL_STATE = {
 };
 
 const isRecurringTypeChanged = (state) => {
-    return state.recurringType !== initialViewState.recurringType;
+    return state.recurringType !== state.initialViewState.recurringType;
 };
 
 const isNewRecord = (state) => {
@@ -122,7 +126,7 @@ const getChangeType = (state) => {
         return "";
     }
 
-    const oldValue = getDonationValue(initialViewState);
+    const oldValue = getDonationValue(state.initialViewState);
     const newValue = getDonationValue(state);
 
     if (oldValue > newValue) {
@@ -270,21 +274,43 @@ const setDateEstablished = (state, dateEstablished) => {
     };
 };
 
+const setError = (state, error) => {
+    console.log(JSON.stringify(error));
+};
+
+const setPaymentMethod = (state, paymentMethod) => {
+    return {
+        ...state,
+        paymentMethod,
+    };
+};
+
+const setCampaignId = (state, campaignId) => {
+    return {
+        ...state,
+        campaignId,
+    };
+};
+
 const loadInitialView = (state, payload) => {
     const { record, ...rest } = payload;
     const flattenedInitialState = { ...record, ...rest };
+
     if (isAdvancedPeriod(flattenedInitialState)) {
         flattenedInitialState.periodType = RECURRING_PERIOD_ADVANCED;
     } else {
         flattenedInitialState.periodType = PERIOD.MONTHLY;
     }
 
-    initialViewState = {
+    const initialViewState = {
         ...state,
         ...flattenedInitialState,
     };
 
-    return initialViewState;
+    return {
+        ...initialViewState,
+        initialViewState,
+    };
 };
 
 export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
@@ -307,6 +333,8 @@ export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
             return setDonorType(state, action.payload);
         case SET_DATE_ESTABLISHED:
             return setDateEstablished(state, action.payload);
+        case SET_ERROR:
+            return setError(state, action.payload);
         case SET_PLANNED_INSTALLMENTS:
             return setPlannedInstallments(state, action.payload);
         case SET_RECURRING_PERIOD:
@@ -319,6 +347,10 @@ export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
             return setPeriodType(state, action.payload);
         case SET_START_DATE:
             return setStartDate(state, action.payload);
+        case SET_CAMPAIGN_ID:
+            return setCampaignId(state, action.payload);
+        case SET_PAYMENT_METHOD:
+            return setPaymentMethod(state, action.payload);
         case INITIAL_VIEW_LOAD:
             return loadInitialView(state, action.payload);
         default:
