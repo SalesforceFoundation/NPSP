@@ -18,7 +18,7 @@
   },
   "isAutoNamingEnabled": true,
   "isChangeLogEnabled": false,
-  "isElevateCustomer": false,
+  "isElevateCustomer": true,
   "isMultiCurrencyEnabled": false,
   "parentSObjectType": "Contact",
   "periodToYearlyFrequencyMap": {
@@ -30,7 +30,17 @@
     "Daily": 365
   },
   "record": {
-    "contactId": "fake-contact-record-id",
+    "recordId": "a09S000000HNWL3IAP",
+    "contactId": "003S000001WqpKSIAZ",
+    "accountId": "001S000001NAsRFIA1",
+    "achLastFour": "5555",
+    "cardExpirationYear": null,
+    "cardLastFour": null,
+    "cardExpirationMonth": null,
+    "recordName": "Testing Contact $1 - Recurring",
+    "paymentMethod": "ACH",
+    "recurringStatus": "Active",
+    "commitmentId": "11a1c101-bcde-001-111f-g1dh00i0jk111",
     "recurringPeriod": "Monthly",
     "recurringType": "Open",
     "dayOfMonth": "15"
