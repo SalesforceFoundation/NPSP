@@ -50,6 +50,8 @@ const CLICKED_DOWN = 'clicked-down';
 const DOWN = 'down';
 const UP = 'up';
 
+const DEFAULT_NAME_ON_CARD = '[Not Provided]'
+
 export {
     DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
     LABEL_NEW_LINE,
@@ -69,5 +71,6 @@ export {
     CLICKED_UP,
     CLICKED_DOWN,
     DOWN,
-    UP
+    UP,
+    DEFAULT_NAME_ON_CARD
 };
