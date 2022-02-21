@@ -2,7 +2,6 @@ import { createElement } from "lwc";
 import Rd2EntryFormScheduleSection from "c/rd2EntryFormScheduleSection";
 import { Rd2Service } from "c/rd2Service";
 import getInitialView from "@salesforce/apex/RD2_EntryFormController.getInitialView";
-import getRecurringSettings from "@salesforce/apex/RD2_EntryFormController.getRecurringSettings";
 import { getObjectInfo, getPicklistValues } from "lightning/uiObjectInfoApi";
 import { mockReset } from "lightning/inputField";
 
@@ -11,7 +10,6 @@ import FIELD_INSTALLMENT_PERIOD from "@salesforce/schema/npe03__Recurring_Donati
 import RECURRING_DONATION_OBJECT from "@salesforce/schema/npe03__Recurring_Donation__c";
 import { SET_RECURRING_TYPE } from "../../rd2Service/actions";
 
-const mockGetRecurringSettings = require("./data/getRecurringSettings.json");
 const mockDayOfMonthPicklistValues = require("./data/wiredDayOfMonthPicklistValues.json");
 const mockInstallmentPeriodPicklistValues = require("./data/wiredInstallmentPeriodPicklistValues.json");
 const mockRecurringDonationObjectInfo = require("../../../../../../tests/__mocks__/apex/data/recurringDonationObjectInfo.json");
@@ -29,14 +27,6 @@ const mockHandleError = jest.fn();
 
 jest.mock("@salesforce/apex/RD2_EntryFormController.getInitialView", () => ({ default: jest.fn() }), { virtual: true });
 
-jest.mock(
-    "@salesforce/apex/RD2_EntryFormController.getRecurringSettings",
-    () => {
-        return { default: jest.fn() };
-    },
-    { virtual: true }
-);
-
 describe("c-rd2-entry-form-schedule-section", () => {
     let component;
     let controller;
@@ -53,7 +43,6 @@ describe("c-rd2-entry-form-schedule-section", () => {
             const rd2State = await rd2Service.loadInitialView(rd2Service.init(), null, FAKE_CONTACT_ID);
             component.rd2State = rd2State;
             controller = new Rd2EntryFormScheduleSectionTestController(component);
-            getRecurringSettings.mockResolvedValue(mockGetRecurringSettings);
             document.body.appendChild(component);
             await setupWires();
         });
@@ -131,7 +120,6 @@ describe("c-rd2-entry-form-schedule-section", () => {
 
             component.addEventListener("installmentschange", mockHandleInstallmentsChange);
             controller = new Rd2EntryFormScheduleSectionTestController(component);
-            getRecurringSettings.mockResolvedValue({ ...mockGetRecurringSettings, defaultRecurringType: "Fixed" });
             document.body.appendChild(component);
             await setupWires();
         });
@@ -169,7 +157,6 @@ describe("c-rd2-entry-form-schedule-section", () => {
             component.addEventListener("periodtypechange", mockHandleCustomPeriodChange);
             component.addEventListener("periodchange", mockHandleAdvancedPeriodChange);
             controller = new Rd2EntryFormScheduleSectionTestController(component);
-            getRecurringSettings.mockResolvedValue(mockGetRecurringSettings);
             document.body.appendChild(component);
             await setupWires("Weekly");
         });
@@ -242,7 +229,6 @@ describe("c-rd2-entry-form-schedule-section", () => {
                 },
             };
             getInitialView.mockResolvedValue(initialViewFixed);
-            getRecurringSettings.mockResolvedValue(mockGetRecurringSettings);
             const rd2State = await rd2Service.loadInitialView(rd2Service.init(), FAKE_RD2_ID, FAKE_CONTACT_ID);
             component.rd2State = rd2State;
 
@@ -254,7 +240,6 @@ describe("c-rd2-entry-form-schedule-section", () => {
 
         it("when record is Open recurring type, number of planned installments field is not visible", async () => {
             const rd2Service = new Rd2Service();
-            getRecurringSettings.mockResolvedValue(mockGetRecurringSettings);
             getInitialView.mockResolvedValue(initialViewResponse);
             const rd2State = await rd2Service.loadInitialView(rd2Service.init(), FAKE_RD2_ID, FAKE_CONTACT_ID);
             component.rd2State = rd2State;
@@ -273,7 +258,6 @@ describe("c-rd2-entry-form-schedule-section", () => {
         });
 
         it("alerts parent component when wiredGetRecurringObjectInfo fails", async () => {
-            getRecurringSettings.mockResolvedValue(mockGetRecurringSettings);
             document.body.appendChild(component);
             const errorMessage = {
                 status: 403,
