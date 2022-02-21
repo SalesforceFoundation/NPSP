@@ -1,17 +1,20 @@
 import { isBlank } from "c/util";
-import { format } from "c/utilCommon";
+import { format, isNull } from "c/utilCommon";
 import { nextState } from "./model";
 import * as ACTIONS from "./actions";
 import {
-    RECURRING_PERIOD_ADVANCED,
+    ACCOUNT_DONOR_TYPE,
+    CHANGE_TYPE_UPGRADE,
+    CONTACT_DONOR_TYPE,
+    CHANGE_TYPE_DOWNGRADE,
+    ELEVATE_SUPPORTED_CURRENCIES,
+    ELEVATE_SUPPORTED_COUNTRIES,
     PERIOD,
+    RECURRING_PERIOD_ADVANCED,
     RECURRING_TYPE_OPEN,
     RECURRING_TYPE_FIXED,
-    ACCOUNT_DONOR_TYPE,
-    CONTACT_DONOR_TYPE,
-    CHANGE_TYPE_UPGRADE,
-    CHANGE_TYPE_DOWNGRADE,
 } from "./constants.js";
+import CURRENCY from "@salesforce/i18n/currency";
 
 import getInitialView from "@salesforce/apex/RD2_EntryFormController.getInitialView";
 
@@ -107,20 +110,59 @@ class Rd2Service {
         return recurringDonation;
     }
 
-    accountHolderTypeFor(donorType) {
-        if (donorType === CONTACT_DONOR_TYPE) {
-            return ACCOUNT_HOLDER_TYPES.INDIVIDUAL;
-        } else if (donorType === ACCOUNT_DONOR_TYPE) {
-            return ACCOUNT_HOLDER_TYPES.BUSINESS;
-        }
-    }
-
     getPaymentProcessingMessage(paymentMethod) {
         if (this.isCard(paymentMethod)) {
             return validatingCardMessage;
         } else if (this.isACH(paymentMethod)) {
             return validatingACHMessage;
         }
+    }
+
+    isValidForElevate(rd2State) {
+        const isScheduleSupported = this.isElevateSupportedSchedule(rd2State);
+        const isValidPaymentMethod = this.isElevatePaymentMethod(rd2State.paymentMethod);
+        const currencySupported = this.isElevateSupportedCurrency(rd2State);
+        const countrySupported = this.isElevateCountrySupported(rd2State);
+        const statusSupported = this.isElevateValidStatus(rd2State);
+        const isElevateCustomer = this.isElevateCustomer(rd2State);
+        return (
+            isElevateCustomer &&
+            isScheduleSupported &&
+            isValidPaymentMethod &&
+            currencySupported &&
+            countrySupported &&
+            statusSupported
+        );
+    }
+
+    isElevateCustomer({ isElevateCustomer }) {
+        return isElevateCustomer;
+    }
+
+    isElevateValidStatus(rd2State) {
+        if (rd2State.recordId) {
+            if (this.isOriginalStatusClosed(rd2State)) {
+                return false;
+            }
+        }
+        return !this.isClosedStatus(rd2State);
+    }
+
+    isElevateCountrySupported({ mailingCountry }) {
+        return isNull(mailingCountry) || ELEVATE_SUPPORTED_COUNTRIES.includes(mailingCountry);
+    }
+
+    isElevateSupportedSchedule({ recurringPeriod, recurringType }) {
+        const isValidRecurringType = recurringType === RECURRING_TYPE_OPEN;
+        const isValidInstallmentPeriod = recurringPeriod !== PERIOD.FIRST_AND_FIFTEENTH;
+        return isValidInstallmentPeriod && isValidRecurringType;
+    }
+
+    isElevateSupportedCurrency({ currencyCode, isMultiCurrencyEnabled }) {
+        if (isMultiCurrencyEnabled) {
+            return ELEVATE_SUPPORTED_CURRENCIES.includes(currencyCode);
+        }
+        return ELEVATE_SUPPORTED_CURRENCIES.includes(CURRENCY);
     }
 
     isElevatePaymentMethod(paymentMethod) {
@@ -134,6 +176,18 @@ class Rd2Service {
     isACH(paymentMethod) {
         return paymentMethod === PAYMENT_METHOD_ACH;
     }
+
+    getOriginalPaymentMethod({ initialViewState }) {
+        return initialViewState.paymentMethod;
+    }
+
+    isOriginalStatusClosed({ initialViewState }) {
+        return this.isClosedStatus(initialViewState);
+    }
+
+    isClosedStatus({ closedStatusValues, recurringStatus }) {
+        return closedStatusValues.includes(recurringStatus);
+    }
 }
 
 class RecurringDonation {
@@ -141,10 +195,6 @@ class RecurringDonation {
 
     constructor(record = {}) {
         this.record = record;
-    }
-
-    hasInstallmentFrequency() {
-        return !isBlank(this.record[FIELD_INSTALLMENT_FREQUENCY.fieldApiName]);
     }
 
     withCommitmentResponseBody(responseBody) {
