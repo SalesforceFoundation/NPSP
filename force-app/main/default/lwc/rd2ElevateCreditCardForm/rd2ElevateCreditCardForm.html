@@ -56,7 +56,7 @@
 
                     <lightning-layout-item size="12" class='slds-var-p-horizontal_small slds-var-p-top_small'>
                         <template if:true={isDisabled}>
-                            <template if:true={existingPaymentIsCard}>
+                            <template if:true={showExistingCardInfo}>
                                 <lightning-layout vertical-align='center' multiple-rows='true'>
                                     <lightning-layout-item size="4" class=" slds-text-color_weak slds-var-p-bottom_small">
                                         <label for="last4CreditCard" id="creditCardLast4Label"
@@ -65,7 +65,7 @@
                                         </label><br/>
                                         <lightning-formatted-text
                                             id="last4CreditCard"
-                                            value={cardLastFour}
+                                            value={rd2State.cardLastFour}
                                             data-qa-locator={qaLocatorLastFourDigits}
                                             aria-labelledby="creditCardLast4Label">
                                         </lightning-formatted-text>
@@ -83,7 +83,7 @@
                                     </lightning-layout-item>
                                 </lightning-layout>
                             </template>
-                            <template if:true={existingPaymentIsAch}>
+                            <template if:true={showExistingACHInfo}>
                                 <lightning-layout vertical-align='center' multiple-rows='true'>
                                     <lightning-layout-item size="4" class=" slds-text-color_weak slds-var-p-bottom_small">
                                         <label for="last4ACH"
@@ -92,7 +92,7 @@
                                         </label><br/>
                                         <lightning-formatted-text
                                                 id="last4ACH"
-                                                value={achLastFour}
+                                                value={rd2State.achLastFour}
                                                 data-qa-locator={qaLocatorLastFourDigits}>
                                         </lightning-formatted-text>
                                     </lightning-layout-item>
