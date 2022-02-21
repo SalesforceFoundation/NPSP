@@ -159,10 +159,10 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     /***
      * @description Initializes the component with data
      */
-    connectedCallback() {
+    async connectedCallback() {
         if (this.recordId) {
             this.populateAppConfigurationData();
-            this.rd2State = this.rd2Service.loadInitialView(this.rd2State, this.recordId);
+            this.rd2State = await this.rd2Service.loadInitialView(this.rd2State, this.recordId);
         }
     }
 
