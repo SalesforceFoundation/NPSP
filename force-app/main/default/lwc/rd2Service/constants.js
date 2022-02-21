@@ -15,3 +15,5 @@ export const CONTACT_DONOR_TYPE = "Contact";
 
 export const CHANGE_TYPE_UPGRADE = "Upgrade";
 export const CHANGE_TYPE_DOWNGRADE = "Downgrade";
+export const ELEVATE_SUPPORTED_CURRENCIES = ["USD"];
+export const ELEVATE_SUPPORTED_COUNTRIES = ["US", "USA", "United States", "United States of America"];
