@@ -181,8 +181,12 @@ public with sharing class Gift {
     }
 
     public void remapFieldsForView() {
-        this.dataImport.Donation_Amount__c = this.dataImport.Recurring_Donation_Amount__c;
-        this.dataImport.Donation_Date__c = this.dataImport.Recurring_Donation_Date_Established__c;
+        if (this.dataImport.Recurring_Donation_Amount__c != null) {
+            this.dataImport.Donation_Amount__c = this.dataImport.Recurring_Donation_Amount__c;
+        }
+        if (this.dataImport.Recurring_Donation_Date_Established__c != null) {
+            this.dataImport.Donation_Date__c = this.dataImport.Recurring_Donation_Date_Established__c;
+        }
     }
 
     public Boolean isImported() {
