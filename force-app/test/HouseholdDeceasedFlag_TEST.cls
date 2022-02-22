@@ -42,6 +42,9 @@ private class HouseholdDeceasedFlag_TEST {
         deceasedTestingContacts[0].Deceased__c = true;
         deceasedTestingContacts[1].Deceased__c = true;
         insert deceasedTestingContacts;
+
+        Account testHousehold = UTIL_UnitTestData_TEST.buildHouseholdAccount();
+        insert testHousehold;
     }
 
     /**
@@ -221,16 +224,87 @@ private class HouseholdDeceasedFlag_TEST {
             'Household Account name should still contain deceased Contact Last Name.');
     }
 
+    @IsTest
+    private static void shouldSetAllMembersDeceasedWhenBulkDeceasedContactsCreated() {
+        Account allDeceasedAccount = getHouseholdWithNoMembers();
+
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.getContacts(5);
+        for (Contact testContact : testContacts) {
+            testContact.AccountId = allDeceasedAccount.Id;
+            testContact.Deceased__c = true;
+        }
+
+        Test.startTest();
+            insert testContacts;
+        Test.stopTest();
+
+        Account deceasedAccount = [SELECT All_Members_Deceased__c, Name FROM Account WHERE Id = :allDeceasedAccount.Id
+                                   LIMIT 1];
+        System.assertEquals(true, deceasedAccount.All_Members_Deceased__c, 'All members deceased should be true.');
+    }
+
+    @IsTest
+    private static void shouldSetAllDeceasedFalseWhenMixOfDeceasedContactsCreated() {
+        Account allDeceasedAccount = getHouseholdWithNoMembers();
+
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.getContacts(5);
+        testContacts[0].Deceased__c = true;
+        testContacts[1].Deceased__c = true;
+
+        for (Contact testContact : testContacts) {
+            testContact.AccountId = allDeceasedAccount.Id;
+        }
+
+        Test.startTest();
+            insert testContacts;
+        Test.stopTest();
+
+        Account deceasedAccount = [SELECT All_Members_Deceased__c, Name
+                                   FROM Account
+                                   WHERE Id = :allDeceasedAccount.Id
+                                   LIMIT 1];
+        System.assertEquals(false, deceasedAccount.All_Members_Deceased__c, 'All members deceased should be true.');
+    }
+
+    @IsTest
+    private static void shouldSetAllMembersDeceasedAllMembersBulkUpdateToDeceased() {
+        Account allDeceasedAccount = getHouseholdWithNoMembers();
+
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.getContacts(5);
+
+        for (Contact testContact : testContacts) {
+            testContact.AccountId = allDeceasedAccount.Id;
+        }
+        insert testContacts;
+
+        Test.startTest();
+            List<Contact> contactsToUpdate = [SELECT Deceased__c FROM Contact WHERE AccountId = :allDeceasedAccount.Id];
+            for (Contact testContact : contactsToUpdate) {
+                testContact.Deceased__c = true;
+            }
+            update contactsToUpdate;
+        Test.stopTest();
+
+        Account deceasedAccount = [SELECT All_Members_Deceased__c, Name
+                                   FROM Account
+                                   WHERE Id = :allDeceasedAccount.Id
+                                   LIMIT 1];
+        System.assertEquals(true, deceasedAccount.All_Members_Deceased__c, 'All members deceased should be true.');
+    }
 
 
     // Helpers
     ////////////
 
-    public static Account getAccount(Contact queryContact) {
+    private static Account getHouseholdWithNoMembers() {
+        return [SELECT Id FROM Account WHERE Name LIKE '%Test Account%' LIMIT 1];
+    }
+
+    private static Account getAccount(Contact queryContact) {
         return [SELECT Id, Name, All_Members_Deceased__c FROM Account WHERE Id = :queryContact.AccountId];
     }
 
-    public static Map<Id, Account> getAccountsByIds(Contact contact1, Contact contact2) {
+    private static Map<Id, Account> getAccountsByIds(Contact contact1, Contact contact2) {
         return new Map<Id, Account>([
             SELECT Id, Name, All_Members_Deceased__c
             FROM Account
