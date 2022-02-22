@@ -932,7 +932,7 @@ public inherited sharing class Addresses extends fflib_SObjects2 {
         return oldMap?.get(address.Id);
     }
 
-    private static Map<Id, Account> getAccountsByIds(Set<Id> accountIds) {
+    public static Map<Id, Account> getAccountsByIds(Set<Id> accountIds) {
         return new Map<Id, Account>([
                 SELECT Id, BillingStreet, BillingCity, BillingState,
                         BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude, Undeliverable_Address__c
