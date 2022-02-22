@@ -14,7 +14,8 @@ import {
     PAYMENT_METHOD_CREDIT_CARD,
     PAYMENT_METHODS,
     TOKENIZE_ACH_EVENT_ACTION,
-    TOKENIZE_CREDIT_CARD_EVENT_ACTION
+    TOKENIZE_CREDIT_CARD_EVENT_ACTION,
+    DEFAULT_NAME_ON_CARD
 } from 'c/geConstants';
 import ElevateWidgetDisplay from './helpers/elevateWidgetDisplay';
 import GeFormService from 'c/geFormService';
@@ -25,6 +26,18 @@ import DATA_IMPORT_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.P
 import DATA_IMPORT_PAYMENT_METHOD from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import DATA_IMPORT_CONTACT_FIRSTNAME from '@salesforce/schema/DataImport__c.Contact1_Firstname__c';
 import DATA_IMPORT_CONTACT_LASTNAME from '@salesforce/schema/DataImport__c.Contact1_Lastname__c';
+import DATA_IMPORT_CONTACT_CITY from '@salesforce/schema/DataImport__c.Home_City__c';
+import DATA_IMPORT_CONTACT_COUNTRY from '@salesforce/schema/DataImport__c.Home_Country__c';
+import DATA_IMPORT_CONTACT_STATE_PROVINCE from '@salesforce/schema/DataImport__c.Home_State_Province__c';
+import DATA_IMPORT_CONTACT_STREET from '@salesforce/schema/DataImport__c.Home_Street__c';
+import DATA_IMPORT_CONTACT_ZIP_POSTAL_CODE from '@salesforce/schema/DataImport__c.Home_Zip_Postal_Code__c';
+
+import DATA_IMPORT_ACCOUNT_CITY from '@salesforce/schema/DataImport__c.Account1_City__c';
+import DATA_IMPORT_ACCOUNT_COUNTRY from '@salesforce/schema/DataImport__c.Account1_Country__c';
+import DATA_IMPORT_ACCOUNT_STATE_PROVINCE from '@salesforce/schema/DataImport__c.Account1_State_Province__c';
+import DATA_IMPORT_ACCOUNT_STREET from '@salesforce/schema/DataImport__c.Account1_Street__c';
+import DATA_IMPORT_ACCOUNT_ZIP_POSTAL_CODE from '@salesforce/schema/DataImport__c.Account1_Zip_Postal_Code__c';
+
 import DATA_IMPORT_DONATION_DONOR from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 import DATA_IMPORT_ACCOUNT_NAME from '@salesforce/schema/DataImport__c.Account1_Name__c';
 import DATA_IMPORT_PARENT_BATCH_LOOKUP from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
@@ -527,7 +540,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         if (this._currentPaymentMethod === PAYMENT_METHOD_CREDIT_CARD) {
             //The cardholder name is always empty for the purchase Payments Services card tokenization iframe
             //even though when it is accessible by the Gift Entry form for the Donor Type = Contact.
-            return { nameOnCard: null };
+            return this.creditCardTokenizeParameters();
         } else {
             return this.ACHTokenizeParameters();
         }
@@ -545,6 +558,56 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             ? this.populateAchParametersForBusiness(achTokenizeParameters)
             : this.populateAchParametersForIndividual(achTokenizeParameters);
         return JSON.stringify(achTokenizeParameters);
+    }
+
+    creditCardTokenizeParameters() {
+        let creditCardParams = {
+            billingAddrCity: '',
+            billingAddrCountry: '',
+            billingAddrLine1: '',
+            billingAddrPostalCode: '',
+            billingAddrState: '',
+            nameOnCard: DEFAULT_NAME_ON_CARD
+        }
+
+        creditCardParams = this.widgetDataFromState[
+            apiNameFor(DATA_IMPORT_DONATION_DONOR)
+            ] === CONTACT_DONOR_TYPE
+            ? this.buildContactDonorAddress(creditCardParams)
+            : this.buildAccountDonorAddress(creditCardParams)
+        return JSON.stringify(creditCardParams);
+    }
+
+    buildAccountDonorAddress(creditCardParams) {
+        creditCardParams.billingAddrCity =
+            this.widgetDataFromState[apiNameFor(DATA_IMPORT_ACCOUNT_CITY)];
+        creditCardParams.billingAddrCountry =
+            this.widgetDataFromState[apiNameFor(DATA_IMPORT_ACCOUNT_COUNTRY)];
+        creditCardParams.billingAddrLine1 =
+            this.widgetDataFromState[apiNameFor(DATA_IMPORT_ACCOUNT_STREET)];
+        creditCardParams.billingAddrPostalCode =
+            this.widgetDataFromState[apiNameFor(DATA_IMPORT_ACCOUNT_ZIP_POSTAL_CODE)];
+        creditCardParams.billingAddrState =
+            this.widgetDataFromState[apiNameFor(DATA_IMPORT_ACCOUNT_STATE_PROVINCE)];
+        return creditCardParams;
+    }
+
+    buildContactDonorAddress(creditCardParams) {
+        creditCardParams.billingAddrCity =
+            this.widgetDataFromState[apiNameFor(DATA_IMPORT_CONTACT_CITY)];
+        creditCardParams.billingAddrCountry =
+            this.widgetDataFromState[apiNameFor(DATA_IMPORT_CONTACT_COUNTRY)];
+        creditCardParams.billingAddrLine1 =
+            this.widgetDataFromState[apiNameFor(DATA_IMPORT_CONTACT_STREET)];
+        creditCardParams.billingAddrPostalCode =
+            this.widgetDataFromState[apiNameFor(DATA_IMPORT_CONTACT_ZIP_POSTAL_CODE)];
+        creditCardParams.billingAddrState =
+            this.widgetDataFromState[apiNameFor(DATA_IMPORT_CONTACT_STATE_PROVINCE)];
+        return creditCardParams;
+    }
+
+    donorType() {
+        return this.widgetDataFromState[apiNameFor(DATA_IMPORT_DONATION_DONOR)]
     }
 
     populateAchParametersForBusiness(achTokenizeParameters) {

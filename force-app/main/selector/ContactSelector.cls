@@ -98,12 +98,26 @@ public inherited sharing class ContactSelector {
         return queryForContactNamingFields;
     }
 
+    public static List<Contact> getContactAddressFieldsForContactsIn(Set<Id> contactIds) {
+        return Database.query(contactAddressFieldsSOQL(contactIds));
+    }
+
     public static List<Contact> getContactAddressFieldsForContactAccountsIn(Set<Id> householdAccountIds) {
-        return Database.query(contactAddressFieldsSOQL(householdAccountIds));
+        return Database.query(contactAddressFieldsFromAccountSOQL(householdAccountIds));
+    }
+
+    private static String contactAddressFieldsSOQL(Set<Id> contactIds) {
+        List<String> selectFields = contactAddressFields();
+
+        return new UTIL_Query()
+                .withSelectFields(selectFields)
+                .withFrom(String.valueOf(Contact.SObjectType))
+                .withWhere('Id IN :contactIds')
+                .build();
     }
 
     private static String householdAccountType = CAO_Constants.HH_ACCOUNT_TYPE;
-    private static String contactAddressFieldsSOQL(Set<Id> householdAccountIds) {
+    private static String contactAddressFieldsFromAccountSOQL(Set<Id> householdAccountIds) {
         List<String> selectFields = contactAddressFields();
 
         return new UTIL_Query()
