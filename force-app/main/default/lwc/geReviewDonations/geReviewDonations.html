@@ -1,7 +1,17 @@
 <template>
     <template if:true={hasPendingDonations}>
         <article class={reviewDonationsComputedClass}>
-            <lightning-layout vertical-align="center"
+            <template if:true={giftInViewHasSchedule}>
+                <c-util-inline-text custom-class="slds-p-around_none"
+                                    icon-name="utility:warning"
+                                    icon-variant="warning"
+                                    icon-size="small"
+                                    text="This donor has pending open donations, but reviewing existing donations is not supported for recurring gifts.">
+                </c-util-inline-text>
+            </template>
+
+            <lightning-layout if:false={giftInViewHasSchedule}
+                              vertical-align="center"
                               multiple-rows="true">
                 <lightning-layout-item size="12">
                     <span class="slds-text-body_regular"
