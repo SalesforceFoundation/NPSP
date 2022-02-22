@@ -388,7 +388,8 @@ export default class GeFormRenderer extends LightningElement{
             },
             createRecurrenceCallback: (scheduleData) => {
                 this.createRecurrence(scheduleData);
-            }
+            },
+            giftInView: this.giftInView
         };
 
         if (isEdit) {

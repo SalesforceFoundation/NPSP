@@ -1,5 +1,5 @@
 import { LightningElement, api, track } from 'lwc';
-import { isEmpty } from 'c/utilCommon';
+import { isEmpty, isEmptyObject } from 'c/utilCommon';
 
 import { Rd2Service, ACTIONS, PERIOD, RECURRING_PERIOD_ADVANCED } from "c/rd2Service";
 
@@ -14,10 +14,14 @@ import INSTALLMENTS from '@salesforce/schema/npe03__Recurring_Donation__c.npe03_
 import DAY_OF_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.Day_of_Month__c';
 import INSTALLMENT_FREQUENCY from '@salesforce/schema/npe03__Recurring_Donation__c.InstallmentFrequency__c';
 
+import OPPORTUNITY_IMPORTED from '@salesforce/schema/DataImport__c.DonationImported__c';
+import PAYMENT_IMPORTED from '@salesforce/schema/DataImport__c.PaymentImported__c';
+
 export default class GeModalRecurringDonation extends LightningElement {
     @api schedule;
     @api cancelCallback;
     @api createRecurrenceCallback;
+    @api giftInView;
 
     rd2Service = new Rd2Service();
     @track rd2State = this.rd2Service.init();
@@ -43,6 +47,27 @@ export default class GeModalRecurringDonation extends LightningElement {
 
     get scheduleComponent() {
         return this.template.querySelectorAll("[data-id=\"scheduleComponent\"]")[0];
+    }
+
+    get giftInViewHasSoftCredits() {
+        if (this.giftInView?.softCredits) {
+            const softCredits = JSON.parse(this.giftInView.softCredits);
+            return softCredits.length > 0;
+        }
+        return false;
+    }
+
+    get giftInViewHasReviewDonation() {
+        const isReviewingOpportunity = !isEmptyObject(this.giftInView?.fields[OPPORTUNITY_IMPORTED.fieldApiName]);
+        const isReviewingPayment = !isEmptyObject(this.giftInView?.fields[PAYMENT_IMPORTED.fieldApiName]);
+        return isReviewingOpportunity || isReviewingPayment;
+    }
+
+    get shouldDisplayWarning() {
+        if (this.giftInViewHasSoftCredits || this.giftInViewHasReviewDonation) {
+            return true;
+        }
+        return false;
     }
 
     handleAddSchedule() {
