@@ -2193,6 +2193,10 @@ public with sharing class ADDR_Addresses_TEST {
         UTIL_UnitTestData_TEST.disableMergeTriggers();
         UTIL_UnitTestData_TEST.disableHHNamingTriggers();
 
+        // createTestData does the following:
+        // 1. Inserts Accounts: 200, 10
+        // 2. Inserts Contacts: 200, 10
+        // 3. Inserts Addresses: 200, 10
         createTestData(totalHH, totalContactPerHH);
 
         // verify that the HH and Contacts share the same address
@@ -2207,6 +2211,10 @@ public with sharing class ADDR_Addresses_TEST {
         for (Contact con : contacts) {
             Account acc = accountById.get(con.AccountId);
 
+            // The assertions validate:
+            // 1. Address on Contact matches address on Account
+            // 2. Contact isAddressOverride is false
+            // 3. Contact current address is populated
             System.assertEquals(true, isMatchAddressAccCon(acc, con));
             System.assertEquals(false, con.is_Address_Override__c);
             System.assertNotEquals(null, con.Current_Address__c);
