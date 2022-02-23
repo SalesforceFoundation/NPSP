@@ -18,6 +18,7 @@ const EXTENDED_DISABLED_MESSAGE = 'c.geBodyPaymentNotProcessingTransaction c.psS
 const BDI_FAILURE_DISABLED_MESSAGE = 'c.geErrorCardChargedBDIFailed';
 const PAYMENT_METHOD_FIELD = 'Payment_Method__c';
 const DATA_IMPORT_PARENT_BATCH_LOOKUP = 'NPSP_Data_Import_Batch__c';
+const DATA_IMPORT_DONATION_DONOR = 'Donation_Donor__c';
 const DATA_IMPORT_PAYMENT_STATUS = 'Payment_Status__c';
 
 const createWidgetElement = () => {
@@ -26,6 +27,10 @@ const createWidgetElement = () => {
         {is: GeFormWidgetTokenizeCard}
     );
     element.Settings = Settings;
+    element.widgetDataFromState = {
+        ...element.widgetDataFromState,
+        [DATA_IMPORT_DONATION_DONOR]: 'Contact1'
+    }
     return element;
 }
 
