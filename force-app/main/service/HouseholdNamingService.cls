@@ -85,7 +85,11 @@ public without sharing class HouseholdNamingService {
     }
 
     public void updateHouseholdNameAndMemberCountAsync(List<Id> hhids) {
-       updateHouseholdNameAndMemberCountAsynchronously(hhids);
+       updateHouseholdNameAndMemberCountAsynchronously(hhids, AccountAdapter.isAllMembersDeceasedUpdateEnabled);
+    }
+
+    public static void updateHouseholdNameAndMemberCountAsynchronously(List<Id> hhids) {
+        updateHouseholdNameAndMemberCountAsynchronously(hhids, AccountAdapter.isAllMembersDeceasedUpdateEnabled);
     }
 
     /*******************************************************************************************************
@@ -94,8 +98,9 @@ public without sharing class HouseholdNamingService {
     * @return void
     */
     @future
-    public static void updateHouseholdNameAndMemberCountAsynchronously(List<Id> hhids) {
+    public static void updateHouseholdNameAndMemberCountAsynchronously(List<Id> hhids, Boolean isDeceasedUpdateEnabled) {
         //set our process control to avoid recursive updating on household records
+        AccountAdapter.enableHouseholdDeceasedUpdate(isDeceasedUpdateEnabled);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
         HouseholdNamingService householdNamingService = new HouseholdNamingService();
         householdNamingService.updateHouseholdNameAndMemberCount(hhids);
