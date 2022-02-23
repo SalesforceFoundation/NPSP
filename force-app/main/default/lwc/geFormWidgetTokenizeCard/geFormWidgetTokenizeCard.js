@@ -46,6 +46,8 @@ import PAYMENT_EXPIRATION_MONTH from '@salesforce/schema/DataImport__c.Payment_C
 import PAYMENT_LAST_4 from '@salesforce/schema/DataImport__c.Payment_Card_Last_4__c';
 import DATA_IMPORT_ID from '@salesforce/schema/DataImport__c.Id';
 import DATA_IMPORT from '@salesforce/schema/DataImport__c';
+import DATA_IMPORT_CONTACT1_IMPORTED from '@salesforce/schema/DataImport__c.Contact1Imported__c';
+import DATA_IMPORT_ACCOUNT1_IMPORTED from '@salesforce/schema/DataImport__c.Account1Imported__c';
 
 import commonPaymentServices from '@salesforce/label/c.commonPaymentServices';
 import geElevateWidgetPaymentServiceUnavailable from '@salesforce/label/c.geElevateWidgetPaymentServiceUnavailable';
@@ -69,7 +71,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     _cardExpirationDate;
     _widgetDataFromState;
     _readOnlyData;
-    _showBillingAddressFields = false;
 
     constructor() {
         super();
@@ -77,6 +78,11 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         this.display.init(this);
         this._displayState = this.display.currentState();
         registerListener('resetElevateWidget', this.handleElevateWidgetReset, this);
+        registerListener('displayWidgetError', this.handleWidgetError, this);
+    }
+
+    handleWidgetError(event) {
+        this.handleError(event.error);
     }
 
     async connectedCallback() {
@@ -86,18 +92,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             const domainInfo = await GeFormService.getOrgDomain();
             tokenHandler.setVisualforceOriginURLs(domainInfo);
         }
-    }
-
-    get showBillingAddressFields() {
-        return this._showBillingAddressFields;
-    }
-
-    handleShowBillingAddressFields() {
-        this._showBillingAddressFields = true;
-    }
-
-    handleRemoveBillingAddressFields() {
-        this._showBillingAddressFields = false;
     }
 
     get isElevateCustomer() {
@@ -574,49 +568,20 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     creditCardTokenizeParameters() {
-        let creditCardParams = {
-            billingAddrCity: '',
-            billingAddrCountry: '',
-            billingAddrLine1: '',
-            billingAddrPostalCode: '',
-            billingAddrState: '',
-            nameOnCard: DEFAULT_NAME_ON_CARD
-        }
-
-        creditCardParams = this.widgetDataFromState[
-            apiNameFor(DATA_IMPORT_DONATION_DONOR)
-            ] === CONTACT_DONOR_TYPE
-            ? this.buildContactDonorAddress(creditCardParams)
-            : this.buildAccountDonorAddress(creditCardParams)
+        const elevateAddressFields =
+            this.template.querySelector(`[data-id='elevateAddressFields']`);
+        let creditCardParams = Object.assign({},
+            elevateAddressFields.addressFields);
+        creditCardParams.nameOnCard = DEFAULT_NAME_ON_CARD;
         return JSON.stringify(creditCardParams);
     }
 
-    buildAccountDonorAddress(creditCardParams) {
-        creditCardParams.billingAddrCity =
-            this.widgetDataFromState[apiNameFor(DATA_IMPORT_ACCOUNT_CITY)];
-        creditCardParams.billingAddrCountry =
-            this.widgetDataFromState[apiNameFor(DATA_IMPORT_ACCOUNT_COUNTRY)];
-        creditCardParams.billingAddrLine1 =
-            this.widgetDataFromState[apiNameFor(DATA_IMPORT_ACCOUNT_STREET)];
-        creditCardParams.billingAddrPostalCode =
-            this.widgetDataFromState[apiNameFor(DATA_IMPORT_ACCOUNT_ZIP_POSTAL_CODE)];
-        creditCardParams.billingAddrState =
-            this.widgetDataFromState[apiNameFor(DATA_IMPORT_ACCOUNT_STATE_PROVINCE)];
-        return creditCardParams;
-    }
-
-    buildContactDonorAddress(creditCardParams) {
-        creditCardParams.billingAddrCity =
-            this.widgetDataFromState[apiNameFor(DATA_IMPORT_CONTACT_CITY)];
-        creditCardParams.billingAddrCountry =
-            this.widgetDataFromState[apiNameFor(DATA_IMPORT_CONTACT_COUNTRY)];
-        creditCardParams.billingAddrLine1 =
-            this.widgetDataFromState[apiNameFor(DATA_IMPORT_CONTACT_STREET)];
-        creditCardParams.billingAddrPostalCode =
-            this.widgetDataFromState[apiNameFor(DATA_IMPORT_CONTACT_ZIP_POSTAL_CODE)];
-        creditCardParams.billingAddrState =
-            this.widgetDataFromState[apiNameFor(DATA_IMPORT_CONTACT_STATE_PROVINCE)];
-        return creditCardParams;
+    get selectedDonorId() {
+        return  {
+            donorId : this.donorType() === CONTACT_DONOR_TYPE
+                ? this.widgetDataFromState[apiNameFor(DATA_IMPORT_CONTACT1_IMPORTED)]
+                : this.widgetDataFromState[apiNameFor(DATA_IMPORT_ACCOUNT1_IMPORTED)]
+        };
     }
 
     donorType() {

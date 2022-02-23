@@ -89,6 +89,13 @@
                                         src={tokenizeCardPageUrl}
                                         data-id={CUSTOM_LABELS.commonPaymentServices}>
                                 </iframe>
+                                <lightning-layout multiple-rows="true">
+                                    <lightning-layout-item class="fade-in" size="12">
+                                        <c-elevate-address-fields selected-donor-id= {selectedDonorId}
+                                                                  data-id='elevateAddressFields' >
+                                        </c-elevate-address-fields>
+                                    </lightning-layout-item>
+                                </lightning-layout>
                             </div>
                         </template>
 
@@ -108,6 +115,13 @@
                                         src={tokenizeCardPageUrl}
                                         data-id={CUSTOM_LABELS.commonPaymentServices}>
                                 </iframe>
+                                <lightning-layout multiple-rows="true">
+                                    <lightning-layout-item class="fade-in" size="12">
+                                        <c-elevate-address-fields selected-donor-id= {selectedDonorId}
+                                                                  data-id='elevateAddressFields' >
+                                        </c-elevate-address-fields>
+                                    </lightning-layout-item>
+                                </lightning-layout>
                             </div>
                         </template>
 
@@ -178,29 +192,8 @@
                         </template>
                     </lightning-layout-item>
 
-                    <lightning-layout-item size='12' if:false={showSpinner}>
-                        <lightning-layout multiple-rows="true">
-                            <lightning-layout-item size='12' if:false={showBillingAddressFields}>
-                                <lightning-button variant="base"
-                                                  label='Add Billing Address'
-                                                  onclick={handleShowBillingAddressFields}
-                                                  class='slds-button slds-button_base'
-                                                  data-qa-locator=''>
-                                </lightning-button>
-                            </lightning-layout-item>
-                            <lightning-layout-item size="12" if:true={showBillingAddressFields}>
-                                <lightning-button variant="base"
-                                                  label='Remove Billing Address'
-                                                  onclick={handleRemoveBillingAddressFields}
-                                                  class='slds-button slds-button_base slds-float_right'
-                                                  data-qa-locator=''>
-                                </lightning-button>
-                            </lightning-layout-item >
-                            <lightning-layout-item class="fade-in" size="12" if:true={showBillingAddressFields}>
-                                <c-elevate-address-fields ></c-elevate-address-fields>
-                            </lightning-layout-item>
-                        </lightning-layout>
-                    </lightning-layout-item>
+<!--                    <lightning-layout-item size='12' if:false={showSpinner}>
+                    </lightning-layout-item>-->
                 </lightning-layout>
             </article>
         </lightning-layout-item>

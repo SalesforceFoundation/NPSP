@@ -1,10 +1,23 @@
-<!--
- - Created by voduyemi on 2/14/22.
- -->
-
-<!-- Elevate Address Fields -->
 <template>
-    <lightning-layout multiple-rows="false">
+
+    <lightning-layout-item size='12' if:false={showBillingAddressFields}>
+        <lightning-button variant="base"
+                          label='Add Billing Address'
+                          onclick={handleShowBillingAddressFields}
+                          class='slds-button_base'
+                          data-qa-locator={qaLocatorAddBillingAddress}>
+        </lightning-button>
+    </lightning-layout-item>
+    <lightning-layout-item size="12" if:true={showBillingAddressFields}>
+        <lightning-button variant="base"
+                          label='Remove Billing Address'
+                          onclick={handleRemoveBillingAddressFields}
+                          class='slds-float_right'
+                          data-qa-locator={qaLocatorRemoveBillingAddress}>
+        </lightning-button>
+    </lightning-layout-item>
+
+    <lightning-layout multiple-rows="false" if:true={showBillingAddressFields}>
         <lightning-layout-item size="8">
             <div class="slds-p-bottom_none">
                 Billing Address
@@ -13,90 +26,94 @@
         </lightning-layout-item>
     </lightning-layout>
 
-    <lightning-layout multiple-rows="true">
+    <lightning-layout multiple-rows="true" if:true={showBillingAddressFields}>
         <lightning-layout-item size='12'
                                class ='slds-p-vertical_small'>
             <lightning-button label='Use Donor Address'
-                              title= ''
-                              onclick={handleClick}
+                              title='Use Donor Address'
+                              onclick={handleUseDonorAddress}
                               class='slds-m-left_x-small'
-                              data-qa-locator= ''>
+                              data-qa-locator={qaLocatorUseDonorAddress}>
             </lightning-button>
             <lightning-button label='Clear Address'
-                              title= ''
-                              onclick={handleClick}
+                              title='Clear Address'
+                              onclick={handleClearAddress}
                               class='slds-m-left_x-small'
-                              data-qa-locator= ''>
+                              data-qa-locator={qaLocatorClearAddress}>
             </lightning-button>
         </lightning-layout-item>
     </lightning-layout>
 
-    <lightning-layout multiple-rows='true'>
-        <lightning-layout-item size='6'
+    <lightning-layout multiple-rows='true' if:true={showBillingAddressFields}>
+        <lightning-layout-item size='6' class=slds-p-around_small
                                medium-device-size='3'>
-            <article class='slds-p-horizontal_small slds-p-vertical_xx-small'>
-                <lightning-input data-id='inputComponent'
-                                 value={addressFields.addressLine1}
-                                 type= 'text'
-                                 label='Street 1'
-                                 data-qa-locator='Street_1'>
-                </lightning-input>
-            </article>
+            <lightning-input data-id='addressLine1'
+                             name='addressLine1'
+                             value={addressFields.addressLine1}
+                             onchange={handleOnChange}
+                             type='text'
+                             label='Street 1'
+                             data-qa-locator={qaLocatorStreet1}>
+            </lightning-input>
         </lightning-layout-item>
-        <lightning-layout-item size='6'
+        <lightning-layout-item size='6' class=slds-p-around_small
                                medium-device-size='3'>
-            <article class='slds-p-horizontal_small slds-p-vertical_xx-small'>
-                <lightning-input data-id='inputComponent'
-                                 value={addressFields.addressLine2}
-                                 type= 'text'
-                                 label='Street 2'
-                                 data-qa-locator='Street_1'>
-                </lightning-input>
-            </article>
+            <lightning-input data-id='addressLine2'
+                             name='addressLine2'
+                             value={addressFields.addressLine2}
+                             onchange={handleOnChange}
+                             type='text'
+                             label='Street 2'
+                             data-qa-locator={qaLocatorStreet2}>
+            </lightning-input>
         </lightning-layout-item>
-        <lightning-layout-item size='6'
+        <lightning-layout-item size='6' class=slds-p-around_small
                                medium-device-size='3'>
-            <article class='slds-p-horizontal_small slds-p-vertical_xx-small'>
-                <lightning-input data-id='inputComponent'
-                                 value={addressFields.city}
-                                 type= 'text'
-                                 label='City'
-                                 data-qa-locator='Street_1'>
-                </lightning-input>
-            </article>
+            <lightning-input data-id='city'
+                             name='city'
+                             value={addressFields.city}
+                             onchange={handleOnChange}
+                             type='text'
+                             label='City'
+                             data-qa-locator={qaLocatorCity}>
+            </lightning-input>
+
         </lightning-layout-item>
-        <lightning-layout-item size='6'
+        <lightning-layout-item size='6' class=slds-p-around_small
                                medium-device-size='3'>
-            <article class='slds-p-horizontal_small slds-p-vertical_xx-small'>
-                <lightning-input data-id='inputComponent'
-                                 value={addressFields.state}
-                                 type= 'text'
-                                 label='State'
-                                 data-qa-locator='Street_1'>
-                </lightning-input>
-            </article>
+            <lightning-input data-id='state'
+                             name='state'
+                             value={addressFields.state}
+                             onchange={handleOnChange}
+                             type='text'
+                             label='State'
+                             data-qa-locator={qaLocatorState}>
+            </lightning-input>
+
         </lightning-layout-item>
-        <lightning-layout-item size='6'
+        <lightning-layout-item size='6' class=slds-p-around_small
                                medium-device-size='3'>
-            <article class='slds-p-horizontal_small slds-p-vertical_xx-small'>
-                <lightning-input data-id='inputComponent'
-                                 value={addressFields.postalCode}
-                                 type= 'text'
-                                 label='Postal Code'
-                                 data-qa-locator='Street_1'>
-                </lightning-input>
-            </article>
+            <lightning-input data-id='postalCode'
+                             name='postalCode'
+                             value={addressFields.postalCode}
+                             onchange={handleOnChange}
+                             type='text'
+                             label='Postal Code'
+                             data-qa-locator={qaLocatorPostalCode}>
+            </lightning-input>
+
         </lightning-layout-item>
-        <lightning-layout-item size='6'
+        <lightning-layout-item size='6' class=slds-p-around_small
                                medium-device-size='3'>
-            <article class='slds-p-horizontal_small slds-p-vertical_xx-small'>
-                <lightning-input data-id='inputComponent'
-                                 value={addressFields.country}
-                                 type= 'text'
-                                 label='Country'
-                                 data-qa-locator='Street_1'>
-                </lightning-input>
-            </article>
+            <lightning-input data-id='country'
+                             name='country'
+                             value={addressFields.country}
+                             onchange={handleOnChange}
+                             type='text'
+                             label='Country'
+                             data-qa-locator={qaLocatorCountry}>
+            </lightning-input>
+
         </lightning-layout-item>
     </lightning-layout>
 </template>

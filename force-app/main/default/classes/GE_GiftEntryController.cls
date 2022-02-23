@@ -1212,6 +1212,75 @@ public with sharing class GE_GiftEntryController {
         return (String)batches[0].get(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
     }
 
+    @AuraEnabled(Cacheable= true)
+    public static ElevateAddressFields retrieveDonorAddress(String donorId) {
+        try {
+            Id donor = Id.valueOf(donorId);
+            if (donor.getSobjectType() == Contact.SObjectType) {
+                return getContactAddress(donor);
+            }
+            return getAccountAddress(donor);
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+
+    }
+
+    private static ElevateAddressFields getContactAddress(Id donorId) {
+        List<Contact> contacts = new List<Contact>();
+        contacts = [
+            SELECT Id,
+                Current_Address__r.MailingCity__c,
+                Current_Address__r.MailingStreet__c,
+                Current_Address__r.MailingCountry__c,
+                Current_Address__r.MailingPostalCode__c,
+                Current_Address__r.MailingStreet2__c,
+                Current_Address__r.MailingState__c
+            FROM Contact
+            WHERE Id =: donorId];
+        return new ElevateAddressFields(contacts[0]);
+    }
+
+    private class ElevateAddressFields{
+        @AuraEnabled public String addressLine1;
+        @AuraEnabled public String addressLine2;
+        @AuraEnabled public String city;
+        @AuraEnabled public String country;
+        @AuraEnabled public String postalCode;
+        @AuraEnabled public String state;
+
+        public ElevateAddressFields(Contact con) {
+            this.addressLine1 = con.Current_Address__r.MailingStreet__c;
+            this.addressLine2 = con.Current_Address__r.MailingStreet2__c;
+            this.city = con.Current_Address__r.MailingCity__c;
+            this.state = con.Current_Address__r.MailingState__c;
+            this.postalCode = con.Current_Address__r.MailingPostalCode__c;
+            this.country = con.Current_Address__r.MailingCountry__c;
+        }
+
+        public ElevateAddressFields(Account acc) {
+            this.addressLine1 = acc.BillingStreet;
+            this.addressLine2 = '';
+            this.city = acc.BillingCity;
+            this.state = acc.BillingState;
+            this.postalCode = acc.BillingPostalCode;
+            this.country = acc.BillingCountry;
+        }
+    }
+
+    private static ElevateAddressFields getAccountAddress (Id donorId) {
+        List<Account> accounts = [
+            SELECT BillingStreet,
+                BillingCity,
+                BillingCountry,
+                BillingState,
+                BillingPostalCode
+            FROM Account
+            WHERE Id =: donorId
+        ];
+        return new ElevateAddressFields(accounts[0]);
+    }
+
     private class CurrencyMismatchException extends Exception {}
 
     private class BDIException extends Exception {}
