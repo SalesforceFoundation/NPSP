@@ -12,7 +12,7 @@ export default class ElevateAddressFields extends LightningElement {
     @api selectedDonorId;
 
 
-    @track addressFields = {
+    @track _addressFields = {
         city: '',
         country: '',
         addressLine1: '',
@@ -30,11 +30,11 @@ export default class ElevateAddressFields extends LightningElement {
     }
 
     handleRemoveBillingAddressFields() {
-        this.addressFields = {};
+        this._addressFields = {};
         this._showBillingAddressFields = false;
     }
 
-    handleValueChangeSync = (event) => {
+    handleValueChangeSync = () => {
         const allInputs = this.template.querySelectorAll('lightning-input')
         allInputs.forEach(element => {
             this.addressFields[element.name] = element.value;
@@ -43,7 +43,7 @@ export default class ElevateAddressFields extends LightningElement {
     handleOnChange = debouncify(this.handleValueChangeSync.bind(this), 300);
 
     handleClearAddress() {
-        this.addressFields = {};
+        this._addressFields = {};
     }
 
     async handleUseDonorAddress() {
@@ -57,7 +57,7 @@ export default class ElevateAddressFields extends LightningElement {
             const retrievedAddress = await retrieveDonorAddress(
                 { donorId: this.selectedDonorId.donorId }
             );
-            this.addressFields = Object.assign({}, retrievedAddress);
+            this._addressFields = Object.assign({}, retrievedAddress);
         } catch (err) {
             handleError(err);
         }
@@ -65,7 +65,7 @@ export default class ElevateAddressFields extends LightningElement {
 
     @api
     get addressFields() {
-       return this.addressFields;
+       return this._addressFields;
     }
 
     dispatchApplicationEvent(eventName, payload) {
