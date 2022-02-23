@@ -872,8 +872,11 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
     public List<NPSP_Contact> npspContactsInAccounts() {
         if (npspContactsInAccounts == null) {
             npspContactsInAccounts = new List<NPSP_Contact>();
-            for (Contact con : (List<Contact>) getRecordsWithNotBlankFieldValues(Contact.AccountId)) {
+            for (Contact con : (List<Contact>) getRecords()) {
                 NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
+                if (!npspContact.hasAccount()) {
+                    continue;
+                }
                 npspContactsInAccounts.add(npspContact);
             }
         }
