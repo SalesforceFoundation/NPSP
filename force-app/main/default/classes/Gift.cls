@@ -158,17 +158,46 @@ public with sharing class Gift {
     }
 
     public Boolean hasPopulatedRecurringFields() {
-        return this.dataImport.Recurring_Donation_Recurring_Type__c != null
-            || this.dataImport.Recurring_Donation_Installment_Period__c != null
-            || this.dataImport.Recurring_Donation_Effective_Date__c != null
-            || this.dataImport.Recurring_Donation_Day_of_Month__c != null
+        if (canAccessRecurringFields()) {
+            return this.dataImport.Recurring_Donation_Recurring_Type__c != null
+                || this.dataImport.Recurring_Donation_Installment_Period__c != null
+                || this.dataImport.Recurring_Donation_Effective_Date__c != null
+                || this.dataImport.Recurring_Donation_Day_of_Month__c != null
 
-            || this.dataImport.Recurring_Donation_Amount__c != null
-            || this.dataImport.Recurring_Donation_Date_Established__c != null
-            || this.dataImport.Recurring_Donation_Name__c != null
-            || this.dataImport.Recurring_Donation_Installment_Frequency__c != null
-            || this.dataImport.RecurringDonationImported__c != null
-            || this.dataImport.RecurringDonationImportStatus__c != null;
+                || this.dataImport.Recurring_Donation_Amount__c != null
+                || this.dataImport.Recurring_Donation_Date_Established__c != null
+                || this.dataImport.Recurring_Donation_Name__c != null
+                || this.dataImport.Recurring_Donation_Installment_Frequency__c != null
+                || this.dataImport.Recurring_Donation_Planned_Installments__c != null
+                || this.dataImport.RecurringDonationImported__c != null
+                || this.dataImport.Recurring_Donation_End_Date__c != null
+                || this.dataImport.RecurringDonationImportStatus__c != null;
+        }
+        return false;
+    }
+
+    private Boolean canAccessRecurringFields() {
+        List<SObjectField> giftScheduleFieldApiNames = new List<Schema.SObjectField>{
+            DataImport__c.SObjectType.fields.Recurring_Donation_Recurring_Type__c,
+            DataImport__c.SObjectType.fields.Recurring_Donation_Date_Established__c,
+            DataImport__c.SObjectType.fields.Recurring_Donation_Day_of_Month__c,
+            DataImport__c.SObjectType.fields.Recurring_Donation_Planned_Installments__c,
+            DataImport__c.SObjectType.fields.Recurring_Donation_Installment_Period__c,
+            DataImport__c.SObjectType.fields.Recurring_Donation_Installment_Frequency__c,
+            DataImport__c.SObjectType.fields.Recurring_Donation_Effective_Date__c,
+            DataImport__c.SObjectType.fields.Recurring_Donation_Amount__c,
+            DataImport__c.SObjectType.fields.Recurring_Donation_End_Date__c,
+            DataImport__c.SObjectType.fields.Donation_Amount__c,
+            DataImport__c.SObjectType.fields.Donation_Date__c
+        };
+
+        try {
+            fflib_SecurityUtils.checkRead(DataImportBatch__c.SObjectType, giftScheduleFieldApiNames);
+            fflib_SecurityUtils.checkUpdate(DataImportBatch__c.SObjectType, giftScheduleFieldApiNames);
+        } catch (fflib_SecurityUtils.SecurityException e) {
+            return false;
+        }
+        return true;
     }
 
     public void preprocessForRecurringGift() {

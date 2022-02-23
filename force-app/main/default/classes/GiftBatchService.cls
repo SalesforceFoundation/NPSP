@@ -54,6 +54,12 @@ public with sharing class GiftBatchService {
         String.valueOf(DataImport__c.Account1_Name__c)
     };
 
+    // Used to determine whether or not the Gift Batch has recurring gifts and
+    // the current user has the proper permissions to open the gift batch.
+    public Boolean isGiftBatchAccessible(GiftBatchId giftBatchId) {
+        return giftBatchServicePrivilegedHelper.isGiftBatchAccessible(giftBatchId);
+    }
+
     public Map<String, Integer> getGiftBatchTotalsMapFor(Id batchId) {
         GiftBatches batches = new GiftBatches(new Set<Id> {batchId}, new GiftBatchSelector());
         GiftBatchGroupedTotals groupedTotals = batches.getGroupedTotals();
@@ -187,6 +193,18 @@ public with sharing class GiftBatchService {
             return batches.isEmpty() ? null : batches[0];
         }
 
+        private Boolean hasRecurringGift(GiftBatchId giftBatchId){
+            Id dataImportBatchId = giftBatchId.value();
+            List<DataImport__c> gifts = [
+                SELECT Id
+                FROM DataImport__c
+                WHERE NPSP_Data_Import_Batch__c =: dataImportBatchId
+                AND Recurring_Donation_Recurring_Type__c != null
+                LIMIT 1
+            ];
+            return gifts.isEmpty() ? false : true;
+        }
+
         private AsyncApexJob selectAsyncApexJobBy(Id asyncApexJobId){
             List<AsyncApexJob> apexJobs = [
                 SELECT
@@ -196,6 +214,14 @@ public with sharing class GiftBatchService {
                 AND JobType =: JOB_TYPE_BATCH
             ];
             return apexJobs.isEmpty() ? null : apexJobs[0];
+        }
+
+        public Boolean isGiftBatchAccessible(GiftBatchId giftBatchId) {
+            if (hasRecurringGift(giftBatchId)) {
+                GE_SettingsService service = new GE_SettingsService();
+                return service.isRecurringGiftsEnabled();
+            }
+            return true;
         }
 
         public void updateGiftBatchWith(Id apexJobId, GiftBatchId giftBatchId) {
