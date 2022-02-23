@@ -40,7 +40,6 @@ public class TDTM_TriggerHandler {
     
     private static Boolean defaultRecordsInserted = false;
     
-    private static Boolean useDefaultCachingStrategy = true;
     private static Map<Schema.DescribeSobjectResult, Integer> processedRecordCountBySobjectType = new Map<Schema.DescribeSobjectResult, Integer>();
 
     public static Boolean suppressDebugAssertAfterErrorLogging = false;
@@ -410,16 +409,12 @@ public class TDTM_TriggerHandler {
         return oldList;
     }
 
-    public static void enableOldListCachingEvaluation() {
-        useDefaultCachingStrategy = false;
-    }
-
     public static Boolean noErrorInCurrentTransaction(Schema.DescribeSObjectResult describeObj, List<SObject> newList) {
         return processedRecordCountBySobjectType.get(describeObj) == newList?.size();
     }
 
     private static Boolean shouldCacheOldList(Schema.DescribeSObjectResult describeObj, List<SObject> newList) {
-        return useDefaultCachingStrategy || noErrorInCurrentTransaction(describeObj, newList);
+        return noErrorInCurrentTransaction(describeObj, newList);
     }
 
     private static void storeCurrentProcessedRecordCount(
