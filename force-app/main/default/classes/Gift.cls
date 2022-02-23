@@ -323,9 +323,7 @@ public with sharing class Gift {
         DataImport__c.SObjectType.fields.Recurring_Donation_Effective_Date__c,
         DataImport__c.SObjectType.fields.Recurring_Donation_Amount__c,
         DataImport__c.SObjectType.fields.Recurring_Donation_End_Date__c,
-        DataImport__c.SObjectType.fields.RecurringDonationImportStatus__c,
-        DataImport__c.SObjectType.fields.Donation_Amount__c,
-        DataImport__c.SObjectType.fields.Donation_Date__c
+        DataImport__c.SObjectType.fields.RecurringDonationImportStatus__c
     };
 
 }
