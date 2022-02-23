@@ -136,21 +136,19 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     }
 
     public void processGifts() {
-        // TODO: Remove method
-        // prepareGiftsForProcessing();
-        // GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(this.giftBatchId);
-        // System.enqueueJob(processorQueue);
+        prepareGiftsForProcessing();
+        GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(this.giftBatchId);
+        System.enqueueJob(processorQueue);
     }
 
     @TestVisible
     private void prepareGiftsForProcessing() {
-        // TODO: Remove method
-        // gifts.prepareForProcessing();
+        gifts.prepareForProcessing();
 
-        // if (paymentIntegrationServiceConfig.isIntegrationEnabled()) {
-        //     captureAuthorizedGifts();
-        // }
-        // updateRecords();
+        if (paymentIntegrationServiceConfig.isIntegrationEnabled()) {
+            captureAuthorizedGifts();
+        }
+        updateRecords();
     }
 
     private void failGiftsWith(String failReason) {
