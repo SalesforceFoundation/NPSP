@@ -108,7 +108,7 @@ public inherited sharing class NPSP_Contact {
     }
 
     public Boolean isAddressChanged() {
-        return isNewContact() ? !isAddressEmpty() : 
+        return oldContact == null ? !isAddressEmpty() :
             addressService.isSObjectAddressDifferent(oldContact, mailingAddress()) ||
             (!isAddressEmpty() && primaryAddressTypeChanged());
     }
