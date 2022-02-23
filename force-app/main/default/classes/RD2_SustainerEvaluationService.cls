@@ -66,7 +66,7 @@ public inherited sharing class RD2_SustainerEvaluationService {
 
     private Set<Id> contactIds = new Set<Id>();
     private Set<Id> accountIds = new Set<Id>();
-    private List<SObject> reocrdsToUpdate = new List<SObject>();
+    private List<SObject> recordsToUpdate = new List<SObject>();
 
     public RD2_SustainerEvaluationService withRecurringDonations(List<npe03__Recurring_Donation__c> rds) {
         if (rds == null && rds.isEmpty()) {
@@ -90,12 +90,12 @@ public inherited sharing class RD2_SustainerEvaluationService {
 
     public List<Contact> getContactsWithSustainerChanged() {
         evaulateSustainersFor('Contact', contactIds);
-        return (List<Contact>) reocrdsToUpdate;
+        return (List<Contact>) recordsToUpdate;
     }
 
     public List<Account> getAccountsWithSustainerChanged() {
         evaulateSustainersFor('Account', accountIds);
-        return (List<Account>) reocrdsToUpdate;
+        return (List<Account>) recordsToUpdate;
     }
 
     /**
@@ -105,7 +105,7 @@ public inherited sharing class RD2_SustainerEvaluationService {
     * @param recordsIds A set of record Ids that will be evaluated
     */
     private void evaulateSustainersFor(String sObjectType, Set<Id> recordIds) {
-        this.reocrdsToUpdate = new List<SObject>();
+        this.recordsToUpdate = new List<SObject>();
         if (recordIds.isEmpty()) {
             return;
         }
@@ -128,7 +128,7 @@ public inherited sharing class RD2_SustainerEvaluationService {
             for (SObject formerSustainer : formerSustainers) {
                 if (formerSustainer.get(SUSTAINER_FIELD) != SustainerType.Former.name()) {
                     formerSustainer.put(SUSTAINER_FIELD, SustainerType.Former.name());
-                    this.reocrdsToUpdate.add(formerSustainer); 
+                    this.recordsToUpdate.add(formerSustainer); 
                 }
             }
             return;
@@ -140,7 +140,7 @@ public inherited sharing class RD2_SustainerEvaluationService {
         for (SObject nonSustainer : nonSustainers) {
             if (String.isNotBlank(String.valueOf(nonSustainer.get(SUSTAINER_FIELD)))) {
                 nonSustainer.put(SUSTAINER_FIELD, null);
-                this.reocrdsToUpdate.add(nonSustainer); 
+                this.recordsToUpdate.add(nonSustainer); 
             }
         }
     }
@@ -158,7 +158,7 @@ public inherited sharing class RD2_SustainerEvaluationService {
             if (rdsWithSpecificState != null && rdsWithSpecificState.size() > 0) {
                 if (candidate.get(SUSTAINER_FIELD) != state.name()) {
                     candidate.put(SUSTAINER_FIELD, state.name());
-                    this.reocrdsToUpdate.add(candidate);
+                    this.recordsToUpdate.add(candidate);
                 }
 
             } else {

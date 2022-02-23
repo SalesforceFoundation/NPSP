@@ -294,7 +294,8 @@ public with sharing class CON_ContactMerge_CTRL {
         'Number_of_Soft_Credits_Last_N_Days__c',
         'Number_of_Soft_Credits_Last_Year__c',
         'Number_of_Soft_Credits_This_Year__c',
-        'Number_of_Soft_Credits_Two_Years_Ago__c'
+        'Number_of_Soft_Credits_Two_Years_Ago__c',
+        'Sustainer__c'
     };
 
     /***********************************************************************************************

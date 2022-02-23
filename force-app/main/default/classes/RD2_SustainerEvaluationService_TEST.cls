@@ -54,7 +54,7 @@ private with sharing class RD2_SustainerEvaluationService_TEST {
         Contact contactRecord = TEST_ContactBuilder.dummyContactWithRecurringDonation(rds);
         RD2_QueryService queryServiceStub = (RD2_QueryService)Test.createStub(
             RD2_QueryService.class,
-            new RD2_QueryServiceMock(new List<Contact>{contactRecord}, null)
+            new RD2_QueryServiceMock(new List<Contact>{contactRecord}, null, null)
         );
         RD2_SustainerEvaluationService.queryService = queryServiceStub;
 
@@ -88,7 +88,11 @@ private with sharing class RD2_SustainerEvaluationService_TEST {
         Contact contactRecord = TEST_ContactBuilder.dummyContactWithRecurringDonation(rds);
         RD2_QueryService queryServiceStub = (RD2_QueryService)Test.createStub(
             RD2_QueryService.class,
-            new RD2_QueryServiceMock(TEST_ContactBuilder.dummyContactListWithIds(), new List<Contact>{contactRecord})
+            new RD2_QueryServiceMock(
+                TEST_ContactBuilder.dummyContactListWithIds(),
+                new List<Contact>{contactRecord},
+                TEST_ContactBuilder.dummyContactListWithIds()
+            )
         );
         RD2_SustainerEvaluationService.queryService = queryServiceStub;
 
@@ -104,11 +108,18 @@ private with sharing class RD2_SustainerEvaluationService_TEST {
     }
 
     @IsTest
-    private static void verifyContactWithNoAcitveAndLapsedRDShouldSetSustainerToFormer() {
-        List<Contact> contactList = TEST_ContactBuilder.dummyContactListWithIds();
+    private static void verifyContactWithOnlyClosedRDShouldSetSustainerToFormer() {
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withDefaultValues()
+            .withStatusClosed()
+            .build()
+        };
+
+        List<Contact> contactList = new List<Contact>{TEST_ContactBuilder.dummyContactWithRecurringDonation(rds)};
         RD2_QueryService queryServiceStub = (RD2_QueryService)Test.createStub(
             RD2_QueryService.class,
-            new RD2_QueryServiceMock(contactList, contactList)
+            new RD2_QueryServiceMock(TEST_ContactBuilder.dummyContactListWithIds(),TEST_ContactBuilder.dummyContactListWithIds(), contactList)
         );
         RD2_SustainerEvaluationService.queryService = queryServiceStub;
 
@@ -123,12 +134,14 @@ private with sharing class RD2_SustainerEvaluationService_TEST {
     }
 
     public class RD2_QueryServiceMock implements StubProvider {
-        List<Contact> contactWithActiveRd;
-        List<Contact> contactWithLapsedRd;
+        List<Contact> contactsWithActiveRd;
+        List<Contact> contactsWithLapsedRd;
+        List<Contact> contactsWithClosedRd;
 
-        public RD2_QueryServiceMock(List<Contact> contactWithActiveRd, List<Contact> contactWithLapsedRd) {
-            this.contactWithActiveRd = contactWithActiveRd;
-            this.contactWithLapsedRd = contactWithLapsedRd;
+        public RD2_QueryServiceMock(List<Contact> contactsWithActiveRd, List<Contact> contactsWithLapsedRd, List<Contact> contactsWithClosedRd) {
+            this.contactsWithActiveRd = contactsWithActiveRd;
+            this.contactsWithLapsedRd = contactsWithLapsedRd;
+            this.contactsWithClosedRd = contactsWithClosedRd;
         }
 
         public Object handleMethodCall(Object stubbedObject,
@@ -140,10 +153,13 @@ private with sharing class RD2_SustainerEvaluationService_TEST {
         ) {
             switch on stubbedMethodName {
                 when 'getSObjectWithActiveRecurringDonations' {
-                    return contactWithActiveRd;
+                    return contactsWithActiveRd;
                 }
                 when 'getSObjectWithLapsedRecurringDonations' {
-                    return contactWithLapsedRd;
+                    return contactsWithLapsedRd;
+                }
+                when 'getSObjectWithClosedRecurringDonations' {
+                    return contactsWithClosedRd;
                 }
 
             }
