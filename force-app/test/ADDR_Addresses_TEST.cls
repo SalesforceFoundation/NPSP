@@ -2184,21 +2184,22 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void addressShouldBePropagatedToAccountsAndContactsOnMultipleTriggerCalls() {
+        // Arrange
         Integer totalHH = 210;
         Integer totalContactPerHH = 1;
-
         UTIL_Debug.disableDebugLogging();
         UTIL_UnitTestData_TEST.disableAffiliationsTriggers();
         UTIL_UnitTestData_TEST.disableRelationshipTriggers();
         UTIL_UnitTestData_TEST.disableMergeTriggers();
         UTIL_UnitTestData_TEST.disableHHNamingTriggers();
+        createAccountAndContactData(totalHH, totalContactPerHH);
 
-        // createTestData does the following:
-        // 1. Inserts Accounts: 200, 10
-        // 2. Inserts Contacts: 200, 10
-        // 3. Inserts Addresses: 200, 10
-        createTestData(totalHH, totalContactPerHH);
+        // Act
+        Test.startTest();
+        createAddressData(totalHH, false);
+        Test.stopTest();
 
+        // Assert
         // verify that the HH and Contacts share the same address
         Map<Id, Account> accountById = new Map<Id, Account>([
             SELECT Id, Name, BillingStreet, BillingCity,
