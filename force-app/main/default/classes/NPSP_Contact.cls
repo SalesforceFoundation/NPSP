@@ -60,7 +60,18 @@ public inherited sharing class NPSP_Contact {
         set;
     }
 
-    public NPSP_Contact(Contact contact, Contact oldContact) {
+    @TestVisible
+    private OrgConfig orgConfig {
+        get {
+            if (orgConfig == null) {
+                orgConfig = new OrgConfig();
+            }
+            return orgConfig;
+        }
+        set;
+    }
+
+   public NPSP_Contact(Contact contact, Contact oldContact) {
         this.contact = contact;
         this.oldContact = oldContact;
     }
@@ -108,13 +119,31 @@ public inherited sharing class NPSP_Contact {
     }
 
     public Boolean isAddressChanged() {
-        return oldContact == null ? !contactService.isContactAddressEmpty(contact) :
+        Boolean addressEmpty = isContactAddressEmpty();
+        return oldContact == null ? !addressEmpty :
             addressService.isSObjectAddressDifferent(oldContact, mailingAddress()) ||
-            (!contactService.isContactAddressEmpty(contact) && primaryAddressTypeChanged());
+            (!addressEmpty && primaryAddressTypeChanged());
     }
 
     public Boolean isAddressEmpty() {
-        return contactService.isContactAddressEmpty(contact);
+        return isContactAddressEmpty();
+    }
+
+    /*******************************************************************************************************
+    * @description returns whether the contact's mailing address is empty
+    * @return boolean. true if the Mailing Address fields are all empty
+    ********************************************************************************************************/
+    private Boolean isContactAddressEmpty() {
+        Boolean isEmpty =
+                contact.MailingStreet == null &&
+                        contact.MailingCity == null &&
+                        contact.MailingState == null &&
+                        contact.MailingPostalCode == null &&
+                        // note that we decided to ignore country so that a default value won't create unnecessary address objects
+                        (contact.MailingCountry == null || orgConfig.isStateCountryPicklistsEnabled()) &&
+                        // only test StateCode if picklists enabled.
+                        (!orgConfig.isStateCountryPicklistsEnabled() || contact.get('MailingStateCode') == null);
+        return isEmpty;
     }
 
     public Boolean addressOverrideChanged() {
