@@ -105,7 +105,7 @@ public class CON_DoNotContact_TDTM extends TDTM_Runnable {
         
         return dmlWrapper;
 	}
-    
+
     /*******************************************************************************************************
     * @description Sets Do Not Contact and related fields when a contact is flagged as deceased. Removes from
     * Household name if there are other non-deceased members in the household.
