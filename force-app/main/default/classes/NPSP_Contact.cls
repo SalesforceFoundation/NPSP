@@ -162,10 +162,6 @@ public inherited sharing class NPSP_Contact {
         return primaryAddressType(contact) != primaryAddressType(oldContact);
     }
 
-    public Boolean hasAccount() {
-        return contact.AccountId != null;
-    }
-
     public Boolean householdAndAccountDiffer() {
         return contact.HHId__c != contact.AccountId;
     }
