@@ -173,7 +173,7 @@ public class CON_ContactMerge_TEST {
      */
     @IsTest
     private static void selectedMergeCandidatesShouldDisplayCorrectValues() {
-        Contact differingContact = [SELECT HomePhone FROM Contact WHERE LastName = 'Differing' LIMIT 1];
+        Contact differingContact = getUniqueContact();
         CON_ContactMerge_CTRL controller = getControllerForSearch();
         controller.search();
         selectSearchResults(controller.searchResults);
@@ -829,7 +829,7 @@ public class CON_ContactMerge_TEST {
     private static Contact getUniqueContact() {
         return [SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId
                 FROM Contact
-                WHERE LastName = 'Differing'
+                WHERE HomePhone = '7771232345'
                 LIMIT 1
         ];
     }
