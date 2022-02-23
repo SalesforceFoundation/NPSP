@@ -53,6 +53,12 @@ public inherited sharing class RD2_SustainerEvaluationService {
         Former
     }
 
+    private boolean isBatchMode = false;
+    public RD2_SustainerEvaluationService withBatchContext(Boolean isBatchMode) {
+        this.isBatchMode = isBatchMode;
+        return this;
+    }
+
     public static Boolean isSustainerUpdateEnabled = false;
     public static void setSustainerUpdateEnabled(Boolean enabled) {
         isSustainerUpdateEnabled = enabled;
@@ -114,10 +120,27 @@ public inherited sharing class RD2_SustainerEvaluationService {
         List<SObject> lapsedSustainerCandidates = queryService.getSObjectWithLapsedRecurringDonations(sObjectType, UTIL_SObject.extractIds(inactiveSustainers));
         List<SObject> formerSustainers = evaluateCurrentSustainerTypeAndReturnNotMatchingRecords(SustainerType.Lapsed, lapsedSustainerCandidates);
 
-        for (SObject formerSustainer : formerSustainers) {
-            if (formerSustainer.get(SUSTAINER_FIELD) != SustainerType.Former.name()) {
-                formerSustainer.put(SUSTAINER_FIELD,SustainerType.Former.name());
-                this.reocrdsToUpdate.add(formerSustainer); 
+        if (formerSustainers.size() == 0) {
+            return;
+        }
+  
+        if (isBatchMode) {
+            for (SObject formerSustainer : formerSustainers) {
+                if (formerSustainer.get(SUSTAINER_FIELD) != SustainerType.Former.name()) {
+                    formerSustainer.put(SUSTAINER_FIELD, SustainerType.Former.name());
+                    this.reocrdsToUpdate.add(formerSustainer); 
+                }
+            }
+            return;
+        }
+
+        List<SObject> formerSustainerCandidates = queryService.getSObjectWithClosedRecurringDonations(sObjectType, UTIL_SObject.extractIds(formerSustainers));
+        List<SObject> nonSustainers = evaluateCurrentSustainerTypeAndReturnNotMatchingRecords(SustainerType.Former, formerSustainerCandidates);
+
+        for (SObject nonSustainer : nonSustainers) {
+            if (String.isNotBlank(String.valueOf(nonSustainer.get(SUSTAINER_FIELD)))) {
+                nonSustainer.put(SUSTAINER_FIELD, null);
+                this.reocrdsToUpdate.add(nonSustainer); 
             }
         }
     }
