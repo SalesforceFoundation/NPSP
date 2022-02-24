@@ -6555,6 +6555,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Add Billing Address</value>
     </labels>
     <labels>
+        <fullName>elevateBillingAddress</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Billing Address</shortDescription>
+        <value>Billing Address</value>
+    </labels>
+    <labels>
         <fullName>elevateBillingAddressHelp</fullName>
         <language>en_US</language>
         <protected>true</protected>

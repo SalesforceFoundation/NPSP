@@ -3,11 +3,42 @@ import { debouncify } from 'c/utilCommon';
 import retrieveDonorAddress from '@salesforce/apex/GE_GiftEntryController.retrieveDonorAddress';
 import { handleError } from 'c/utilTemplateBuilder';
 import { fireEvent } from 'c/pubsubNoPageRef';
+import billingAddressLabel from "@salesforce/label/c.elevateBillingAddress";
+import billingCityLabel from "@salesforce/label/c.lblCity";
+import billingPostalCodeLabel from "@salesforce/label/c.lblPostalCode";
+import billingStateLabel from "@salesforce/label/c.lblState";
+import billingStreetLabel from "@salesforce/label/c.lblStreet";
+import billingCountryLabel from "@salesforce/label/c.lblCountry";
+import billingAddressHelpLabel from "@salesforce/label/c.elevateBillingAddressHelp";
+import donorAddressEmptyLabel from "@salesforce/label/c.elevateDonorAddressEmpty";
+import clearAddressLabel from "@salesforce/label/c.elevateClearAddress";
+import useDonorAddressLabel from "@salesforce/label/c.elevateUseDonorAddress";
+import addBillingAddressButtonLabel from "@salesforce/label/c.elevateAddBillingAddress";
+import removeBillingAddressButtonLabel from "@salesforce/label/c.elevateRemoveBillingAddress";
 
 export default class ElevateAddressFields extends LightningElement {
 
+    labels = {
+        billingAddressLabel,
+        billingCityLabel,
+        billingPostalCodeLabel,
+        billingStateLabel,
+        billingStreetLabel,
+        billingCountryLabel,
+        billingAddressHelpLabel,
+        clearAddressLabel,
+        donorAddressEmptyLabel,
+        useDonorAddressLabel,
+        addBillingAddressButtonLabel,
+        removeBillingAddressButtonLabel,
+    };
+
+
     _showBillingAddressFields = false;
     _donorAddress;
+
+    billingStreetLabel1 = billingStreetLabel + " 1";
+    billingStreetLabel2 = billingStreetLabel + " 2";
 
     @api selectedDonorId;
 
@@ -49,7 +80,7 @@ export default class ElevateAddressFields extends LightningElement {
     async handleUseDonorAddress() {
         if (!this.selectedDonorId.donorId) {
             this.dispatchApplicationEvent('displayWidgetError', {
-                error: 'Please provide an address for this donor'
+                error: this.labels.donorAddressEmptyLabel
             });
             return;
         }

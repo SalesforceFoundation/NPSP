@@ -2,7 +2,7 @@
 
     <lightning-layout-item size='12' if:false={showBillingAddressFields}>
         <lightning-button variant="base"
-                          label='Add Billing Address'
+                          label={labels.addBillingAddressButtonLabel}
                           onclick={handleShowBillingAddressFields}
                           class='slds-button_base'
                           data-qa-locator={qaLocatorAddBillingAddress}>
@@ -10,7 +10,7 @@
     </lightning-layout-item>
     <lightning-layout-item size="12" if:true={showBillingAddressFields}>
         <lightning-button variant="base"
-                          label='Remove Billing Address'
+                          label={labels.removeBillingAddressButtonLabel}
                           onclick={handleRemoveBillingAddressFields}
                           class='slds-float_right'
                           data-qa-locator={qaLocatorRemoveBillingAddress}>
@@ -19,24 +19,26 @@
 
     <lightning-layout multiple-rows="false" if:true={showBillingAddressFields}>
         <lightning-layout-item size="8">
-            <div class="slds-p-bottom_none">
-                Billing Address
-                <lightning-helptext content="You'll receive weekly updates"></lightning-helptext>
-            </div>
+            <strong class="slds-form-element__label slds-var-p-bottom_x-small">
+                {labels.billingAddressLabel}
+            </strong>
+            <lightning-helptext class="slds-clearfix"
+                                content={labels.billingAddressHelpLabel}>
+            </lightning-helptext>
         </lightning-layout-item>
     </lightning-layout>
 
     <lightning-layout multiple-rows="true" if:true={showBillingAddressFields}>
         <lightning-layout-item size='12'
                                class ='slds-p-vertical_small'>
-            <lightning-button label='Use Donor Address'
-                              title='Use Donor Address'
+            <lightning-button label={labels.useDonorAddressLabel}
+                              title={labels.useDonorAddressLabel}
                               onclick={handleUseDonorAddress}
                               class='slds-m-left_x-small'
                               data-qa-locator={qaLocatorUseDonorAddress}>
             </lightning-button>
-            <lightning-button label='Clear Address'
-                              title='Clear Address'
+            <lightning-button label={labels.clearAddressLabel}
+                              title={labels.clearAddressLabel}
                               onclick={handleClearAddress}
                               class='slds-m-left_x-small'
                               data-qa-locator={qaLocatorClearAddress}>
@@ -52,7 +54,7 @@
                              value={addressFields.addressLine1}
                              onchange={handleOnChange}
                              type='text'
-                             label='Street 1'
+                             label={billingStreetLabel1}
                              data-qa-locator={qaLocatorStreet1}>
             </lightning-input>
         </lightning-layout-item>
@@ -63,7 +65,7 @@
                              value={addressFields.addressLine2}
                              onchange={handleOnChange}
                              type='text'
-                             label='Street 2'
+                             label={billingStreetLabel2}
                              data-qa-locator={qaLocatorStreet2}>
             </lightning-input>
         </lightning-layout-item>
@@ -74,7 +76,7 @@
                              value={addressFields.city}
                              onchange={handleOnChange}
                              type='text'
-                             label='City'
+                             label={labels.billingCityLabel}
                              data-qa-locator={qaLocatorCity}>
             </lightning-input>
 
@@ -86,7 +88,7 @@
                              value={addressFields.state}
                              onchange={handleOnChange}
                              type='text'
-                             label='State'
+                             label={labels.billingStateLabel}
                              data-qa-locator={qaLocatorState}>
             </lightning-input>
 
@@ -98,7 +100,7 @@
                              value={addressFields.postalCode}
                              onchange={handleOnChange}
                              type='text'
-                             label='Postal Code'
+                             label={labels.billingPostalCodeLabel}
                              data-qa-locator={qaLocatorPostalCode}>
             </lightning-input>
 
@@ -110,7 +112,7 @@
                              value={addressFields.country}
                              onchange={handleOnChange}
                              type='text'
-                             label='Country'
+                             label={labels.billingCountryLabel}
                              data-qa-locator={qaLocatorCountry}>
             </lightning-input>
 
