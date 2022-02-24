@@ -183,40 +183,7 @@ public inherited sharing class HouseholdService {
             Database.SaveResult[] householdSaveResults) {
         List<Contact> contactsToBeUpdatedWithHouseholdId =
                 getContactsToBeUpdatedWithNewHouseholdId(contacts, householdSaveResults);
-
-        disableContactTriggerHandlers();
         update contactsToBeUpdatedWithHouseholdId;
-        enableContactTriggerHandlers();
-    }
-
-    private void disableContactTriggerHandlers() {
-        TDTM_ProcessControl.toggleTriggerState('Contact', 'HH_Households_TDTM',
-                false);
-        TDTM_ProcessControl.toggleTriggerState('Contact', 'ACCT_IndividualAccounts_TDTM',
-                false);
-        TDTM_ProcessControl.toggleTriggerState('Contact', 'ADDR_Contact_TDTM',
-                false);
-        TDTM_ProcessControl.toggleTriggerState('Contact', 'CON_DoNotContact_TDTM',
-                false);
-        TDTM_ProcessControl.toggleTriggerState('Contact', 'AFFL_Affiliations_TDTM',
-                false);
-        TDTM_ProcessControl.toggleTriggerState('Contact', 'REL_Relationships_Con_TDTM',
-                false);
-    }
-
-    private void enableContactTriggerHandlers() {
-        TDTM_ProcessControl.toggleTriggerState('Contact', 'HH_Households_TDTM',
-                true);
-        TDTM_ProcessControl.toggleTriggerState('Contact', 'ACCT_IndividualAccounts_TDTM',
-                true);
-        TDTM_ProcessControl.toggleTriggerState('Contact', 'ADDR_Contact_TDTM',
-                true);
-        TDTM_ProcessControl.toggleTriggerState('Contact', 'CON_DoNotContact_TDTM',
-                true);
-        TDTM_ProcessControl.toggleTriggerState('Contact', 'AFFL_Affiliations_TDTM',
-                true);
-        TDTM_ProcessControl.toggleTriggerState('Contact', 'REL_Relationships_Con_TDTM',
-                true);
     }
 
     private void updateNamesAfterHouseholdInsert(Database.SaveResult[] lsr) {
