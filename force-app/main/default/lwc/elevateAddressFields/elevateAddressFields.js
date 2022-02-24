@@ -1,7 +1,6 @@
 import { api, LightningElement, track} from 'lwc';
 import { debouncify } from 'c/utilCommon';
 import retrieveDonorAddress from '@salesforce/apex/GE_GiftEntryController.retrieveDonorAddress';
-import { handleError } from 'c/utilTemplateBuilder';
 import { fireEvent } from 'c/pubsubNoPageRef';
 import billingAddressLabel from "@salesforce/label/c.elevateBillingAddress";
 import billingCityLabel from "@salesforce/label/c.lblCity";
@@ -61,7 +60,7 @@ export default class ElevateAddressFields extends LightningElement {
     }
 
     handleRemoveBillingAddressFields() {
-        this._addressFields = {};
+        this.handleClearAddress();
         this._showBillingAddressFields = false;
     }
 
@@ -75,12 +74,15 @@ export default class ElevateAddressFields extends LightningElement {
 
     handleClearAddress() {
         this._addressFields = {};
+        this.dispatchApplicationEvent('clearWidgetError');
     }
 
     async handleUseDonorAddress() {
         if (!this.selectedDonorId.donorId) {
-            this.dispatchApplicationEvent('displayWidgetError', {
-                error: this.labels.donorAddressEmptyLabel
+            this.handleError({
+                error: this.labels.donorAddressEmptyLabel,
+                theme: 'warning',
+                icon: 'utility:warning'
             });
             return;
         }
@@ -90,8 +92,12 @@ export default class ElevateAddressFields extends LightningElement {
             );
             this._addressFields = Object.assign({}, retrievedAddress);
         } catch (err) {
-            handleError(err);
+            this.handleError(err);
         }
+    }
+
+    handleError(error) {
+        this.dispatchApplicationEvent('displayWidgetError', error);
     }
 
     @api

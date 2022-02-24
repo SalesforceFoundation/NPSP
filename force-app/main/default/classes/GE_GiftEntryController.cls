@@ -1223,10 +1223,27 @@ public with sharing class GE_GiftEntryController {
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
-
     }
 
+    private static final List<SObjectField> CONTACT_DONOR_ADDRESS_FIELDS = new List<Schema.SObjectField> {
+        Address__c.SObjectType.fields.MailingStreet__c,
+        Address__c.SObjectType.fields.MailingStreet2__c,
+        Address__c.SObjectType.fields.MailingState__c,
+        Address__c.SObjectType.fields.MailingCountry__c,
+        Address__c.SObjectType.fields.MailingCity__c,
+        Address__c.SObjectType.fields.MailingPostalCode__c
+    };
+
+    private static final List<SObjectField> ACCOUNT_DONOR_ADDRESS_FIELDS = new List<SObjectField>{
+        Account.SObjectType.fields.BillingStreet,
+        Account.SObjectType.fields.BillingCity,
+        Account.SObjectType.fields.BillingState,
+        Account.SObjectType.fields.BillingPostalCode,
+        Account.SObjectType.fields.BillingCountry
+    };
+
     private static ElevateAddressFields getContactAddress(Id donorId) {
+        fflib_SecurityUtils.checkRead(Address__c.SObjectType, CONTACT_DONOR_ADDRESS_FIELDS);
         List<Contact> contacts = new List<Contact>();
         contacts = [
             SELECT Id,
@@ -1237,8 +1254,25 @@ public with sharing class GE_GiftEntryController {
                 Current_Address__r.MailingStreet2__c,
                 Current_Address__r.MailingState__c
             FROM Contact
-            WHERE Id =: donorId];
+            WHERE Id =: donorId
+            WITH SECURITY_ENFORCED
+        ];
         return new ElevateAddressFields(contacts[0]);
+    }
+
+    private static ElevateAddressFields getAccountAddress (Id donorId) {
+        fflib_SecurityUtils.checkRead(Account.SObjectType, ACCOUNT_DONOR_ADDRESS_FIELDS);
+        List<Account> accounts = [
+            SELECT BillingStreet,
+                BillingCity,
+                BillingCountry,
+                BillingState,
+                BillingPostalCode
+            FROM Account
+            WHERE Id =: donorId
+            WITH SECURITY_ENFORCED
+        ];
+        return new ElevateAddressFields(accounts[0]);
     }
 
     private class ElevateAddressFields{
@@ -1266,19 +1300,6 @@ public with sharing class GE_GiftEntryController {
             this.postalCode = acc.BillingPostalCode;
             this.country = acc.BillingCountry;
         }
-    }
-
-    private static ElevateAddressFields getAccountAddress (Id donorId) {
-        List<Account> accounts = [
-            SELECT BillingStreet,
-                BillingCity,
-                BillingCountry,
-                BillingState,
-                BillingPostalCode
-            FROM Account
-            WHERE Id =: donorId
-        ];
-        return new ElevateAddressFields(accounts[0]);
     }
 
     private class CurrencyMismatchException extends Exception {}

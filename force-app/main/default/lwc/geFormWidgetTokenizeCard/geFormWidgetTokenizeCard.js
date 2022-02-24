@@ -68,10 +68,11 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         this._displayState = this.display.currentState();
         registerListener('resetElevateWidget', this.handleElevateWidgetReset, this);
         registerListener('displayWidgetError', this.handleWidgetError, this);
+        registerListener('clearWidgetError', this.clearError, this);
     }
 
     handleWidgetError(event) {
-        this.handleError(event.error);
+        this.handleError(event);
     }
 
     async connectedCallback() {
@@ -628,11 +629,17 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         this.display.transitionTo('loading');
         this.display.transitionTo('charge');
         this.alert = {
-            theme: 'error',
+            theme: message.theme
+                ? message.theme
+                :  'error',
             show: true,
-            message: this.CUSTOM_LABELS.gePaymentProcessingErrorBanner,
+            message: message.error
+                ? message.error
+                :  this.CUSTOM_LABELS.gePaymentProcessingErrorBanner,
             variant: 'inverse',
-            icon: 'utility:error'
+            icon: message.icon
+                ? message.icon
+                :  'utility:error'
         };
 
         let errorValue;
