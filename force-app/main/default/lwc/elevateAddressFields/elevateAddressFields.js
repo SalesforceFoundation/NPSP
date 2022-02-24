@@ -14,6 +14,7 @@ import clearAddressLabel from "@salesforce/label/c.elevateClearAddress";
 import useDonorAddressLabel from "@salesforce/label/c.elevateUseDonorAddress";
 import addBillingAddressButtonLabel from "@salesforce/label/c.elevateAddBillingAddress";
 import removeBillingAddressButtonLabel from "@salesforce/label/c.elevateRemoveBillingAddress";
+import { buildErrorMessage } from 'c/utilTemplateBuilder';
 
 export default class ElevateAddressFields extends LightningElement {
 
@@ -92,7 +93,7 @@ export default class ElevateAddressFields extends LightningElement {
             );
             this._addressFields = Object.assign({}, retrievedAddress);
         } catch (err) {
-            this.handleError(err);
+            this.handleError({ error: buildErrorMessage(err) });
         }
     }
 
