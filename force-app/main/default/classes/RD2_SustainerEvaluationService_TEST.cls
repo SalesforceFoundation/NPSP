@@ -104,7 +104,7 @@ private with sharing class RD2_SustainerEvaluationService_TEST {
     }
 
     @IsTest
-    private static void verifyContactWithNoAcitveAndLapsedRDShouldSetSustainerToFormer() {
+    private static void verifyContactWithNoActiveAndLapsedRDShouldSetSustainerToFormer() {
         List<Contact> contactList = TEST_ContactBuilder.dummyContactListWithIds();
         RD2_QueryService queryServiceStub = (RD2_QueryService)Test.createStub(
             RD2_QueryService.class,

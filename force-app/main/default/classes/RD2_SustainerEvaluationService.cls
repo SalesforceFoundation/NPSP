@@ -63,7 +63,7 @@ public inherited sharing class RD2_SustainerEvaluationService {
     private List<SObject> reocrdsToUpdate = new List<SObject>();
 
     public RD2_SustainerEvaluationService withRecurringDonations(List<npe03__Recurring_Donation__c> rds) {
-        if (rds == null && rds.isEmpty()) {
+        if (rds == null || rds.isEmpty()) {
             return this;
         }
     
