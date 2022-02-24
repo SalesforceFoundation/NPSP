@@ -41,13 +41,17 @@ class GiftBatch {
     async init(dataImportBatchId) {
         this._id = dataImportBatchId;
         this._accessible = await isGiftBatchAccessible({ batchId: this._id });
-        this._isProcessing = await hasQueueableId({ batchId: this._id });
-        const viewModel = await getGiftBatchViewWithLimitsAndOffsets({
-            dataImportBatchId: this._id,
-            giftsLimit: DEFAULT_MEMBER_GIFTS_QUERY_LIMIT,
-            giftsOffset: 0
-        });
-        this._setPropertiesFrom(viewModel);
+
+        if (this._accessible) {
+            this._isProcessing = await hasQueueableId({ batchId: this._id });
+            const viewModel = await getGiftBatchViewWithLimitsAndOffsets({
+                dataImportBatchId: this._id,
+                giftsLimit: DEFAULT_MEMBER_GIFTS_QUERY_LIMIT,
+                giftsOffset: 0
+            });
+            this._setPropertiesFrom(viewModel);
+        }
+
         return this.state();
     }
 
