@@ -162,7 +162,25 @@ describe("c-rd2-entry-form", () => {
 
             expect(header).toBeTruthy();
             expect(header.textContent).toBe(RD2_EntryFormHeader);
-        })
+        });
+
+        it('when multicurrency enabled, displays currency field', async () => {
+            getInitialView.mockResolvedValue({
+                ...initialViewResponse,
+                isElevateCustomer: true,
+                isMultiCurrencyEnabled: true,
+            });
+
+            const element = createRd2EntryForm();
+            await flushPromises();
+
+            await setupWireMocksForElevate();
+
+            const controller = new RD2FormController(element);
+
+            const currencyIsoCodeField = controller.currencyIsoCode();
+            expect(currencyIsoCodeField.element).toBeTruthy();
+        });
     });
 
     describe("tokenization", () => {
@@ -303,7 +321,30 @@ describe("c-rd2-entry-form", () => {
 
             expect(header).toBeTruthy();
             expect(header.textContent).toBe(`${commonEdit} ${recordName}`);
-        })
+        });
+
+        it('when multicurrency enabled, populates multicurrency field', async () => {
+            const { record } = rd2WithCardCommitmentInitialView;
+            getInitialView.mockResolvedValue({
+                ...rd2WithCardCommitmentInitialView,
+                isMultiCurrencyEnabled: true,
+                record: {
+                    ...record,
+                    currencyIsoCode: 'USD'
+                }
+            });
+
+            const element = createRd2EntryForm();
+            await flushPromises();
+
+            await setupWireMocksForElevate();
+
+            const controller = new RD2FormController(element);
+
+            const currencyIsoCodeField = controller.currencyIsoCode();
+            expect(currencyIsoCodeField.element).toBeTruthy();
+            expect(currencyIsoCodeField.getValue()).toBe('USD');
+        });
 
         it("rd2 record with card payment, when editing, displays card information", async () => {
             getInitialView.mockResolvedValue(rd2WithCardCommitmentInitialView);

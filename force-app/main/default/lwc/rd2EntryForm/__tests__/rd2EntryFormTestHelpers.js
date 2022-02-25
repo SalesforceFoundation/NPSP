@@ -48,6 +48,10 @@ export class RD2FormField {
         this.element.value = value;
     }
 
+    getValue() {
+        return this.element.value;
+    }
+
     changeValue(value) {
         this.setValue(value);
         this.dispatchChangeEvent();
@@ -95,6 +99,11 @@ export class RD2FormController {
 
     amount() {
         const field = this.element.shadowRoot.querySelector('lightning-input-field[data-id="amountField"]');
+        return new RD2FormField(field);
+    }
+
+    currencyIsoCode() {
+        const field = this.element.shadowRoot.querySelector('lightning-input-field[data-id="currencyField"]');
         return new RD2FormField(field);
     }
 
