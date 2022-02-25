@@ -111,8 +111,6 @@ export default class rd2EntryForm extends LightningElement {
     @track customFields = {};
     fieldInfos;
 
-    header = newHeaderLabel;
-
     isAutoNamingEnabled;
     isLoading = true;
     loadingText = this.customLabels.loadingMessage;
@@ -260,7 +258,6 @@ export default class rd2EntryForm extends LightningElement {
     wiredRecurringDonationRecord(response) {
         if (response.data) {
             this.record = response.data;
-            this.header = editHeaderLabel + " " + this.record.fields.Name.value;
             this.isRecordReady = true;
             this.isEdit = true;
             this.commitmentId = getFieldValue(this.record, FIELD_COMMITMENT_ID);
