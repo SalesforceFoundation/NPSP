@@ -9,6 +9,7 @@ import handleCommitment from "@salesforce/apex/RD2_EntryFormController.handleCom
 
 import RD2_EntryFormMissingPermissions from "@salesforce/label/c.RD2_EntryFormMissingPermissions";
 import RD2_EntryFormHeader from "@salesforce/label/c.RD2_EntryFormHeader";
+import commonEdit from "@salesforce/label/c.commonEdit";
 
 const contactGetRecord = require("./data/contactGetRecord.json");
 const accountGetRecord = require("./data/accountGetRecord.json");
@@ -286,16 +287,28 @@ describe("c-rd2-entry-form", () => {
         });
     });
 
-    describe("edit mode", () => {
+    describe("editing existing record", () => {
         beforeEach(() => {
             setupIframeReply();
         });
+
+        it('displays label with record name in header', async () => {
+            getInitialView.mockResolvedValue(rd2WithCardCommitmentInitialView);
+            const element = createRd2EditForm(FAKE_CARD_RD2_ID);
+            const controller = new RD2FormController(element);
+            const header = controller.header();
+            await flushPromises();
+
+            const { recordName } = rd2WithCardCommitmentInitialView.record;
+
+            expect(header).toBeTruthy();
+            expect(header.textContent).toBe(`${commonEdit} ${recordName}`);
+        })
 
         it("rd2 record with card payment, when editing, displays card information", async () => {
             getInitialView.mockResolvedValue(rd2WithCardCommitmentInitialView);
             const element = createRd2EditForm(FAKE_CARD_RD2_ID);
             const controller = new RD2FormController(element);
-            await flushPromises();
 
             await setupWireMocksForElevate();
 
