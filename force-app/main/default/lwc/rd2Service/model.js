@@ -55,7 +55,7 @@ const DEFAULT_INITIAL_STATE = {
 
     //schedule
     donationValue: null,
-    currency: null,
+    currencyIsoCode: null,
     recurringPeriod: null, // Monthly / Yearly / 1st and 15th. When periodType is Monthly, recurringPeriod is Monthly.
     periodType: null, // Monthly or Advanced
     recurringFrequency: 1, // Every *X* Months
