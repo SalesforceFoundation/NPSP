@@ -157,9 +157,9 @@ class Rd2Service {
         return isValidInstallmentPeriod && isValidRecurringType;
     }
 
-    isElevateSupportedCurrency({ currencyCode, isMultiCurrencyEnabled }) {
+    isElevateSupportedCurrency({ currencyIsoCode, isMultiCurrencyEnabled }) {
         if (isMultiCurrencyEnabled) {
-            return ELEVATE_SUPPORTED_CURRENCIES.includes(currencyCode);
+            return ELEVATE_SUPPORTED_CURRENCIES.includes(currencyIsoCode);
         }
         return ELEVATE_SUPPORTED_CURRENCIES.includes(CURRENCY);
     }
