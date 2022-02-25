@@ -70,7 +70,7 @@ const ADMIN_RESOURCES = [
         id: 6,
         label: gsResourcesHubLabel,
         linkLabel: gsResourcesHubLink,
-        href: 'https://powerofus.force.com/s/group/0F980000000CjVbCAK/getting-started-with-salesforce',
+        href: 'https://powerofus.force.com/HUB_Salesforce_Org_Get_Started',
         ariaLabel: `${gsResourcesHubLink} ${opensInNewLink}`
     },
     {
@@ -94,14 +94,14 @@ const END_USER_RESOURCES = [
         id: 1,
         label: gseuResourcesItemQuestionsAnsweredLabel,
         linkLabel: gseuResourcesItemQuestionsAnsweredLinkLabel,
-        href: 'https://powerofus.force.com/publogin',
+        href: 'https://powerofus.force.com/HUB_NPSP_Group',
         ariaLabel: `${gseuResourcesItemQuestionsAnsweredLinkLabel} ${opensInNewLink}`
     },
     {
         id: 2,
         label: gseuResourcesItemAboutNPSPLabel,
         linkLabel: gseuResourcesItemAboutNPSPLinkLabel,
-        href: 'https://powerofus.force.com/s/article/NPSP-Documentation',
+        href: 'https://powerofus.force.com/NPSP_Documentation',
         ariaLabel: `${gseuResourcesItemAboutNPSPLinkLabel} ${opensInNewLink}`
     },
     {
