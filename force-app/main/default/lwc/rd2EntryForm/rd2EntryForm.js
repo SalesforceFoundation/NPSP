@@ -330,6 +330,13 @@ export default class rd2EntryForm extends LightningElement {
         });
     }
 
+    handleCustomFieldChange(event) {
+        this.perform({
+            type: ACTIONS.CUSTOM_FIELD_CHANGE,
+            payload: event.detail
+        });
+    }
+
     /**
      * @description Retrieves the contact data whenever a contact is changed.
      * Data is not refreshed when the contact Id is null.
@@ -391,6 +398,13 @@ export default class rd2EntryForm extends LightningElement {
             payload: event.detail.value,
         });
         this.evaluateElevateEditWidget();
+    }
+
+    handleStatusReasonChange(event) {
+        this.perform({
+            type: ACTIONS.SET_STATUS_REASON,
+            payload: event.detail.value,
+        });
     }
 
     /***
@@ -756,7 +770,6 @@ export default class rd2EntryForm extends LightningElement {
      *   because New override button will not refresh in the same lightning session
      */
     resetAllValues() {
-        this.recordId = null;
         this.isLoading = false;
         this.isSaveButtonDisabled = false;
         this.isElevateWidgetEnabled = false;
@@ -787,6 +800,13 @@ export default class rd2EntryForm extends LightningElement {
         });
         const field = this.template.querySelector('lightning-input-field[data-id="paymentMethod"]');
         field.reset();
+    }
+
+    get headerLabel() {
+        if (this.recordId) {
+            return `${editHeaderLabel} ${this.rd2State.recordName}`;
+        }
+        return newHeaderLabel;
     }
 
     /**
@@ -898,7 +918,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /**
-     * @description Close the modal when Escsape key is pressed
+     * @description Close the modal when Escape key is pressed
      */
     handleKeyUp(event) {
         if (event.keyCode === 27 || event.code === "Escape") {

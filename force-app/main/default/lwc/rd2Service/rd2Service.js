@@ -1,4 +1,3 @@
-import { isBlank } from "c/util";
 import { format, isNull } from "c/utilCommon";
 import { nextState } from "./model";
 import * as ACTIONS from "./actions";
@@ -30,7 +29,7 @@ import FIELD_CONTACT_ID from "@salesforce/schema/npe03__Recurring_Donation__c.np
 import FIELD_ORGANIZATION_ID from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__c";
 import validatingCardMessage from "@salesforce/label/c.RD2_EntryFormSaveCreditCardValidationMessage";
 import validatingACHMessage from "@salesforce/label/c.RD2_EntryFormSaveACHMessage";
-import { ACCOUNT_HOLDER_TYPES, PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD } from "c/geConstants";
+import { PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD } from "c/geConstants";
 
 const ELEVATE_PAYMENT_METHODS = [PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD];
 

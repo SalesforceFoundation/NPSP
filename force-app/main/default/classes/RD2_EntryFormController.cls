@@ -107,7 +107,6 @@ public with sharing class RD2_EntryFormController {
             return view;
         }
 
-
         view.isAutoNamingEnabled = RD2_NamingService.isAutomaticNamingEnabled;
         view.isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
         view.parentSObjectType = (parentId == null) ? null : UTIL_Describe.objectNameFromId(parentId);
@@ -211,14 +210,6 @@ public with sharing class RD2_EntryFormController {
         return isContactDonor;
     }
 
-    private static Map<String, Object> getCustomFieldValues(npe03__Recurring_Donation__c recurringDonation) {
-        Map<String, Object> customFieldValues = new Map<String, Object>();
-        for(CustomField field : getCustomFieldSectionFields()) {
-            customFieldValues.put(field.apiName, recurringDonation.get(field.apiName));
-        }
-        return customFieldValues;
-    }
-
     /**
      * @description Validate that the current user has Read access to a specific set of required fields. If this returns
      * false, the custom UI will display a warning message at the top of the page.
@@ -286,6 +277,7 @@ public with sharing class RD2_EntryFormController {
     public class CustomField {
         @AuraEnabled public String apiName;
         @AuraEnabled public Boolean required;
+        @AuraEnabled public Object value;
 
         /***
         * @description Constructor for the CustomField class
@@ -602,7 +594,6 @@ public with sharing class RD2_EntryFormController {
             this.cardLastFour = record.CardLast4__c;
             this.cardExpirationMonth = record.CardExpirationMonth__c;
             this.cardExpirationYear = record.CardExpirationYear__c;
-            this.customFieldValues = getCustomFieldValues(record);
             return this;
         }
     }
@@ -635,6 +626,7 @@ public with sharing class RD2_EntryFormController {
 
         public void withRecord(npe03__Recurring_Donation__c record) {
             this.record = new RD2RecordView(record);
+            this.populateCustomFieldValues(record);
         }
 
         public void withParentId(Id parentId) {
@@ -644,6 +636,13 @@ public with sharing class RD2_EntryFormController {
                 this.record.accountId = parentId;
             } else if(parentSobjectType == Contact.SObjectType) {
                 this.record.contactId = parentId;
+            }
+        }
+
+        private void populateCustomFieldValues(npe03__Recurring_Donation__c record) {
+            for(CustomField f : this.customFieldSets) {
+                Object val = record.get(f.apiName);
+                f.value = val;
             }
         }
 

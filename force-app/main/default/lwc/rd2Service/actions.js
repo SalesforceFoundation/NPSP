@@ -1,3 +1,4 @@
+export const CUSTOM_FIELD_CHANGE = "custom_field_change";
 export const SET_CONTACT_ID = "set_contact_id";
 export const SET_ACCOUNT_ID = "set_account_id";
 export const SET_CONTACT_DETAILS = "set_contact_details";
@@ -18,5 +19,6 @@ export const SET_CURRENCY = "set_currency";
 export const SET_CHANGE_TYPE = "set_change_type";
 export const SET_RECORD_NAME = "set_record_name";
 export const SET_STATUS = "set_status";
+export const SET_STATUS_REASON = "set_status_reason";
 export const SET_CAMPAIGN_ID = "set_campaign_id";
 export const INITIAL_VIEW_LOAD = "initial_view_load";
