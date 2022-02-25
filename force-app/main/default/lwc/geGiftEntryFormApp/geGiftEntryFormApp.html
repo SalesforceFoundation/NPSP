@@ -23,66 +23,81 @@
             </lightning-card>
         </template>
         <template if:false={isLoading}>
-            <template if:true={isBatchMode}>
-                <c-ge-batch-gift-entry-header gift-batch-state={giftBatchState}
-                                              is-gift-batch-processing={isBatchProcessing}
-                                              onbatchdryrun={handleBatchDryRun}
-                                              onedit={handleEditBatch}
-                                              onprocessbatch={handleProcessBatch}>
-                </c-ge-batch-gift-entry-header>
-            </template>
-
-            <template if:true={isBatchProcessing} class='spinner-container'>
-                <div class='slds-card'>
-                    <lightning-spinner alternative-text={CUSTOM_LABELS.messageLoading}
-                                       variant='brand'
-                                       size='large'>
-                    </lightning-spinner>
-                    <p class='loading-text slds-text-heading_medium'>{CUSTOM_LABELS.geProcessingBatch}</p>
-                    <c-util-stencil row-count=20 column-count=4></c-util-stencil>
-                </div>
-            </template>
-
-            <template if:false={isBatchProcessing}>
-                <div class='slds-is-relative'>
-                    <lightning-spinner if:true={isFormRendering}></lightning-spinner>
-                    <c-ge-form-renderer
-                            is-form-collapsed={isFormCollapsed}
-                            gift-in-view={giftInView}
-                            onformstatechange={handleFormStateChange}
-                            onreviewdonationschange={handleReviewDonationsChange}
-                            onaddschedule={handleAddSchedule}
-                            onremoveschedule={handleRemoveSchedule}
-                            oneditschedule={handleEditGiftSchedule}
-                            is-elevate-customer={isElevateCustomer}
-                            batch-id={recordId}
-                            oncollapseform={handleCollapseForm}
-                            onclearcurrentgift={handleClearGiftInView}
-                            onsubmit={handleSubmit}
-                            onlogerror={handleLogError}
-                            onsectionsretrieved={handleSectionsRetrieved}
-                            onpermissionerror={handlePermissionErrors}
-                            ontogglemodal={handleToggleModal}
-                            onnavigate={handleNavigateEvent}
-                            loading-text={loadingText}
-                            batch-currency-iso-code={batchCurrencyIsoCode}
-                            >
-                    </c-ge-form-renderer>
-                </div>
-
-                <template if:false={isPermissionError}>
-                    <c-ge-batch-gift-entry-table
-                        gift-batch-state={giftBatchState}
-                        user-defined-batch-table-column-names={userDefinedBatchTableColumnNames}
-                        batch-id={recordId}
-                        onloaddata={handleLoadData}
-                        onloadmoregifts={handleLoadMoreGifts}
-                        ondelete={handleDelete}
-                        onselectcolumns={handleSelectColumns}
-                        batch-currency-iso-code={batchCurrencyIsoCode}
-                        is-elevate-customer={isElevateCustomer}>
-                    </c-ge-batch-gift-entry-table>
+            <template if:true={giftBatchState.isAccessible}>
+                <template if:true={isBatchMode}>
+                    <c-ge-batch-gift-entry-header gift-batch-state={giftBatchState}
+                                                  is-gift-batch-processing={isBatchProcessing}
+                                                  onbatchdryrun={handleBatchDryRun}
+                                                  onedit={handleEditBatch}
+                                                  onprocessbatch={handleProcessBatch}>
+                    </c-ge-batch-gift-entry-header>
                 </template>
+
+                <template if:true={isBatchProcessing}
+                          class='spinner-container'>
+                    <div class='slds-card'>
+                        <lightning-spinner alternative-text={CUSTOM_LABELS.messageLoading}
+                                           variant='brand'
+                                           size='large'>
+                        </lightning-spinner>
+                        <p class='loading-text slds-text-heading_medium'>{CUSTOM_LABELS.geProcessingBatch}</p>
+                        <c-util-stencil row-count=20 column-count=4></c-util-stencil>
+                    </div>
+                </template>
+
+                <template if:false={isBatchProcessing}>
+                    <div class='slds-is-relative'>
+                        <lightning-spinner if:true={isFormRendering}></lightning-spinner>
+                        <c-ge-form-renderer
+                                is-form-collapsed={isFormCollapsed}
+                                gift-in-view={giftInView}
+                                onformstatechange={handleFormStateChange}
+                                onreviewdonationschange={handleReviewDonationsChange}
+                                onaddschedule={handleAddSchedule}
+                                onremoveschedule={handleRemoveSchedule}
+                                oneditschedule={handleEditGiftSchedule}
+                                is-elevate-customer={isElevateCustomer}
+                                batch-id={recordId}
+                                oncollapseform={handleCollapseForm}
+                                onclearcurrentgift={handleClearGiftInView}
+                                onsubmit={handleSubmit}
+                                onlogerror={handleLogError}
+                                onsectionsretrieved={handleSectionsRetrieved}
+                                onpermissionerror={handlePermissionErrors}
+                                ontogglemodal={handleToggleModal}
+                                onnavigate={handleNavigateEvent}
+                                loading-text={loadingText}
+                                batch-currency-iso-code={batchCurrencyIsoCode}
+                                >
+                        </c-ge-form-renderer>
+                    </div>
+
+                    <template if:false={isPermissionError}>
+                        <c-ge-batch-gift-entry-table
+                            gift-batch-state={giftBatchState}
+                            user-defined-batch-table-column-names={userDefinedBatchTableColumnNames}
+                            batch-id={recordId}
+                            onloaddata={handleLoadData}
+                            onloadmoregifts={handleLoadMoreGifts}
+                            ondelete={handleDelete}
+                            onselectcolumns={handleSelectColumns}
+                            batch-currency-iso-code={batchCurrencyIsoCode}
+                            is-elevate-customer={isElevateCustomer}>
+                        </c-ge-batch-gift-entry-table>
+                    </template>
+                </template>
+            </template>
+
+            <template if:false={giftBatchState.isAccessible}>
+                <div class='slds-card slds-card_extension'>
+                    <div class='slds-p-top_x-large'>
+                        <c-util-illustration title={CUSTOM_LABELS.rdFlsErrorHeader}
+                                             message={CUSTOM_LABELS.rdFlsErrorDetail}
+                                             size='large'
+                                             variant='lake-mountain'>
+                        </c-util-illustration>
+                    </div>
+                </div>
             </template>
         </template>
 

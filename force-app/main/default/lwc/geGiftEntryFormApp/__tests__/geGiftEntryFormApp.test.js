@@ -14,6 +14,7 @@ import getDataImportModel from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.g
 import getGiftBatchView from '@salesforce/apex/GE_GiftEntryController.getGiftBatchView';
 import isElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 import processGiftsFor from '@salesforce/apex/GE_GiftEntryController.processGiftsFor';
+import isGiftBatchAccessible from '@salesforce/apex/GE_GiftEntryController.isGiftBatchAccessible';
 import OPP_PAYMENT_OBJECT from '@salesforce/schema/npe01__OppPayment__c';
 import { getRecord } from 'lightning/uiRecordApi';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
@@ -57,6 +58,7 @@ const setupForBatchMode = (giftBatchView) => {
     getDataImportModel.mockResolvedValue('{"dummyKey":"dummyValue"}');
     getGiftBatchView.mockResolvedValue(giftBatchView);
     isElevateCustomer.mockResolvedValue(true);
+    isGiftBatchAccessible.mockResolvedValue(true);
 
     const formApp = createGeGiftEntryFormApp();
     formApp.sObjectName = DATA_IMPORT_BATCH_OBJECT.objectApiName;
@@ -98,6 +100,16 @@ jest.mock(
     { virtual: true }
 );
 
+jest.mock(
+    '@salesforce/apex/GE_GiftEntryController.isGiftBatchAccessible',
+    () => {
+        return {
+            default: jest.fn(),
+        };
+    },
+    { virtual: true }
+);
+
 // mock labels so that we can assert the values being replaced in the string
 jest.mock(
     '@salesforce/label/c.geErrorDonorTypeValidationSingle',
@@ -126,6 +138,35 @@ describe('c-ge-gift-entry-form-app', () => {
     });
 
     describe('rendering behavior', () => {
+
+        it('should render page blocker if the gift batch is inaccessible to the current user', async () => {
+            const formApp = setupForBatchMode({gifts: [], totals: { TOTAL: 1, IMPORTED: 1 }});
+            isGiftBatchAccessible.mockResolvedValue(false);
+
+            await flushPromises();
+
+            const pageBlocker = formApp.shadowRoot.querySelector('c-util-illustration');
+            expect(pageBlocker).toBeTruthy();
+        });
+
+        it('should not render page blocker if the gift batch is accessible to the current user', async () => {
+            const formApp = setupForBatchMode({gifts: [], totals: { TOTAL: 1, IMPORTED: 1 }});
+
+            await flushPromises();
+
+            const pageBlocker = formApp.shadowRoot.querySelector('c-util-illustration');
+            expect(pageBlocker).toBeNull();
+
+            const batchHeader = formApp.shadowRoot.querySelector('c-ge-batch-gift-entry-header');
+            expect(batchHeader).toBeTruthy();
+
+            const formRenderer = formApp.shadowRoot.querySelector('c-ge-form-renderer');
+            expect(formRenderer).toBeTruthy();
+
+            const batchTable = formApp.shadowRoot.querySelector('c-ge-batch-gift-entry-table');
+            expect(batchTable).toBeTruthy();
+        });
+
         it('should render processing batch spinner if batch is still processing', async () => {
             const formApp = setupForBatchMode({gifts: [], totals: { TOTAL: 1, PROCESSING: 1 }});
 

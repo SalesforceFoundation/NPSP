@@ -165,7 +165,7 @@ public with sharing class GiftSelector {
         if (GE_PaymentServices.getInstance().isElevateCustomer()) {
             queryFieldAsSet.addAll(elevateFields());
         }
-        // TODO: Only include gift schedule fields if org-wide and record-level gift scheduling is enabled
+
         if (GE_SettingsService.getInstance().isRecurringGiftsEnabled()) {
             queryFieldAsSet.addAll(giftScheduleFields());
         }

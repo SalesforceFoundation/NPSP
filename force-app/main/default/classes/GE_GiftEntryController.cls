@@ -170,6 +170,15 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
+    public static Boolean isGiftBatchAccessible(Id batchId){
+        try {
+            return giftBatchService.isGiftBatchAccessible(new GiftBatchId(batchId));
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
     public static GiftBatchView updateGiftBatchWith(String giftBatchChangesAsJSON){
         try {
             InboundGiftBatchDTO giftBatchChanges =

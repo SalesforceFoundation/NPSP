@@ -1,6 +1,7 @@
 import GiftBatch from 'c/geGiftBatch';
 import getGiftBatchView from '@salesforce/apex/GE_GiftEntryController.getGiftBatchView';
 import hasQueueableId from '@salesforce/apex/GE_GiftEntryController.hasQueueableId';
+import isGiftBatchAccessible from '@salesforce/apex/GE_GiftEntryController.isGiftBatchAccessible';
 
 const giftBatchViewJSON = require('./data/giftBatchView.json');
 
@@ -14,6 +15,7 @@ describe('ge-gift-batch', () => {
     it('should initialize with expected properties', async () => {
         getGiftBatchView.mockResolvedValue(giftBatchViewJSON);
         hasQueueableId.mockResolvedValue(null);
+        isGiftBatchAccessible.mockResolvedValue(true);
         const giftBatch = new GiftBatch();
         await giftBatch.init(giftBatchViewJSON.giftBatchId);
 
@@ -37,6 +39,7 @@ describe('ge-gift-batch', () => {
     it('should be in processing state', async () => {
         getGiftBatchView.mockResolvedValue(giftBatchViewJSON);
         hasQueueableId.mockResolvedValue('DUMMY_QUEUEABLE_ID');
+        isGiftBatchAccessible.mockResolvedValue(true);
         const giftBatch = new GiftBatch();
         await giftBatch.init(giftBatchViewJSON.giftBatchId);
 
