@@ -112,8 +112,7 @@ global with sharing class Callable_API implements System.Callable {
             } when 'err.dispatchaction' {
                 // This method is to be used only by Salesforce.org apps and is subject to change at any time. Do NOT call this method.
                 // If you do so, your functionality can break without any warning or liability from Salesforce.
-                // If you have any questions, please inquire on the Power of Us Hub.
-
+               
                 // Since there are multiple actions that can be invoked, the ERR_Dispatch_API will get the remaining params out of the
                 // parameter service depending on which action was invoked
                 return CallableDispatchService_ERR.getInstanceOf(paramService).dispatch();
@@ -154,7 +153,6 @@ global with sharing class Callable_API implements System.Callable {
             } when 'allo.processoppsandpmts' {
                 // This method is to be used only by Salesforce.org apps and is subject to change at any time. Do NOT call this method.
                 // If you do so, your functionality can break without any warning or liability from Salesforce.
-                // If you have any questions, please inquire on the Power of Us Hub.
                 Set<Id> opportunityIds = paramService.getSetId(CallableApiParameters.PARAM_OPPORTUNITY_IDS);
                 String contextType = paramService.getString(CallableApiParameters.PARAM_CONTEXT_TYPE);
                 Datetime processingBoundary = paramService.getDatetime(CallableApiParameters.PARAM_PROCESSING_BOUNDARY);
@@ -168,8 +166,7 @@ global with sharing class Callable_API implements System.Callable {
 
             } when 'allo.validatepmtallocationconfig' {
                 // This method is to be used only by Salesforce.org apps and is subject to change at any time. Do NOT call this method.
-                // If you do so, your functionality can break without any warning or liability from Salesforce.
-                // If you have any questions, please inquire on the Power of Us Hub.
+                // If you do so, your functionality can break without any warning or liability from Salesforce.               
                 return ALLO_AllocationsSettings.getSettings().validatePaymentAllocationsConfiguration();
 
             } when 'settings.enablecustomizablerollups' {

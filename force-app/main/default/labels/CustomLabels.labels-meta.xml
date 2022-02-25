@@ -1463,7 +1463,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>ErrorEmailMessage</shortDescription>
-        <value>Salesforce encountered these NPSP errors. To learn more about common errors, see &quot;Troubleshoot the Nonprofit Success Pack&quot; on the Power of Us Hub. If you&apos;re unsure how to resolve the errors, post a message in the Nonprofit Success Pack group: https://powerofus.force.com/HUB_NPSP_Group</value>
+        <value>Salesforce encountered these NPSP errors. If you&apos;re unsure how to resolve the errors, post a message in the Nonprofit Success Pack group: https://powerofus.force.com/HUB_NPSP_Group</value>
     </labels>
     <labels>
         <fullName>FieldSetRelatedFieldError</fullName>
@@ -1487,7 +1487,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>InactiveScheduledJobsOwnerErrMsg</shortDescription>
-        <value>There are Scheduled Jobs owned by an inactive User. Review your Scheduled Jobs and ensure the owner of each one is an active User. See Edit or Reschedule NPSP Scheduled Jobs in the Power of Us Hub for more information: https://powerofus.force.com/articles/Resource/NPSP-Edit-or-Reschedule-NPSP-Scheduled-Jobs</value>
+        <value>There are Scheduled Jobs owned by an inactive User. Review your Scheduled Jobs and ensure the owner of each one is an active User. See Edit or Reschedule NPSP Scheduled Jobs for more information: https://powerofus.force.com/NPSP_Scheduled_Jobs</value>
     </labels>
     <labels>
         <fullName>NameRequired</fullName>
@@ -3283,21 +3283,21 @@
         <fullName>RP_USParagraph</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resources Page - Power of Us Paragraph</shortDescription>
+        <shortDescription>Resources Page - Trailblazer Paragraph</shortDescription>
         <value>Get help from our active community of fellow NPSP users, or reach out to Salesforce.org.</value>
     </labels>
     <labels>
         <fullName>RP_UsHubLinkLabel</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resources Page - Power of Us Hub Link</shortDescription>
-        <value>Power of Us HUB</value>
+        <shortDescription>Resources Page - Trailblazer Link</shortDescription>
+        <value>Trailblazer Community</value>
     </labels>
     <labels>
         <fullName>RP_UsSubtitle</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resources Page - Power of Us Subtitle</shortDescription>
+        <shortDescription>Resources Page - Trailblazer Subtitle</shortDescription>
         <value>2. Join the Community</value>
     </labels>
     <labels>
@@ -3825,7 +3825,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Explanation of Batch Data Entry not being supported &amp; recommendations</shortDescription>
-        <value>As of October 1, 2020, Batch Data Entry is no longer supported. Most capabilities have been replaced with newer features in NPSP. If you have any in-progress batches, you can still access those records, but you can&apos;t process them using Batch Data Entry. Contact support if you need to access in-progress batches. &lt;br/&gt; You may want to explore Gift Entry as an alternative to Batch Data Entry. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt; on the Power of Us Hub.</value>
+        <value>As of October 1, 2020, Batch Data Entry is no longer supported. Most capabilities have been replaced with newer features in NPSP. If you have any in-progress batches, you can still access those records, but you can&apos;t process them using Batch Data Entry. Contact support if you need to access in-progress batches. &lt;br/&gt; You may want to explore Gift Entry as an alternative to Batch Data Entry. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.</value>
     </labels>
     <labels>
         <fullName>bdeRetirementWarningBody</fullName>
@@ -3833,7 +3833,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Explanation of Batch Data Entry retirement &amp; recommendations</shortDescription>
-        <value>On October 1, 2020, Batch Data Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Data Entry. To ensure a smooth transition, enable and use Gift Entry in advance of October 1st. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt; on the Power of Us Hub.</value>
+        <value>On October 1, 2020, Batch Data Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Data Entry. To ensure a smooth transition, enable and use Gift Entry in advance of October 1st. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.</value>
     </labels>
     <labels>
         <fullName>bdeRetirementWarningHeader</fullName>
@@ -5527,7 +5527,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
             If you have any in-progress batches, you can still access those records, but you can&apos;t process them using Batch Gift Entry.
             Contact support if you need to access in-progress batches.
             You may want to explore Gift Entry as an alternative to Batch Gift Entry.
-            Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt; on the Power of Us Hub.
+            Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.
         </value>
     </labels>
     <labels>
@@ -6523,7 +6523,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Text to be display before the &apos;See Duplicate Contact&apos; button</shortDescription>
-        <value>See all duplicate Contacts found using matching rules. &lt;a href=&quot; https://powerofus.force.com/s/article/NPSP-Merging-Contacts&quot;&gt;&lt;b&gt; Tell Me More &lt;/b&gt;&lt;/a&gt;</value>
+        <value>See all duplicate Contacts found using matching rules. &lt;a href=&apos;https://powerofus.force.com/IP_Contacts&apos; target=&apos;_blank&apos;&gt;&lt;b&gt; Tell Me More &lt;/b&gt;&lt;/a&gt;</value>
     </labels>
     <labels>
         <fullName>conMergeSeeDupConDRS</fullName>
@@ -8945,7 +8945,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Failure msg description for system error &amp; uncertain if payment processed - Pt 4</shortDescription>
-        <!-- {0} = custom label commonPaymentServices i.e. Payment Services --><value>For more information, please see {0} troubleshooting documentation on the Power of Us Hub.</value>
+        <!-- {0} = custom label commonPaymentServices i.e. Payment Services --><value>For more information, please see {0} troubleshooting documentation.</value>
     </labels>
     <labels>
         <fullName>commonGauAllocations</fullName>
@@ -10861,7 +10861,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionNothingScheduled</shortDescription>
-        <value>To reschedule the default NPSP jobs, go to NPSP Settings | Bulk Data Processes | Process Scheduler. Click Edit. Make sure Don&apos;t Enable Auto Schedule Default NPSP Job is not selected. Click Save. See Edit or Reschedule NPSP Jobs in the Power of Us Hub for more information: https://powerofus.force.com/articles/Resource/NPSP-Edit-or-Reschedule-NPSP-Scheduled-Jobs</value>
+        <value>To reschedule the default NPSP jobs, go to NPSP Settings | Bulk Data Processes | Process Scheduler. Click Edit. Make sure Don&apos;t Enable Auto Schedule Default NPSP Job is not selected. Click Save. See Edit or Reschedule NPSP Jobs for more information: https://powerofus.force.com/NPSP_Scheduled_Jobs</value>
     </labels>
     <labels>
         <fullName>healthSolutionOCRDupPrimary</fullName>
@@ -10932,7 +10932,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionTriggerHandlerMismatch</shortDescription>
-        <value>Changes to triggers can affect core NPSP functionality in unexpected ways, and should be thoroughly tested before deployment to production. If these changes were unintentional, you should reset your Trigger Handlers to match the default NPSP configuration. See the Manage Trigger Handlers article in the Power Of Us Hub for more information: https://powerofus.force.com/articles/Resource/NPSP-Manage-Trigger-Handlers</value>
+        <value>Changes to triggers can affect core NPSP functionality in unexpected ways, and should be thoroughly tested before deployment to production. If these changes were unintentional, you should reset your Trigger Handlers to match the default NPSP configuration. See Manage Trigger Handlers for more information: https://powerofus.force.com/NPSP_Manage_Trigger_Handlers</value>
     </labels>
     <labels>
         <fullName>healthSolutionUnsupportedPicklistValue</fullName>
@@ -13607,7 +13607,7 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpPowerOfUsHub</shortDescription>
-        <value>Got questions? The Hub has answers! Try the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; group for questions about NPSP and the &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; group for questions about Salesforce administration and cofiguration.&lt;br/&gt;&lt;br/&gt;Keep up with the latest NPSP release notes in the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt; group.</value>
+        <value>Got questions? Try the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; group for questions about NPSP and the &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; group for questions about Salesforce administration and configuration.&lt;br/&gt;&lt;br/&gt;Keep up with the latest NPSP release notes in the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt; group.</value>
     </labels>
     <labels>
         <fullName>stgHelpPrimaryContactBatch</fullName>
@@ -15205,7 +15205,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgPowerOfUsHub</shortDescription>
-        <value>Power of Us Hub</value>
+        <value>Trailblazer Community</value>
     </labels>
     <labels>
         <fullName>stgRDNamingDescription</fullName>
@@ -15381,7 +15381,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Resource Hub label in Get Started Resources section</shortDescription>
-        <value>Power of Us Hub</value>
+        <value>Trailblazer Community</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemHubLinkLabel</fullName>
@@ -15453,7 +15453,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Questions Answered link label in Get Started Resources section for End Users</shortDescription>
-        <value>Power of Us Hub</value>
+        <value>Trailblazer Community</value>
     </labels>
     <labels>
         <fullName>gseuResourcesItemAboutNPSPLabel</fullName>
