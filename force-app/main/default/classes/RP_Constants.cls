@@ -45,10 +45,10 @@ public with sharing class RP_Constants {
 
     // Configuration for the Getting Started page links
     public static final String RP_CUSTOMER_JOURNEY_LINK = 'http://www.salesforce.org/events/';
-    public static final String RP_NPSP_DOCUMENTATION_LINK = 'https://powerofus.force.com/s/article/NPSP-BP-Salesforce-Fundamentals';
-    public static final String RP_SALESFORCE_ORG_OFFICE_HOURS_LINK = 'https://powerofus.force.com/s/article/SFDO-CS-Hub-Community-Office-Hours';
+    public static final String RP_NPSP_DOCUMENTATION_LINK = 'https://powerofus.force.com/NPSP_Documentation';
+    public static final String RP_SALESFORCE_ORG_OFFICE_HOURS_LINK = 'https://powerofus.force.com/HUB_Foundation_Office_Hours';
     public static final String RP_TRAILHEAD_LINK = 'https://trailhead.salesforce.com/en/content/learn/modules/nonprofit-cloud-basics';
-    public static final String RP_US_LINK = 'https://powerofus.force.com';
-    public static final String RP_WEBINAR_LINK = 'https://powerofus.force.com/articles/Resource/NPSP-Documentation';
+    public static final String RP_US_LINK = 'https://powerofus.force.com/HUB_NPSP_Group';
+    public static final String RP_WEBINAR_LINK = 'https://powerofus.force.com/NPSP_Documentation';
 
 }
