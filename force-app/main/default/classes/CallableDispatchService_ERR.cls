@@ -34,7 +34,6 @@
 *             This method is to be used only by Salesforce.org apps and is subject to change at
 *             any time. Do NOT call this method.  If you do so, your functionality can break
 *             without any warning or liability from Salesforce.
-*             If you have any questions, please inquire on the Power of Us Hub.
 */
 public with sharing class CallableDispatchService_ERR {
     /*******************************************************************************************************
@@ -66,8 +65,7 @@ public with sharing class CallableDispatchService_ERR {
      * parameters passed to it.
      *            This method is to be used only by Salesforce.org apps and is subject to change at
      *            any time. Do NOT call this method.  If you do so, your functionality can break
-     *            without any warning or liability from Salesforce.
-     *            If you have any questions, please inquire on the Power of Us Hub.
+     *            without any warning or liability from Salesforce.     
      * @param CallableApiParameters paramService Parameteters passed to the Callable API as part of it's invocation
      * @return CallableDispatchService_ERR instance ready to use
      */
@@ -80,8 +78,7 @@ public with sharing class CallableDispatchService_ERR {
      * based on an "ActionType" parameter
      *            This method is to be used only by Salesforce.org apps and is subject to change at
      *            any time. Do NOT call this method.  If you do so, your functionality can break
-     *            without any warning or liability from Salesforce.
-     *            If you have any questions, please inquire on the Power of Us Hub.
+     *            without any warning or liability from Salesforce.     
      * @return Object The result of the dispatch action's invocation
      */
     public Object dispatch() {
