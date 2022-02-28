@@ -2073,17 +2073,22 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void addressShouldBePropagatedToAccountsAndContactsOnMultipleTriggerCalls() {
+        // Arrange
         Integer totalHH = 210;
         Integer totalContactPerHH = 1;
-
         UTIL_Debug.disableDebugLogging();
         UTIL_UnitTestData_TEST.disableAffiliationsTriggers();
         UTIL_UnitTestData_TEST.disableRelationshipTriggers();
         UTIL_UnitTestData_TEST.disableMergeTriggers();
         UTIL_UnitTestData_TEST.disableHHNamingTriggers();
+        createAccountAndContactData(totalHH, totalContactPerHH);
 
-        createTestData(totalHH, totalContactPerHH);
+        // Act
+        Test.startTest();
+        createAddressData(totalHH, false);
+        Test.stopTest();
 
+        // Assert
         // verify that the HH and Contacts share the same address
         Map<Id, Account> accountById = new Map<Id, Account>([
             SELECT Id, Name, BillingStreet, BillingCity,
@@ -2096,6 +2101,10 @@ public with sharing class ADDR_Addresses_TEST {
         for (Contact con : contacts) {
             Account acc = accountById.get(con.AccountId);
 
+            // The assertions validate:
+            // 1. Address on Contact matches address on Account
+            // 2. Contact isAddressOverride is false
+            // 3. Contact current address is populated
             System.assertEquals(true, isMatchAddressAccCon(acc, con));
             System.assertEquals(false, con.is_Address_Override__c);
             System.assertNotEquals(null, con.Current_Address__c);
