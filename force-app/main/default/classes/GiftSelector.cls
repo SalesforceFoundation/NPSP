@@ -145,7 +145,11 @@ public with sharing class GiftSelector {
             String.valueOf(DataImport__c.Recurring_Donation_Planned_Installments__c),
             String.valueOf(DataImport__c.Recurring_Donation_Installment_Period__c),
             String.valueOf(DataImport__c.Recurring_Donation_Installment_Frequency__c),
-            String.valueOf(DataImport__c.Recurring_Donation_Effective_Date__c)
+            String.valueOf(DataImport__c.Recurring_Donation_Effective_Date__c),
+            String.valueOf(DataImport__c.Recurring_Donation_Amount__c),
+            String.valueOf(DataImport__c.RecurringDonationImported__c),
+            String.valueOf(DataImport__c.RecurringDonationImportStatus__c),
+            String.valueOf(DataImport__c.Recurring_Donation_Name__c)
         };
 
         return giftScheduleFieldApiNames;
@@ -161,7 +165,7 @@ public with sharing class GiftSelector {
         if (GE_PaymentServices.getInstance().isElevateCustomer()) {
             queryFieldAsSet.addAll(elevateFields());
         }
-        // TODO: Only include gift schedule fields if org-wide and record-level gift scheduling is enabled
+
         if (GE_SettingsService.getInstance().isRecurringGiftsEnabled()) {
             queryFieldAsSet.addAll(giftScheduleFields());
         }

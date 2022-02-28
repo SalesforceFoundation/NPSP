@@ -156,9 +156,26 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
+    public static Boolean hasQueueableId(String batchId) {
+        try {
+            return giftBatchService.hasQueueableJob(new GiftBatchId((Id) batchId));
+        } catch (AuraHandledException e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
     public static Map<String, Integer> getGiftBatchTotalsBy(String batchId) {
-        giftBatchService.validateBatch(new GiftBatchId((Id) batchId));
         return giftBatchService.getGiftBatchTotalsMapFor((Id) batchId);
+    }
+
+    @AuraEnabled
+    public static Boolean isGiftBatchAccessible(Id batchId){
+        try {
+            return giftBatchService.isGiftBatchAccessible(new GiftBatchId(batchId));
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
     }
 
     @AuraEnabled

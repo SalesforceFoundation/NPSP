@@ -3,6 +3,14 @@
         <c-rd2-entry-form-schedule-section
             rd2-state={rd2State}
             data-id='scheduleComponent'
+            onerrorevent={handleChildComponentError}
+            ontypechange={handleRecurringTypeChange}
+            ondayofmonthchange={handleDayOfMonthChange}
+            onstartdatechange={handleStartDateChange}
+            onperiodchange={handleRecurringPeriodChange}
+            onperiodtypechange={handleRecurringPeriodTypeChange}
+            onfrequencychange={handleFrequencyChange}
+            oninstallmentschange={handleInstallmentsChange}
             >
         </c-rd2-entry-form-schedule-section>
         <div slot='footer'>

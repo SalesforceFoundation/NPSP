@@ -157,6 +157,46 @@ public with sharing class Gift {
         this.dataImport.Additional_Object_JSON__c = additionalObjectJSONHelper.asJSON();
     }
 
+    public Boolean hasPopulatedRecurringFields() {
+        if (canAccessRecurringFields()) {
+            Map<String, Object> recurringFields = this.dataImport.getPopulatedFieldsAsMap();
+            for (SObjectField field : GIFT_SCHEDULE_FIELDS) {
+                if (recurringFields.get(String.valueOf(field)) != null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private Boolean canAccessRecurringFields() {
+        try {
+            fflib_SecurityUtils.checkRead(DataImportBatch__c.SObjectType, GIFT_SCHEDULE_FIELDS);
+            fflib_SecurityUtils.checkUpdate(DataImportBatch__c.SObjectType, GIFT_SCHEDULE_FIELDS);
+        } catch (fflib_SecurityUtils.SecurityException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public void preprocessForRecurringGift() {
+        this.dataImport.Recurring_Donation_Amount__c = this.dataImport.Donation_Amount__c;
+        this.dataImport.Recurring_Donation_Date_Established__c = this.dataImport.Donation_Date__c;
+        this.dataImport.Donation_Amount__c = null;
+        this.dataImport.Donation_Date__c = null;
+        this.dataImport.DonationImported__c = null;
+        clearNetNewSoftCredits();
+    }
+
+    public void remapFieldsForView() {
+        if (this.dataImport.Recurring_Donation_Amount__c != null) {
+            this.dataImport.Donation_Amount__c = this.dataImport.Recurring_Donation_Amount__c;
+        }
+        if (this.dataImport.Recurring_Donation_Date_Established__c != null) {
+            this.dataImport.Donation_Date__c = this.dataImport.Recurring_Donation_Date_Established__c;
+        }
+    }
+
     public Boolean isImported() {
         return this.status() == BDI_DataImport_API.bdiImported;
     }
@@ -254,6 +294,14 @@ public with sharing class Gift {
             true);
     }
 
+    private void clearNetNewSoftCredits() {
+        AdditionalObjectJSON additionalObjectJSONHelper =
+            new AdditionalObjectJSON(additionalObjectString());
+        additionalObjectJSONHelper.clearSoftCreditsFromDynamicSourceGroup();
+        this.dataImport.Additional_Object_JSON__c = additionalObjectJSONHelper.asJSON();
+        this.softCredits = null;
+    }
+
     @TestVisible
     private UnitOfWork unitOfWork {
         get {
@@ -264,5 +312,18 @@ public with sharing class Gift {
         }
         set;
     }
+
+    private final List<SObjectField> GIFT_SCHEDULE_FIELDS = new List<Schema.SObjectField> {
+        DataImport__c.SObjectType.fields.Recurring_Donation_Recurring_Type__c,
+        DataImport__c.SObjectType.fields.Recurring_Donation_Date_Established__c,
+        DataImport__c.SObjectType.fields.Recurring_Donation_Day_of_Month__c,
+        DataImport__c.SObjectType.fields.Recurring_Donation_Planned_Installments__c,
+        DataImport__c.SObjectType.fields.Recurring_Donation_Installment_Period__c,
+        DataImport__c.SObjectType.fields.Recurring_Donation_Installment_Frequency__c,
+        DataImport__c.SObjectType.fields.Recurring_Donation_Effective_Date__c,
+        DataImport__c.SObjectType.fields.Recurring_Donation_Amount__c,
+        DataImport__c.SObjectType.fields.Recurring_Donation_End_Date__c,
+        DataImport__c.SObjectType.fields.RecurringDonationImportStatus__c
+    };
 
 }
