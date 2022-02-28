@@ -64,6 +64,11 @@ public with sharing class ADDR_Addresses_TEST {
 
     private static OrgConfig orgConfig = new OrgConfig();
 
+    @TestSetup
+    private static void createTestData() {
+
+    }
+
     /*********************************************************************************************************
     @description
         create N new default Addresses for N Households (with M Contacts)
@@ -660,7 +665,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     @isTest
     private static void newUndeliverableAddressShouldNotSyncToAccountWhenNotDefault() {
-        List<Account> accounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(5, CAO_Constants.HH_ACCOUNT_TYPE);
+        List<Account> accounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(2, CAO_Constants.HH_ACCOUNT_TYPE);
         insert accounts;
 
         buildTestAddress(5);
@@ -688,7 +693,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     @isTest
     private static void updatedUndeliverableAddressShouldNotSyncToAccountWhenNotDefault() {
-        List<Account> accounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(5, CAO_Constants.HH_ACCOUNT_TYPE);
+        List<Account> accounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(2, CAO_Constants.HH_ACCOUNT_TYPE);
         insert accounts;
 
         buildTestAddress(5);
@@ -2214,18 +2219,14 @@ public with sharing class ADDR_Addresses_TEST {
     }
 
     @IsTest
-    private static void latestStartDateShouldNotUpdateWhenAddressIsUpdated() {
-        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-        new npe01__Contacts_And_Orgs_Settings__c(
-                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                Simple_Address_Change_Treated_as_Update__c = true
-        ));
+    private static void latestStartDateShouldDefaultToTodayForNewDefaultAddress() {
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
 
         Contact testContact = UTIL_UnitTestData_TEST.getContact();
-
         buildTestAddress(1);
         populateContactAddress(testContact, testAddresses[0]);
-
         insert testContact;
 
         Address__c testAddress = [SELECT Latest_Start_Date__c, Default_Address__c
@@ -2233,22 +2234,8 @@ public with sharing class ADDR_Addresses_TEST {
                                   WHERE MailingState__c = 'Washington'
                                   LIMIT 1];
         System.assertEquals(true, testAddress.Default_Address__c, 'Address should be set as the default address.');
-//        System.assertEquals(System.today(), testAddress.Latest_Start_Date__c);
-
-        Date startDateInThePast = System.today() - 1;
-
-        Test.startTest();
-
-            testAddress.Latest_Start_Date__c = startDateInThePast;
-            update testAddress;
-        Test.stopTest();
-
-        Address__c updatedAddress = [SELECT Latest_Start_Date__c
-                                     FROM Address__c
-                                     WHERE MailingState__c = 'Washington'
-                                     LIMIT 1];
-        System.assertEquals(startDateInThePast, updatedAddress.Latest_Start_Date__c, 'The latest start date should ' +
-                'not be changed.');
+        System.assertEquals(System.today(), testAddress.Latest_Start_Date__c, 'The default address latest start date ' +
+                'should be set to today\'s date.');
     }
 
     // Helpers
