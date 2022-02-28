@@ -1124,7 +1124,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
     }
 
     @isTest
-    private static void shouldChangeRDStatusToLapsedWhenAutomationThresholdDaysReach() {
+    private static void shouldChangeRDStatusToLapsedWhenAutomationThresholdDaysReachAndUpdateSustainer() {
         Date startDate = Date.newInstance(2020, 1, 1);
         Date currentDate = Date.newInstance(2020, 2, 26);
 
@@ -1145,10 +1145,14 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         rd = rdGateway.getRecord(rd.Id);
         System.assertEquals(RD2_Constants.STATUS_LAPSED, rd.Status__c,
             'RD should be updated to Lapsed when the threshold days has psased (2/15 + 10 days + 1 day)');
+        
+        Contact parentContact = getContact();
+        System.assertEquals(RD2_SustainerEvaluationService.SustainerType.Lapsed.name(), parentContact.Sustainer__c,
+            'The parent Contact should be mark as Lapsed Sustainer');
     }
 
     @isTest
-    private static void shouldChangeRDStatusToClosedWhenAutomationThresholdDaysReach() {
+    private static void shouldChangeRDStatusToClosedWhenAutomationThresholdDaysReachAndUpdateSustainer() {
         Date startDate = Date.newInstance(2020, 1, 1);
         Date currentDate = Date.newInstance(2020, 3, 7);
 
@@ -1169,6 +1173,10 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         rd = rdGateway.getRecord(rd.Id);
         System.assertEquals(RD2_Constants.STATUS_CLOSED, rd.Status__c,
             'RD should be updated to Closed when the threshold days has psased (2/15 + 20 days + 1 day)');
+
+        Contact parentContact = getContact();
+        System.assertEquals(RD2_SustainerEvaluationService.SustainerType.Former.name(), parentContact.Sustainer__c,
+            'The parent Contact should be mark as Former Sustainer');
     }
 
 
@@ -1229,7 +1237,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
     */
     private static Contact getContact() {
         return [
-            SELECT FirstName, LastName, AccountId
+            SELECT FirstName, LastName, AccountId, Sustainer__c
             FROM Contact
             LIMIT 1
         ];
