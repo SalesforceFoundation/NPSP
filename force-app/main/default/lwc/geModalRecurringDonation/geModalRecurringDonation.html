@@ -1,22 +1,5 @@
 <template>
     <lightning-card>
-        <template if:true={shouldDisplayWarning}>
-            <template if:true={giftInViewHasSoftCredits}>
-                <c-util-inline-text icon-name="utility:warning"
-                                    icon-variant="warning"
-                                    icon-size="small"
-                                    text="Soft credits in Gift Entry is not supported for recurring gifts.">
-                </c-util-inline-text>
-            </template>
-            <template if:true={giftInViewHasReviewDonation}>
-                <c-util-inline-text icon-name="utility:warning"
-                                    icon-variant="warning"
-                                    icon-size="small"
-                                    text="Reviewing an open donation is not supported for recurring gifts.">
-                </c-util-inline-text>
-            </template>
-        </template>
-
         <c-rd2-entry-form-schedule-section
             if:false={shouldDisplayWarning}
             rd2-state={rd2State}
@@ -42,7 +25,6 @@
                             >
                         </lightning-button>
                         <lightning-button
-                            if:false={shouldDisplayWarning}
                             class='slds-m-horizontal_xx-small'
                             label={applyScheduleButton}
                             onclick={handleAddSchedule}
