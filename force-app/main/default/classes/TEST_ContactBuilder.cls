@@ -79,4 +79,28 @@ public inherited sharing class TEST_ContactBuilder {
         con.MailingPostalCode = '11011';
         return con;
     }
+
+    @TestVisible
+    private static Contact dummyContactWithRecurringDonation(List<npe03__Recurring_Donation__c> rds) {
+        Contact con = dummyContactWithId();
+        for (npe03__Recurring_Donation__c rd : rds) {
+            rd.npe03__Contact__c = con.Id;
+        }
+
+        con = addRelatedList(con, 'npe03__R00N80000002bOmREAU__r', rds);
+        return con;
+    }
+
+    private static Contact addRelatedList(Contact con, String relationshipName, List<SObject> records) {
+        String contactRecord = JSON.serialize(con);
+        contactRecord = contactRecord.left(contactRecord.length()-1);
+
+        String objJson = JSON.serialize(records);
+        contactRecord += ',"' + relationshipName + '":{"totalSize":' + records.size() + ',"done":true,"records":' + objJson + '}';
+
+        contactRecord += '}';
+
+        return (Contact)JSON.deserialize(contactRecord, Contact.class);
+    }
+
 }

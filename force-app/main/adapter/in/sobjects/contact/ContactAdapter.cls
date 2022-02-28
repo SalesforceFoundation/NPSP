@@ -101,6 +101,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
 
         Contacts contacts = new Contacts(newSObjects);
         contacts.resetDeprecatedFields();
+        contacts.resetSustainerFields();
 
         if (CAO_Constants.isHHAccountModel()) {
             householdServiceInstance.createOneToOneAndHouseholdAccountsFor(
@@ -248,6 +249,10 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
             LegacyHouseholds.attachToBucketAccount(
                     contacts.publicContactsWithNonNullAccountIds()
             );
+        }
+
+        if (RD2_SustainerEvaluationService.isSustainerUpdateEnabled == false) {
+            contacts.resetSustainerFields();
         }
     }
 
