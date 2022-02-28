@@ -713,6 +713,56 @@ private with sharing class RD2_EntryFormController_TEST {
             'The Exception message does not match');
     }
 
+    @IsTest
+    private static void canSaveRecurringDonation() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        Contact donorContact = getContact();
+
+        RD2_EntryFormController.RD2SaveRequest req = new RD2_EntryFormController.RD2SaveRequest();
+
+        req.dayOfMonth = '15';
+        req.startDate = Date.newInstance(2022, 1, 15);
+        req.dateEstablished = Date.newInstance(2022, 1, 15);
+        req.recurringFrequency = 1;
+        req.contactId = donorContact.Id;
+        req.recurringStatus = 'Active';
+        req.donationValue = 5;
+        req.recurringType = 'Open';
+        req.recurringPeriod = 'Monthly';
+        req.paymentMethod = 'Credit Card';
+
+        RD2_EntryFormController.RD2SaveResult result = RD2_EntryFormController.saveRecurringDonation(req);
+
+        System.assert(result.success, 'RD not inserted successfully');
+        System.assertNotEquals(result.recordId, null, 'Save result should have an Id');
+    }
+
+
+    @IsTest
+    private static void saveResponseIncludesErrorInformation() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        Contact donorContact = getContact();
+
+        RD2_EntryFormController.RD2SaveRequest req = new RD2_EntryFormController.RD2SaveRequest();
+
+        req.dayOfMonth = '15';
+        req.startDate = Date.newInstance(2022, 1, 15);
+        req.dateEstablished = Date.newInstance(2022, 1, 15);
+        req.recurringFrequency = 1;
+        req.contactId = donorContact.Id;
+        req.recurringStatus = 'Active';
+        req.donationValue = -1;
+        req.recurringType = 'Open';
+        req.recurringPeriod = 'Monthly';
+        req.paymentMethod = 'Credit Card';
+
+        RD2_EntryFormController.RD2SaveResult result = RD2_EntryFormController.saveRecurringDonation(req);
+
+        System.assertEquals(false, result.success, 'Expected RD2SaveResult success to be false');
+        System.assertEquals(null, result.recordId, 'Expected empty record Id');
+        System.assertEquals(Label.RD2_AmountMustBeValid, result.errors[0].message, 'Wrong error message');
+    }
+
     // Helpers
     ////////////////
 

@@ -16,6 +16,7 @@ import {
 import CURRENCY from "@salesforce/i18n/currency";
 
 import getInitialView from "@salesforce/apex/RD2_EntryFormController.getInitialView";
+import saveRecurringDonation from "@salesforce/apex/RD2_EntryFormController.saveRecurringDonation";
 
 import FIELD_ID from "@salesforce/schema/npe03__Recurring_Donation__c.Id";
 import FIELD_ACH_LAST4 from "@salesforce/schema/npe03__Recurring_Donation__c.ACH_Last_4__c";
@@ -52,6 +53,25 @@ class Rd2Service {
             console.log("Error: ", ex);
             return state;
         }
+    }
+
+    async save(rd2State) {
+        let result;
+        try {
+            const saveRequest = this.getSaveRequest(rd2State);
+            result = await saveRecurringDonation(saveRequest);
+            console.log(JSON.parse(JSON.stringify(result)));
+        } catch (ex) {
+            console.error(ex);
+        }
+
+        if (result.success) {
+            const action = { type: ACTIONS.RECORD_SAVED, payload: result.recordId };
+            return this.dispatch(rd2State, action);
+        }
+
+        const action = { type: ACTIONS.RECORD_SAVE_FAILED, payload: result };
+        return this.dispatch(rd2State, action);
     }
 
     /***
@@ -115,6 +135,58 @@ class Rd2Service {
         } else if (this.isACH(paymentMethod)) {
             return validatingACHMessage;
         }
+    }
+
+    getSaveRequest(rd2State) {
+        const {
+            recordId,
+            recordName,
+            recurringStatus,
+            contactId,
+            accountId,
+            dateEstablished,
+            donationValue,
+            currencyIsoCode,
+            recurringPeriod,
+            recurringFrequency,
+            startDate,
+            dayOfMonth,
+            plannedInstallments,
+            recurringType,
+            paymentToken,
+            commitmentId,
+            achLastFour,
+            cardLastFour,
+            cardExpirationMonth,
+            cardExpirationYear,
+            paymentMethod,
+            customFieldValues,
+        } = rd2State;
+
+        return {
+            recordId,
+            recordName,
+            recurringStatus,
+            contactId,
+            accountId,
+            dateEstablished,
+            donationValue,
+            currencyIsoCode,
+            recurringPeriod,
+            recurringFrequency,
+            startDate,
+            dayOfMonth,
+            plannedInstallments,
+            recurringType,
+            paymentToken,
+            commitmentId,
+            achLastFour,
+            cardLastFour,
+            cardExpirationMonth,
+            cardExpirationYear,
+            paymentMethod,
+            customFieldValues,
+        };
     }
 
     isValidForElevate(rd2State) {
@@ -186,6 +258,12 @@ class Rd2Service {
 
     isClosedStatus({ closedStatusValues, recurringStatus }) {
         return closedStatusValues.includes(recurringStatus);
+    }
+
+    isPaymentMethodChanged(rd2State) {
+        const originalPaymentMethod = this.getOriginalPaymentMethod(rd2State);
+        const { paymentMethod } = rd2State;
+        return originalPaymentMethod !== paymentMethod;
     }
 }
 

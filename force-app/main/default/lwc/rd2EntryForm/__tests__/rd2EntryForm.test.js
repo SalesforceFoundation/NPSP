@@ -6,6 +6,7 @@ import { mockGetIframeReply } from "c/psElevateTokenHandler";
 
 import getInitialView from "@salesforce/apex/RD2_EntryFormController.getInitialView";
 import handleCommitment from "@salesforce/apex/RD2_EntryFormController.handleCommitment";
+import saveRecurringDonation from "@salesforce/apex/RD2_EntryFormController.saveRecurringDonation";
 
 import RD2_EntryFormMissingPermissions from "@salesforce/label/c.RD2_EntryFormMissingPermissions";
 import RD2_EntryFormHeader from "@salesforce/label/c.RD2_EntryFormHeader";
@@ -24,6 +25,7 @@ const rd2WithACHCommitmentInitialView = require("./data/rd2WithACHCommitmentInit
 const rd2WithoutCommitmentInitialView = require("./data/rd2WithoutCommitmentInitialView.json");
 
 jest.mock("@salesforce/apex/RD2_EntryFormController.getInitialView", () => ({ default: jest.fn() }), { virtual: true });
+jest.mock("@salesforce/apex/RD2_EntryFormController.saveRecurringDonation", () => ({ default: jest.fn() }), { virtual: true });
 
 const mockScrollIntoView = jest.fn();
 
@@ -234,6 +236,31 @@ describe("c-rd2-entry-form", () => {
                 InstallmentFrequency__c: 1,
             };
             validateCommitmentMessage(EXPECTED_RECORD);
+            // TODO: When submit is swapped out, use this expect block instead.
+            // expect(saveRecurringDonation).toHaveBeenCalled();
+            // expect(saveRecurringDonation).toHaveBeenCalledWith({
+            //     achLastFour: "5432",
+            //     cardExpirationMonth: null,
+            //     cardExpirationYear: null,
+            //     cardLastFour: null,
+            //     commitmentId: "ffd252d6-7ffc-46a0-994f-00f7582263d2",
+            //     currencyIsoCode: null,
+            //     dayOfMonth: "6",
+            //     paymentMethod: "ACH",
+            //     paymentToken: "a_dummy_token",
+            //     recordId: null,
+            //     recordName: "",
+            //     recurringFrequency: 1,
+            //     recurringType: "Open",
+            //     recurringStatus: null,
+            //     startDate: "2021-02-03",
+            //     donationValue: 1,
+            //     contactId: "001fakeContactId",
+            //     accountId: null,
+            //     dateEstablished: "2021-02-03",
+            //     recurringPeriod: "Monthly",
+            //     plannedInstallments: null,
+            // });
             expect(mockRecordEditFormSubmit).toHaveBeenCalled();
             expect(mockRecordEditFormSubmit).toHaveBeenCalledWith({
                 ACH_Last_4__c: "5432",

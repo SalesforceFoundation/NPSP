@@ -78,7 +78,7 @@ export class RD2FormController {
     setDefaultDateValues() {
         this.dateEstablished().changeValue("2021-02-03");
         this.startDate().changeValue("2021-02-03");
-        this.dayOfMonth().setValue("6");
+        this.dayOfMonth().changeValue("6");
     }
 
     header() {
