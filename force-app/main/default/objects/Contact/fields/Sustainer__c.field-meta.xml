@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Sustainer__c</fullName>
+    <description>Indicates if this Contact is an active, lapsed, or former recurring donor. The value is based on the Status of the related Recurring Donations.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Indicates if this Contact is an active, lapsed, or former recurring donor. The value is based on the Status of the related Recurring Donations.</inlineHelpText>
+    <label>Sustainer</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>false</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Active</fullName>
+                <default>false</default>
+                <label>Active</label>
+            </value>
+            <value>
+                <fullName>Lapsed</fullName>
+                <default>false</default>
+                <label>Lapsed</label>
+            </value>
+            <value>
+                <fullName>Former</fullName>
+                <default>false</default>
+                <label>Former</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
