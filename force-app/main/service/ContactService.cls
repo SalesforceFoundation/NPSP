@@ -35,17 +35,6 @@
 public with sharing class ContactService {
 
     @TestVisible
-    private OrgConfig orgConfig {
-        get {
-            if (orgConfig == null) {
-                orgConfig = new OrgConfig();
-            }
-            return orgConfig;
-        }
-        set;
-    }
-
-    @TestVisible
     private AddressService addressServiceInstance {
         get {
             if (addressServiceInstance == null) {
@@ -66,25 +55,6 @@ public with sharing class ContactService {
             return householdService;
         }
         set;
-    }
-
-    /*******************************************************************************************************
-    * @description returns whether the contact's mailing address is empty
-    * @param con1 a Contact
-    * @return boolean. true if the Mailing Address fields are all empty
-    ********************************************************************************************************/
-    public Boolean isContactAddressEmpty(Contact con1) {
-        Boolean isEmpty =
-                con1.MailingStreet == null &&
-                        con1.MailingCity == null &&
-                        con1.MailingState == null &&
-                        con1.MailingPostalCode == null &&
-                        // note that we decided to ignore country so that a default value won't create unnecessary address objects
-                        (con1.MailingCountry == null || orgConfig.isStateCountryPicklistsEnabled()) &&
-                        // only test StateCode if picklists enabled.
-                        (!orgConfig.isStateCountryPicklistsEnabled() || con1.get('MailingStateCode') == null);
-        return isEmpty;
-
     }
 
     public void moveOppsToNewContactAccount(Map<Id, Id> newAcctIdByContactId, Map<Id, Id> oldAcctIdByContactId) {
