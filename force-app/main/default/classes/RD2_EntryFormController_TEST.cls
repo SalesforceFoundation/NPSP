@@ -48,6 +48,8 @@ private with sharing class RD2_EntryFormController_TEST {
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
 
+    private static OrgConfig orgConfig = new OrgConfig();
+
     /****
     * @description Creates data required for unit tests
     */
@@ -659,8 +661,13 @@ private with sharing class RD2_EntryFormController_TEST {
 
         donorContact.MailingStreet = streetLine1 + '\n' + streetLine2;
         donorContact.MailingCity = 'Test City';
-        donorContact.MailingState = 'Test State';
-        donorContact.MailingCountry = 'Test Country';
+        donorContact.MailingState = 'Minnesota';
+        donorContact.MailingCountry = 'United States';
+        if (orgConfig.isStateCountryPicklistsEnabled()) {
+            donorContact.put('MailingStateCode', 'MN');
+            donorContact.put('MailingCountryCode', 'US');
+        }
+
         update donorContact;
 
         Address__c donorAddress = RD2_EntryFormController.getDonorAddress(donorContact.Id);
@@ -683,8 +690,13 @@ private with sharing class RD2_EntryFormController_TEST {
 
         donorAccount.BillingStreet = streetLine1 + '\n' + streetLine2;
         donorAccount.BillingCity = 'Test City';
-        donorAccount.BillingState = 'Test State';
-        donorAccount.BillingCountry = 'Test Country';
+        donorAccount.BillingState = 'Minnesota';
+        donorAccount.BillingCountry = 'United States';
+        if (orgConfig.isStateCountryPicklistsEnabled()) {
+            donorAccount.put('BillingStateCode', 'MN');
+            donorAccount.put('BillingCountryCode', 'US');
+        }
+
         insert donorAccount;
 
         Address__c donorAddress = RD2_EntryFormController.getDonorAddress(donorAccount.Id);
