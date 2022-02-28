@@ -164,6 +164,12 @@ public inherited sharing class Contacts extends fflib_SObjects2 {
         }
     }
 
+    public void resetSustainerFields() {
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            contactRecord.Sustainer__c = oldVersionOf(contactRecord)?.Sustainer__c;
+        }
+    }
+
     public void keepPrivateContactsPrivate() {
         for (Contact contactRecord : (List<Contact>) getRecords()) {
             // for contacts marked private after they have been created, break the relationship from their account (any model)
