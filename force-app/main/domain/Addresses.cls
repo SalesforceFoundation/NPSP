@@ -58,6 +58,16 @@ public inherited sharing class Addresses extends fflib_SObjects2 {
         set;
     }
 
+    private static OrgConfig orgConfig {
+        get {
+            if (orgConfig == null) {
+                orgConfig = new OrgConfig();
+            }
+            return orgConfig;
+        }
+        set;
+    }
+
     public Addresses(List<Address__c> addresses) {
         super(addresses, Address__c.SObjectType);
     }
@@ -933,12 +943,31 @@ public inherited sharing class Addresses extends fflib_SObjects2 {
     }
 
     public static Map<Id, Account> getAccountsByIds(Set<Id> accountIds) {
-        return new Map<Id, Account>([
-                SELECT Id, BillingStreet, BillingCity, BillingState,
-                        BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude, Undeliverable_Address__c
-                FROM Account
-                WHERE Id IN :accountIds
-        ]);
+        List<String> selectFields = accountAddressFields();
+
+        String accountAddressFieldsSOQL = new UTIL_Query()
+                .withSelectFields(selectFields)
+                .withFrom(String.valueOf(Account.SObjectType))
+                .withWhere('Id IN :accountIds')
+                .build();
+
+        return new Map<Id, Account>((Account[])Database.query(accountAddressFieldsSOQL));
+    }
+
+    private static List<String> accountAddressFields() {
+        List<String> selectFields = new List<String> {
+                'Id', 'BillingStreet',
+                'BillingCity', 'BillingState',
+                'BillingPostalCode', 'BillingCountry',
+                'BillingLatitude', 'BillingLongitude',
+                'Undeliverable_Address__c'
+        };
+
+        if (orgConfig.isStateCountryPicklistsEnabled()) {
+            selectFields.add('BillingCountryCode');
+            selectFields.add('BillingStateCode');
+        }
+        return selectFields;
     }
 
     /*******************************************************************************************************
