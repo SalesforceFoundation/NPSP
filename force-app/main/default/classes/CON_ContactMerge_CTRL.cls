@@ -980,7 +980,8 @@ public with sharing class CON_ContactMerge_CTRL {
             ContactMergeService contactMerge = new ContactMergeService();
             contactMerge.mergeContacts(winningContact, losingContacts);
 
-            updateContactWithOnlyUniqueFields(winningContact.Id);
+            updateContactAfterMerge(winningContact.Id);
+
 
         } catch (Exception e) {
             Database.rollback(sp);
@@ -1027,14 +1028,41 @@ public with sharing class CON_ContactMerge_CTRL {
         populateContactWithFields(winningContact, false);
     }
 
-    private void updateContactWithOnlyUniqueFields(Id winningContactId) {
+    private void updateContactAfterMerge(Id winningContactId) {
         Contact winningContact = new Contact(Id = winningContactId);
 
-        Boolean hasUniqueFieldChange = populateContactWithFields(winningContact, true);
+        Boolean hasFieldChange = populateContactWithOnlyUniqueFields(winningContact);
+        hasFieldChange = hasFieldChange || populateContactWithSustainerChanged(winningContact);
 
-        if (hasUniqueFieldChange) {
+        if (hasFieldChange) {
             updateAndHandleWinningContact(winningContact);
         }
+        
+    }
+
+    private Boolean populateContactWithOnlyUniqueFields(Contact winningContact) {
+        Boolean hasUniqueFieldChange = populateContactWithFields(winningContact, true);
+        return hasUniqueFieldChange;
+    }
+
+    private Boolean populateContactWithSustainerChanged(Contact winningContact) {
+        DescribeFieldResult sustainerFieldDescribeResult = Contact.Sustainer__c.getDescribe();
+
+        if (!UTIL_Permissions.canRead(sustainerFieldDescribeResult, false)
+            || !UTIL_Permissions.canUpdate(sustainerFieldDescribeResult, false)) {
+            return false;
+        }
+
+        List<Contact> contactWithSustainerChanged = new RD2_SustainerEvaluationService()
+        .withContacts(new List<Contact>{winningContact})
+        .getContactsWithSustainerChanged();
+
+        Boolean needSustainerUpdate = contactWithSustainerChanged.size() != 0;
+        if (needSustainerUpdate) {
+            winningContact.Sustainer__c = contactWithSustainerChanged[0].Sustainer__c;
+        }
+
+        return needSustainerUpdate;
     }
 
     private Boolean populateContactWithFields(Contact winningContact, Boolean isUniqueField) {
@@ -1057,11 +1085,15 @@ public with sharing class CON_ContactMerge_CTRL {
     }
 
     private void updateAndHandleWinningContact(Contact winningContact) {
+        RD2_SustainerEvaluationService.setSustainerUpdateEnabled(true);
+
         Database.DMLOptions dml = new Database.DMLOptions();
         dml.DuplicateRuleHeader.AllowSave = true;
 
         Database.SaveResult saveResult = UTIL_DMLService.updateRecord(winningContact, dml);
         handleDMLError(saveResult);
+
+        RD2_SustainerEvaluationService.setSustainerUpdateEnabled(false);
     }
 
     private void handleDMLError(Database.SaveResult saveResult) {

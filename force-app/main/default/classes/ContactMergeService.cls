@@ -143,7 +143,9 @@ public class ContactMergeService {
         if (loserAccountsToBeMerged.size() > 0) {
             merge winnerAccount[0] loserAccountsToBeMerged;
         }
-        
+
+        updateWinnerAccountSustainerAfterMerge(winnerAccount[0]);
+
         //merge the contacts
         
         //there is a Contact delete trigger that deletes the one-to-one Account of a Contact after it is deleted
@@ -189,7 +191,26 @@ public class ContactMergeService {
         if (loserAccountsToBeDeleted.size() > 0) {
             delete loserAccountsToBeDeleted;
         }
+
         successfulMerge = true;
         return successfulMerge;
+    }
+
+    private void updateWinnerAccountSustainerAfterMerge(Account winnerAccount) {
+        DescribeFieldResult sustainerFieldDescribeResult = Account.Sustainer__c.getDescribe();
+
+        if (UTIL_Permissions.canRead(sustainerFieldDescribeResult, false)
+            && UTIL_Permissions.canUpdate(sustainerFieldDescribeResult, false)
+        ) {
+            List<Account> winnerWithSustainerChanged = new RD2_SustainerEvaluationService()
+            .withAccounts(new List<Account>{winnerAccount})
+            .getAccountsWithSustainerChanged();
+
+            if (winnerWithSustainerChanged.size() != 0) {
+                RD2_SustainerEvaluationService.setSustainerUpdateEnabled(true);
+                UTIL_DMLService.updateRecords(winnerWithSustainerChanged);
+                RD2_SustainerEvaluationService.setSustainerUpdateEnabled(false);
+            }
+        }
     }
 }
