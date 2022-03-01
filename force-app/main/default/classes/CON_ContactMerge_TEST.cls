@@ -439,6 +439,14 @@ public class CON_ContactMerge_TEST {
             .build()
         };
 
+        winningContact = getContacts(new List<Contact>{winningContact})[0];
+        losingContact = getContacts(new List<Contact>{losingContact})[0];
+
+        System.assertEquals(RD2_SustainerEvaluationService.SustainerType.Active.name(), losingContact.Sustainer__c,
+            'The losing Contact should be mark as Active Sustainer');
+        System.assertEquals(RD2_SustainerEvaluationService.SustainerType.Former.name(), winningContact.Sustainer__c,
+            'The winning Contact should be mark as Former Sustainer');
+
         selectMasterRecord(controller, winningContact.Id);
 
         //merge them
@@ -501,6 +509,14 @@ public class CON_ContactMerge_TEST {
             .build()
         };
 
+        winningContact = getContacts(new List<Contact>{winningContact})[0];
+        losingContact = getContacts(new List<Contact>{losingContact})[0];
+
+        System.assertEquals(RD2_SustainerEvaluationService.SustainerType.Lapsed.name(), losingContact.Sustainer__c,
+            'The losing Contact should be mark as Lapsed Sustainer');
+        System.assertEquals(RD2_SustainerEvaluationService.SustainerType.Former.name(), winningContact.Sustainer__c,
+            'The winning Contact should be mark as Former Sustainer');
+
         selectMasterRecord(controller, winningContact.Id);
 
         //merge them
@@ -553,6 +569,14 @@ public class CON_ContactMerge_TEST {
             .withContact(losingContact.Id)
             .withAmount(1)
             .build();
+
+        winningContact = getContacts(new List<Contact>{winningContact})[0];
+        losingContact = getContacts(new List<Contact>{losingContact})[0];
+
+        System.assertEquals(RD2_SustainerEvaluationService.SustainerType.Former.name(), losingContact.Sustainer__c,
+            'The losing Contact should be mark as Former Sustainer');
+        System.assertEquals(null, winningContact.Sustainer__c,
+            'The winning Contact should not be a Sustainer');
 
         selectMasterRecord(controller, winningContact.Id);
 
