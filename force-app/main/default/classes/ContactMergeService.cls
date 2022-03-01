@@ -142,9 +142,8 @@ public class ContactMergeService {
         //we merge the Accounts first, if there are any one-to-one Accounts or Solo Household Accounts in the mix
         if (loserAccountsToBeMerged.size() > 0) {
             merge winnerAccount[0] loserAccountsToBeMerged;
+            updateWinnerAccountSustainerAfterMerge(winnerAccount[0]);
         }
-
-        updateWinnerAccountSustainerAfterMerge(winnerAccount[0]);
 
         //merge the contacts
         
