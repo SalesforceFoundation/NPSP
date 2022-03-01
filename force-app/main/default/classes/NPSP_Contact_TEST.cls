@@ -55,4 +55,15 @@ private class NPSP_Contact_TEST {
 
         System.assertNotEquals(null, npspContact.mailingAddress());
     }
+
+    @IsTest
+    static void givenAContactWithOnlyPrimaryAddressType_thenAddressNotMarkedChanged() {
+        //Todo: replace with dummy contact with address
+        NPSP_Contact npspContact = new NPSP_Contact(
+                new Contact(LastName='Tester',FirstName='Test',npe01__Primary_Address_Type__c='Home')
+        );
+
+        System.assertEquals(false, npspContact.isAddressChanged());
+    }
+
 }

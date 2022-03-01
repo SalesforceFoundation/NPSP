@@ -32,7 +32,7 @@
 * @date 2021
 * @description Domain class for Addresses in NPSP.
 */
-public inherited sharing class Addresses extends fflib_SObjects {
+public inherited sharing class Addresses extends fflib_SObjects2 {
 
     private Map<Id, Address__c> oldMap;
 
@@ -54,6 +54,16 @@ public inherited sharing class Addresses extends fflib_SObjects {
                 contactSelector = new ContactSelector();
             }
             return contactSelector;
+        }
+        set;
+    }
+
+    private static OrgConfig orgConfig {
+        get {
+            if (orgConfig == null) {
+                orgConfig = new OrgConfig();
+            }
+            return orgConfig;
         }
         set;
     }
@@ -893,9 +903,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     private Addresses defaultAddresses() {
-        fflib_SObjects defaultAddresses = selectByFieldValue(
+        List<Address__c> defaultAddresses = getRecordsByFieldValue(
                 Address__c.Default_Address__c, TRUE);
-        return new Addresses(defaultAddresses.getRecords());
+        return new Addresses(defaultAddresses);
     }
 
     private void updateLatestDatesForDefaultChanges() {
@@ -932,13 +942,32 @@ public inherited sharing class Addresses extends fflib_SObjects {
         return oldMap?.get(address.Id);
     }
 
-    private static Map<Id, Account> getAccountsByIds(Set<Id> accountIds) {
-        return new Map<Id, Account>([
-                SELECT Id, BillingStreet, BillingCity, BillingState,
-                        BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude, Undeliverable_Address__c
-                FROM Account
-                WHERE Id IN :accountIds
-        ]);
+    public static Map<Id, Account> getAccountsByIds(Set<Id> accountIds) {
+        List<String> selectFields = accountAddressFields();
+
+        String accountAddressFieldsSOQL = new UTIL_Query()
+                .withSelectFields(selectFields)
+                .withFrom(String.valueOf(Account.SObjectType))
+                .withWhere('Id IN :accountIds')
+                .build();
+
+        return new Map<Id, Account>((Account[])Database.query(accountAddressFieldsSOQL));
+    }
+
+    private static List<String> accountAddressFields() {
+        List<String> selectFields = new List<String> {
+                'Id', 'BillingStreet',
+                'BillingCity', 'BillingState',
+                'BillingPostalCode', 'BillingCountry',
+                'BillingLatitude', 'BillingLongitude',
+                'Undeliverable_Address__c'
+        };
+
+        if (orgConfig.isStateCountryPicklistsEnabled()) {
+            selectFields.add('BillingCountryCode');
+            selectFields.add('BillingStateCode');
+        }
+        return selectFields;
     }
 
     /*******************************************************************************************************

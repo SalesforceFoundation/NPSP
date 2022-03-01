@@ -434,6 +434,18 @@
                 <behavior>Edit</behavior>
                 <field>Donation_Description__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Donation_Notification_Recipient_Name__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Donation_Notification_Recipient_Email__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Donation_Notification_Recipient_Info__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
@@ -451,6 +463,26 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Donation_Membership_End_Date__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Donation_Tribute_Type__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Donation_Honoree_Name__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Donation_Honoree_Information__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Donation_Notification_Preference__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Donation_Notification_Message__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -617,6 +649,10 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Payment_Paid__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Payment_Type__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>

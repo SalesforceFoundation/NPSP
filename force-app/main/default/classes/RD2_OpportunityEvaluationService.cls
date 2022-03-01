@@ -398,6 +398,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 .reviseStatus(currentDate, scheduleService)
                 .reviseNextDonationDate(scheduleService);
 
+            if (isBatchContext) {
+                rdRecord.statusAutomationReviseStatus(scheduleService);
+            }
+
             //evaluate Opportunities
             if (rdRecord.isClosed()
                 || rdRecord.isElevateRecord() && RD2_ElevateIntegrationService.isIntegrationEnabled()) {
@@ -426,6 +430,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         createChangeLog(rdRecords);
 
         toggleTriggerState(true);
+
+        evaluateSustainers();
 
         dbService.processErrors();
 
@@ -480,6 +486,20 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
 
         changeLogService.insertChangeLogRecords();
+    }
+
+    private void evaluateSustainers() {
+        RD2_SustainerEvaluationService sustainerService = new RD2_SustainerEvaluationService()
+            .withRecurringDonations(rds)
+            .withRecurringDonations(oldRds);
+    
+        if (isBatchContext) {
+            TDTM_Config_API.disableAllTriggers();
+        }
+        RD2_SustainerEvaluationService.setSustainerUpdateEnabled(true);
+        dbService.updateRecords(sustainerService.getContactsWithSustainerChanged());
+        dbService.updateRecords(sustainerService.getAccountsWithSustainerChanged());
+        RD2_SustainerEvaluationService.setSustainerUpdateEnabled(false);
     }
 
     /**

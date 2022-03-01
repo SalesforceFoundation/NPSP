@@ -5,6 +5,7 @@
   "customFieldSets": [],
   "defaultInstallmentPeriod": "Monthly",
   "defaultRecurringType": "Open",
+  "hasRequiredPermissions": true,
   "InstallmentFrequencyPermissions": {
     "Createable": true,
     "Updateable": true,
@@ -36,6 +37,7 @@
     "recurringFrequency": 1,
     "recordId": "a0963000008oxZnAAI",
     "plannedInstallments": null,
+    "paymentMethod": "Credit Card",
     "paymentToken": null,
     "donorType": "Contact",
     "donationValue": 0.5,
@@ -48,6 +50,6 @@
     "cardExpirationYear": "2023",
     "cardExpirationMonth": "02",
     "achLastFour": null,
-    "accountId": "00163000010jyT6AAI"
+    "accountId": "001fakeAccountId"
   }
 }

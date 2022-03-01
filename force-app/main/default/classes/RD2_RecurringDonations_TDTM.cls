@@ -108,7 +108,6 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         List<SObject> rds, List<SObject> oldRds,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult
     ) {
-
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             return null;
         }
@@ -138,8 +137,30 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
         cancelCommitments(rds, oldRds, triggerAction);
 
+        updateSustainerForDeleteAndUndelete(rds, oldRds, triggerAction);
+        
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
         return dmlActions;
+    }
+
+    private void updateSustainerForDeleteAndUndelete(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
+        if (triggerAction != TDTM_Runnable.Action.AfterDelete && triggerAction != TDTM_Runnable.Action.AfterUndelete) {
+            return;
+        }
+
+        RD2_SustainerEvaluationService sustainerService = new RD2_SustainerEvaluationService()
+        .withRecurringDonations(rds)
+        .withRecurringDonations(oldRds);
+
+        RD2_SustainerEvaluationService.setSustainerUpdateEnabled(true);
+
+        DmlWrapper sustainerDMLAction = new DmlWrapper();
+        sustainerDMLAction.objectsToUpdate = sustainerService.getContactsWithSustainerChanged();
+        TDTM_TriggerHandler.processDML(sustainerDMLAction);
+
+        sustainerDMLAction.objectsToUpdate = sustainerService.getAccountsWithSustainerChanged();
+        TDTM_TriggerHandler.processDML(sustainerDMLAction);
+        RD2_SustainerEvaluationService.setSustainerUpdateEnabled(false);
     }
 
     /***
@@ -382,7 +403,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     */
     @TestVisible
     private Boolean shouldEvaluateOppsSynchronouslyOnInsert(Boolean isBulk) {
-        RD2_Settings settings = new RD2_Settings();
+        RD2_Settings settings = RD2_Settings.getInstance();
 
         if (settings.firstInstallmentCreateMode == RD2_Constants.FirstInstallmentOppCreateOptions.Synchronous.name()) {
             return true;

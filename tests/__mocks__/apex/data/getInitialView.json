@@ -5,6 +5,7 @@
   "customFieldSets": [],
   "defaultInstallmentPeriod": "Monthly",
   "defaultRecurringType": "Open",
+  "hasRequiredPermissions": true,
   "InstallmentFrequencyPermissions": {
     "Createable": true,
     "Updateable": true,
@@ -31,6 +32,7 @@
   "record": {
     "contactId": "fake-contact-record-id",
     "recurringPeriod": "Monthly",
-    "recurringType": "Open"
+    "recurringType": "Open",
+    "dayOfMonth": "15"
   }
 }

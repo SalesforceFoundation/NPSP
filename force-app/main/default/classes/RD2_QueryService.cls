@@ -50,6 +50,17 @@ public inherited sharing class RD2_QueryService {
         set;
     }
 
+    @TestVisible
+    private static RD2_StatusMapper statusMapper {
+        get {
+            if (statusMapper == null) {
+                statusMapper = new RD2_StatusMapper();
+            }
+            return statusMapper;
+        }
+        set;
+    }
+
     /***
     * @description Contains the current custom field mappings used to copy specified fields
     * on Recurring Donation to mapped fields onto the Opportunity record
@@ -60,6 +71,16 @@ public inherited sharing class RD2_QueryService {
                 customFieldMapper = new RD2_CustomFieldMapper();
             }
             return customFieldMapper;
+        }
+        set;
+    }
+
+    private RD2_Settings settings {
+        get {
+            if (settings == null) {
+                settings = new RD2_Settings();
+            }
+            return settings;
         }
         set;
     }
@@ -153,7 +174,8 @@ public inherited sharing class RD2_QueryService {
                 String.valueOf(npe03__Recurring_Donation__c.CardExpirationMonth__c),
                 String.valueOf(npe03__Recurring_Donation__c.CardExpirationYear__c)
         });
-        queryFields.addAll(customFieldMapper.getRdFieldNames());
+
+        queryFields.addAll(getCustomFieldNames());
 
         if (UserInfo.isMultiCurrencyOrganization()) {
             queryFields.add(CURRENCY_ISO_CODE_FIELD);
@@ -218,5 +240,49 @@ public inherited sharing class RD2_QueryService {
             .build();
 
         return '(' + oppSubquery + ')';
+    }
+
+    private List<String> getCustomFieldNames() {
+        List<String> fieldNames = new List<String>();
+        for(FieldSetMember field : settings.getCustomFieldSetMembers()) {
+            fieldNames.add(field.fieldPath);
+        }
+        return fieldNames;
+    }
+
+    public List<SObject> getSObjectWithActiveRecurringDonations(String sObjectType, Set<Id> recordIds) {
+        Set<String> statusValues = statusMapper.getActiveStatusValues();
+        String queryString = getSObjectWithRecurringDonationsQuery(sObjectType);
+
+        return Database.query(queryString);
+    }
+
+    public List<SObject> getSObjectWithLapsedRecurringDonations(String sObjectType, Set<Id> recordIds) {
+        Set<String> statusValues = statusMapper.getLapsedStatusValues();
+        String queryString = getSObjectWithRecurringDonationsQuery(sObjectType);
+
+        return Database.query(queryString);
+    }
+
+    private String getSObjectWithRecurringDonationsQuery(String sObjectType) {
+        Set<String> selectedField = new Set<String>{
+            UTIL_Namespace.StrTokenNSPrefix('Sustainer__c'),
+            getRecurringDonationSubQuery(sObjectType)
+        };
+
+        return new UTIL_Query()
+            .withSelectFields(selectedField)
+            .withFrom(sObjectType)
+            .withWhere(
+                'Id IN: recordIds')
+            .build();
+    }
+
+    private String getRecurringDonationSubQuery(String sObjectType) {
+        String lookupReference = sObjectType == 'Account'
+            ? 'npe03__RecurringDonations__r'
+            : 'npe03__R00N80000002bOmREAU__r';
+
+        return '(SELECT Id FROM ' + lookupReference +' WHERE Status__c IN: statusValues LIMIT 1)';
     }
 }

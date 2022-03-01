@@ -34,7 +34,7 @@
 * @description Enhanced Recurring Donations Entry Form LWC Controller Tests
 *
 */
-@isTest
+@IsTest
 private with sharing class RD2_EntryFormController_TEST {
 
     private static final Date START_DATE = Date.newInstance(2019, 3, 1);
@@ -47,6 +47,8 @@ private with sharing class RD2_EntryFormController_TEST {
 
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
+
+    private static OrgConfig orgConfig = new OrgConfig();
 
     /****
     * @description Creates data required for unit tests
@@ -72,53 +74,47 @@ private with sharing class RD2_EntryFormController_TEST {
     /***
     * @description Verifies that Entry Form Controller gathers the correct org setting
     */
-    @isTest
+    @IsTest
     private static void shouldReturnSettings() {
         Id accountId =  UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
 
         Test.startTest();
-        Map<String, Object> orgSettingsByKey = RD2_EntryFormController.getRecurringSettings(accountId);
+        RD2_EntryFormController.RD2AppView initialView = RD2_EntryFormController.getInitialView(accountId, null);
         Test.stopTest();
 
-        System.assertEquals(RD2_NamingService.isAutomaticNamingEnabled, ((Boolean) orgSettingsByKey.get('isAutoNamingEnabled')),
+        System.assertEquals(RD2_NamingService.isAutomaticNamingEnabled, initialView.isAutoNamingEnabled,
             'Recurring Donation Auto Naming setting should be returned accordingly');
-        System.assertEquals(UserInfo.isMultiCurrencyOrganization(), (Boolean) orgSettingsByKey.get('isMultiCurrencyEnabled'),
+        System.assertEquals(UserInfo.isMultiCurrencyOrganization(), initialView.isMultiCurrencyEnabled,
             'Multi Currency Org should be detected in the configuration.');
-        System.assertEquals(String.valueOf(Account.SObjectType), (String) orgSettingsByKey.get('parentSObjectType'),
+        System.assertEquals(String.valueOf(Account.SObjectType), initialView.parentSObjectType,
             'Parent Sobject type should be correctly identified when value is not null');
 
-        System.assertEquals(true, ((Map<String,Boolean>)orgSettingsByKey.get('InstallmentPeriodPermissions')).get('Createable'),
+        System.assertEquals(true, initialView.InstallmentPeriodPermissions.get('Createable'),
             'Installment_Period__c.IsCreatable should return true');
-        System.assert(orgSettingsByKey.get('customFieldSets') instanceof List<RD2_EntryFormController.CustomField>,
-            'A list of Custom Fields should be returned');
-        System.assert(orgSettingsByKey.get('periodToYearlyFrequencyMap') instanceof Map<String, Integer>,
-            'A map of String to Integer should be returned');
-        System.assert(orgSettingsByKey.get('defaultRecurringType') instanceof String,
-            'A String value should be returned');
     }
 
     /***
     * @description Verifies whether the org is the Elevate customer
     * in order to display the Elevate credit card widget if so.
     */
-    @isTest
+    @IsTest
     private static void shouldDisplayElevateWidgetWhenElevateEnabledIsTrue() {
         Id accountId =  UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
 
         RD2_ElevateIntegrationService_TEST.enableElevateUserPermissions();
 
         Test.startTest();
-        Map<String, Object> orgSettingsByKey = RD2_EntryFormController.getRecurringSettings(accountId);
+        RD2_EntryFormController.RD2AppView initialView =  RD2_EntryFormController.getInitialView(accountId, null);
         Test.stopTest();
 
-        System.assertEquals(true, ((Boolean) orgSettingsByKey.get('isElevateCustomer')),
+        System.assertEquals(true, initialView.isElevateCustomer,
             'The org should be Elevate customer');
     }
 
     /***
     * @description Verifies that Entry Form Controller returns the expected results for Account for Donor Type
     */
-    @isTest
+    @IsTest
     private static void shouldReturnAccountDonorType() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
@@ -135,9 +131,9 @@ private with sharing class RD2_EntryFormController_TEST {
         insert rd;
 
         Test.startTest();
-        Map<String, Object> response = RD2_EntryFormController.getRecurringData(rd.Id);
-        String donorType = (String)response.get('DonorType');
-        String period = (String)response.get('Period');
+        RD2_EntryFormController.RD2AppView view = RD2_EntryFormController.getInitialView(a.Id, rd.Id);
+        String donorType = view.record.donorType;
+        String period = view.record.recurringPeriod;
         Test.stopTest();
 
         System.assertEquals('Account', donorType);
@@ -147,7 +143,7 @@ private with sharing class RD2_EntryFormController_TEST {
     /***
     * @description Verifies that Entry Form Controller returns the expected results for Contact for Donor Type
     */
-    @isTest
+    @IsTest
     private static void shouldReturnContactDonorType() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
@@ -157,10 +153,10 @@ private with sharing class RD2_EntryFormController_TEST {
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
         Test.startTest();
-        Map<String, Object> response = RD2_EntryFormController.getRecurringData(rd.Id);
-        String donorType = (String)response.get('DonorType');
-        String period = (String)response.get('Period');
-        Integer frequency = Integer.valueOf(response.get('Frequency'));
+        RD2_EntryFormController.RD2AppView view = RD2_EntryFormController.getInitialView(null, rd.Id);
+        String donorType = view.record.donorType;
+        String period = view.record.recurringPeriod;
+        Integer frequency = view.record.recurringFrequency;
         Test.stopTest();
 
         System.assertEquals('Contact', donorType);
@@ -208,7 +204,7 @@ private with sharing class RD2_EntryFormController_TEST {
     /***
     * @description Verifies that Entry Form Controller excluded all NPSP packaged field and predefined excluded fields
     */
-    @isTest
+    @IsTest
     private static void shouldReturnRD2CustomFieldsWithoutNPSPNameSpaceAndExcludedFields() {
         Test.startTest();
         List<RD2_EntryFormController.CustomField> customFields = RD2_EntryFormController.getCustomFieldSectionFields();
@@ -229,7 +225,7 @@ private with sharing class RD2_EntryFormController_TEST {
     /***
     * @description Verifies Commitment record created response is returned upon successful creation
     */
-    @isTest
+    @IsTest
     private static void shouldReturnCreatedResponseWhenCreateCommitmentSucceeds() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
@@ -254,7 +250,7 @@ private with sharing class RD2_EntryFormController_TEST {
     /**
     * @description Verifies an error record will be created when an error response is received from the Elevate API.
     */
-    @isTest
+    @IsTest
     private static void shouldCreateErrorRecordWhenElevateReturnsErrorResponse() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
@@ -287,7 +283,7 @@ private with sharing class RD2_EntryFormController_TEST {
     /**
     * @description Verifies an error record will be created when update paymnet commitment fail.
     */
-    @isTest
+    @IsTest
     private static void shouldCreateErrorRecordWhenUpdatePaymentInfoReturnsErrorResponse() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
@@ -315,7 +311,7 @@ private with sharing class RD2_EntryFormController_TEST {
     /**
     * @description Verifies commitment success response is returned upon successful update 
     */
-    @isTest
+    @IsTest
     private static void shouldReturnSuccessResponseWhenUpdatePaymentInfoIsSuccess() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
@@ -363,7 +359,7 @@ private with sharing class RD2_EntryFormController_TEST {
     /**
     * @description Verifies commitment success response is returned upon successful schedule update 
     */
-    @isTest
+    @IsTest
     private static void shouldReturnSuccessResponseWhenUpdateElevateScheduleAmount() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
@@ -412,7 +408,7 @@ private with sharing class RD2_EntryFormController_TEST {
     /**
     * @description Verifies commitment success response is returned upon successful schedule update 
     */
-    @isTest
+    @IsTest
     private static void shouldReturnSuccessResponseWhenUpdateElevateSchedulePeriod() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
@@ -461,7 +457,7 @@ private with sharing class RD2_EntryFormController_TEST {
     /**
     * @description Verifies commitment success response is returned upon successful schedule update 
     */
-    @isTest
+    @IsTest
     private static void shouldReturnSuccessResponseWhenUpdateElevateScheduleFrequency() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
@@ -510,7 +506,7 @@ private with sharing class RD2_EntryFormController_TEST {
     /***
     * @description Verifies Recurring Donation should be validate and handle any error before calling Elevate API
     */
-    @isTest
+    @IsTest
     private static void shouldThrowExceptionWhenRDFieldValueIsInvalid() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
@@ -551,7 +547,7 @@ private with sharing class RD2_EntryFormController_TEST {
     /***
     * @description Verifies Recurring Donation should be validate and handle any error before calling Elevate API
     */
-    @isTest
+    @IsTest
     private static void shouldReturnSuccessWhenUpdatingRdFromController() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
@@ -606,7 +602,7 @@ private with sharing class RD2_EntryFormController_TEST {
     /**
     * @description Verifies commitment success response is returned upon successful campaign update
     */
-    @isTest
+    @IsTest
     private static void shouldReturnSuccessResponseWhenUpdateElevateCamapaign() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
@@ -653,7 +649,81 @@ private with sharing class RD2_EntryFormController_TEST {
         System.assertEquals(UTIL_Http.STATUS_OK, status,
             'The response status should match: ' + response);
     }
- 
+
+    /**
+    * @description Verifies Donor Address is returned when a Contact Id is passed
+    */
+    @IsTest
+    private static void shouldReturnAddressWhenDonorIsContact() {
+        Contact donorContact = getContact();
+        String streetLine1 = 'Test Street';
+        String streetLine2 = 'Test Line 2';
+
+        donorContact.MailingStreet = streetLine1 + '\n' + streetLine2;
+        donorContact.MailingCity = 'Test City';
+        donorContact.MailingState = 'Minnesota';
+        donorContact.MailingCountry = 'United States';
+        if (orgConfig.isStateCountryPicklistsEnabled()) {
+            donorContact.put('MailingStateCode', 'MN');
+            donorContact.put('MailingCountryCode', 'US');
+        }
+
+        update donorContact;
+
+        Address__c donorAddress = RD2_EntryFormController.getDonorAddress(donorContact.Id);
+
+        System.assertEquals(donorAddress.MailingCity__c, donorContact.MailingCity, 'Contact and Address do not match');
+        System.assertEquals(donorAddress.MailingState__c, donorContact.MailingState, 'Contact and Address do not match');
+        System.assertEquals(donorAddress.MailingCountry__c, donorContact.MailingCountry, 'Contact and Address do not match');
+        System.assertEquals(donorAddress.MailingStreet__c, streetLine1, 'Contact and Address do not match');
+        System.assertEquals(donorAddress.MailingStreet2__c, streetLine2, 'Contact and Address do not match');
+    }
+    
+    /**
+    * @description Verifies Donor Address is returned when an Account Id is passed
+    */
+    @IsTest
+    private static void shouldReturnAddressWhenDonorIsAccount() {
+        Account donorAccount = UTIL_UnitTestData_TEST.buildOrganizationAccount();
+        String streetLine1 = 'Test Street';
+        String streetLine2 = 'Test Line 2';
+
+        donorAccount.BillingStreet = streetLine1 + '\n' + streetLine2;
+        donorAccount.BillingCity = 'Test City';
+        donorAccount.BillingState = 'Minnesota';
+        donorAccount.BillingCountry = 'United States';
+        if (orgConfig.isStateCountryPicklistsEnabled()) {
+            donorAccount.put('BillingStateCode', 'MN');
+            donorAccount.put('BillingCountryCode', 'US');
+        }
+
+        insert donorAccount;
+
+        Address__c donorAddress = RD2_EntryFormController.getDonorAddress(donorAccount.Id);
+
+        System.assertEquals(donorAddress.MailingCity__c, donorAccount.BillingCity, 'Account and Address do not match');
+        System.assertEquals(donorAddress.MailingState__c, donorAccount.BillingState, 'Account and Address do not match');
+        System.assertEquals(donorAddress.MailingCountry__c, donorAccount.BillingCountry, 'Account and Address do not match');
+        System.assertEquals(donorAddress.MailingStreet__c, streetLine1, 'Account and Address do not match');
+        System.assertEquals(donorAddress.MailingStreet2__c, streetLine2, 'Account and Address do not match');
+    }
+
+    @IsTest
+    private static void shouldThrowExceptionWhenGetDonorAddressWithoutPermissions() {
+        RD2_EntryFormController.permissions = 
+            (UTIL_Permissions) Test.createStub(UTIL_Permissions.class, new UTIL_PermissionsMock(false, false));
+        Contact donorContact = getContact();
+
+        AuraHandledException caughtException;
+        try {
+            RD2_EntryFormController.getDonorAddress(donorContact.Id);
+        } catch (AuraHandledException ex) {
+            caughtException = ex;
+        }
+        System.assertNotEquals(null, caughtException, 'There should be an Exception');
+        System.assertEquals(Label.commonPermissionErrorMessage, caughtException.getMessage(), 
+            'The Exception message does not match');
+    }
 
     // Helpers
     ////////////////
@@ -727,4 +797,31 @@ private with sharing class RD2_EntryFormController_TEST {
             return this.rd;
         }
     }
+
+    private class UTIL_PermissionsMock implements StubProvider {
+
+        Boolean canRead;
+        Boolean canCreate;
+
+        public UTIL_PermissionsMock(Boolean canRead, Boolean canCreate) {
+            this.canCreate = canCreate;
+            this.canRead = canRead;
+        }
+
+        public Object handleMethodCall(Object stubbedObject, String stubbedMethodName,
+                Type returnType, List<Type> listOfParamTypes, List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+
+            switch on stubbedMethodName {
+                when 'canRead' {
+                    return this.canRead;
+                }
+                when 'canCreate' {
+                    return this.canCreate;
+                }
+            }
+            return null;
+        }
+    }
+
 }

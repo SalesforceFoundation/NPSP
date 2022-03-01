@@ -34,7 +34,7 @@
 * @description Test class for RD2_StatusAutomationService
 */
 @IsTest
-private class RD2_StatusAutomationService_TEST {
+public class RD2_StatusAutomationService_TEST {
     private static final Integer DAYS_FOR_LAPSED = 15;
     private static final Integer DAYS_FOR_CLOSED = 20;
 
@@ -80,7 +80,7 @@ private class RD2_StatusAutomationService_TEST {
         RD2_StatusAutomationService service = new RD2_StatusAutomationService();
 
         Test.startTest();
-        String errorMessage = service.validateSetting(5, 3, null, null);
+        String errorMessage = service.validateSetting(service.buildStatusAutomationSettings(5, 3, null, null));
         Test.stopTest();
 
         System.assertEquals(System.label.RD2_StatusAutomationInvalidNumberOfDays, errorMessage,
@@ -96,7 +96,7 @@ private class RD2_StatusAutomationService_TEST {
         RD2_StatusAutomationService service = new RD2_StatusAutomationService();
 
         Test.startTest();
-        String errorMessage = service.validateSetting(-5, null, RD2_Constants.STATUS_LAPSED, null);
+        String errorMessage = service.validateSetting(service.buildStatusAutomationSettings(-5, null, RD2_Constants.STATUS_LAPSED, null));
         Test.stopTest();
 
         System.assertEquals(System.label.RD2_StatusAutomationNegativeNumberOfDays, errorMessage,
@@ -112,7 +112,7 @@ private class RD2_StatusAutomationService_TEST {
         RD2_StatusAutomationService service = new RD2_StatusAutomationService();
 
         Test.startTest();
-        String errorMessage = service.validateSetting(null, -3, null, RD2_Constants.STATUS_CLOSED);
+        String errorMessage = service.validateSetting(service.buildStatusAutomationSettings(null, -3, null, RD2_Constants.STATUS_CLOSED));
         Test.stopTest();
 
         System.assertEquals(System.label.RD2_StatusAutomationNegativeNumberOfDays, errorMessage,
@@ -128,7 +128,7 @@ private class RD2_StatusAutomationService_TEST {
         RD2_StatusAutomationService service = new RD2_StatusAutomationService();
 
         Test.startTest();
-        String errorMessage = service.validateSetting(null, 3, null, 'random');
+        String errorMessage = service.validateSetting(service.buildStatusAutomationSettings(null, 3, null, 'random'));
         Test.stopTest();
 
         System.assertEquals(System.label.RD2_StatusAutomationInvalidClosedStatus, errorMessage,
@@ -144,7 +144,7 @@ private class RD2_StatusAutomationService_TEST {
         RD2_StatusAutomationService service = new RD2_StatusAutomationService();
 
         Test.startTest();
-        String errorMessage = service.validateSetting(2, null, 'random', null);
+        String errorMessage = service.validateSetting(service.buildStatusAutomationSettings(2, null, 'random', null));
         Test.stopTest();
 
         System.assertEquals(System.label.RD2_StatusAutomationInvalidLapsedStatus, errorMessage,
@@ -160,10 +160,134 @@ private class RD2_StatusAutomationService_TEST {
         RD2_StatusAutomationService service = new RD2_StatusAutomationService();
 
         Test.startTest();
-        String errorMessage = service.validateSetting(null, null, 'random', 'random');
+        String errorMessage = service.validateSetting(service.buildStatusAutomationSettings(null, null, 'random', 'random'));
         Test.stopTest();
 
         System.assertEquals(null, errorMessage,
         'no error message should be returned because the feature is off when Number of Days is null.');
     }
+
+    @Istest
+    private static void verifyStatusAutomationShouldNotMarkRDToLapsedOnTheThresholdDay() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        setupStatusAutomationSettings(15, 20);
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+        RD2_StatusAutomationService automationService = new RD2_StatusAutomationService();
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withInstallmentPeriodMonthly()
+            .withStatusActive()
+            .withDayOfMonth('1')
+            .withInstallmentFrequency(1)
+            .withStartDate(Date.newInstance(2019, 6, 10))
+            .withCalculateNextDonationDate()
+            .build();
+
+        rd = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rd, new List<Opportunity>(), scheduleService.buildNewSchedules(rd));
+        RD2_ScheduleService.currentDate = Date.newInstance(2019, 7, 16);
+
+        RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
+        Test.startTest();
+        Boolean shouldMarkAsLapsed = automationService.shouldMarkRDAsLapsed(rdRecord, scheduleService);
+        Test.stopTest();
+
+        System.assertNotEquals(true, shouldMarkAsLapsed,
+            'Should not mark RD as Lasped when threshold days has not passed (15 days) since the expected donation on 2019/7/1 is missing');
+    }
+
+    @Istest
+    private static void verifyStatusAutomationShouldMarkRDToLapsedAfterThresholdDay() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        setupStatusAutomationSettings(15, 20);
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+        RD2_StatusAutomationService automationService = new RD2_StatusAutomationService();
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withInstallmentPeriodMonthly()
+            .withStatusActive()
+            .withDayOfMonth('1')
+            .withInstallmentFrequency(1)
+            .withStartDate(Date.newInstance(2019, 6, 10))
+            .withCalculateNextDonationDate()
+            .build();
+
+        rd = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rd, new List<Opportunity>(), scheduleService.buildNewSchedules(rd));
+        RD2_ScheduleService.currentDate = Date.newInstance(2019, 7, 17);
+
+        RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
+        Test.startTest();
+        Boolean shouldMarkAsLapsed = automationService.shouldMarkRDAsLapsed(rdRecord, scheduleService);
+        Test.stopTest();
+
+        System.assertEquals(true, shouldMarkAsLapsed,
+            'Should mark RD as Lapsed when threshold days has passed (15 days) since the expected donation on 2019/7/1 is missing');
+    }
+
+    @Istest
+    private static void verifyStatusAutomationShouldNotMarkRDToClosedOnThresholdDay() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        setupStatusAutomationSettings(15, 20);
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+        RD2_StatusAutomationService automationService = new RD2_StatusAutomationService();
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withInstallmentPeriodWeekly()
+            .withStatusActive()
+            .withInstallmentFrequency(1)
+            .withStartDate(Date.newInstance(2019, 6, 10))
+            .withCalculateNextDonationDate()
+            .withLastPaymentDate(Date.newinstance(2019, 7, 16))
+            .build();
+
+        rd = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rd, new List<Opportunity>(), scheduleService.buildNewSchedules(rd));
+        RD2_ScheduleService.currentDate = Date.newinstance(2019, 8, 11);
+
+        RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
+        Test.startTest();
+        Boolean shouldMarkAsClosed = automationService.shouldMarkRDAsClosed(rdRecord, scheduleService);
+        Test.stopTest();
+
+        System.assertEquals(false, shouldMarkAsClosed,
+            'Should not mark RD as Closed when threshold days has not passed (8/11/2019 - 20 days) since the expected donation on 7/22/2019 is missing');
+    }
+
+    @Istest
+    private static void verifyStatusAutomationShouldNotRDToClosedOnThresholdDay() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        setupStatusAutomationSettings(15, 20);
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+        RD2_StatusAutomationService automationService = new RD2_StatusAutomationService();
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withInstallmentPeriodYearly()
+            .withStatusActive()
+            .withInstallmentFrequency(1)
+            .withStartDate(Date.newInstance(2019, 6, 10))
+            .withCalculateNextDonationDate()
+            .withLastPaymentDate(Date.newinstance(2020, 7, 1))
+            .build();
+
+        rd = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rd, new List<Opportunity>(), scheduleService.buildNewSchedules(rd));
+        RD2_ScheduleService.currentDate = Date.newInstance(2021, 7, 1);
+
+        RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
+        Test.startTest();
+        Boolean shouldMarkAsClosed = automationService.shouldMarkRDAsClosed(rdRecord, scheduleService);
+        Test.stopTest();
+
+        System.assertEquals(true, shouldMarkAsClosed,
+            'Should mark RD as Closed when threshold days has passed (20 days) since the expected donation on 2020/6/10 is missing');
+    }
+
+    public static void setupStatusAutomationSettings(Integer daysForLapsed, Integer daysForClosed) {
+        RD2_Settings_TEST.setUpConfiguration(
+            new Map<String, Object>{
+                'StatusAutomationDaysForLapsed__c' => daysForLapsed,
+                'StatusAutomationDaysForClosed__c' => daysForClosed,
+                'StatusAutomationLapsedValue__c' => RD2_Constants.STATUS_LAPSED,
+                'StatusAutomationClosedValue__c' => RD2_Constants.STATUS_CLOSED
+            }
+        );
+    }
+
 }
