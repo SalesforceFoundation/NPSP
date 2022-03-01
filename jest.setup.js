@@ -14,7 +14,6 @@ global.clearDOM = () => {
     jest.clearAllMocks();
 };
 
-
 expect.extend({
     toContainOptions(actual, expected) {
         const valueExists = valueToCheck =>
