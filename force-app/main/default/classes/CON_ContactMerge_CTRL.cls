@@ -1032,7 +1032,7 @@ public with sharing class CON_ContactMerge_CTRL {
         Contact winningContact = new Contact(Id = winningContactId);
 
         Boolean hasFieldChange = populateContactWithOnlyUniqueFields(winningContact);
-        hasFieldChange = hasFieldChange || populateContactWithSustainerChanged(winningContact);
+        hasFieldChange = hasFieldChange || evaluateContactForSustainerChange(winningContact);
 
         if (hasFieldChange) {
             updateAndHandleWinningContact(winningContact);
@@ -1045,7 +1045,7 @@ public with sharing class CON_ContactMerge_CTRL {
         return hasUniqueFieldChange;
     }
 
-    private Boolean populateContactWithSustainerChanged(Contact winningContact) {
+    private Boolean evaluateContactForSustainerChange(Contact winningContact) {
         DescribeFieldResult sustainerFieldDescribeResult = Contact.Sustainer__c.getDescribe();
 
         if (!UTIL_Permissions.canRead(sustainerFieldDescribeResult, false)
