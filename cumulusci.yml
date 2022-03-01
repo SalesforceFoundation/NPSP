@@ -876,6 +876,26 @@ flows:
             4:
                 task: run_tests
 
+    config_trial_complete:
+        steps:
+            # TODO: Update once we can test with a Beta instead of 2GP
+            #1:
+            #    flow: dependencies
+            2:
+                flow: install_2gp_commit #task: install_managed
+            3:
+                task: deploy_post
+                options:
+                    unmanaged: False
+            4:
+                flow: config_trial
+            5:
+                flow: enable_rd2_managed
+            6:
+                flow: enable_gift_entry
+            7:
+                task: update_admin_profile
+
     config_trial:
         steps:
             1:
