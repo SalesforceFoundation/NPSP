@@ -36,6 +36,8 @@
 @isTest
 public with sharing class ADDR_Validator_Batch_TEST {
 
+    private static OrgConfig orgConfig = new OrgConfig();
+
     public static void createDefaultSettings() {
     	// use the household account model
         UTIL_CustomSettingsFacade.getContactsSettings();
@@ -95,7 +97,11 @@ public with sharing class ADDR_Validator_Batch_TEST {
                 from Address__c where Household_Account__c = :accountId];
         System.assertEquals(1, av.size());
         System.assertEquals('1 Infinite Loop', av[0].MailingStreet__c);
-        System.assertEquals('CA', av[0].MailingState__c);
+        if (!orgConfig.isStateCountryPicklistsEnabled()) {
+            System.assertEquals('CA', av[0].MailingState__c);
+        } else {
+            System.assertEquals('California', av[0].MailingState__c);
+        }
         System.assertEquals('95014-2083', av[0].MailingPostalCode__c);
         System.assertEquals(true, av[0].Verified__c);
         
@@ -165,14 +171,22 @@ public with sharing class ADDR_Validator_Batch_TEST {
         Test.stopTest();
         
         //check address records were verified
-        addresses = [select MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c 
+        addresses = [select MailingStreet__c, MailingState__c, MailingPostalCode__c,
+                Verified__c, MailingCountry__c
                     from Address__c where Household_Account__c IN :AccountIDs];
         System.assertEquals(batchSize, addresses.size());
         Integer i = 1;
         for(Address__c addr : addresses) {
         	UTIL_Debug.debug(LoggingLevel.WARN, '****Asserting address record #' + i);
 	        System.assertEquals('1 Infinite Loop', addr.MailingStreet__c);
-	        System.assertEquals('CA', addr.MailingState__c);
+            //Not compatible when State/Country pl enabled
+            if (orgConfig.isStateCountryPicklistsEnabled()) {
+	            System.assertEquals('California', addr.MailingState__c);
+	            System.assertEquals('United States', addr.MailingCountry__c);
+            } else {
+	            System.assertEquals('CA', addr.MailingState__c);
+	            System.assertEquals('US', addr.MailingCountry__c);
+            }
 	        System.assertEquals('95014-2083', addr.MailingPostalCode__c);
 	        System.assertEquals(true, addr.Verified__c);
 	        i++;
@@ -216,7 +230,11 @@ public with sharing class ADDR_Validator_Batch_TEST {
         System.assertEquals(1, addresses.size());
         System.assertEquals('98236', addresses[0].MailingPostalCode__c);
         System.assertEquals('Clinton', addresses[0].MailingCity__c);
-        System.assertEquals('WA', addresses[0].MailingState__c);
+        if (!orgConfig.isStateCountryPicklistsEnabled()) {
+            System.assertEquals('WA', addresses[0].MailingState__c);
+        } else {
+            System.assertEquals('Washington', addresses[0].MailingState__c);
+        }
         System.assertEquals(true, addresses[0].Verified__c);
     }
     
@@ -283,7 +301,11 @@ public with sharing class ADDR_Validator_Batch_TEST {
                 from Address__c where Household_Account__c = :addrAccountId];
         System.assertEquals(1, av1.size());
         System.assertEquals('1 Infinite Loop', av1[0].MailingStreet__c);
-        System.assertEquals('CA', av1[0].MailingState__c);
+        if (!orgConfig.isStateCountryPicklistsEnabled()) {
+            System.assertEquals('CA', av1[0].MailingState__c);
+        } else {
+            System.assertEquals('California', av1[0].MailingState__c);
+        }
         System.assertEquals('95014-2083', av1[0].MailingPostalCode__c);
         System.assertEquals(true, av1[0].Verified__c);
         
@@ -293,7 +315,11 @@ public with sharing class ADDR_Validator_Batch_TEST {
         System.assertEquals(1, av2.size());
         System.assertEquals('98236', av2[0].MailingPostalCode__c);
         System.assertEquals('Clinton', av2[0].MailingCity__c);
-        System.assertEquals('WA', av2[0].MailingState__c);
+        if (!orgConfig.isStateCountryPicklistsEnabled()) {
+            System.assertEquals('WA', av2[0].MailingState__c);
+        } else {
+            System.assertEquals('Washington', av2[0].MailingState__c);
+        }
         System.assertEquals(true, av2[0].Verified__c);
     }
     
