@@ -37,6 +37,7 @@
 public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidator {
 
     private Addr_Verification_Settings__c settings;
+    private OrgConfig orgConfig = new OrgConfig();
 
     /*******************************************************************************************************
     * @description Provides the called with the service name.
@@ -163,10 +164,23 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
                             av.MailingStreet__c = sr.delivery_line_1;
                             av.MailingStreet2__c = sr.delivery_line_2;
                             av.MailingCity__c = sr.components.city_name;
-                            av.MailingState__c = sr.components.state_abbreviation;
+                            if (!orgConfig.isStateCountryPicklistsEnabled()) {
+                                av.MailingState__c = sr.components.state_abbreviation;
+                            } else {
+                                // Do not map abbreviation to MailingState when
+                                // State/Country picklists enabled since the State
+                                // value has already been validated as an
+                                // available and acceptable option by the platform.
+                            }
                             av.MailingPostalCode__c = (sr.components.zipcode == null) ? null : (sr.components.zipcode +
                                 ((sr.components.plus4_code != null && sr.components.plus4_code != '') ? ('-' + sr.components.plus4_code) : ''));
-                            av.MailingCountry__c = 'US';
+                            if (!orgConfig.isStateCountryPicklistsEnabled()) {
+                                av.MailingCountry__c = 'US';
+                            } else {
+                                // Set mailing country to the expected value when state
+                                // country picklist are enabled
+                                av.MailingCountry__c = 'United States';
+                            }
                             av.Geolocation__Latitude__s = sr.metadata.latitude;
                             av.Geolocation__Longitude__s = sr.metadata.longitude;
                             av.County_Name__c = sr.metadata.county_name;
@@ -251,8 +265,17 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
                                     UTIL_Debug.debug('****Populating city and estate.');
                                     av.Verified__c = true;
                                     av.MailingCity__c = sr.city_states[0].city;
-                                    av.MailingState__c = sr.city_states[0].state_abbreviation;
-                                    av.MailingCountry__c = 'US';
+                                    if (!orgConfig.isStateCountryPicklistsEnabled()) {
+                                        av.MailingState__c = sr.city_states[0].state_abbreviation;
+                                        av.MailingCountry__c = 'US';
+                                    } else {
+                                        // When state and country picklist are enabled map
+                                        // the state to the mailing state field (not the 
+                                        // abbreviation), in order to populate the field 
+                                        // with values that are valid picklist options.
+                                        av.MailingState__c = sr.city_states[0].state;
+                                        av.MailingCountry__c = 'United States';
+                                    }
                                 }
 
                                 // if there is exactly one zip, fill in zip
