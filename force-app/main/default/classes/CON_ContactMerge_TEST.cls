@@ -544,9 +544,9 @@ public class CON_ContactMerge_TEST {
         System.assert(losingAccount.isEmpty(), 'The losing contact account should be deleted.');
 
         System.assertEquals(RD2_SustainerEvaluationService.SustainerType.Lapsed.name(), updatedWinningContact[0].Sustainer__c,
-            'The winning contact should be mark as Lapsed Sustainer when there is an Active RD attached to it.');
+            'The winning contact should be mark as Lapsed Sustainer when there is an Lapsed RD attached to it.');
             System.assertEquals(RD2_SustainerEvaluationService.SustainerType.Lapsed.name(), winningAccount[0].Sustainer__c,
-            'The winning Account should be mark as Lapsed Sustainer when there is an Active RD attached to it.');
+            'The winning Account should be mark as Lapsed Sustainer when there is an Lapsed RD attached to it.');
     }
 
     @IsTest
@@ -605,9 +605,9 @@ public class CON_ContactMerge_TEST {
         System.assert(losingAccount.isEmpty(), 'The losing contact account should be deleted.');
 
         System.assertEquals(RD2_SustainerEvaluationService.SustainerType.Former.name(), updatedWinningContact[0].Sustainer__c,
-            'The winning contact should be mark as Former Sustainer when there is an Active RD attached to it.');
+            'The winning contact should be mark as Former Sustainer when there are only Closed RDs attached to it.');
             System.assertEquals(RD2_SustainerEvaluationService.SustainerType.Former.name(), winningAccount[0].Sustainer__c,
-            'The winning Account should be mark as Former Sustainer when there is an Active RD attached to it.');
+            'The winning Account should be mark as Former Sustainer when there are only Closed RDs attached to it.');
     }
 
 
