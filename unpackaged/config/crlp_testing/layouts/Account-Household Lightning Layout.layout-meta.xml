@@ -90,6 +90,10 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
+                <field>Sustainer__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
                 <field>npo02__FirstCloseDate__c</field>
             </layoutItems>
             <layoutItems>
@@ -121,10 +125,6 @@
             <layoutItems>
                 <behavior>Readonly</behavior>
                 <field>npo02__Best_Gift_Year_Total__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Readonly</behavior>
-                <field>Sustainer__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
