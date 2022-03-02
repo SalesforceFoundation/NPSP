@@ -72,7 +72,11 @@ public with sharing class ADDR_Validator_TEST {
         Address__c[] av = getAddressesForHousehold(contact.AccountId);
         System.assertEquals(1, av.size());
         System.assertEquals('1 Infinite Loop', av[0].MailingStreet__c);
-        System.assertEquals('CA', av[0].MailingState__c);
+        if (!orgConfig.isStateCountryPicklistsEnabled()) {
+            System.assertEquals('CA', av[0].MailingState__c);
+        } else {
+            System.assertEquals('California', av[0].MailingState__c);
+        }
         System.assertEquals('95014-2083', av[0].MailingPostalCode__c);
         System.assertEquals(true, av[0].Verified__c);
         System.assertEquals(Label.Addr_Verified, av[0].Verification_Status__c);

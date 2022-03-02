@@ -52,9 +52,8 @@ public with sharing class ADDR_Contacts_TEST {
         Test.startTest();
             Contact contactToUpdate = [SELECT Current_Address__c FROM Contact WHERE Id = :npspContact.getRecord().Id];
             NPSP_Contact npspContactToUpdate = new NPSP_Contact(contactToUpdate);
-            npspContactToUpdate.setUndeliverableMailingAddress(true);
             npspContactToUpdate.setCurrentAddress(
-                    new NPSP_Address(buildAddresses(1, false)[0]));
+                    new NPSP_Address(buildAddresses(1, true)[0]));
 
             update npspContactToUpdate.getRecord();
         Test.stopTest();
