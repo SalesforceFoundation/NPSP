@@ -57,6 +57,7 @@ export default class DonationHistoryTable extends LightningElement {
     }
 
     set filter(value) {
+        this.data = [];
         this._filter = value;
         this.retrieveDonationHistory();
     }
