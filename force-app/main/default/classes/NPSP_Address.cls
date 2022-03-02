@@ -339,11 +339,6 @@ public inherited sharing class NPSP_Address implements IAddress {
         address.Geolocation__Latitude__s = (Decimal) getSObjectField(sobjSrc, fieldPrefixSrc, 'Latitude');
         address.Geolocation__Longitude__s = (Decimal) getSObjectField(sobjSrc, fieldPrefixSrc, 'Longitude');
 
-        if (orgConfig.isStateCountryPicklistsEnabled()) {
-            populateAddressCountryFromCountryCode(sobjSrc, fieldPrefixSrc);
-            populateAddressStateFromStateCode(sobjSrc, fieldPrefixSrc);
-        }
-
         // if specified, also include Address Type
         if (addrType != null) {
             address.Address_Type__c = addrType;
@@ -390,67 +385,6 @@ public inherited sharing class NPSP_Address implements IAddress {
         if (Integer.valueOf(d) < 10)
             return Decimal.valueOf(m + '.0' + d); else
                 return Decimal.valueOf(m + '.' + d);
-    }
-
-    /*******************************************************************************************************
-    * @description Updates the Address record's MailingCountry field when it is empty
-    *              with the Account's BillingCountryCode or Contact's MailingCountryCode value.
-    * @param sobjSrc the source Account or Contact
-    * @param fieldPrefixSrc the address field to copy from, ie., Mailing, Other, Billing, Shipping
-    * @param addr the Address object to update accordingly
-    * @return void
-    */
-    @TestVisible
-    private void populateAddressCountryFromCountryCode(SObject sobjSrc, String fieldPrefixSrc) {
-        String countryCode = (String) sobjSrc.get(fieldPrefixSrc + 'CountryCode');
-        if (String.isBlank(countryCode)) {
-            return;
-        }
-
-        if (String.isEmpty(address.MailingCountry__c)) {
-            address.MailingCountry__c = orgConfig.validCountriesByCode().get(countryCode
-                    .toUpperCase());
-        }
-    }
-
-    /*******************************************************************************************************
-    * @description Updates the Address record's MailingState field when it is empty
-    *              or does not match the Account's BillingStateCode or Contact's MailingStateCode value.
-    * @param sobjSrc the source Account or Contact
-    * @param fieldPrefixSrc the address field to copy from, ie., Mailing, Other, Billing, Shipping
-    * @return void
-    */
-    @TestVisible
-    private void populateAddressStateFromStateCode(SObject sobjSrc, String fieldPrefixSrc) {
-        String stateCode = (String) sobjSrc.get(fieldPrefixSrc + 'StateCode');
-        if (String.isBlank(stateCode)) {
-            return;
-        }
-
-        if (String.isEmpty(address.MailingState__c) || !isMatchingStateCode(stateCode)) {
-
-            // Assume it's a valid statecode
-            address.MailingState__c = stateCode;
-        }
-    }
-
-    /*******************************************************************************************************
-    * @description Determines if the Account's BillingStateCode or Contact's MailingStateCode matches the
-    *              Address record's Mailing State.
-    * @param stateCode the BillingStateCode or MailingStateCode
-    * @return void
-    */
-    @TestVisible
-    private Boolean isMatchingStateCode(String stateCode) {
-        if (String.isBlank(address.MailingState__c)) {
-            return false;
-        }
-
-        String mappedMailingState = (orgConfig.validStatesByLabel() == null)
-                ? ''
-                : orgConfig.validStatesByLabel().get(address.MailingState__c.toUpperCase());
-
-        return stateCode.equalsIgnoreCase(mappedMailingState);
     }
 
     /*******************************************************************************************************
