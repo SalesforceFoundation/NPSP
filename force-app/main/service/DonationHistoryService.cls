@@ -152,6 +152,9 @@ public with sharing class DonationHistoryService {
     * @param contactId contact id which is going to be requested.
     */
     public Integer getTotalNumberOfRecords() {
+        if (shouldApplyFilterByYear(filter)) {
+            return selector.getTotalNumberOfRecordsWithYear(contactId, Integer.valueOf(filter));
+        }
         return selector.getTotalNumberOfRecords(this.contactId);
     }
 }

@@ -13,6 +13,8 @@ export default class DonationHistoryTable extends LightningElement {
     @api contactId;
 
     _filter;
+
+    infiniteScroll = true;
     
     paymentMethodLabel;
 
@@ -60,6 +62,7 @@ export default class DonationHistoryTable extends LightningElement {
         this.data = [];
         this._filter = value;
         this.retrieveDonationHistory();
+        this.infiniteScroll = true;
     }
     
     connectedCallback() {
@@ -118,7 +121,7 @@ export default class DonationHistoryTable extends LightningElement {
         .then(data => {
                 if (this.data.length >= this.totalNumberOfRecords) {
                     this.tableElement.isLoading = false;
-                    this.tableElement.enableInfiniteLoading = false;
+                    this.infiniteScroll = false;
                     return;
                 }
                 const currentData = this.data;

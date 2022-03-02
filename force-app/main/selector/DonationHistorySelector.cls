@@ -124,4 +124,19 @@ public inherited sharing class DonationHistorySelector {
                                 WITH SECURITY_ENFORCED];
         return totalRecords;
     }
+
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description method to return total number of record
+    */
+    public Integer getTotalNumberOfRecordsWithYear( Id contactId, Integer year ) {
+        Integer totalRecords = [SELECT COUNT()
+                                FROM Opportunity
+                                WHERE IsWon = true
+                                AND Primary_Contact__r.Id =:contactId
+                                AND Calendar_Year(CloseDate) = :year
+                                WITH SECURITY_ENFORCED];
+        return totalRecords;
+    }
 }
