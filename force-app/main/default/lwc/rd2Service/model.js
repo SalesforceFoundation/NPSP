@@ -69,7 +69,7 @@ const DEFAULT_INITIAL_STATE = {
     changeType: "",
 
     //Custom Fields
-    customFields: {},
+    customFieldSets: [],
 
     //elevate iframe
     paymentToken: null,
@@ -192,12 +192,12 @@ const setAccountId = (state, accountId) => {
 };
 
 const setCustomField = (state, { fieldName, value }) => {
-    const { customFields } = state;
+    const { customFieldSets } = state;
 
     return {
         ...state,
-        customFields: {
-            ...customFields,
+        customFieldsSet: {
+            ...customFieldSets,
             [fieldName]: value,
         },
     };

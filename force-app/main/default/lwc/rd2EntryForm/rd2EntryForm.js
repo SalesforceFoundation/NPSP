@@ -486,7 +486,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     get hasCustomFields() {
-        return Object.keys(this.rd2State.customFields).length > 0;
+        return Object.keys(this.rd2State.customFieldSets).length > 0;
     }
 
     /***
