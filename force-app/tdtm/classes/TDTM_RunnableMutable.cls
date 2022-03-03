@@ -61,7 +61,7 @@ global abstract class TDTM_RunnableMutable {
                 context.records,
                 context.existingRecords,
                 context.action(),
-                context.describeObj,
+                UTIL_Describe.getObjectDescribe(context.getSObjectType()),
                 dmlWrapper
         );
     }
