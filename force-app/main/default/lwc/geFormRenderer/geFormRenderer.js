@@ -412,8 +412,9 @@ export default class GeFormRenderer extends LightningElement{
         const isReviewingOpportunity = !isEmptyObject(this.giftInView?.fields[DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName]);
         const isReviewingPayment = !isEmptyObject(this.giftInView?.fields[DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName]);
         const hasSoftCredits = this.hasSoftCredits();
+        const isGiftAuthorized = this.isGiftAuthorized();
 
-        return isReviewingOpportunity || isReviewingPayment || hasSoftCredits;
+        return isGiftAuthorized || isReviewingOpportunity || isReviewingPayment || hasSoftCredits;
     }
 
     displayWarningForRecurringGiftModal() {
@@ -421,6 +422,8 @@ export default class GeFormRenderer extends LightningElement{
         {
             'variant': 'warning',
             'title': this.CUSTOM_LABELS.commonWarning,
+            // TODO: Update or create a new custom label to include messaging related to
+            // the salesforce.org elevate field bundle not being supported for schedules.
             'message': geRecurringGiftModalWarning,
             'buttons':
                 [{
