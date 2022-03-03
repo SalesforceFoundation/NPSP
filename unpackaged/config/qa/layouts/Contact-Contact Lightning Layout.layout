@@ -208,7 +208,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>Sustainer__c</field>
+                <field>%%%NAMESPACE%%%Sustainer__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
