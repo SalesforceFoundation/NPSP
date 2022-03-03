@@ -942,7 +942,7 @@ public inherited sharing class Addresses extends fflib_SObjects2 {
         return oldMap?.get(address.Id);
     }
 
-    public static Map<Id, Account> getAccountsByIds(Set<Id> accountIds) {
+    private static Map<Id, Account> getAccountsByIds(Set<Id> accountIds) {
         List<String> selectFields = accountAddressFields();
 
         String accountAddressFieldsSOQL = new UTIL_Query()
