@@ -551,6 +551,7 @@ public with sharing class RD2_EntryFormController {
         @AuraEnabled public Id recordId;
         @AuraEnabled public String recordName;
         @AuraEnabled public String recurringStatus;
+        @AuraEnabled public String statusReason;
         @AuraEnabled public Id contactId;
         @AuraEnabled public Id accountId;
         @AuraEnabled public String donorType;
@@ -564,6 +565,7 @@ public with sharing class RD2_EntryFormController {
         @AuraEnabled public String dayOfMonth;
         @AuraEnabled public Integer plannedInstallments;
         @AuraEnabled public Integer paidInstallments;
+        @AuraEnabled public Id campaignId;
         @AuraEnabled public String recurringType;
         @AuraEnabled public Date nextDonationDate;
         @AuraEnabled public String paymentToken;
@@ -588,6 +590,7 @@ public with sharing class RD2_EntryFormController {
             this.contactId = record.npe03__Contact__c;
             this.accountId = record.npe03__Organization__c;
             this.recurringStatus = record.Status__c;
+            this.statusReason = record.ClosedReason__c;
             this.recordName = record.Name;
             this.donorType = getDonorType(record);
             this.dateEstablished = record.npe03__Date_Established__c;
@@ -602,6 +605,7 @@ public with sharing class RD2_EntryFormController {
             this.paymentMethod = record.PaymentMethod__c;
             this.nextDonationDate = record.npe03__Next_Payment_Date__c;
             this.recurringType = record.RecurringType__c;
+            this.campaignId = record.npe03__Recurring_Donation_Campaign__c;
             this.commitmentId = record.CommitmentId__c;
             this.achLastFour = record.ACH_Last_4__c;
             this.cardLastFour = record.CardLast4__c;

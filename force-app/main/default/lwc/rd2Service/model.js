@@ -66,6 +66,8 @@ const DEFAULT_INITIAL_STATE = {
     paidAmount: null, // Fixed Only, used to calculate change type
     paidInstallments: null, // Fixed Only, used to calculate change type
     nextDonationDate: null,
+
+    campaignId: null,
     changeType: "",
 
     //Custom Fields
