@@ -686,6 +686,7 @@ public with sharing class RD2_EntryFormController {
         @AuraEnabled public Id recordId;
         @AuraEnabled public String recordName;
         @AuraEnabled public String recurringStatus;
+        @AuraEnabled public String statusReason;
         @AuraEnabled public Id contactId;
         @AuraEnabled public Id accountId;
         @AuraEnabled public Date dateEstablished;
@@ -697,6 +698,7 @@ public with sharing class RD2_EntryFormController {
         @AuraEnabled public String dayOfMonth;
         @AuraEnabled public Integer plannedInstallments;
         @AuraEnabled public String recurringType;
+        @AuraEnabled public String campaignId;
         @AuraEnabled public String paymentToken;
         @AuraEnabled public String commitmentId;
         @AuraEnabled public String paymentMethod;
@@ -707,6 +709,7 @@ public with sharing class RD2_EntryFormController {
             rd.Id = recordId;
             rd.Name = recordName;
             rd.Status__c = recurringStatus;
+            rd.ClosedReason__c = statusReason;
             rd.npe03__Contact__c = contactId;
             rd.npe03__Organization__c = accountId;
             rd.npe03__Date_Established__c = dateEstablished;
@@ -722,6 +725,7 @@ public with sharing class RD2_EntryFormController {
             rd.Day_of_Month__c = dayOfMonth;
             rd.npe03__Installments__c = plannedInstallments;
             rd.RecurringType__c = recurringType;
+            rd.npe03__Recurring_Donation_Campaign__c = campaignId;
             rd.CommitmentId__c = commitmentId;
             rd.PaymentMethod__c = paymentMethod;
 
