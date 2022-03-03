@@ -36,6 +36,8 @@ import Settings from 'c/geSettings';
 import GeLabelService from 'c/geLabelService';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geMakeRecurring from '@salesforce/label/c.geMakeRecurring';
+import btnContinue from '@salesforce/label/c.btnContinue';
+import geRecurringGiftModalWarning from '@salesforce/label/c.geRecurringGiftModalWarning';
 import geRecurringScheduleInformation from '@salesforce/label/c.geRecurringScheduleInformation';
 import { getNumberAsLocalizedCurrency } from 'c/utilNumberFormatter';
 import {
@@ -147,12 +149,6 @@ const FORM_STATE_IMMUTABLE_FIELDS_API_NAMES = [
 
 const ACH_CONSENT_MESSAGE = 'true';
 const EXPANDABLE_SECTION_CONTAINER = 'expandableSectionContainer';
-
-const GIFT_SCHEDULE_OVERLAY_LIBRARY_PROPERTIES = {
-    header: geRecurringScheduleInformation,
-    componentName: 'geModalRecurringDonation',
-    showCloseButton: true,
-}
 
 export default class GeFormRenderer extends LightningElement{
     // these three fields are used to query the donor record
@@ -382,13 +378,19 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     openRecurringGiftModal(isEdit) {
+        if (this.shouldDisplayWarningForRecurringGiftModal()) {
+            this.displayWarningForRecurringGiftModal();
+            return;
+        }
+
         const componentProperties = {
             cancelCallback: () => {
                 fireEvent(this.pageRef, 'geModalCloseEvent', {})
             },
             createRecurrenceCallback: (scheduleData) => {
                 this.createRecurrence(scheduleData);
-            }
+            },
+            giftInView: this.giftInView
         };
 
         if (isEdit) {
@@ -396,10 +398,44 @@ export default class GeFormRenderer extends LightningElement{
         }
 
         const detail = {
-            modalProperties: GIFT_SCHEDULE_OVERLAY_LIBRARY_PROPERTIES,
+            modalProperties: {
+                header: geRecurringScheduleInformation,
+                componentName: 'geModalRecurringDonation',
+                showCloseButton: true,
+            },
             componentProperties
         };
         this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
+    }
+
+    shouldDisplayWarningForRecurringGiftModal() {
+        const isReviewingOpportunity = !isEmptyObject(this.giftInView?.fields[DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName]);
+        const isReviewingPayment = !isEmptyObject(this.giftInView?.fields[DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName]);
+        const hasSoftCredits = this.hasSoftCredits();
+
+        return isReviewingOpportunity || isReviewingPayment || hasSoftCredits;
+    }
+
+    displayWarningForRecurringGiftModal() {
+        this.toggleModalByComponentName('geModalPrompt',
+        {
+            'variant': 'warning',
+            'title': this.CUSTOM_LABELS.commonWarning,
+            'message': geRecurringGiftModalWarning,
+            'buttons':
+                [{
+                    label: btnContinue,
+                    action: () => { fireEvent(this.pageRef, 'geModalCloseEvent', {}) }
+                }]
+        });
+    }
+
+    hasSoftCredits() {
+        if (this.giftInView?.softCredits) {
+            const softCredits = JSON.parse(this.giftInView.softCredits);
+            return softCredits.length > 0;
+        }
+        return false;
     }
 
     handleRemoveSchedule() {

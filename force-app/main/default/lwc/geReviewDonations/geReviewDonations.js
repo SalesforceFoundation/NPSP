@@ -7,13 +7,14 @@ import geLabelService from 'c/geLabelService';
 import getOpenDonationsView from '@salesforce/apex/GE_GiftEntryController.getOpenDonationsView';
 import OPPORTUNITY from '@salesforce/schema/Opportunity';
 import PAYMENT from '@salesforce/schema/npe01__OppPayment__c';
-import { hasNestedProperty } from 'c/utilCommon';
+import { isEmptyObject } from 'c/utilCommon';
 
 export default class geReviewDonations extends NavigationMixin(LightningElement) {
 
     CUSTOM_LABELS = geLabelService.CUSTOM_LABELS;
 
     @api donorId;
+    @api giftInView;
 
     _donor;
     _donorType;
@@ -145,6 +146,10 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
             this.isUpdatingPayment ?
             true :
             false;
+    }
+
+    get giftInViewHasSchedule() {
+        return !isEmptyObject(this.giftInView?.schedule);
     }
 
     /*******************************************************************************

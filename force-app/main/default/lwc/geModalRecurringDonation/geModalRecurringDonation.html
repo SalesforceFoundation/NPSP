@@ -1,6 +1,7 @@
 <template>
     <lightning-card>
         <c-rd2-entry-form-schedule-section
+            if:false={shouldDisplayWarning}
             rd2-state={rd2State}
             data-id='scheduleComponent'
             onerrorevent={handleChildComponentError}
