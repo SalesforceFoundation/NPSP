@@ -86,7 +86,7 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>%%%NAMESPACE%%%Sustainer__c</field>
+                <field>Sustainer__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
