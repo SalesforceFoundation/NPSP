@@ -220,6 +220,15 @@ export class RD2FormController {
         );
     }
 
+    customFieldsSection() {
+        return this.element.shadowRoot.querySelector('c-rd2-entry-form-custom-fields-section');
+    }
+
+    customFields() {
+        const customFields = this.customFieldsSection();
+        return customFields.shadowRoot.querySelectorAll('lightning-input-field');
+    }
+
     changeTypePicklist() {
         return this.element.shadowRoot.querySelector('lightning-input-field[data-id="changeType"]');
     }

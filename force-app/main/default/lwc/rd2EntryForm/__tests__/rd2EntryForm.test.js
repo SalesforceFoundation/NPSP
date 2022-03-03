@@ -166,6 +166,26 @@ describe("c-rd2-entry-form", () => {
             expect(header.textContent).toBe(RD2_EntryFormHeader);
         });
 
+        it("renders custom fields when one field is defined", async () => {
+            getInitialView.mockResolvedValue({
+                ...initialViewResponse,
+                customFieldSets: [
+                    {
+                        apiName: "Custom1__c",
+                        required: false,
+                    },
+                ],
+            });
+
+            const element = createRd2EntryForm();
+            const controller = new RD2FormController(element);
+
+            await flushPromises();
+
+            expect(controller.customFieldsSection()).toBeTruthy();
+            expect(controller.customFields()).toHaveLength(1);
+        });
+
         it('when multicurrency enabled, displays currency field', async () => {
             getInitialView.mockResolvedValue({
                 ...initialViewResponse,
