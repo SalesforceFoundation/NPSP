@@ -244,6 +244,10 @@ public inherited sharing class Addresses extends fflib_SObjects {
             clearAccountAddressDefaults(allAddressesByAccountId,
                 accountId, householdInfoByAccountId, addressesToUpdate);
 
+            // add latest start date reset
+            resetLatestStartDateFor(addressToSyncToAccountsAndContacts.getRecord());
+            resetLatestEndDateFor(addressToSyncToAccountsAndContacts.getRecord());
+
             updateAddressForHouseholdContacts(contactsByHouseholdAccountId,
                 accountId, npspHouseholdAccount, addressToSyncToAccountsAndContacts, contactsToUpdate);
 
@@ -884,11 +888,11 @@ public inherited sharing class Addresses extends fflib_SObjects {
         }
     }
 
-    private void resetLatestEndDateFor(Address__c address) {
+    private static void resetLatestEndDateFor(Address__c address) {
         address.Latest_End_Date__c = NULL;
     }
 
-    private void resetLatestStartDateFor(Address__c address) {
+    private static void resetLatestStartDateFor(Address__c address) {
         address.Latest_Start_Date__c = System.today();
     }
 
