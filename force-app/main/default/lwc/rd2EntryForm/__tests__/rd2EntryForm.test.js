@@ -298,6 +298,7 @@ describe("c-rd2-entry-form", () => {
                 npe03__Date_Established__c: "2021-02-03",
                 npe03__Installment_Period__c: "Monthly",
                 npe03__Installments__c: null,
+                npe03__Recurring_Donation_Campaign__c: null
             });
         });
 
@@ -609,6 +610,7 @@ describe("c-rd2-entry-form", () => {
                 npe03__Date_Established__c: "2021-02-03",
                 npe03__Installment_Period__c: "Monthly",
                 npe03__Installments__c: null,
+                npe03__Recurring_Donation_Campaign__c: null
             });
         });
 
@@ -671,6 +673,7 @@ describe("c-rd2-entry-form", () => {
                 npe03__Date_Established__c: "2021-02-03",
                 npe03__Installment_Period__c: "Monthly",
                 npe03__Installments__c: null,
+                npe03__Recurring_Donation_Campaign__c: null,
             });
         });
     });
