@@ -18,6 +18,7 @@ module.exports = {
         "^@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues": "<rootDir>/tests/__mocks__/apex/GE_PaymentServices.getPaymentTransactionStatusValues",
         "^@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo": "<rootDir>/tests/__mocks__/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo"
     },
+    testMatch: ['**/__tests__/**/?(*.)+(spec|test).[jt]s?(x)'],
     testPathIgnorePatterns: [
         '<rootDir>/node_modules/',
         '<rootDir>/test/specs/'
