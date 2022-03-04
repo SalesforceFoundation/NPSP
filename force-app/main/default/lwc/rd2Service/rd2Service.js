@@ -1,4 +1,3 @@
-import { isBlank } from "c/util";
 import { format, isNull } from "c/utilCommon";
 import { nextState } from "./model";
 import * as ACTIONS from "./actions";
@@ -17,6 +16,7 @@ import {
 import CURRENCY from "@salesforce/i18n/currency";
 
 import getInitialView from "@salesforce/apex/RD2_EntryFormController.getInitialView";
+import saveRecurringDonation from "@salesforce/apex/RD2_EntryFormController.saveRecurringDonation";
 
 import FIELD_ID from "@salesforce/schema/npe03__Recurring_Donation__c.Id";
 import FIELD_ACH_LAST4 from "@salesforce/schema/npe03__Recurring_Donation__c.ACH_Last_4__c";
@@ -30,7 +30,7 @@ import FIELD_CONTACT_ID from "@salesforce/schema/npe03__Recurring_Donation__c.np
 import FIELD_ORGANIZATION_ID from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__c";
 import validatingCardMessage from "@salesforce/label/c.RD2_EntryFormSaveCreditCardValidationMessage";
 import validatingACHMessage from "@salesforce/label/c.RD2_EntryFormSaveACHMessage";
-import { ACCOUNT_HOLDER_TYPES, PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD } from "c/geConstants";
+import { PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD } from "c/geConstants";
 
 const ELEVATE_PAYMENT_METHODS = [PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD];
 
@@ -53,6 +53,25 @@ class Rd2Service {
             console.log("Error: ", ex);
             return state;
         }
+    }
+
+    async save(rd2State) {
+        let result;
+        try {
+            const saveRequest = this.getSaveRequest(rd2State);
+            result = await saveRecurringDonation(saveRequest);
+            console.log(JSON.parse(JSON.stringify(result)));
+        } catch (ex) {
+            console.error(ex);
+        }
+
+        if (result.success) {
+            const action = { type: ACTIONS.RECORD_SAVED, payload: result.recordId };
+            return this.dispatch(rd2State, action);
+        }
+
+        const action = { type: ACTIONS.RECORD_SAVE_FAILED, payload: result };
+        return this.dispatch(rd2State, action);
     }
 
     /***
@@ -118,6 +137,62 @@ class Rd2Service {
         }
     }
 
+    getSaveRequest(rd2State) {
+        const {
+            recordId,
+            recordName,
+            recurringStatus,
+            statusReason,
+            contactId,
+            accountId,
+            dateEstablished,
+            donationValue,
+            currencyIsoCode,
+            recurringPeriod,
+            recurringFrequency,
+            startDate,
+            dayOfMonth,
+            plannedInstallments,
+            recurringType,
+            paymentToken,
+            campaignId,
+            commitmentId,
+            achLastFour,
+            cardLastFour,
+            cardExpirationMonth,
+            cardExpirationYear,
+            paymentMethod,
+            customFieldValues,
+        } = rd2State;
+
+        return {
+            recordId,
+            recordName,
+            recurringStatus,
+            statusReason,
+            contactId,
+            accountId,
+            dateEstablished,
+            donationValue,
+            currencyIsoCode,
+            recurringPeriod,
+            recurringFrequency,
+            startDate,
+            dayOfMonth,
+            plannedInstallments,
+            recurringType,
+            paymentToken,
+            campaignId,
+            commitmentId,
+            achLastFour,
+            cardLastFour,
+            cardExpirationMonth,
+            cardExpirationYear,
+            paymentMethod,
+            customFieldValues,
+        };
+    }
+
     isValidForElevate(rd2State) {
         const isScheduleSupported = this.isElevateSupportedSchedule(rd2State);
         const isValidPaymentMethod = this.isElevatePaymentMethod(rd2State.paymentMethod);
@@ -158,9 +233,9 @@ class Rd2Service {
         return isValidInstallmentPeriod && isValidRecurringType;
     }
 
-    isElevateSupportedCurrency({ currencyCode, isMultiCurrencyEnabled }) {
+    isElevateSupportedCurrency({ currencyIsoCode, isMultiCurrencyEnabled }) {
         if (isMultiCurrencyEnabled) {
-            return ELEVATE_SUPPORTED_CURRENCIES.includes(currencyCode);
+            return ELEVATE_SUPPORTED_CURRENCIES.includes(currencyIsoCode);
         }
         return ELEVATE_SUPPORTED_CURRENCIES.includes(CURRENCY);
     }
@@ -187,6 +262,12 @@ class Rd2Service {
 
     isClosedStatus({ closedStatusValues, recurringStatus }) {
         return closedStatusValues.includes(recurringStatus);
+    }
+
+    isPaymentMethodChanged(rd2State) {
+        const originalPaymentMethod = this.getOriginalPaymentMethod(rd2State);
+        const { paymentMethod } = rd2State;
+        return originalPaymentMethod !== paymentMethod;
     }
 }
 

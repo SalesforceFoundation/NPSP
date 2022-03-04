@@ -11,12 +11,11 @@ export default class rd2EntryFormCustomFieldsSection extends LightningElement {
     @api
     isValid() {
         let isValid = true;
-        this.template.querySelectorAll('lightning-input-field')
-            .forEach(field => {
-                if (!field.reportValidity()) {
-                    isValid = false;
-                }
-            });
+        this.template.querySelectorAll("lightning-input-field").forEach((field) => {
+            if (!field.reportValidity()) {
+                isValid = false;
+            }
+        });
         return isValid;
     }
 
@@ -28,24 +27,34 @@ export default class rd2EntryFormCustomFieldsSection extends LightningElement {
     returnValues() {
         let data = {};
 
-        this.template.querySelectorAll('lightning-input-field')
-            .forEach(field => {
-                data[field.fieldName] = field.value;
-            });
+        this.template.querySelectorAll("lightning-input-field").forEach((field) => {
+            data[field.fieldName] = field.value;
+        });
 
         return data;
     }
 
     /**
-    * @description reset all lighning-input-field value 
-    */
+     * @description reset all lightning-input-field values
+     */
     @api
     resetValues() {
-    this.template.querySelectorAll('lightning-input-field')
-        .forEach(field => {
+        this.template.querySelectorAll("lightning-input-field").forEach((field) => {
             if (field.value) {
                 field.reset();
             }
         });
+    }
+
+    handleChange(event) {
+        const { fieldName, value } = event.target;
+        this.dispatchEvent(
+            new CustomEvent("change", {
+                detail: {
+                    fieldName,
+                    value,
+                },
+            })
+        );
     }
 }
