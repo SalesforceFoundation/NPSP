@@ -71,20 +71,6 @@ public with sharing class RD2_EntryFormController {
     }
 
     /***
-    * @description Permissions class used to determine if the running user has permissions
-    */
-    @TestVisible
-    private static UTIL_Permissions permissions {
-        get {
-            if (permissions == null) {
-                permissions = new UTIL_Permissions();
-            }
-            return permissions;
-        }
-        set;
-    }
-
-    /***
     * @description Retrieves the record type id for the household account record type
     */
     @TestVisible
@@ -106,7 +92,6 @@ public with sharing class RD2_EntryFormController {
         if(!view.hasRequiredPermissions) {
             return view;
         }
-
 
         view.isAutoNamingEnabled = RD2_NamingService.isAutomaticNamingEnabled;
         view.isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
@@ -154,54 +139,8 @@ public with sharing class RD2_EntryFormController {
         return UTIL_Describe.getLightningSelectOptions('npe03__Recurring_Donation__c','npe03__Installment_Period__c');
     }
 
-    /**
-    * @description Retrieve the donor address given an Account or Contact Id
-    * @param donorId Id of donor, Account or Contact
-    * @return Address__c of the Account's BillingAddress or Contact's MailingAddress
-    */
-    @AuraEnabled
-    public static Address__c getDonorAddress(Id donorId) {
-        if (donorId == null) {
-            return null;
-        }
-
-        SObjectType donorObjectType = donorId.getSobjectType();
-        if (!hasDonorAddressPermissions(donorObjectType)) {
-            AuraHandledException ex = new AuraHandledException(Label.commonPermissionErrorMessage);
-            ex.setMessage(Label.commonPermissionErrorMessage);
-            throw ex;
-        }
-
-        NPSP_Address donorAddress = new NPSP_Address(new Address__c());
-        if(donorObjectType == Account.SObjectType) {
-            Account donorAccount;
-            Map<Id, Account> accounts = Addresses.getAccountsByIds(new Set<Id>{donorId});
-            if (accounts != null) {
-                donorAddress.copyFromSObject(accounts.get(donorId), 'Billing', null);
-            }
-        } else if(donorObjectType == Contact.SObjectType) {
-            List<Contact> contacts = ContactSelector.getContactAddressFieldsForContactsIn(new Set<Id>{donorId});
-            if (contacts != null) {
-                donorAddress.copyFromSObject(contacts[0], 'Mailing', null);
-            }
-        }
-
-        Address__c address = donorAddress.getRecord();
-        return address;
-    }
-
-    private static Boolean hasDonorAddressPermissions(SObjectType donorObjectType) {
-        Boolean hasAccess = false;
-        if (donorObjectType == Account.SObjectType) {
-            hasAccess = permissions.canRead(Account.SObjectType, new Set<SObjectField>{Account.BillingAddress});
-        } else if(donorObjectType == Contact.SObjectType) {
-            hasAccess = permissions.canRead(Contact.SObjectType, new Set<SObjectField>{Contact.MailingAddress});
-        }
-        return hasAccess;
-    }
-
     private static String getDonorType(npe03__Recurring_Donation__c rd) {
-        String donorType = isContactDonor(rd) ? 'Contact' : 'Account';
+        String donorType = isContactDonor(rd) ? RD2_Constants.DONOR_TYPE_CONTACT : RD2_Constants.DONOR_TYPE_ACCOUNT;
         return donorType;
     }
 
@@ -209,14 +148,6 @@ public with sharing class RD2_EntryFormController {
         Boolean isContactDonor = rd.npe03__Organization__r.RecordTypeId == hhRecordTypeId
                 || (rd.npe03__Organization__c == null && rd.npe03__Contact__r.Account.RecordTypeId == hhRecordTypeId);
         return isContactDonor;
-    }
-
-    private static Map<String, Object> getCustomFieldValues(npe03__Recurring_Donation__c recurringDonation) {
-        Map<String, Object> customFieldValues = new Map<String, Object>();
-        for(CustomField field : getCustomFieldSectionFields()) {
-            customFieldValues.put(field.apiName, recurringDonation.get(field.apiName));
-        }
-        return customFieldValues;
     }
 
     /**
@@ -280,21 +211,16 @@ public with sharing class RD2_EntryFormController {
         return fields;
     }
 
-    /***
-    * @description Wrapper class for custom field info
-    */
-    public class CustomField {
-        @AuraEnabled public String apiName;
-        @AuraEnabled public Boolean required;
-
-        /***
-        * @description Constructor for the CustomField class
-        * @param field A FieldSetMember reference to the field to be included
-        */
-        public CustomField(Schema.FieldSetMember field) {
-            this.apiName = field.getFieldPath();
-            this.required = field.getDbRequired() || field.getRequired();
+    @AuraEnabled
+    public static RD2SaveResult saveRecurringDonation(RD2SaveRequest saveRequest) {
+        npe03__Recurring_Donation__c rd = saveRequest.toRecord();
+        Database.SaveResult sr;
+        if (rd.Id != null) {
+            sr = Database.update(rd, false);
+        } else {
+            sr = Database.insert(rd, false);
         }
+        return new RD2SaveResult(sr);
     }
 
     /***
@@ -440,7 +366,7 @@ public with sharing class RD2_EntryFormController {
             regulationService.adjust(newRds, oldRds);
             regulationService.markRDsAsElevate(newRds);
             
-            List<RD2_ValidationService.ErrorRecord> errorRds = new RD2_ValidationService(newRds, oldRds)
+            List<ErrorRecord> errorRds = new RD2_ValidationService(newRds, oldRds)
                 .validate();
 
             regulationService.removeElevateMarker(newRds);
@@ -544,10 +470,29 @@ public with sharing class RD2_EntryFormController {
         }
     }
 
+    /***
+    * @description Wrapper class for custom field info
+    */
+    public class CustomField {
+        @AuraEnabled public String apiName;
+        @AuraEnabled public Boolean required;
+        @AuraEnabled public Object value;
+
+        /***
+        * @description Constructor for the CustomField class
+        * @param field A FieldSetMember reference to the field to be included
+        */
+        public CustomField(Schema.FieldSetMember field) {
+            this.apiName = field.getFieldPath();
+            this.required = field.getDbRequired() || field.getRequired();
+        }
+    }
+
     public class RD2RecordView {
         @AuraEnabled public Id recordId;
         @AuraEnabled public String recordName;
         @AuraEnabled public String recurringStatus;
+        @AuraEnabled public String statusReason;
         @AuraEnabled public Id contactId;
         @AuraEnabled public Id accountId;
         @AuraEnabled public String donorType;
@@ -561,7 +506,9 @@ public with sharing class RD2_EntryFormController {
         @AuraEnabled public String dayOfMonth;
         @AuraEnabled public Integer plannedInstallments;
         @AuraEnabled public Integer paidInstallments;
+        @AuraEnabled public Id campaignId;
         @AuraEnabled public String recurringType;
+        @AuraEnabled public Date nextDonationDate;
         @AuraEnabled public String paymentToken;
         @AuraEnabled public String commitmentId;
         @AuraEnabled public String achLastFour;
@@ -584,6 +531,7 @@ public with sharing class RD2_EntryFormController {
             this.contactId = record.npe03__Contact__c;
             this.accountId = record.npe03__Organization__c;
             this.recurringStatus = record.Status__c;
+            this.statusReason = record.ClosedReason__c;
             this.recordName = record.Name;
             this.donorType = getDonorType(record);
             this.dateEstablished = record.npe03__Date_Established__c;
@@ -596,19 +544,19 @@ public with sharing class RD2_EntryFormController {
             this.plannedInstallments = record.npe03__Installments__c?.intValue();
             this.paidInstallments = record.npe03__Total_Paid_Installments__c?.intValue();
             this.paymentMethod = record.PaymentMethod__c;
+            this.nextDonationDate = record.npe03__Next_Payment_Date__c;
             this.recurringType = record.RecurringType__c;
+            this.campaignId = record.npe03__Recurring_Donation_Campaign__c;
             this.commitmentId = record.CommitmentId__c;
             this.achLastFour = record.ACH_Last_4__c;
             this.cardLastFour = record.CardLast4__c;
             this.cardExpirationMonth = record.CardExpirationMonth__c;
             this.cardExpirationYear = record.CardExpirationYear__c;
-            this.customFieldValues = getCustomFieldValues(record);
             return this;
         }
     }
 
     public class RD2AppView {
-
         @AuraEnabled public Boolean isAutoNamingEnabled;
         @AuraEnabled public Boolean isMultiCurrencyEnabled;
         @AuraEnabled public String parentSObjectType;
@@ -635,6 +583,7 @@ public with sharing class RD2_EntryFormController {
 
         public void withRecord(npe03__Recurring_Donation__c record) {
             this.record = new RD2RecordView(record);
+            this.populateCustomFieldValues(record);
         }
 
         public void withParentId(Id parentId) {
@@ -642,8 +591,17 @@ public with sharing class RD2_EntryFormController {
             SObjectType parentSobjectType = parentId.getSobjectType();
             if(parentSobjectType == Account.SObjectType) {
                 this.record.accountId = parentId;
+                this.record.donorType = RD2_Constants.DONOR_TYPE_ACCOUNT;
             } else if(parentSobjectType == Contact.SObjectType) {
                 this.record.contactId = parentId;
+                this.record.donorType = RD2_Constants.DONOR_TYPE_CONTACT;
+            }
+        }
+
+        private void populateCustomFieldValues(npe03__Recurring_Donation__c record) {
+            for(CustomField f : this.customFieldSets) {
+                Object val = record.get(f.apiName);
+                f.value = val;
             }
         }
 
@@ -662,6 +620,91 @@ public with sharing class RD2_EntryFormController {
                 String currentDay = String.valueOf(Date.today().day());
                 this.record.dayOfMonth = currentDay == '31' ? RD2_Constants.DAY_OF_MONTH_LAST_DAY : currentDay;
             }
+        }
+    }
+
+    public class RD2SaveRequest {
+        @AuraEnabled public Id recordId;
+        @AuraEnabled public String recordName;
+        @AuraEnabled public String recurringStatus;
+        @AuraEnabled public String statusReason;
+        @AuraEnabled public Id contactId;
+        @AuraEnabled public Id accountId;
+        @AuraEnabled public Date dateEstablished;
+        @AuraEnabled public Decimal donationValue;
+        @AuraEnabled public String currencyIsoCode;
+        @AuraEnabled public String recurringPeriod;
+        @AuraEnabled public Integer recurringFrequency;
+        @AuraEnabled public Date startDate;
+        @AuraEnabled public String dayOfMonth;
+        @AuraEnabled public Integer plannedInstallments;
+        @AuraEnabled public String recurringType;
+        @AuraEnabled public String campaignId;
+        @AuraEnabled public String paymentToken;
+        @AuraEnabled public String commitmentId;
+        @AuraEnabled public String paymentMethod;
+        @AuraEnabled public Map<String, Object> customFieldValues;
+
+        public npe03__Recurring_Donation__c toRecord() {
+            npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
+            rd.Id = recordId;
+            rd.Name = recordName;
+            rd.Status__c = recurringStatus;
+            rd.ClosedReason__c = statusReason;
+            rd.npe03__Contact__c = contactId;
+            rd.npe03__Organization__c = accountId;
+            rd.npe03__Date_Established__c = dateEstablished;
+
+            rd.npe03__Amount__c = donationValue;
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                rd.put('CurrencyIsoCode', currencyIsoCode);
+            }
+
+            rd.npe03__Installment_Period__c = recurringPeriod;
+            rd.InstallmentFrequency__c = recurringFrequency;
+            rd.StartDate__c = startDate;
+            rd.Day_of_Month__c = dayOfMonth;
+            rd.npe03__Installments__c = plannedInstallments;
+            rd.RecurringType__c = recurringType;
+            rd.npe03__Recurring_Donation_Campaign__c = campaignId;
+            rd.CommitmentId__c = commitmentId;
+            rd.PaymentMethod__c = paymentMethod;
+
+            if (customFieldValues != null) {
+                for (String fieldApiName : customFieldValues.keySet()) {
+                    Object fieldValue = customFieldValues.get(fieldApiName);
+                    rd.put(fieldApiName, fieldValue);
+                }
+            }
+
+            return rd;
+        }
+    }
+
+    public class RD2SaveResult {
+        @AuraEnabled public Boolean success;
+        @AuraEnabled public Id recordId;
+        @AuraEnabled public List<RD2SaveError> errors;
+
+        public RD2SaveResult(Database.SaveResult result) {
+            this.success = result.isSuccess();
+            this.recordId = result.id;
+            if (!this.success) {
+                this.errors = new List<RD2SaveError>();
+                for(Database.Error err : result.getErrors()) {
+                    this.errors.add(new RD2SaveError(err));
+                }
+            }
+        }
+    }
+
+    public class RD2SaveError {
+        @AuraEnabled public String message;
+        @AuraEnabled public List<String> fields;
+
+        public RD2SaveError(Database.Error err) {
+            this.message = err.getMessage();
+            this.fields = err.getFields();
         }
     }
 }

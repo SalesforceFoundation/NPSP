@@ -175,8 +175,8 @@ public with sharing class RD2_ValidationService {
     * @description Validates Recurring Donation records
     * @return List<RD2_ValidationService.ErrorRecord>
     */
-    public List<RD2_ValidationService.ErrorRecord> validate() {
-        List<RD2_ValidationService.ErrorRecord> errorRds = new List<RD2_ValidationService.ErrorRecord>();
+    public List<ErrorRecord> validate() {
+        List<ErrorRecord> errorRds = new List<ErrorRecord>();
 
         Boolean isNew = oldRds == null || oldRds.isEmpty();
 
@@ -732,80 +732,4 @@ public with sharing class RD2_ValidationService {
 
         return closeWonDateByRdId;
     }
-
-    /**
-    * @description ErrorRecord class with all the validation errors related to the Recurring Donation
-    */
-    public class ErrorRecord {
-        npe03__Recurring_Donation__c recurringDonation;
-        List<String> errors = new List<String>();
-
-        /**
-        * @descripion Construct the Error Record class
-        * @param rd The Recurring Donation that will be tracked 
-        */
-        public ErrorRecord(npe03__Recurring_Donation__c rd) {
-            this.recurringDonation = rd;
-        }
-
-        /**
-        * @description Append a single error to the collection
-        * @param error The specific error message that will be added
-        * @return ErrorRecord
-        */
-        public ErrorRecord addError(String error) {
-            if (String.isNotBlank(error)) {
-                this.errors.add(error);
-            }
-
-            return this;
-        }
-
-        /**
-        * @description Append a colleciton of errors to the collection
-        * @param errors The specific error messages that will be added
-        * @return ErrorRecord
-        */
-        public ErrorRecord addErrors(List<String> errors) {
-            if (errors != null) {
-                this.errors?.addAll(errors);
-            }
-
-            return this;
-        }
-
-        /**
-        * @description Returns Recurring Donation record
-        * @return npe03__Recurring_Donation__c
-        */
-        public npe03__Recurring_Donation__c getRecord() {
-            return this.recurringDonation;
-        }
-
-        /**
-        * @description Check if the current Recurring Donation has any validation error
-        */
-        public Boolean hasError() {
-            return !this.errors.isEmpty();
-        }
-
-        /***
-        * @description Returns errors
-        * @return List<String>
-        */
-        public List<String> getErrors() {
-            return this.errors?.clone();
-        }
-
-        /***
-        * @description Returns the first added error
-        * @return String
-        */
-        public String getFirstError() {
-            return this.errors.isEmpty()
-                ? null
-                : this.errors[0];
-        }
-    }
-
 }
