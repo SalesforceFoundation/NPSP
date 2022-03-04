@@ -138,6 +138,7 @@ global abstract class TDTM_Runnable {
     * kind will be performed at the end of the transaction.
     */     
     global class DmlWrapper {
+        global List<ErrorRecord> objectsWithError = new List<ErrorRecord>();
         global List<SObject> objectsToInsert = new List<SObject>(); 
         global List<SObject> objectsToUpdate = new List<SObject>();
         global List<SObject> objectsToDelete = new List<SObject>();
@@ -194,7 +195,7 @@ global abstract class TDTM_Runnable {
             return sorted;            
         }
     }
-    
+
     /*******************************************************************************************************
     * @description Different type of actions to run classes for from triggers. Equivalent to trigger events,
     * but used in our TDTM design.
