@@ -39,6 +39,7 @@
     "plannedInstallments": null,
     "paymentMethod": "ACH",
     "paymentToken": null,
+    "nextPaymentDate": "2021-05-29",
     "donorType": "Contact",
     "donationValue": 0.5,
     "dayOfMonth": "29",
