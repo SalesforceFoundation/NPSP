@@ -1,10 +1,8 @@
-import { api, track, LightningElement, wire } from "lwc";
+import { api, track, LightningElement } from "lwc";
 import { constructErrorMessage } from "c/utilCommon";
-import { getObjectInfo } from "lightning/uiObjectInfoApi";
 
 import tokenHandler from "c/psElevateTokenHandler";
 import getOrgDomainInfo from "@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo";
-import getDonorAddress from "@salesforce/apex/RD2_EntryFormController.getDonorAddress";
 
 import elevateWidgetLabel from "@salesforce/label/c.commonPaymentServices";
 import spinnerAltText from "@salesforce/label/c.geAssistiveSpinner";
@@ -17,25 +15,6 @@ import elevateEnableButtonLabel from "@salesforce/label/c.RD2_ElevateEnableButto
 import updatePaymentButtonLabel from "@salesforce/label/c.commonEditPaymentInformation";
 import cancelButtonLabel from "@salesforce/label/c.commonCancel";
 import commonExpirationDate from "@salesforce/label/c.commonMMYY";
-import billingCityLabel from "@salesforce/label/c.lblCity";
-import billingPostalCodeLabel from "@salesforce/label/c.lblPostalCode";
-import billingStateLabel from "@salesforce/label/c.lblState";
-import billingStreetLabel from "@salesforce/label/c.lblStreet";
-import billingCountryLabel from "@salesforce/label/c.lblCountry";
-import billingAddressHelpLabel from "@salesforce/label/c.elevateBillingAddressHelp";
-import donorAddressEmptyLabel from "@salesforce/label/c.elevateDonorAddressEmpty";
-import clearAddressLabel from "@salesforce/label/c.elevateClearAddress";
-import useDonorAddressLabel from "@salesforce/label/c.elevateUseDonorAddress";
-import addBillingAddressButtonLabel from "@salesforce/label/c.elevateAddBillingAddress";
-import removeBillingAddressButtonLabel from "@salesforce/label/c.elevateRemoveBillingAddress";
-
-import ACCOUNT_ADDRESS_FIELD from "@salesforce/schema/Account.BillingAddress";
-import ADDRESS_CITY_FIELD from "@salesforce/schema/Address__c.MailingCity__c";
-import ADDRESS_COUNTRY_FIELD from "@salesforce/schema/Address__c.MailingCountry__c";
-import ADDRESS_POSTAL_FIELD from "@salesforce/schema/Address__c.MailingPostalCode__c";
-import ADDRESS_STATE_FIELD from "@salesforce/schema/Address__c.MailingState__c";
-import ADDRESS_STREET_FIELD from "@salesforce/schema/Address__c.MailingStreet__c";
-import ADDRESS_STREET2_FIELD from "@salesforce/schema/Address__c.MailingStreet2__c";
 
 import { isNull } from "c/util";
 import {
@@ -71,33 +50,8 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         nextPaymentDonationDateMessage,
         nextACHPaymentDonationDateMessage,
         commonExpirationDate,
-        billingCityLabel,
-        billingPostalCodeLabel,
-        billingStateLabel,
-        billingStreetLabel,
-        billingCountryLabel,
-        billingAddressHelpLabel,
-        clearAddressLabel,
-        donorAddressEmptyLabel,
-        useDonorAddressLabel,
-        addBillingAddressButtonLabel,
-        removeBillingAddressButtonLabel,
     };
-    billingAddressLabel;
-    billingStreetLabel1 = billingStreetLabel + " 1";
-    billingStreetLabel2 = billingStreetLabel + " 2";
-
-    billingCity;
-    billingPostalCode;
-    billingState;
-    billingStreet1;
-    billingStreet2;
-    billingCountry;
     cardholderName;
-
-    searchingForAddress = false;
-    showEmptyAddressError = false;
-    showBillingAddress = false;
 
     rd2Service = new Rd2Service();
 
@@ -121,13 +75,6 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     @api payerFirstName;
     @api payerLastName;
 
-    @wire(getObjectInfo, { objectApiName: ACCOUNT_ADDRESS_FIELD.objectApiName })
-    accountInfo({ data, error }) {
-        if (data) {
-            this.billingAddressLabel = data.fields[ACCOUNT_ADDRESS_FIELD.fieldApiName].label;
-        }
-    }
-
     @api
     get paymentMethod() {
         return this._paymentMethod;
@@ -136,7 +83,6 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     set paymentMethod(value) {
         if (this.shouldNotifyIframe(value)) {
             this.notifyIframePaymentMethodChanged(value);
-            this.handleRemoveBillingAddressFields();
         }
         this._paymentMethod = value;
         this.enableWidgetOnPaymentMethodChange = true;
@@ -330,13 +276,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
 
     getCardParams() {
         return {
-            city: this.billingCity,
-            country: this.billingCountry,
-            addressLine1: this.billingStreet1,
-            addressLine2: this.billingStreet2,
-            postalCode: this.billingPostalCode,
-            state: this.billingState,
-            nameOnCard: this.cardholderName,
+            nameOnCard: this.cardholderName
         };
     }
 
@@ -430,7 +370,6 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         this.isDisabled = true;
         this.isMounted = false;
         this.clearError();
-        this.handleRemoveBillingAddressFields();
     }
 
     /**
@@ -484,66 +423,6 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         const fieldName = event.target.name;
         const newVal = event.detail.value;
         this[fieldName] = newVal;
-    }
-
-    /**
-     * Handles showing the Billing Address fields for Credit Card payments
-     */
-    handleAddBillingAddressFields() {
-        this.showBillingAddress = true;
-    }
-
-    /**
-     * Handles hiding, and clearing, the Billing Address fields for Credit Card payments
-     */
-    handleRemoveBillingAddressFields() {
-        this.showBillingAddress = false;
-        this.handleClearAddressButton();
-    }
-
-    /**
-     * Handles population of Credit Card Billing Address fields based on the current donor
-     */
-    handleDefaultAddressButton() {
-        const donorId =
-            this.rd2State.donorType === CONTACT_DONOR_TYPE ? this.rd2State.contactId : this.rd2State.accountId;
-
-        if (!donorId) {
-            return;
-        }
-
-        this.showEmptyAddressError = false;
-        this.searchingForAddress = true;
-        getDonorAddress({ donorId: donorId })
-            .then((result) => {
-                if (Object.keys(result).length === 0) {
-                    this.showEmptyAddressError = true;
-                } else if (result) {
-                    this.billingCity = result[ADDRESS_CITY_FIELD.fieldApiName];
-                    this.billingCountry = result[ADDRESS_COUNTRY_FIELD.fieldApiName];
-                    this.billingPostalCode = result[ADDRESS_POSTAL_FIELD.fieldApiName];
-                    this.billingState = result[ADDRESS_STATE_FIELD.fieldApiName];
-                    this.billingStreet1 = result[ADDRESS_STREET_FIELD.fieldApiName];
-                    this.billingStreet2 = result[ADDRESS_STREET2_FIELD.fieldApiName];
-                }
-                this.searchingForAddress = false;
-            })
-            .catch((error) => {
-                this.handleError(error);
-                this.searchingForAddress = false;
-            });
-    }
-
-    /**
-     * Handles clearing of Credit Card Billing Address fields
-     */
-    handleClearAddressButton() {
-        this.billingCity = "";
-        this.billingCountry = "";
-        this.billingPostalCode = "";
-        this.billingState = "";
-        this.billingStreet1 = "";
-        this.billingStreet2 = "";
     }
 
     /**

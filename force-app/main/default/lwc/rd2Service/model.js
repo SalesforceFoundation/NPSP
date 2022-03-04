@@ -11,13 +11,16 @@ import {
     SET_DATE_ESTABLISHED,
     SET_ERROR,
     SET_PERIOD_TYPE,
-    SET_START_DATE,
     SET_RECURRING_TYPE,
     SET_RECURRING_PERIOD,
     SET_RECURRING_FREQUENCY,
+    SET_START_DATE,
+    SET_STATUS,
+    SET_STATUS_REASON,
     SET_PAYMENT_METHOD,
     SET_PLANNED_INSTALLMENTS,
     INITIAL_VIEW_LOAD,
+    CUSTOM_FIELD_CHANGE, SET_PAYMENT_TOKEN, COMMITMENT_RESPONSE
 } from "./actions";
 
 import {
@@ -37,7 +40,8 @@ const DEFAULT_INITIAL_STATE = {
     recordId: null,
     parentId: null,
     recurringStatus: null, // Active, Lapsed, Closed
-    recordName: null, // only used when auto-naming disabled
+    statusReason: null,
+    recordName: "",
 
     // donor
     contactId: null,
@@ -51,23 +55,23 @@ const DEFAULT_INITIAL_STATE = {
 
     //schedule
     donationValue: null,
-    currency: null,
+    currencyIsoCode: null,
     recurringPeriod: null, // Monthly / Yearly / 1st and 15th. When periodType is Monthly, recurringPeriod is Monthly.
     periodType: null, // Monthly or Advanced
     recurringFrequency: 1, // Every *X* Months
     startDate: null,
     dayOfMonth: null, // 1, 2, 3 ... "LAST_DAY"
-    plannedInstallments: null, // Only used for "Fixed" RDs.
+    plannedInstallments: null, // Only used for Fixed RDs.
     recurringType: null, // Fixed or Open
     paidAmount: null, // Fixed Only, used to calculate change type
     paidInstallments: null, // Fixed Only, used to calculate change type
+    nextDonationDate: null,
 
-    //change type
+    campaignId: null,
     changeType: "",
 
     //Custom Fields
-    customFields: {},
-    customFieldValues: {},
+    customFieldSets: [],
 
     //elevate iframe
     paymentToken: null,
@@ -142,10 +146,62 @@ const isAdvancedPeriod = (state) => {
     return state.recurringPeriod !== PERIOD.MONTHLY || state.recurringFrequency > 1;
 };
 
+const getCardFields = (cardData) => {
+    const { last4, expirationMonth, expirationYear } = cardData;
+    return {
+        cardLastFour: last4,
+        cardExpirationMonth: expirationMonth,
+        cardExpirationYear: expirationYear,
+        achLastFour: null
+    };
+};
+
+const getAchFields = (achData) => {
+    const { last4 } = achData;
+    return {
+        cardLastFour: null,
+        cardExpirationMonth: null,
+        cardExpirationYear: null,
+        achLastFour: last4
+    };
+}
+
+const handleCommitmentResponse = (state, payload) => {
+    const { cardData, achData } = payload;
+
+    if (cardData) {
+        const cardFields = getCardFields(cardData);
+        return {
+            ...state,
+            ...cardFields,
+            commitmentId: payload.id,
+        };
+    }
+
+    const achFields = getAchFields(achData);
+    return {
+        ...state,
+        ...achFields,
+        commitmentId: payload.id,
+    };
+};
+
 const setAccountId = (state, accountId) => {
     return {
         ...state,
         accountId,
+    };
+};
+
+const setCustomField = (state, { fieldName, value }) => {
+    const { customFieldSets } = state;
+
+    return {
+        ...state,
+        customFieldsSet: {
+            ...customFieldSets,
+            [fieldName]: value,
+        },
     };
 };
 
@@ -215,6 +271,13 @@ const setPeriodType = (state, periodType) => {
     };
 };
 
+const setPaymentToken = (state, paymentToken) => {
+    return {
+        ...state,
+        paymentToken
+    };
+};
+
 const setPlannedInstallments = (state, plannedInstallments) => {
     const newState = {
         ...state,
@@ -257,6 +320,20 @@ const setRecurringType = (state, recurringType) => {
     return {
         ...newState,
         changeType: getChangeType(newState),
+    };
+};
+
+const setStatus = (state, recurringStatus) => {
+   return {
+        ...state,
+        recurringStatus,
+    };
+};
+
+const setStatusReason = (state, statusReason) => {
+   return {
+        ...state,
+        statusReason,
     };
 };
 
@@ -315,6 +392,10 @@ const loadInitialView = (state, payload) => {
 
 export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
     switch (action.type) {
+        case CUSTOM_FIELD_CHANGE:
+            return setCustomField(state, action.payload);
+        case COMMITMENT_RESPONSE:
+            return handleCommitmentResponse(state, action.payload);
         case SET_CONTACT_ID:
             return setContactId(state, action.payload);
         case SET_ACCOUNT_ID:
@@ -335,6 +416,8 @@ export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
             return setDateEstablished(state, action.payload);
         case SET_ERROR:
             return setError(state, action.payload);
+        case SET_PAYMENT_TOKEN:
+            return setPaymentToken(state, action.payload);
         case SET_PLANNED_INSTALLMENTS:
             return setPlannedInstallments(state, action.payload);
         case SET_RECURRING_PERIOD:
@@ -345,6 +428,10 @@ export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
             return setRecurringType(state, action.payload);
         case SET_PERIOD_TYPE:
             return setPeriodType(state, action.payload);
+        case SET_STATUS:
+            return setStatus(state, action.payload);
+        case SET_STATUS_REASON:
+            return setStatusReason(state, action.payload);
         case SET_START_DATE:
             return setStartDate(state, action.payload);
         case SET_CAMPAIGN_ID:

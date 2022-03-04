@@ -98,10 +98,6 @@ public inherited sharing class ContactSelector {
         return queryForContactNamingFields;
     }
 
-    public static List<Contact> getContactAddressFieldsForContactsIn(Set<Id> contactIds) {
-        return Database.query(contactAddressFieldsSOQL(contactIds));
-    }
-
     public static List<Contact> getContactAddressFieldsForContactAccountsIn(Set<Id> householdAccountIds) {
         return Database.query(contactAddressFieldsFromAccountSOQL(householdAccountIds));
     }
