@@ -890,7 +890,7 @@ flows:
             4:
                 flow: config_trial
             5:
-                flow: enable_rd2_managed
+                flow: enable_rd2
             6:
                 flow: enable_gift_entry
             7:
@@ -1046,25 +1046,6 @@ flows:
                 # Wait until after the data migration job has completed
                 options:
                     class_name: RD2_DataMigration_BATCH
-
-    enable_rd2_managed:
-        description: 'Fully configures and enables a Scratch org with Enhanced Recurring Donations (managed package only)'
-        group: NPSP
-        steps:
-            1:
-                flow: enable_rd2
-                options:
-                    enable_crlp:
-                        managed: true
-                        param1: false
-                    custom_settings_value_wait:
-                        managed: true
-                    execute_anon:
-                        managed: true
-                        unmanaged: false
-                    deploy_rd2_config:
-                        managed: true
-                        unmanaged: false
 
     config_managed:
         steps:
