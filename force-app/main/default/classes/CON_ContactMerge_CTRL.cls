@@ -844,8 +844,9 @@ public with sharing class CON_ContactMerge_CTRL {
     */
     private Boolean isNPSPReadOnly(String strField) {
         for (String strF : readOnlyFields) {
-            if (strField.equalsIgnoreCase(strF))
+            if (strField.equalsIgnoreCase(UTIL_Namespace.StrTokenRemoveNSPrefix(strF))) {
                 return true;
+            }
         }
         return false;
     }
