@@ -20,8 +20,8 @@
                     data-id="closeButton">
                 </lightning-button-icon>
                 <h2
-                    class="slds-text-heading_medium slds-text-heading--medium slds-hyphenate header-string slds-p-top_large slds-p-horizontal_medium" id="modal-heading-01">
-                    {header}
+                    class="slds-text-heading_medium slds-hyphenate header-string slds-p-top_large slds-p-horizontal_medium" id="modal-heading-01">
+                    {headerLabel}
                 </h2>
             </header>
 
@@ -84,6 +84,7 @@
                                         <lightning-layout-item padding="horizontal-small" size="6" if:true={fields.status}>
                                             <lightning-input-field
                                                     data-id="status"
+                                                    value={rd2State.recurringStatus}
                                                     field-name={fields.status.apiName}
                                                     onchange={handleStatusChange}
                                                     required>
@@ -92,7 +93,10 @@
 
                                         <lightning-layout-item padding="horizontal-small" size="6"
                                             if:true={fields.statusReason}>
-                                            <lightning-input-field field-name={fields.statusReason.apiName}>
+                                            <lightning-input-field
+                                                value={rd2State.statusReason}
+                                                onchange={handleStatusReasonChange}
+                                                field-name={fields.statusReason.apiName}>
                                             </lightning-input-field>
                                         </lightning-layout-item>
                                     </lightning-layout>
@@ -112,6 +116,7 @@
                                         if:true={fields.amount}>
                                         <lightning-input-field
                                                 field-name={fields.amount.apiName}
+                                                value={rd2State.donationValue}
                                                 data-id="amountField"
                                                 onchange={handleAmountChange}
                                                 required
@@ -128,6 +133,7 @@
                                                 <lightning-input-field id="currencyField"
                                                                        data-id="currencyField"
                                                                        field-name={fields.currency.apiName}
+                                                                       value={rd2State.currencyIsoCode}
                                                                        variant="label-hidden"
                                                                        onchange={handleCurrencyChange}
                                                                        required
@@ -234,8 +240,10 @@
 
                                         <c-rd2-entry-form-custom-fields-section
                                             record-id={recordId}
-                                            fields={rd2State.customFields}
-                                            data-id="customFieldsComponent">
+                                            fields={rd2State.customFieldSets}
+                                            data-id="customFieldsComponent"
+                                            onchange={handleCustomFieldChange}
+                                        >
                                         </c-rd2-entry-form-custom-fields-section>
 
                                     </div>
