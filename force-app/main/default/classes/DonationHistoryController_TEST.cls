@@ -44,6 +44,12 @@ public class DonationHistoryController_TEST {
     static void makeData() {
         Date myDateTime = Date.newInstance(2020, 2, 2);
 
+
+        
+        
+        
+             
+        
         UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, 1, 3, 1);
         Account accSrc = UTIL_UnitTestData_TEST.listAccT[0];
         list<Contact> listConSrc = UTIL_UnitTestData_TEST.listConT;
@@ -67,7 +73,33 @@ public class DonationHistoryController_TEST {
         List<Opportunity> recordsOpp = new List<Opportunity>();
         recordsOpp.add(opportunityHardCredit);
         recordsOpp.add(opportunitySoftCredit);
+		
         insert recordsOpp;
+        
+                if (!Schema.sObjectType.Profile.isAccessible()) {
+            NoAccessException ex = new NoAccessException();
+            ex.setMessage('Profile');
+            throw ex;
+        }
+        Profile p = [SELECT Id FROM Profile WHERE Name = 'Gold Partner User' LIMIT 1];
+
+        User newUser = new User(
+            LastName = 'lastNameTest',
+            Email = 'paranoia902713489234@mailinator.com',
+            ProfileId = p.Id,
+			ContactId = listConSrc[0].Id,
+            Username = 'paranoia902713489234@mailinator.com',
+            Alias = 'alias902',
+            TimeZoneSidKey = UserInfo.getTimeZone().toString(),
+            LocaleSidKey = ('EN_us' != null
+                ? 'EN_us'
+                : UserInfo.getLocale()),
+            LanguageLocaleKey = UserInfo.getLanguage(),
+            EmailEncodingKey = 'ISO-8859-1'
+        );
+		insert newUser;
+        
+
     }
 
     /**
@@ -145,4 +177,28 @@ public class DonationHistoryController_TEST {
         }
         System.assertEquals('Insufficient Permissions', message, 'should not have access to donationHistory');
     }
+
+	@IsTest
+    private static void shouldReturnContactForUser() {
+		User testUser = [
+            SELECT
+                Id, LastName
+            FROM User
+            WHERE LastName = 'lastNameTest'
+            LIMIT 1
+        ];
+		DonationHistorySelector newDonationHistorySelector = new DonationHistorySelector();
+        Id contact1Id = newDonationHistorySelector.getContactIdByUserId(testUser.Id);
+        
+        Contact testContact = [
+            SELECT
+                Id
+            FROM Contact
+            WHERE FirstName = 'TestFirstName10'
+            LIMIT 1
+        ];
+        
+        System.assertEquals(contact1Id, testContact.Id, 'Ids should be the same');
+    }
+
 }
