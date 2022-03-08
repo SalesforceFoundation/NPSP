@@ -69,7 +69,7 @@ public with sharing class CON_ContactMerge_CTRL {
     */ 
     
     public Boolean showDRS { get; set; }
-    public String whatsMyString {get {return String.valueOf(Contact.Sustainer__c);} set;};
+    public String whatsMyString {get {return String.valueOf(Contact.Sustainer__c);} set;}
     /***********************************************************************************************
     * @description Search text entered by user.
     */
