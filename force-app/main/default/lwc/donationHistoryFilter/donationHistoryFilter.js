@@ -32,6 +32,7 @@ export default class DonationHistoryFilter extends LightningElement {
 
     getYearsByContact(){
     getYearsWithDonation({contactId : this.contactId})
+
         .then(
             result => {
                 this.options = this.generateOptionsFromYearsList(this.generateYearList(result));
@@ -39,6 +40,7 @@ export default class DonationHistoryFilter extends LightningElement {
                 console.info(error);
             });
     }
+
     /**
      * From a list of years, it generates the options for the combobox array(with Lifetime element).
      * @param {[string]} yearList 

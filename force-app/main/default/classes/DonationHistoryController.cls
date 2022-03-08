@@ -53,7 +53,7 @@ public with sharing class DonationHistoryController {
     * @date 2021
     * @description Donation History inner class.
     */
-    public class DonationHistoryView{
+    public class DonationHistoryView {
         @AuraEnabled public Id id;
         @AuraEnabled public String name;
         @AuraEnabled public Date closeDate;

@@ -142,6 +142,7 @@ public inherited sharing class DonationHistorySelector {
     /** 
     * @author Salesforce.org
     * @date 2021
+
     * @description method to return total number of record
     */
     public Integer getTotalNumberOfRecordsWithYear( Id contactId, Integer year ) {
@@ -153,4 +154,5 @@ public inherited sharing class DonationHistorySelector {
                                 WITH SECURITY_ENFORCED];
         return totalRecords;
     }
+
 }

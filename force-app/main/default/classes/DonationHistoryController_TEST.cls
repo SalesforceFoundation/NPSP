@@ -43,26 +43,35 @@ public class DonationHistoryController_TEST {
     @TestSetup
     static void makeData() {
         Date myDateTime = Date.newInstance(2020, 2, 2);
-
-
-        
-        
-        
-             
-        
+        Date dateTimeInPast = Date.newInstance(2019, 2, 2);
         UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, 1, 3, 1);
         Account accSrc = UTIL_UnitTestData_TEST.listAccT[0];
         list<Contact> listConSrc = UTIL_UnitTestData_TEST.listConT;
 
-        Opportunity opportunityHardCredit = new Opportunity(
-            Name='HardCredit1',
-            AccountId=accSrc.Id,
-            Primary_Contact__c=listConSrc[0].Id,
-            Amount=400,
-            StageName='Closed Won',
+        /** 
+         * opportunityHardCreditOfContact0 its a hard credit for contact 0. opportunityForContact1, anotherOpportunityForContact1 are related to the same account  which contact 0 is
+         * related but they should not appear in the query as they are not hard credit for contact0. They could be soft credit for contact 0 but the entire configuration is not needed
+         * for this test purpose.
+        */
+        Opportunity opportunityHardCreditOfContact0 = new Opportunity(
+            Name='HardCredit1', 
+            AccountId=accSrc.Id, 
+            Primary_Contact__c=listConSrc[0].Id, 
+            Amount=400, 
+            StageName='Closed Won', 
             CloseDate=myDateTime
         );
-        Opportunity opportunitySoftCredit = new Opportunity(
+
+        Opportunity opportunityAnotherHardCreditOfContact0 = new Opportunity(
+            Name='HardCredit2', 
+            AccountId=accSrc.Id, 
+            Primary_Contact__c=listConSrc[0].Id, 
+            Amount=400, 
+            StageName='Closed Won', 
+            CloseDate=dateTimeInPast
+        );
+
+        Opportunity opportunityForContact1 = new Opportunity(
             Name='SoftCredit1', 
             AccountId=accSrc.Id, 
             Primary_Contact__c=listConSrc[1].Id, 
@@ -70,10 +79,21 @@ public class DonationHistoryController_TEST {
             StageName='Closed Won', 
             CloseDate=myDateTime
         );
-        List<Opportunity> recordsOpp = new List<Opportunity>();
-        recordsOpp.add(opportunityHardCredit);
-        recordsOpp.add(opportunitySoftCredit);
-		
+
+
+        Opportunity anotherOpportunityForContact1 = new Opportunity(
+            Name='SoftCredit1', 
+            AccountId=accSrc.Id, 
+            Primary_Contact__c=listConSrc[1].Id, 
+            Amount=200, 
+            StageName='Closed Won', 
+            CloseDate=dateTimeInPast
+        );
+        
+        List<Opportunity> recordsOpp = new List<Opportunity> {opportunityHardCreditOfContact0, opportunityAnotherHardCreditOfContact0, opportunityForContact1, anotherOpportunityForContact1};
+        // recordsOpp.add(opportunityHardCredit);
+        // recordsOpp.add(opportunitySoftCredit);
+
         insert recordsOpp;
         
                 if (!Schema.sObjectType.Profile.isAccessible()) {
@@ -109,21 +129,16 @@ public class DonationHistoryController_TEST {
     */
     @IsTest
     private static void shouldReturnExpectedDonationHistoryResult() {
-        Contact testContact = [
-            SELECT
-                Id
-            FROM Contact
-            WHERE FirstName = 'TestFirstName10'
-            LIMIT 1
-        ];        
-        Boolean influencer = false;
-        Boolean role = false;
+        Contact testContact = findContactByFirstname('TestFirstName10');
+        
         Test.startTest();
-            DonationHistoryController.DonationHistoryAppView donationHistory =
-            DonationHistoryController.getDonationHistory(testContact.Id, 0, '2020');
+
+        DonationHistoryController.DonationHistoryAppView donationHistory = 
+            DonationHistoryController.getDonationHistory(testContact.Id, 0, 'lifetime');
+
         Test.stopTest();
-        System.assertEquals(1, donationHistory.donations.size(), 'Should return only 1 record');
-        System.assertEquals(1, donationHistory.totalNumberOfRecords, 'Should return only 1 on total number of records');
+
+        System.assertEquals(2, donationHistory.donations.size(), 'Should return only 2 record');
     }
 
     /**
@@ -133,17 +148,13 @@ public class DonationHistoryController_TEST {
     */
     @IsTest
     private static void shouldNotReturnDonationHistory() {
-        Contact testContact = [
-            SELECT
-                Id
-            FROM Contact
-            WHERE FirstName = 'TestFirstName12'
-            LIMIT 1
-        ];
-       
+        Contact testContact = findContactByFirstname('TestFirstName12');
+        
         Test.startTest();
-            DonationHistoryController.DonationHistoryAppView donationHistory =
-            DonationHistoryController.getDonationHistory(testContact.Id, 0, '2020');
+
+        DonationHistoryController.DonationHistoryAppView donationHistory = 
+        DonationHistoryController.getDonationHistory(testContact.Id, 0, 'lifetime');
+
         Test.stopTest();
         System.assertEquals(0, donationHistory.donations.size(), 'Should not return records');
         System.assertEquals(0, donationHistory.totalNumberOfRecords, 'Should return 0 number of records');
@@ -157,26 +168,23 @@ public class DonationHistoryController_TEST {
     @IsTest
     private static void shouldThrowAccessException() {
         User u = UTIL_UnitTestData_TEST.createUser('Minimum Access - Salesforce');
-        Contact testContact = [
-            SELECT
-            Id
-            FROM Contact
-            WHERE FirstName = 'TestFirstName10'
-            LIMIT 1
-        ];    
+        Contact testContact = findContactByFirstname('TestFirstName10');
         String message = '';
         try{
             Test.startTest();
-                System.runAs(u){
-                    DonationHistoryController.DonationHistoryAppView donationHistory =
-                    DonationHistoryController.getDonationHistory(testContact.Id, 0, '2020');
-                }
-            Test.stopTest();
+
+            System.runAs(u){
+                DonationHistoryController.DonationHistoryAppView donationHistory = 
+                DonationHistoryController.getDonationHistory(testContact.Id, 0, 'lifetime'); 
+            }
+	        Test.stopTest();
+
         } catch(Exception e){
             message = e.getMessage();
         }
         System.assertEquals('Insufficient Permissions', message, 'should not have access to donationHistory');
     }
+
 
 	@IsTest
     private static void shouldReturnContactForUser() {
@@ -200,5 +208,41 @@ public class DonationHistoryController_TEST {
         
         System.assertEquals(contact1Id, testContact.Id, 'Ids should be the same');
     }
+
+
+    @IsTest
+    private static void shouldReturnYearsForFilter() {
+        Contact thecontact = findContactByFirstname('TestFirstName11');
+       
+        List<String> donationsYears = DonationHistoryController.getYearsWithDonations(thecontact.id);
+        System.assertNotEquals(null, donationsYears, 'donationsYears should not be null');
+        System.assertEquals(2, donationsYears.size(), 'donationsYears should have 2 elements');
+        System.assertEquals('2020', donationsYears[0], 'donationsYears should be in descendent order');
+
+    }
+    
+    @IsTest
+    private static void shouldReturnOneElementFor2019(){
+        
+        Contact testContact =findContactByFirstname('TestFirstName10');        
+       
+        Test.startTest();
+        DonationHistoryController.DonationHistoryAppView donationHistory = DonationHistoryController.getDonationHistory(testContact.Id, 0, '2019');
+        Test.stopTest();
+
+        System.assertNotEquals(null, donationHistory, 'Donation History should not be empty');
+        System.assertEquals(1, donationHistory.donations.size(), 'donationHistory should contain only one element');
+    }
+
+    private static Contact findContactByFirstName(String firstName) {
+        for (Contact c : [SELECT ID, FirstName
+                          FROM Contact]) {
+            if (c.Firstname == firstName) {
+                return c;
+            }
+        }
+        return null;
+    }
+    
 
 }

@@ -36,6 +36,7 @@ export default class DonationHistoryTable extends LightningElement {
 
     @track
     columns = [];
+
     // eslint-disable-next-line @lwc/lwc/no-async-await
     async connectedCallback() {
         if(!this.contactId){
@@ -85,7 +86,6 @@ export default class DonationHistoryTable extends LightningElement {
     async retrieveDonationHistory(){
         getDonationHistory({ contactId: this.contactId, offset: 0, filter : this.filter })
         .then((data) => {
-
             if (data) {
                 this.totalNumberOfRecords = data.totalNumberOfRecords;
                 console.log('this.totalNumberOfRecords: ',this.totalNumberOfRecords);
@@ -138,6 +138,7 @@ export default class DonationHistoryTable extends LightningElement {
                     this.tableElement.isLoading = false;
                     this.infiniteScroll = false;
                     this.tableElement.enableInfiniteLoading = false;
+
                     return;
                 }
                 const currentData = this.data;
