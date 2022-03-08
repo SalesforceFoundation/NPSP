@@ -18,7 +18,7 @@
     <div class="slds-scope">
         <!-- PAGE HEADER -->
         <apex:form id="pgHeader">
-            <c:UTIL_PageHeader headerLabel="{!whatsMyString}"
+            <c:UTIL_PageHeader headerLabel="{!$Label.conMergePageTitle}"
                                header="{!$Label.conMergePageTitleDetail}"
                                icon="contact" iconCategory="standard"
                                showSaveBtn="false" showCancelBtn="false"/>
@@ -479,8 +479,6 @@
                                                                   value="{!row.selectedValue}"
                                                                   rendered="{!row.showRadio}"/>
                                                 <apex:outputText value="{!row.fieldLabel}"/>
-                                                <apex:outputText value="{!row.fieldName}"/>
-                                                {!row.fieldName}
                                             </th>
                                             <apex:repeat var="col" value="{!row.values}">
                                                 <apex:outputText rendered="{!row.showRadio}">
