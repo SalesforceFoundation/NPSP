@@ -69,7 +69,7 @@ public with sharing class CON_ContactMerge_CTRL {
     */ 
     
     public Boolean showDRS { get; set; }
-
+    public String whatsMyString {get {return String.valueOf(Contact.Sustainer__c);} set;};
     /***********************************************************************************************
     * @description Search text entered by user.
     */
@@ -279,7 +279,7 @@ public with sharing class CON_ContactMerge_CTRL {
         'npo02__LastOppAmount__c',
         'npo02__Best_Gift_Year__c',
         'npo02__Best_Gift_Year_Total__c',
-        'Soft_Credit_Last_N_Days__c',
+        String.valueOf(Contact.Soft_Credit_Last_N_Days__c),
         'npo02__Soft_Credit_Last_Year__c',
         'npo02__Soft_Credit_This_Year__c',
         'npo02__Soft_Credit_Total__c',
@@ -295,7 +295,7 @@ public with sharing class CON_ContactMerge_CTRL {
         'Number_of_Soft_Credits_Last_Year__c',
         'Number_of_Soft_Credits_This_Year__c',
         'Number_of_Soft_Credits_Two_Years_Ago__c',
-        'Sustainer__c'
+        String.valueOf(Contact.Sustainer__c)
     };
 
     /***********************************************************************************************
@@ -844,7 +844,7 @@ public with sharing class CON_ContactMerge_CTRL {
     */
     private Boolean isNPSPReadOnly(String strField) {
         for (String strF : readOnlyFields) {
-            if (strField.equalsIgnoreCase(UTIL_Namespace.StrTokenRemoveNSPrefix(strF))) {
+            if (strField.equalsIgnoreCase(strF)) {
                 return true;
             }
         }
