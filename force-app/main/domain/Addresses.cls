@@ -250,7 +250,7 @@ public inherited sharing class Addresses extends fflib_SObjects2 {
 
             NPSP_HouseholdAccount npspHouseholdAccount = new NPSP_HouseholdAccount(accountsById.get(accountId));
             updateAccountAddress(npspHouseholdAccount, addressToSyncToAccountsAndContacts, accountsToUpdate);
-
+            // TODO: OTHER DEFAULT ADDRESSES ARE ALREADY CLEARED BEFORE THEY GET HERE.
             clearAccountAddressDefaults(allAddressesByAccountId,
                 accountId, householdInfoByAccountId, addressesToUpdate);
 
@@ -334,10 +334,14 @@ public inherited sharing class Addresses extends fflib_SObjects2 {
         if (accountHasAddresses(allAddressesByAccountId, accountId)) {
             for (Address__c address : allAddressesByAccountId.get(accountId)) {
                 HouseholdInfo householdInfo = householdInfoByAccountId.get(accountId);
-                if (address.Id == householdInfo.defaultAddress.Id) {
+                NPSP_Address npspAddress = new NPSP_Address(address);
+                if (npspAddress.getRecord().Id == householdInfo.defaultAddress.Id) {
                     continue;
                 }
-                if (address.Default_Address__c) {
+
+                // TODO: THIS IS THE AREA NOT CAUSING THE PREVIOUS DEFAULT LATEST START DATE TO WORK. THE ADDRESS
+                //  HERE IS NOT COMING IN AS A DEFAULT SO WE CANNOT TELL WHICH WAS THE PREVIOUS DEFAULT.
+                if (npspAddress.hasDefaultChanged() && !npspAddress.getRecord().Default_Address__c) {
                     address.Default_Address__c = false;
                     address.Latest_End_Date__c = System.today();
                     addressesToUpdate.add(address);
@@ -894,11 +898,11 @@ public inherited sharing class Addresses extends fflib_SObjects2 {
         }
     }
 
-    private void resetLatestEndDateFor(Address__c address) {
+    private static void resetLatestEndDateFor(Address__c address) {
         address.Latest_End_Date__c = NULL;
     }
 
-    private void resetLatestStartDateFor(Address__c address) {
+    private static void resetLatestStartDateFor(Address__c address) {
         address.Latest_Start_Date__c = System.today();
     }
 

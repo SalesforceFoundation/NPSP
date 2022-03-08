@@ -660,7 +660,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     @isTest
     private static void newUndeliverableAddressShouldNotSyncToAccountWhenNotDefault() {
-        List<Account> accounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(5, CAO_Constants.HH_ACCOUNT_TYPE);
+        List<Account> accounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(2, CAO_Constants.HH_ACCOUNT_TYPE);
         insert accounts;
 
         buildTestAddress(5);
@@ -688,7 +688,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     @isTest
     private static void updatedUndeliverableAddressShouldNotSyncToAccountWhenNotDefault() {
-        List<Account> accounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(5, CAO_Constants.HH_ACCOUNT_TYPE);
+        List<Account> accounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(2, CAO_Constants.HH_ACCOUNT_TYPE);
         insert accounts;
 
         buildTestAddress(5);
@@ -1412,6 +1412,117 @@ public with sharing class ADDR_Addresses_TEST {
         System.assertEquals(false, newAddress.Default_Address__c);
     }
 
+
+    /*********************************************************************************************************
+    @description
+        Update Address' Mailing Country when it is empty and State & Country Picklists are enabled.
+    verify:
+        Does not populate the Address' Mailing Country if the source sObject's CountryCode is empty
+        Populates the Address' Mailing Country with the source sObject's CountryCode value if the Mailing Country is empty
+    **********************************************************************************************************/
+    @IsTest
+    private static void testEmptyAddressCountryIsPopulatedFromCountryCode() {
+        if (!orgConfig.isStateCountryPicklistsEnabled()) {
+
+            return;
+        }
+
+        Contact con = new Contact();
+        con.put('MailingCountryCode', null);
+        Address__c addressEmptyCountry = new Address__c(MailingCountry__c = null);
+
+        Test.startTest();
+
+        String countryCode = 'US';
+        String country = 'United States';
+
+        NPSP_Address npspAddressEmptyCountry = new NPSP_Address(addressEmptyCountry);
+        npspAddressEmptyCountry.populateAddressCountryFromCountryCode(con, 'Mailing');
+        System.assertEquals(null, npspAddressEmptyCountry.country());
+
+        con.put('MailingCountryCode', countryCode);
+        npspAddressEmptyCountry.populateAddressCountryFromCountryCode(con, 'Mailing');
+        System.assertEquals(country, npspAddressEmptyCountry.country());
+
+        Test.stopTest();
+    }
+
+
+    /*********************************************************************************************************
+    @description
+        Update the Address' Mailing State when it is empty or does not match the source sObject's StateCode
+        and State & Country Picklists are enabled.
+    verify:
+        Does not populate the Address' Mailing State if the source sObject's StateCode is empty
+        Populate the Address' Mailing State with the source sObject's StateCode value if the Mailing State is empty
+        Populate the Address' Mailing State with the source sObject's StateCode value if the Mailing State does not match the StateCode
+    **********************************************************************************************************/
+    @IsTest
+    private static void testEmptyAddressStateIsPopulatedFromStateCode() {
+        if (!orgConfig.isStateCountryPicklistsEnabled()) {
+
+            return;
+        }
+
+        Contact con = new Contact();
+        con.put('MailingStateCode', null);
+        Address__c addressEmptyState = new Address__c(MailingState__c = null);
+
+        Test.startTest();
+
+        String stateCode = 'CA';
+
+        NPSP_Address npspAddressEmptyState = new NPSP_Address(addressEmptyState);
+        npspAddressEmptyState.populateAddressStateFromStateCode(con, 'Mailing');
+        System.assertEquals(null, npspAddressEmptyState.state());
+
+        con.put('MailingStateCode', stateCode);
+        npspAddressEmptyState.populateAddressStateFromStateCode(con, 'Mailing');
+        System.assertEquals(stateCode, npspAddressEmptyState.state());
+
+        npspAddressEmptyState.state('NY');
+        npspAddressEmptyState.populateAddressStateFromStateCode(con, 'Mailing');
+        System.assertEquals(stateCode, npspAddressEmptyState.state());
+
+        Test.stopTest();
+    }
+
+
+    /*********************************************************************************************************
+    @description
+        Checks if the Mailing State matches the source sObject's StateCode.
+    verify:
+        Returns false if the Address Mailing State is empty
+        Returns false if the Address Mailing State does not match the StateCode
+        Returns true if the Address Mailing State matches the StateCode
+    **********************************************************************************************************/
+    @IsTest
+    private static void testIsMatchingStateCode() {
+        if (!orgConfig.isStateCountryPicklistsEnabled()) {
+
+            return;
+        }
+
+        Address__c addressMatch = new Address__c();
+
+        Test.startTest();
+
+        String stateCode = 'CA';
+
+        NPSP_Address npspAddressMatch = new NPSP_Address(addressMatch);
+        npspAddressMatch.state(null);
+        System.assertEquals(false, npspAddressMatch.isMatchingStateCode(stateCode));
+
+        npspAddressMatch.state('Hawaii');
+        System.assertEquals(false, npspAddressMatch.isMatchingStateCode(stateCode));
+
+        npspAddressMatch.state('California');
+        System.assertEquals(true, npspAddressMatch.isMatchingStateCode(stateCode));
+
+        Test.stopTest();
+    }
+
+
     /*********************************************************************************************************
     @description
         update contacts' mailing address to cause an update to default Address object
@@ -2073,8 +2184,7 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void addressShouldBePropagatedToAccountsAndContactsOnMultipleTriggerCalls() {
-        // Arrange
-        Integer totalHH = 210;
+        Integer totalHH = 20;
         Integer totalContactPerHH = 1;
         UTIL_Debug.disableDebugLogging();
         UTIL_UnitTestData_TEST.disableAffiliationsTriggers();
@@ -2109,6 +2219,72 @@ public with sharing class ADDR_Addresses_TEST {
             System.assertEquals(false, con.is_Address_Override__c);
             System.assertNotEquals(null, con.Current_Address__c);
         }
+    }
+
+    @IsTest
+    private static void latestStartDateShouldDefaultToTodayForNewDefaultAddress() {
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+
+        Contact testContact = UTIL_UnitTestData_TEST.getContact();
+        buildTestAddress(1);
+        populateContactAddress(testContact, testAddresses[0]);
+
+        Test.startTest();
+        insert testContact;
+        Test.stopTest();
+
+        Address__c testAddress = [SELECT Latest_Start_Date__c, Default_Address__c
+                                  FROM Address__c
+                                  WHERE MailingState__c = 'Washington'
+                                  LIMIT 1];
+        System.assertEquals(true, testAddress.Default_Address__c, 'Address should be set as the default address.');
+        System.assertEquals(System.today(), testAddress.Latest_Start_Date__c, 'The default address latest start date ' +
+                'should be set to today\'s date.');
+    }
+
+    @IsTest
+    private static void latestStartDateOnUpdatedDefaultAddressSetToToday() {
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+        List<Account> testAccounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, CAO_Constants.HH_ACCOUNT_TYPE);
+        insert testAccounts;
+
+        buildTestAddress(2);
+        testAddresses[0].Household_Account__c = testAccounts[0].Id;
+        testAddresses[1].Household_Account__c = testAccounts[0].Id;
+        testAddresses[1].Latest_Start_Date__c = System.today() - 1;
+        insert testAddresses;
+
+        Contact testContact = UTIL_UnitTestData_TEST.getContact();
+        testContact.Current_Address__c = testAddresses[0].Id;
+        insert testContact;
+
+        List<Address__c> testFirstAddress = [SELECT Latest_Start_Date__c, Latest_End_Date__c, Default_Address__c
+                                        FROM Address__c
+                                        WHERE Id = :testAddresses[0].Id];
+
+        System.assertEquals(true, testFirstAddress[0].Default_Address__c, 'Address should not be set as the default ' +
+                'address.');
+
+        Test.startTest();
+            testAddresses[1].Default_Address__c = true;
+            update testAddresses[1];
+        Test.stopTest();
+
+        List<Address__c> testAddress = [SELECT Latest_Start_Date__c, Latest_End_Date__c, Default_Address__c
+                                  FROM Address__c
+                                  WHERE Id IN :testAddresses
+                                  ORDER BY CreatedDate];
+        System.assertEquals(true, testAddress[1].Default_Address__c, 'Address should be set as the default address.');
+        System.assertEquals(System.today(), testAddress[1].Latest_Start_Date__c, 'The default address latest start ' +
+        'date should be set to today\'s date.');
+        System.assertEquals(false, testAddress[0].Default_Address__c, 'Address should not be set as the default ' +
+                'address.');
+        System.assertEquals(System.today(), testAddress[0].Latest_End_Date__c, 'The previous default address latest ' +
+                'end date should be set to today\'s date.');
     }
 
     // Helpers
