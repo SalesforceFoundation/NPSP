@@ -120,7 +120,7 @@ public class DonationHistoryController_TEST {
         Boolean role = false;
         Test.startTest();
             DonationHistoryController.DonationHistoryAppView donationHistory =
-            DonationHistoryController.getDonationHistory(testContact.Id, 0);
+            DonationHistoryController.getDonationHistory(testContact.Id, 0, '2020');
         Test.stopTest();
         System.assertEquals(1, donationHistory.donations.size(), 'Should return only 1 record');
         System.assertEquals(1, donationHistory.totalNumberOfRecords, 'Should return only 1 on total number of records');
@@ -143,7 +143,7 @@ public class DonationHistoryController_TEST {
        
         Test.startTest();
             DonationHistoryController.DonationHistoryAppView donationHistory =
-            DonationHistoryController.getDonationHistory(testContact.Id, 0);
+            DonationHistoryController.getDonationHistory(testContact.Id, 0, '2020');
         Test.stopTest();
         System.assertEquals(0, donationHistory.donations.size(), 'Should not return records');
         System.assertEquals(0, donationHistory.totalNumberOfRecords, 'Should return 0 number of records');
@@ -169,7 +169,7 @@ public class DonationHistoryController_TEST {
             Test.startTest();
                 System.runAs(u){
                     DonationHistoryController.DonationHistoryAppView donationHistory =
-                    DonationHistoryController.getDonationHistory(testContact.Id, 0);
+                    DonationHistoryController.getDonationHistory(testContact.Id, 0, '2020');
                 }
             Test.stopTest();
         } catch(Exception e){

@@ -34,9 +34,16 @@
 */
 public with sharing class DonationHistoryService {
     private Id contactId;
+    private String filter;
     private Integer offset;
     
-    public DonationHistoryService(Id contactId, Integer offset) {
+    public DonationHistoryService(Id contactId, Integer offset, String filter) {
+        this.contactId = contactId;
+        this.filter = filter;
+        this.offset    = offset;
+    }
+
+    public DonationHistoryService(Id contactId) {
         this.contactId = contactId;
         this.offset    = offset;
     }
@@ -94,10 +101,46 @@ public with sharing class DonationHistoryService {
     */
     public List<Opportunity> getDonationHistory() {
         if (hasAccessToDonationHistory()) {
-            return selector.getWonOpportunitiesByContactId(this.contactId, this.offset);
+            List<Opportunity> credits = null;
+            if (shouldApplyFilterByYear(filter)) {
+                credits = selector.getWonOpportunitiesByContactIdAndYear(contactId, offset, Integer.valueOf(filter));
+            } else { 
+                credits = selector.getWonOpportunitiesByContactId(contactId, offset);
+            }
+            return credits;
         } else {
             throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
         }
+    }
+
+    private boolean shouldApplyFilterByYear(String filter) {
+        return filter != null && filter.isNumeric();
+    }
+
+    /**
+     * @descritpion returns the years where the contact made at least 1 donation.
+     * @param contactId the contact id.
+     * @return List<String>
+     */
+    public List<String> getYearsWithDonationsForContact() {
+        
+        if (!hasAccessToDonationHistory()) {
+            throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
+        }
+        return convertAggregateResultListToStringList(selector.getYearsWithDonationForContact(contactId));
+     }
+
+/**
+     * @description converts a List<AggregateResult> in a List<String> .
+     * @param result The list with with the aggregate results from the database.
+     * @return List<String> the list of the values in the expr0 represented as String.
+     */ 
+    private List<String> convertAggregateResultListToStringList(List<AggregateResult> results) {
+        List<String> aggregateResultsAsStrings = new List<String>();
+        for(AggregateResult result : results) {
+            aggregateResultsAsStrings.add(String.valueOf(result.get('closeYear')));
+        }
+        return aggregateResultsAsStrings;
     }
 
     /** 
@@ -107,6 +150,9 @@ public with sharing class DonationHistoryService {
     * @param contactId contact id which is going to be requested.
     */
     public Integer getTotalNumberOfRecords() {
+        if (shouldApplyFilterByYear(filter)) {
+            return selector.getTotalNumberOfRecordsWithYear(contactId, Integer.valueOf(filter));
+        }
         return selector.getTotalNumberOfRecords(this.contactId);
     }
 }

@@ -64,6 +64,53 @@ public inherited sharing class DonationHistorySelector {
         ];
     }
 
+    /**
+     * @description Returns the OpportunityContactRole won in a specific year.
+     * @param contactId the contact id.
+     * @param year Integer filter of year.
+     * @return List<OpportunityContactRole>
+     */
+    public List<Opportunity> getWonOpportunitiesByContactIdAndYear(Id contactId, Integer offset, Integer year) {
+        return [
+            SELECT  Id, 
+                    Name, 
+                    CloseDate, 
+                    Amount, 
+                    Primary_Contact__r.Email, 
+                    Primary_Contact__r.Name,
+                    (
+                        SELECT npe01__Payment_Method__c,
+                            npe01__Paid__c
+                        FROM npe01__OppPayment__r 
+                        WHERE npe01__Paid__c = true
+                        ORDER BY npe01__Payment_Date__c
+                        LIMIT 1
+                    ) 
+            FROM Opportunity
+            WHERE IsWon = true 
+                AND Primary_Contact__r.Id =:contactId 
+                AND Calendar_Year(CloseDate) = :year
+            WITH SECURITY_ENFORCED
+            ORDER BY Opportunity.CloseDate 
+            DESC LIMIT 50
+            OFFSET :offset
+        ];
+    }
+
+    /**
+     * @description Returns the years in which the contact has made at least 1 donation.
+     * @param contactId Id the contact id.
+     * @returns List<AggregateResult> Selecting the Calenday_Year of the Opportunity.CloseDate
+     */
+    public List<AggregateResult> getYearsWithDonationForContact(Id contactId) {
+        return [SELECT   Calendar_Year(CloseDate) closeYear
+                FROM     Opportunity 
+                WHERE    IsWon = true 
+                AND      ContactId =:contactId 
+                GROUP BY Calendar_YEAR(CloseDate)
+                ORDER BY Calendar_YEAR(CloseDate) DESC];
+    }
+    
     /** 
     * @author Salesforce.org
     * @date 2021
@@ -90,5 +137,20 @@ public inherited sharing class DonationHistorySelector {
                                 WITH SECURITY_ENFORCED
                                 LIMIT 1];
         return contactId.get(0).ContactId;
+    }
+
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description method to return total number of record
+    */
+    public Integer getTotalNumberOfRecordsWithYear( Id contactId, Integer year ) {
+        Integer totalRecords = [SELECT COUNT()
+                                FROM Opportunity
+                                WHERE IsWon = true
+                                AND Primary_Contact__r.Id =:contactId
+                                AND Calendar_Year(CloseDate) = :year
+                                WITH SECURITY_ENFORCED];
+        return totalRecords;
     }
 }
