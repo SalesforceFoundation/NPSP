@@ -83,6 +83,9 @@ public with sharing class RD2_VisualizeScheduleController {
      */
     @AuraEnabled
     public static Map<String, Object> getInstallments(Id recordId, Integer displayNum) {
+        if (!hasAccess()) {
+            throw new UTIL_Permissions.InsufficientPermissionException(System.Label.RD2_ScheduleVisualizerFLSInstallment);
+        }
         validate(recordId);
 
         RD2_RecurringDonation rd = getRecurringDonation(recordId);
@@ -133,6 +136,9 @@ public with sharing class RD2_VisualizeScheduleController {
      */
     @AuraEnabled
     public static Map<String, Object> getSchedules(Id recordId) {
+        if (!hasAccess()) {
+            throw new UTIL_Permissions.InsufficientPermissionException(System.Label.RD2_ScheduleVisualizerFLSSchedule);
+        }
         validate(recordId);
 
         RD2_RecurringDonation rd = getRecurringDonation(recordId);
@@ -390,6 +396,16 @@ public with sharing class RD2_VisualizeScheduleController {
         }
 
         return null;
+    }
+
+    /**
+     * @description Checks if the user has access to read a Recurring Donation
+     * @return Boolean
+     */
+    private static Boolean hasAccess() {
+        String rdObjectName = Schema.SObjectType.npe03__Recurring_Donation__c.getName();
+
+        return UTIL_Permissions.canRead(rdObjectName, false);
     }
     
 

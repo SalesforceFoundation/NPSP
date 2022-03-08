@@ -161,6 +161,8 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
      */
     @AuraEnabled
     public static List<Mapping> loadMapping() {
+        checkStatusMappingPermissions();
+
         List<Mapping> mappings = new List<Mapping>();
 
         try {
@@ -196,6 +198,7 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
      */
     @AuraEnabled
     public static String saveMapping(String jsonMapping) {
+        checkStatusMappingPermissions();
         return saveMapping(jsonMapping, new DeploymentHandler());
     }
 
@@ -280,6 +283,7 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
      */
     @AuraEnabled
     public static String getDeployResult(String deploymentId) {
+        checkStatusMappingPermissions();
         return getDeployResult(deploymentId, new DeploymentHandler(deploymentId));
     }
 
@@ -311,6 +315,15 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
         AuraHandledException e = new AuraHandledException(errMessage);
         e.setMessage(errMessage);
         throw e;
+    }
+
+    /***
+    * @description Helper method for checking permissions, throws an Exception is User is not an Admin
+    */
+    private static void checkStatusMappingPermissions() {
+        if (!STG_Panel.runningUserIsAdmin()) {
+            throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
+        }
     }
 
     /**

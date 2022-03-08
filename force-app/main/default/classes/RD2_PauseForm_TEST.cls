@@ -117,12 +117,12 @@ public with sharing class RD2_PauseForm_TEST {
         System.runAs(readOnlyUser) {
             RD2_ScheduleService.currentDate = pauseSchedule.StartDate__c.addDays(1);
 
-            RD2_PauseForm_CTRL.PauseData pause = getPauseData(rd.Id);
-            System.assertEquals(false, pause.hasAccess, 'The user should not have access: ' + pause);
-            System.assertEquals(null, pause.isRDClosed, 'The Recurring Donation closed status should not be specified');
-            System.assertEquals(null, pause.startDate, 'The Pause Start Date should not be set');
-            System.assertEquals(null, pause.resumeAfterDate, 'The Pause Resume After Date should not be set');
-            System.assertEquals(null, pause.pausedReason, 'The Paused Reason should not be initialized');
+            try {
+                String pauseJson = RD2_PauseForm_CTRL.getPauseData(rd.Id);
+                System.assert(false, 'Should have thrown an Exception');
+            } catch(Exception e){
+                System.assertEquals(System.Label.RD2_PausePermissionRequired, e.getMessage(), 'Exception message should match');
+            }
         }
     }
 

@@ -219,6 +219,8 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     */
     @AuraEnabled
     public static void enableEnhancement() {
+        checkRDEnablementPermissions();
+
         EnablementState state = getEnablementState();
 
         if (isDryRunOutdated(state)) {
@@ -245,9 +247,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     * @return void
     */
     public static void callableApiEnableEnhancement(Boolean rescheduleBatchJobs) {
-        if (!STG_Panel.runningUserIsAdmin()) {
-            throw new UTIL_Permissions.InsufficientPermissionException(System.Label.RD2_EnablementPermissionRequired);
-        }
+        checkRDEnablementPermissions();
 
         Boolean isCrlpEnabled = new CRLP_ApiService().isCrlpEnabled();
         if (!isCrlpEnabled) {
@@ -319,6 +319,8 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     */
     @AuraEnabled
     public static void launchMetaDeploy() {
+        checkRDEnablementPermissions();
+
         EnablementState state = getEnablementState();
         state.isMetaLaunched = true;
 
@@ -440,6 +442,8 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     */
     @AuraEnabled
     public static Id runMigration() {
+        checkRDEnablementPermissions();
+
         Id jobId;
         try {
             RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
@@ -457,12 +461,10 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     * @return Id Batch Job Id
     */
     public static Id callableApiRunMigration() {
+        checkRDEnablementPermissions();
+        
         if (!RD2_EnablementService.getInstance().isRecurringDonations2Enabled()) {
             throw new EnablementException(System.Label.RD2_ErrorDataMigrationJobCannotBeRun);
-        }
-
-        if (!STG_Panel.runningUserIsAdmin()) {
-            throw new UTIL_Permissions.InsufficientPermissionException(System.Label.RD2_EnablementPermissionRequired);
         }
 
         setMigrationEnabled(true);
@@ -504,6 +506,15 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
+        }
+    }
+
+    /***
+    * @description Helper method for checking permissions, throws an Exception is User is not an Admin
+    */
+    private static void checkRDEnablementPermissions() {
+        if (!STG_Panel.runningUserIsAdmin()) {
+            throw new UTIL_Permissions.InsufficientPermissionException(System.Label.RD2_EnablementPermissionRequired);
         }
     }
 

@@ -60,6 +60,7 @@ public with sharing class RD2_PauseForm_CTRL {
      */
     @AuraEnabled(cacheable=false)
     public static String getPauseData(Id rdId) {
+        checkRecurringDonationPausePermissions();
         String jsonData;
         try {
             RD2_RecurringDonation rd = getRecurringDonation(rdId);
@@ -85,6 +86,15 @@ public with sharing class RD2_PauseForm_CTRL {
         }
 
         return jsonData;
+    }
+
+    /***
+    * @description Helper method for checking permissions, throws an Exception is User is not an Admin
+    */
+    private static void checkRecurringDonationPausePermissions() {
+        if (!hasAccess()) {
+            throw new UTIL_Permissions.InsufficientPermissionException(System.Label.RD2_PausePermissionRequired);
+        }
     }
 
     /**
@@ -184,6 +194,7 @@ public with sharing class RD2_PauseForm_CTRL {
      */
     @AuraEnabled
     public static void savePause(String jsonPauseData) {
+        checkRecurringDonationPausePermissions();
         try {
             PauseData pause = (PauseData) JSON.deserialize(jsonPauseData, PauseData.class);
             
