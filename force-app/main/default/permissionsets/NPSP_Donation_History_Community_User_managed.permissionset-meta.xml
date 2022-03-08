@@ -83,7 +83,7 @@
         <allowEdit>false</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>%%%NAMESPACE%%%OppPayment__c</object>
+        <object>npe01__OppPayment__c</object>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
 </PermissionSet>
