@@ -2227,7 +2227,10 @@ public with sharing class ADDR_Addresses_TEST {
         Contact testContact = UTIL_UnitTestData_TEST.getContact();
         buildTestAddress(1);
         populateContactAddress(testContact, testAddresses[0]);
+
+        Test.startTest();
         insert testContact;
+        Test.stopTest();
 
         Address__c testAddress = [SELECT Latest_Start_Date__c, Default_Address__c
                                   FROM Address__c
@@ -2236,6 +2239,49 @@ public with sharing class ADDR_Addresses_TEST {
         System.assertEquals(true, testAddress.Default_Address__c, 'Address should be set as the default address.');
         System.assertEquals(System.today(), testAddress.Latest_Start_Date__c, 'The default address latest start date ' +
                 'should be set to today\'s date.');
+    }
+
+    @IsTest
+    private static void latestStartDateOnUpdatedDefaultAddressSetToToday() {
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+        List<Account> testAccounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, CAO_Constants.HH_ACCOUNT_TYPE);
+        insert testAccounts;
+
+        buildTestAddress(2);
+        testAddresses[0].Household_Account__c = testAccounts[0].Id;
+        testAddresses[1].Household_Account__c = testAccounts[0].Id;
+        testAddresses[1].Latest_Start_Date__c = System.today() - 1;
+        insert testAddresses;
+
+        Contact testContact = UTIL_UnitTestData_TEST.getContact();
+        testContact.Current_Address__c = testAddresses[0].Id;
+        insert testContact;
+
+        List<Address__c> testFirstAddress = [SELECT Latest_Start_Date__c, Latest_End_Date__c, Default_Address__c
+                                        FROM Address__c
+                                        WHERE Id = :testAddresses[0].Id];
+
+        System.assertEquals(true, testFirstAddress[0].Default_Address__c, 'Address should not be set as the default ' +
+                'address.');
+
+        Test.startTest();
+            testAddresses[1].Default_Address__c = true;
+            update testAddresses[1];
+        Test.stopTest();
+
+        List<Address__c> testAddress = [SELECT Latest_Start_Date__c, Latest_End_Date__c, Default_Address__c
+                                  FROM Address__c
+                                  WHERE Id IN :testAddresses
+                                  ORDER BY CreatedDate];
+        System.assertEquals(true, testAddress[1].Default_Address__c, 'Address should be set as the default address.');
+        System.assertEquals(System.today(), testAddress[1].Latest_Start_Date__c, 'The default address latest start ' +
+        'date should be set to today\'s date.');
+        System.assertEquals(false, testAddress[0].Default_Address__c, 'Address should not be set as the default ' +
+                'address.');
+        System.assertEquals(System.today(), testAddress[0].Latest_End_Date__c, 'The previous default address latest ' +
+                'end date should be set to today\'s date.');
     }
 
     // Helpers
