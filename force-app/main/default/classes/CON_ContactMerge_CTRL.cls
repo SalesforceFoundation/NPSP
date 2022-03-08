@@ -67,9 +67,8 @@ public with sharing class CON_ContactMerge_CTRL {
     /***********************************************************************************************
     * @description To decide whether to show Dupliacate Record Set record list on the page or not
     */ 
-    
     public Boolean showDRS { get; set; }
-    public String whatsMyString {get {return String.valueOf(Contact.Sustainer__c);} set;}
+
     /***********************************************************************************************
     * @description Search text entered by user.
     */
@@ -284,17 +283,17 @@ public with sharing class CON_ContactMerge_CTRL {
         'npo02__Soft_Credit_This_Year__c',
         'npo02__Soft_Credit_Total__c',
         'npo02__Soft_Credit_Two_Years_Ago__c',
-        'First_Soft_Credit_Amount__c',
-        'First_Soft_Credit_Date__c',
-        'Largest_Soft_Credit_Amount__c',
-        'Largest_Soft_Credit_Date__c',
-        'Last_Soft_Credit_Amount__c',
-        'Last_Soft_Credit_Date__c',
-        'Number_of_Soft_Credits__c',
-        'Number_of_Soft_Credits_Last_N_Days__c',
-        'Number_of_Soft_Credits_Last_Year__c',
-        'Number_of_Soft_Credits_This_Year__c',
-        'Number_of_Soft_Credits_Two_Years_Ago__c',
+        String.valueOf(Contact.First_Soft_Credit_Amount__c),
+        String.valueOf(Contact.First_Soft_Credit_Date__c),
+        String.valueOf(Contact.Largest_Soft_Credit_Amount__c),
+        String.valueOf(Contact.Largest_Soft_Credit_Date__c),
+        String.valueOf(Contact.Last_Soft_Credit_Amount__c),
+        String.valueOf(Contact.Last_Soft_Credit_Date__c),
+        String.valueOf(Contact.Number_of_Soft_Credits__c),
+        String.valueOf(Contact.Number_of_Soft_Credits_Last_N_Days__c),
+        String.valueOf(Contact.Number_of_Soft_Credits_Last_Year__c),
+        String.valueOf(Contact.Number_of_Soft_Credits_This_Year__c),
+        String.valueOf(Contact.Number_of_Soft_Credits_Two_Years_Ago__c),
         String.valueOf(Contact.Sustainer__c)
     };
 
