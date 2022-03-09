@@ -125,19 +125,7 @@ public inherited sharing class DonationHistorySelector {
         return totalRecords;
     }
 
-    /** 
-    * @author Salesforce.org
-    * @date 2021
-    * @description method to return contact related to current user.
-    */
-    public Id getContactIdByUserId( Id userId ) {
-        List<User> contactId = [SELECT ContactId
-                                FROM User
-                                WHERE Id =: userId
-                                WITH SECURITY_ENFORCED
-                                LIMIT 1];
-        return contactId.get(0).ContactId;
-    }
+
 
     /** 
     * @author Salesforce.org

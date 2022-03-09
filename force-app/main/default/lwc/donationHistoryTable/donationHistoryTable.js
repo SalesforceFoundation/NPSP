@@ -39,15 +39,7 @@ export default class DonationHistoryTable extends LightningElement {
 
     // eslint-disable-next-line @lwc/lwc/no-async-await
     async connectedCallback() {
-        if(!this.contactId){
-            getContactIdByUserId()
-            .then((contactId) => {
-                this.contactId = contactId;
-                this.retrieveDonationHistory();
-            });
-        } else {
-            this.retrieveDonationHistory();
-        }
+        this.retrieveDonationHistory();
     }
 
 
@@ -86,6 +78,7 @@ export default class DonationHistoryTable extends LightningElement {
     async retrieveDonationHistory(){
         getDonationHistory({ contactId: this.contactId, offset: 0, filter : this.filter })
         .then((data) => {
+            console.log('data: ', JSON.parse(JSON.stringify(data)));
             if (data) {
                 this.totalNumberOfRecords = data.totalNumberOfRecords;
                 console.log('this.totalNumberOfRecords: ',this.totalNumberOfRecords);

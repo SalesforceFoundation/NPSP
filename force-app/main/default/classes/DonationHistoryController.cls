@@ -78,7 +78,9 @@ public with sharing class DonationHistoryController {
     */
     @AuraEnabled(cacheable=true)
     public static DonationHistoryAppView getDonationHistory(Id contactId, Integer offset, String filter) {
-        DonationHistoryService service = new DonationHistoryService(contactId, offset, filter);
+        contactId = (contactId == null ? getContactIdByUserId() : contactId );
+        System.debug('getDonationHistory contactId: ' + contactId);
+		DonationHistoryService service = new DonationHistoryService(contactId, offset, filter);
         try {
             Boolean paymentsEnabled = service.checkIfPaymentsAreEnabled();
             DonationHistoryAppView donationHistories = new DonationHistoryAppView();
@@ -86,6 +88,7 @@ public with sharing class DonationHistoryController {
             donationHistories.totalNumberOfRecords = service.getTotalNumberOfRecords();
             donationHistories.isPaymentsEnabled = paymentsEnabled;
             donationHistories.paymentMethodLabel = service.getPaymentMethodLabel();
+            System.debug('donationHistories: ' + donationHistories);
             return donationHistories;
         } catch(AuraHandledException ex) {
             throw new AuraHandledException(ex.getMessage());
@@ -100,6 +103,8 @@ public with sharing class DonationHistoryController {
     @AuraEnabled(cacheable=true)
     public static List<String> getYearsWithDonations(Id contactId) {
         try {
+            contactId = (contactId == null ? getContactIdByUserId() : contactId );
+            System.debug('getYearsWithDonations contactId: ' + contactId);
             return new DonationHistoryService(contactId).getYearsWithDonationsForContact();
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
@@ -114,6 +119,7 @@ public with sharing class DonationHistoryController {
     */
     private static List<DonationHistoryView> buildHistoryFromOpportunities(List<Opportunity> opportunities, Id contactId, Boolean includePaymentMethod) {
         List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
+        System.debug('buildHistoryFromOpportunities contactId: ' + contactId);
         for (Opportunity opp : opportunities) {
             if(opp.npe01__OppPayment__r != null && opp.npe01__OppPayment__r.size() > 0){
                 String paymentMethod = includePaymentMethod
@@ -129,7 +135,6 @@ public with sharing class DonationHistoryController {
 
     @AuraEnabled(cacheable=true)
     public static Id getContactIdByUserId(){
-        DonationHistorySelector selector = new DonationHistorySelector();
-        return selector.getContactIdByUserId(UserInfo.getUserId());
+        return USER_UserService.getContactIdByUserId();
     }
 }
