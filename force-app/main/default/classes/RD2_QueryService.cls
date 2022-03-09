@@ -264,6 +264,13 @@ public inherited sharing class RD2_QueryService {
         return Database.query(queryString);
     }
 
+    public List<SObject> getSObjectWithClosedRecurringDonations(String sObjectType, Set<Id> recordIds) {
+        Set<String> statusValues = statusMapper.getClosedStatusValues();
+        String queryString = getSObjectWithRecurringDonationsQuery(sObjectType);
+
+        return Database.query(queryString);
+    }
+
     private String getSObjectWithRecurringDonationsQuery(String sObjectType) {
         Set<String> selectedField = new Set<String>{
             UTIL_Namespace.StrTokenNSPrefix('Sustainer__c'),
