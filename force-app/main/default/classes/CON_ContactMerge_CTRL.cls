@@ -67,7 +67,6 @@ public with sharing class CON_ContactMerge_CTRL {
     /***********************************************************************************************
     * @description To decide whether to show Dupliacate Record Set record list on the page or not
     */ 
-    
     public Boolean showDRS { get; set; }
 
     /***********************************************************************************************
@@ -279,22 +278,23 @@ public with sharing class CON_ContactMerge_CTRL {
         'npo02__LastOppAmount__c',
         'npo02__Best_Gift_Year__c',
         'npo02__Best_Gift_Year_Total__c',
-        'Soft_Credit_Last_N_Days__c',
+        String.valueOf(Contact.Soft_Credit_Last_N_Days__c),
         'npo02__Soft_Credit_Last_Year__c',
         'npo02__Soft_Credit_This_Year__c',
         'npo02__Soft_Credit_Total__c',
         'npo02__Soft_Credit_Two_Years_Ago__c',
-        'First_Soft_Credit_Amount__c',
-        'First_Soft_Credit_Date__c',
-        'Largest_Soft_Credit_Amount__c',
-        'Largest_Soft_Credit_Date__c',
-        'Last_Soft_Credit_Amount__c',
-        'Last_Soft_Credit_Date__c',
-        'Number_of_Soft_Credits__c',
-        'Number_of_Soft_Credits_Last_N_Days__c',
-        'Number_of_Soft_Credits_Last_Year__c',
-        'Number_of_Soft_Credits_This_Year__c',
-        'Number_of_Soft_Credits_Two_Years_Ago__c'
+        String.valueOf(Contact.First_Soft_Credit_Amount__c),
+        String.valueOf(Contact.First_Soft_Credit_Date__c),
+        String.valueOf(Contact.Largest_Soft_Credit_Amount__c),
+        String.valueOf(Contact.Largest_Soft_Credit_Date__c),
+        String.valueOf(Contact.Last_Soft_Credit_Amount__c),
+        String.valueOf(Contact.Last_Soft_Credit_Date__c),
+        String.valueOf(Contact.Number_of_Soft_Credits__c),
+        String.valueOf(Contact.Number_of_Soft_Credits_Last_N_Days__c),
+        String.valueOf(Contact.Number_of_Soft_Credits_Last_Year__c),
+        String.valueOf(Contact.Number_of_Soft_Credits_This_Year__c),
+        String.valueOf(Contact.Number_of_Soft_Credits_Two_Years_Ago__c),
+        String.valueOf(Contact.Sustainer__c)
     };
 
     /***********************************************************************************************
@@ -843,8 +843,9 @@ public with sharing class CON_ContactMerge_CTRL {
     */
     private Boolean isNPSPReadOnly(String strField) {
         for (String strF : readOnlyFields) {
-            if (strField.equalsIgnoreCase(strF))
+            if (strField.equalsIgnoreCase(strF)) {
                 return true;
+            }
         }
         return false;
     }
@@ -979,7 +980,8 @@ public with sharing class CON_ContactMerge_CTRL {
             ContactMergeService contactMerge = new ContactMergeService();
             contactMerge.mergeContacts(winningContact, losingContacts);
 
-            updateContactWithOnlyUniqueFields(winningContact.Id);
+            updateContactAfterMerge(winningContact.Id);
+
 
         } catch (Exception e) {
             Database.rollback(sp);
@@ -1026,14 +1028,41 @@ public with sharing class CON_ContactMerge_CTRL {
         populateContactWithFields(winningContact, false);
     }
 
-    private void updateContactWithOnlyUniqueFields(Id winningContactId) {
+    private void updateContactAfterMerge(Id winningContactId) {
         Contact winningContact = new Contact(Id = winningContactId);
 
-        Boolean hasUniqueFieldChange = populateContactWithFields(winningContact, true);
+        Boolean hasFieldChange = populateContactWithOnlyUniqueFields(winningContact);
+        hasFieldChange = hasFieldChange || evaluateContactForSustainerChange(winningContact);
 
-        if (hasUniqueFieldChange) {
+        if (hasFieldChange) {
             updateAndHandleWinningContact(winningContact);
         }
+        
+    }
+
+    private Boolean populateContactWithOnlyUniqueFields(Contact winningContact) {
+        Boolean hasUniqueFieldChange = populateContactWithFields(winningContact, true);
+        return hasUniqueFieldChange;
+    }
+
+    private Boolean evaluateContactForSustainerChange(Contact winningContact) {
+        DescribeFieldResult sustainerFieldDescribeResult = Contact.Sustainer__c.getDescribe();
+
+        if (!UTIL_Permissions.canRead(sustainerFieldDescribeResult, false)
+            || !UTIL_Permissions.canUpdate(sustainerFieldDescribeResult, false)) {
+            return false;
+        }
+
+        List<Contact> contactWithSustainerChanged = new RD2_SustainerEvaluationService()
+        .withContacts(new List<Contact>{winningContact})
+        .getContactsWithSustainerChanged();
+
+        Boolean needSustainerUpdate = contactWithSustainerChanged.size() != 0;
+        if (needSustainerUpdate) {
+            winningContact.Sustainer__c = contactWithSustainerChanged[0].Sustainer__c;
+        }
+
+        return needSustainerUpdate;
     }
 
     private Boolean populateContactWithFields(Contact winningContact, Boolean isUniqueField) {
@@ -1056,11 +1085,15 @@ public with sharing class CON_ContactMerge_CTRL {
     }
 
     private void updateAndHandleWinningContact(Contact winningContact) {
+        RD2_SustainerEvaluationService.setSustainerUpdateEnabled(true);
+
         Database.DMLOptions dml = new Database.DMLOptions();
         dml.DuplicateRuleHeader.AllowSave = true;
 
         Database.SaveResult saveResult = UTIL_DMLService.updateRecord(winningContact, dml);
         handleDMLError(saveResult);
+
+        RD2_SustainerEvaluationService.setSustainerUpdateEnabled(false);
     }
 
     private void handleDMLError(Database.SaveResult saveResult) {
