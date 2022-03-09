@@ -508,7 +508,7 @@
                                                     <td class="slds-size_1-of-3">
                                                         <span class="slds-radio_faux" aria-label="{!row.fieldLabel}"></span>
                                                         <span>
-                                                            <apex:outputText value="{!col.value}"/>
+                                                            <apex:outputText value="{!IF((col.value == null), '[' + $Label.lblEmpty+ ']', col.value) }"/>
                                                         </span>
                                                     </td>
                                                 </apex:outputText>

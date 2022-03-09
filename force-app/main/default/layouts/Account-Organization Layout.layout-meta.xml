@@ -87,6 +87,10 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
+                <field>Sustainer__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
                 <field>npo02__FirstCloseDate__c</field>
             </layoutItems>
             <layoutItems>
