@@ -172,4 +172,42 @@ private class DonationSelector_TEST {
 
         return opportunityIds;
     }
+
+    @IsTest
+    private static void shouldReturnYearsForFilter() {
+        
+        Date myDateTime = Date.newInstance(2020, 2, 2);
+        Date dateTimeInPast = Date.newInstance(2019, 2, 2);
+        List<Contact> contacts = UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, 1, 3, 1);
+        Account accSrc = UTIL_UnitTestData_TEST.listAccT[0];
+        list<Contact> listConSrc = UTIL_UnitTestData_TEST.listConT;
+
+        Opportunity opportunityHardCreditOfContact0 = new Opportunity(
+            Name='HardCredit1', 
+            AccountId=accSrc.Id, 
+            Primary_Contact__c=listConSrc[0].Id, 
+            Amount=400, 
+            StageName='Closed Won', 
+            CloseDate=myDateTime
+        );
+
+        Opportunity opportunityAnotherHardCreditOfContact0 = new Opportunity(
+            Name='HardCredit2', 
+            AccountId=accSrc.Id, 
+            Primary_Contact__c=listConSrc[0].Id, 
+            Amount=400, 
+            StageName='Closed Won', 
+            CloseDate=dateTimeInPast
+        );
+
+        insert new List<Opportunity> { opportunityHardCreditOfContact0, opportunityAnotherHardCreditOfContact0};
+
+       
+        List<String> donationsYears = new DonationHistorySelector().getYearsWithDonationForContact(contacts[0].id);
+        System.assertNotEquals(null, donationsYears, 'donationsYears should not be null');
+        System.assertEquals(2, donationsYears.size(), 'donationsYears should have 2 elements');
+        System.assertEquals('2020', donationsYears[0], 'donationsYears should be in descendent order');
+
+    }
+
 }
