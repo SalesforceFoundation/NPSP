@@ -192,6 +192,10 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
+                <field>%%%NAMESPACE%%%Sustainer__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
                 <field>npo02__FirstCloseDate__c</field>
             </layoutItems>
             <layoutItems>
