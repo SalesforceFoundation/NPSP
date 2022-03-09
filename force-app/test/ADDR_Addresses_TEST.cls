@@ -64,11 +64,6 @@ public with sharing class ADDR_Addresses_TEST {
 
     private static OrgConfig orgConfig = new OrgConfig();
 
-    @TestSetup
-    private static void createTestData() {
-        createTestData(1, 1);
-    }
-
     /*********************************************************************************************************
     @description
         create N new default Addresses for N Households (with M Contacts)
@@ -668,7 +663,7 @@ public with sharing class ADDR_Addresses_TEST {
         List<Account> accounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(2, CAO_Constants.HH_ACCOUNT_TYPE);
         insert accounts;
 
-        buildTestAddress(5);
+        buildTestAddress(2);
 
         for (Integer i=0; i < testAddresses.size(); i++) {
             testAddresses[i].Household_Account__c = accounts[i].Id;
@@ -696,7 +691,7 @@ public with sharing class ADDR_Addresses_TEST {
         List<Account> accounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(2, CAO_Constants.HH_ACCOUNT_TYPE);
         insert accounts;
 
-        buildTestAddress(5);
+        buildTestAddress(2);
 
         for (Integer i=0; i < testAddresses.size(); i++) {
             testAddresses[i].Household_Account__c = accounts[i].Id;
@@ -2121,6 +2116,14 @@ public with sharing class ADDR_Addresses_TEST {
             return;
         }
 
+        Contact testContact = UTIL_UnitTestData_TEST.getContact();
+        buildTestAddress(1);
+        populateContactAddress(testContact, testAddresses[0]);
+
+        Test.startTest();
+        insert testContact;
+        Test.stopTest();
+
         Address__c testAddress = [SELECT Latest_Start_Date__c, Default_Address__c
                                   FROM Address__c
                                   WHERE MailingState__c = 'Washington'
@@ -2135,24 +2138,33 @@ public with sharing class ADDR_Addresses_TEST {
         if (ADV_PackageInfo_SVC.useAdv()) {
             return;
         }
+        buildTestAddress(2);
+        NPSP_Contact npspContact = new NPSP_Contact(UTIL_UnitTestData_TEST.getContact());
+        npspContact.mailingAddress(new NPSP_Address(testAddresses[0]));
+
+        insert npspContact.getRecord();
+
         Contact testContact = [SELECT Current_Address__c, Current_Address__r.Default_Address__c, AccountId
                                FROM Contact
+                               WHERE Id = :npspContact.getRecord().Id
                                LIMIT 1];
         Id defaultAddressId = testContact.Current_Address__c;
         System.assertEquals(true, testContact.Current_Address__r.Default_Address__c, 'The address should be the default address of ' +
                 'the household.');
 
-        testAccounts = [SELECT Id FROM Account LIMIT 1];
-        createAddressData(1, false);
+        testAddresses[1].Household_Account__c = testContact.AccountId;
+        insert testAddresses[1];
+
+        Address__c nonDefaultAddress = [SELECT Default_Address__c FROM Address__c WHERE Id = :testAddresses[1].Id];
 
         Test.startTest();
-            testAddresses[0].Default_Address__c = true;
-            update testAddresses[0];
+            nonDefaultAddress.Default_Address__c = true;
+            update nonDefaultAddress;
         Test.stopTest();
 
         Address__c newDefaultAddress = [SELECT Default_Address__c, Latest_Start_Date__c, Latest_End_Date__c
                                         FROM Address__c
-                                        WHERE Id = :testAddresses[0].Id
+                                        WHERE Id = :nonDefaultAddress.Id
                                         LIMIT 1];
         Address__c previousDefaultAddress = [SELECT Default_Address__c, Latest_Start_Date__c, Latest_End_Date__c
                                              FROM Address__c
@@ -2173,17 +2185,22 @@ public with sharing class ADDR_Addresses_TEST {
         if (ADV_PackageInfo_SVC.useAdv()) {
             return;
         }
+        buildTestAddress(1);
+        NPSP_Contact npspContact = new NPSP_Contact(UTIL_UnitTestData_TEST.getContact());
+        npspContact.mailingAddress(new NPSP_Address(testAddresses[0]));
+
+        insert npspContact.getRecord();
 
         Contact testContact = [SELECT Current_Address__c, Current_Address__r.Default_Address__c, AccountId
                                FROM Contact
+                               WHERE Id = :npspContact.getRecord().Id
                                LIMIT 1];
         System.assertEquals(true, testContact.Current_Address__r.Default_Address__c, 'The address should be the default address of ' +
                 'the household.');
 
         Address__c defaultAddress = [SELECT Default_Address__c
                                      FROM Address__c
-                                     WHERE Default_Address__c = TRUE
-                                     LIMIT 1];
+                                     WHERE Id = :testContact.Current_Address__c];
 
         Test.startTest();
             defaultAddress.Default_Address__c = false;

@@ -926,7 +926,7 @@ public inherited sharing class Addresses extends fflib_SObjects2 {
     private Addresses addressesWithDefaultChanges() {
         List<Address__c> addressesWithDefaultChanges = new List<Address__c>();
         for (Address__c address : (List<Address__c>) getRecords()) {
-            NPSP_Address npspAddress = new NPSP_Address(address);
+            NPSP_Address npspAddress = new NPSP_Address(address, oldVersionOf(address));
 
             if (npspAddress.hasDefaultChanged()) {
                 addressesWithDefaultChanges.add(address);
