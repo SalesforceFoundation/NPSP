@@ -6548,48 +6548,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Streamline donation processing with Salesforce.org Elevate and NPSP</value>
     </labels>
     <labels>
-        <fullName>elevateAddBillingAddress</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Label for Add Billing Address button</shortDescription>
-        <value>Add Billing Address</value>
-    </labels>
-    <labels>
-        <fullName>elevateBillingAddressHelp</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Help text for Credit Card Billing Address</shortDescription>
-        <value>Billing Address is required only for certain Elevate Payment Gateways.</value>
-    </labels>
-    <labels>
-        <fullName>elevateClearAddress</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Button text to clear Credit Card Billing Address</shortDescription>
-        <value>Clear Address</value>
-    </labels>
-    <labels>
-        <fullName>elevateDonorAddressEmpty</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Error text for empty donor address</shortDescription>
-        <value>This donor doesn&apos;t have address information in Salesforce.</value>
-    </labels>
-    <labels>
-        <fullName>elevateRemoveBillingAddress</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Label for Remove Billing Address button</shortDescription>
-        <value>Remove Billing Address</value>
-    </labels>
-    <labels>
-        <fullName>elevateUseDonorAddress</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Button text to auto-fill Credit Card Billing Address</shortDescription>
-        <value>Use Donor Address</value>
-    </labels>
-    <labels>
         <fullName>engagementPlanCantEdit</fullName>
         <categories>Engagement Plans</categories>
         <language>en_US</language>

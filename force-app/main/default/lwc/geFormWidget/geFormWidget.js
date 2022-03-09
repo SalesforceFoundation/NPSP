@@ -11,18 +11,6 @@ import DATA_IMPORT_PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Payment
 import DATA_IMPORT_PARENT_BATCH_LOOKUP from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
 import DATA_IMPORT_ID from '@salesforce/schema/DataImport__c.Id';
 
-import DATA_IMPORT_CONTACT_CITY from '@salesforce/schema/DataImport__c.Home_City__c';
-import DATA_IMPORT_CONTACT_COUNTRY from '@salesforce/schema/DataImport__c.Home_Country__c';
-import DATA_IMPORT_CONTACT_STATE_PROVINCE from '@salesforce/schema/DataImport__c.Home_State_Province__c';
-import DATA_IMPORT_CONTACT_STREET from '@salesforce/schema/DataImport__c.Home_Street__c';
-import DATA_IMPORT_CONTACT_ZIP_POSTAL_CODE from '@salesforce/schema/DataImport__c.Home_Zip_Postal_Code__c';
-
-import DATA_IMPORT_ACCOUNT_CITY from '@salesforce/schema/DataImport__c.Account1_City__c';
-import DATA_IMPORT_ACCOUNT_COUNTRY from '@salesforce/schema/DataImport__c.Account1_Country__c';
-import DATA_IMPORT_ACCOUNT_STATE_PROVINCE from '@salesforce/schema/DataImport__c.Account1_State_Province__c';
-import DATA_IMPORT_ACCOUNT_STREET from '@salesforce/schema/DataImport__c.Account1_Street__c';
-import DATA_IMPORT_ACCOUNT_ZIP_POSTAL_CODE from '@salesforce/schema/DataImport__c.Account1_Zip_Postal_Code__c';
-
 const ALLOCATION_WIDGET = 'geFormWidgetAllocation';
 const SOFT_CREDIT_WIDGET = 'geFormWidgetSoftCredit';
 const TOKENIZE_CARD_WIDGET = 'geFormWidgetTokenizeCard';
@@ -52,17 +40,7 @@ export default class GeFormWidget extends LightningElement {
         apiNameFor(DATA_IMPORT_DONATION_DONOR),
         apiNameFor(DATA_IMPORT_ACCOUNT_NAME),
         apiNameFor(DATA_IMPORT_PAYMENT_STATUS),
-        apiNameFor(DATA_IMPORT_ID),
-        apiNameFor(DATA_IMPORT_ACCOUNT_CITY),
-        apiNameFor(DATA_IMPORT_ACCOUNT_COUNTRY),
-        apiNameFor(DATA_IMPORT_ACCOUNT_STREET),
-        apiNameFor(DATA_IMPORT_ACCOUNT_ZIP_POSTAL_CODE),
-        apiNameFor(DATA_IMPORT_ACCOUNT_STATE_PROVINCE),
-        apiNameFor(DATA_IMPORT_CONTACT_CITY),
-        apiNameFor(DATA_IMPORT_CONTACT_COUNTRY),
-        apiNameFor(DATA_IMPORT_CONTACT_STREET),
-        apiNameFor(DATA_IMPORT_CONTACT_ZIP_POSTAL_CODE),
-        apiNameFor(DATA_IMPORT_CONTACT_STATE_PROVINCE)
+        apiNameFor(DATA_IMPORT_ID)
     ];
 
     get giftInViewHasSchedule() {
