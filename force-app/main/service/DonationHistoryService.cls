@@ -37,17 +37,6 @@ public with sharing class DonationHistoryService {
     private String filter;
     private Integer offset;
 
-    public DonationHistoryService(Id contactId, Integer offset, String filter) {
-        this.contactId = contactId;
-        this.filter = filter;
-        this.offset = offset;
-    }
-
-    public DonationHistoryService(Id contactId) {
-        this.contactId = contactId;
-        this.offset    = offset;
-    }
-
     @TestVisible
     private UTIL_Permissions permissions {
         get {
@@ -59,6 +48,7 @@ public with sharing class DonationHistoryService {
         set;
     }
 
+    @TestVisible
     private DonationHistorySelector selector {
         get {
             if(selector == null) {
@@ -66,7 +56,9 @@ public with sharing class DonationHistoryService {
             }
             return selector;
         }
-        set;
+        set { 
+            this.selector = value;
+        }
     }
 
     private Boolean hasAccessToDonationHistory() {
@@ -100,7 +92,7 @@ public with sharing class DonationHistoryService {
     * @description method to return Donation History list.
     * @return List<Opportunity> returns Opportunities and Payment Method for them.
     */
-    public List<Opportunity> getDonationHistory() {
+    public List<Opportunity> getDonationHistory(Id contactId, Integer offset, String filter) {
         if (hasAccessToDonationHistory()) {
             List<Opportunity> credits = null;
             if (shouldApplyFilterByYear(filter)) {
@@ -124,7 +116,7 @@ public with sharing class DonationHistoryService {
      * @param contactId the contact id.
      * @return List<String>
      */
-    public List<String> getYearsWithDonationsForContact() {
+    public List<String> getYearsWithDonationsForContact(Id contactId) {
         
         if (!hasAccessToDonationHistory()) {
             throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);

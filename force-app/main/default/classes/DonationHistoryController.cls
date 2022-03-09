@@ -34,6 +34,20 @@
 * @description Class for list donation history by credit type.
 */
 public with sharing class DonationHistoryController {
+
+    @TestVisible
+    private static DonationHistoryService service {
+        get {
+            if (service == null) {
+                service = new DonationHistoryService();
+            }
+            return service;
+        }
+
+        set {
+            service = value;
+        }
+    }
     /** 
     * @author Salesforce.org
     * @date 2021
@@ -77,11 +91,10 @@ public with sharing class DonationHistoryController {
     */
     @AuraEnabled(cacheable=true)
     public static DonationHistoryAppView getDonationHistory(Id contactId, Integer offset, String filter) {
-        DonationHistoryService service = new DonationHistoryService(contactId, offset, filter);
         try {
             Boolean paymentsEnabled = service.checkIfPaymentsAreEnabled();
             DonationHistoryAppView donationHistories = new DonationHistoryAppView();
-            donationHistories.donations = buildHistoryFromOpportunities(service.getDonationHistory(), contactId, paymentsEnabled);
+            donationHistories.donations = buildHistoryFromOpportunities(service.getDonationHistory(contactId, offset, filter), contactId, paymentsEnabled);
             donationHistories.totalNumberOfRecords = service.getTotalNumberOfRecords();
             donationHistories.isPaymentsEnabled = paymentsEnabled;
             donationHistories.paymentMethodLabel = service.getPaymentMethodLabel();
@@ -99,7 +112,7 @@ public with sharing class DonationHistoryController {
     @AuraEnabled(cacheable=true)
     public static List<String> getYearsWithDonations(Id contactId) {
         try {
-            return new DonationHistoryService(contactId).getYearsWithDonationsForContact();
+            return service.getYearsWithDonationsForContact(contactId);
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
