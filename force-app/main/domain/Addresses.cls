@@ -250,7 +250,6 @@ public inherited sharing class Addresses extends fflib_SObjects2 {
 
             NPSP_HouseholdAccount npspHouseholdAccount = new NPSP_HouseholdAccount(accountsById.get(accountId));
             updateAccountAddress(npspHouseholdAccount, addressToSyncToAccountsAndContacts, accountsToUpdate);
-            // TODO: OTHER DEFAULT ADDRESSES ARE ALREADY CLEARED BEFORE THEY GET HERE.
             clearAccountAddressDefaults(allAddressesByAccountId,
                 accountId, householdInfoByAccountId, addressesToUpdate);
 
@@ -339,9 +338,7 @@ public inherited sharing class Addresses extends fflib_SObjects2 {
                     continue;
                 }
 
-                // TODO: THIS IS THE AREA NOT CAUSING THE PREVIOUS DEFAULT LATEST START DATE TO WORK. THE ADDRESS
-                //  HERE IS NOT COMING IN AS A DEFAULT SO WE CANNOT TELL WHICH WAS THE PREVIOUS DEFAULT.
-                if (npspAddress.hasDefaultChanged() && !npspAddress.getRecord().Default_Address__c) {
+                if (npspAddress.isDefault()) {
                     address.Default_Address__c = false;
                     address.Latest_End_Date__c = System.today();
                     addressesToUpdate.add(address);
@@ -931,7 +928,7 @@ public inherited sharing class Addresses extends fflib_SObjects2 {
         for (Address__c address : (List<Address__c>) getRecords()) {
             NPSP_Address npspAddress = new NPSP_Address(address);
 
-            if (npspAddress.isDefault()) {
+            if (npspAddress.hasDefaultChanged()) {
                 addressesWithDefaultChanges.add(address);
             }
         }
