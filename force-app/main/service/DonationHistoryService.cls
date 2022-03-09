@@ -121,21 +121,8 @@ public with sharing class DonationHistoryService {
         if (!hasAccessToDonationHistory()) {
             throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
         }
-        return convertAggregateResultListToStringList(selector.getYearsWithDonationForContact(contactId));
+        return selector.getYearsWithDonationForContact(contactId);
      }
-
-    /**
-     * @description converts a List<AggregateResult> in a List<String> .
-     * @param result The list with with the aggregate results from the database.
-     * @return List<String> the list of the values in the expr0 represented as String.
-     */ 
-    private List<String> convertAggregateResultListToStringList(List<AggregateResult> results) {
-        List<String> aggregateResultsAsStrings = new List<String>();
-        for(AggregateResult result : results) {
-            aggregateResultsAsStrings.add(String.valueOf(result.get('closeYear')));
-        }
-        return aggregateResultsAsStrings;
-    }
 
     /** 
     * @author Salesforce.org
