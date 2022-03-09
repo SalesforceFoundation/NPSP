@@ -409,6 +409,208 @@ public class CON_ContactMerge_TEST {
                 'account should not have changed.');
     }
 
+    @IsTest
+    private static void mergingTwoContactsWithActiveRDSustainersChangeToActive() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        CON_ContactMerge_CTRL controller = getController();
+        List<Contact> testContacts = getContacts(1);
+        testContacts.add(getUniqueContact());
+        setupMockDataForMerge(controller, testContacts);
+
+        Contact losingContact = testContacts[0];
+        Contact winningContact = testContacts[1];
+
+        insert new List<npe03__Recurring_Donation__c> {
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withDefaultValues()
+            .withStatusActive()
+            .withContact(losingContact.Id)
+            .withAmount(1)
+            .build(),
+
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withDefaultValues()
+            .withStatusClosed()
+            .withContact(winningContact.Id)
+            .withAmount(1)
+            .build()
+        };
+
+        winningContact = getContacts(new List<Contact>{winningContact})[0];
+        losingContact = getContacts(new List<Contact>{losingContact})[0];
+
+        System.assertEquals(RD2_SustainerEvaluationService.SustainerType.Active.name(), losingContact.Sustainer__c,
+            'The losing Contact should be mark as Active Sustainer');
+        System.assertEquals(RD2_SustainerEvaluationService.SustainerType.Former.name(), winningContact.Sustainer__c,
+            'The winning Contact should be mark as Former Sustainer');
+
+        selectMasterRecord(controller, winningContact.Id);
+
+        //merge them
+        Test.startTest();
+            controller.mergeContacts();
+        Test.stopTest();
+
+        List<Contact> updatedWinningContact = getContacts(new List<Contact>{winningContact});
+        List<Contact> updatedLosingContact = getContacts(new List<Contact>{losingContact});
+
+        List<Account> winningAccount = getTestAccountFor(updatedWinningContact[0].AccountId);
+        List<Account> losingAccount = getTestAccountFor(losingContact.AccountId);
+
+        List<npe03__Recurring_Donation__c> rds = [SELECT npe03__Organization__c, npe03__Contact__c FROM npe03__Recurring_Donation__c];
+
+        System.assertEquals(updatedWinningContact[0].Id, rds[0].npe03__Contact__c,
+            'The RD should be reparent to winning Contact');
+        System.assertEquals(winningAccount[0].Id, rds[0].npe03__Organization__c,
+            'The RD should be reparent to winning Account');
+
+        System.assert(!updatedWinningContact.isEmpty(), 'Winning contact should not be deleted.');
+        System.assert(updatedLosingContact.isEmpty(), 'Losing contact should be deleted.');
+
+        System.assert(!winningAccount.isEmpty(), 'The winning contact account should not be deleted');
+        System.assert(losingAccount.isEmpty(), 'The losing contact account should be deleted.');
+
+        System.assertEquals(RD2_SustainerEvaluationService.SustainerType.Active.name(), updatedWinningContact[0].Sustainer__c,
+            'The winning contact should be mark as Active Sustainer when there is an Active RD attached to it.');
+            System.assertEquals(RD2_SustainerEvaluationService.SustainerType.Active.name(), winningAccount[0].Sustainer__c,
+            'The winning Account should be mark as Active Sustainer when there is an Active RD attached to it.');
+    }
+
+    @IsTest
+    private static void mergingTwoContactsWithLapsedRDResultSustainerSetToLapsed() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        CON_ContactMerge_CTRL controller = getController();
+        List<Contact> testContacts = getContacts(1);
+        testContacts.add(getUniqueContact());
+        setupMockDataForMerge(controller, testContacts);
+
+        Contact losingContact = testContacts[0];
+        Contact winningContact = testContacts[1];
+
+        insert new List<npe03__Recurring_Donation__c> {
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withDefaultValues()
+            .withStatusLapsed()
+            .withContact(losingContact.Id)
+            .withAmount(1)
+            .build(),
+
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withDefaultValues()
+            .withStatusClosed()
+            .withContact(winningContact.Id)
+            .withAmount(1)
+            .build()
+        };
+
+        winningContact = getContacts(new List<Contact>{winningContact})[0];
+        losingContact = getContacts(new List<Contact>{losingContact})[0];
+
+        System.assertEquals(RD2_SustainerEvaluationService.SustainerType.Lapsed.name(), losingContact.Sustainer__c,
+            'The losing Contact should be mark as Lapsed Sustainer');
+        System.assertEquals(RD2_SustainerEvaluationService.SustainerType.Former.name(), winningContact.Sustainer__c,
+            'The winning Contact should be mark as Former Sustainer');
+
+        selectMasterRecord(controller, winningContact.Id);
+
+        //merge them
+        Test.startTest();
+            controller.mergeContacts();
+        Test.stopTest();
+
+        List<Contact> updatedWinningContact = getContacts(new List<Contact>{winningContact});
+        List<Contact> updatedLosingContact = getContacts(new List<Contact>{losingContact});
+
+        List<Account> winningAccount = getTestAccountFor(updatedWinningContact[0].AccountId);
+        List<Account> losingAccount = getTestAccountFor(losingContact.AccountId);
+
+        List<npe03__Recurring_Donation__c> rds = [SELECT npe03__Organization__c, npe03__Contact__c FROM npe03__Recurring_Donation__c];
+
+        System.assertEquals(updatedWinningContact[0].Id, rds[0].npe03__Contact__c,
+            'The RD should be reparent to winning Contact');
+        System.assertEquals(winningAccount[0].Id, rds[0].npe03__Organization__c,
+            'The RD should be reparent to winning Account');
+
+        System.assert(!updatedWinningContact.isEmpty(), 'Winning contact should not be deleted.');
+        System.assert(updatedLosingContact.isEmpty(), 'Losing contact should be deleted.');
+
+        System.assert(!winningAccount.isEmpty(), 'The winning contact account should not be deleted');
+        System.assert(losingAccount.isEmpty(), 'The losing contact account should be deleted.');
+
+        System.assertEquals(RD2_SustainerEvaluationService.SustainerType.Lapsed.name(), updatedWinningContact[0].Sustainer__c,
+            'The winning contact should be mark as Lapsed Sustainer when there is an Lapsed RD attached to it.');
+            System.assertEquals(RD2_SustainerEvaluationService.SustainerType.Lapsed.name(), winningAccount[0].Sustainer__c,
+            'The winning Account should be mark as Lapsed Sustainer when there is an Lapsed RD attached to it.');
+    }
+
+    @IsTest
+    private static void mergingTwoContactsWithClosedRDResultSustainerSetToFormer() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        CON_ContactMerge_CTRL controller = getController();
+        List<Contact> testContacts = getContacts(1);
+        testContacts.add(getUniqueContact());
+        setupMockDataForMerge(controller, testContacts);
+
+        Contact losingContact = testContacts[0];
+        Contact winningContact = testContacts[1];
+
+        insert TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withDefaultValues()
+            .withStatusClosed()
+            .withContact(losingContact.Id)
+            .withAmount(1)
+            .build();
+
+        winningContact = getContacts(new List<Contact>{winningContact})[0];
+        losingContact = getContacts(new List<Contact>{losingContact})[0];
+
+        System.assertEquals(RD2_SustainerEvaluationService.SustainerType.Former.name(), losingContact.Sustainer__c,
+            'The losing Contact should be mark as Former Sustainer');
+        System.assertEquals(null, winningContact.Sustainer__c,
+            'The winning Contact should not be a Sustainer');
+
+        selectMasterRecord(controller, winningContact.Id);
+
+        //merge them
+        Test.startTest();
+            controller.mergeContacts();
+        Test.stopTest();
+
+        List<Contact> updatedWinningContact = getContacts(new List<Contact>{winningContact});
+        List<Contact> updatedLosingContact = getContacts(new List<Contact>{losingContact});
+
+        List<Account> winningAccount = getTestAccountFor(updatedWinningContact[0].AccountId);
+        List<Account> losingAccount = getTestAccountFor(losingContact.AccountId);
+
+        List<npe03__Recurring_Donation__c> rds = [SELECT npe03__Organization__c, npe03__Contact__c FROM npe03__Recurring_Donation__c];
+
+        System.assertEquals(updatedWinningContact[0].Id, rds[0].npe03__Contact__c,
+            'The RD should be reparent to winning Contact');
+        System.assertEquals(winningAccount[0].Id, rds[0].npe03__Organization__c,
+            'The RD should be reparent to winning Account');
+
+        System.assert(!updatedWinningContact.isEmpty(), 'Winning contact should not be deleted.');
+        System.assert(updatedLosingContact.isEmpty(), 'Losing contact should be deleted.');
+
+        System.assert(!winningAccount.isEmpty(), 'The winning contact account should not be deleted');
+        System.assert(losingAccount.isEmpty(), 'The losing contact account should be deleted.');
+
+        System.assertEquals(RD2_SustainerEvaluationService.SustainerType.Former.name(), updatedWinningContact[0].Sustainer__c,
+            'The winning contact should be mark as Former Sustainer when there are only Closed RDs attached to it.');
+            System.assertEquals(RD2_SustainerEvaluationService.SustainerType.Former.name(), winningAccount[0].Sustainer__c,
+            'The winning Account should be mark as Former Sustainer when there are only Closed RDs attached to it.');
+    }
+
+
     //merge a one-to-one contact with one in a normal organzation
     //the organization shouldn't be deleted
     @IsTest
@@ -719,7 +921,7 @@ public class CON_ContactMerge_TEST {
 
     private static List<Contact> getContacts(Integer numberOfContacts) {
         return [
-                SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId
+                SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId, Sustainer__c
                 FROM Contact
                 LIMIT :numberOfContacts
         ];
@@ -727,7 +929,7 @@ public class CON_ContactMerge_TEST {
 
     private static List<Contact> getContacts(List<Contact> contacts) {
         return [
-                SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId
+                SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId, Sustainer__c
                 FROM Contact
                 WHERE Id IN :contacts
         ];
@@ -757,7 +959,7 @@ public class CON_ContactMerge_TEST {
     }
 
     private static List<Account> getTestAccountFor(Id accountId) {
-        return [SELECT Id FROM Account WHERE Id = :accountId];
+        return [SELECT Id, Sustainer__c FROM Account WHERE Id = :accountId];
     }
 
     private static Set<Id> getSetOfIds(List<SObject> records) {

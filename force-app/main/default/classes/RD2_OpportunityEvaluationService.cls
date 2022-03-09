@@ -490,6 +490,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
     private void evaluateSustainers() {
         RD2_SustainerEvaluationService sustainerService = new RD2_SustainerEvaluationService()
+            .withBatchContext(isBatchContext)
             .withRecurringDonations(rds)
             .withRecurringDonations(oldRds);
     
