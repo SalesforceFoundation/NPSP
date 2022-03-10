@@ -2,11 +2,6 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Nonprofit Success Pack</fullName>
     <types>
-        <members>Grant_Path</members>
-        <members>Major_Gift_Path</members>
-        <name>AnimationRule</name>
-    </types>
-    <types>
         <members>NPSP_Home</members>
         <name>ApexPage</name>
     </types>
@@ -33,37 +28,37 @@
         <members>%%%NAMESPACE%%%Engagement_Plan__c.NPSP_Engagement_Plan</members>
         <members>%%%NAMESPACE%%%General_Accounting_Unit__c.NPSP_General_Accounting_Unit</members>
         <members>%%%NAMESPACE%%%Grant_Deadline__c.Deliverable_Layout</members>
+        <members>Account.%%%NAMESPACE%%%Account_Compact_Layout</members>
         <members>Account.NPSP_Household_Account</members>
         <members>Account.NPSP_Organization_Account</members>
-        <members>Account.%%%NAMESPACE%%%Account_Compact_Layout</members>
         <members>Campaign.NPSP_Compact_Layout</members>
-        <members>Contact.NPSP_Contact_Compact_Layout_Unmanaged</members>
         <members>Contact.%%%NAMESPACE%%%Contact_Compact_Layout</members>
         <members>Contact.%%%NAMESPACE%%%NPSP_Contact_Compact_Layout</members>
+        <members>Contact.NPSP_Contact_Compact_Layout_Unmanaged</members>
+        <members>Opportunity.%%%NAMESPACE%%%Donation_Compact_Layout</members>
+        <members>Opportunity.%%%NAMESPACE%%%Membership_Compact_Layout</members>
+        <members>Opportunity.%%%NAMESPACE%%%NPSP_Donation_Compact_Layout</members>
         <members>Opportunity.NPSP_Donation_Compact_Layout_Unmanaged</members>
         <members>Opportunity.NPSP_Grant_Compact_Layout_Unmanaged</members>
         <members>Opportunity.NPSP_In_Kind_Compact_Layout_Unmanaged</members>
         <members>Opportunity.NPSP_Membership_Compact_Layout_Unmanaged</members>
-        <members>Opportunity.%%%NAMESPACE%%%Donation_Compact_Layout</members>
-        <members>Opportunity.%%%NAMESPACE%%%Membership_Compact_Layout</members>
-        <members>Opportunity.%%%NAMESPACE%%%NPSP_Donation_Compact_Layout</members>
-        <members>npe01__OppPayment__c.NPSP_Payment_Compact_Layout_Unmanaged</members>
         <members>npe01__OppPayment__c.%%%NAMESPACE%%%NPSP_Payment_Compact_Layout</members>
+        <members>npe01__OppPayment__c.NPSP_Payment_Compact_Layout_Unmanaged</members>
+        <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%NPSP_Recurring_Donation_Compact_Layout</members>
         <members>npe03__Recurring_Donation__c.Enhanced_Recurring_Donations</members>
         <members>npe03__Recurring_Donation__c.NPSP_Recurring_Donation_Compact_Layout_Unmanaged</members>
         <members>npe03__Recurring_Donation__c.npe03__NPSP_Recurring_Donation_Compact_Layout</members>
-        <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%NPSP_Recurring_Donation_Compact_Layout</members>
-        <members>npe4__Relationship__c.NPSP_Relationship_Compact_Layout_Unmanaged</members>
         <members>npe4__Relationship__c.%%%NAMESPACE%%%NPSP_Relationship_Compact_Layout</members>
-        <members>npe5__Affiliation__c.NPSP_Affiliation_Compact_Layout_Unmanaged</members>
+        <members>npe4__Relationship__c.NPSP_Relationship_Compact_Layout_Unmanaged</members>
         <members>npe5__Affiliation__c.%%%NAMESPACE%%%NPSP_Affiliation_Compact_Layout</members>
-        <members>%%%NAMESPACE%%%Address__c.NPSP_Address_Compact_Layout_Unmanaged</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%NPSP_Address_Compact_Layout</members>
-        <members>%%%NAMESPACE%%%Allocation__c.NPSP_GAU_Allocation</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Template__c.NPSP_Engagement_Plan_Template</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan__c.NPSP_Engagement_Plan</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c.NPSP_General_Accounting_Unit</members>
-        <members>%%%NAMESPACE%%%Grant_Deadline__c.Deliverable_Layout</members>
+        <members>npe5__Affiliation__c.NPSP_Affiliation_Compact_Layout_Unmanaged</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%NPSP_Address_Compact_Layout</members>
+        <members>npsp__Address__c.NPSP_Address_Compact_Layout_Unmanaged</members>
+        <members>npsp__Allocation__c.NPSP_GAU_Allocation</members>
+        <members>npsp__Engagement_Plan_Template__c.NPSP_Engagement_Plan_Template</members>
+        <members>npsp__Engagement_Plan__c.NPSP_Engagement_Plan</members>
+        <members>npsp__General_Accounting_Unit__c.NPSP_General_Accounting_Unit</members>
+        <members>npsp__Grant_Deadline__c.Deliverable_Layout</members>
         <name>CompactLayout</name>
     </types>
     <types>
@@ -85,6 +80,25 @@
         <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Household_Account__c</members>
         <members>%%%NAMESPACE%%%Engagement_Plan__c.%%%NAMESPACE%%%Engagement_Plan_Template__c</members>
         <members>%%%NAMESPACE%%%Grant_Deadline__c.%%%NAMESPACE%%%Opportunity__c</members>
+        <members>Account.%%%NAMESPACE%%%Batch__c</members>
+        <members>Account.%%%NAMESPACE%%%CustomizableRollups_UseSkewMode__c</members>
+        <members>Account.%%%NAMESPACE%%%Funding_Focus__c</members>
+        <members>Account.%%%NAMESPACE%%%Grantmaker__c</members>
+        <members>Account.%%%NAMESPACE%%%Matching_Gift_Administrator_Name__c</members>
+        <members>Account.%%%NAMESPACE%%%Matching_Gift_Amount_Max__c</members>
+        <members>Account.%%%NAMESPACE%%%Matching_Gift_Amount_Min__c</members>
+        <members>Account.%%%NAMESPACE%%%Matching_Gift_Annual_Employee_Max__c</members>
+        <members>Account.%%%NAMESPACE%%%Matching_Gift_Comments__c</members>
+        <members>Account.%%%NAMESPACE%%%Matching_Gift_Company__c</members>
+        <members>Account.%%%NAMESPACE%%%Matching_Gift_Email__c</members>
+        <members>Account.%%%NAMESPACE%%%Matching_Gift_Info_Updated__c</members>
+        <members>Account.%%%NAMESPACE%%%Matching_Gift_Percent__c</members>
+        <members>Account.%%%NAMESPACE%%%Matching_Gift_Phone__c</members>
+        <members>Account.%%%NAMESPACE%%%Matching_Gift_Request_Deadline__c</members>
+        <members>Account.%%%NAMESPACE%%%Membership_Span__c</members>
+        <members>Account.%%%NAMESPACE%%%Membership_Status__c</members>
+        <members>Account.%%%NAMESPACE%%%Number_of_Household_Members__c</members>
+        <members>Account.%%%NAMESPACE%%%Undeliverable_Address__c</members>
         <members>Account.AccountNumber</members>
         <members>Account.AccountSource</members>
         <members>Account.AnnualRevenue</members>
@@ -143,25 +157,6 @@
         <members>Account.npo02__SmallestAmount__c</members>
         <members>Account.npo02__TotalMembershipOppAmount__c</members>
         <members>Account.npo02__TotalOppAmount__c</members>
-        <members>Account.%%%NAMESPACE%%%Batch__c</members>
-        <members>Account.%%%NAMESPACE%%%CustomizableRollups_UseSkewMode__c</members>
-        <members>Account.%%%NAMESPACE%%%Funding_Focus__c</members>
-        <members>Account.%%%NAMESPACE%%%Grantmaker__c</members>
-        <members>Account.%%%NAMESPACE%%%Matching_Gift_Administrator_Name__c</members>
-        <members>Account.%%%NAMESPACE%%%Matching_Gift_Amount_Max__c</members>
-        <members>Account.%%%NAMESPACE%%%Matching_Gift_Amount_Min__c</members>
-        <members>Account.%%%NAMESPACE%%%Matching_Gift_Annual_Employee_Max__c</members>
-        <members>Account.%%%NAMESPACE%%%Matching_Gift_Comments__c</members>
-        <members>Account.%%%NAMESPACE%%%Matching_Gift_Company__c</members>
-        <members>Account.%%%NAMESPACE%%%Matching_Gift_Email__c</members>
-        <members>Account.%%%NAMESPACE%%%Matching_Gift_Info_Updated__c</members>
-        <members>Account.%%%NAMESPACE%%%Matching_Gift_Percent__c</members>
-        <members>Account.%%%NAMESPACE%%%Matching_Gift_Phone__c</members>
-        <members>Account.%%%NAMESPACE%%%Matching_Gift_Request_Deadline__c</members>
-        <members>Account.%%%NAMESPACE%%%Membership_Span__c</members>
-        <members>Account.%%%NAMESPACE%%%Membership_Status__c</members>
-        <members>Account.%%%NAMESPACE%%%Number_of_Household_Members__c</members>
-        <members>Account.%%%NAMESPACE%%%Undeliverable_Address__c</members>
         <members>Activity.%%%NAMESPACE%%%Engagement_Plan_Task__c</members>
         <members>Activity.%%%NAMESPACE%%%Engagement_Plan__c</members>
         <members>Campaign.ActualCost</members>
@@ -235,6 +230,32 @@
         <members>Case.SuppliedName</members>
         <members>Case.SuppliedPhone</members>
         <members>Case.Type</members>
+        <members>Contact.%%%NAMESPACE%%%Address_Verification_Status__c</members>
+        <members>Contact.%%%NAMESPACE%%%Batch__c</members>
+        <members>Contact.%%%NAMESPACE%%%Current_Address__c</members>
+        <members>Contact.%%%NAMESPACE%%%CustomizableRollups_UseSkewMode__c</members>
+        <members>Contact.%%%NAMESPACE%%%Deceased__c</members>
+        <members>Contact.%%%NAMESPACE%%%Do_Not_Contact__c</members>
+        <members>Contact.%%%NAMESPACE%%%Exclude_from_Household_Formal_Greeting__c</members>
+        <members>Contact.%%%NAMESPACE%%%Exclude_from_Household_Informal_Greeting__c</members>
+        <members>Contact.%%%NAMESPACE%%%Exclude_from_Household_Name__c</members>
+        <members>Contact.%%%NAMESPACE%%%First_Soft_Credit_Amount__c</members>
+        <members>Contact.%%%NAMESPACE%%%First_Soft_Credit_Date__c</members>
+        <members>Contact.%%%NAMESPACE%%%HHId__c</members>
+        <members>Contact.%%%NAMESPACE%%%Largest_Soft_Credit_Amount__c</members>
+        <members>Contact.%%%NAMESPACE%%%Largest_Soft_Credit_Date__c</members>
+        <members>Contact.%%%NAMESPACE%%%Last_Soft_Credit_Amount__c</members>
+        <members>Contact.%%%NAMESPACE%%%Last_Soft_Credit_Date__c</members>
+        <members>Contact.%%%NAMESPACE%%%Number_of_Soft_Credits_Last_N_Days__c</members>
+        <members>Contact.%%%NAMESPACE%%%Number_of_Soft_Credits_Last_Year__c</members>
+        <members>Contact.%%%NAMESPACE%%%Number_of_Soft_Credits_This_Year__c</members>
+        <members>Contact.%%%NAMESPACE%%%Number_of_Soft_Credits_Two_Years_Ago__c</members>
+        <members>Contact.%%%NAMESPACE%%%Number_of_Soft_Credits__c</members>
+        <members>Contact.%%%NAMESPACE%%%Primary_Affiliation__c</members>
+        <members>Contact.%%%NAMESPACE%%%Primary_Contact__c</members>
+        <members>Contact.%%%NAMESPACE%%%Soft_Credit_Last_N_Days__c</members>
+        <members>Contact.%%%NAMESPACE%%%Undeliverable_Address__c</members>
+        <members>Contact.%%%NAMESPACE%%%is_Address_Override__c</members>
         <members>Contact.AccountId</members>
         <members>Contact.AssistantName</members>
         <members>Contact.AssistantPhone</members>
@@ -317,32 +338,6 @@
         <members>Contact.npo02__TotalMembershipOppAmount__c</members>
         <members>Contact.npo02__TotalOppAmount__c</members>
         <members>Contact.npo02__Total_Household_Gifts__c</members>
-        <members>Contact.%%%NAMESPACE%%%Address_Verification_Status__c</members>
-        <members>Contact.%%%NAMESPACE%%%Batch__c</members>
-        <members>Contact.%%%NAMESPACE%%%Current_Address__c</members>
-        <members>Contact.%%%NAMESPACE%%%CustomizableRollups_UseSkewMode__c</members>
-        <members>Contact.%%%NAMESPACE%%%Deceased__c</members>
-        <members>Contact.%%%NAMESPACE%%%Do_Not_Contact__c</members>
-        <members>Contact.%%%NAMESPACE%%%Exclude_from_Household_Formal_Greeting__c</members>
-        <members>Contact.%%%NAMESPACE%%%Exclude_from_Household_Informal_Greeting__c</members>
-        <members>Contact.%%%NAMESPACE%%%Exclude_from_Household_Name__c</members>
-        <members>Contact.%%%NAMESPACE%%%First_Soft_Credit_Amount__c</members>
-        <members>Contact.%%%NAMESPACE%%%First_Soft_Credit_Date__c</members>
-        <members>Contact.%%%NAMESPACE%%%HHId__c</members>
-        <members>Contact.%%%NAMESPACE%%%Largest_Soft_Credit_Amount__c</members>
-        <members>Contact.%%%NAMESPACE%%%Largest_Soft_Credit_Date__c</members>
-        <members>Contact.%%%NAMESPACE%%%Last_Soft_Credit_Amount__c</members>
-        <members>Contact.%%%NAMESPACE%%%Last_Soft_Credit_Date__c</members>
-        <members>Contact.%%%NAMESPACE%%%Number_of_Soft_Credits_Last_N_Days__c</members>
-        <members>Contact.%%%NAMESPACE%%%Number_of_Soft_Credits_Last_Year__c</members>
-        <members>Contact.%%%NAMESPACE%%%Number_of_Soft_Credits_This_Year__c</members>
-        <members>Contact.%%%NAMESPACE%%%Number_of_Soft_Credits_Two_Years_Ago__c</members>
-        <members>Contact.%%%NAMESPACE%%%Number_of_Soft_Credits__c</members>
-        <members>Contact.%%%NAMESPACE%%%Primary_Affiliation__c</members>
-        <members>Contact.%%%NAMESPACE%%%Primary_Contact__c</members>
-        <members>Contact.%%%NAMESPACE%%%Soft_Credit_Last_N_Days__c</members>
-        <members>Contact.%%%NAMESPACE%%%Undeliverable_Address__c</members>
-        <members>Contact.%%%NAMESPACE%%%is_Address_Override__c</members>
         <members>Contract.AccountId</members>
         <members>Contract.ActivatedById</members>
         <members>Contract.ActivatedDate</members>
@@ -381,6 +376,12 @@
         <members>Entitlement.StatusIndicator</members>
         <members>Entitlement.Type</members>
         <members>Entitlement.WorkOrdersPerEntitlement</members>
+        <members>Lead.%%%NAMESPACE%%%Batch__c</members>
+        <members>Lead.%%%NAMESPACE%%%CompanyCity__c</members>
+        <members>Lead.%%%NAMESPACE%%%CompanyCountry__c</members>
+        <members>Lead.%%%NAMESPACE%%%CompanyPostalCode__c</members>
+        <members>Lead.%%%NAMESPACE%%%CompanyState__c</members>
+        <members>Lead.%%%NAMESPACE%%%CompanyStreet__c</members>
         <members>Lead.Address</members>
         <members>Lead.AnnualRevenue</members>
         <members>Lead.CampaignId</members>
@@ -407,12 +408,6 @@
         <members>Lead.Website</members>
         <members>Lead.npe01__Preferred_Email__c</members>
         <members>Lead.npe01__Preferred_Phone__c</members>
-        <members>Lead.%%%NAMESPACE%%%Batch__c</members>
-        <members>Lead.%%%NAMESPACE%%%CompanyCity__c</members>
-        <members>Lead.%%%NAMESPACE%%%CompanyCountry__c</members>
-        <members>Lead.%%%NAMESPACE%%%CompanyPostalCode__c</members>
-        <members>Lead.%%%NAMESPACE%%%CompanyState__c</members>
-        <members>Lead.%%%NAMESPACE%%%CompanyStreet__c</members>
         <members>Location.CloseDate</members>
         <members>Location.ConstructionEndDate</members>
         <members>Location.ConstructionStartDate</members>
@@ -434,38 +429,6 @@
         <members>Location.RemodelStartDate</members>
         <members>Location.RootLocationId</members>
         <members>Location.TimeZone</members>
-        <members>Opportunity.AccountId</members>
-        <members>Opportunity.Amount</members>
-        <members>Opportunity.CampaignId</members>
-        <members>Opportunity.CloseDate</members>
-        <members>Opportunity.ContractId</members>
-        <members>Opportunity.Description</members>
-        <members>Opportunity.ExpectedRevenue</members>
-        <members>Opportunity.IqScore</members>
-        <members>Opportunity.IsPrivate</members>
-        <members>Opportunity.LeadSource</members>
-        <members>Opportunity.Name</members>
-        <members>Opportunity.NextStep</members>
-        <members>Opportunity.OwnerId</members>
-        <members>Opportunity.Pricebook2Id</members>
-        <members>Opportunity.Probability</members>
-        <members>Opportunity.StageName</members>
-        <members>Opportunity.TotalOpportunityQuantity</members>
-        <members>Opportunity.Type</members>
-        <members>Opportunity.npe01__Amount_Outstanding__c</members>
-        <members>Opportunity.npe01__Amount_Written_Off__c</members>
-        <members>Opportunity.npe01__Contact_Id_for_Role__c</members>
-        <members>Opportunity.npe01__Do_Not_Automatically_Create_Payment__c</members>
-        <members>Opportunity.npe01__Is_Opp_From_Individual__c</members>
-        <members>Opportunity.npe01__Member_Level__c</members>
-        <members>Opportunity.npe01__Membership_End_Date__c</members>
-        <members>Opportunity.npe01__Membership_Origin__c</members>
-        <members>Opportunity.npe01__Membership_Start_Date__c</members>
-        <members>Opportunity.npe01__Number_of_Payments__c</members>
-        <members>Opportunity.npe01__Payments_Made__c</members>
-        <members>Opportunity.npe03__Recurring_Donation__c</members>
-        <members>Opportunity.npo02__CombinedRollupFieldset__c</members>
-        <members>Opportunity.npo02__systemHouseholdContactRoleProcessor__c</members>
         <members>Opportunity.%%%NAMESPACE%%%Acknowledgment_Date__c</members>
         <members>Opportunity.%%%NAMESPACE%%%Acknowledgment_Status__c</members>
         <members>Opportunity.%%%NAMESPACE%%%Ask_Date__c</members>
@@ -506,6 +469,38 @@
         <members>Opportunity.%%%NAMESPACE%%%Recurring_Donation_Installment_Number__c</members>
         <members>Opportunity.%%%NAMESPACE%%%Requested_Amount__c</members>
         <members>Opportunity.%%%NAMESPACE%%%Tribute_Type__c</members>
+        <members>Opportunity.AccountId</members>
+        <members>Opportunity.Amount</members>
+        <members>Opportunity.CampaignId</members>
+        <members>Opportunity.CloseDate</members>
+        <members>Opportunity.ContractId</members>
+        <members>Opportunity.Description</members>
+        <members>Opportunity.ExpectedRevenue</members>
+        <members>Opportunity.IqScore</members>
+        <members>Opportunity.IsPrivate</members>
+        <members>Opportunity.LeadSource</members>
+        <members>Opportunity.Name</members>
+        <members>Opportunity.NextStep</members>
+        <members>Opportunity.OwnerId</members>
+        <members>Opportunity.Pricebook2Id</members>
+        <members>Opportunity.Probability</members>
+        <members>Opportunity.StageName</members>
+        <members>Opportunity.TotalOpportunityQuantity</members>
+        <members>Opportunity.Type</members>
+        <members>Opportunity.npe01__Amount_Outstanding__c</members>
+        <members>Opportunity.npe01__Amount_Written_Off__c</members>
+        <members>Opportunity.npe01__Contact_Id_for_Role__c</members>
+        <members>Opportunity.npe01__Do_Not_Automatically_Create_Payment__c</members>
+        <members>Opportunity.npe01__Is_Opp_From_Individual__c</members>
+        <members>Opportunity.npe01__Member_Level__c</members>
+        <members>Opportunity.npe01__Membership_End_Date__c</members>
+        <members>Opportunity.npe01__Membership_Origin__c</members>
+        <members>Opportunity.npe01__Membership_Start_Date__c</members>
+        <members>Opportunity.npe01__Number_of_Payments__c</members>
+        <members>Opportunity.npe01__Payments_Made__c</members>
+        <members>Opportunity.npe03__Recurring_Donation__c</members>
+        <members>Opportunity.npo02__CombinedRollupFieldset__c</members>
+        <members>Opportunity.npo02__systemHouseholdContactRoleProcessor__c</members>
         <members>OrderItem.AvailableQuantity</members>
         <members>OrderItem.Description</members>
         <members>OrderItem.EndDate</members>
@@ -664,6 +659,21 @@
         <members>WorkStepTemplate.IsActive</members>
         <members>WorkStepTemplate.Name</members>
         <members>WorkStepTemplate.OwnerId</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Advancement_Namespace__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Automatic_Campaign_Member_Management__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Campaign_Member_Non_Responded_Status__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Campaign_Member_Responded_Status__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Contact_Role_for_Organizational_Opps__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Enforce_Accounting_Data_Consistency__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Honoree_Opportunity_Contact_Role__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Household_Account_Addresses_Disabled__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Max_Payments__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Notification_Recipient_Opp_Contact_Role__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Opp_RecTypes_Excluded_for_Payments__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Opp_Types_Excluded_for_Payments__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Organizational_Account_Addresses_Enabled__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Payments_Auto_Close_Stage_Name__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Simple_Address_Change_Treated_as_Update__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.npe01__Account_Processor__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.npe01__DISABLE_IndividualAccounts_trigger__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.npe01__DISABLE_OpportunityAccount_trigger__c</members>
@@ -682,31 +692,6 @@
         <members>npe01__Contacts_And_Orgs_Settings__c.npe01__Package_Update_URL__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.npe01__Payments_Enabled__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.npe01__Update_Check_Interval__c</members>
-        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Advancement_Namespace__c</members>
-        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Automatic_Campaign_Member_Management__c</members>
-        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Campaign_Member_Non_Responded_Status__c</members>
-        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Campaign_Member_Responded_Status__c</members>
-        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Contact_Role_for_Organizational_Opps__c</members>
-        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Enforce_Accounting_Data_Consistency__c</members>
-        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Honoree_Opportunity_Contact_Role__c</members>
-        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Household_Account_Addresses_Disabled__c</members>
-        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Max_Payments__c</members>
-        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Notification_Recipient_Opp_Contact_Role__c</members>
-        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Opp_RecTypes_Excluded_for_Payments__c</members>
-        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Opp_Types_Excluded_for_Payments__c</members>
-        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Organizational_Account_Addresses_Enabled__c</members>
-        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Payments_Auto_Close_Stage_Name__c</members>
-        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Simple_Address_Change_Treated_as_Update__c</members>
-        <members>npe01__OppPayment__c.Payment_Status__c</members>
-        <members>npe01__OppPayment__c.npe01__Check_Reference_Number__c</members>
-        <members>npe01__OppPayment__c.npe01__Custom_Payment_Field__c</members>
-        <members>npe01__OppPayment__c.npe01__Opportunity__c</members>
-        <members>npe01__OppPayment__c.npe01__Paid__c</members>
-        <members>npe01__OppPayment__c.npe01__Payment_Amount__c</members>
-        <members>npe01__OppPayment__c.npe01__Payment_Date__c</members>
-        <members>npe01__OppPayment__c.npe01__Payment_Method__c</members>
-        <members>npe01__OppPayment__c.npe01__Scheduled_Date__c</members>
-        <members>npe01__OppPayment__c.npe01__Written_Off__c</members>
         <members>npe01__OppPayment__c.%%%NAMESPACE%%%ACH_Code__c</members>
         <members>npe01__OppPayment__c.%%%NAMESPACE%%%ACH_Last_4__c</members>
         <members>npe01__OppPayment__c.%%%NAMESPACE%%%Authorized_Date__c</members>
@@ -734,24 +719,18 @@
         <members>npe01__OppPayment__c.%%%NAMESPACE%%%Payment_Acknowledgment_Status__c</members>
         <members>npe01__OppPayment__c.%%%NAMESPACE%%%Total_Transaction_Fees__c</members>
         <members>npe01__OppPayment__c.%%%NAMESPACE%%%Type__c</members>
+        <members>npe01__OppPayment__c.Payment_Status__c</members>
+        <members>npe01__OppPayment__c.npe01__Check_Reference_Number__c</members>
+        <members>npe01__OppPayment__c.npe01__Custom_Payment_Field__c</members>
+        <members>npe01__OppPayment__c.npe01__Opportunity__c</members>
+        <members>npe01__OppPayment__c.npe01__Paid__c</members>
+        <members>npe01__OppPayment__c.npe01__Payment_Amount__c</members>
+        <members>npe01__OppPayment__c.npe01__Payment_Date__c</members>
+        <members>npe01__OppPayment__c.npe01__Payment_Method__c</members>
+        <members>npe01__OppPayment__c.npe01__Scheduled_Date__c</members>
+        <members>npe01__OppPayment__c.npe01__Written_Off__c</members>
         <members>npe01__Payment_Field_Mapping_Settings__c.npe01__Opportunity_Field__c</members>
         <members>npe01__Payment_Field_Mapping_Settings__c.npe01__Payment_Field__c</members>
-        <members>npe03__Recurring_Donation__c.npe03__Amount__c</members>
-        <members>npe03__Recurring_Donation__c.npe03__Contact__c</members>
-        <members>npe03__Recurring_Donation__c.npe03__Date_Established__c</members>
-        <members>npe03__Recurring_Donation__c.npe03__Donor_Name__c</members>
-        <members>npe03__Recurring_Donation__c.npe03__Installment_Amount__c</members>
-        <members>npe03__Recurring_Donation__c.npe03__Installment_Period__c</members>
-        <members>npe03__Recurring_Donation__c.npe03__Installments__c</members>
-        <members>npe03__Recurring_Donation__c.npe03__Last_Payment_Date__c</members>
-        <members>npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c</members>
-        <members>npe03__Recurring_Donation__c.npe03__Open_Ended_Status__c</members>
-        <members>npe03__Recurring_Donation__c.npe03__Organization__c</members>
-        <members>npe03__Recurring_Donation__c.npe03__Paid_Amount__c</members>
-        <members>npe03__Recurring_Donation__c.npe03__Recurring_Donation_Campaign__c</members>
-        <members>npe03__Recurring_Donation__c.npe03__Schedule_Type__c</members>
-        <members>npe03__Recurring_Donation__c.npe03__Total_Paid_Installments__c</members>
-        <members>npe03__Recurring_Donation__c.npe03__Total__c</members>
         <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%ACH_Last_4__c</members>
         <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%Always_Use_Last_Day_Of_Month__c</members>
         <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%CardExpirationMonth__c</members>
@@ -772,19 +751,22 @@
         <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%RecurringType__c</members>
         <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%StartDate__c</members>
         <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%Status__c</members>
-        <members>npe03__Recurring_Donations_Settings__c.npe03__Add_Campaign_to_All_Opportunites__c</members>
-        <members>npe03__Recurring_Donations_Settings__c.npe03__DISABLE_Donations_trigger__c</members>
-        <members>npe03__Recurring_Donations_Settings__c.npe03__DISABLE_RecurringDonations_trigger__c</members>
-        <members>npe03__Recurring_Donations_Settings__c.npe03__Enable_Update_Check__c</members>
-        <members>npe03__Recurring_Donations_Settings__c.npe03__Error_Email_Notifications__c</members>
-        <members>npe03__Recurring_Donations_Settings__c.npe03__Last_Batch_Run__c</members>
-        <members>npe03__Recurring_Donations_Settings__c.npe03__Maximum_Donations__c</members>
-        <members>npe03__Recurring_Donations_Settings__c.npe03__Number_of_Failures__c</members>
-        <members>npe03__Recurring_Donations_Settings__c.npe03__Number_of_Successes__c</members>
-        <members>npe03__Recurring_Donations_Settings__c.npe03__Open_Opportunity_Behavior__c</members>
-        <members>npe03__Recurring_Donations_Settings__c.npe03__Opportunity_Forecast_Months__c</members>
-        <members>npe03__Recurring_Donations_Settings__c.npe03__Record_Type__c</members>
-        <members>npe03__Recurring_Donations_Settings__c.npe03__Update_Check_Interval__c</members>
+        <members>npe03__Recurring_Donation__c.npe03__Amount__c</members>
+        <members>npe03__Recurring_Donation__c.npe03__Contact__c</members>
+        <members>npe03__Recurring_Donation__c.npe03__Date_Established__c</members>
+        <members>npe03__Recurring_Donation__c.npe03__Donor_Name__c</members>
+        <members>npe03__Recurring_Donation__c.npe03__Installment_Amount__c</members>
+        <members>npe03__Recurring_Donation__c.npe03__Installment_Period__c</members>
+        <members>npe03__Recurring_Donation__c.npe03__Installments__c</members>
+        <members>npe03__Recurring_Donation__c.npe03__Last_Payment_Date__c</members>
+        <members>npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c</members>
+        <members>npe03__Recurring_Donation__c.npe03__Open_Ended_Status__c</members>
+        <members>npe03__Recurring_Donation__c.npe03__Organization__c</members>
+        <members>npe03__Recurring_Donation__c.npe03__Paid_Amount__c</members>
+        <members>npe03__Recurring_Donation__c.npe03__Recurring_Donation_Campaign__c</members>
+        <members>npe03__Recurring_Donation__c.npe03__Schedule_Type__c</members>
+        <members>npe03__Recurring_Donation__c.npe03__Total_Paid_Installments__c</members>
+        <members>npe03__Recurring_Donation__c.npe03__Total__c</members>
         <members>npe03__Recurring_Donations_Settings__c.%%%NAMESPACE%%%DataMigrationBatchSize__c</members>
         <members>npe03__Recurring_Donations_Settings__c.%%%NAMESPACE%%%DisableRollupsWhenCreatingInstallments__c</members>
         <members>npe03__Recurring_Donations_Settings__c.%%%NAMESPACE%%%EnableAutomaticNaming__c</members>
@@ -800,10 +782,24 @@
         <members>npe03__Recurring_Donations_Settings__c.%%%NAMESPACE%%%Recurring_Donation_Batch_Size__c</members>
         <members>npe03__Recurring_Donations_Settings__c.%%%NAMESPACE%%%StatusMappingDeploymentId__c</members>
         <members>npe03__Recurring_Donations_Settings__c.%%%NAMESPACE%%%UseFiscalYearForRecurringDonationValue__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.npe03__Add_Campaign_to_All_Opportunites__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.npe03__DISABLE_Donations_trigger__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.npe03__DISABLE_RecurringDonations_trigger__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.npe03__Enable_Update_Check__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.npe03__Error_Email_Notifications__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.npe03__Last_Batch_Run__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.npe03__Maximum_Donations__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.npe03__Number_of_Failures__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.npe03__Number_of_Successes__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.npe03__Open_Opportunity_Behavior__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.npe03__Opportunity_Forecast_Months__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.npe03__Record_Type__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.npe03__Update_Check_Interval__c</members>
         <members>npe4__Relationship_Lookup__c.npe4__Active__c</members>
         <members>npe4__Relationship_Lookup__c.npe4__Female__c</members>
         <members>npe4__Relationship_Lookup__c.npe4__Male__c</members>
         <members>npe4__Relationship_Lookup__c.npe4__Neutral__c</members>
+        <members>npe4__Relationship__c.%%%NAMESPACE%%%Related_Opportunity_Contact_Role__c</members>
         <members>npe4__Relationship__c.npe4__Contact__c</members>
         <members>npe4__Relationship__c.npe4__Description__c</members>
         <members>npe4__Relationship__c.npe4__ReciprocalRelationship__c</members>
@@ -812,7 +808,7 @@
         <members>npe4__Relationship__c.npe4__SYSTEM_SystemCreated__c</members>
         <members>npe4__Relationship__c.npe4__Status__c</members>
         <members>npe4__Relationship__c.npe4__Type__c</members>
-        <members>npe4__Relationship__c.%%%NAMESPACE%%%Related_Opportunity_Contact_Role__c</members>
+        <members>npe5__Affiliation__c.%%%NAMESPACE%%%Related_Opportunity_Contact_Role__c</members>
         <members>npe5__Affiliation__c.Contact_Link__c</members>
         <members>npe5__Affiliation__c.npe5__Contact__c</members>
         <members>npe5__Affiliation__c.npe5__Description__c</members>
@@ -822,7 +818,7 @@
         <members>npe5__Affiliation__c.npe5__Role__c</members>
         <members>npe5__Affiliation__c.npe5__StartDate__c</members>
         <members>npe5__Affiliation__c.npe5__Status__c</members>
-        <members>npe5__Affiliation__c.%%%NAMESPACE%%%Related_Opportunity_Contact_Role__c</members>
+        <members>npo02__Household__c.%%%NAMESPACE%%%Number_of_Household_Members__c</members>
         <members>npo02__Household__c.npo02__Addressee__c</members>
         <members>npo02__Household__c.npo02__Always_Anonymous__c</members>
         <members>npo02__Household__c.npo02__AverageAmount__c</members>
@@ -865,7 +861,9 @@
         <members>npo02__Household__c.npo02__SmallestAmount__c</members>
         <members>npo02__Household__c.npo02__TotalMembershipOppAmount__c</members>
         <members>npo02__Household__c.npo02__TotalOppAmount__c</members>
-        <members>npo02__Household__c.%%%NAMESPACE%%%Number_of_Household_Members__c</members>
+        <members>npo02__Households_Settings__c.%%%NAMESPACE%%%Matched_Donor_Role__c</members>
+        <members>npo02__Households_Settings__c.%%%NAMESPACE%%%Seasonal_Addresses_Batch_Size__c</members>
+        <members>npo02__Households_Settings__c.%%%NAMESPACE%%%Use_Dated_Conversion_Rates__c</members>
         <members>npo02__Households_Settings__c.npo02__Advanced_Household_Naming__c</members>
         <members>npo02__Households_Settings__c.npo02__Always_Rollup_to_Primary_Contact__c</members>
         <members>npo02__Households_Settings__c.npo02__Async_Household_Naming__c</members>
@@ -901,349 +899,346 @@
         <members>npo02__Households_Settings__c.npo02__Soft_Credit_Roles__c</members>
         <members>npo02__Households_Settings__c.npo02__Update_Check_Interval__c</members>
         <members>npo02__Households_Settings__c.npo02__Use_Fiscal_Year_for_Rollups__c</members>
-        <members>npo02__Households_Settings__c.%%%NAMESPACE%%%Matched_Donor_Role__c</members>
-        <members>npo02__Households_Settings__c.%%%NAMESPACE%%%Seasonal_Addresses_Batch_Size__c</members>
-        <members>npo02__Households_Settings__c.%%%NAMESPACE%%%Use_Dated_Conversion_Rates__c</members>
         <members>npo02__User_Rollup_Field_Settings__c.npo02__Field_Action__c</members>
         <members>npo02__User_Rollup_Field_Settings__c.npo02__Object_Name__c</members>
         <members>npo02__User_Rollup_Field_Settings__c.npo02__Source_Field__c</members>
         <members>npo02__User_Rollup_Field_Settings__c.npo02__Target_Field__c</members>
-        <members>%%%NAMESPACE%%%Account_Soft_Credit__c.%%%NAMESPACE%%%Account__c</members>
-        <members>%%%NAMESPACE%%%Account_Soft_Credit__c.%%%NAMESPACE%%%Amount__c</members>
-        <members>%%%NAMESPACE%%%Account_Soft_Credit__c.%%%NAMESPACE%%%Opportunity__c</members>
-        <members>%%%NAMESPACE%%%Account_Soft_Credit__c.%%%NAMESPACE%%%Role__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%API_Response__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Address_Type__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Administrative_Area__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Ambiguous__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Congressional_District__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%County_Name__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Default_Address__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Exclude_from_Updates__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Formula_MailingAddress__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Formula_MailingStreetAddress__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Geolocation__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Household_Account__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Latest_End_Date__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Latest_Start_Date__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%MailingCity__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%MailingCountry__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%MailingPostalCode__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%MailingState__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%MailingStreet2__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%MailingStreet__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%NCOA_Evaluation_Date__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%NCOA_Result_Code__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Pre_Verification_Address__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Seasonal_End_Day__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Seasonal_End_Month__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Seasonal_Start_Day__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Seasonal_Start_Month__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%State_Lower_District__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%State_Upper_District__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Undeliverable__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Verification_Status__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Verified_Date__c</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Verified__c</members>
-        <members>%%%NAMESPACE%%%Allocation__c.%%%NAMESPACE%%%Amount__c</members>
-        <members>%%%NAMESPACE%%%Allocation__c.%%%NAMESPACE%%%Campaign__c</members>
-        <members>%%%NAMESPACE%%%Allocation__c.%%%NAMESPACE%%%General_Accounting_Unit__c</members>
-        <members>%%%NAMESPACE%%%Allocation__c.%%%NAMESPACE%%%Opportunity__c</members>
-        <members>%%%NAMESPACE%%%Allocation__c.%%%NAMESPACE%%%Payment__c</members>
-        <members>%%%NAMESPACE%%%Allocation__c.%%%NAMESPACE%%%Percent__c</members>
-        <members>%%%NAMESPACE%%%Allocation__c.%%%NAMESPACE%%%Recurring_Donation__c</members>
-        <members>%%%NAMESPACE%%%Batch__c.%%%NAMESPACE%%%Batch_Status__c</members>
-        <members>%%%NAMESPACE%%%Batch__c.%%%NAMESPACE%%%Description__c</members>
-        <members>%%%NAMESPACE%%%Batch__c.%%%NAMESPACE%%%Number_of_Items__c</members>
-        <members>%%%NAMESPACE%%%Batch__c.%%%NAMESPACE%%%Object_Name__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Account_Custom_Unique_ID__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Active_Fields__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Batch_Defaults__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Batch_Description__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Batch_Gift_Entry_Version__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Batch_Number__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Batch_Process_Size__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Batch_Status__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Batch_Table_Columns__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Contact_Custom_Unique_ID__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Contact_Matching_Rule__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Donation_Date_Range__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Donation_Matching_Behavior__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Donation_Matching_Implementing_Class__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Donation_Matching_Rule__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Expected_Count_of_Gifts__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Expected_Total_Batch_Amount__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Form_Template__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%GiftBatch__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Last_Processed_On__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Post_Process_Implementing_Class__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Process_Using_Scheduled_Job__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Records_Failed__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Records_Successfully_Processed__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%RequireTotalMatch__c</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Run_Opportunity_Rollups_while_Processing__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%ACH_Consent__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Account1ImportStatus__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Account1Imported__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Account1_City__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Account1_Country__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Account1_Name__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Account1_Phone__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Account1_State_Province__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Account1_Street__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Account1_Website__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Account1_Zip_Postal_Code__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Account2ImportStatus__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Account2Imported__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Account2_City__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Account2_Country__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Account2_Name__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Account2_Phone__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Account2_State_Province__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Account2_Street__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Account2_Website__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Account2_Zip_Postal_Code__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Additional_Object_JSON__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%ApexJobId__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Campaign_Member_Status__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact1ImportStatus__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact1Imported__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact1_Alternate_Email__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact1_Birthdate__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact1_Consent_Message__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact1_Consent_Opt_In__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact1_Firstname__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact1_Home_Phone__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact1_Lastname__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact1_Mobile_Phone__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact1_Other_Phone__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact1_Personal_Email__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact1_Preferred_Email__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact1_Preferred_Phone__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact1_Salutation__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact1_Title__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact1_Work_Email__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact1_Work_Phone__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact2ImportStatus__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact2Imported__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact2_Alternate_Email__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact2_Birthdate__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact2_Firstname__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact2_Home_Phone__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact2_Lastname__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact2_Mobile_Phone__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact2_Other_Phone__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact2_Personal_Email__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact2_Preferred_Email__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact2_Preferred_Phone__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact2_Salutation__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact2_Title__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact2_Work_Email__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Contact2_Work_Phone__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%DonationCampaignImportStatus__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%DonationCampaignImported__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%DonationImportStatus__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%DonationImported__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Donation_Amount__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Donation_Campaign_Name__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Donation_Date__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Donation_Description__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Donation_Donor__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Donation_Elevate_Recurring_ID__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Donation_Member_Level__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Donation_Membership_End_Date__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Donation_Membership_Origin__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Donation_Membership_Start_Date__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Donation_Name__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Donation_Possible_Matches__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Donation_Record_Type_Name__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Donation_Stage__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Donation_Type__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Elevate_Custom_Metadata__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Elevate_Payment_Status__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%FailureInformation__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%GAU_Allocation_1_Amount__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%GAU_Allocation_1_GAU__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%GAU_Allocation_1_Import_Status__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%GAU_Allocation_1_Imported__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%GAU_Allocation_1_Percent__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%GAU_Allocation_2_Amount__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%GAU_Allocation_2_GAU__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%GAU_Allocation_2_Import_Status__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%GAU_Allocation_2_Imported__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%GAU_Allocation_2_Percent__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%HomeAddressImportStatus__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%HomeAddressImported__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Home_City__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Home_Country__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Home_State_Province__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Home_Street__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Home_Zip_Postal_Code__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%HouseholdAccountImported__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Household_Phone__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%ImportedDate__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%NPSP_Data_Import_Batch__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Opportunity_Contact_Role_1_ImportStatus__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Opportunity_Contact_Role_1_Imported__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Opportunity_Contact_Role_1_Role__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Opportunity_Contact_Role_2_ImportStatus__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Opportunity_Contact_Role_2_Imported__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Opportunity_Contact_Role_2_Role__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%PaymentImportStatus__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%PaymentImported__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_ACH_Code__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_ACH_Last_4__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Authorization_Token__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Authorized_Date__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Authorized_UTC_Timestamp__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Card_Expiration_Month__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Card_Expiration_Year__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Card_Last_4__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Card_Network__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Check_Reference_Number__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Declined_Reason__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Donor_Cover_Amount__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Elevate_Batch_ID__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Elevate_Created_Date__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Elevate_Created_UTC_Timestamp__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Elevate_ID__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Elevate_Original_Payment_ID__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Elevate_Transaction_Fee__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Gateway_ID__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Gateway_Payment_ID__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Gateway_Transaction_Fee__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Method__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Origin_ID__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Origin_Name__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Origin_Type__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Paid__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Possible_Matches__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Status__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Total_Transaction_Fees__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Type__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%RecurringDonationImportStatus__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%RecurringDonationImported__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Amount__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Change_Type__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Date_Established__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Day_of_Month__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Effective_Date__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Elevate_Recurring_ID__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_End_Date__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Installment_Frequency__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Installment_Period__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Name__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Payment_Method__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Planned_Installments__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Recurring_Type__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Status_Reason__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Status__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Status__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%UTM_Campaign__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%UTM_Content__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%UTM_Keyword_Terms__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%UTM_Medium__c</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%UTM_Source__c</members>
-        <members>%%%NAMESPACE%%%Data_Import_Settings__c.%%%NAMESPACE%%%Account_Custom_Unique_ID__c</members>
-        <members>%%%NAMESPACE%%%Data_Import_Settings__c.%%%NAMESPACE%%%Account_Matching_Rule__c</members>
-        <members>%%%NAMESPACE%%%Data_Import_Settings__c.%%%NAMESPACE%%%Batch_Size__c</members>
-        <members>%%%NAMESPACE%%%Data_Import_Settings__c.%%%NAMESPACE%%%CMT_API_Status__c</members>
-        <members>%%%NAMESPACE%%%Data_Import_Settings__c.%%%NAMESPACE%%%CMT_Deployment_ID__c</members>
-        <members>%%%NAMESPACE%%%Data_Import_Settings__c.%%%NAMESPACE%%%Contact_Custom_Unique_ID__c</members>
-        <members>%%%NAMESPACE%%%Data_Import_Settings__c.%%%NAMESPACE%%%Contact_Matching_Rule__c</members>
-        <members>%%%NAMESPACE%%%Data_Import_Settings__c.%%%NAMESPACE%%%Default_Data_Import_Field_Mapping_Set__c</members>
-        <members>%%%NAMESPACE%%%Data_Import_Settings__c.%%%NAMESPACE%%%Donation_Date_Range__c</members>
-        <members>%%%NAMESPACE%%%Data_Import_Settings__c.%%%NAMESPACE%%%Donation_Matching_Behavior__c</members>
-        <members>%%%NAMESPACE%%%Data_Import_Settings__c.%%%NAMESPACE%%%Donation_Matching_Implementing_Class__c</members>
-        <members>%%%NAMESPACE%%%Data_Import_Settings__c.%%%NAMESPACE%%%Donation_Matching_Rule__c</members>
-        <members>%%%NAMESPACE%%%Data_Import_Settings__c.%%%NAMESPACE%%%Field_Mapping_Method__c</members>
-        <members>%%%NAMESPACE%%%Data_Import_Settings__c.%%%NAMESPACE%%%Post_Process_Implementing_Class__c</members>
-        <members>%%%NAMESPACE%%%Data_Import_Settings__c.%%%NAMESPACE%%%Run_Opportunity_Rollups_while_Processing__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Task__c.%%%NAMESPACE%%%Assigned_To__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Task__c.%%%NAMESPACE%%%Comments__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Task__c.%%%NAMESPACE%%%Days_After__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Task__c.%%%NAMESPACE%%%Engagement_Plan_Template__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Task__c.%%%NAMESPACE%%%Parent_Task__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Task__c.%%%NAMESPACE%%%Priority__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Task__c.%%%NAMESPACE%%%Reminder_Time__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Task__c.%%%NAMESPACE%%%Reminder__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Task__c.%%%NAMESPACE%%%Send_Email__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Task__c.%%%NAMESPACE%%%Status__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Task__c.%%%NAMESPACE%%%Type__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Template__c.%%%NAMESPACE%%%Automatically_Update_Child_Task_Due_Date__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Template__c.%%%NAMESPACE%%%Default_Assignee__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Template__c.%%%NAMESPACE%%%Description__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Template__c.%%%NAMESPACE%%%Reschedule_To__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Template__c.%%%NAMESPACE%%%Skip_Weekends__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Template__c.%%%NAMESPACE%%%Total_Engagement_Plans__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Template__c.%%%NAMESPACE%%%Total_Tasks__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan__c.%%%NAMESPACE%%%Account__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan__c.%%%NAMESPACE%%%Campaign__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan__c.%%%NAMESPACE%%%Case__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan__c.%%%NAMESPACE%%%Completed_Tasks__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan__c.%%%NAMESPACE%%%Contact__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan__c.%%%NAMESPACE%%%Engagement_Plan_Template__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan__c.%%%NAMESPACE%%%Opportunity__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan__c.%%%NAMESPACE%%%Recurring_Donation__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan__c.%%%NAMESPACE%%%Status__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan__c.%%%NAMESPACE%%%Total_EP_Tasks__c</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan__c.%%%NAMESPACE%%%Total_Tasks__c</members>
-        <members>%%%NAMESPACE%%%Error__c.%%%NAMESPACE%%%Context_Type__c</members>
-        <members>%%%NAMESPACE%%%Error__c.%%%NAMESPACE%%%Datetime__c</members>
-        <members>%%%NAMESPACE%%%Error__c.%%%NAMESPACE%%%Email_Sent__c</members>
-        <members>%%%NAMESPACE%%%Error__c.%%%NAMESPACE%%%Error_Type__c</members>
-        <members>%%%NAMESPACE%%%Error__c.%%%NAMESPACE%%%Full_Message__c</members>
-        <members>%%%NAMESPACE%%%Error__c.%%%NAMESPACE%%%Object_Type__c</members>
-        <members>%%%NAMESPACE%%%Error__c.%%%NAMESPACE%%%Posted_in_Chatter__c</members>
-        <members>%%%NAMESPACE%%%Error__c.%%%NAMESPACE%%%Record_URL__c</members>
-        <members>%%%NAMESPACE%%%Error__c.%%%NAMESPACE%%%Related_Record_ID__c</members>
-        <members>%%%NAMESPACE%%%Error__c.%%%NAMESPACE%%%Retry_Pending__c</members>
-        <members>%%%NAMESPACE%%%Error__c.%%%NAMESPACE%%%Stack_Trace__c</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c.%%%NAMESPACE%%%Active__c</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c.%%%NAMESPACE%%%Average_Allocation__c</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c.%%%NAMESPACE%%%Description__c</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c.%%%NAMESPACE%%%First_Allocation_Date__c</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c.%%%NAMESPACE%%%Largest_Allocation__c</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c.%%%NAMESPACE%%%Last_Allocation_Date__c</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c.%%%NAMESPACE%%%Number_of_Allocations_Last_N_Days__c</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c.%%%NAMESPACE%%%Number_of_Allocations_Last_Year__c</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c.%%%NAMESPACE%%%Number_of_Allocations_This_Year__c</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c.%%%NAMESPACE%%%Number_of_Allocations_Two_Years_Ago__c</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c.%%%NAMESPACE%%%Smallest_Allocation__c</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c.%%%NAMESPACE%%%Total_Allocations_Last_N_Days__c</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c.%%%NAMESPACE%%%Total_Allocations_Last_Year__c</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c.%%%NAMESPACE%%%Total_Allocations_This_Year__c</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c.%%%NAMESPACE%%%Total_Allocations_Two_Years_Ago__c</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c.%%%NAMESPACE%%%Total_Allocations__c</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c.%%%NAMESPACE%%%Total_Number_of_Allocations__c</members>
-        <members>%%%NAMESPACE%%%Grant_Deadline__c.%%%NAMESPACE%%%Grant_Deadline_Due_Date__c</members>
-        <members>%%%NAMESPACE%%%Grant_Deadline__c.%%%NAMESPACE%%%Grant_Deliverable_Close_Date__c</members>
-        <members>%%%NAMESPACE%%%Grant_Deadline__c.%%%NAMESPACE%%%Grant_Deliverable_Requirements__c</members>
-        <members>%%%NAMESPACE%%%Grant_Deadline__c.%%%NAMESPACE%%%Opportunity__c</members>
-        <members>%%%NAMESPACE%%%Grant_Deadline__c.%%%NAMESPACE%%%Type__c</members>
-        <members>%%%NAMESPACE%%%Level__c.%%%NAMESPACE%%%Active__c</members>
-        <members>%%%NAMESPACE%%%Level__c.%%%NAMESPACE%%%Description__c</members>
-        <members>%%%NAMESPACE%%%Level__c.%%%NAMESPACE%%%Engagement_Plan_Template__c</members>
-        <members>%%%NAMESPACE%%%Level__c.%%%NAMESPACE%%%Level_Field__c</members>
-        <members>%%%NAMESPACE%%%Level__c.%%%NAMESPACE%%%Maximum_Amount__c</members>
-        <members>%%%NAMESPACE%%%Level__c.%%%NAMESPACE%%%Minimum_Amount__c</members>
-        <members>%%%NAMESPACE%%%Level__c.%%%NAMESPACE%%%Previous_Level_Field__c</members>
-        <members>%%%NAMESPACE%%%Level__c.%%%NAMESPACE%%%Source_Field__c</members>
-        <members>%%%NAMESPACE%%%Level__c.%%%NAMESPACE%%%Target__c</members>
-        <members>%%%NAMESPACE%%%Partial_Soft_Credit__c.%%%NAMESPACE%%%Amount__c</members>
-        <members>%%%NAMESPACE%%%Partial_Soft_Credit__c.%%%NAMESPACE%%%Contact_Name__c</members>
-        <members>%%%NAMESPACE%%%Partial_Soft_Credit__c.%%%NAMESPACE%%%Contact_Role_ID__c</members>
-        <members>%%%NAMESPACE%%%Partial_Soft_Credit__c.%%%NAMESPACE%%%Contact__c</members>
-        <members>%%%NAMESPACE%%%Partial_Soft_Credit__c.%%%NAMESPACE%%%Opportunity__c</members>
-        <members>%%%NAMESPACE%%%Partial_Soft_Credit__c.%%%NAMESPACE%%%Role_Name__c</members>
-        <members>%%%NAMESPACE%%%Trigger_Handler__c.%%%NAMESPACE%%%Active__c</members>
-        <members>%%%NAMESPACE%%%Trigger_Handler__c.%%%NAMESPACE%%%Asynchronous__c</members>
-        <members>%%%NAMESPACE%%%Trigger_Handler__c.%%%NAMESPACE%%%Class__c</members>
-        <members>%%%NAMESPACE%%%Trigger_Handler__c.%%%NAMESPACE%%%Load_Order__c</members>
-        <members>%%%NAMESPACE%%%Trigger_Handler__c.%%%NAMESPACE%%%Object__c</members>
-        <members>%%%NAMESPACE%%%Trigger_Handler__c.%%%NAMESPACE%%%Trigger_Action__c</members>
-        <members>%%%NAMESPACE%%%Trigger_Handler__c.%%%NAMESPACE%%%User_Managed__c</members>
-        <members>%%%NAMESPACE%%%Trigger_Handler__c.%%%NAMESPACE%%%Usernames_to_Exclude__c</members>
+        <members>npsp__Account_Soft_Credit__c.%%%NAMESPACE%%%Account__c</members>
+        <members>npsp__Account_Soft_Credit__c.%%%NAMESPACE%%%Amount__c</members>
+        <members>npsp__Account_Soft_Credit__c.%%%NAMESPACE%%%Opportunity__c</members>
+        <members>npsp__Account_Soft_Credit__c.%%%NAMESPACE%%%Role__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%API_Response__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%Address_Type__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%Administrative_Area__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%Ambiguous__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%Congressional_District__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%County_Name__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%Default_Address__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%Exclude_from_Updates__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%Formula_MailingAddress__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%Formula_MailingStreetAddress__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%Geolocation__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%Household_Account__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%Latest_End_Date__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%Latest_Start_Date__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%MailingCity__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%MailingCountry__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%MailingPostalCode__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%MailingState__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%MailingStreet2__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%MailingStreet__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%NCOA_Evaluation_Date__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%NCOA_Result_Code__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%Pre_Verification_Address__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%Seasonal_End_Day__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%Seasonal_End_Month__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%Seasonal_Start_Day__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%Seasonal_Start_Month__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%State_Lower_District__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%State_Upper_District__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%Undeliverable__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%Verification_Status__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%Verified_Date__c</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%Verified__c</members>
+        <members>npsp__Allocation__c.%%%NAMESPACE%%%Amount__c</members>
+        <members>npsp__Allocation__c.%%%NAMESPACE%%%Campaign__c</members>
+        <members>npsp__Allocation__c.%%%NAMESPACE%%%General_Accounting_Unit__c</members>
+        <members>npsp__Allocation__c.%%%NAMESPACE%%%Opportunity__c</members>
+        <members>npsp__Allocation__c.%%%NAMESPACE%%%Payment__c</members>
+        <members>npsp__Allocation__c.%%%NAMESPACE%%%Percent__c</members>
+        <members>npsp__Allocation__c.%%%NAMESPACE%%%Recurring_Donation__c</members>
+        <members>npsp__Batch__c.%%%NAMESPACE%%%Batch_Status__c</members>
+        <members>npsp__Batch__c.%%%NAMESPACE%%%Description__c</members>
+        <members>npsp__Batch__c.%%%NAMESPACE%%%Number_of_Items__c</members>
+        <members>npsp__Batch__c.%%%NAMESPACE%%%Object_Name__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Account_Custom_Unique_ID__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Active_Fields__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Batch_Defaults__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Batch_Description__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Batch_Gift_Entry_Version__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Batch_Number__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Batch_Process_Size__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Batch_Status__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Batch_Table_Columns__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Contact_Custom_Unique_ID__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Contact_Matching_Rule__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Donation_Date_Range__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Donation_Matching_Behavior__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Donation_Matching_Implementing_Class__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Donation_Matching_Rule__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Expected_Count_of_Gifts__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Expected_Total_Batch_Amount__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Form_Template__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%GiftBatch__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Last_Processed_On__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Post_Process_Implementing_Class__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Process_Using_Scheduled_Job__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Records_Failed__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Records_Successfully_Processed__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%RequireTotalMatch__c</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Run_Opportunity_Rollups_while_Processing__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%ACH_Consent__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Account1ImportStatus__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Account1Imported__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Account1_City__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Account1_Country__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Account1_Name__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Account1_Phone__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Account1_State_Province__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Account1_Street__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Account1_Website__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Account1_Zip_Postal_Code__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Account2ImportStatus__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Account2Imported__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Account2_City__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Account2_Country__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Account2_Name__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Account2_Phone__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Account2_State_Province__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Account2_Street__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Account2_Website__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Account2_Zip_Postal_Code__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Additional_Object_JSON__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%ApexJobId__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Campaign_Member_Status__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact1ImportStatus__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact1Imported__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact1_Alternate_Email__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact1_Birthdate__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact1_Consent_Message__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact1_Consent_Opt_In__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact1_Firstname__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact1_Home_Phone__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact1_Lastname__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact1_Mobile_Phone__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact1_Other_Phone__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact1_Personal_Email__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact1_Preferred_Email__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact1_Preferred_Phone__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact1_Salutation__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact1_Title__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact1_Work_Email__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact1_Work_Phone__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact2ImportStatus__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact2Imported__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact2_Alternate_Email__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact2_Birthdate__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact2_Firstname__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact2_Home_Phone__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact2_Lastname__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact2_Mobile_Phone__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact2_Other_Phone__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact2_Personal_Email__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact2_Preferred_Email__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact2_Preferred_Phone__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact2_Salutation__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact2_Title__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact2_Work_Email__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Contact2_Work_Phone__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%DonationCampaignImportStatus__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%DonationCampaignImported__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%DonationImportStatus__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%DonationImported__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Donation_Amount__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Donation_Campaign_Name__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Donation_Date__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Donation_Description__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Donation_Donor__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Donation_Elevate_Recurring_ID__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Donation_Member_Level__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Donation_Membership_End_Date__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Donation_Membership_Origin__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Donation_Membership_Start_Date__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Donation_Name__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Donation_Possible_Matches__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Donation_Record_Type_Name__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Donation_Stage__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Donation_Type__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Elevate_Custom_Metadata__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Elevate_Payment_Status__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%FailureInformation__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%GAU_Allocation_1_Amount__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%GAU_Allocation_1_GAU__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%GAU_Allocation_1_Import_Status__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%GAU_Allocation_1_Imported__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%GAU_Allocation_1_Percent__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%GAU_Allocation_2_Amount__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%GAU_Allocation_2_GAU__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%GAU_Allocation_2_Import_Status__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%GAU_Allocation_2_Imported__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%GAU_Allocation_2_Percent__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%HomeAddressImportStatus__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%HomeAddressImported__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Home_City__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Home_Country__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Home_State_Province__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Home_Street__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Home_Zip_Postal_Code__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%HouseholdAccountImported__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Household_Phone__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%ImportedDate__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%NPSP_Data_Import_Batch__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Opportunity_Contact_Role_1_ImportStatus__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Opportunity_Contact_Role_1_Imported__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Opportunity_Contact_Role_1_Role__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Opportunity_Contact_Role_2_ImportStatus__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Opportunity_Contact_Role_2_Imported__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Opportunity_Contact_Role_2_Role__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%PaymentImportStatus__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%PaymentImported__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_ACH_Code__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_ACH_Last_4__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Authorization_Token__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Authorized_Date__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Authorized_UTC_Timestamp__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Card_Expiration_Month__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Card_Expiration_Year__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Card_Last_4__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Card_Network__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Check_Reference_Number__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Declined_Reason__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Donor_Cover_Amount__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Elevate_Batch_ID__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Elevate_Created_Date__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Elevate_Created_UTC_Timestamp__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Elevate_ID__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Elevate_Original_Payment_ID__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Elevate_Transaction_Fee__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Gateway_ID__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Gateway_Payment_ID__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Gateway_Transaction_Fee__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Method__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Origin_ID__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Origin_Name__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Origin_Type__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Paid__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Possible_Matches__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Status__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Total_Transaction_Fees__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Payment_Type__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%RecurringDonationImportStatus__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%RecurringDonationImported__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Amount__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Change_Type__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Date_Established__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Day_of_Month__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Effective_Date__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Elevate_Recurring_ID__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Recurring_Donation_End_Date__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Installment_Frequency__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Installment_Period__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Name__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Payment_Method__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Planned_Installments__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Recurring_Type__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Status_Reason__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Status__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Status__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%UTM_Campaign__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%UTM_Content__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%UTM_Keyword_Terms__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%UTM_Medium__c</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%UTM_Source__c</members>
+        <members>npsp__Data_Import_Settings__c.%%%NAMESPACE%%%Account_Custom_Unique_ID__c</members>
+        <members>npsp__Data_Import_Settings__c.%%%NAMESPACE%%%Account_Matching_Rule__c</members>
+        <members>npsp__Data_Import_Settings__c.%%%NAMESPACE%%%Batch_Size__c</members>
+        <members>npsp__Data_Import_Settings__c.%%%NAMESPACE%%%CMT_API_Status__c</members>
+        <members>npsp__Data_Import_Settings__c.%%%NAMESPACE%%%CMT_Deployment_ID__c</members>
+        <members>npsp__Data_Import_Settings__c.%%%NAMESPACE%%%Contact_Custom_Unique_ID__c</members>
+        <members>npsp__Data_Import_Settings__c.%%%NAMESPACE%%%Contact_Matching_Rule__c</members>
+        <members>npsp__Data_Import_Settings__c.%%%NAMESPACE%%%Default_Data_Import_Field_Mapping_Set__c</members>
+        <members>npsp__Data_Import_Settings__c.%%%NAMESPACE%%%Donation_Date_Range__c</members>
+        <members>npsp__Data_Import_Settings__c.%%%NAMESPACE%%%Donation_Matching_Behavior__c</members>
+        <members>npsp__Data_Import_Settings__c.%%%NAMESPACE%%%Donation_Matching_Implementing_Class__c</members>
+        <members>npsp__Data_Import_Settings__c.%%%NAMESPACE%%%Donation_Matching_Rule__c</members>
+        <members>npsp__Data_Import_Settings__c.%%%NAMESPACE%%%Field_Mapping_Method__c</members>
+        <members>npsp__Data_Import_Settings__c.%%%NAMESPACE%%%Post_Process_Implementing_Class__c</members>
+        <members>npsp__Data_Import_Settings__c.%%%NAMESPACE%%%Run_Opportunity_Rollups_while_Processing__c</members>
+        <members>npsp__Engagement_Plan_Task__c.%%%NAMESPACE%%%Assigned_To__c</members>
+        <members>npsp__Engagement_Plan_Task__c.%%%NAMESPACE%%%Comments__c</members>
+        <members>npsp__Engagement_Plan_Task__c.%%%NAMESPACE%%%Days_After__c</members>
+        <members>npsp__Engagement_Plan_Task__c.%%%NAMESPACE%%%Engagement_Plan_Template__c</members>
+        <members>npsp__Engagement_Plan_Task__c.%%%NAMESPACE%%%Parent_Task__c</members>
+        <members>npsp__Engagement_Plan_Task__c.%%%NAMESPACE%%%Priority__c</members>
+        <members>npsp__Engagement_Plan_Task__c.%%%NAMESPACE%%%Reminder_Time__c</members>
+        <members>npsp__Engagement_Plan_Task__c.%%%NAMESPACE%%%Reminder__c</members>
+        <members>npsp__Engagement_Plan_Task__c.%%%NAMESPACE%%%Send_Email__c</members>
+        <members>npsp__Engagement_Plan_Task__c.%%%NAMESPACE%%%Status__c</members>
+        <members>npsp__Engagement_Plan_Task__c.%%%NAMESPACE%%%Type__c</members>
+        <members>npsp__Engagement_Plan_Template__c.%%%NAMESPACE%%%Automatically_Update_Child_Task_Due_Date__c</members>
+        <members>npsp__Engagement_Plan_Template__c.%%%NAMESPACE%%%Default_Assignee__c</members>
+        <members>npsp__Engagement_Plan_Template__c.%%%NAMESPACE%%%Description__c</members>
+        <members>npsp__Engagement_Plan_Template__c.%%%NAMESPACE%%%Reschedule_To__c</members>
+        <members>npsp__Engagement_Plan_Template__c.%%%NAMESPACE%%%Skip_Weekends__c</members>
+        <members>npsp__Engagement_Plan_Template__c.%%%NAMESPACE%%%Total_Engagement_Plans__c</members>
+        <members>npsp__Engagement_Plan_Template__c.%%%NAMESPACE%%%Total_Tasks__c</members>
+        <members>npsp__Engagement_Plan__c.%%%NAMESPACE%%%Account__c</members>
+        <members>npsp__Engagement_Plan__c.%%%NAMESPACE%%%Campaign__c</members>
+        <members>npsp__Engagement_Plan__c.%%%NAMESPACE%%%Case__c</members>
+        <members>npsp__Engagement_Plan__c.%%%NAMESPACE%%%Completed_Tasks__c</members>
+        <members>npsp__Engagement_Plan__c.%%%NAMESPACE%%%Contact__c</members>
+        <members>npsp__Engagement_Plan__c.%%%NAMESPACE%%%Engagement_Plan_Template__c</members>
+        <members>npsp__Engagement_Plan__c.%%%NAMESPACE%%%Opportunity__c</members>
+        <members>npsp__Engagement_Plan__c.%%%NAMESPACE%%%Recurring_Donation__c</members>
+        <members>npsp__Engagement_Plan__c.%%%NAMESPACE%%%Status__c</members>
+        <members>npsp__Engagement_Plan__c.%%%NAMESPACE%%%Total_EP_Tasks__c</members>
+        <members>npsp__Engagement_Plan__c.%%%NAMESPACE%%%Total_Tasks__c</members>
+        <members>npsp__Error__c.%%%NAMESPACE%%%Context_Type__c</members>
+        <members>npsp__Error__c.%%%NAMESPACE%%%Datetime__c</members>
+        <members>npsp__Error__c.%%%NAMESPACE%%%Email_Sent__c</members>
+        <members>npsp__Error__c.%%%NAMESPACE%%%Error_Type__c</members>
+        <members>npsp__Error__c.%%%NAMESPACE%%%Full_Message__c</members>
+        <members>npsp__Error__c.%%%NAMESPACE%%%Object_Type__c</members>
+        <members>npsp__Error__c.%%%NAMESPACE%%%Posted_in_Chatter__c</members>
+        <members>npsp__Error__c.%%%NAMESPACE%%%Record_URL__c</members>
+        <members>npsp__Error__c.%%%NAMESPACE%%%Related_Record_ID__c</members>
+        <members>npsp__Error__c.%%%NAMESPACE%%%Retry_Pending__c</members>
+        <members>npsp__Error__c.%%%NAMESPACE%%%Stack_Trace__c</members>
+        <members>npsp__General_Accounting_Unit__c.%%%NAMESPACE%%%Active__c</members>
+        <members>npsp__General_Accounting_Unit__c.%%%NAMESPACE%%%Average_Allocation__c</members>
+        <members>npsp__General_Accounting_Unit__c.%%%NAMESPACE%%%Description__c</members>
+        <members>npsp__General_Accounting_Unit__c.%%%NAMESPACE%%%First_Allocation_Date__c</members>
+        <members>npsp__General_Accounting_Unit__c.%%%NAMESPACE%%%Largest_Allocation__c</members>
+        <members>npsp__General_Accounting_Unit__c.%%%NAMESPACE%%%Last_Allocation_Date__c</members>
+        <members>npsp__General_Accounting_Unit__c.%%%NAMESPACE%%%Number_of_Allocations_Last_N_Days__c</members>
+        <members>npsp__General_Accounting_Unit__c.%%%NAMESPACE%%%Number_of_Allocations_Last_Year__c</members>
+        <members>npsp__General_Accounting_Unit__c.%%%NAMESPACE%%%Number_of_Allocations_This_Year__c</members>
+        <members>npsp__General_Accounting_Unit__c.%%%NAMESPACE%%%Number_of_Allocations_Two_Years_Ago__c</members>
+        <members>npsp__General_Accounting_Unit__c.%%%NAMESPACE%%%Smallest_Allocation__c</members>
+        <members>npsp__General_Accounting_Unit__c.%%%NAMESPACE%%%Total_Allocations_Last_N_Days__c</members>
+        <members>npsp__General_Accounting_Unit__c.%%%NAMESPACE%%%Total_Allocations_Last_Year__c</members>
+        <members>npsp__General_Accounting_Unit__c.%%%NAMESPACE%%%Total_Allocations_This_Year__c</members>
+        <members>npsp__General_Accounting_Unit__c.%%%NAMESPACE%%%Total_Allocations_Two_Years_Ago__c</members>
+        <members>npsp__General_Accounting_Unit__c.%%%NAMESPACE%%%Total_Allocations__c</members>
+        <members>npsp__General_Accounting_Unit__c.%%%NAMESPACE%%%Total_Number_of_Allocations__c</members>
+        <members>npsp__Grant_Deadline__c.%%%NAMESPACE%%%Grant_Deadline_Due_Date__c</members>
+        <members>npsp__Grant_Deadline__c.%%%NAMESPACE%%%Grant_Deliverable_Close_Date__c</members>
+        <members>npsp__Grant_Deadline__c.%%%NAMESPACE%%%Grant_Deliverable_Requirements__c</members>
+        <members>npsp__Grant_Deadline__c.%%%NAMESPACE%%%Opportunity__c</members>
+        <members>npsp__Grant_Deadline__c.%%%NAMESPACE%%%Type__c</members>
+        <members>npsp__Level__c.%%%NAMESPACE%%%Active__c</members>
+        <members>npsp__Level__c.%%%NAMESPACE%%%Description__c</members>
+        <members>npsp__Level__c.%%%NAMESPACE%%%Engagement_Plan_Template__c</members>
+        <members>npsp__Level__c.%%%NAMESPACE%%%Level_Field__c</members>
+        <members>npsp__Level__c.%%%NAMESPACE%%%Maximum_Amount__c</members>
+        <members>npsp__Level__c.%%%NAMESPACE%%%Minimum_Amount__c</members>
+        <members>npsp__Level__c.%%%NAMESPACE%%%Previous_Level_Field__c</members>
+        <members>npsp__Level__c.%%%NAMESPACE%%%Source_Field__c</members>
+        <members>npsp__Level__c.%%%NAMESPACE%%%Target__c</members>
+        <members>npsp__Partial_Soft_Credit__c.%%%NAMESPACE%%%Amount__c</members>
+        <members>npsp__Partial_Soft_Credit__c.%%%NAMESPACE%%%Contact_Name__c</members>
+        <members>npsp__Partial_Soft_Credit__c.%%%NAMESPACE%%%Contact_Role_ID__c</members>
+        <members>npsp__Partial_Soft_Credit__c.%%%NAMESPACE%%%Contact__c</members>
+        <members>npsp__Partial_Soft_Credit__c.%%%NAMESPACE%%%Opportunity__c</members>
+        <members>npsp__Partial_Soft_Credit__c.%%%NAMESPACE%%%Role_Name__c</members>
+        <members>npsp__Trigger_Handler__c.%%%NAMESPACE%%%Active__c</members>
+        <members>npsp__Trigger_Handler__c.%%%NAMESPACE%%%Asynchronous__c</members>
+        <members>npsp__Trigger_Handler__c.%%%NAMESPACE%%%Class__c</members>
+        <members>npsp__Trigger_Handler__c.%%%NAMESPACE%%%Load_Order__c</members>
+        <members>npsp__Trigger_Handler__c.%%%NAMESPACE%%%Object__c</members>
+        <members>npsp__Trigger_Handler__c.%%%NAMESPACE%%%Trigger_Action__c</members>
+        <members>npsp__Trigger_Handler__c.%%%NAMESPACE%%%User_Managed__c</members>
+        <members>npsp__Trigger_Handler__c.%%%NAMESPACE%%%Usernames_to_Exclude__c</members>
         <name>CustomField</name>
     </types>
     <types>
@@ -1399,328 +1394,328 @@
         <members>npo02__User_Rollup_Field_Settings__c-fr</members>
         <members>npo02__User_Rollup_Field_Settings__c-ja</members>
         <members>npo02__User_Rollup_Field_Settings__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Account_Soft_Credit__c-de</members>
-        <members>%%%NAMESPACE%%%Account_Soft_Credit__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Account_Soft_Credit__c-en_US</members>
-        <members>%%%NAMESPACE%%%Account_Soft_Credit__c-es</members>
-        <members>%%%NAMESPACE%%%Account_Soft_Credit__c-fr</members>
-        <members>%%%NAMESPACE%%%Account_Soft_Credit__c-ja</members>
-        <members>%%%NAMESPACE%%%Account_Soft_Credit__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Address_Verification_Settings__c-de</members>
-        <members>%%%NAMESPACE%%%Address_Verification_Settings__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Address_Verification_Settings__c-en_US</members>
-        <members>%%%NAMESPACE%%%Address_Verification_Settings__c-es</members>
-        <members>%%%NAMESPACE%%%Address_Verification_Settings__c-fr</members>
-        <members>%%%NAMESPACE%%%Address_Verification_Settings__c-ja</members>
-        <members>%%%NAMESPACE%%%Address_Verification_Settings__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Address__c-de</members>
-        <members>%%%NAMESPACE%%%Address__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Address__c-en_US</members>
-        <members>%%%NAMESPACE%%%Address__c-es</members>
-        <members>%%%NAMESPACE%%%Address__c-fr</members>
-        <members>%%%NAMESPACE%%%Address__c-iw</members>
-        <members>%%%NAMESPACE%%%Address__c-ja</members>
-        <members>%%%NAMESPACE%%%Address__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Allocation__c-de</members>
-        <members>%%%NAMESPACE%%%Allocation__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Allocation__c-en_US</members>
-        <members>%%%NAMESPACE%%%Allocation__c-es</members>
-        <members>%%%NAMESPACE%%%Allocation__c-fr</members>
-        <members>%%%NAMESPACE%%%Allocation__c-iw</members>
-        <members>%%%NAMESPACE%%%Allocation__c-ja</members>
-        <members>%%%NAMESPACE%%%Allocation__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Allocations_Settings__c-de</members>
-        <members>%%%NAMESPACE%%%Allocations_Settings__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Allocations_Settings__c-en_US</members>
-        <members>%%%NAMESPACE%%%Allocations_Settings__c-es</members>
-        <members>%%%NAMESPACE%%%Allocations_Settings__c-fr</members>
-        <members>%%%NAMESPACE%%%Allocations_Settings__c-ja</members>
-        <members>%%%NAMESPACE%%%Allocations_Settings__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Batch_Data_Entry_Settings__c-de</members>
-        <members>%%%NAMESPACE%%%Batch_Data_Entry_Settings__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Batch_Data_Entry_Settings__c-en_US</members>
-        <members>%%%NAMESPACE%%%Batch_Data_Entry_Settings__c-es</members>
-        <members>%%%NAMESPACE%%%Batch_Data_Entry_Settings__c-fr</members>
-        <members>%%%NAMESPACE%%%Batch_Data_Entry_Settings__c-ja</members>
-        <members>%%%NAMESPACE%%%Batch_Data_Entry_Settings__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Batch__c-de</members>
-        <members>%%%NAMESPACE%%%Batch__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Batch__c-en_US</members>
-        <members>%%%NAMESPACE%%%Batch__c-es</members>
-        <members>%%%NAMESPACE%%%Batch__c-fr</members>
-        <members>%%%NAMESPACE%%%Batch__c-iw</members>
-        <members>%%%NAMESPACE%%%Batch__c-ja</members>
-        <members>%%%NAMESPACE%%%Batch__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Custom_Column_Header__c-de</members>
-        <members>%%%NAMESPACE%%%Custom_Column_Header__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Custom_Column_Header__c-en_US</members>
-        <members>%%%NAMESPACE%%%Custom_Column_Header__c-es</members>
-        <members>%%%NAMESPACE%%%Custom_Column_Header__c-fr</members>
-        <members>%%%NAMESPACE%%%Custom_Column_Header__c-ja</members>
-        <members>%%%NAMESPACE%%%Custom_Column_Header__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Customizable_Rollup_Settings__c-de</members>
-        <members>%%%NAMESPACE%%%Customizable_Rollup_Settings__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Customizable_Rollup_Settings__c-en_US</members>
-        <members>%%%NAMESPACE%%%Customizable_Rollup_Settings__c-es</members>
-        <members>%%%NAMESPACE%%%Customizable_Rollup_Settings__c-fr</members>
-        <members>%%%NAMESPACE%%%Customizable_Rollup_Settings__c-ja</members>
-        <members>%%%NAMESPACE%%%Customizable_Rollup_Settings__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c-de</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c-en_GB</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c-en_US</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c-es</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c-fr</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c-ja</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%DataImport__c-de</members>
-        <members>%%%NAMESPACE%%%DataImport__c-en_GB</members>
-        <members>%%%NAMESPACE%%%DataImport__c-en_US</members>
-        <members>%%%NAMESPACE%%%DataImport__c-es</members>
-        <members>%%%NAMESPACE%%%DataImport__c-fr</members>
-        <members>%%%NAMESPACE%%%DataImport__c-iw</members>
-        <members>%%%NAMESPACE%%%DataImport__c-ja</members>
-        <members>%%%NAMESPACE%%%DataImport__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping_Set__mdt-de</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping_Set__mdt-en_GB</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping_Set__mdt-en_US</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping_Set__mdt-es</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping_Set__mdt-fr</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping_Set__mdt-ja</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping_Set__mdt-nl_NL</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping__mdt-de</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping__mdt-en_GB</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping__mdt-en_US</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping__mdt-es</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping__mdt-fr</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping__mdt-ja</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping__mdt-nl_NL</members>
-        <members>%%%NAMESPACE%%%Data_Import_Object_Mapping_Set__mdt-de</members>
-        <members>%%%NAMESPACE%%%Data_Import_Object_Mapping_Set__mdt-en_GB</members>
-        <members>%%%NAMESPACE%%%Data_Import_Object_Mapping_Set__mdt-en_US</members>
-        <members>%%%NAMESPACE%%%Data_Import_Object_Mapping_Set__mdt-es</members>
-        <members>%%%NAMESPACE%%%Data_Import_Object_Mapping_Set__mdt-fr</members>
-        <members>%%%NAMESPACE%%%Data_Import_Object_Mapping_Set__mdt-ja</members>
-        <members>%%%NAMESPACE%%%Data_Import_Object_Mapping_Set__mdt-nl_NL</members>
-        <members>%%%NAMESPACE%%%Data_Import_Object_Mapping__mdt-de</members>
-        <members>%%%NAMESPACE%%%Data_Import_Object_Mapping__mdt-en_GB</members>
-        <members>%%%NAMESPACE%%%Data_Import_Object_Mapping__mdt-en_US</members>
-        <members>%%%NAMESPACE%%%Data_Import_Object_Mapping__mdt-es</members>
-        <members>%%%NAMESPACE%%%Data_Import_Object_Mapping__mdt-fr</members>
-        <members>%%%NAMESPACE%%%Data_Import_Object_Mapping__mdt-ja</members>
-        <members>%%%NAMESPACE%%%Data_Import_Object_Mapping__mdt-nl_NL</members>
-        <members>%%%NAMESPACE%%%Data_Import_Settings__c-de</members>
-        <members>%%%NAMESPACE%%%Data_Import_Settings__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Data_Import_Settings__c-en_US</members>
-        <members>%%%NAMESPACE%%%Data_Import_Settings__c-es</members>
-        <members>%%%NAMESPACE%%%Data_Import_Settings__c-fr</members>
-        <members>%%%NAMESPACE%%%Data_Import_Settings__c-ja</members>
-        <members>%%%NAMESPACE%%%Data_Import_Settings__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%DeploymentEvent__e-de</members>
-        <members>%%%NAMESPACE%%%DeploymentEvent__e-en_GB</members>
-        <members>%%%NAMESPACE%%%DeploymentEvent__e-en_US</members>
-        <members>%%%NAMESPACE%%%DeploymentEvent__e-es</members>
-        <members>%%%NAMESPACE%%%DeploymentEvent__e-fr</members>
-        <members>%%%NAMESPACE%%%DeploymentEvent__e-ja</members>
-        <members>%%%NAMESPACE%%%DeploymentEvent__e-nl_NL</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Task__c-de</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Task__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Task__c-en_US</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Task__c-es</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Task__c-fr</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Task__c-iw</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Task__c-ja</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Task__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Template__c-de</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Template__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Template__c-en_US</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Template__c-es</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Template__c-fr</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Template__c-iw</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Template__c-ja</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Template__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan__c-de</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan__c-en_US</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan__c-es</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan__c-fr</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan__c-iw</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan__c-ja</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Error_Settings__c-de</members>
-        <members>%%%NAMESPACE%%%Error_Settings__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Error_Settings__c-en_US</members>
-        <members>%%%NAMESPACE%%%Error_Settings__c-es</members>
-        <members>%%%NAMESPACE%%%Error_Settings__c-fr</members>
-        <members>%%%NAMESPACE%%%Error_Settings__c-ja</members>
-        <members>%%%NAMESPACE%%%Error_Settings__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Error__c-de</members>
-        <members>%%%NAMESPACE%%%Error__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Error__c-en_US</members>
-        <members>%%%NAMESPACE%%%Error__c-es</members>
-        <members>%%%NAMESPACE%%%Error__c-fr</members>
-        <members>%%%NAMESPACE%%%Error__c-iw</members>
-        <members>%%%NAMESPACE%%%Error__c-ja</members>
-        <members>%%%NAMESPACE%%%Error__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Filter_Group__mdt-de</members>
-        <members>%%%NAMESPACE%%%Filter_Group__mdt-en_GB</members>
-        <members>%%%NAMESPACE%%%Filter_Group__mdt-en_US</members>
-        <members>%%%NAMESPACE%%%Filter_Group__mdt-es</members>
-        <members>%%%NAMESPACE%%%Filter_Group__mdt-fr</members>
-        <members>%%%NAMESPACE%%%Filter_Group__mdt-ja</members>
-        <members>%%%NAMESPACE%%%Filter_Group__mdt-nl_NL</members>
-        <members>%%%NAMESPACE%%%Filter_Rule__mdt-de</members>
-        <members>%%%NAMESPACE%%%Filter_Rule__mdt-en_GB</members>
-        <members>%%%NAMESPACE%%%Filter_Rule__mdt-en_US</members>
-        <members>%%%NAMESPACE%%%Filter_Rule__mdt-es</members>
-        <members>%%%NAMESPACE%%%Filter_Rule__mdt-fr</members>
-        <members>%%%NAMESPACE%%%Filter_Rule__mdt-ja</members>
-        <members>%%%NAMESPACE%%%Filter_Rule__mdt-nl_NL</members>
-        <members>%%%NAMESPACE%%%Form_Template__c-de</members>
-        <members>%%%NAMESPACE%%%Form_Template__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Form_Template__c-en_US</members>
-        <members>%%%NAMESPACE%%%Form_Template__c-es</members>
-        <members>%%%NAMESPACE%%%Form_Template__c-fr</members>
-        <members>%%%NAMESPACE%%%Form_Template__c-ja</members>
-        <members>%%%NAMESPACE%%%Form_Template__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Fund__c-de</members>
-        <members>%%%NAMESPACE%%%Fund__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Fund__c-en_US</members>
-        <members>%%%NAMESPACE%%%Fund__c-es</members>
-        <members>%%%NAMESPACE%%%Fund__c-fr</members>
-        <members>%%%NAMESPACE%%%Fund__c-ja</members>
-        <members>%%%NAMESPACE%%%Fund__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c-de</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c-en_GB</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c-en_US</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c-es</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c-fr</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c-iw</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c-ja</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%GetStartedChecklistItem__mdt-de</members>
-        <members>%%%NAMESPACE%%%GetStartedChecklistItem__mdt-en_GB</members>
-        <members>%%%NAMESPACE%%%GetStartedChecklistItem__mdt-en_US</members>
-        <members>%%%NAMESPACE%%%GetStartedChecklistItem__mdt-es</members>
-        <members>%%%NAMESPACE%%%GetStartedChecklistItem__mdt-fr</members>
-        <members>%%%NAMESPACE%%%GetStartedChecklistItem__mdt-ja</members>
-        <members>%%%NAMESPACE%%%GetStartedChecklistItem__mdt-nl_NL</members>
-        <members>%%%NAMESPACE%%%GetStartedChecklistSection__mdt-de</members>
-        <members>%%%NAMESPACE%%%GetStartedChecklistSection__mdt-en_GB</members>
-        <members>%%%NAMESPACE%%%GetStartedChecklistSection__mdt-en_US</members>
-        <members>%%%NAMESPACE%%%GetStartedChecklistSection__mdt-es</members>
-        <members>%%%NAMESPACE%%%GetStartedChecklistSection__mdt-fr</members>
-        <members>%%%NAMESPACE%%%GetStartedChecklistSection__mdt-ja</members>
-        <members>%%%NAMESPACE%%%GetStartedChecklistSection__mdt-nl_NL</members>
-        <members>%%%NAMESPACE%%%GetStartedCompletionChecklistState__c-de</members>
-        <members>%%%NAMESPACE%%%GetStartedCompletionChecklistState__c-en_GB</members>
-        <members>%%%NAMESPACE%%%GetStartedCompletionChecklistState__c-en_US</members>
-        <members>%%%NAMESPACE%%%GetStartedCompletionChecklistState__c-es</members>
-        <members>%%%NAMESPACE%%%GetStartedCompletionChecklistState__c-fr</members>
-        <members>%%%NAMESPACE%%%GetStartedCompletionChecklistState__c-ja</members>
-        <members>%%%NAMESPACE%%%GetStartedCompletionChecklistState__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Gift_Entry_Settings__c-de</members>
-        <members>%%%NAMESPACE%%%Gift_Entry_Settings__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Gift_Entry_Settings__c-en_US</members>
-        <members>%%%NAMESPACE%%%Gift_Entry_Settings__c-es</members>
-        <members>%%%NAMESPACE%%%Gift_Entry_Settings__c-fr</members>
-        <members>%%%NAMESPACE%%%Gift_Entry_Settings__c-ja</members>
-        <members>%%%NAMESPACE%%%Gift_Entry_Settings__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Grant_Deadline__c-de</members>
-        <members>%%%NAMESPACE%%%Grant_Deadline__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Grant_Deadline__c-en_US</members>
-        <members>%%%NAMESPACE%%%Grant_Deadline__c-es</members>
-        <members>%%%NAMESPACE%%%Grant_Deadline__c-fr</members>
-        <members>%%%NAMESPACE%%%Grant_Deadline__c-iw</members>
-        <members>%%%NAMESPACE%%%Grant_Deadline__c-ja</members>
-        <members>%%%NAMESPACE%%%Grant_Deadline__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Household_Naming_Settings__c-de</members>
-        <members>%%%NAMESPACE%%%Household_Naming_Settings__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Household_Naming_Settings__c-en_US</members>
-        <members>%%%NAMESPACE%%%Household_Naming_Settings__c-es</members>
-        <members>%%%NAMESPACE%%%Household_Naming_Settings__c-fr</members>
-        <members>%%%NAMESPACE%%%Household_Naming_Settings__c-ja</members>
-        <members>%%%NAMESPACE%%%Household_Naming_Settings__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Level__c-de</members>
-        <members>%%%NAMESPACE%%%Level__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Level__c-en_US</members>
-        <members>%%%NAMESPACE%%%Level__c-es</members>
-        <members>%%%NAMESPACE%%%Level__c-fr</members>
-        <members>%%%NAMESPACE%%%Level__c-iw</members>
-        <members>%%%NAMESPACE%%%Level__c-ja</members>
-        <members>%%%NAMESPACE%%%Level__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Levels_Settings__c-de</members>
-        <members>%%%NAMESPACE%%%Levels_Settings__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Levels_Settings__c-en_US</members>
-        <members>%%%NAMESPACE%%%Levels_Settings__c-es</members>
-        <members>%%%NAMESPACE%%%Levels_Settings__c-fr</members>
-        <members>%%%NAMESPACE%%%Levels_Settings__c-ja</members>
-        <members>%%%NAMESPACE%%%Levels_Settings__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Opportunity_Naming_Settings__c-de</members>
-        <members>%%%NAMESPACE%%%Opportunity_Naming_Settings__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Opportunity_Naming_Settings__c-en_US</members>
-        <members>%%%NAMESPACE%%%Opportunity_Naming_Settings__c-es</members>
-        <members>%%%NAMESPACE%%%Opportunity_Naming_Settings__c-fr</members>
-        <members>%%%NAMESPACE%%%Opportunity_Naming_Settings__c-ja</members>
-        <members>%%%NAMESPACE%%%Opportunity_Naming_Settings__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Opportunity_Stage_To_State_Mapping__mdt-de</members>
-        <members>%%%NAMESPACE%%%Opportunity_Stage_To_State_Mapping__mdt-en_GB</members>
-        <members>%%%NAMESPACE%%%Opportunity_Stage_To_State_Mapping__mdt-en_US</members>
-        <members>%%%NAMESPACE%%%Opportunity_Stage_To_State_Mapping__mdt-es</members>
-        <members>%%%NAMESPACE%%%Opportunity_Stage_To_State_Mapping__mdt-fr</members>
-        <members>%%%NAMESPACE%%%Opportunity_Stage_To_State_Mapping__mdt-ja</members>
-        <members>%%%NAMESPACE%%%Opportunity_Stage_To_State_Mapping__mdt-nl_NL</members>
-        <members>%%%NAMESPACE%%%Partial_Soft_Credit__c-de</members>
-        <members>%%%NAMESPACE%%%Partial_Soft_Credit__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Partial_Soft_Credit__c-en_US</members>
-        <members>%%%NAMESPACE%%%Partial_Soft_Credit__c-es</members>
-        <members>%%%NAMESPACE%%%Partial_Soft_Credit__c-fr</members>
-        <members>%%%NAMESPACE%%%Partial_Soft_Credit__c-iw</members>
-        <members>%%%NAMESPACE%%%Partial_Soft_Credit__c-ja</members>
-        <members>%%%NAMESPACE%%%Partial_Soft_Credit__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%RecurringDonationChangeLog__c-de</members>
-        <members>%%%NAMESPACE%%%RecurringDonationChangeLog__c-en_GB</members>
-        <members>%%%NAMESPACE%%%RecurringDonationChangeLog__c-en_US</members>
-        <members>%%%NAMESPACE%%%RecurringDonationChangeLog__c-es</members>
-        <members>%%%NAMESPACE%%%RecurringDonationChangeLog__c-fr</members>
-        <members>%%%NAMESPACE%%%RecurringDonationChangeLog__c-ja</members>
-        <members>%%%NAMESPACE%%%RecurringDonationChangeLog__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%RecurringDonationStatusMapping__mdt-de</members>
-        <members>%%%NAMESPACE%%%RecurringDonationStatusMapping__mdt-en_GB</members>
-        <members>%%%NAMESPACE%%%RecurringDonationStatusMapping__mdt-en_US</members>
-        <members>%%%NAMESPACE%%%RecurringDonationStatusMapping__mdt-es</members>
-        <members>%%%NAMESPACE%%%RecurringDonationStatusMapping__mdt-fr</members>
-        <members>%%%NAMESPACE%%%RecurringDonationStatusMapping__mdt-ja</members>
-        <members>%%%NAMESPACE%%%RecurringDonationStatusMapping__mdt-nl_NL</members>
-        <members>%%%NAMESPACE%%%Relationship_Sync_Excluded_Fields__c-de</members>
-        <members>%%%NAMESPACE%%%Relationship_Sync_Excluded_Fields__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Relationship_Sync_Excluded_Fields__c-en_US</members>
-        <members>%%%NAMESPACE%%%Relationship_Sync_Excluded_Fields__c-es</members>
-        <members>%%%NAMESPACE%%%Relationship_Sync_Excluded_Fields__c-fr</members>
-        <members>%%%NAMESPACE%%%Relationship_Sync_Excluded_Fields__c-ja</members>
-        <members>%%%NAMESPACE%%%Relationship_Sync_Excluded_Fields__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Rollup__mdt-de</members>
-        <members>%%%NAMESPACE%%%Rollup__mdt-en_GB</members>
-        <members>%%%NAMESPACE%%%Rollup__mdt-en_US</members>
-        <members>%%%NAMESPACE%%%Rollup__mdt-es</members>
-        <members>%%%NAMESPACE%%%Rollup__mdt-fr</members>
-        <members>%%%NAMESPACE%%%Rollup__mdt-ja</members>
-        <members>%%%NAMESPACE%%%Rollup__mdt-nl_NL</members>
-        <members>%%%NAMESPACE%%%Schedulable__c-de</members>
-        <members>%%%NAMESPACE%%%Schedulable__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Schedulable__c-en_US</members>
-        <members>%%%NAMESPACE%%%Schedulable__c-es</members>
-        <members>%%%NAMESPACE%%%Schedulable__c-fr</members>
-        <members>%%%NAMESPACE%%%Schedulable__c-iw</members>
-        <members>%%%NAMESPACE%%%Schedulable__c-ja</members>
-        <members>%%%NAMESPACE%%%Schedulable__c-nl_NL</members>
-        <members>%%%NAMESPACE%%%Trigger_Handler__c-de</members>
-        <members>%%%NAMESPACE%%%Trigger_Handler__c-en_GB</members>
-        <members>%%%NAMESPACE%%%Trigger_Handler__c-en_US</members>
-        <members>%%%NAMESPACE%%%Trigger_Handler__c-es</members>
-        <members>%%%NAMESPACE%%%Trigger_Handler__c-fr</members>
-        <members>%%%NAMESPACE%%%Trigger_Handler__c-iw</members>
-        <members>%%%NAMESPACE%%%Trigger_Handler__c-ja</members>
-        <members>%%%NAMESPACE%%%Trigger_Handler__c-nl_NL</members>
+        <members>npsp__Account_Soft_Credit__c-de</members>
+        <members>npsp__Account_Soft_Credit__c-en_GB</members>
+        <members>npsp__Account_Soft_Credit__c-en_US</members>
+        <members>npsp__Account_Soft_Credit__c-es</members>
+        <members>npsp__Account_Soft_Credit__c-fr</members>
+        <members>npsp__Account_Soft_Credit__c-ja</members>
+        <members>npsp__Account_Soft_Credit__c-nl_NL</members>
+        <members>npsp__Address_Verification_Settings__c-de</members>
+        <members>npsp__Address_Verification_Settings__c-en_GB</members>
+        <members>npsp__Address_Verification_Settings__c-en_US</members>
+        <members>npsp__Address_Verification_Settings__c-es</members>
+        <members>npsp__Address_Verification_Settings__c-fr</members>
+        <members>npsp__Address_Verification_Settings__c-ja</members>
+        <members>npsp__Address_Verification_Settings__c-nl_NL</members>
+        <members>npsp__Address__c-de</members>
+        <members>npsp__Address__c-en_GB</members>
+        <members>npsp__Address__c-en_US</members>
+        <members>npsp__Address__c-es</members>
+        <members>npsp__Address__c-fr</members>
+        <members>npsp__Address__c-iw</members>
+        <members>npsp__Address__c-ja</members>
+        <members>npsp__Address__c-nl_NL</members>
+        <members>npsp__Allocation__c-de</members>
+        <members>npsp__Allocation__c-en_GB</members>
+        <members>npsp__Allocation__c-en_US</members>
+        <members>npsp__Allocation__c-es</members>
+        <members>npsp__Allocation__c-fr</members>
+        <members>npsp__Allocation__c-iw</members>
+        <members>npsp__Allocation__c-ja</members>
+        <members>npsp__Allocation__c-nl_NL</members>
+        <members>npsp__Allocations_Settings__c-de</members>
+        <members>npsp__Allocations_Settings__c-en_GB</members>
+        <members>npsp__Allocations_Settings__c-en_US</members>
+        <members>npsp__Allocations_Settings__c-es</members>
+        <members>npsp__Allocations_Settings__c-fr</members>
+        <members>npsp__Allocations_Settings__c-ja</members>
+        <members>npsp__Allocations_Settings__c-nl_NL</members>
+        <members>npsp__Batch_Data_Entry_Settings__c-de</members>
+        <members>npsp__Batch_Data_Entry_Settings__c-en_GB</members>
+        <members>npsp__Batch_Data_Entry_Settings__c-en_US</members>
+        <members>npsp__Batch_Data_Entry_Settings__c-es</members>
+        <members>npsp__Batch_Data_Entry_Settings__c-fr</members>
+        <members>npsp__Batch_Data_Entry_Settings__c-ja</members>
+        <members>npsp__Batch_Data_Entry_Settings__c-nl_NL</members>
+        <members>npsp__Batch__c-de</members>
+        <members>npsp__Batch__c-en_GB</members>
+        <members>npsp__Batch__c-en_US</members>
+        <members>npsp__Batch__c-es</members>
+        <members>npsp__Batch__c-fr</members>
+        <members>npsp__Batch__c-iw</members>
+        <members>npsp__Batch__c-ja</members>
+        <members>npsp__Batch__c-nl_NL</members>
+        <members>npsp__Custom_Column_Header__c-de</members>
+        <members>npsp__Custom_Column_Header__c-en_GB</members>
+        <members>npsp__Custom_Column_Header__c-en_US</members>
+        <members>npsp__Custom_Column_Header__c-es</members>
+        <members>npsp__Custom_Column_Header__c-fr</members>
+        <members>npsp__Custom_Column_Header__c-ja</members>
+        <members>npsp__Custom_Column_Header__c-nl_NL</members>
+        <members>npsp__Customizable_Rollup_Settings__c-de</members>
+        <members>npsp__Customizable_Rollup_Settings__c-en_GB</members>
+        <members>npsp__Customizable_Rollup_Settings__c-en_US</members>
+        <members>npsp__Customizable_Rollup_Settings__c-es</members>
+        <members>npsp__Customizable_Rollup_Settings__c-fr</members>
+        <members>npsp__Customizable_Rollup_Settings__c-ja</members>
+        <members>npsp__Customizable_Rollup_Settings__c-nl_NL</members>
+        <members>npsp__DataImportBatch__c-de</members>
+        <members>npsp__DataImportBatch__c-en_GB</members>
+        <members>npsp__DataImportBatch__c-en_US</members>
+        <members>npsp__DataImportBatch__c-es</members>
+        <members>npsp__DataImportBatch__c-fr</members>
+        <members>npsp__DataImportBatch__c-ja</members>
+        <members>npsp__DataImportBatch__c-nl_NL</members>
+        <members>npsp__DataImport__c-de</members>
+        <members>npsp__DataImport__c-en_GB</members>
+        <members>npsp__DataImport__c-en_US</members>
+        <members>npsp__DataImport__c-es</members>
+        <members>npsp__DataImport__c-fr</members>
+        <members>npsp__DataImport__c-iw</members>
+        <members>npsp__DataImport__c-ja</members>
+        <members>npsp__DataImport__c-nl_NL</members>
+        <members>npsp__Data_Import_Field_Mapping_Set__mdt-de</members>
+        <members>npsp__Data_Import_Field_Mapping_Set__mdt-en_GB</members>
+        <members>npsp__Data_Import_Field_Mapping_Set__mdt-en_US</members>
+        <members>npsp__Data_Import_Field_Mapping_Set__mdt-es</members>
+        <members>npsp__Data_Import_Field_Mapping_Set__mdt-fr</members>
+        <members>npsp__Data_Import_Field_Mapping_Set__mdt-ja</members>
+        <members>npsp__Data_Import_Field_Mapping_Set__mdt-nl_NL</members>
+        <members>npsp__Data_Import_Field_Mapping__mdt-de</members>
+        <members>npsp__Data_Import_Field_Mapping__mdt-en_GB</members>
+        <members>npsp__Data_Import_Field_Mapping__mdt-en_US</members>
+        <members>npsp__Data_Import_Field_Mapping__mdt-es</members>
+        <members>npsp__Data_Import_Field_Mapping__mdt-fr</members>
+        <members>npsp__Data_Import_Field_Mapping__mdt-ja</members>
+        <members>npsp__Data_Import_Field_Mapping__mdt-nl_NL</members>
+        <members>npsp__Data_Import_Object_Mapping_Set__mdt-de</members>
+        <members>npsp__Data_Import_Object_Mapping_Set__mdt-en_GB</members>
+        <members>npsp__Data_Import_Object_Mapping_Set__mdt-en_US</members>
+        <members>npsp__Data_Import_Object_Mapping_Set__mdt-es</members>
+        <members>npsp__Data_Import_Object_Mapping_Set__mdt-fr</members>
+        <members>npsp__Data_Import_Object_Mapping_Set__mdt-ja</members>
+        <members>npsp__Data_Import_Object_Mapping_Set__mdt-nl_NL</members>
+        <members>npsp__Data_Import_Object_Mapping__mdt-de</members>
+        <members>npsp__Data_Import_Object_Mapping__mdt-en_GB</members>
+        <members>npsp__Data_Import_Object_Mapping__mdt-en_US</members>
+        <members>npsp__Data_Import_Object_Mapping__mdt-es</members>
+        <members>npsp__Data_Import_Object_Mapping__mdt-fr</members>
+        <members>npsp__Data_Import_Object_Mapping__mdt-ja</members>
+        <members>npsp__Data_Import_Object_Mapping__mdt-nl_NL</members>
+        <members>npsp__Data_Import_Settings__c-de</members>
+        <members>npsp__Data_Import_Settings__c-en_GB</members>
+        <members>npsp__Data_Import_Settings__c-en_US</members>
+        <members>npsp__Data_Import_Settings__c-es</members>
+        <members>npsp__Data_Import_Settings__c-fr</members>
+        <members>npsp__Data_Import_Settings__c-ja</members>
+        <members>npsp__Data_Import_Settings__c-nl_NL</members>
+        <members>npsp__DeploymentEvent__e-de</members>
+        <members>npsp__DeploymentEvent__e-en_GB</members>
+        <members>npsp__DeploymentEvent__e-en_US</members>
+        <members>npsp__DeploymentEvent__e-es</members>
+        <members>npsp__DeploymentEvent__e-fr</members>
+        <members>npsp__DeploymentEvent__e-ja</members>
+        <members>npsp__DeploymentEvent__e-nl_NL</members>
+        <members>npsp__Engagement_Plan_Task__c-de</members>
+        <members>npsp__Engagement_Plan_Task__c-en_GB</members>
+        <members>npsp__Engagement_Plan_Task__c-en_US</members>
+        <members>npsp__Engagement_Plan_Task__c-es</members>
+        <members>npsp__Engagement_Plan_Task__c-fr</members>
+        <members>npsp__Engagement_Plan_Task__c-iw</members>
+        <members>npsp__Engagement_Plan_Task__c-ja</members>
+        <members>npsp__Engagement_Plan_Task__c-nl_NL</members>
+        <members>npsp__Engagement_Plan_Template__c-de</members>
+        <members>npsp__Engagement_Plan_Template__c-en_GB</members>
+        <members>npsp__Engagement_Plan_Template__c-en_US</members>
+        <members>npsp__Engagement_Plan_Template__c-es</members>
+        <members>npsp__Engagement_Plan_Template__c-fr</members>
+        <members>npsp__Engagement_Plan_Template__c-iw</members>
+        <members>npsp__Engagement_Plan_Template__c-ja</members>
+        <members>npsp__Engagement_Plan_Template__c-nl_NL</members>
+        <members>npsp__Engagement_Plan__c-de</members>
+        <members>npsp__Engagement_Plan__c-en_GB</members>
+        <members>npsp__Engagement_Plan__c-en_US</members>
+        <members>npsp__Engagement_Plan__c-es</members>
+        <members>npsp__Engagement_Plan__c-fr</members>
+        <members>npsp__Engagement_Plan__c-iw</members>
+        <members>npsp__Engagement_Plan__c-ja</members>
+        <members>npsp__Engagement_Plan__c-nl_NL</members>
+        <members>npsp__Error_Settings__c-de</members>
+        <members>npsp__Error_Settings__c-en_GB</members>
+        <members>npsp__Error_Settings__c-en_US</members>
+        <members>npsp__Error_Settings__c-es</members>
+        <members>npsp__Error_Settings__c-fr</members>
+        <members>npsp__Error_Settings__c-ja</members>
+        <members>npsp__Error_Settings__c-nl_NL</members>
+        <members>npsp__Error__c-de</members>
+        <members>npsp__Error__c-en_GB</members>
+        <members>npsp__Error__c-en_US</members>
+        <members>npsp__Error__c-es</members>
+        <members>npsp__Error__c-fr</members>
+        <members>npsp__Error__c-iw</members>
+        <members>npsp__Error__c-ja</members>
+        <members>npsp__Error__c-nl_NL</members>
+        <members>npsp__Filter_Group__mdt-de</members>
+        <members>npsp__Filter_Group__mdt-en_GB</members>
+        <members>npsp__Filter_Group__mdt-en_US</members>
+        <members>npsp__Filter_Group__mdt-es</members>
+        <members>npsp__Filter_Group__mdt-fr</members>
+        <members>npsp__Filter_Group__mdt-ja</members>
+        <members>npsp__Filter_Group__mdt-nl_NL</members>
+        <members>npsp__Filter_Rule__mdt-de</members>
+        <members>npsp__Filter_Rule__mdt-en_GB</members>
+        <members>npsp__Filter_Rule__mdt-en_US</members>
+        <members>npsp__Filter_Rule__mdt-es</members>
+        <members>npsp__Filter_Rule__mdt-fr</members>
+        <members>npsp__Filter_Rule__mdt-ja</members>
+        <members>npsp__Filter_Rule__mdt-nl_NL</members>
+        <members>npsp__Form_Template__c-de</members>
+        <members>npsp__Form_Template__c-en_GB</members>
+        <members>npsp__Form_Template__c-en_US</members>
+        <members>npsp__Form_Template__c-es</members>
+        <members>npsp__Form_Template__c-fr</members>
+        <members>npsp__Form_Template__c-ja</members>
+        <members>npsp__Form_Template__c-nl_NL</members>
+        <members>npsp__Fund__c-de</members>
+        <members>npsp__Fund__c-en_GB</members>
+        <members>npsp__Fund__c-en_US</members>
+        <members>npsp__Fund__c-es</members>
+        <members>npsp__Fund__c-fr</members>
+        <members>npsp__Fund__c-ja</members>
+        <members>npsp__Fund__c-nl_NL</members>
+        <members>npsp__General_Accounting_Unit__c-de</members>
+        <members>npsp__General_Accounting_Unit__c-en_GB</members>
+        <members>npsp__General_Accounting_Unit__c-en_US</members>
+        <members>npsp__General_Accounting_Unit__c-es</members>
+        <members>npsp__General_Accounting_Unit__c-fr</members>
+        <members>npsp__General_Accounting_Unit__c-iw</members>
+        <members>npsp__General_Accounting_Unit__c-ja</members>
+        <members>npsp__General_Accounting_Unit__c-nl_NL</members>
+        <members>npsp__GetStartedChecklistItem__mdt-de</members>
+        <members>npsp__GetStartedChecklistItem__mdt-en_GB</members>
+        <members>npsp__GetStartedChecklistItem__mdt-en_US</members>
+        <members>npsp__GetStartedChecklistItem__mdt-es</members>
+        <members>npsp__GetStartedChecklistItem__mdt-fr</members>
+        <members>npsp__GetStartedChecklistItem__mdt-ja</members>
+        <members>npsp__GetStartedChecklistItem__mdt-nl_NL</members>
+        <members>npsp__GetStartedChecklistSection__mdt-de</members>
+        <members>npsp__GetStartedChecklistSection__mdt-en_GB</members>
+        <members>npsp__GetStartedChecklistSection__mdt-en_US</members>
+        <members>npsp__GetStartedChecklistSection__mdt-es</members>
+        <members>npsp__GetStartedChecklistSection__mdt-fr</members>
+        <members>npsp__GetStartedChecklistSection__mdt-ja</members>
+        <members>npsp__GetStartedChecklistSection__mdt-nl_NL</members>
+        <members>npsp__GetStartedCompletionChecklistState__c-de</members>
+        <members>npsp__GetStartedCompletionChecklistState__c-en_GB</members>
+        <members>npsp__GetStartedCompletionChecklistState__c-en_US</members>
+        <members>npsp__GetStartedCompletionChecklistState__c-es</members>
+        <members>npsp__GetStartedCompletionChecklistState__c-fr</members>
+        <members>npsp__GetStartedCompletionChecklistState__c-ja</members>
+        <members>npsp__GetStartedCompletionChecklistState__c-nl_NL</members>
+        <members>npsp__Gift_Entry_Settings__c-de</members>
+        <members>npsp__Gift_Entry_Settings__c-en_GB</members>
+        <members>npsp__Gift_Entry_Settings__c-en_US</members>
+        <members>npsp__Gift_Entry_Settings__c-es</members>
+        <members>npsp__Gift_Entry_Settings__c-fr</members>
+        <members>npsp__Gift_Entry_Settings__c-ja</members>
+        <members>npsp__Gift_Entry_Settings__c-nl_NL</members>
+        <members>npsp__Grant_Deadline__c-de</members>
+        <members>npsp__Grant_Deadline__c-en_GB</members>
+        <members>npsp__Grant_Deadline__c-en_US</members>
+        <members>npsp__Grant_Deadline__c-es</members>
+        <members>npsp__Grant_Deadline__c-fr</members>
+        <members>npsp__Grant_Deadline__c-iw</members>
+        <members>npsp__Grant_Deadline__c-ja</members>
+        <members>npsp__Grant_Deadline__c-nl_NL</members>
+        <members>npsp__Household_Naming_Settings__c-de</members>
+        <members>npsp__Household_Naming_Settings__c-en_GB</members>
+        <members>npsp__Household_Naming_Settings__c-en_US</members>
+        <members>npsp__Household_Naming_Settings__c-es</members>
+        <members>npsp__Household_Naming_Settings__c-fr</members>
+        <members>npsp__Household_Naming_Settings__c-ja</members>
+        <members>npsp__Household_Naming_Settings__c-nl_NL</members>
+        <members>npsp__Level__c-de</members>
+        <members>npsp__Level__c-en_GB</members>
+        <members>npsp__Level__c-en_US</members>
+        <members>npsp__Level__c-es</members>
+        <members>npsp__Level__c-fr</members>
+        <members>npsp__Level__c-iw</members>
+        <members>npsp__Level__c-ja</members>
+        <members>npsp__Level__c-nl_NL</members>
+        <members>npsp__Levels_Settings__c-de</members>
+        <members>npsp__Levels_Settings__c-en_GB</members>
+        <members>npsp__Levels_Settings__c-en_US</members>
+        <members>npsp__Levels_Settings__c-es</members>
+        <members>npsp__Levels_Settings__c-fr</members>
+        <members>npsp__Levels_Settings__c-ja</members>
+        <members>npsp__Levels_Settings__c-nl_NL</members>
+        <members>npsp__Opportunity_Naming_Settings__c-de</members>
+        <members>npsp__Opportunity_Naming_Settings__c-en_GB</members>
+        <members>npsp__Opportunity_Naming_Settings__c-en_US</members>
+        <members>npsp__Opportunity_Naming_Settings__c-es</members>
+        <members>npsp__Opportunity_Naming_Settings__c-fr</members>
+        <members>npsp__Opportunity_Naming_Settings__c-ja</members>
+        <members>npsp__Opportunity_Naming_Settings__c-nl_NL</members>
+        <members>npsp__Opportunity_Stage_To_State_Mapping__mdt-de</members>
+        <members>npsp__Opportunity_Stage_To_State_Mapping__mdt-en_GB</members>
+        <members>npsp__Opportunity_Stage_To_State_Mapping__mdt-en_US</members>
+        <members>npsp__Opportunity_Stage_To_State_Mapping__mdt-es</members>
+        <members>npsp__Opportunity_Stage_To_State_Mapping__mdt-fr</members>
+        <members>npsp__Opportunity_Stage_To_State_Mapping__mdt-ja</members>
+        <members>npsp__Opportunity_Stage_To_State_Mapping__mdt-nl_NL</members>
+        <members>npsp__Partial_Soft_Credit__c-de</members>
+        <members>npsp__Partial_Soft_Credit__c-en_GB</members>
+        <members>npsp__Partial_Soft_Credit__c-en_US</members>
+        <members>npsp__Partial_Soft_Credit__c-es</members>
+        <members>npsp__Partial_Soft_Credit__c-fr</members>
+        <members>npsp__Partial_Soft_Credit__c-iw</members>
+        <members>npsp__Partial_Soft_Credit__c-ja</members>
+        <members>npsp__Partial_Soft_Credit__c-nl_NL</members>
+        <members>npsp__RecurringDonationChangeLog__c-de</members>
+        <members>npsp__RecurringDonationChangeLog__c-en_GB</members>
+        <members>npsp__RecurringDonationChangeLog__c-en_US</members>
+        <members>npsp__RecurringDonationChangeLog__c-es</members>
+        <members>npsp__RecurringDonationChangeLog__c-fr</members>
+        <members>npsp__RecurringDonationChangeLog__c-ja</members>
+        <members>npsp__RecurringDonationChangeLog__c-nl_NL</members>
+        <members>npsp__RecurringDonationStatusMapping__mdt-de</members>
+        <members>npsp__RecurringDonationStatusMapping__mdt-en_GB</members>
+        <members>npsp__RecurringDonationStatusMapping__mdt-en_US</members>
+        <members>npsp__RecurringDonationStatusMapping__mdt-es</members>
+        <members>npsp__RecurringDonationStatusMapping__mdt-fr</members>
+        <members>npsp__RecurringDonationStatusMapping__mdt-ja</members>
+        <members>npsp__RecurringDonationStatusMapping__mdt-nl_NL</members>
+        <members>npsp__Relationship_Sync_Excluded_Fields__c-de</members>
+        <members>npsp__Relationship_Sync_Excluded_Fields__c-en_GB</members>
+        <members>npsp__Relationship_Sync_Excluded_Fields__c-en_US</members>
+        <members>npsp__Relationship_Sync_Excluded_Fields__c-es</members>
+        <members>npsp__Relationship_Sync_Excluded_Fields__c-fr</members>
+        <members>npsp__Relationship_Sync_Excluded_Fields__c-ja</members>
+        <members>npsp__Relationship_Sync_Excluded_Fields__c-nl_NL</members>
+        <members>npsp__Rollup__mdt-de</members>
+        <members>npsp__Rollup__mdt-en_GB</members>
+        <members>npsp__Rollup__mdt-en_US</members>
+        <members>npsp__Rollup__mdt-es</members>
+        <members>npsp__Rollup__mdt-fr</members>
+        <members>npsp__Rollup__mdt-ja</members>
+        <members>npsp__Rollup__mdt-nl_NL</members>
+        <members>npsp__Schedulable__c-de</members>
+        <members>npsp__Schedulable__c-en_GB</members>
+        <members>npsp__Schedulable__c-en_US</members>
+        <members>npsp__Schedulable__c-es</members>
+        <members>npsp__Schedulable__c-fr</members>
+        <members>npsp__Schedulable__c-iw</members>
+        <members>npsp__Schedulable__c-ja</members>
+        <members>npsp__Schedulable__c-nl_NL</members>
+        <members>npsp__Trigger_Handler__c-de</members>
+        <members>npsp__Trigger_Handler__c-en_GB</members>
+        <members>npsp__Trigger_Handler__c-en_US</members>
+        <members>npsp__Trigger_Handler__c-es</members>
+        <members>npsp__Trigger_Handler__c-fr</members>
+        <members>npsp__Trigger_Handler__c-iw</members>
+        <members>npsp__Trigger_Handler__c-ja</members>
+        <members>npsp__Trigger_Handler__c-nl_NL</members>
         <name>CustomObjectTranslation</name>
     </types>
     <types>
@@ -1757,11 +1752,11 @@
         <members>npe01__OppPayment__c.%%%NAMESPACE%%%Payment_WizardFS</members>
         <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%RD2_Entry_Form_Custom_Fields</members>
         <members>npo02__Household__c.npo02__Manage_Household_Custom</members>
-        <members>%%%NAMESPACE%%%Allocation__c.%%%NAMESPACE%%%ManageAllocationsAdditionalFields</members>
-        <members>%%%NAMESPACE%%%Batch__c.%%%NAMESPACE%%%BatchDetailView</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%BatchGiftEntryTabColumns</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Template__c.%%%NAMESPACE%%%ManageEPTemplateFS</members>
-        <members>%%%NAMESPACE%%%Level__c.%%%NAMESPACE%%%LevelEdit</members>
+        <members>npsp__Allocation__c.%%%NAMESPACE%%%ManageAllocationsAdditionalFields</members>
+        <members>npsp__Batch__c.%%%NAMESPACE%%%BatchDetailView</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%BatchGiftEntryTabColumns</members>
+        <members>npsp__Engagement_Plan_Template__c.%%%NAMESPACE%%%ManageEPTemplateFS</members>
+        <members>npsp__Level__c.%%%NAMESPACE%%%LevelEdit</members>
         <name>FieldSet</name>
     </types>
     <types>
@@ -1807,17 +1802,17 @@
         <members>Account-%%%NAMESPACE%%%Organization Layout</members>
         <members>Account-Household Lightning Layout</members>
         <members>Account-Organization Lightning Layout</members>
-        <members>Account-%%%NAMESPACE%%%Household Layout</members>
-        <members>Account-%%%NAMESPACE%%%Organization Layout</members>
+        <members>Account-npsp__Household Layout</members>
+        <members>Account-npsp__Organization Layout</members>
         <members>Asset-Asset Layout</members>
         <members>Campaign-%%%NAMESPACE%%%NPSP Campaign Layout</members>
-        <members>Campaign-%%%NAMESPACE%%%NPSP Campaign Layout</members>
+        <members>Campaign-npsp__NPSP Campaign Layout</members>
         <members>Case-Case Layout</members>
         <members>ContactPointAddress-Contact Point Address Layout</members>
         <members>ContactPointEmail-Contact Point Email Layout</members>
         <members>ContactPointPhone-Contact Point Phone Layout</members>
         <members>Contact-Contact Lightning Layout</members>
-        <members>Contact-%%%NAMESPACE%%%Contact Layout</members>
+        <members>Contact-npsp__Contact Layout</members>
         <members>Contract-Contract Layout</members>
         <members>EmailMessage-Email Message Layout</members>
         <members>OpportunityLineItem-Opportunity Product Layout</members>
@@ -1827,12 +1822,12 @@
         <members>Opportunity-%%%NAMESPACE%%%Major Gift Layout</members>
         <members>Opportunity-%%%NAMESPACE%%%Matching Gift Layout</members>
         <members>Opportunity-%%%NAMESPACE%%%Membership Layout</members>
-        <members>Opportunity-%%%NAMESPACE%%%Donation Layout</members>
-        <members>Opportunity-%%%NAMESPACE%%%Grant Layout</members>
-        <members>Opportunity-%%%NAMESPACE%%%In-Kind Gift Layout</members>
-        <members>Opportunity-%%%NAMESPACE%%%Major Gift Layout</members>
-        <members>Opportunity-%%%NAMESPACE%%%Matching Gift Layout</members>
-        <members>Opportunity-%%%NAMESPACE%%%Membership Layout</members>
+        <members>Opportunity-npsp__Donation Layout</members>
+        <members>Opportunity-npsp__Grant Layout</members>
+        <members>Opportunity-npsp__In-Kind Gift Layout</members>
+        <members>Opportunity-npsp__Major Gift Layout</members>
+        <members>Opportunity-npsp__Matching Gift Layout</members>
+        <members>Opportunity-npsp__Membership Layout</members>
         <members>Order-Order Layout</members>
         <members>Solution-Solution Layout</members>
         <members>Task-Task Layout</members>
@@ -1848,34 +1843,34 @@
         <members>npe4__Relationship__c-npe4__Relationship Layout</members>
         <members>npe5__Affiliation__c-npe5__Affiliation Layout</members>
         <members>npo02__Household__c-npo02__Household Layout</members>
-        <members>%%%NAMESPACE%%%Account_Soft_Credit__c-%%%NAMESPACE%%%Account Soft Credit Layout</members>
-        <members>%%%NAMESPACE%%%Address__c-%%%NAMESPACE%%%Address Layout</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c-%%%NAMESPACE%%%NPSP Data Import Batch Layout</members>
-        <members>%%%NAMESPACE%%%DataImport__c-%%%NAMESPACE%%%Data Import Layout</members>
-        <members>%%%NAMESPACE%%%Data_Import_Field_Mapping__mdt-%%%NAMESPACE%%%Data Import Field Mapping Layout</members>
-        <members>%%%NAMESPACE%%%Data_Import_Object_Mapping_Set__mdt-%%%NAMESPACE%%%Data Import Object Mapping Set Layout</members>
-        <members>%%%NAMESPACE%%%Data_Import_Object_Mapping__mdt-%%%NAMESPACE%%%Data Import Object Mapping Layout</members>
-        <members>%%%NAMESPACE%%%Error__c-%%%NAMESPACE%%%Error Layout</members>
-        <members>%%%NAMESPACE%%%Filter_Group__mdt-%%%NAMESPACE%%%Filter Group Layout</members>
-        <members>%%%NAMESPACE%%%Filter_Rule__mdt-%%%NAMESPACE%%%Filter Rule Layout</members>
-        <members>%%%NAMESPACE%%%Form_Template__c-%%%NAMESPACE%%%Form Template Layout</members>
-        <members>%%%NAMESPACE%%%GetStartedChecklistItem__mdt-%%%NAMESPACE%%%GS Checklist Item Layout</members>
-        <members>%%%NAMESPACE%%%GetStartedChecklistSection__mdt-%%%NAMESPACE%%%GS Checklist Section Layout</members>
-        <members>%%%NAMESPACE%%%Grant_Deadline__c-Deliverable</members>
-        <members>%%%NAMESPACE%%%Grant_Deadline__c-%%%NAMESPACE%%%Grant Deadline Layout</members>
-        <members>%%%NAMESPACE%%%RecurringDonationChangeLog__c-%%%NAMESPACE%%%Recurring Donation Change Log Layout</members>
-        <members>%%%NAMESPACE%%%Rollup__mdt-%%%NAMESPACE%%%Rollup Layout</members>
+        <members>npsp__Account_Soft_Credit__c-npsp__Account Soft Credit Layout</members>
+        <members>npsp__Address__c-npsp__Address Layout</members>
+        <members>npsp__DataImportBatch__c-npsp__NPSP Data Import Batch Layout</members>
+        <members>npsp__DataImport__c-npsp__Data Import Layout</members>
+        <members>npsp__Data_Import_Field_Mapping__mdt-npsp__Data Import Field Mapping Layout</members>
+        <members>npsp__Data_Import_Object_Mapping_Set__mdt-npsp__Data Import Object Mapping Set Layout</members>
+        <members>npsp__Data_Import_Object_Mapping__mdt-npsp__Data Import Object Mapping Layout</members>
+        <members>npsp__Error__c-npsp__Error Layout</members>
+        <members>npsp__Filter_Group__mdt-npsp__Filter Group Layout</members>
+        <members>npsp__Filter_Rule__mdt-npsp__Filter Rule Layout</members>
+        <members>npsp__Form_Template__c-npsp__Form Template Layout</members>
+        <members>npsp__GetStartedChecklistItem__mdt-npsp__GS Checklist Item Layout</members>
+        <members>npsp__GetStartedChecklistSection__mdt-npsp__GS Checklist Section Layout</members>
+        <members>npsp__Grant_Deadline__c-Deliverable</members>
+        <members>npsp__Grant_Deadline__c-npsp__Grant Deadline Layout</members>
+        <members>npsp__RecurringDonationChangeLog__c-npsp__Recurring Donation Change Log Layout</members>
+        <members>npsp__Rollup__mdt-npsp__Rollup Layout</members>
         <name>Layout</name>
     </types>
     <types>
         <members>%%%NAMESPACE%%%Grant_Deadline__c.All</members>
+        <members>Account.%%%NAMESPACE%%%AllAccounts</members>
         <members>Account.Household_Accounts</members>
         <members>Account.MyAccounts</members>
         <members>Account.MyOrganizations</members>
         <members>Account.NewLastWeek</members>
         <members>Account.NewThisWeek</members>
         <members>Account.Organization_Accounts</members>
-        <members>Account.%%%NAMESPACE%%%AllAccounts</members>
         <members>Activity.MyActivities</members>
         <members>Activity.MyDelegatedActivities</members>
         <members>Activity.MyTeamsActivities</members>
@@ -1901,6 +1896,7 @@
         <members>Lead.AllOpenLeads</members>
         <members>Lead.MyUnreadLeads</members>
         <members>Lead.TodaysLeads</members>
+        <members>Opportunity.%%%NAMESPACE%%%To_Be_Acknowledged</members>
         <members>Opportunity.AllDonations</members>
         <members>Opportunity.AllOpportunities</members>
         <members>Opportunity.ClosingNextMonth</members>
@@ -1911,7 +1907,6 @@
         <members>Opportunity.NewThisWeek</members>
         <members>Opportunity.Private</members>
         <members>Opportunity.Won</members>
-        <members>Opportunity.%%%NAMESPACE%%%To_Be_Acknowledged</members>
         <members>Order.AllActivatedOrders</members>
         <members>Order.AllDraftOrders</members>
         <members>Order.AllOrders</members>
@@ -1925,22 +1920,22 @@
         <members>WorkOrder.My_WorkOrders</members>
         <members>npe03__Recurring_Donation__c.All_Recurring_Donations</members>
         <members>npo02__Household__c.npo02__All</members>
-        <members>%%%NAMESPACE%%%Batch__c.%%%NAMESPACE%%%All</members>
-        <members>%%%NAMESPACE%%%Batch__c.%%%NAMESPACE%%%Completed_Batches</members>
-        <members>%%%NAMESPACE%%%Batch__c.%%%NAMESPACE%%%Open_Batches</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%All</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Gift_Batches</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%All</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Dry_Run_Errors</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Dry_Run_Validated</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Failed_Data_Imports</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Succesfully_Imported</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%To_Be_Imported</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Template__c.%%%NAMESPACE%%%All</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c.%%%NAMESPACE%%%All</members>
-        <members>%%%NAMESPACE%%%Grant_Deadline__c.All</members>
-        <members>%%%NAMESPACE%%%Level__c.%%%NAMESPACE%%%All</members>
-        <members>%%%NAMESPACE%%%Trigger_Handler__c.%%%NAMESPACE%%%All</members>
+        <members>npsp__Batch__c.%%%NAMESPACE%%%All</members>
+        <members>npsp__Batch__c.%%%NAMESPACE%%%Completed_Batches</members>
+        <members>npsp__Batch__c.%%%NAMESPACE%%%Open_Batches</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%All</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Gift_Batches</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%All</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Dry_Run_Errors</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Dry_Run_Validated</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Failed_Data_Imports</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Succesfully_Imported</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%To_Be_Imported</members>
+        <members>npsp__Engagement_Plan_Template__c.%%%NAMESPACE%%%All</members>
+        <members>npsp__General_Accounting_Unit__c.%%%NAMESPACE%%%All</members>
+        <members>npsp__Grant_Deadline__c.All</members>
+        <members>npsp__Level__c.%%%NAMESPACE%%%All</members>
+        <members>npsp__Trigger_Handler__c.%%%NAMESPACE%%%All</members>
         <name>ListView</name>
     </types>
     <types>
@@ -2101,7 +2096,7 @@
         <members>NPSP_Fundraising_Reports/Top_25_Opportunities_Lifetime</members>
         <members>NPSP_Fundraising_Reports/Tribute_Opportunities</members>
         <members>NPSP_Fundraising_Reports/X10_Increase_Projection</members>
-        <members>NPSP_Constituent_Reports/%%%NAMESPACE%%%NPSP_Campaign_Household_Mailing_List_V2</members>
+        <members>NPSP_Constituent_Reports/npsp__NPSP_Campaign_Household_Mailing_List_V2</members>
         <name>Report</name>
     </types>
     <types>
@@ -2273,7 +2268,7 @@
         <members>Contact.Contact_Preferred_Email</members>
         <members>Contact.Contact_Preferred_Phone</members>
         <members>npe4__Relationship__c.npe4__Related_Contact_Do_Not_Change</members>
-        <members>%%%NAMESPACE%%%Level__c.%%%NAMESPACE%%%Target_Required</members>
+        <members>npsp__Level__c.%%%NAMESPACE%%%Target_Required</members>
         <name>ValidationRule</name>
     </types>
     <types>
@@ -2283,38 +2278,38 @@
         <members>Campaign.ViewAllCampaignMembers</members>
         <members>Campaign.ViewCampaignInfluenceReport</members>
         <members>Campaign.npo02__Household_Mailing_List</members>
-        <members>Contact.npe4__Relationships_Viewer</members>
-        <members>Contact.npo02__Copy_Address_to_Household</members>
-        <members>Contact.npo02__Household</members>
         <members>Contact.%%%NAMESPACE%%%Merge_Contacts</members>
         <members>Contact.%%%NAMESPACE%%%New_Gift</members>
         <members>Contact.%%%NAMESPACE%%%Recalculate_Rollups</members>
-        <members>Opportunity.npe01__Add_Matching_Donation</members>
-        <members>Opportunity.npe01__Matching_Donation</members>
-        <members>Opportunity.npe01__New_Contact_Donation</members>
-        <members>Opportunity.npe01__New_Organization_Donation</members>
+        <members>Contact.npe4__Relationships_Viewer</members>
+        <members>Contact.npo02__Copy_Address_to_Household</members>
+        <members>Contact.npo02__Household</members>
         <members>Opportunity.%%%NAMESPACE%%%Email_Acknowledgment</members>
         <members>Opportunity.%%%NAMESPACE%%%Email_Acknowledgments</members>
         <members>Opportunity.%%%NAMESPACE%%%Find_Matched_Gifts</members>
         <members>Opportunity.%%%NAMESPACE%%%Manage_Soft_Credits</members>
         <members>Opportunity.%%%NAMESPACE%%%Refresh_Name</members>
+        <members>Opportunity.npe01__Add_Matching_Donation</members>
+        <members>Opportunity.npe01__Matching_Donation</members>
+        <members>Opportunity.npe01__New_Contact_Donation</members>
+        <members>Opportunity.npe01__New_Organization_Donation</members>
         <members>npe01__OppPayment__c.npe01__Schedule_Payments</members>
         <members>npe01__OppPayment__c.npe01__Writeoff_Payments</members>
+        <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%Recalculate_Rollups</members>
         <members>npe03__Recurring_Donation__c.npe03__New_Recurring_Acct_Donation</members>
         <members>npe03__Recurring_Donation__c.npe03__New_Recurring_Donation_Pledge_Account</members>
         <members>npe03__Recurring_Donation__c.npe03__Refresh_Opportunities</members>
-        <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%Recalculate_Rollups</members>
         <members>npo02__Household__c.npo02__Copy_Household_Address_to_Contacts</members>
         <members>npo02__Household__c.npo02__New_Household_Member</members>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Verify_Address</members>
-        <members>%%%NAMESPACE%%%Allocation__c.%%%NAMESPACE%%%Manage_Allocations</members>
-        <members>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Process_Batch</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Delete_All_Data_Import_Records</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Delete_Imported_Data_Import_Records</members>
-        <members>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Process_Data_Import</members>
-        <members>%%%NAMESPACE%%%Engagement_Plan_Template__c.%%%NAMESPACE%%%Manage_Template</members>
-        <members>%%%NAMESPACE%%%General_Accounting_Unit__c.%%%NAMESPACE%%%Recalculate_Rollups</members>
-        <members>%%%NAMESPACE%%%Partial_Soft_Credit__c.%%%NAMESPACE%%%Manage_Soft_Credits</members>
+        <members>npsp__Address__c.%%%NAMESPACE%%%Verify_Address</members>
+        <members>npsp__Allocation__c.%%%NAMESPACE%%%Manage_Allocations</members>
+        <members>npsp__DataImportBatch__c.%%%NAMESPACE%%%Process_Batch</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Delete_All_Data_Import_Records</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Delete_Imported_Data_Import_Records</members>
+        <members>npsp__DataImport__c.%%%NAMESPACE%%%Process_Data_Import</members>
+        <members>npsp__Engagement_Plan_Template__c.%%%NAMESPACE%%%Manage_Template</members>
+        <members>npsp__General_Accounting_Unit__c.%%%NAMESPACE%%%Recalculate_Rollups</members>
+        <members>npsp__Partial_Soft_Credit__c.%%%NAMESPACE%%%Manage_Soft_Credits</members>
         <name>WebLink</name>
     </types>
     <types>
