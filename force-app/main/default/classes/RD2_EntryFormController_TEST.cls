@@ -76,7 +76,7 @@ private with sharing class RD2_EntryFormController_TEST {
     */
     @IsTest
     private static void shouldReturnSettings() {
-        Id accountId =  UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
+        Id accountId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
 
         Test.startTest();
         RD2_EntryFormController.RD2AppView initialView = RD2_EntryFormController.getInitialView(accountId, null);
@@ -98,13 +98,39 @@ private with sharing class RD2_EntryFormController_TEST {
     * in order to display the Elevate credit card widget if so.
     */
     @IsTest
+    private static void newRecordShouldDefaultStartDate() {
+        Test.startTest();
+        RD2_EntryFormController.RD2AppView initialView = RD2_EntryFormController.getInitialView(null, null);
+        Test.stopTest();
+
+        System.assertEquals(initialView.record.dateEstablished, Date.today(), 'Date established should default to today.');
+    }
+
+    /***
+    * @description Verifies whether the org is the Elevate customer
+    * in order to display the Elevate credit card widget if so.
+    */
+    @IsTest
+    private static void newRecordShouldDefaultDateEstablished() {
+        Test.startTest();
+        RD2_EntryFormController.RD2AppView initialView = RD2_EntryFormController.getInitialView(null, null);
+        Test.stopTest();
+
+        System.assertEquals(initialView.record.startDate, Date.today(), 'Start date should default to today.');
+    }
+
+    /***
+    * @description Verifies whether the org is the Elevate customer
+    * in order to display the Elevate credit card widget if so.
+    */
+    @IsTest
     private static void shouldDisplayElevateWidgetWhenElevateEnabledIsTrue() {
-        Id accountId =  UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
+        Id accountId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
 
         RD2_ElevateIntegrationService_TEST.enableElevateUserPermissions();
 
         Test.startTest();
-        RD2_EntryFormController.RD2AppView initialView =  RD2_EntryFormController.getInitialView(accountId, null);
+        RD2_EntryFormController.RD2AppView initialView = RD2_EntryFormController.getInitialView(accountId, null);
         Test.stopTest();
 
         System.assertEquals(true, initialView.isElevateCustomer,

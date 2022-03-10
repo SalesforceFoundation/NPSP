@@ -519,7 +519,10 @@ public with sharing class RD2_EntryFormController {
         @AuraEnabled public Map<String, Object> customFieldValues;
 
         public RD2RecordView() {
-
+            Date today = Date.today();
+            this.donorType = RD2_Constants.DONOR_TYPE_CONTACT;
+            this.dateEstablished = today;
+            this.startDate = today;
         }
 
         public RD2RecordView(npe03__Recurring_Donation__c record) {
