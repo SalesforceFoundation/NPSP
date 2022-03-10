@@ -2217,6 +2217,81 @@ public with sharing class ADDR_Addresses_TEST {
                 'previous default address should be set to today.');
     }
 
+    @IsTest
+    private static void newNonDefaultAddressHasNullStartAndEndDate() {
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+        buildTestAddress(2);
+        NPSP_Contact npspContact = new NPSP_Contact(UTIL_UnitTestData_TEST.getContact());
+        npspContact.mailingAddress(new NPSP_Address(testAddresses[0]));
+
+        insert npspContact.getRecord();
+
+        Contact testContact = [SELECT Current_Address__c, Current_Address__r.Default_Address__c, AccountId
+                               FROM Contact
+                               WHERE Id = :npspContact.getRecord().Id
+                               LIMIT 1];
+        System.assertEquals(true, testContact.Current_Address__r.Default_Address__c, 'The address should be the default address of ' +
+                'the household.');
+
+        testAddresses[1].Household_Account__c = testContact.AccountId;
+
+        Test.startTest();
+            insert testAddresses[1];
+        Test.stopTest();
+
+        Address__c updatedTestAddress = [SELECT Default_Address__c, Latest_Start_Date__c, Latest_End_Date__c
+                                            FROM Address__c
+                                            WHERE Id = :testAddresses[1].Id
+                                            LIMIT 1];
+        System.assertEquals(false, updatedTestAddress.Default_Address__c, 'The previous default address should be' +
+                ' set to false.');
+        System.assertEquals(null, updatedTestAddress.Latest_End_Date__c, 'The latest end date on the ' +
+                'new address should be null.');
+        System.assertEquals(null, updatedTestAddress.Latest_Start_Date__c, 'The latest start date on the ' +
+                'new address should be null.');
+    }
+
+    @IsTest
+    private static void updatedNonDefaultStartAndEndDateIsRetained() {
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+        buildTestAddress(2);
+        NPSP_Contact npspContact = new NPSP_Contact(UTIL_UnitTestData_TEST.getContact());
+        npspContact.mailingAddress(new NPSP_Address(testAddresses[0]));
+
+        insert npspContact.getRecord();
+
+        Contact testContact = [SELECT AccountId FROM Contact LIMIT 1];
+
+        testAddresses[1].Household_Account__c = testContact.AccountId;
+        insert testAddresses[1];
+
+        Address__c testAddress = [SELECT Latest_Start_Date__c, Latest_End_Date__c
+                                  FROM Address__c
+                                  WHERE Id = :testAddresses[1].Id
+                                  LIMIT 1];
+        Test.startTest();
+            testAddress.Latest_Start_Date__c = System.today() - 2;
+            testAddress.Latest_End_Date__c = System.today() - 1;
+
+            update testAddress;
+        Test.stopTest();
+
+        Address__c updatedTestAddress = [SELECT Default_Address__c, Latest_Start_Date__c, Latest_End_Date__c
+                                         FROM Address__c
+                                         WHERE Id = :testAddresses[1].Id
+                                         LIMIT 1];
+        System.assertEquals(false, updatedTestAddress.Default_Address__c, 'The previous default address should be' +
+                ' set to false.');
+        System.assertEquals(System.today() - 1, updatedTestAddress.Latest_End_Date__c, 'The latest end date on the ' +
+                'new address should be null.');
+        System.assertEquals(System.today() - 2, updatedTestAddress.Latest_Start_Date__c, 'The latest start date on the ' +
+                'new address should be null.');
+    }
+
     // Helpers
     ////////////
 
