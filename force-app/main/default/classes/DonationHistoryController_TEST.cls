@@ -46,26 +46,24 @@ public class DonationHistoryController_TEST {
     private static void shouldReturnExpectedDonationHistoryResult() {
         Date myDateTime = Date.newInstance(2020, 2, 2);
         Date dateTimeInPast = Date.newInstance(2019, 2, 2);
-        UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, 1, 3, 1);
-        Account accSrc = UTIL_UnitTestData_TEST.listAccT[0];
-        list<Contact> listConSrc = UTIL_UnitTestData_TEST.listConT;
 
+        IdGen gen = new IdGen();
         Opportunity opportunityHardCreditOfContact0 = new Opportunity(
-            Name='HardCredit1', 
-            AccountId=accSrc.Id, 
-            Primary_Contact__c=listConSrc[0].Id, 
-            Amount=400, 
-            StageName='Closed Won', 
-            CloseDate=myDateTime
+            Name = 'HardCredit1', 
+            AccountId = gen.generate(Account.SObjectType),
+            Primary_Contact__c= gen.generate(Contact.SObjectType), 
+            Amount = 400, 
+            StageName = 'Closed Won', 
+            CloseDate = myDateTime
         );
 
         Opportunity opportunityAnotherHardCreditOfContact0 = new Opportunity(
-            Name='HardCredit2', 
-            AccountId=accSrc.Id, 
-            Primary_Contact__c=listConSrc[0].Id, 
-            Amount=400, 
-            StageName='Closed Won', 
-            CloseDate=dateTimeInPast
+            Name = 'HardCredit2', 
+            AccountId = gen.generate(Account.SObjectType), 
+            Primary_Contact__c = gen.generate(Contact.SObjectType), 
+            Amount = 400, 
+            StageName = 'Closed Won', 
+            CloseDate = dateTimeInPast
         );
 
         List<SObject> records = new List<SObject> {opportunityHardCreditOfContact0, opportunityAnotherHardCreditOfContact0};
@@ -116,17 +114,15 @@ public class DonationHistoryController_TEST {
         
         Date myDateTime = Date.newInstance(2020, 2, 2);
         Date dateTimeInPast = Date.newInstance(2019, 2, 2);
-        UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, 1, 3, 1);
-        Account accSrc = UTIL_UnitTestData_TEST.listAccT[0];
-        list<Contact> listConSrc = UTIL_UnitTestData_TEST.listConT;
+        IdGen gen = new IdGen();
 
         Opportunity opportunityHardCreditOfContact0 = new Opportunity(
-            Name='HardCredit1', 
-            AccountId=accSrc.Id, 
-            Primary_Contact__c=listConSrc[0].Id, 
-            Amount=400, 
-            StageName='Closed Won', 
-            CloseDate=myDateTime
+            Name = 'HardCredit1', 
+            AccountId = gen.generate(Account.SObjectType), 
+            Primary_Contact__c = gen.generate(Contact.SObjectType), 
+            Amount = 400, 
+            StageName = 'Closed Won', 
+            CloseDate = myDateTime
         );
 
         List<SObject> records = new List<SObject> {opportunityHardCreditOfContact0};
@@ -191,20 +187,19 @@ public class DonationHistoryController_TEST {
     }
 
     public class IdGen {
-	private  Integer fakeIdCount = 0;
-	private  final String ID_PATTERN = '000000000000';
+        private  Integer fakeIdCount = 0;
+        private  final String ID_PATTERN = '000000000000';
 
-	/**
-	 * Generate a fake Salesforce Id for the given SObjectType
-	 */
-	public Id generate(Schema.SObjectType sobjectType)
-	{
-		String keyPrefix = sobjectType.getDescribe().getKeyPrefix();
-		fakeIdCount++;
+        /**
+         * Generate a fake Salesforce Id for the given SObjectType
+         */
+        public Id generate(Schema.SObjectType sobjectType) {
+            String keyPrefix = sobjectType.getDescribe().getKeyPrefix();
+            fakeIdCount++;
 
-		String fakeIdPrefix = ID_PATTERN.substring(0, 12 - fakeIdCount.format().length());
+            String fakeIdPrefix = ID_PATTERN.substring(0, 12 - fakeIdCount.format().length());
 
-		return Id.valueOf(keyPrefix + fakeIdPrefix + fakeIdCount);
-	}
-}
+            return Id.valueOf(keyPrefix + fakeIdPrefix + fakeIdCount);
+        }
+    }
 }
