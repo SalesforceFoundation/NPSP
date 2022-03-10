@@ -37,8 +37,7 @@ export default class DonationHistoryTable extends LightningElement {
     @track
     columns = [];
 
-    // eslint-disable-next-line @lwc/lwc/no-async-await
-    async connectedCallback() {
+    connectedCallback() {
         this.retrieveDonationHistory();
     }
 
@@ -74,8 +73,7 @@ export default class DonationHistoryTable extends LightningElement {
         this.tableElement ? this.tableElement.enableInfiniteLoading = true : null;
     }
 
-    // eslint-disable-next-line @lwc/lwc/no-async-await
-    async retrieveDonationHistory(){
+    retrieveDonationHistory(){
         getDonationHistory({ contactId: this.contactId, offset: 0, filter : this.filter })
         .then((data) => {
             if (data) {

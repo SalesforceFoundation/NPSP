@@ -5,8 +5,7 @@ export default class GivingSummaryDetailPage extends LightningElement {
     
     @api recordId;
 
-    // eslint-disable-next-line @lwc/lwc/no-async-await
-    async connectedCallback() {
+    connectedCallback() {
         if(!this.recordId){
             getContactIdByUserId()
             .then((recordId) => {
