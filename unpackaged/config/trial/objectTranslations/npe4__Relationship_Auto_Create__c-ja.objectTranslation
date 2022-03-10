@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- リレーション自動作成 --></value>
+    </caseValues>
+    <fields>
+        <help>このキャンペーンメンバーの自動作成の対象となるキャンペーン種別(個人の自動作成では空白になります)。</help>
+        <label><!-- Campaign Types --></label>
+        <name>npe4__Campaign_Types__c</name>
+    </fields>
+    <fields>
+        <help>このリレーションの作成をトリガする項目の挿入または更新</help>
+        <label><!-- Field --></label>
+        <name>npe4__Field__c</name>
+    </fields>
+    <fields>
+        <help>この自動リレーションが関連付けられるオブジェクト</help>
+        <label><!-- Object --></label>
+        <name>npe4__Object__c</name>
+    </fields>
+    <fields>
+        <help>ベースオブジェクトと参照オブジェクト間で作成されるリレーション種別。参照オブジェクトには相互関係が割り当てられます (使用可能な場合)。</help>
+        <label><!-- Relationship Type --></label>
+        <name>npe4__Relationship_Type__c</name>
+    </fields>
+</CustomObjectTranslation>

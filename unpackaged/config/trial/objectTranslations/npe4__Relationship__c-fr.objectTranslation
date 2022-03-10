@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Relation</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Relations</value>
+    </caseValues>
+    <fields>
+        <help>Le contact associé est le ______ de ce contact.</help>
+        <label><!-- Contact --></label>
+        <name>npe4__Contact__c</name>
+        <relationshipLabel><!-- Relationships --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>Informations supplémentaires sur cette relation</help>
+        <label><!-- Description --></label>
+        <name>npe4__Description__c</name>
+    </fields>
+    <fields>
+        <help>Champ système qui relie les deux côtés d’une relation.  Ce champ ne doit pas être modifié directement.  La relation réciproque aura le type opposé de cette relation, s’il existe.</help>
+        <label><!-- Reciprocal Relationship --></label>
+        <name>npe4__ReciprocalRelationship__c</name>
+        <relationshipLabel><!-- Relationships --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Related Contact --></label>
+        <name>npe4__RelatedContact__c</name>
+        <relationshipLabel><!-- Hidden Relationships List --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>Formule de texte construisant une phrase qui explique la relation entre les deux contacts</help>
+        <label><!-- Relationship Explanation --></label>
+        <name>npe4__Relationship_Explanation__c</name>
+    </fields>
+    <fields>
+        <help>Champ système indiquant si cette relation a été créée automatiquement comme relation réciproque d’une autre relation.</help>
+        <label><!-- _SYSTEM: SystemCreated --></label>
+        <name>npe4__SYSTEM_SystemCreated__c</name>
+    </fields>
+    <fields>
+        <help>Statut de la relation.</help>
+        <label><!-- Status --></label>
+        <name>npe4__Status__c</name>
+        <picklistValues>
+            <masterLabel>Current</masterLabel>
+            <translation>Actuel</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Former</masterLabel>
+            <translation>Précédent</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Champ décrivant comment le contact associé est connecté au contact.</help>
+        <label><!-- Type --></label>
+        <name>npe4__Type__c</name>
+        <picklistValues>
+            <masterLabel>Aunt</masterLabel>
+            <translation>Tante</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Child</masterLabel>
+            <translation>Enfant</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Cousin</masterLabel>
+            <translation>Cousin</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Coworker</masterLabel>
+            <translation>Collègue</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Daughter</masterLabel>
+            <translation>Fille</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Employee</masterLabel>
+            <translation>Employé</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Employer</masterLabel>
+            <translation>Employeur</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Family</masterLabel>
+            <translation>Famille</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Father</masterLabel>
+            <translation>Père</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Friend</masterLabel>
+            <translation>Ami</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Grandchild</masterLabel>
+            <translation>Petit-enfant</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Granddaughter</masterLabel>
+            <translation>Petite-fille</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Grandfather</masterLabel>
+            <translation>Grand-père</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Grandmother</masterLabel>
+            <translation>Grand-mère</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Grandparent</masterLabel>
+            <translation>Grand-parent</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Grandson</masterLabel>
+            <translation>Petit-fils</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Husband</masterLabel>
+            <translation>Mari</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mother</masterLabel>
+            <translation>Mère</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Parent</masterLabel>
+            <translation>Parent</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Partner</masterLabel>
+            <translation>Partenaire</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Son</masterLabel>
+            <translation>Fils</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Spouse</masterLabel>
+            <translation><!-- Spouse --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Uncle</masterLabel>
+            <translation>Oncle</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Wife</masterLabel>
+            <translation>Épouse</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Lorsque vous créez une opportunité pour le contact de cette relation, NSPS assigne ce rôle de contact d’opportunité au contact associé.</help>
+        <label><!-- Related Opportunity Contact Role --></label>
+        <name>%%%NAMESPACE%%%Related_Opportunity_Contact_Role__c</name>
+        <picklistValues>
+            <masterLabel>Soft Credit</masterLabel>
+            <translation>Crédit indirect</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Solicitor</masterLabel>
+            <translation>Solliciteur</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Tribute</masterLabel>
+            <translation>Hommage</translation>
+        </picklistValues>
+    </fields>
+    <gender>Feminine</gender>
+    <layouts>
+        <layout>Relationship Layout</layout>
+        <sections>
+            <label>Informations de relation</label>
+            <section>Relationship Information</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Numéro de relation</nameFieldLabel>
+    <startsWith>Consonant</startsWith>
+    <validationRules>
+        <errorMessage><!-- Rather than change the contacts in an existing relationship, delete this relationship and create a new on between the new contacts --></errorMessage>
+        <name>npe4__Related_Contact_Do_Not_Change</name>
+    </validationRules>
+</CustomObjectTranslation>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- 継続支援設定 --></value>
+    </caseValues>
+    <fields>
+        <help>選択すると、継続支援のすべての支援で継続支援のキャンペーンが使用されます。選択しないと、最初の支援のみでキャンペーンが使用されます。</help>
+        <label><!-- Add Campaign to All Opportunities --></label>
+        <name>npe03__Add_Campaign_to_All_Opportunites__c</name>
+    </fields>
+    <fields>
+        <help>廃止。トリガの動作が [NPSP 設定] の [トリガ設定] ページで制御されるようになりました。</help>
+        <label><!-- DEPRECATED-Disable_Donations_trigger --></label>
+        <name>npe03__DISABLE_Donations_trigger__c</name>
+    </fields>
+    <fields>
+        <help>廃止。トリガの動作が [NPSP 設定] の [トリガ設定] ページで制御されるようになりました。</help>
+        <label><!-- DEPRECATED-Disable_RD_trigger --></label>
+        <name>npe03__DISABLE_RecurringDonations_trigger__c</name>
+    </fields>
+    <fields>
+        <help>廃止。Nonprofit Success Pack の新バージョンが自動的にインストールされます。</help>
+        <label><!-- DEPRECATED-Enable Update Check --></label>
+        <name>npe03__Enable_Update_Check__c</name>
+    </fields>
+    <fields>
+        <help>廃止。[システムエラー] 設定パネルの通知設定に置き換えられました。</help>
+        <label><!-- DEPRECATED-Error Email Notifications --></label>
+        <name>npe03__Error_Email_Notifications__c</name>
+    </fields>
+    <fields>
+        <help>継続支援の前回の一括更新の日時。</help>
+        <label><!-- Last Batch Run --></label>
+        <name>npe03__Last_Batch_Run__c</name>
+    </fields>
+    <fields>
+        <help>固定期間の継続支援で作成される支援の合計数を制限します。デフォルトは 50 です。これより大きい値を設定すると、DML エラーになる可能性があります。</help>
+        <label><!-- Maximum Donations --></label>
+        <name>npe03__Maximum_Donations__c</name>
+    </fields>
+    <fields>
+        <help>前回の一括処理で継続支援の更新に失敗した回数。</help>
+        <label><!-- Number of Failures --></label>
+        <name>npe03__Number_of_Failures__c</name>
+    </fields>
+    <fields>
+        <help>前回の一括処理で継続支援の更新に成功した回数。</help>
+        <label><!-- Number of Successes --></label>
+        <name>npe03__Number_of_Successes__c</name>
+    </fields>
+    <fields>
+        <help>無期限の継続支援が完了状態に移行されたときの残りの進行中の支援の動作を決定します。</help>
+        <label><!-- Open Opportunity Behavior on RD Close --></label>
+        <name>npe03__Open_Opportunity_Behavior__c</name>
+    </fields>
+    <fields>
+        <help>無期限の継続支援を使用しているときに作成される進行中の支援が計上される現在日付からの月数。警告: この値を低くすると、余分な支援は削除されます。値を高くすると、支援を追加する一括処理が起動されます。</help>
+        <label><!-- Opportunity Forecast Months --></label>
+        <name>npe03__Opportunity_Forecast_Months__c</name>
+    </fields>
+    <fields>
+        <help>継続支援の作成時に使用される支援レコードタイプ。</help>
+        <label><!-- Opportunity Record Type --></label>
+        <name>npe03__Record_Type__c</name>
+    </fields>
+    <fields>
+        <help>廃止。Nonprofit Success Pack の新バージョンが自動的にインストールされます。</help>
+        <label><!-- DEPRECATED-Update Check Interval --></label>
+        <name>npe03__Update_Check_Interval__c</name>
+    </fields>
+    <fields>
+        <help>既存の継続支援レコードを拡張継続支援データモデルに移行するときに処理するレコードの数。</help>
+        <label><!-- Enhanced RD Data Migration Batch Size --></label>
+        <name>%%%NAMESPACE%%%DataMigrationBatchSize__c</name>
+    </fields>
+    <fields>
+        <help>選択されている場合、カスタマイズ可能な積み上げ集計が有効になっていても、継続支援の新しい割賦支援が作成されたときに積み上げ集計がすぐに計算されません。</help>
+        <label><!-- Disable CRLP When Creating Installments --></label>
+        <name>%%%NAMESPACE%%%DisableRollupsWhenCreatingInstallments__c</name>
+    </fields>
+    <fields>
+        <help>有効になっていると、Salesforce は継続支援名を自動的に入力します。</help>
+        <label><!-- Automatic Recurring Donation Naming --></label>
+        <name>%%%NAMESPACE%%%EnableAutomaticNaming__c</name>
+    </fields>
+    <fields>
+        <help>有効にすると、継続支援の金額、スケジュール、またはキャンペーン項目が更新されるたびに NPSP によって継続支援の変更ログレコードが作成されます。</help>
+        <label><!-- Enable Recurring Donation Change Log --></label>
+        <name>%%%NAMESPACE%%%EnableChangeLog__c</name>
+    </fields>
+    <fields>
+        <help>NPSP が継続支援の割賦支援を作成するタイミングを指定します。デフォルトは [常に次の割賦を作成] です。</help>
+        <label><!-- Installment Opportunity Auto-Creation --></label>
+        <name>%%%NAMESPACE%%%InstallmentOppAutoCreateOption__c</name>
+    </fields>
+    <fields>
+        <help>NPSP が継続支援の割賦商談を作成する方法を指定します。デフォルトは [Synchronous (同期)] です。</help>
+        <label><!-- Installment Opportunity Async Behavior --></label>
+        <name>%%%NAMESPACE%%%InstallmentOppFirstCreateMode__c</name>
+    </fields>
+    <fields>
+        <help>継続支援の作成時に NPSP が新しい各割賦支援に適用する支援フェーズ。</help>
+        <label><!-- Stage Name for Installment Opportunities --></label>
+        <name>%%%NAMESPACE%%%InstallmentOppStageName__c</name>
+    </fields>
+    <fields>
+        <help>このオプションにより、拡張継続支援が有効になります。重要: [NPSP 設定] で拡張継続支援を有効にする必要があります。カスタム設定で有効にすると、データの不整合が生じる可能性があります。</help>
+        <label><!-- Enhanced Recurring Donations --></label>
+        <name>%%%NAMESPACE%%%IsRecurringDonations2Enabled__c</name>
+    </fields>
+    <fields>
+        <help>次の進行中の支援の完了予定日が変更された場合に NPSP が新しい割賦商談を作成しない次回の支援日の前後の日数。[間隔] が [毎月] の継続支援にのみ適用されます。</help>
+        <label><!-- Next Donation Date Match Range --></label>
+        <name>%%%NAMESPACE%%%NextDonationDateMatchRangeDays__c</name>
+    </fields>
+    <fields>
+        <help>継続支援の命名に使用する形式。</help>
+        <label><!-- Recurring Donation Name Format --></label>
+        <name>%%%NAMESPACE%%%RecurringDonationNameFormat__c</name>
+    </fields>
+    <fields>
+        <help>拡張継続支援の有効化の確認および状態が含まれます。</help>
+        <label><!-- Recurring Donations Enablement State --></label>
+        <name>%%%NAMESPACE%%%RecurringDonations2EnablementState__c</name>
+    </fields>
+    <fields>
+        <help>Dry Run およびデータ移行の最新の結果が含まれます。</help>
+        <label><!-- Enhanced RD Data Migration State --></label>
+        <name>%%%NAMESPACE%%%RecurringDonations2MigrationState__c</name>
+    </fields>
+    <fields>
+        <help>継続支援バッチジョブ実行時に一度に処理されるレコードの数。デフォルトサイズは 50 です。システムの制限により継続支援バッチジョブが失敗する場合は、この数値を小さくします。</help>
+        <label><!-- Recurring Donation Batch Size --></label>
+        <name>%%%NAMESPACE%%%Recurring_Donation_Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help>状況対応付けカスタムメタデータリリース ID</help>
+        <label><!-- Status Mapping Deployment Id --></label>
+        <name>%%%NAMESPACE%%%StatusMappingDeploymentId__c</name>
+    </fields>
+    <fields>
+        <help>このオプションがオンになっていると、継続支援の総額に会計年度を使用できます。会計年度の開始月を設定するには、[設定] | [会社の設定] | [会計年度] に移動します。注意: 標準会計年度のみを使用し、カスタム会計年度は有効にしないでください。</help>
+        <label><!-- Use Fiscal Year for Recurring Donations --></label>
+        <name>%%%NAMESPACE%%%UseFiscalYearForRecurringDonationValue__c</name>
+    </fields>
+</CustomObjectTranslation>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value><!-- Benutzer-Rollup-Feldeinstellung --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value><!-- Benutzer-Rollup-Feldeinstellungen --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value><!-- Benutzer-Rollup-Feldeinstellung --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value><!-- Benutzer-Rollup-Feldeinstellungen --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value><!-- Benutzer-Rollup-Feldeinstellung --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value><!-- Benutzer-Rollup-Feldeinstellungen --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value><!-- Benutzer-Rollup-Feldeinstellung --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value><!-- Benutzer-Rollup-Feldeinstellungen --></value>
+    </caseValues>
+    <fields>
+        <help>Die Rollup-Aktion (MIN, MAX, SUM, COUNT), die im Ausgangsfeld ausgeführt werden soll</help>
+        <label><!-- Field Action --></label>
+        <name>npo02__Field_Action__c</name>
+    </fields>
+    <fields>
+        <help>Das Objekt, dem dieser Benutzer-Rollup zugeordnet wird</help>
+        <label><!-- Object Name --></label>
+        <name>npo02__Object_Name__c</name>
+    </fields>
+    <fields>
+        <help>Das Ausgangsfeld und die Aktion vom Objekt für diesen Benutzer-Rollup</help>
+        <label><!-- Source Field --></label>
+        <name>npo02__Source_Field__c</name>
+    </fields>
+    <fields>
+        <help>Das Zielfeld für den Wert des Rollups für diesen benutzerdefinierten Rollup</help>
+        <label><!-- Target Field --></label>
+        <name>npo02__Target_Field__c</name>
+    </fields>
+    <gender><!-- Feminine --></gender>
+</CustomObjectTranslation>

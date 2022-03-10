@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value><!-- Einstellung für Kontakte und Organisationen --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value><!-- Einstellungen für Kontakte und Organisationen --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value><!-- Einstellung für Kontakte und Organisationen --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value><!-- Einstellungen für Kontakte und Organisationen --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value><!-- Einstellung für Kontakte und Organisationen --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value><!-- Einstellungen für Kontakte und Organisationen --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value><!-- Einstellung für Kontakte und Organisationen --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value><!-- Einstellungen für Kontakte und Organisationen --></value>
+    </caseValues>
+    <fields>
+        <help>Einstellung für das Account-Modell Sollte &quot;Haushalt-Account&quot;, &quot;Eins-zu-Eins“ oder &quot;Einzelperson&quot; sein Ersetzt das benutzerdefinierte Feld &quot;Contact.SystemAccountProcessor__c&quot;  &quot;Haushalt-Account&quot; ist das empfohlene Modell.</help>
+        <label><!-- Account Model --></label>
+        <name>npe01__Account_Processor__c</name>
+    </fields>
+    <fields>
+        <help>ERSETZT. Das Auslöserverhalten wird jetzt über die Seite &quot;Auslöserkonfiguration&quot; in den NPSP-Einstellungen gesteuert.</help>
+        <label><!-- DEPRECATED-Disable_IndividualAcc_trigger --></label>
+        <name>npe01__DISABLE_IndividualAccounts_trigger__c</name>
+    </fields>
+    <fields>
+        <help>ERSETZT. Das Auslöserverhalten wird jetzt über die Seite &quot;Auslöserkonfiguration&quot; in den NPSP-Einstellungen gesteuert.</help>
+        <label><!-- DEPRECATED-Disable_OppAccount_trigger --></label>
+        <name>npe01__DISABLE_OpportunityAccount_trigger__c</name>
+    </fields>
+    <fields>
+        <help>ERSETZT. Das Auslöserverhalten wird jetzt über die Seite &quot;Auslöserkonfiguration&quot; in den NPSP-Einstellungen gesteuert.</help>
+        <label><!-- DEPRECATED-Disable_OCR_trigger --></label>
+        <name>npe01__DISABLE_OpportunityContactRoles_trigger__c</name>
+    </fields>
+    <fields>
+        <help>ERSETZT. Das Auslöserverhalten wird jetzt über die Seite &quot;Auslöserkonfiguration&quot; in den NPSP-Einstellungen gesteuert.</help>
+        <label><!-- DEPRECATED-Disable_OppPayments_trigger --></label>
+        <name>npe01__DISABLE_OpportunityPayments_trigger__c</name>
+    </fields>
+    <fields>
+        <help>Gibt an, ob bei der Lead-Konvertierung eine Opportunity erstellt werden soll</help>
+        <label><!-- Create Opportunity on Lead Convert --></label>
+        <name>npe01__Default_Opp_on_Convert__c</name>
+    </fields>
+    <fields>
+        <help>ERSETZT. Das Auslöserverhalten wird jetzt über die Seite &quot;Auslöserkonfiguration&quot; in den NPSP-Einstellungen gesteuert.</help>
+        <label><!-- DEPRECATED-Disable Account Model Trigger --></label>
+        <name>npe01__Disable_Account_Model_Trigger__c</name>
+    </fields>
+    <fields>
+        <help>ERSETZT. Das Auslöserverhalten wird jetzt über die Seite &quot;Auslöserkonfiguration&quot; in den NPSP-Einstellungen gesteuert.</help>
+        <label><!-- DEPRECATED-Enable OppContactRole Trigger --></label>
+        <name>npe01__Enable_Opportunity_Contact_Role_Trigger__c</name>
+    </fields>
+    <fields>
+        <help>ERSETZT. Es werden automatisch neue Versionen des Nonprofit Success Pack installiert.</help>
+        <label><!-- DEPRECATED-Enable Update Check --></label>
+        <name>npe01__Enable_Update_Check__c</name>
+    </fields>
+    <fields>
+        <help>Die Kennung des Account-Datensatztyps für Haushalt-Accounts Wenn keine Auswahl getroffen wurde, wird der Account standardmäßig auf den Standarddatensatztyp des Benutzer-Accounts festgelegt.</help>
+        <label><!-- Household Account Record Type --></label>
+        <name>npe01__HH_Account_RecordTypeID__c</name>
+    </fields>
+    <fields>
+        <help>ERSETZT. Es werden automatisch neue Versionen des Nonprofit Success Pack installiert.</help>
+        <label><!-- DEPRECATED-Has Package Update --></label>
+        <name>npe01__Has_Package_Update__c</name>
+    </fields>
+    <fields>
+        <help>ERSETZT. Es werden automatisch neue Versionen des Nonprofit Success Pack installiert.</help>
+        <label><!-- DEPRECATED-Last Update Check --></label>
+        <name>npe01__Last_Update_Check__c</name>
+    </fields>
+    <fields>
+        <help>ERSETZT. Es werden automatisch neue Versionen des Nonprofit Success Pack installiert.</help>
+        <label><!-- DEPRECATED-Max Package Version --></label>
+        <name>npe01__Max_Package_Version__c</name>
+    </fields>
+    <fields>
+        <help>Die Kennung des Account-Datensatztyps für Eins-zu-Eins-Accounts  Wenn keine Auswahl getroffen wurde, wird der Account standardmäßig auf den Standarddatensatztyp des Benutzer-Accounts festgelegt.</help>
+        <label><!-- One-to-One Record Type --></label>
+        <name>npe01__One_to_One_RecordTypeID__c</name>
+    </fields>
+    <fields>
+        <help>Die Standardrolle für die primäre Opportunity-Kontaktrolle, die automatisch erstellt wird</help>
+        <label><!-- Contact Role for Individual Opps --></label>
+        <name>npe01__Opportunity_Contact_Role_Default_role__c</name>
+    </fields>
+    <fields>
+        <help>ERSETZT. Es werden automatisch neue Versionen des Nonprofit Success Pack installiert.</help>
+        <label><!-- DEPRECATED-Package Update URL --></label>
+        <name>npe01__Package_Update_URL__c</name>
+    </fields>
+    <fields>
+        <help>Aktiviert automatische Zahlungen, die für neue Opportunities/Spenden erstellt wurden.</help>
+        <label><!-- Automatic Payment Creation --></label>
+        <name>npe01__Payments_Enabled__c</name>
+    </fields>
+    <fields>
+        <help>ERSETZT. Es werden automatisch neue Versionen des Nonprofit Success Pack installiert.</help>
+        <label><!-- DEPRECATED-Update Check Interval --></label>
+        <name>npe01__Update_Check_Interval__c</name>
+    </fields>
+    <fields>
+        <help>Nur zur Systemverwendung: Namespace für paketübergreifende Funktionalität.</help>
+        <label><!-- GEM Namespace --></label>
+        <name>%%%NAMESPACE%%%Advancement_Namespace__c</name>
+    </fields>
+    <fields>
+        <help>Erstellt automatisch ein Kampagnenmitglied, wenn Sie eine Opportunity erstellen, der ein Hauptansprechpartner und eine Primärkampagnenquelle zugeordnet ist, oder wenn Sie diese Opportunity mit der Phase &quot;Geschlossen/Gewonnen&quot; aktualisieren.</help>
+        <label><!-- Automatic Campaign Member Management --></label>
+        <name>%%%NAMESPACE%%%Automatic_Campaign_Member_Management__c</name>
+    </fields>
+    <fields>
+        <help>Der autom. Status eines Kamp.mitglieds für Opportunities mit dem Status &quot;Offen&quot; oder &quot;Geschlossen/Verloren&quot; sowie einem Hauptansprechpartner und einer Primärkampagnenquelle. Erfolgt kein Eintrag, verwendet Salesforce den ersten Status &quot;Nicht geantwortet&quot;.</help>
+        <label><!-- Campaign Member Non Responded Status --></label>
+        <name>%%%NAMESPACE%%%Campaign_Member_Non_Responded_Status__c</name>
+    </fields>
+    <fields>
+        <help>Der autom. Status eines Kampagnenmitglieds für Opportunities mit dem Status &quot;Geschlossen/Gewonnen&quot;, denen ein Hauptansprechpartner und eine Primärkampagnenquelle zugeordnet ist. Erfolgt kein Eintrag, verwendet Salesforce den ersten Status &quot;Geantwortet&quot;.</help>
+        <label><!-- Campaign Member Responded Status --></label>
+        <name>%%%NAMESPACE%%%Campaign_Member_Responded_Status__c</name>
+    </fields>
+    <fields>
+        <help>Die Standard-Kontaktrolle, die automatisch dem Hauptansprechpartner der Opportunity zugewiesen wird, wenn der Account der Opportunity KEIN Haushalt-, Eins-zu-Eins- oder Einzelperson-Account ist.</help>
+        <label><!-- Contact Role for Organizational Opps --></label>
+        <name>%%%NAMESPACE%%%Contact_Role_for_Organizational_Opps__c</name>
+    </fields>
+    <fields>
+        <help>Hiermit werden mehrere Regeln und Automatisierungen zu Zahlungen und Opportunities aktiviert, um sicherzustellen, dass die Verrechnungsdaten vollständig und konsistent sind.</help>
+        <label><!-- Enforce Accounting Data Consistency --></label>
+        <name>%%%NAMESPACE%%%Enforce_Accounting_Data_Consistency__c</name>
+    </fields>
+    <fields>
+        <help>Mit dieser Einstellung wird automatisch eine Kontaktrolle für Opportunities mit einem Kontakt des Begünstigten erstellt. Wenn dieses Feld leer bleibt, wird die automatische Erstellung einer Kontaktrolle für den Begünstigten deaktiviert.</help>
+        <label><!-- Honoree Opportunity Contact Role --></label>
+        <name>%%%NAMESPACE%%%Honoree_Opportunity_Contact_Role__c</name>
+    </fields>
+    <fields>
+        <help>Deaktiviert bei Auswahl die Adressenverwaltung für Haushalt-Accounts.</help>
+        <label><!-- Household Account Addresses Disabled --></label>
+        <name>%%%NAMESPACE%%%Household_Account_Addresses_Disabled__c</name>
+    </fields>
+    <fields>
+        <help>Legt die maximale Anzahl der Zahlungen fest, die im Zahlungserstellungsassistenten verfügbar sind.</help>
+        <label><!-- Max Payments --></label>
+        <name>%%%NAMESPACE%%%Max_Payments__c</name>
+    </fields>
+    <fields>
+        <help>Mit dieser Einstellung wird automatisch eine Kontaktrolle für Opportunities mit einem Benachrichtigungsempfängerkontakt erstellt. Wenn dieses Feld leer bleibt, wird die autom. Erstellung einer Kontaktrolle für den Benachrichtigungsempfänger deaktiviert.</help>
+        <label><!-- Notification Recipient Opp Contact Role --></label>
+        <name>%%%NAMESPACE%%%Notification_Recipient_Opp_Contact_Role__c</name>
+    </fields>
+    <fields>
+        <help>Namen von Opportunity-Datensatztypen, die von der Erstellung von Zahlungen ausgeschlossen werden sollen</help>
+        <label><!-- Excluded Opp Record Types --></label>
+        <name>%%%NAMESPACE%%%Opp_RecTypes_Excluded_for_Payments__c</name>
+    </fields>
+    <fields>
+        <help>Werte für das Opportunity-Typ-Feld, das von der Erstellung von Zahlungen ausgeschlossen werden soll</help>
+        <label><!-- Excluded Opp Types --></label>
+        <name>%%%NAMESPACE%%%Opp_Types_Excluded_for_Payments__c</name>
+    </fields>
+    <fields>
+        <help>Aktiviert bei Auswahl die Adressenverwaltung für Organisation-Accounts</help>
+        <label><!-- Organizational Account Addresses Enabled --></label>
+        <name>%%%NAMESPACE%%%Organizational_Account_Addresses_Enabled__c</name>
+    </fields>
+    <fields>
+        <help>Wählen Sie die Phase aus, zu der die Opportunity autom. geändert werden soll, wenn der Gesamtbetrag der Zahlung dem Opport.-Betrag entspricht. Ist keine Phase ausgewählt, werden Opportunities nicht autom. geändert, wenn die Zahlung vollständ. erfolgt ist.</help>
+        <label><!-- Opportunity Stage for When Fully Paid --></label>
+        <name>%%%NAMESPACE%%%Payments_Auto_Close_Stage_Name__c</name>
+    </fields>
+    <fields>
+        <help>Wenn diese Option aktiviert ist, aktualisieren Änderungen an einem einzelnen Adressfeld eines Kontakts oder Accounts die vorhandene Adresse, anstatt eine neue Adresse zu erstellen.</help>
+        <label><!-- Simple Address Change Treated as Update --></label>
+        <name>%%%NAMESPACE%%%Simple_Address_Change_Treated_as_Update__c</name>
+    </fields>
+    <gender><!-- Feminine --></gender>
+</CustomObjectTranslation>

@@ -1,0 +1,950 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>NPSP データインポート</value>
+    </caseValues>
+    <fields>
+        <help>支援者が同意した Elevate Giving Page 同意メッセージ。</help>
+        <label><!-- Payment ACH Consent Message --></label>
+        <name>%%%NAMESPACE%%%ACH_Consent__c</name>
+    </fields>
+    <fields>
+        <label><!-- Account1 Import Status --></label>
+        <name>%%%NAMESPACE%%%Account1ImportStatus__c</name>
+    </fields>
+    <fields>
+        <label><!-- Account1 Imported --></label>
+        <name>%%%NAMESPACE%%%Account1Imported__c</name>
+        <relationshipLabel><!-- NPSP Data Imports (Account1 Imported) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Account1.BillingCity --></help>
+        <label><!-- Account1 City --></label>
+        <name>%%%NAMESPACE%%%Account1_City__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account1.BillingCountry --></help>
+        <label><!-- Account1 Country --></label>
+        <name>%%%NAMESPACE%%%Account1_Country__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account1.Name --></help>
+        <label><!-- Account1 Name --></label>
+        <name>%%%NAMESPACE%%%Account1_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account1.Phone --></help>
+        <label><!-- Account1 Phone --></label>
+        <name>%%%NAMESPACE%%%Account1_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account1.BillingState --></help>
+        <label><!-- Account1 State/Province --></label>
+        <name>%%%NAMESPACE%%%Account1_State_Province__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account1.BillingStreet --></help>
+        <label><!-- Account1 Street --></label>
+        <name>%%%NAMESPACE%%%Account1_Street__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account1.Website --></help>
+        <label><!-- Account1 Website --></label>
+        <name>%%%NAMESPACE%%%Account1_Website__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account1.BillingPostalCode --></help>
+        <label><!-- Account1 Zip/Postal Code --></label>
+        <name>%%%NAMESPACE%%%Account1_Zip_Postal_Code__c</name>
+    </fields>
+    <fields>
+        <label><!-- Account2 Import Status --></label>
+        <name>%%%NAMESPACE%%%Account2ImportStatus__c</name>
+    </fields>
+    <fields>
+        <label><!-- Account2 Imported --></label>
+        <name>%%%NAMESPACE%%%Account2Imported__c</name>
+        <relationshipLabel><!-- NPSP Data Imports (Account2 Imported) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Account2.BillingCity --></help>
+        <label><!-- Account2 City --></label>
+        <name>%%%NAMESPACE%%%Account2_City__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account2.BillingCountry --></help>
+        <label><!-- Account2 Country --></label>
+        <name>%%%NAMESPACE%%%Account2_Country__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account2.Name --></help>
+        <label><!-- Account2 Name --></label>
+        <name>%%%NAMESPACE%%%Account2_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account2.Phone --></help>
+        <label><!-- Account2 Phone --></label>
+        <name>%%%NAMESPACE%%%Account2_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account2.BillingState --></help>
+        <label><!-- Account2 State/Province --></label>
+        <name>%%%NAMESPACE%%%Account2_State_Province__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account2.BillingStreet --></help>
+        <label><!-- Account2 Street --></label>
+        <name>%%%NAMESPACE%%%Account2_Street__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account2.Website --></help>
+        <label><!-- Account2 Website --></label>
+        <name>%%%NAMESPACE%%%Account2_Website__c</name>
+    </fields>
+    <fields>
+        <help><!-- Account2.BillingPostalCode --></help>
+        <label><!-- Account2 Zip/Postal Code --></label>
+        <name>%%%NAMESPACE%%%Account2_Zip_Postal_Code__c</name>
+    </fields>
+    <fields>
+        <help>この項目により、1 つのデータインポートレコードから動的な数のオブジェクトの動的な数のレコードを作成できます。追加オブジェクト情報は JSON 形式でここに保存されます。</help>
+        <label><!-- Additional Object JSON --></label>
+        <name>%%%NAMESPACE%%%Additional_Object_JSON__c</name>
+    </fields>
+    <fields>
+        <help>レコードを処理した一括処理ジョブの ApexJobID。</help>
+        <label><!-- ApexJobId --></label>
+        <name>%%%NAMESPACE%%%ApexJobId__c</name>
+    </fields>
+    <fields>
+        <label><!-- Campaign Member Status --></label>
+        <name>%%%NAMESPACE%%%Campaign_Member_Status__c</name>
+    </fields>
+    <fields>
+        <label><!-- Contact1 Import Status --></label>
+        <name>%%%NAMESPACE%%%Contact1ImportStatus__c</name>
+    </fields>
+    <fields>
+        <label><!-- Contact1 Imported --></label>
+        <name>%%%NAMESPACE%%%Contact1Imported__c</name>
+        <relationshipLabel><!-- NPSP Data Imports (Contact1 Imported) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Contact1.npe01__AlternateEmail__c --></help>
+        <label><!-- Contact1 Alternate Email --></label>
+        <name>%%%NAMESPACE%%%Contact1_Alternate_Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.Birthdate --></help>
+        <label><!-- Contact1 Birthdate --></label>
+        <name>%%%NAMESPACE%%%Contact1_Birthdate__c</name>
+    </fields>
+    <fields>
+        <help>何に取引先責任者がオプトインしたかについての詳細を提供します。</help>
+        <label><!-- Contact1 Consent Message --></label>
+        <name>%%%NAMESPACE%%%Contact1_Consent_Message__c</name>
+    </fields>
+    <fields>
+        <help>取引先責任者がオプトインに同意したかどうかを決定します。</help>
+        <label><!-- Contact1 Consent Opt-In --></label>
+        <name>%%%NAMESPACE%%%Contact1_Consent_Opt_In__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.Firstname --></help>
+        <label><!-- Contact1 First Name --></label>
+        <name>%%%NAMESPACE%%%Contact1_Firstname__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.HomePhone --></help>
+        <label><!-- Contact1 Home Phone --></label>
+        <name>%%%NAMESPACE%%%Contact1_Home_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.Lastname --></help>
+        <label><!-- Contact1 Last Name --></label>
+        <name>%%%NAMESPACE%%%Contact1_Lastname__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.MobilePhone --></help>
+        <label><!-- Contact1 Mobile Phone --></label>
+        <name>%%%NAMESPACE%%%Contact1_Mobile_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.OtherPhone --></help>
+        <label><!-- Contact1 Other Phone --></label>
+        <name>%%%NAMESPACE%%%Contact1_Other_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.npe01__HomeEmail__c --></help>
+        <label><!-- Contact1 Personal Email --></label>
+        <name>%%%NAMESPACE%%%Contact1_Personal_Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.npe01__Preferred_Email__c --></help>
+        <label><!-- Contact1 Preferred Email --></label>
+        <name>%%%NAMESPACE%%%Contact1_Preferred_Email__c</name>
+        <picklistValues>
+            <masterLabel>Alternate</masterLabel>
+            <translation>代替方法</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Personal</masterLabel>
+            <translation>個人</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>勤務先</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Contact1.npe01__PreferredPhone__c --></help>
+        <label><!-- Contact1 Preferred Phone --></label>
+        <name>%%%NAMESPACE%%%Contact1_Preferred_Phone__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation>自宅</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mobile</masterLabel>
+            <translation>携帯</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>その他</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>勤務先</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Contact1.Salutation --></help>
+        <label><!-- Contact1 Salutation --></label>
+        <name>%%%NAMESPACE%%%Contact1_Salutation__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.Title --></help>
+        <label><!-- Contact1 Title --></label>
+        <name>%%%NAMESPACE%%%Contact1_Title__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.npe01__WorkEmail__c --></help>
+        <label><!-- Contact1 Work Email --></label>
+        <name>%%%NAMESPACE%%%Contact1_Work_Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact1.npe01__WorkPhone__c --></help>
+        <label><!-- Contact1 Work Phone --></label>
+        <name>%%%NAMESPACE%%%Contact1_Work_Phone__c</name>
+    </fields>
+    <fields>
+        <label><!-- Contact2 Import Status --></label>
+        <name>%%%NAMESPACE%%%Contact2ImportStatus__c</name>
+    </fields>
+    <fields>
+        <label><!-- Contact2 Imported --></label>
+        <name>%%%NAMESPACE%%%Contact2Imported__c</name>
+        <relationshipLabel><!-- NPSP Data Imports (Contact2 Imported) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Contact2.npe01__AlternateEmail__c --></help>
+        <label><!-- Contact2 Alternate Email --></label>
+        <name>%%%NAMESPACE%%%Contact2_Alternate_Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.Birthdate --></help>
+        <label><!-- Contact2 Birthdate --></label>
+        <name>%%%NAMESPACE%%%Contact2_Birthdate__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.Firstname --></help>
+        <label><!-- Contact2 First Name --></label>
+        <name>%%%NAMESPACE%%%Contact2_Firstname__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.HomePhone --></help>
+        <label><!-- Contact2 Home Phone --></label>
+        <name>%%%NAMESPACE%%%Contact2_Home_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.Lastname --></help>
+        <label><!-- Contact2 Last Name --></label>
+        <name>%%%NAMESPACE%%%Contact2_Lastname__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.MobilePhone --></help>
+        <label><!-- Contact2 Mobile Phone --></label>
+        <name>%%%NAMESPACE%%%Contact2_Mobile_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.OtherPhone --></help>
+        <label><!-- Contact2 Other Phone --></label>
+        <name>%%%NAMESPACE%%%Contact2_Other_Phone__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.npe01__HomeEmail__c --></help>
+        <label><!-- Contact2 Personal Email --></label>
+        <name>%%%NAMESPACE%%%Contact2_Personal_Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.npe01__Preferred_Email__c --></help>
+        <label><!-- Contact2 Preferred Email --></label>
+        <name>%%%NAMESPACE%%%Contact2_Preferred_Email__c</name>
+        <picklistValues>
+            <masterLabel>Alternate</masterLabel>
+            <translation>代替方法</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Personal</masterLabel>
+            <translation>個人</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>勤務先</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Contact2.npe01__PreferredPhone__c --></help>
+        <label><!-- Contact2 Preferred Phone --></label>
+        <name>%%%NAMESPACE%%%Contact2_Preferred_Phone__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation>自宅</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mobile</masterLabel>
+            <translation>携帯</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>その他</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>勤務先</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- Contact2.Salutation --></help>
+        <label><!-- Contact2 Salutation --></label>
+        <name>%%%NAMESPACE%%%Contact2_Salutation__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.Title --></help>
+        <label><!-- Contact2 Title --></label>
+        <name>%%%NAMESPACE%%%Contact2_Title__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.npe01__WorkEmail__c --></help>
+        <label><!-- Contact2 Work Email --></label>
+        <name>%%%NAMESPACE%%%Contact2_Work_Email__c</name>
+    </fields>
+    <fields>
+        <help><!-- Contact2.npe01__WorkPhone__c --></help>
+        <label><!-- Contact2 Work Phone --></label>
+        <name>%%%NAMESPACE%%%Contact2_Work_Phone__c</name>
+    </fields>
+    <fields>
+        <label><!-- Donation Campaign Import Status --></label>
+        <name>%%%NAMESPACE%%%DonationCampaignImportStatus__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.CampaignId --></help>
+        <label><!-- Donation Campaign Source --></label>
+        <name>%%%NAMESPACE%%%DonationCampaignImported__c</name>
+        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Donation Import Status --></label>
+        <name>%%%NAMESPACE%%%DonationImportStatus__c</name>
+    </fields>
+    <fields>
+        <label><!-- Donation Imported --></label>
+        <name>%%%NAMESPACE%%%DonationImported__c</name>
+        <relationshipLabel><!-- NPSP Data Imports (Opportunity1 Imported) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.Amount --></help>
+        <label><!-- Donation Amount --></label>
+        <name>%%%NAMESPACE%%%Donation_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Campaign Name --></label>
+        <name>%%%NAMESPACE%%%Donation_Campaign_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.CloseDate --></help>
+        <label><!-- Donation Date --></label>
+        <name>%%%NAMESPACE%%%Donation_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.Description --></help>
+        <label><!-- Donation Description --></label>
+        <name>%%%NAMESPACE%%%Donation_Description__c</name>
+    </fields>
+    <fields>
+        <help>支援が「個人1」からの個人支援であるか、「団体1」からの団体支援であるかを指定します。</help>
+        <label><!-- Donation Donor --></label>
+        <name>%%%NAMESPACE%%%Donation_Donor__c</name>
+        <picklistValues>
+            <masterLabel>Account1</masterLabel>
+            <translation>団体 1</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Contact1</masterLabel>
+            <translation>個人 1</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>この支援商談のリンク先である、Elevate 内の継続支援の一意の外部 ID。</help>
+        <label><!-- Donation Elevate Recurring ID --></label>
+        <name>%%%NAMESPACE%%%Donation_Elevate_Recurring_ID__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.npe01__Member_Level__c --></help>
+        <label><!-- Donation Member Level --></label>
+        <name>%%%NAMESPACE%%%Donation_Member_Level__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.npe01__Membership_End_Date__c --></help>
+        <label><!-- Donation Membership End Date --></label>
+        <name>%%%NAMESPACE%%%Donation_Membership_End_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.npe01__Membership_Origin__c --></help>
+        <label><!-- Donation Membership Origin --></label>
+        <name>%%%NAMESPACE%%%Donation_Membership_Origin__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.npe01__Membership_Start_Date__c --></help>
+        <label><!-- Donation Membership Start Date --></label>
+        <name>%%%NAMESPACE%%%Donation_Membership_Start_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.Name --></help>
+        <label><!-- Donation Name --></label>
+        <name>%%%NAMESPACE%%%Donation_Name__c</name>
+    </fields>
+    <fields>
+        <help>支援にマッチングする潜在的な支援上位 10 件の ID のコンマ区切りリスト。</help>
+        <label><!-- Donation Possible Matches --></label>
+        <name>%%%NAMESPACE%%%Donation_Possible_Matches__c</name>
+    </fields>
+    <fields>
+        <help>支援に使用する支援レコードタイプの名前。空白のままにした場合、デフォルトのレコードタイプが使用されます。</help>
+        <label><!-- Donation Record Type Name --></label>
+        <name>%%%NAMESPACE%%%Donation_Record_Type_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.StageName --></help>
+        <label><!-- Donation Stage --></label>
+        <name>%%%NAMESPACE%%%Donation_Stage__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.Type --></help>
+        <label><!-- Donation Type --></label>
+        <name>%%%NAMESPACE%%%Donation_Type__c</name>
+    </fields>
+    <fields>
+        <help>JSON として保存されている Elevate Giving Pages からのカスタムメタデータ。</help>
+        <label><!-- Elevate Custom Metadata --></label>
+        <name>%%%NAMESPACE%%%Elevate_Custom_Metadata__c</name>
+    </fields>
+    <fields>
+        <help>Elevate に表示されるトランザクション状況。</help>
+        <label><!-- Elevate Payment Status --></label>
+        <name>%%%NAMESPACE%%%Elevate_Payment_Status__c</name>
+    </fields>
+    <fields>
+        <help>データインポートレコードのインポートに失敗した理由の説明。</help>
+        <label><!-- Failure Information --></label>
+        <name>%%%NAMESPACE%%%FailureInformation__c</name>
+    </fields>
+    <fields>
+        <help>支援の最初の一般会計単位の割り当てに起因する金額。データインポートの高度な対応付けを使用して、この項目に対応付ける必要があります。</help>
+        <label><!-- GAU Allocation 1: Amount --></label>
+        <name>%%%NAMESPACE%%%GAU_Allocation_1_Amount__c</name>
+    </fields>
+    <fields>
+        <help>最初の割り当てで使用される一般会計単位の Salesforce ID。</help>
+        <label><!-- GAU Allocation 1: GAU --></label>
+        <name>%%%NAMESPACE%%%GAU_Allocation_1_GAU__c</name>
+        <relationshipLabel><!-- NPSP Data Imports (GAU 1) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>最初の一般会計単位の割り当ての挿入の試行に基づく状況。</help>
+        <label><!-- GAU Allocation 1: Import Status --></label>
+        <name>%%%NAMESPACE%%%GAU_Allocation_1_Import_Status__c</name>
+    </fields>
+    <fields>
+        <help>正常に作成されたときの最初の一般会計単位の割り当てへのルックアップ。</help>
+        <label><!-- GAU Allocation 1: Imported --></label>
+        <name>%%%NAMESPACE%%%GAU_Allocation_1_Imported__c</name>
+        <relationshipLabel><!-- NPSP Data Imports (GAU 1) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>支援の最初の一般会計単位の割り当てに起因するパーセント。データインポートの高度な対応付けを使用して、この項目に対応付ける必要があります。</help>
+        <label><!-- GAU Allocation 1: Percent --></label>
+        <name>%%%NAMESPACE%%%GAU_Allocation_1_Percent__c</name>
+    </fields>
+    <fields>
+        <help>支援の 2 番目の一般会計単位の割り当てに起因する金額。データインポートの高度な対応付けを使用して、この項目に対応付ける必要があります。</help>
+        <label><!-- GAU Allocation 2: Amount --></label>
+        <name>%%%NAMESPACE%%%GAU_Allocation_2_Amount__c</name>
+    </fields>
+    <fields>
+        <help>2 番目の割り当てで使用される一般会計単位の Salesforce ID。</help>
+        <label><!-- GAU Allocation 2: GAU --></label>
+        <name>%%%NAMESPACE%%%GAU_Allocation_2_GAU__c</name>
+        <relationshipLabel><!-- NPSP Data Imports (GAU 2) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>2 番目の一般会計単位の割り当ての挿入の試行に基づく状況。</help>
+        <label><!-- GAU Allocation 2: Import Status --></label>
+        <name>%%%NAMESPACE%%%GAU_Allocation_2_Import_Status__c</name>
+    </fields>
+    <fields>
+        <help>正常に作成されたときの最初の一般会計単位の割り当てへのルックアップ。</help>
+        <label><!-- GAU Allocation 2: Imported --></label>
+        <name>%%%NAMESPACE%%%GAU_Allocation_2_Imported__c</name>
+        <relationshipLabel><!-- NPSP Data Imports (GAU 2) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>支援の 2 番目の一般会計単位の割り当てに起因するパーセント。データインポートの高度な対応付けを使用して、この項目に対応付ける必要があります。</help>
+        <label><!-- GAU Allocation 2: Percent --></label>
+        <name>%%%NAMESPACE%%%GAU_Allocation_2_Percent__c</name>
+    </fields>
+    <fields>
+        <label><!-- Home Address Import Status --></label>
+        <name>%%%NAMESPACE%%%HomeAddressImportStatus__c</name>
+    </fields>
+    <fields>
+        <label><!-- Home Address Imported --></label>
+        <name>%%%NAMESPACE%%%HomeAddressImported__c</name>
+        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Address.%%%NAMESPACE%%%MailingCity__c --></help>
+        <label><!-- Home City --></label>
+        <name>%%%NAMESPACE%%%Home_City__c</name>
+    </fields>
+    <fields>
+        <help><!-- Address.%%%NAMESPACE%%%MailingCountry__c --></help>
+        <label><!-- Home Country --></label>
+        <name>%%%NAMESPACE%%%Home_Country__c</name>
+    </fields>
+    <fields>
+        <help><!-- Address.%%%NAMESPACE%%%MailingState__c --></help>
+        <label><!-- Home State/Province --></label>
+        <name>%%%NAMESPACE%%%Home_State_Province__c</name>
+    </fields>
+    <fields>
+        <help><!-- Address.%%%NAMESPACE%%%MailingStreet__c --></help>
+        <label><!-- Home Street --></label>
+        <name>%%%NAMESPACE%%%Home_Street__c</name>
+    </fields>
+    <fields>
+        <help><!-- Address.%%%NAMESPACE%%%MailingPostalCode__c --></help>
+        <label><!-- Home Zip/Postal Code --></label>
+        <name>%%%NAMESPACE%%%Home_Zip_Postal_Code__c</name>
+    </fields>
+    <fields>
+        <label><!-- Household Account Imported --></label>
+        <name>%%%NAMESPACE%%%HouseholdAccountImported__c</name>
+        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- Household.Phone --></help>
+        <label><!-- Household Phone --></label>
+        <name>%%%NAMESPACE%%%Household_Phone__c</name>
+    </fields>
+    <fields>
+        <help>データインポートレコードが正常にインポートされた日付。</help>
+        <label><!-- Imported Date --></label>
+        <name>%%%NAMESPACE%%%ImportedDate__c</name>
+    </fields>
+    <fields>
+        <help>このレコードを含む NPSP データインポートバッチに対する参照。</help>
+        <label><!-- NPSP Data Import Batch --></label>
+        <name>%%%NAMESPACE%%%NPSP_Data_Import_Batch__c</name>
+        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>最初の支援個人の役割の挿入の試行に基づく状況。</help>
+        <label><!-- Opportunity Contact Role 1: ImportStatus --></label>
+        <name>%%%NAMESPACE%%%Opportunity_Contact_Role_1_ImportStatus__c</name>
+    </fields>
+    <fields>
+        <help>インポートされた支援個人の役割の Salesforce ID</help>
+        <label><!-- Opportunity Contact Role 1: Imported --></label>
+        <name>%%%NAMESPACE%%%Opportunity_Contact_Role_1_Imported__c</name>
+    </fields>
+    <fields>
+        <help>支援個人の役割を作成するときに使用する必要のある役割。たとえば、「ソフトクレジット」と入力して、ソフトクレジットの支援個人の役割を作成します。</help>
+        <label><!-- Opportunity Contact Role 1: Role --></label>
+        <name>%%%NAMESPACE%%%Opportunity_Contact_Role_1_Role__c</name>
+    </fields>
+    <fields>
+        <help>2 番目の支援個人の役割の挿入の試行に基づく状況。</help>
+        <label><!-- Opportunity Contact Role 2: ImportStatus --></label>
+        <name>%%%NAMESPACE%%%Opportunity_Contact_Role_2_ImportStatus__c</name>
+    </fields>
+    <fields>
+        <help>インポートされた支援個人の役割の Salesforce ID</help>
+        <label><!-- Opportunity Contact Role 2: Imported --></label>
+        <name>%%%NAMESPACE%%%Opportunity_Contact_Role_2_Imported__c</name>
+    </fields>
+    <fields>
+        <help>支援個人の役割を作成するときに使用する必要のある役割。たとえば、「ソフトクレジット」と入力して、ソフトクレジットの支援個人の役割を作成します。</help>
+        <label><!-- Opportunity Contact Role 2: Role --></label>
+        <name>%%%NAMESPACE%%%Opportunity_Contact_Role_2_Role__c</name>
+    </fields>
+    <fields>
+        <label><!-- Payment Import Status --></label>
+        <name>%%%NAMESPACE%%%PaymentImportStatus__c</name>
+    </fields>
+    <fields>
+        <label><!-- Payment Imported --></label>
+        <name>%%%NAMESPACE%%%PaymentImported__c</name>
+        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>この ACH トランザクションで使用される Standard Entry Class (SEC) コード。</help>
+        <label><!-- Payment ACH Code --></label>
+        <name>%%%NAMESPACE%%%Payment_ACH_Code__c</name>
+    </fields>
+    <fields>
+        <help>このトランザクションで使用された銀行口座の最後の 4 桁。</help>
+        <label><!-- Payment ACH Last 4 --></label>
+        <name>%%%NAMESPACE%%%Payment_ACH_Last_4__c</name>
+    </fields>
+    <fields>
+        <help>トランザクションの承認トークン。</help>
+        <label><!-- Payment Authorization Token --></label>
+        <name>%%%NAMESPACE%%%Payment_Authorization_Token__c</name>
+    </fields>
+    <fields>
+        <help>トランザクションが承認された日時。</help>
+        <label><!-- Payment Authorized Date --></label>
+        <name>%%%NAMESPACE%%%Payment_Authorized_Date__c</name>
+    </fields>
+    <fields>
+        <help>支払ゲートウェイから取得した、このトランザクションが正常に承認された正確な日時 (ミリ秒単位まで)。</help>
+        <label><!-- Payment Authorized UTC Timestamp --></label>
+        <name>%%%NAMESPACE%%%Payment_Authorized_UTC_Timestamp__c</name>
+    </fields>
+    <fields>
+        <help>このトランザクションで使用されたカードの有効期限 (月)。</help>
+        <label><!-- Payment Card Expiration Month --></label>
+        <name>%%%NAMESPACE%%%Payment_Card_Expiration_Month__c</name>
+    </fields>
+    <fields>
+        <help>このトランザクションで使用されたカードの有効期限 (年)。</help>
+        <label><!-- Payment Card Expiration Year --></label>
+        <name>%%%NAMESPACE%%%Payment_Card_Expiration_Year__c</name>
+    </fields>
+    <fields>
+        <help>このトランザクションで使用されたカードの最後の 4 桁。</help>
+        <label><!-- Payment Card Last 4 --></label>
+        <name>%%%NAMESPACE%%%Payment_Card_Last_4__c</name>
+    </fields>
+    <fields>
+        <help>このトランザクションで使用されたカードのカードネットワーク。</help>
+        <label><!-- Payment Card Network --></label>
+        <name>%%%NAMESPACE%%%Payment_Card_Network__c</name>
+    </fields>
+    <fields>
+        <help><!-- Payment.npe01__Check_Reference_Number__c --></help>
+        <label><!-- Payment Check/Reference Number --></label>
+        <name>%%%NAMESPACE%%%Payment_Check_Reference_Number__c</name>
+    </fields>
+    <fields>
+        <help>トランザクションが却下された理由に関する詳細を提供します。</help>
+        <label><!-- Payment Elevate API Declined Reason --></label>
+        <name>%%%NAMESPACE%%%Payment_Declined_Reason__c</name>
+    </fields>
+    <fields>
+        <help>支援金額に加えて支援者が支払った金額。多くの場合、手数料を補償したり支援にチップを追加したりするために使用されます。</help>
+        <label><!-- Payment Donor Cover Amount --></label>
+        <name>%%%NAMESPACE%%%Payment_Donor_Cover_Amount__c</name>
+    </fields>
+    <fields>
+        <help>処理のために Elevate に送信された支払のバッチの ID。</help>
+        <label><!-- Payment Elevate Batch ID --></label>
+        <name>%%%NAMESPACE%%%Payment_Elevate_Batch_ID__c</name>
+    </fields>
+    <fields>
+        <help>トランザクションが作成された日時。</help>
+        <label><!-- Payment Elevate Created Date --></label>
+        <name>%%%NAMESPACE%%%Payment_Elevate_Created_Date__c</name>
+    </fields>
+    <fields>
+        <help>Elevate から取得した、トランザクションが作成された正確な日時 (ミリ秒単位まで)。</help>
+        <label><!-- Payment Elevate Created UTC  Timestamp --></label>
+        <name>%%%NAMESPACE%%%Payment_Elevate_Created_UTC_Timestamp__c</name>
+    </fields>
+    <fields>
+        <help>Elevate から取得した、このトランザクションの一意の ID。</help>
+        <label><!-- Payment Elevate ID --></label>
+        <name>%%%NAMESPACE%%%Payment_Elevate_ID__c</name>
+    </fields>
+    <fields>
+        <help>返金の場合のみ。Elevate から取得した、元の支払トランザクションの ID を表示します。</help>
+        <label><!-- Payment Elevate Original Payment ID --></label>
+        <name>%%%NAMESPACE%%%Payment_Elevate_Original_Payment_ID__c</name>
+    </fields>
+    <fields>
+        <help>Elevate によって課金される取引手数料。</help>
+        <label><!-- Payment Elevate Transaction Fee --></label>
+        <name>%%%NAMESPACE%%%Payment_Elevate_Transaction_Fee__c</name>
+    </fields>
+    <fields>
+        <help>このトランザクションを処理した支払ゲートウェイの ID。</help>
+        <label><!-- Payment Gateway ID --></label>
+        <name>%%%NAMESPACE%%%Payment_Gateway_ID__c</name>
+    </fields>
+    <fields>
+        <help>支払ゲートウェイから取得した、このトランザクションの一意の ID。</help>
+        <label><!-- Payment Gateway Payment ID --></label>
+        <name>%%%NAMESPACE%%%Payment_Gateway_Payment_ID__c</name>
+    </fields>
+    <fields>
+        <help>支払ゲートウェイによって課金される取引手数料。</help>
+        <label><!-- Payment Gateway Transaction Fee --></label>
+        <name>%%%NAMESPACE%%%Payment_Gateway_Transaction_Fee__c</name>
+    </fields>
+    <fields>
+        <help><!-- Payment.npe01__Payment_Method__c --></help>
+        <label><!-- Payment Method --></label>
+        <name>%%%NAMESPACE%%%Payment_Method__c</name>
+    </fields>
+    <fields>
+        <help>トランザクションが開始されたシステムの ID。</help>
+        <label><!-- Payment Origin ID --></label>
+        <name>%%%NAMESPACE%%%Payment_Origin_ID__c</name>
+    </fields>
+    <fields>
+        <help>トランザクションが開始されたシステムの名前。</help>
+        <label><!-- Payment Origin Name --></label>
+        <name>%%%NAMESPACE%%%Payment_Origin_Name__c</name>
+    </fields>
+    <fields>
+        <help>トランザクションの開始に使用されたシステムの種別。使用可能な値には、[エンゲージメントハブ]、[贈与ページ]、[支払 API]、[Salesforce] が含まれます。</help>
+        <label><!-- Payment Origin Type --></label>
+        <name>%%%NAMESPACE%%%Payment_Origin_Type__c</name>
+    </fields>
+    <fields>
+        <help>支払が支払済かどうかを示します。</help>
+        <label><!-- Payment Paid --></label>
+        <name>%%%NAMESPACE%%%Payment_Paid__c</name>
+        <picklistValues>
+            <masterLabel>False</masterLabel>
+            <translation>False</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>True</masterLabel>
+            <translation>True</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>支援にマッチングする潜在的な支払上位 10 件の ID のコンマ区切りリスト。</help>
+        <label><!-- Payment Possible Matches --></label>
+        <name>%%%NAMESPACE%%%Payment_Possible_Matches__c</name>
+    </fields>
+    <fields>
+        <help>Elevate から取得した、トランザクションの API 状況。</help>
+        <label><!-- Payment Elevate API Status --></label>
+        <name>%%%NAMESPACE%%%Payment_Status__c</name>
+    </fields>
+    <fields>
+        <help>Elevate および支払ゲートウェイによって課金される取引手数料の合計。</help>
+        <label><!-- Payment Total Transaction Fees --></label>
+        <name>%%%NAMESPACE%%%Payment_Total_Transaction_Fees__c</name>
+    </fields>
+    <fields>
+        <help>トランザクションの種別を示します。</help>
+        <label><!-- Payment Type --></label>
+        <name>%%%NAMESPACE%%%Payment_Type__c</name>
+    </fields>
+    <fields>
+        <help>継続支援の挿入の試行に基づく状況。</help>
+        <label><!-- Recurring Donation Import Status --></label>
+        <name>%%%NAMESPACE%%%RecurringDonationImportStatus__c</name>
+    </fields>
+    <fields>
+        <help>正常に作成されたときの継続支援へのルックアップ。</help>
+        <label><!-- Recurring Donation Imported --></label>
+        <name>%%%NAMESPACE%%%RecurringDonationImported__c</name>
+        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>割賦商談の 1 回の支払額。</help>
+        <label><!-- Recurring Donation Amount --></label>
+        <name>%%%NAMESPACE%%%Recurring_Donation_Amount__c</name>
+    </fields>
+    <fields>
+        <help>この更新が表す変更の種別 (アップグレード、ダウングレードなど)。</help>
+        <label><!-- Recurring Donation Change Type --></label>
+        <name>%%%NAMESPACE%%%Recurring_Donation_Change_Type__c</name>
+    </fields>
+    <fields>
+        <help>この継続支援の始期。デフォルトは現在の日付です。</help>
+        <label><!-- Recurring Donation Date Established --></label>
+        <name>%%%NAMESPACE%%%Recurring_Donation_Date_Established__c</name>
+    </fields>
+    <fields>
+        <help>[間隔] が [毎月] の場合、今後の割賦商談の特定の日付 (月の特定の日) を設定します。29 または 30 を選択した場合、その日数がない月の割賦日は月の最終日になります。</help>
+        <label><!-- Recurring Donation Day of Month --></label>
+        <name>%%%NAMESPACE%%%Recurring_Donation_Day_of_Month__c</name>
+    </fields>
+    <fields>
+        <help>この継続支援の新規および更新されたスケジュール情報 (金額、日付など) が有効になる日付。デフォルトは現在の日付です。</help>
+        <label><!-- Recurring Donation Effective Date --></label>
+        <name>%%%NAMESPACE%%%Recurring_Donation_Effective_Date__c</name>
+    </fields>
+    <fields>
+        <help>Elevate の関連する継続支援の外部の一意の ID。</help>
+        <label><!-- Recurring Donation Elevate Recurring ID --></label>
+        <name>%%%NAMESPACE%%%Recurring_Donation_Elevate_Recurring_ID__c</name>
+    </fields>
+    <fields>
+        <help>この日付以降、NPSP はこの継続支援の割賦を作成しなくなり、[状況] を [クローズ] に更新します。</help>
+        <label><!-- Recurring Donation End Date --></label>
+        <name>%%%NAMESPACE%%%Recurring_Donation_End_Date__c</name>
+    </fields>
+    <fields>
+        <help>[頻度] と [間隔] により、この継続支援の割賦スケジュールが定義されます。たとえば、[間隔] が [毎月] で、[頻度] が 3 の場合、スケジュールは「3 か月ごと」として定義されます。</help>
+        <label><!-- Recurring Donation Installment Frequency --></label>
+        <name>%%%NAMESPACE%%%Recurring_Donation_Installment_Frequency__c</name>
+    </fields>
+    <fields>
+        <help>[間隔] と [頻度] により、この継続支援の割賦スケジュールが定義されます。たとえば、[間隔] が [毎月] で、[頻度] が 3 の場合、スケジュールは「3 か月ごと」として定義されます。</help>
+        <label><!-- Recurring Donation Installment Period --></label>
+        <name>%%%NAMESPACE%%%Recurring_Donation_Installment_Period__c</name>
+    </fields>
+    <fields>
+        <help>継続支援名形式を選択している場合は空白のままにします。それ以外の場合は独自の名前を入力します。</help>
+        <label><!-- Recurring Donation Name --></label>
+        <name>%%%NAMESPACE%%%Recurring_Donation_Name__c</name>
+    </fields>
+    <fields>
+        <help>この継続支援の支払のフォーム。NPSP は選択した値を関連する各支払レコードに自動的にコピーします。</help>
+        <label><!-- Recurring Donation Payment Method --></label>
+        <name>%%%NAMESPACE%%%Recurring_Donation_Payment_Method__c</name>
+    </fields>
+    <fields>
+        <help>予定されている回数。[継続種別] が [固定] の場合のみ使用されます。</help>
+        <label><!-- Recurring Donation Planned Installments --></label>
+        <name>%%%NAMESPACE%%%Recurring_Donation_Planned_Installments__c</name>
+    </fields>
+    <fields>
+        <help>[無期限] は継続的な継続支援を示します。[固定] は特定の回数が設定されている継続支援を示します。[固定] の場合、[予定回数] 項目も入力する必要があります。</help>
+        <label><!-- Recurring Donation Recurring Type --></label>
+        <name>%%%NAMESPACE%%%Recurring_Donation_Recurring_Type__c</name>
+    </fields>
+    <fields>
+        <help>この継続支援が現在の状況値になっている理由。</help>
+        <label><!-- Recurring Donation Status Reason --></label>
+        <name>%%%NAMESPACE%%%Recurring_Donation_Status_Reason__c</name>
+    </fields>
+    <fields>
+        <help>継続支援が有効に使用されているのか、一時的に停止しているのか、完了しているのかを示します。</help>
+        <label><!-- Recurring Donation Status --></label>
+        <name>%%%NAMESPACE%%%Recurring_Donation_Status__c</name>
+    </fields>
+    <fields>
+        <help>データインポートレコードのインポート状況。</help>
+        <label><!-- Status --></label>
+        <name>%%%NAMESPACE%%%Status__c</name>
+        <picklistValues>
+            <masterLabel>Failed</masterLabel>
+            <translation>失敗</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Imported</masterLabel>
+            <translation>インポート済み</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>アウトリーチ活動の名前または要請コードをトラッキングするための Google アナリティクスパラメータ。たとえば、spring_2021_fundraiser。</help>
+        <label><!-- UTM Campaign --></label>
+        <name>%%%NAMESPACE%%%UTM_Campaign__c</name>
+    </fields>
+    <fields>
+        <help>要請内で類似したコンテンツまたはリンクを区別するための Google アナリティクスパラメータ。</help>
+        <label><!-- UTM Content --></label>
+        <name>%%%NAMESPACE%%%UTM_Content__c</name>
+    </fields>
+    <fields>
+        <help>有料検索用語をトラッキングするための Google アナリティクスパラメータ。</help>
+        <label><!-- UTM Keyword Terms --></label>
+        <name>%%%NAMESPACE%%%UTM_Keyword_Terms__c</name>
+    </fields>
+    <fields>
+        <help>URL が共有された方法をトラッキングするための Google アナリティクスパラメータ。たとえば、email や banner_ad。</help>
+        <label><!-- UTM Medium --></label>
+        <name>%%%NAMESPACE%%%UTM_Medium__c</name>
+    </fields>
+    <fields>
+        <help>参照元をトラッキングするための Google アナリティクスパラメータ。たとえば、website や newsletter。</help>
+        <label><!-- UTM Source --></label>
+        <name>%%%NAMESPACE%%%UTM_Source__c</name>
+    </fields>
+    <layouts>
+        <layout>Data Import Layout</layout>
+        <sections>
+            <label><!-- Account1 Information --></label>
+            <section>Account1 Information</section>
+        </sections>
+        <sections>
+            <label><!-- Account2 Information --></label>
+            <section>Account2 Information</section>
+        </sections>
+        <sections>
+            <label>個人１情報</label>
+            <section>Contact1 Information</section>
+        </sections>
+        <sections>
+            <label>個人２情報</label>
+            <section>Contact2 Information</section>
+        </sections>
+        <sections>
+            <label>支援情報</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label><!-- GAU Allocation Information --></label>
+            <section>GAU Allocation Information</section>
+        </sections>
+        <sections>
+            <label>自宅住所</label>
+            <section>Home Address</section>
+        </sections>
+        <sections>
+            <label><!-- Household Information --></label>
+            <section>Household Information</section>
+        </sections>
+        <sections>
+            <label><!-- Opportunity Contact Role Information --></label>
+            <section>Opportunity Contact Role Information</section>
+        </sections>
+        <sections>
+            <label>継続支援の情報</label>
+            <section>Recurring Donation Information</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>データインポート ID</nameFieldLabel>
+    <webLinks>
+        <label><!-- Delete_All_Data_Import_Records --></label>
+        <name>%%%NAMESPACE%%%Delete_All_Data_Import_Records</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Delete_Imported_Data_Import_Records --></label>
+        <name>%%%NAMESPACE%%%Delete_Imported_Data_Import_Records</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Process_Data_Import --></label>
+        <name>%%%NAMESPACE%%%Process_Data_Import</name>
+    </webLinks>
+</CustomObjectTranslation>

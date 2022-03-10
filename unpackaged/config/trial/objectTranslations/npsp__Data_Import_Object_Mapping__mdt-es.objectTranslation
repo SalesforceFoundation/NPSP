@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Asignación de objeto de importación de datos --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Asignaciones de objetos de importaciones de datos --></value>
+    </caseValues>
+    <fields>
+        <help>Si debe emplearse lógica de Apex personalizada para asignar campos a este objeto, este campo se rellena con el nombre de una clase (incluyendo el espacio de nombres) que amplía la clase BDI_ObjectMappingLogic y sustituye el método populateObject.</help>
+        <label><!-- Custom Mapping Logic Class --></label>
+        <name>%%%NAMESPACE%%%Custom_Mapping_Logic_Class__c</name>
+    </fields>
+    <fields>
+        <help>El Grupo de objetos de importación de datos que contiene este registro.</help>
+        <label><!-- Data Import Object Mapping Set --></label>
+        <name>%%%NAMESPACE%%%Data_Import_Object_Mapping_Set__c</name>
+        <relationshipLabel><!-- Data Import Object Mappings --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>El nombre de API de campo del objeto Importación de datos de NPSP donde el Id. del registro importado se colocará cuando la importación se realice correctamente. También es donde el código verificará si este registro fue importado o por coincidencia.</help>
+        <label><!-- Imported Record Field Name --></label>
+        <name>%%%NAMESPACE%%%Imported_Record_Field_Name__c</name>
+    </fields>
+    <fields>
+        <help>El Nombre de API de campo donde se registrará la operación correcta o fallida de un registro de Importación de datos de NPSP.</help>
+        <label><!-- Imported Record Status Field Name --></label>
+        <name>%%%NAMESPACE%%%Imported_Record_Status_Field_Name__c</name>
+    </fields>
+    <fields>
+        <label><!-- Is Deleted --></label>
+        <name>%%%NAMESPACE%%%Is_Deleted__c</name>
+    </fields>
+    <fields>
+        <help>El nombre de objeto de importación datos heredados del objeto en el que se basa este Grupo de objetos de importación de datos.</help>
+        <label><!-- Legacy Data Import Object Name --></label>
+        <name>%%%NAMESPACE%%%Legacy_Data_Import_Object_Name__c</name>
+    </fields>
+    <fields>
+        <help>El nombre de API del objeto de destino para este Grupo de objetos.</help>
+        <label><!-- Object API Name --></label>
+        <name>%%%NAMESPACE%%%Object_API_Name__c</name>
+    </fields>
+    <fields>
+        <help>El registro de Grupo de objetos de importación de datos que debe existir antes de que se pueda crear este registro (ya sea principal o secundario).</help>
+        <label><!-- Predecessor --></label>
+        <name>%%%NAMESPACE%%%Predecessor__c</name>
+    </fields>
+    <fields>
+        <help>Si este Grupo de objetos es un secundario del predecesor, este campo debe consultar el principal. Si es el principal del predecesor, debe ser el campo de búsqueda en el registro secundario.</help>
+        <label><!-- Relationship Field --></label>
+        <name>%%%NAMESPACE%%%Relationship_Field__c</name>
+    </fields>
+    <fields>
+        <help>Indica si este objeto es un principal o secundario del predecesor.</help>
+        <label><!-- Relationship To Predecessor --></label>
+        <name>%%%NAMESPACE%%%Relationship_To_Predecessor__c</name>
+        <picklistValues>
+            <masterLabel>Child</masterLabel>
+            <translation>Menor</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>No Predecessor</masterLabel>
+            <translation>Sin predecesor</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Parent</masterLabel>
+            <translation>Progenitor</translation>
+        </picklistValues>
+    </fields>
+    <gender><!-- Feminine --></gender>
+    <layouts>
+        <layout>Data Import Object Mapping Layout</layout>
+        <sections>
+            <label>Detalles de relación de objeto personalizado</label>
+            <section>Custom Object Relationship Details</section>
+        </sections>
+    </layouts>
+</CustomObjectTranslation>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Fout</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Fouten</value>
+    </caseValues>
+    <fields>
+        <help>Context die de fout gegenereerde, indien bekend.</help>
+        <label><!-- Context Type --></label>
+        <name>%%%NAMESPACE%%%Context_Type__c</name>
+    </fields>
+    <fields>
+        <help>Datum en tijd wanneer de fout is opgetreden</help>
+        <label><!-- Datetime --></label>
+        <name>%%%NAMESPACE%%%Datetime__c</name>
+    </fields>
+    <fields>
+        <help>Geeft aan of een e-mail notificatie is verzonden met betrekking tot deze fout.</help>
+        <label><!-- Email Sent --></label>
+        <name>%%%NAMESPACE%%%Email_Sent__c</name>
+    </fields>
+    <fields>
+        <help>Type fout die is opgetreden</help>
+        <label><!-- Error Type --></label>
+        <name>%%%NAMESPACE%%%Error_Type__c</name>
+    </fields>
+    <fields>
+        <help>Volledige Tekst van het foutbericht</help>
+        <label><!-- Full Message --></label>
+        <name>%%%NAMESPACE%%%Full_Message__c</name>
+    </fields>
+    <fields>
+        <help>Type object waar de fout is opgetreden, indien bekend.</help>
+        <label><!-- Object Type --></label>
+        <name>%%%NAMESPACE%%%Object_Type__c</name>
+    </fields>
+    <fields>
+        <help>Geeft aan of de fout is gepost in Chatter</help>
+        <label><!-- Posted in Chatter --></label>
+        <name>%%%NAMESPACE%%%Posted_in_Chatter__c</name>
+    </fields>
+    <fields>
+        <help>Een link naar het record die de fout veroorzaakte, indien beschikbaar.</help>
+        <label><!-- Record URL --></label>
+        <name>%%%NAMESPACE%%%Record_URL__c</name>
+    </fields>
+    <fields>
+        <help>De Salesforce-ID van de record die is gekoppeld aan deze fout.</help>
+        <label><!-- Related Record ID --></label>
+        <name>%%%NAMESPACE%%%Related_Record_ID__c</name>
+    </fields>
+    <fields>
+        <help>Indien geselecteerd, geeft dit aan dat de record die is opgegeven in ID van gerelateerde record opnieuw wordt verwerkt in het volgende geplande proces. Als opnieuw verwerken slaagt, wordt de selectie van dit veld opgeheven. Is ook van toepassing op specifieke typen fouten die plaatsvinden tijdens geplande processen.</help>
+        <label><!-- Retry Pending? --></label>
+        <name>%%%NAMESPACE%%%Retry_Pending__c</name>
+    </fields>
+    <fields>
+        <help>Stack trace for the geworpen fout, indien beschikbaar tijdens looptijd</help>
+        <label><!-- Stack Trace --></label>
+        <name>%%%NAMESPACE%%%Stack_Trace__c</name>
+    </fields>
+    <gender>Feminine</gender>
+    <nameFieldLabel>Foutnummer</nameFieldLabel>
+</CustomObjectTranslation>

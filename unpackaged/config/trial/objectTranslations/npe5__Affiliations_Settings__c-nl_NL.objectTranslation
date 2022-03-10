@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Affiliatie-instelling --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Affiliatie-instellingen --></value>
+    </caseValues>
+    <fields>
+        <help>Maak of update Connecties voor Contactpersonen verwant aan een Organisatie Account waar hun Organisatie veld of Primaire Connectie veld is veranderd</help>
+        <label><!-- Automatic Affiliation Management --></label>
+        <name>npe5__Automatic_Affiliation_Creation_Turned_On__c</name>
+    </fields>
+    <gender><!-- Feminine --></gender>
+</CustomObjectTranslation>

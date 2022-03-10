@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <article>None</article>
+        <plural>false</plural>
+        <value><!-- DEPRECATED-Relationship Error --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>false</plural>
+        <value><!-- הDEPRECATED-Relationship Error --></value>
+    </caseValues>
+    <caseValues>
+        <article>None</article>
+        <plural>true</plural>
+        <value><!-- DEPRECATED-Relationship Error --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>true</plural>
+        <value><!-- הDEPRECATED-Relationship Error --></value>
+    </caseValues>
+    <fields>
+        <help>התאריך והשעה בהם התרחשה השגיאה</help>
+        <label><!-- Error Date/Time --></label>
+        <name>npe4__Error_Date_Time__c</name>
+    </fields>
+    <fields>
+        <help>קישור אל הרשומה שבה התרחשה השגיאה, אם זמינה.</help>
+        <label><!-- Error Record Link --></label>
+        <name>npe4__Error_Record_Link__c</name>
+    </fields>
+    <fields>
+        <help>מעקב המחסנית של השגיאה שהתרחשה, אם זמין בזמן הריצה.</help>
+        <label><!-- Error Stack Trace --></label>
+        <name>npe4__Error_Stack_Trace__c</name>
+    </fields>
+    <fields>
+        <help>סוג השגיאה שהתרחשה</help>
+        <label><!-- Error Type --></label>
+        <name>npe4__Error_Type__c</name>
+    </fields>
+    <fields>
+        <help>הטקסט המלא של הודעת השגיאה</help>
+        <label><!-- Full Error Message --></label>
+        <name>npe4__Full_Error_Message__c</name>
+    </fields>
+    <gender><!-- Masculine --></gender>
+    <nameFieldLabel><!-- Relationship Error Name --></nameFieldLabel>
+</CustomObjectTranslation>

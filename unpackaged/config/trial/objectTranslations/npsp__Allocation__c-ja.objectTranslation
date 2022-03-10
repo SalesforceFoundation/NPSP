@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>一般会計単位の割り当て</value>
+    </caseValues>
+    <fieldSets>
+        <label><!-- Manage Allocations Additional Fields --></label>
+        <name>%%%NAMESPACE%%%ManageAllocationsAdditionalFields</name>
+    </fieldSets>
+    <fields>
+        <help>この一般会計単位に割り当てる支援金額。パーセントベースの割り当ての場合は空白のままにします。</help>
+        <label><!-- Amount --></label>
+        <name>%%%NAMESPACE%%%Amount__c</name>
+    </fields>
+    <fields>
+        <help>必要に応じて、キャンペーンを割り当ての対象とします。主キャンペーンソースとしてこのキャンペーンを使用して作成されたすべての新しい支援は、自動的に同じ方法で割り当てられます。</help>
+        <label><!-- Campaign --></label>
+        <name>%%%NAMESPACE%%%Campaign__c</name>
+        <relationshipLabel><!-- GAU Allocations --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>この割り当ての対象となる一般会計単位。新しい割り当てでは、有効としてマークされた一般会計単位のみを使用できます。</help>
+        <label><!-- General Accounting Unit --></label>
+        <lookupFilter>
+            <errorMessage><!-- Choose an active General Accounting Unit for this Allocation. You cannot modify an Allocation assigned to an inactive General Accounting Unit. --></errorMessage>
+            <informationalMessage><!-- You must select an active General Accounting Unit for this Allocation. --></informationalMessage>
+        </lookupFilter>
+        <name>%%%NAMESPACE%%%General_Accounting_Unit__c</name>
+        <relationshipLabel><!-- GAU Allocations --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>支援を割り当ての対象とします。成立フェーズのすべての支援は、この割り当ての一般会計単位に積み上げ集計されます。</help>
+        <label><!-- Opportunity --></label>
+        <name>%%%NAMESPACE%%%Opportunity__c</name>
+        <relationshipLabel><!-- GAU Allocations --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>支払を割り当ての対象とします。</help>
+        <label><!-- Payment --></label>
+        <name>%%%NAMESPACE%%%Payment__c</name>
+        <relationshipLabel><!-- Payment Allocations --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>この一般会計単位に割り当てる支援金額のパーセント。パーセントベースの割り当ての支援金額を変更すると、割り当て金額が変更されます。</help>
+        <label><!-- Percent --></label>
+        <name>%%%NAMESPACE%%%Percent__c</name>
+    </fields>
+    <fields>
+        <help>必要に応じて、継続支援を割り当ての対象とします。この継続支援スケジュールを使用して作成されたすべての新しい支援は、自動的に同じ方法で割り当てられます。</help>
+        <label><!-- Recurring Donation --></label>
+        <name>%%%NAMESPACE%%%Recurring_Donation__c</name>
+        <relationshipLabel><!-- GAU Allocations --></relationshipLabel>
+    </fields>
+    <nameFieldLabel>一般会計単位の割り当て名</nameFieldLabel>
+    <webLinks>
+        <label><!-- Manage_Allocations --></label>
+        <name>%%%NAMESPACE%%%Manage_Allocations</name>
+    </webLinks>
+</CustomObjectTranslation>

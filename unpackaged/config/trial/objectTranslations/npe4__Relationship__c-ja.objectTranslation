@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>リレーション</value>
+    </caseValues>
+    <fields>
+        <help>関係する個人はこの個人の ______。</help>
+        <label><!-- Contact --></label>
+        <name>npe4__Contact__c</name>
+        <relationshipLabel><!-- Relationships --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>このリレーションの追加情報</help>
+        <label><!-- Description --></label>
+        <name>npe4__Description__c</name>
+    </fields>
+    <fields>
+        <help>リレーションの両側を結合するシステム項目。この項目を直接変更しないでください。相互関係は、このリレーションの反対の種別になります (使用可能な場合)。</help>
+        <label><!-- Reciprocal Relationship --></label>
+        <name>npe4__ReciprocalRelationship__c</name>
+        <relationshipLabel><!-- Relationships --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Related Contact --></label>
+        <name>npe4__RelatedContact__c</name>
+        <relationshipLabel><!-- Hidden Relationships List --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>2 つの個人間のリレーションを説明する文章を作成するテキスト数式</help>
+        <label><!-- Relationship Explanation --></label>
+        <name>npe4__Relationship_Explanation__c</name>
+    </fields>
+    <fields>
+        <help>このリレーションが別のリレーションの相互関係として自動的に作成されたかどうかを示すシステム項目</help>
+        <label><!-- _SYSTEM: SystemCreated --></label>
+        <name>npe4__SYSTEM_SystemCreated__c</name>
+    </fields>
+    <fields>
+        <help>リレーションの状況。</help>
+        <label><!-- Status --></label>
+        <name>npe4__Status__c</name>
+        <picklistValues>
+            <masterLabel>Current</masterLabel>
+            <translation>現在</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Former</masterLabel>
+            <translation>以前</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>関係する個人が個人に結び付けられている方法を説明する項目。</help>
+        <label><!-- Type --></label>
+        <name>npe4__Type__c</name>
+        <picklistValues>
+            <masterLabel>Aunt</masterLabel>
+            <translation>叔母</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Child</masterLabel>
+            <translation>子ども</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Cousin</masterLabel>
+            <translation>いとこ</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Coworker</masterLabel>
+            <translation>同僚</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Daughter</masterLabel>
+            <translation>娘</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Employee</masterLabel>
+            <translation>従業員</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Employer</masterLabel>
+            <translation>雇用主</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Family</masterLabel>
+            <translation>家族</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Father</masterLabel>
+            <translation>父</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Friend</masterLabel>
+            <translation>友人</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Grandchild</masterLabel>
+            <translation>孫</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Granddaughter</masterLabel>
+            <translation>孫娘</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Grandfather</masterLabel>
+            <translation>祖父</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Grandmother</masterLabel>
+            <translation>祖母</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Grandparent</masterLabel>
+            <translation>祖父母</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Grandson</masterLabel>
+            <translation>孫息子</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Husband</masterLabel>
+            <translation>夫</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mother</masterLabel>
+            <translation>母</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Parent</masterLabel>
+            <translation>親</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Partner</masterLabel>
+            <translation>パートナー</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Son</masterLabel>
+            <translation>息子</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Spouse</masterLabel>
+            <translation><!-- Spouse --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Uncle</masterLabel>
+            <translation>叔父</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Wife</masterLabel>
+            <translation>妻</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>このリレーションの個人の支援を作成すると、この支援個人の役割が関連する個人に割り当てられます。</help>
+        <label><!-- Related Opportunity Contact Role --></label>
+        <name>%%%NAMESPACE%%%Related_Opportunity_Contact_Role__c</name>
+        <picklistValues>
+            <masterLabel>Soft Credit</masterLabel>
+            <translation>ソフトクレジット</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Solicitor</masterLabel>
+            <translation>支援依頼者</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Tribute</masterLabel>
+            <translation>敬意/追悼</translation>
+        </picklistValues>
+    </fields>
+    <layouts>
+        <layout>Relationship Layout</layout>
+        <sections>
+            <label>リレーション情報</label>
+            <section>Relationship Information</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>リレーション番号</nameFieldLabel>
+    <validationRules>
+        <errorMessage><!-- Rather than change the contacts in an existing relationship, delete this relationship and create a new on between the new contacts --></errorMessage>
+        <name>npe4__Related_Contact_Do_Not_Change</name>
+    </validationRules>
+</CustomObjectTranslation>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value><!-- Spendeneintragseinstellung --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value><!-- Spendeneintragseinstellungen --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value><!-- Spendeneintragseinstellung --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value><!-- Spendeneintragseinstellungen --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value><!-- Spendeneintragseinstellung --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value><!-- Spendeneintragseinstellungen --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value><!-- Spendeneintragseinstellung --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value><!-- Spendeneintragseinstellungen --></value>
+    </caseValues>
+    <fields>
+        <help>Dies ist eine Ausgangsvorlage, die für die Schenkungseingabe zur Eingabe einzelner Schenkungen oder Batches von Schenkungen verwendet wird. Dies ist die Standardvorlage für die Eingabe einzelner Schenkungen.</help>
+        <label><!-- Default Gift Entry Template --></label>
+        <name>%%%NAMESPACE%%%Default_Gift_Entry_Template__c</name>
+    </fields>
+    <fields>
+        <help>Aktiviert das Schenkungseingabe-Tool. Für dieses Feature ist erweiterte Zuordnung erforderlich.</help>
+        <label><!-- Enable Gift Entry --></label>
+        <name>%%%NAMESPACE%%%Enable_Gift_Entry__c</name>
+    </fields>
+    <gender><!-- Feminine --></gender>
+</CustomObjectTranslation>

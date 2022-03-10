@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Erreur</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Erreurs</value>
+    </caseValues>
+    <fields>
+        <help>Contexte ayant généré l’erreur, s’il est connu.</help>
+        <label><!-- Context Type --></label>
+        <name>%%%NAMESPACE%%%Context_Type__c</name>
+    </fields>
+    <fields>
+        <help>Date et heure auxquelles l’erreur s’est produite</help>
+        <label><!-- Datetime --></label>
+        <name>%%%NAMESPACE%%%Datetime__c</name>
+    </fields>
+    <fields>
+        <help>Indique si une notification par e-mail concernant cette erreur a été envoyée.</help>
+        <label><!-- Email Sent --></label>
+        <name>%%%NAMESPACE%%%Email_Sent__c</name>
+    </fields>
+    <fields>
+        <help>Type de l’erreur survenue</help>
+        <label><!-- Error Type --></label>
+        <name>%%%NAMESPACE%%%Error_Type__c</name>
+    </fields>
+    <fields>
+        <help>Texte complet du message d’erreur</help>
+        <label><!-- Full Message --></label>
+        <name>%%%NAMESPACE%%%Full_Message__c</name>
+    </fields>
+    <fields>
+        <help>Type de l’objet sur lequel l’erreur s’est produite, s’il est connu.</help>
+        <label><!-- Object Type --></label>
+        <name>%%%NAMESPACE%%%Object_Type__c</name>
+    </fields>
+    <fields>
+        <help>Indique si l’erreur a été publiée dans Chatter.</help>
+        <label><!-- Posted in Chatter --></label>
+        <name>%%%NAMESPACE%%%Posted_in_Chatter__c</name>
+    </fields>
+    <fields>
+        <help>Lien vers l’enregistrement ayant provoqué l’erreur, si disponible.</help>
+        <label><!-- Record URL --></label>
+        <name>%%%NAMESPACE%%%Record_URL__c</name>
+    </fields>
+    <fields>
+        <help>L&apos;ID Salesforce de l&apos;enregistrement associé à cette erreur.</help>
+        <label><!-- Related Record ID --></label>
+        <name>%%%NAMESPACE%%%Related_Record_ID__c</name>
+    </fields>
+    <fields>
+        <help>Lorsque cette option est sélectionnée, l&apos;enregistrement spécifié dans ID d&apos;enregistrement associé est retraité dans le processus suivant. Si le nouveau traitement réussit, ce champ est désélectionné. S&apos;applique aux types d&apos;erreur des processus planifiés.</help>
+        <label><!-- Retry Pending? --></label>
+        <name>%%%NAMESPACE%%%Retry_Pending__c</name>
+    </fields>
+    <fields>
+        <help>Trace de pile pour l’erreur déclenchée, si disponible dynamiquement.</help>
+        <label><!-- Stack Trace --></label>
+        <name>%%%NAMESPACE%%%Stack_Trace__c</name>
+    </fields>
+    <gender>Feminine</gender>
+    <nameFieldLabel>Numéro d&apos;erreur</nameFieldLabel>
+    <startsWith>Vowel</startsWith>
+</CustomObjectTranslation>

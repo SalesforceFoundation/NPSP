@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Configuración de importación de datos --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Configuraciones de importaciones de datos --></value>
+    </caseValues>
+    <fields>
+        <help>Campo opcional de Id único para buscar duplicados en cuentas.</help>
+        <label><!-- Account Custom Unique ID --></label>
+        <name>%%%NAMESPACE%%%Account_Custom_Unique_ID__c</name>
+    </fields>
+    <fields>
+        <help>Especifica que regla seguir cuando se buscan duplicados entre las cuentas existentes y las cuentas en el Data Import.</help>
+        <label><!-- Account Matching Rule --></label>
+        <name>%%%NAMESPACE%%%Account_Matching_Rule__c</name>
+    </fields>
+    <fields>
+        <help>La cantidad de registros en el NPSP Data Import que se procesan en cada lote</help>
+        <label><!-- Batch Process Size --></label>
+        <name>%%%NAMESPACE%%%Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help>JSON para el resultado de la implementación de CMT
+{ &quot;jobId&quot;: &quot;repsonse&quot; }</help>
+        <label><!-- CMT API Deployment Result --></label>
+        <name>%%%NAMESPACE%%%CMT_API_Status__c</name>
+    </fields>
+    <fields>
+        <help>Identificador de la implementación de metadatos personalizados</help>
+        <label><!-- CMT Deployment ID --></label>
+        <name>%%%NAMESPACE%%%CMT_Deployment_ID__c</name>
+    </fields>
+    <fields>
+        <help>Campo opcional de Id único para utilizar en reglas de coincidencia de contacto</help>
+        <label><!-- Contact Custom Unique ID --></label>
+        <name>%%%NAMESPACE%%%Contact_Custom_Unique_ID__c</name>
+    </fields>
+    <fields>
+        <help>Especifica que regla seguir cuando se buscan duplicados entre los contactos existentes y los contactos en el Data Import.</help>
+        <label><!-- Contact Matching Rule --></label>
+        <name>%%%NAMESPACE%%%Contact_Matching_Rule__c</name>
+    </fields>
+    <fields>
+        <help>El nombre de la API de metadatos personalizada del registro del conjunto de asignación de campos de importación de datos que debe emplearse de forma predeterminada.</help>
+        <label><!-- Default Data Import Field Mapping Set --></label>
+        <name>%%%NAMESPACE%%%Default_Data_Import_Field_Mapping_Set__c</name>
+    </fields>
+    <fields>
+        <help>Introduzca los días desde la fecha de la donación a contar al buscar una oportunidad o pago coincidente. Data Importer elegirá la oportunidad o pago coincidente con fecha caiga dentro del número de días Y esté más cercana a la fecha de la donación.</help>
+        <label><!-- Number of Days from Donation Date --></label>
+        <name>%%%NAMESPACE%%%Donation_Date_Range__c</name>
+    </fields>
+    <fields>
+        <help>Define cómo debe tratar Data Importer las donaciones coincidentes. Debe seleccionar un valor.</help>
+        <label><!-- Donation Matching Behavior --></label>
+        <name>%%%NAMESPACE%%%Donation_Matching_Behavior__c</name>
+    </fields>
+    <fields>
+        <help>El nombre del desarrollador de una clase de Apex que implementa la interfaz BDI_IMatching para donaciones. Deje esta opción en blanco para permitir que NPSP controle las coincidencias.</help>
+        <label><!-- Donation Matching Implementing Class --></label>
+        <name>%%%NAMESPACE%%%Donation_Matching_Implementing_Class__c</name>
+    </fields>
+    <fields>
+        <help>Especifica por qué campos buscar la coincidencia cuando se intentan hacer coincidir donaciones en registros de importación de datos con oportunidades y pagos existentes. Haga clic con Control o Comando para seleccionar más de un campo.</help>
+        <label><!-- Donation Matching Rule --></label>
+        <name>%%%NAMESPACE%%%Donation_Matching_Rule__c</name>
+    </fields>
+    <fields>
+        <help>Define el modo con que los campos del registro Importación de datos de NPSP se asignan a otros objetos en Salesforce. Las opciones son Texto de ayuda o Asignación de campos de importación de datos.</help>
+        <label><!-- Field Mapping Method --></label>
+        <name>%%%NAMESPACE%%%Field_Mapping_Method__c</name>
+    </fields>
+    <fields>
+        <help>El nombre del desarrollador de una clase de Apex que implementa la interfaz BDI_IPostProcess para registros de importación de datos de NPSP.</help>
+        <label><!-- Post Process Implementing Class --></label>
+        <name>%%%NAMESPACE%%%Post_Process_Implementing_Class__c</name>
+    </fields>
+    <fields>
+        <help>Al marcarse, NPSP calcula datos estadísticos de donantes al procesar donaciones. Si no se marca, los datos se calculan durante el trabajo nocturno predeterminado. Tenga en cuenta que al seleccionarse se podría ralentizar el procesamiento de este lote.</help>
+        <label><!-- Calculate Donation Rollups with Batch --></label>
+        <name>%%%NAMESPACE%%%Run_Opportunity_Rollups_while_Processing__c</name>
+    </fields>
+    <gender><!-- Feminine --></gender>
+</CustomObjectTranslation>

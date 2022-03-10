@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Configuración de campo de totalización de usuario --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Configuraciones de campos de totalización de usuarios --></value>
+    </caseValues>
+    <fields>
+        <help>La acción en el total (MIN, MAX, SUMA, CUENTA) a realizarse en el campo de origen.</help>
+        <label><!-- Field Action --></label>
+        <name>npo02__Field_Action__c</name>
+    </fields>
+    <fields>
+        <help>El objeto al que este total esta relacionado.</help>
+        <label><!-- Object Name --></label>
+        <name>npo02__Object_Name__c</name>
+    </fields>
+    <fields>
+        <help>El campo de origen y la acción del objeto para este total.</help>
+        <label><!-- Source Field --></label>
+        <name>npo02__Source_Field__c</name>
+    </fields>
+    <fields>
+        <help>Campo de destino donde se completará el valor de este total definido por el usuario.</help>
+        <label><!-- Target Field --></label>
+        <name>npo02__Target_Field__c</name>
+    </fields>
+    <gender><!-- Feminine --></gender>
+</CustomObjectTranslation>

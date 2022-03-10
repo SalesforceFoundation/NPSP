@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Foutinstellingen --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Foutinstellingen --></value>
+    </caseValues>
+    <fields>
+        <help>Wordt gebruikt om de meest recente uitvoer van de Async Opdracht Fout Logboek bij te houden</help>
+        <label><!-- Async Error Check Last Run --></label>
+        <name>%%%NAMESPACE%%%Async_Error_Check_Last_Run__c</name>
+    </fields>
+    <fields>
+        <help>Als deze optie wordt geselecteerd, worden met &apos;Controle van de Toestand&apos; alleen de NPSP-configuratie-instellingen gecontroleerd op problemen. Selecteer deze optie als uw organisatie veel records heeft en de functie niet kan worden voltooid.</help>
+        <label><!-- Disable Record Data Health Checks --></label>
+        <name>%%%NAMESPACE%%%DisableRecordDataHealthChecks__c</name>
+    </fields>
+    <fields>
+        <help>Indien aangevinkt, NPSP&apos;s foutafhandeling framework is uitgeschakeld</help>
+        <label><!-- Disable Error Handling --></label>
+        <name>%%%NAMESPACE%%%Disable_Error_Handling__c</name>
+    </fields>
+    <fields>
+        <help>Indien ingeschakeld, zal NPSP niet automatisch terugkerende opdrachten uitvoeren. Deze opdrachten bevatten Rollups, adreswijzigingen, bijwerken van teugkerende donaties en foutafhandeling.</help>
+        <label><!-- Don&apos;t Auto Schedule Default NPSP Jobs --></label>
+        <name>%%%NAMESPACE%%%Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
+    </fields>
+    <fields>
+        <help>Vink dit aan om debug statements in gemanagede pakket code in te schakelen.</help>
+        <label><!-- Enable Debug --></label>
+        <name>%%%NAMESPACE%%%Enable_Debug__c</name>
+    </fields>
+    <fields>
+        <help>Vink aan wanneer je wilt dat het systeem notificaties plaatst voor bepaalde type fouten.</help>
+        <label><!-- Error Notifications --></label>
+        <name>%%%NAMESPACE%%%Error_Notifications_On__c</name>
+    </fields>
+    <fields>
+        <help>Selecteer het type gebruiker waar de notificatie naar gestuurd moet worden</help>
+        <label><!-- Error Notification Recipients --></label>
+        <name>%%%NAMESPACE%%%Error_Notifications_To__c</name>
+    </fields>
+    <fields>
+        <help>Niet bijwerken. Alleen voor testen van Salesforce-org.-proef. Staat overschrijven van beperkte toegang van parameter van voorziening PilotEnabled toe in Scratch-organisaties voor proeftesten in organisaties zonder gekoppelde productlicentie in de LMO.</help>
+        <label><!-- Scratch Org Override: Pilot Enabled --></label>
+        <name>%%%NAMESPACE%%%OverrideFeature_PilotEnabled__c</name>
+    </fields>
+    <fields>
+        <help>Respecteer de Duplicaatregelinstellingen die regelen of duplicaatrecords toegestaan zijn. Controleer instellingen onder Set-up en Duplicaatregels. Wanneer Actie bij Aanmaken of Actie bij Bewerken ingesteld zijn op &apos;Toestaan&apos;, worden duplicaten bewaard.</help>
+        <label><!-- Respect Duplicate Rule Settings --></label>
+        <name>%%%NAMESPACE%%%Respect_Duplicate_Rule_Settings__c</name>
+    </fields>
+    <fields>
+        <help>Vink aan wanneer je fouten wilt opslaan in de database.</help>
+        <label><!-- Store Errors --></label>
+        <name>%%%NAMESPACE%%%Store_Errors_On__c</name>
+    </fields>
+    <gender><!-- Feminine --></gender>
+</CustomObjectTranslation>

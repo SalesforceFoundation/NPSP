@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <help><!-- Formula field showing the Amount left towards the Campaign&apos;s Expected Revenue --></help>
+        <label><!-- Amount to Goal --></label>
+        <name>Amount_to_Goal__c</name>
+    </fields>
+    <layouts>
+        <layout>NPSP Campaign Layout</layout>
+        <sections>
+            <label><!-- Campaign Description --></label>
+            <section>Campaign Description</section>
+        </sections>
+        <sections>
+            <label><!-- Donation Information --></label>
+            <section>Donation Information</section>
+        </sections>
+    </layouts>
+    <recordTypes>
+        <description><!-- Use this Record Type for Events --></description>
+        <label><!-- Event --></label>
+        <name>Event</name>
+    </recordTypes>
+    <recordTypes>
+        <description><!-- Use this Record Type for fundraising activities --></description>
+        <label><!-- Fundraising --></label>
+        <name>Fundraising</name>
+    </recordTypes>
+    <recordTypes>
+        <description><!-- Use this Record Type to create lists of people --></description>
+        <label><!-- General --></label>
+        <name>General</name>
+    </recordTypes>
+    <recordTypes>
+        <description><!-- Use this Record Type for outreach --></description>
+        <label><!-- Marketing --></label>
+        <name>Marketing</name>
+    </recordTypes>
+    <webLinks>
+        <label><!-- ViewAllCampaignMembers --></label>
+        <name>ViewAllCampaignMembers</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- ViewCampaignInfluenceReport --></label>
+        <name>ViewCampaignInfluenceReport</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Household_Mailing_List --></label>
+        <name>npo02__Household_Mailing_List</name>
+    </webLinks>
+</CustomObjectTranslation>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- 取引先責任者と団体の設定 --></value>
+    </caseValues>
+    <fields>
+        <help>団体モデルの設定。「世帯団体」、「1 対 1」、「個人」のいずれかを指定します。カスタム項目 Contact.SystemAccountProcessor__c の代わりに使用されます。「世帯団体」が推奨モデルです。</help>
+        <label><!-- Account Model --></label>
+        <name>npe01__Account_Processor__c</name>
+    </fields>
+    <fields>
+        <help>廃止。トリガの動作が [NPSP 設定] の [トリガ設定] ページで制御されるようになりました。</help>
+        <label><!-- DEPRECATED-Disable_IndividualAcc_trigger --></label>
+        <name>npe01__DISABLE_IndividualAccounts_trigger__c</name>
+    </fields>
+    <fields>
+        <help>廃止。トリガの動作が [NPSP 設定] の [トリガ設定] ページで制御されるようになりました。</help>
+        <label><!-- DEPRECATED-Disable_OppAccount_trigger --></label>
+        <name>npe01__DISABLE_OpportunityAccount_trigger__c</name>
+    </fields>
+    <fields>
+        <help>廃止。トリガの動作が [NPSP 設定] の [トリガ設定] ページで制御されるようになりました。</help>
+        <label><!-- DEPRECATED-Disable_OCR_trigger --></label>
+        <name>npe01__DISABLE_OpportunityContactRoles_trigger__c</name>
+    </fields>
+    <fields>
+        <help>廃止。トリガの動作が [NPSP 設定] の [トリガ設定] ページで制御されるようになりました。</help>
+        <label><!-- DEPRECATED-Disable_OppPayments_trigger --></label>
+        <name>npe01__DISABLE_OpportunityPayments_trigger__c</name>
+    </fields>
+    <fields>
+        <help>リード取引開始時に支援を作成するかどうかを指定します。</help>
+        <label><!-- Create Opportunity on Lead Convert --></label>
+        <name>npe01__Default_Opp_on_Convert__c</name>
+    </fields>
+    <fields>
+        <help>廃止。トリガの動作が [NPSP 設定] の [トリガ設定] ページで制御されるようになりました。</help>
+        <label><!-- DEPRECATED-Disable Account Model Trigger --></label>
+        <name>npe01__Disable_Account_Model_Trigger__c</name>
+    </fields>
+    <fields>
+        <help>廃止。トリガの動作が [NPSP 設定] の [トリガ設定] ページで制御されるようになりました。</help>
+        <label><!-- DEPRECATED-Enable OppContactRole Trigger --></label>
+        <name>npe01__Enable_Opportunity_Contact_Role_Trigger__c</name>
+    </fields>
+    <fields>
+        <help>廃止。Nonprofit Success Pack の新バージョンが自動的にインストールされます。</help>
+        <label><!-- DEPRECATED-Enable Update Check --></label>
+        <name>npe01__Enable_Update_Check__c</name>
+    </fields>
+    <fields>
+        <help>世帯団体に使用される団体レコードタイプの ID。何も選択しない場合、団体にはユーザのデフォルト団体レコードタイプが設定されます。</help>
+        <label><!-- Household Account Record Type --></label>
+        <name>npe01__HH_Account_RecordTypeID__c</name>
+    </fields>
+    <fields>
+        <help>廃止。Nonprofit Success Pack の新バージョンが自動的にインストールされます。</help>
+        <label><!-- DEPRECATED-Has Package Update --></label>
+        <name>npe01__Has_Package_Update__c</name>
+    </fields>
+    <fields>
+        <help>廃止。Nonprofit Success Pack の新バージョンが自動的にインストールされます。</help>
+        <label><!-- DEPRECATED-Last Update Check --></label>
+        <name>npe01__Last_Update_Check__c</name>
+    </fields>
+    <fields>
+        <help>廃止。Nonprofit Success Pack の新バージョンが自動的にインストールされます。</help>
+        <label><!-- DEPRECATED-Max Package Version --></label>
+        <name>npe01__Max_Package_Version__c</name>
+    </fields>
+    <fields>
+        <help>1 対 1 団体で使用される団体レコードタイプの ID。何も選択しない場合、団体にはユーザのデフォルト団体レコードタイプが設定されます。</help>
+        <label><!-- One-to-One Record Type --></label>
+        <name>npe01__One_to_One_RecordTypeID__c</name>
+    </fields>
+    <fields>
+        <help>自動的に作成される主支援個人の役割のデフォルト役割。</help>
+        <label><!-- Contact Role for Individual Opps --></label>
+        <name>npe01__Opportunity_Contact_Role_Default_role__c</name>
+    </fields>
+    <fields>
+        <help>廃止。Nonprofit Success Pack の新バージョンが自動的にインストールされます。</help>
+        <label><!-- DEPRECATED-Package Update URL --></label>
+        <name>npe01__Package_Update_URL__c</name>
+    </fields>
+    <fields>
+        <help>新しい支援で作成される自動支払を有効にします。</help>
+        <label><!-- Automatic Payment Creation --></label>
+        <name>npe01__Payments_Enabled__c</name>
+    </fields>
+    <fields>
+        <help>廃止。Nonprofit Success Pack の新バージョンが自動的にインストールされます。</help>
+        <label><!-- DEPRECATED-Update Check Interval --></label>
+        <name>npe01__Update_Check_Interval__c</name>
+    </fields>
+    <fields>
+        <help>システム使用目的のみ: クロスパッケージ機能用の名前空間。</help>
+        <label><!-- GEM Namespace --></label>
+        <name>%%%NAMESPACE%%%Advancement_Namespace__c</name>
+    </fields>
+    <fields>
+        <help>主個人と主キャンペーンソースが関連付けられている支援を作成するときに、キャンペーンメンバーを自動的に作成します。</help>
+        <label><!-- Automatic Campaign Member Management --></label>
+        <name>%%%NAMESPACE%%%Automatic_Campaign_Member_Management__c</name>
+    </fields>
+    <fields>
+        <help>主個人と主キャンペーンソースが関連付けられている支援が進行中または不成立の場合にキャンペーンメンバーに自動的に設定される状況。空白のままにすると、最初のレスポンスなしの状況が使用されます。</help>
+        <label><!-- Campaign Member Non Responded Status --></label>
+        <name>%%%NAMESPACE%%%Campaign_Member_Non_Responded_Status__c</name>
+    </fields>
+    <fields>
+        <help>主個人と主キャンペーンソースが関連付けられている支援が成立済みの場合にキャンペーンメンバーに自動的に設定される状況。空白のままにした場合、最初のレスポンスありの状況が使用されます。</help>
+        <label><!-- Campaign Member Responded Status --></label>
+        <name>%%%NAMESPACE%%%Campaign_Member_Responded_Status__c</name>
+    </fields>
+    <fields>
+        <help>デフォルトの個人の役割は、支援の団体が世帯、1 対 1、または個人の団体でない場合に、支援の主個人に自動的に割り当てられます。</help>
+        <label><!-- Contact Role for Organizational Opps --></label>
+        <name>%%%NAMESPACE%%%Contact_Role_for_Organizational_Opps__c</name>
+    </fields>
+    <fields>
+        <help>会計データが完全であり、一貫性を保つように、支払と支援で複数のルールと自動化を有効にします。</help>
+        <label><!-- Enforce Accounting Data Consistency --></label>
+        <name>%%%NAMESPACE%%%Enforce_Accounting_Data_Consistency__c</name>
+    </fields>
+    <fields>
+        <help>この設定に入力すると、支援での個人の役割が名誉会員個人に対して自動作成されます。この項目を空白のままにした場合、名誉会員に対する個人の役割の自動作成は無効になります。</help>
+        <label><!-- Honoree Opportunity Contact Role --></label>
+        <name>%%%NAMESPACE%%%Honoree_Opportunity_Contact_Role__c</name>
+    </fields>
+    <fields>
+        <help>選択すると、世帯団体の住所管理が無効になります。</help>
+        <label><!-- Household Account Addresses Disabled --></label>
+        <name>%%%NAMESPACE%%%Household_Account_Addresses_Disabled__c</name>
+    </fields>
+    <fields>
+        <help>支払作成ウィザードで選択可能な支払の最大回数を指定します。</help>
+        <label><!-- Max Payments --></label>
+        <name>%%%NAMESPACE%%%Max_Payments__c</name>
+    </fields>
+    <fields>
+        <help>この設定に入力すると、支援での個人の役割が通知受信者個人に対して自動作成されます。この項目を空白のままにした場合、通知受信者に対する個人の役割の自動作成は無効になります。</help>
+        <label><!-- Notification Recipient Opp Contact Role --></label>
+        <name>%%%NAMESPACE%%%Notification_Recipient_Opp_Contact_Role__c</name>
+    </fields>
+    <fields>
+        <help>支払の作成から除外する支援レコードタイプの名前。</help>
+        <label><!-- Excluded Opp Record Types --></label>
+        <name>%%%NAMESPACE%%%Opp_RecTypes_Excluded_for_Payments__c</name>
+    </fields>
+    <fields>
+        <help>支払の作成から除外する支援種別項目の値。</help>
+        <label><!-- Excluded Opp Types --></label>
+        <name>%%%NAMESPACE%%%Opp_Types_Excluded_for_Payments__c</name>
+    </fields>
+    <fields>
+        <help>選択すると、組織団体の住所管理が有効になります。</help>
+        <label><!-- Organizational Account Addresses Enabled --></label>
+        <name>%%%NAMESPACE%%%Organizational_Account_Addresses_Enabled__c</name>
+    </fields>
+    <fields>
+        <help>支払総額が支援金額と等しくなったときに支援が自動的に移行される移行先のフェーズを選択します。フェーズが選択されていない場合、支払の完了時に支援のフェーズは自動的に移行されません。</help>
+        <label><!-- Opportunity Stage for When Fully Paid --></label>
+        <name>%%%NAMESPACE%%%Payments_Auto_Close_Stage_Name__c</name>
+    </fields>
+    <fields>
+        <help>オンの場合、1 つの個人または団体の住所項目を変更すると、新しい住所が作成される代わりに既存の住所が更新されます。</help>
+        <label><!-- Simple Address Change Treated as Update --></label>
+        <name>%%%NAMESPACE%%%Simple_Address_Change_Treated_as_Update__c</name>
+    </fields>
+</CustomObjectTranslation>

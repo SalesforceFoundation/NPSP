@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Asignación de CCG</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Asignaciones de CCG</value>
+    </caseValues>
+    <fieldSets>
+        <label><!-- Manage Allocations Additional Fields --></label>
+        <name>%%%NAMESPACE%%%ManageAllocationsAdditionalFields</name>
+    </fieldSets>
+    <fields>
+        <help>Monto de la oportunidad a asignar a esta cuenta contable general. Dejar en blanco para asignaciones basadas en porcentaje.</help>
+        <label><!-- Amount --></label>
+        <name>%%%NAMESPACE%%%Amount__c</name>
+    </fields>
+    <fields>
+        <help>Opcionalmente atribuye asignaciones a una campaña. Todas las nuevas oportunidades creadas con esta campaña en el campo Origen de campaña principal serán automáticamente asignadas del mismo modo.</help>
+        <label><!-- Campaign --></label>
+        <name>%%%NAMESPACE%%%Campaign__c</name>
+        <relationshipLabel><!-- GAU Allocations --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>La cuenta contable general a atribuir la asignación. Solo cuentas contables generales activas están disponibles para nuevas asignaciones.</help>
+        <label><!-- General Accounting Unit --></label>
+        <lookupFilter>
+            <errorMessage><!-- Choose an active General Accounting Unit for this Allocation. You cannot modify an Allocation assigned to an inactive General Accounting Unit. --></errorMessage>
+            <informationalMessage><!-- You must select an active General Accounting Unit for this Allocation. --></informationalMessage>
+        </lookupFilter>
+        <name>%%%NAMESPACE%%%General_Accounting_Unit__c</name>
+        <relationshipLabel><!-- GAU Allocations --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>Oportunidad relacionada. Todas las oportunidades cerradas ganadas van a ser consideradas para los campos de resumen en el registro de la cuenta contable general.</help>
+        <label><!-- Opportunity --></label>
+        <name>%%%NAMESPACE%%%Opportunity__c</name>
+        <relationshipLabel><!-- GAU Allocations --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>Asignaciones de atributos a un pago.</help>
+        <label><!-- Payment --></label>
+        <name>%%%NAMESPACE%%%Payment__c</name>
+        <relationshipLabel><!-- Payment Allocations --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>Porcentaje del importe de la oportunidad a asignar a esta cuenta contable general. Modificar el monto de la oportunidad en oportunidades asignadas por porcentaje cambia el monto de la asignación.</help>
+        <label><!-- Percent --></label>
+        <name>%%%NAMESPACE%%%Percent__c</name>
+    </fields>
+    <fields>
+        <help>Opcionalmente atribuye asignaciones a una donación recurrente. Todas las nuevas oportunidades creadas con esta donación recurrente serán automáticamente asignadas del mismo modo.</help>
+        <label><!-- Recurring Donation --></label>
+        <name>%%%NAMESPACE%%%Recurring_Donation__c</name>
+        <relationshipLabel><!-- GAU Allocations --></relationshipLabel>
+    </fields>
+    <gender>Feminine</gender>
+    <nameFieldLabel>Nombre de asignación de CCG</nameFieldLabel>
+    <webLinks>
+        <label><!-- Manage_Allocations --></label>
+        <name>%%%NAMESPACE%%%Manage_Allocations</name>
+    </webLinks>
+</CustomObjectTranslation>

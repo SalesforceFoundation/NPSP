@@ -1,6 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
         <actionName>View</actionName>
         <comment>Action override created by Lightning App Builder during activation.</comment>
         <content>NPSP_Payment</content>
@@ -8,8 +134,114 @@
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>Flexipage</type>
     </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>NPSP_Payment_Compact_Layout_Unmanaged</compactLayoutAssignment>
+    <compactLayouts>
+        <fullName>NPSP_Payment_Compact_Layout_Unmanaged</fullName>
+        <fields>Name</fields>
+        <fields>npe01__Payment_Amount__c</fields>
+        <fields>npe01__Scheduled_Date__c</fields>
+        <label>NPSP Payment Compact Layout (Unmanaged)</label>
+    </compactLayouts>
+    <compactLayouts>
+        <fullName>%%%NAMESPACE%%%NPSP_Payment_Compact_Layout</fullName>
+        <fields>Name</fields>
+        <fields>npe01__Payment_Amount__c</fields>
+        <fields>npe01__Scheduled_Date__c</fields>
+        <label>NPSP Payment Compact Layout</label>
+    </compactLayouts>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
     <enableEnhancedLookup>false</enableEnhancedLookup>
+    <enableFeeds>true</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableLicensing>false</enableLicensing>
     <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>ControlledByParent</externalSharingModel>
+    <fieldSets>
+        <fullName>%%%NAMESPACE%%%Payment_WizardFS</fullName>
+        <availableFields>
+            <field>npe01__Check_Reference_Number__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>npe01__Custom_Payment_Field__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>IsDeleted</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Name</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>npe01__Opportunity__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>%%%NAMESPACE%%%Payment_Acknowledged_Date__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>%%%NAMESPACE%%%Payment_Acknowledgment_Status__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>npe01__Payment_Method__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>npe01__Written_Off__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <description>Schedule Payments Wizard</description>
+        <displayedFields>
+            <field>npe01__Payment_Amount__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>npe01__Scheduled_Date__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>npe01__Payment_Date__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>npe01__Paid__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <label>Payment Wizard FS</label>
+    </fieldSets>
     <fields>
         <fullName>Payment_Status__c</fullName>
         <externalId>false</externalId>
@@ -17,12 +249,591 @@
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <label>Payment Status</label>
         <required>false</required>
+        <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
     </fields>
+    <fields>
+        <fullName>npe01__Check_Reference_Number__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Check/Reference Number</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>npe01__Custom_Payment_Field__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Custom Payment Field</label>
+        <length>15</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>npe01__Opportunity__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Opportunity</label>
+        <referenceTo>Opportunity</referenceTo>
+        <relationshipLabel>Payments</relationshipLabel>
+        <relationshipName>OppPayment</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>npe01__Paid__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Paid</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>npe01__Payment_Amount__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Payment Amount</label>
+        <precision>14</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>npe01__Payment_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Payment Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>npe01__Payment_Method__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Payment Method</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Cash</fullName>
+                    <default>false</default>
+                    <label>Cash</label>
+                </value>
+                <value>
+                    <fullName>Check</fullName>
+                    <default>false</default>
+                    <label>Check</label>
+                </value>
+                <value>
+                    <fullName>Credit Card</fullName>
+                    <default>false</default>
+                    <label>Credit Card</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>npe01__Scheduled_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Scheduled Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>npe01__Written_Off__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Written Off</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%ACH_Code__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The Standard Entry Class (SEC) code used for this ACH transaction.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The Standard Entry Class (SEC) code used for this ACH transaction.</inlineHelpText>
+        <label>ACH Code</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetName>%%%NAMESPACE%%%Payment_ACH_Code</valueSetName>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%ACH_Last_4__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The last four digits of the bank account used for this transaction.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The last four digits of the bank account used for this transaction.</inlineHelpText>
+        <label>ACH Last 4</label>
+        <length>4</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Authorized_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The date and time the transaction was authorized.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The date and time the transaction was authorized.</inlineHelpText>
+        <label>Authorized Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Authorized_UTC_Timestamp__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The exact date and time (down to the millisecond) from the payment gateway that this transaction was successfully authorized.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The exact date and time (down to the millisecond) from the payment gateway that this transaction was successfully authorized.</inlineHelpText>
+        <label>Authorized UTC Timestamp</label>
+        <length>30</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Batch_Number__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The batch that set this Payment as paid. This field is automatically populated based on your Batch Number Settings in NPSP Settings.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The batch that set this Payment as paid. This field is automatically populated based on your Batch Number Settings in NPSP Settings.</inlineHelpText>
+        <label>Batch Number</label>
+        <length>30</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Card_Expiration_Month__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The expiration month of the card used for this transaction.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The expiration month of the card used for this transaction.</inlineHelpText>
+        <label>Card Expiration Month</label>
+        <length>2</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Card_Expiration_Year__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The expiration year of the card used for this transaction.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The expiration year of the card used for this transaction.</inlineHelpText>
+        <label>Card Expiration Year</label>
+        <length>4</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Card_Last_4__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The last four digits of the card used for this transaction.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The last four digits of the card used for this transaction.</inlineHelpText>
+        <label>Card Last 4</label>
+        <length>4</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Card_Network__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The card network of the card used for this transaction.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The card network of the card used for this transaction.</inlineHelpText>
+        <label>Card Network</label>
+        <length>20</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Donor_Cover_Amount__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The amount the donor paid in addition to their donation amount, often to help cover transaction fees or to add a tip to their donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The amount the donor paid in addition to their donation amount, often to help cover transaction fees or to add a tip to their donation.</inlineHelpText>
+        <label>Donor Cover Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Elevate_Original_Payment_ID__c</fullName>
+        <deprecated>false</deprecated>
+        <description>For refunds only. Shows the ID of the original payment transaction from Elevate.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>For refunds only. Shows the ID of the original payment transaction from Elevate.</inlineHelpText>
+        <label>Elevate Original Payment ID</label>
+        <length>40</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Elevate_Payment_API_Declined_Reason__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Provides detail about why a transaction was declined.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Provides detail about why a transaction was declined.</inlineHelpText>
+        <label>Elevate Payment API Declined Reason</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Elevate_Payment_API_Status__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The API status value for this Elevate connected Payment record.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The API status value for this Elevate connected Payment record.</inlineHelpText>
+        <label>Elevate Payment API Status</label>
+        <length>80</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Elevate_Payment_Created_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The date and time the transaction was created.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The date and time the transaction was created.</inlineHelpText>
+        <label>Elevate Payment Created Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Elevate_Payment_Created_UTC_Timestamp__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The exact date and time (down to the millisecond) from Elevate that the transaction was created.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The exact date and time (down to the millisecond) from Elevate that the transaction was created.</inlineHelpText>
+        <label>Elevate Payment Created  UTC Timestamp</label>
+        <length>30</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Elevate_Payment_ID__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The unique ID for this transaction from Elevate.</description>
+        <externalId>true</externalId>
+        <inlineHelpText>The unique ID for this transaction from Elevate.</inlineHelpText>
+        <label>Elevate Payment ID</label>
+        <length>40</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Elevate_Transaction_Fee__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The transaction fee charged by Elevate.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The transaction fee charged by Elevate.</inlineHelpText>
+        <label>Elevate Transaction Fee</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Gateway_ID__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The ID of the payment gateway that processed this transaction.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The ID of the payment gateway that processed this transaction.</inlineHelpText>
+        <label>Gateway ID</label>
+        <length>40</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Gateway_Payment_ID__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The unique ID for this transaction from the payment gateway.</description>
+        <externalId>true</externalId>
+        <inlineHelpText>The unique ID for this transaction from the payment gateway.</inlineHelpText>
+        <label>Gateway Payment ID</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Gateway_Transaction_Fee__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The transaction fee charged by your payment gateway.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The transaction fee charged by your payment gateway.</inlineHelpText>
+        <label>Gateway Transaction Fee</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Origin_ID__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The ID for the system where the transaction was initiated.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The ID for the system where the transaction was initiated.</inlineHelpText>
+        <label>Origin ID</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Origin_Name__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The name of the system where the transaction was initiated.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The name of the system where the transaction was initiated.</inlineHelpText>
+        <label>Origin Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Origin_Type__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The type of system used to initiate the transaction. Available values include Engagement Hub, Giving Page, Payments API, Salesforce.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The type of system used to initiate the transaction. Available values include Engagement Hub, Giving Page, Payments API, Salesforce.</inlineHelpText>
+        <label>Origin Type</label>
+        <length>40</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Payment_Acknowledged_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Used to track date opportunity was acknowledged</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Date of acknowledgment</inlineHelpText>
+        <label>Payment Acknowledged Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Payment_Acknowledgment_Status__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Status of Acknowledgment of this payment.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Status of Acknowledgment of this payment.</inlineHelpText>
+        <label>Payment Acknowledgment Status</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>To Be Acknowledged</fullName>
+                    <default>false</default>
+                    <label>To Be Acknowledged</label>
+                </value>
+                <value>
+                    <fullName>Acknowledged</fullName>
+                    <default>false</default>
+                    <label>Acknowledged</label>
+                </value>
+                <value>
+                    <fullName>Do Not Acknowledge</fullName>
+                    <default>false</default>
+                    <label>Do Not Acknowledge</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Total_Transaction_Fees__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The sum of the transaction fees charged by Elevate and your payment gateway.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The sum of the transaction fees charged by Elevate and your payment gateway.</inlineHelpText>
+        <label>Total Transaction Fees</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Type__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Indicates the type of transaction.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Indicates the type of transaction.</inlineHelpText>
+        <label>Type</label>
+        <length>40</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>Payment</label>
+    <nameField>
+        <displayFormat>PMT-{00000}</displayFormat>
+        <label>Payment Number</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackHistory>false</trackHistory>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Payments</pluralLabel>
+    <searchLayouts>
+        <customTabListAdditionalFields>npe01__Check_Reference_Number__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>npe01__Paid__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>npe01__Payment_Date__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>npe01__Payment_Amount__c</customTabListAdditionalFields>
+        <lookupDialogsAdditionalFields>npe01__Check_Reference_Number__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>npe01__Paid__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>npe01__Payment_Date__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>npe01__Payment_Amount__c</lookupDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>npe01__Check_Reference_Number__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>npe01__Paid__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>npe01__Payment_Date__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>npe01__Payment_Amount__c</lookupPhoneDialogsAdditionalFields>
+        <searchResultsAdditionalFields>npe01__Check_Reference_Number__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>npe01__Paid__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>npe01__Payment_Date__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>npe01__Payment_Amount__c</searchResultsAdditionalFields>
+    </searchLayouts>
+    <sharingModel>ControlledByParent</sharingModel>
+    <visibility>Public</visibility>
     <webLinks>
-        <fullName>Schedule_Payments</fullName>
+        <fullName>npe01__Schedule_Payments</fullName>
         <availability>online</availability>
         <displayType>massActionButton</displayType>
         <encodingKey>UTF-8</encodingKey>
@@ -35,7 +846,7 @@
         <url>/apex/%%%NAMESPACE%%%PMT_PaymentWizard?id={!Opportunity.Id}&amp;wtype=payment</url>
     </webLinks>
     <webLinks>
-        <fullName>Writeoff_Payments</fullName>
+        <fullName>npe01__Writeoff_Payments</fullName>
         <availability>online</availability>
         <displayType>massActionButton</displayType>
         <encodingKey>UTF-8</encodingKey>

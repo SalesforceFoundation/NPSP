@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- BDE Entry FS --></label>
+        <name>%%%NAMESPACE%%%BDE_Entry_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- BDE List FS --></label>
+        <name>%%%NAMESPACE%%%BDE_List_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- Contact Merge Found FS --></label>
+        <name>%%%NAMESPACE%%%ContactMergeFoundFS</name>
+    </fieldSets>
+    <fields>
+        <label><!-- Gender --></label>
+        <name>Gender__c</name>
+        <picklistValues>
+            <masterLabel>Female</masterLabel>
+            <translation><!-- Female --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Male</masterLabel>
+            <translation><!-- Male --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Non-Binary</masterLabel>
+            <translation><!-- Non-Binary --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Prefer Not To Say</masterLabel>
+            <translation><!-- Prefer Not To Say --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Alternate Email is an optional fourth email: Not personal, preferred, or work email.</help>
+        <label><!-- Alternate Email --></label>
+        <name>npe01__AlternateEmail__c</name>
+    </fields>
+    <fields>
+        <help>See Preferred Email field.</help>
+        <label><!-- Personal Email --></label>
+        <name>npe01__HomeEmail__c</name>
+    </fields>
+    <fields>
+        <help>Formula: Uses primary address type field to determine Home Address from Mailing or Other address.</help>
+        <label><!-- Home Address --></label>
+        <name>npe01__Home_Address__c</name>
+    </fields>
+    <fields>
+        <help>Formula: In order of preference, the SYSTEM_AccountType field, the Account Type field, and &quot;Organisation&quot;.</help>
+        <label><!-- Organization Type --></label>
+        <name>npe01__Organization_Type__c</name>
+    </fields>
+    <fields>
+        <help>Formula: If the Primary Address Type is Other, the Mailing Address.  If the Secondary Address Type is Other, the Other Address.</help>
+        <label><!-- Other Address --></label>
+        <name>npe01__Other_Address__c</name>
+    </fields>
+    <fields>
+        <help>Which phone number should be used for most communications involving this Contact?</help>
+        <label><!-- Preferred Phone --></label>
+        <name>npe01__PreferredPhone__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation>Home</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Mobile</masterLabel>
+            <translation>Mobile</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>Other</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>Work</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Which email should be used for most communications involving this Contact?</help>
+        <label><!-- Preferred Email --></label>
+        <name>npe01__Preferred_Email__c</name>
+        <picklistValues>
+            <masterLabel>Alternate</masterLabel>
+            <translation>Alternate</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Personal</masterLabel>
+            <translation>Personal</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>Work</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Which type of address is the mailing address?</help>
+        <label><!-- Primary Address Type --></label>
+        <name>npe01__Primary_Address_Type__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation>Home</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>Other</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>Work</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Excludes this Contact from any Individual Account processing. If you leave the Account field blank, it will remain blank.</help>
+        <label><!-- Private --></label>
+        <name>npe01__Private__c</name>
+    </fields>
+    <fields>
+        <help>What type of address is the other address?</help>
+        <label><!-- Secondary Address Type --></label>
+        <name>npe01__Secondary_Address_Type__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation>Home</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>Other</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>Work</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>NO LONGER USED - Indicates which model drives Account relationship behavior: Individual (Bucket) or One-to-One</help>
+        <label><!-- DEPRECATED - _SYSTEM: ACCOUNT PROCESSOR --></label>
+        <name>npe01__SystemAccountProcessor__c</name>
+        <picklistValues>
+            <masterLabel>Individual</masterLabel>
+            <translation>Individual</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>One-to-One</masterLabel>
+            <translation>One-to-One</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Formula: &quot;Individual&quot; or &quot;Organisation&quot; depending on Account setting.</help>
+        <label><!-- Type of Account --></label>
+        <name>npe01__Type_of_Account__c</name>
+    </fields>
+    <fields>
+        <help>See Preferred Email field.</help>
+        <label><!-- Work Email --></label>
+        <name>npe01__WorkEmail__c</name>
+    </fields>
+    <fields>
+        <help>See &apos;Preferred Phone&apos; field.</help>
+        <label><!-- Work Phone --></label>
+        <name>npe01__WorkPhone__c</name>
+    </fields>
+    <fields>
+        <help>Formula: If the Primary Address Type is Work, the Postal Address.  If the Secondary Address Type is Work, the Other Address.</help>
+        <label><!-- Work Address --></label>
+        <name>npe01__Work_Address__c</name>
+    </fields>
+    <fields>
+        <label><!-- Average Gift --></label>
+        <name>npo02__AverageAmount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Best Gift Year Total --></label>
+        <name>npo02__Best_Gift_Year_Total__c</name>
+    </fields>
+    <fields>
+        <label><!-- Best Gift Year --></label>
+        <name>npo02__Best_Gift_Year__c</name>
+    </fields>
+    <fields>
+        <label><!-- First Gift Date --></label>
+        <name>npo02__FirstCloseDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Household Mailing Address --></label>
+        <name>npo02__Formula_HouseholdMailingAddress__c</name>
+    </fields>
+    <fields>
+        <label><!-- Household Phone --></label>
+        <name>npo02__Formula_HouseholdPhone__c</name>
+    </fields>
+    <fields>
+        <label><!-- Household Naming Order --></label>
+        <name>npo02__Household_Naming_Order__c</name>
+    </fields>
+    <fields>
+        <label><!-- Household --></label>
+        <name>npo02__Household__c</name>
+        <relationshipLabel><!-- Household Members --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Largest Gift --></label>
+        <name>npo02__LargestAmount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Last Household Gift Date --></label>
+        <name>npo02__LastCloseDateHH__c</name>
+    </fields>
+    <fields>
+        <label><!-- Last Gift Date --></label>
+        <name>npo02__LastCloseDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Last Membership Amount --></label>
+        <name>npo02__LastMembershipAmount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Last Membership Date --></label>
+        <name>npo02__LastMembershipDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Last Membership Level --></label>
+        <name>npo02__LastMembershipLevel__c</name>
+    </fields>
+    <fields>
+        <label><!-- Last Membership Origin --></label>
+        <name>npo02__LastMembershipOrigin__c</name>
+    </fields>
+    <fields>
+        <label><!-- Last Gift Amount --></label>
+        <name>npo02__LastOppAmount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Membership End Date --></label>
+        <name>npo02__MembershipEndDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Membership Join Date --></label>
+        <name>npo02__MembershipJoinDate__c</name>
+    </fields>
+    <fields>
+        <help>Select to exclude this Contact&apos;s name from various generated Household names.</help>
+        <label><!-- Naming Exclusions --></label>
+        <name>npo02__Naming_Exclusions__c</name>
+        <picklistValues>
+            <masterLabel>Household__c.Formal_Greeting__c</masterLabel>
+            <translation>Household__c.Formal_Greeting__c</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Household__c.Informal_Greeting__c</masterLabel>
+            <translation>Household__c.Informal_Greeting__c</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Household__c.Name</masterLabel>
+            <translation>Household__c.Name</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Total Number of Gifts --></label>
+        <name>npo02__NumberOfClosedOpps__c</name>
+    </fields>
+    <fields>
+        <label><!-- Number of Memberships --></label>
+        <name>npo02__NumberOfMembershipOpps__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Gifts Two Years Ago --></label>
+        <name>npo02__OppAmount2YearsAgo__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Gifts Last N Days --></label>
+        <name>npo02__OppAmountLastNDays__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Household Gifts Last Year --></label>
+        <name>npo02__OppAmountLastYearHH__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Gifts Last Year --></label>
+        <name>npo02__OppAmountLastYear__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Household Gifts This Year --></label>
+        <name>npo02__OppAmountThisYearHH__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Gifts This Year --></label>
+        <name>npo02__OppAmountThisYear__c</name>
+    </fields>
+    <fields>
+        <label><!-- Number of Gifts Two Years Ago --></label>
+        <name>npo02__OppsClosed2YearsAgo__c</name>
+    </fields>
+    <fields>
+        <label><!-- Number of Gifts Last N Days --></label>
+        <name>npo02__OppsClosedLastNDays__c</name>
+    </fields>
+    <fields>
+        <label><!-- Number of Gifts Last Year --></label>
+        <name>npo02__OppsClosedLastYear__c</name>
+    </fields>
+    <fields>
+        <label><!-- Number of Gifts This Year --></label>
+        <name>npo02__OppsClosedThisYear__c</name>
+    </fields>
+    <fields>
+        <label><!-- Smallest Gift --></label>
+        <name>npo02__SmallestAmount__c</name>
+    </fields>
+    <fields>
+        <help>The sum of soft credit Opportunity amounts last year determined by Opportunity Contact Role and filtered by Roles in Household Settings.</help>
+        <label><!-- Soft Credit Last Year --></label>
+        <name>npo02__Soft_Credit_Last_Year__c</name>
+    </fields>
+    <fields>
+        <help>Total soft credit amount this year</help>
+        <label><!-- Soft Credit This Year --></label>
+        <name>npo02__Soft_Credit_This_Year__c</name>
+    </fields>
+    <fields>
+        <help>Total amount in soft credits for this Contact&apos;s lifetime. Defined in the Household Settings tab.</help>
+        <label><!-- Soft Credit Total --></label>
+        <name>npo02__Soft_Credit_Total__c</name>
+    </fields>
+    <fields>
+        <help>The sum of soft credit Opportunity amounts two years ago determined by Opportunity Contact Role and filtered by Roles in Household Settings.</help>
+        <label><!-- Soft Credit Two Years Ago --></label>
+        <name>npo02__Soft_Credit_Two_Years_Ago__c</name>
+    </fields>
+    <fields>
+        <label><!-- _SYSTEM: HOUSEHOLD PROCESSOR-DEPRECATED --></label>
+        <name>npo02__SystemHouseholdProcessor__c</name>
+        <picklistValues>
+            <masterLabel>All Individual Contacts</masterLabel>
+            <translation>All Individual Contacts</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>All New or Edited Contacts</masterLabel>
+            <translation>All New or Edited Contacts</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>No Contacts</masterLabel>
+            <translation>No Contacts</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Total Membership Amount --></label>
+        <name>npo02__TotalMembershipOppAmount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Gifts --></label>
+        <name>npo02__TotalOppAmount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Household Gifts --></label>
+        <name>npo02__Total_Household_Gifts__c</name>
+    </fields>
+    <fields>
+        <help>The verification status of the current Address. If this Address requires verification, navigate to the current Address record and select Verify Address. Consult the Power of Us Hub documentation for more information on Address Verification.</help>
+        <label><!-- Address Verification Status --></label>
+        <name>%%%NAMESPACE%%%Address_Verification_Status__c</name>
+    </fields>
+    <fields>
+        <help>Lookup to the Batch that this Contact was created in.</help>
+        <label><!-- Batch --></label>
+        <name>%%%NAMESPACE%%%Batch__c</name>
+        <relationshipLabel><!-- Contacts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>Lookup to the current Address record for this Contact. NPSP populates the Contact&apos;s Mailing Address field with the street, city, state, and postal code from the current Address record.</help>
+        <label><!-- Current Address --></label>
+        <name>%%%NAMESPACE%%%Current_Address__c</name>
+        <relationshipLabel><!-- Contacts (Current Address) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>When checked, Customisable Rollups will always use &apos;Skew Mode&apos; to rollup Hard Credit and Soft Credits for this record.</help>
+        <label><!-- Customizable Rollups: Force Skew Mode --></label>
+        <name>%%%NAMESPACE%%%CustomizableRollups_UseSkewMode__c</name>
+    </fields>
+    <fields>
+        <help>Indicates the Contact is deceased. When selected, NPSP excludes this Contact from Household Naming (unless this Contact is the only one in the Household) and from standard email and phone lists.</help>
+        <label><!-- Deceased --></label>
+        <name>%%%NAMESPACE%%%Deceased__c</name>
+    </fields>
+    <fields>
+        <help>Indicates the Contact does not want your organisation to call or email. Use this field to filter out Contacts in email and phone lists. When selected, NPSP excludes this Contact from Opportunity Acknowledgements.</help>
+        <label><!-- Do Not Contact --></label>
+        <name>%%%NAMESPACE%%%Do_Not_Contact__c</name>
+    </fields>
+    <fields>
+        <help>When selected, NPSP excludes this Contact from the Household Formal Greeting (set in NPSP Settings | People | Households).</help>
+        <label><!-- Exclude from Household Formal Greeting --></label>
+        <name>%%%NAMESPACE%%%Exclude_from_Household_Formal_Greeting__c</name>
+    </fields>
+    <fields>
+        <help>When selected, NPSP excludes this Contact from the Household Informal Greeting (set in NPSP Settings | People | Households).</help>
+        <label><!-- Exclude from Household Informal Greeting --></label>
+        <name>%%%NAMESPACE%%%Exclude_from_Household_Informal_Greeting__c</name>
+    </fields>
+    <fields>
+        <help>When selected, NPSP excludes this Contact from the Household Name (set in NPSP Settings | People | Households).</help>
+        <label><!-- Exclude from Household Name --></label>
+        <name>%%%NAMESPACE%%%Exclude_from_Household_Name__c</name>
+    </fields>
+    <fields>
+        <help>The amount of this Contact&apos;s earliest soft credit.</help>
+        <label><!-- First Soft Credit Amount --></label>
+        <name>%%%NAMESPACE%%%First_Soft_Credit_Amount__c</name>
+    </fields>
+    <fields>
+        <help>The date of this Contact&apos;s earliest soft credit.</help>
+        <label><!-- First Soft Credit Date --></label>
+        <name>%%%NAMESPACE%%%First_Soft_Credit_Date__c</name>
+    </fields>
+    <fields>
+        <help>Holds the Id of the Household record (either Household Account, or Household object) this Contact is currently associated with (read only).</help>
+        <label><!-- HHId --></label>
+        <name>%%%NAMESPACE%%%HHId__c</name>
+    </fields>
+    <fields>
+        <help>The amount of this Contact&apos;s largest soft credit.</help>
+        <label><!-- Largest Soft Credit Amount --></label>
+        <name>%%%NAMESPACE%%%Largest_Soft_Credit_Amount__c</name>
+    </fields>
+    <fields>
+        <help>The date of this Contact&apos;s largest soft credit.</help>
+        <label><!-- Largest Soft Credit Date --></label>
+        <name>%%%NAMESPACE%%%Largest_Soft_Credit_Date__c</name>
+    </fields>
+    <fields>
+        <help>The amount of this Contact&apos;s most recent soft credit.</help>
+        <label><!-- Last Soft Credit Amount --></label>
+        <name>%%%NAMESPACE%%%Last_Soft_Credit_Amount__c</name>
+    </fields>
+    <fields>
+        <help>The date of this Contact&apos;s most recent soft credit.</help>
+        <label><!-- Last Soft Credit Date --></label>
+        <name>%%%NAMESPACE%%%Last_Soft_Credit_Date__c</name>
+    </fields>
+    <fields>
+        <help>The number of soft credits attributed to this Contact that closed in the last N days. The value of N is set in NPSP Settings | Donations | Donor Statistics.</help>
+        <label><!-- Number of Soft Credits Last N Days --></label>
+        <name>%%%NAMESPACE%%%Number_of_Soft_Credits_Last_N_Days__c</name>
+    </fields>
+    <fields>
+        <help>The number of soft credits attributed to this Contact in the previous calendar year.</help>
+        <label><!-- Number of Soft Credits Last Year --></label>
+        <name>%%%NAMESPACE%%%Number_of_Soft_Credits_Last_Year__c</name>
+    </fields>
+    <fields>
+        <help>The number of soft credits attributed to this Contact this calendar year.</help>
+        <label><!-- Number of Soft Credits This Year --></label>
+        <name>%%%NAMESPACE%%%Number_of_Soft_Credits_This_Year__c</name>
+    </fields>
+    <fields>
+        <help>The number of soft credits attributed to this Contact two calendar years ago.</help>
+        <label><!-- Number of Soft Credits Two Years Ago --></label>
+        <name>%%%NAMESPACE%%%Number_of_Soft_Credits_Two_Years_Ago__c</name>
+    </fields>
+    <fields>
+        <help>The total number of soft credits attributed to this Contact.</help>
+        <label><!-- Number of Soft Credits --></label>
+        <name>%%%NAMESPACE%%%Number_of_Soft_Credits__c</name>
+    </fields>
+    <fields>
+        <help>The Account marked as Primary in this Contact&apos;s list of Organisation Affiliations.</help>
+        <label><!-- Primary Affiliation --></label>
+        <name>%%%NAMESPACE%%%Primary_Affiliation__c</name>
+        <relationshipLabel><!-- Do Not Use.  Use Organization Affiliations. --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>Indicates if this Contact is designated as the Primary Contact on their Account (read only).</help>
+        <label><!-- Primary Contact --></label>
+        <name>%%%NAMESPACE%%%Primary_Contact__c</name>
+    </fields>
+    <fields>
+        <help>The total amount of soft credit attributed to this Contact in the last N days. The value of N is set in NPSP Settings | Donations | Donor Statistics.</help>
+        <label><!-- Soft Credit Last N Days --></label>
+        <name>%%%NAMESPACE%%%Soft_Credit_Last_N_Days__c</name>
+    </fields>
+    <fields>
+        <label><!-- Undeliverable Mailing Address --></label>
+        <name>%%%NAMESPACE%%%Undeliverable_Address__c</name>
+    </fields>
+    <fields>
+        <help>When selected, NPSP will not sync this Contact&apos;s address with the Household Default or Seasonal Address. Use this to maintain a separate Mailing Address for this particular Contact.</help>
+        <label><!-- Address Override --></label>
+        <name>%%%NAMESPACE%%%is_Address_Override__c</name>
+    </fields>
+    <layouts>
+        <layout>Contact Layout</layout>
+        <sections>
+            <label>Contact Details</label>
+            <section>Contact Details</section>
+        </sections>
+        <sections>
+            <label>Donation Information</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Donation Totals</label>
+            <section>Donation Totals</section>
+        </sections>
+        <sections>
+            <label>Household Address</label>
+            <section>Household Address</section>
+        </sections>
+        <sections>
+            <label>Household Donation Info</label>
+            <section>Household Donation Info</section>
+        </sections>
+        <sections>
+            <label>Membership Information</label>
+            <section>Membership Information</section>
+        </sections>
+        <sections>
+            <label><!-- Soft Credit Total --></label>
+            <section>Soft Credit Total</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Contact Lightning Layout</layout>
+        <sections>
+            <label><!-- Contact Details --></label>
+            <section>Contact Details</section>
+        </sections>
+        <sections>
+            <label><!-- Donation Information --></label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label><!-- Donation Totals --></label>
+            <section>Donation Totals</section>
+        </sections>
+        <sections>
+            <label><!-- Household Address --></label>
+            <section>Household Address</section>
+        </sections>
+        <sections>
+            <label><!-- Household Donation Info --></label>
+            <section>Household Donation Info</section>
+        </sections>
+        <sections>
+            <label><!-- Membership Information --></label>
+            <section>Membership Information</section>
+        </sections>
+        <sections>
+            <label><!-- Soft Credit Total --></label>
+            <section>Soft Credit Total</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label><!-- New Opportunity --></label>
+        <name>NewDonation</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- New Opportunity --></label>
+        <name>NewInKind</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- New Opportunity --></label>
+        <name>NewMajorGift</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- New Opportunity --></label>
+        <name>NewMembership</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- New Open Recurring Donation --></label>
+        <name>New_Open_Recurring_Donation</name>
+    </quickActions>
+    <validationRules>
+        <errorMessage><!-- Please select a Preferred Email --></errorMessage>
+        <name>Contact_Preferred_Email</name>
+    </validationRules>
+    <validationRules>
+        <errorMessage><!-- Please select a Preferred Phone --></errorMessage>
+        <name>Contact_Preferred_Phone</name>
+    </validationRules>
+    <webLinks>
+        <label><!-- Relationships_Viewer --></label>
+        <name>npe4__Relationships_Viewer</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Copy_Address_to_Household --></label>
+        <name>npo02__Copy_Address_to_Household</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Household --></label>
+        <name>npo02__Household</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Merge_Contacts --></label>
+        <name>%%%NAMESPACE%%%Merge_Contacts</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- New_Gift --></label>
+        <name>%%%NAMESPACE%%%New_Gift</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Recalculate_Rollups --></label>
+        <name>%%%NAMESPACE%%%Recalculate_Rollups</name>
+    </webLinks>
+</CustomObjectTranslation>

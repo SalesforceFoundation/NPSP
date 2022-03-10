@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<style type="text/css">
+ <!--
+.labelCol {
+	width:18%;
+	border-bottom:1px solid #E3DEB8;
+	vertical-align:top;	
+	color:#333333;
+	font-weight:bold;
+	padding:2px 10px 2px 2px;
+	text-align:right;
+	color:#000000;
+	margin:0;
+	font-family:'Arial','Helvetica',sans-serif;
+	font-size:75%;
+}
+.dataCol {
+	border-right:20px solid #F3F3EC;
+	width:32%;
+	border-bottom:1px solid #E3DEB8;
+	vertical-align:top;
+	padding:2px 2px 2px 10px;
+	text-align:left;
+	color:#000000;
+	color:#333333;
+	margin:0;
+	font-family:'Arial','Helvetica',sans-serif;
+	font-size:75%;
+}
+</style>
+
+<script type="text/javascript" src="/js/functions.js"></script>
+<script src="/soap/ajax/13.0/connection.js"></script>
+<script src="/soap/ajax/12.0/apex.js"></script>
+
+<script>
+function initPage() 
+{
+	var contactId = '{!Contact.Id}';
+	var lastDonationDate = sforce.apex.execute("npe01.IndividualAccounts", "getContactLastDonation", {contactId:contactId});
+	var sum = sforce.apex.execute("npe01.IndividualAccounts", "getContactDonationHistory", {contactId:contactId});
+	document.getElementById("sum").innerHTML = sum;
+	document.getElementById("lastDonationDate").innerHTML = lastDonationDate;
+}
+</script>
+</head>
+
+<body onload="javascript:initPage();" class="contactTab detailPage">
+<iframe title="blank - ignore" name="div_submit" id="div_submit" src="/s.gif" style="display:none;visibility:hidden;width:0px;height:0px" frameborder="0"></iframe>
+
+<table id="bodyTable" class="outer" border="0" cellspacing="0" cellpadding="0" width="100%" >
+	<tbody>
+	<tr>
+		<td id="bodyCell"  class="oRight" style="padding-left: 1px;">
+			<div id="ep" class="bPageBlock secondaryPalette">
+				<div class="pbBody">
+					<div class="pbSubsection">
+						<table class="detailList" cellspacing="0" cellpadding="0" border="0">
+							<tbody>
+								<tr>
+									<td class = "labelCol">
+										Last Transaction Date
+									</td>
+									<td>
+										<div id="lastDonationDate" class="dataCol"></div>
+									</td>
+									<td class = "labelCol">
+										Lifetime Transaction Total
+									</td>
+									<td>
+										<div id="sum" class="dataCol"></div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</td>
+	</tr>
+	</tbody>
+</table>
+</body>
+</html>

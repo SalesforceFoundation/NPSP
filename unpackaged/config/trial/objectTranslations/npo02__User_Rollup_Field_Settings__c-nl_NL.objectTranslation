@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Instelling voor gebruikerstotaliseringsveld --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Instellingen voor gebruikerstotaliseringsveld --></value>
+    </caseValues>
+    <fields>
+        <help>De rollup actie (MIN, MAX, SUM, COUNT) die uitgevoerd moet worden op het bron veld.</help>
+        <label><!-- Field Action --></label>
+        <name>npo02__Field_Action__c</name>
+    </fields>
+    <fields>
+        <help>Het object waar deze gebruiker rollup toegewezen aan is.</help>
+        <label><!-- Object Name --></label>
+        <name>npo02__Object_Name__c</name>
+    </fields>
+    <fields>
+        <help>Het bron veld en actie van het object voor deze gebruiker rollup</help>
+        <label><!-- Source Field --></label>
+        <name>npo02__Source_Field__c</name>
+    </fields>
+    <fields>
+        <help>Het doel veld voor het plaatsen van de rolled-up waarde voor de gebruiker die de rollup definieert.</help>
+        <label><!-- Target Field --></label>
+        <name>npo02__Target_Field__c</name>
+    </fields>
+    <gender><!-- Feminine --></gender>
+</CustomObjectTranslation>

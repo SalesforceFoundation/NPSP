@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Affiliation</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Affiliations</value>
+    </caseValues>
+    <fields>
+        <label><!-- Contact Link --></label>
+        <name>Contact_Link__c</name>
+    </fields>
+    <fields>
+        <label><!-- Contact --></label>
+        <name>npe5__Contact__c</name>
+        <relationshipLabel><!-- Organization Affiliations --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Description --></label>
+        <name>npe5__Description__c</name>
+    </fields>
+    <fields>
+        <label><!-- End Date --></label>
+        <name>npe5__EndDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Organization --></label>
+        <name>npe5__Organization__c</name>
+        <relationshipLabel><!-- Affiliated Contacts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>Si coché, l’organisation de l’affiliation sera stockée sur l’enregistrement du contact.</help>
+        <label><!-- Primary --></label>
+        <name>npe5__Primary__c</name>
+    </fields>
+    <fields>
+        <label><!-- Role --></label>
+        <name>npe5__Role__c</name>
+    </fields>
+    <fields>
+        <label><!-- Start Date --></label>
+        <name>npe5__StartDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>npe5__Status__c</name>
+        <picklistValues>
+            <masterLabel>Current</masterLabel>
+            <translation>Actuel</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Former</masterLabel>
+            <translation>Précédent</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Lorsque vous créez une opportunité pour l’organisation de cette affiliation, NSPS assigne ce rôle de contact d’opportunité au contact affilié.</help>
+        <label><!-- Related Opportunity Contact Role --></label>
+        <name>%%%NAMESPACE%%%Related_Opportunity_Contact_Role__c</name>
+        <picklistValues>
+            <masterLabel>Soft Credit</masterLabel>
+            <translation>Crédit indirect</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Solicitor</masterLabel>
+            <translation>Solliciteur</translation>
+        </picklistValues>
+    </fields>
+    <gender>Feminine</gender>
+    <layouts>
+        <layout>Affiliation Layout</layout>
+        <sections>
+            <label>Information de l&apos;affiliation</label>
+            <section>Affiliation Information</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Nom de l’affiliation</nameFieldLabel>
+    <startsWith>Vowel</startsWith>
+</CustomObjectTranslation>

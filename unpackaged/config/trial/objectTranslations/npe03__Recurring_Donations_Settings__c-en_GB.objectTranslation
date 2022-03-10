@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Recurring Donations Settings --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Recurring Donations Settings --></value>
+    </caseValues>
+    <fields>
+        <help>If selected, all Opportunities for Recurring Donations will use the Campaign on the Recurring Donation. Otherwise, only the first Opportunity will have the Campaign.</help>
+        <label><!-- Add Campaign to All Opportunities --></label>
+        <name>npe03__Add_Campaign_to_All_Opportunites__c</name>
+    </fields>
+    <fields>
+        <help>DEPRECATED. Trigger behavior now controlled in the Trigger Configuration page of NPSP Settings.</help>
+        <label><!-- DEPRECATED-Disable_Donations_trigger --></label>
+        <name>npe03__DISABLE_Donations_trigger__c</name>
+    </fields>
+    <fields>
+        <help>DEPRECATED. Trigger behavior now controlled in the Trigger Configuration page of NPSP Settings.</help>
+        <label><!-- DEPRECATED-Disable_RD_trigger --></label>
+        <name>npe03__DISABLE_RecurringDonations_trigger__c</name>
+    </fields>
+    <fields>
+        <help>DEPRECATED. New versions of the Nonprofit Success Pack will be automatically installed.</help>
+        <label><!-- DEPRECATED-Enable Update Check --></label>
+        <name>npe03__Enable_Update_Check__c</name>
+    </fields>
+    <fields>
+        <help>DEPRECATED.  Replaced by the notification settings in the System Error settings panel.</help>
+        <label><!-- DEPRECATED-Error Email Notifications --></label>
+        <name>npe03__Error_Email_Notifications__c</name>
+    </fields>
+    <fields>
+        <help>The date and time of the last batch update of Recurring Donations.</help>
+        <label><!-- Last Batch Run --></label>
+        <name>npe03__Last_Batch_Run__c</name>
+    </fields>
+    <fields>
+        <help>Restricts the total number of donations created for non-open-ended Recurring Donations. Default is 50.  Larger values may result in DML errors.</help>
+        <label><!-- Maximum Donations --></label>
+        <name>npe03__Maximum_Donations__c</name>
+    </fields>
+    <fields>
+        <help>Number of Recurring Donations unsuccessfully updated in the last batch operation.</help>
+        <label><!-- Number of Failures --></label>
+        <name>npe03__Number_of_Failures__c</name>
+    </fields>
+    <fields>
+        <help>Number of Recurring Donations successfully updated in the last batch run.</help>
+        <label><!-- Number of Successes --></label>
+        <name>npe03__Number_of_Successes__c</name>
+    </fields>
+    <fields>
+        <help>Determines the behavior of any remaining open Opportunities when an open-ended Recurring Donation is moved to a closed status.</help>
+        <label><!-- Open Opportunity Behavior on RD Close --></label>
+        <name>npe03__Open_Opportunity_Behavior__c</name>
+    </fields>
+    <fields>
+        <help>Number of months from today worth of open Opportunities to be created when using open-ended Recurring Donations. WARNING: Reducing this value will result in extra Opportunities being deleted.  Increasing it will launch a batch process to add Opportunities</help>
+        <label><!-- Opportunity Forecast Months --></label>
+        <name>npe03__Opportunity_Forecast_Months__c</name>
+    </fields>
+    <fields>
+        <help>Opportunity Record Type used when Recurring Donation Opportunities are created.</help>
+        <label><!-- Opportunity Record Type --></label>
+        <name>npe03__Record_Type__c</name>
+    </fields>
+    <fields>
+        <help>DEPRECATED. New versions of the Nonprofit Success Pack will be automatically installed.</help>
+        <label><!-- DEPRECATED-Update Check Interval --></label>
+        <name>npe03__Update_Check_Interval__c</name>
+    </fields>
+    <fields>
+        <help>The number of records to process at a time when migrating existing Recurring Donation records to the Enhanced Recurring Donations data model.</help>
+        <label><!-- Enhanced RD Data Migration Batch Size --></label>
+        <name>%%%NAMESPACE%%%DataMigrationBatchSize__c</name>
+    </fields>
+    <fields>
+        <help>When selected, and if Customisable Rollups are enabled, then immediate rollup calculations are disabled when new Installment Opportunities are created for a Recurring Donation.</help>
+        <label><!-- Disable CRLP When Creating Installments --></label>
+        <name>%%%NAMESPACE%%%DisableRollupsWhenCreatingInstallments__c</name>
+    </fields>
+    <fields>
+        <help>If enabled, Salesforce automatically populates the Recurring Donation Name.</help>
+        <label><!-- Automatic Recurring Donation Naming --></label>
+        <name>%%%NAMESPACE%%%EnableAutomaticNaming__c</name>
+    </fields>
+    <fields>
+        <help>When enabled, NPSP creates a Recurring Donation Change Log record each time amount, schedule, or campaign fields of a Recurring Donation are updated.</help>
+        <label><!-- Enable Recurring Donation Change Log --></label>
+        <name>%%%NAMESPACE%%%EnableChangeLog__c</name>
+    </fields>
+    <fields>
+        <help>Specifies when NPSP will create installment Opportunities for Recurring Donations. The default is Always Create Next Installment.</help>
+        <label><!-- Installment Opportunity Auto-Creation --></label>
+        <name>%%%NAMESPACE%%%InstallmentOppAutoCreateOption__c</name>
+    </fields>
+    <fields>
+        <help>Specifies how NPSP will create the first installment Opportunity for Recurring Donations. The default is Synchronous.</help>
+        <label><!-- Installment Opportunity Async Behavior --></label>
+        <name>%%%NAMESPACE%%%InstallmentOppFirstCreateMode__c</name>
+    </fields>
+    <fields>
+        <help>The Opportunity Stage that NPSP applies to each new installment Opportunity when you create a Recurring Donation.</help>
+        <label><!-- Stage Name for Installment Opportunities --></label>
+        <name>%%%NAMESPACE%%%InstallmentOppStageName__c</name>
+    </fields>
+    <fields>
+        <help>This option enables Enhanced Recurring Donations. IMPORTANT: You must enable Enhanced Recurring Donations in NPSP Settings. Enabling in Custom Settings may cause data inconsistencies.</help>
+        <label><!-- Enhanced Recurring Donations --></label>
+        <name>%%%NAMESPACE%%%IsRecurringDonations2Enabled__c</name>
+    </fields>
+    <fields>
+        <help>The number of days before or after the Next Donation Date that NPSP won&apos;t create a new installment Opportunity if the next open Opportunity&apos;s Close Date is changed. Applies only to Recurring Donations where Installment Period is Monthly.</help>
+        <label><!-- Next Donation Date Match Range --></label>
+        <name>%%%NAMESPACE%%%NextDonationDateMatchRangeDays__c</name>
+    </fields>
+    <fields>
+        <help>The format to use for Recurring Donation naming.</help>
+        <label><!-- Recurring Donation Name Format --></label>
+        <name>%%%NAMESPACE%%%RecurringDonationNameFormat__c</name>
+    </fields>
+    <fields>
+        <help>Contains Enhanced Recurring Donation enablement confirmations and state.</help>
+        <label><!-- Recurring Donations Enablement State --></label>
+        <name>%%%NAMESPACE%%%RecurringDonations2EnablementState__c</name>
+    </fields>
+    <fields>
+        <help>Contains latest dry run and data migration results.</help>
+        <label><!-- Enhanced RD Data Migration State --></label>
+        <name>%%%NAMESPACE%%%RecurringDonations2MigrationState__c</name>
+    </fields>
+    <fields>
+        <help>The number of records to process at a time when running the Recurring Donations batch job. The default size is 50. Reduce to a smaller number if the Recurring Donations batch job is failing due to system limits.</help>
+        <label><!-- Recurring Donation Batch Size --></label>
+        <name>%%%NAMESPACE%%%Recurring_Donation_Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help>Status mapping custom metadata deployment Id</help>
+        <label><!-- Status Mapping Deployment Id --></label>
+        <name>%%%NAMESPACE%%%StatusMappingDeploymentId__c</name>
+    </fields>
+    <fields>
+        <help>When checked, this option enables fiscal year for Recurring Donation value totals. To set the fiscal year start month, go to Setup | Company Settings | Fiscal Year. NOTE: Use Standard Fiscal Year only. Do not enable Custom Fiscal Year.</help>
+        <label><!-- Use Fiscal Year for Recurring Donations --></label>
+        <name>%%%NAMESPACE%%%UseFiscalYearForRecurringDonationValue__c</name>
+    </fields>
+    <startsWith><!-- Consonant --></startsWith>
+</CustomObjectTranslation>

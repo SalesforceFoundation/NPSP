@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Toewijzing</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Toewijzingen</value>
+    </caseValues>
+    <fieldSets>
+        <label><!-- Manage Allocations Additional Fields --></label>
+        <name>%%%NAMESPACE%%%ManageAllocationsAdditionalFields</name>
+    </fieldSets>
+    <fields>
+        <help>Bedrag van de opportunity wat toegewezen moet worden aan deze algemene accounting unit. Laat leeg voor procent gebaseerde allocaties.</help>
+        <label><!-- Amount --></label>
+        <name>%%%NAMESPACE%%%Amount__c</name>
+    </fields>
+    <fields>
+        <help>Optioneel toeschrijven van allocaties aan een campagne. Alle nieuwe opportunities met deze campagne als primaire campagne bron zal automatisch toegewezen worden op dezelfde manier.</help>
+        <label><!-- Campaign --></label>
+        <name>%%%NAMESPACE%%%Campaign__c</name>
+        <relationshipLabel><!-- GAU Allocations --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>De standaard accounting unit voor deze allocatie. Alleen standaard accounting units die gemarkeerd zijn als actief zijn beschikbaar voor nieuwe allocaties.</help>
+        <label><!-- General Accounting Unit --></label>
+        <lookupFilter>
+            <errorMessage><!-- Choose an active General Accounting Unit for this Allocation. You cannot modify an Allocation assigned to an inactive General Accounting Unit. --></errorMessage>
+            <informationalMessage><!-- You must select an active General Accounting Unit for this Allocation. --></informationalMessage>
+        </lookupFilter>
+        <name>%%%NAMESPACE%%%General_Accounting_Unit__c</name>
+        <relationshipLabel><!-- GAU Allocations --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>Toeschrijven van allocaties aan een opportunity. Alle opportunities in een gesloten en gewonnen fase zullen worden toegewezen aan deze standaard accounting unit.</help>
+        <label><!-- Opportunity --></label>
+        <name>%%%NAMESPACE%%%Opportunity__c</name>
+        <relationshipLabel><!-- GAU Allocations --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>Schrijft toewijzingen toe aan een Betaling.</help>
+        <label><!-- Payment --></label>
+        <name>%%%NAMESPACE%%%Payment__c</name>
+        <relationshipLabel><!-- Payment Allocations --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>Percentage van opportunity bedrag die toegewezen wordt aan deze standaard accounting unit. Wijzigen van een opportunity bedrag die op percentage is toegewezen zal ook het allocatie bedrag wijzigen.</help>
+        <label><!-- Percent --></label>
+        <name>%%%NAMESPACE%%%Percent__c</name>
+    </fields>
+    <fields>
+        <help>Optioneel toeschrijven van allocaties aan een terugkerende donatie. Alle nieuwe opportunities met deze terugkerende donatie schema zal automatisch toegewezen worden op dezelfde manier.</help>
+        <label><!-- Recurring Donation --></label>
+        <name>%%%NAMESPACE%%%Recurring_Donation__c</name>
+        <relationshipLabel><!-- GAU Allocations --></relationshipLabel>
+    </fields>
+    <gender>Feminine</gender>
+    <nameFieldLabel>Naam GAU-Toewijzing</nameFieldLabel>
+    <webLinks>
+        <label><!-- Manage_Allocations --></label>
+        <name>%%%NAMESPACE%%%Manage_Allocations</name>
+    </webLinks>
+</CustomObjectTranslation>

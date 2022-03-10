@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <help><!-- The type of change (Upgrade, Downgrade, etc.) this Change Log record represents. --></help>
+        <label><!-- Change Type --></label>
+        <name>%%%NAMESPACE%%%ChangeType__c</name>
+        <picklistValues>
+            <masterLabel>Downgrade</masterLabel>
+            <translation><!-- Downgrade --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Upgrade</masterLabel>
+            <translation><!-- Upgrade --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The Effective Date of the Recurring Donation when this change occurred. --></help>
+        <label><!-- Effective Date --></label>
+        <name>%%%NAMESPACE%%%EffectiveDate__c</name>
+    </fields>
+    <fields>
+        <help><!-- The new Amount for the related Recurring Donation. --></help>
+        <label><!-- New Amount --></label>
+        <name>%%%NAMESPACE%%%NewAmount__c</name>
+    </fields>
+    <fields>
+        <help><!-- The new annual value for this Recurring Donation, based on the amount and schedule. --></help>
+        <label><!-- New Annual Value --></label>
+        <name>%%%NAMESPACE%%%NewAnnualValue__c</name>
+    </fields>
+    <fields>
+        <help><!-- The new Campaign for the related Recurring Donation. --></help>
+        <label><!-- New Campaign --></label>
+        <name>%%%NAMESPACE%%%NewCampaign__c</name>
+        <relationshipLabel><!-- Recurring Donation Change Log (New Campaign) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The new expected total value for this Fixed Recurring Donation, based on the amount and schedule. --></help>
+        <label><!-- New Expected Total Value --></label>
+        <name>%%%NAMESPACE%%%NewExpectedTotalValue__c</name>
+    </fields>
+    <fields>
+        <help><!-- The new Installment Frequency for the related Recurring Donation. --></help>
+        <label><!-- New Installment Frequency --></label>
+        <name>%%%NAMESPACE%%%NewInstallmentFrequency__c</name>
+    </fields>
+    <fields>
+        <help><!-- The new Installment Period for the related Recurring Donation. --></help>
+        <label><!-- New Installment Period --></label>
+        <name>%%%NAMESPACE%%%NewInstallmentPeriod__c</name>
+    </fields>
+    <fields>
+        <help><!-- The new Payment Method for the related Recurring Donation. --></help>
+        <label><!-- New Payment Method --></label>
+        <name>%%%NAMESPACE%%%NewPaymentMethod__c</name>
+    </fields>
+    <fields>
+        <help><!-- The new number of installments (donations) you expect to receive. For Fixed-Length Recurring Donations only. --></help>
+        <label><!-- New Number of Planned Installments --></label>
+        <name>%%%NAMESPACE%%%NewPlannedInstallments__c</name>
+    </fields>
+    <fields>
+        <help><!-- The new Recurring Type for the related Recurring Donation. --></help>
+        <label><!-- New Recurring Type --></label>
+        <name>%%%NAMESPACE%%%NewRecurringType__c</name>
+    </fields>
+    <fields>
+        <help><!-- The new Status Reason for the related Recurring Donation. --></help>
+        <label><!-- New Status Reason --></label>
+        <name>%%%NAMESPACE%%%NewStatusReason__c</name>
+    </fields>
+    <fields>
+        <help><!-- The new Status for the related Recurring Donation. --></help>
+        <label><!-- New Status --></label>
+        <name>%%%NAMESPACE%%%NewStatus__c</name>
+    </fields>
+    <fields>
+        <help><!-- The previous Amount for the related Recurring Donation. --></help>
+        <label><!-- Previous Amount --></label>
+        <name>%%%NAMESPACE%%%PreviousAmount__c</name>
+    </fields>
+    <fields>
+        <help><!-- The previous annual value for this Recurring Donation, based on the amount and schedule --></help>
+        <label><!-- Previous Annual Value --></label>
+        <name>%%%NAMESPACE%%%PreviousAnnualValue__c</name>
+    </fields>
+    <fields>
+        <help><!-- The previous Campaign for the related Recurring Donation. --></help>
+        <label><!-- Previous Campaign --></label>
+        <name>%%%NAMESPACE%%%PreviousCampaign__c</name>
+        <relationshipLabel><!-- Recurring Donation Change Log (Previous Campaign) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The previous expected total value for this Fixed Recurring Donation, based on the amount and schedule. --></help>
+        <label><!-- Previous Expected Total Value --></label>
+        <name>%%%NAMESPACE%%%PreviousExpectedTotalValue__c</name>
+    </fields>
+    <fields>
+        <help><!-- The previous Installment Frequency for the related Recurring Donation. --></help>
+        <label><!-- Previous Installment Frequency --></label>
+        <name>%%%NAMESPACE%%%PreviousInstallmentFrequency__c</name>
+    </fields>
+    <fields>
+        <help><!-- The previous Installment Period for the related Recurring Donation. --></help>
+        <label><!-- Previous Installment Period --></label>
+        <name>%%%NAMESPACE%%%PreviousInstallmentPeriod__c</name>
+    </fields>
+    <fields>
+        <help><!-- The previous Payment Method for the related Recurring Donation. --></help>
+        <label><!-- Previous Payment Method --></label>
+        <name>%%%NAMESPACE%%%PreviousPaymentMethod__c</name>
+    </fields>
+    <fields>
+        <help><!-- The previous number of installments (donations) you expect to receive. For Fixed-Length Recurring Donations only. --></help>
+        <label><!-- Previous Number of Planned Installments --></label>
+        <name>%%%NAMESPACE%%%PreviousPlannedInstallments__c</name>
+    </fields>
+    <fields>
+        <help><!-- The previous Recurring Type for the related Recurring Donation. --></help>
+        <label><!-- Previous Recurring Type --></label>
+        <name>%%%NAMESPACE%%%PreviousRecurringType__c</name>
+    </fields>
+    <fields>
+        <help><!-- The previous Status Reason for the related Recurring Donation. --></help>
+        <label><!-- Previous Status Reason --></label>
+        <name>%%%NAMESPACE%%%PreviousStatusReason__c</name>
+    </fields>
+    <fields>
+        <help><!-- The previous Status for the related Recurring Donation. --></help>
+        <label><!-- Previous Status --></label>
+        <name>%%%NAMESPACE%%%PreviousStatus__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Recurring Donation related to this Change Log record. --></help>
+        <label><!-- Recurring Donation --></label>
+        <name>%%%NAMESPACE%%%RecurringDonation__c</name>
+        <relationshipLabel><!-- Recurring Donation Change Log --></relationshipLabel>
+    </fields>
+</CustomObjectTranslation>

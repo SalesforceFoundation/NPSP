@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value><!-- Zugehörigkeitseinstellung --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value><!-- Zugehörigkeitseinstellungen --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value><!-- Zugehörigkeitseinstellung --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value><!-- Zugehörigkeitseinstellungen --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value><!-- Zugehörigkeitseinstellung --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value><!-- Zugehörigkeitseinstellungen --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value><!-- Zugehörigkeitseinstellung --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value><!-- Zugehörigkeitseinstellungen --></value>
+    </caseValues>
+    <fields>
+        <help>Durch Akt. von Standardzuordnungen wird für jede Opport. ein Zuordnungsobjekt erstellt. Dadurch wird die Berichterstellung zu Zuordnungen zu einer standardmäßigen allgemeinen Verrechnungseinheit aktiviert, doch es wird auch mehr Datenspeicherplatz belegt.</help>
+        <label><!-- Default Allocations Enabled --></label>
+        <name>%%%NAMESPACE%%%Default_Allocations_Enabled__c</name>
+    </fields>
+    <fields>
+        <help>Enthält die Kennung der standardmäßigen allgemeinen Verrechnungseinheit für die Erstellung der Standardzuordnungen oder für die Zuordnung nicht zugeordneter Beträge</help>
+        <label><!-- Default General Accounting Unit --></label>
+        <name>%%%NAMESPACE%%%Default__c</name>
+    </fields>
+    <fields>
+        <help>Opportunity-Datensatztypen, die von den Berechnungen des Rollups von Zuordnungen ausgeschlossen werden sollen</help>
+        <label><!-- Excluded Opp RecTypes --></label>
+        <name>%%%NAMESPACE%%%Excluded_Opp_RecTypes__c</name>
+    </fields>
+    <fields>
+        <help>Von Rollups von Zuordnungen ausgeschlossene Opportunity-Typen</help>
+        <label><!-- Excluded Opp Types --></label>
+        <name>%%%NAMESPACE%%%Excluded_Opp_Types__c</name>
+    </fields>
+    <fields>
+        <help>Gibt an, ob Zuordnungen auf Zahlungsebene festgelegt werden können. Lesen Sie die Dokumentation zu Zuordnungen auf Zahlungsebene, bevor Sie diese Einstellung ändern.</help>
+        <label><!-- Payment Allocations Enabled --></label>
+        <name>%%%NAMESPACE%%%Payment_Allocations_Enabled__c</name>
+    </fields>
+    <fields>
+        <help>Dieser Wert beeinflusst die Anzahl der Tage für die Rollup-Felder &quot;N-Tage-Zuordnungen&quot;.</help>
+        <label><!-- Rollup N Day Value --></label>
+        <name>%%%NAMESPACE%%%Rollup_N_Day_Value__c</name>
+    </fields>
+    <fields>
+        <help>Bei Akt. wird f. die Zuordn.-Rollup-Gesamtwerte das Geschäftsjahr statt der Einst. f. das Kalenderjahr verwendet.  Festleg. der Gesch.jahrinf.: Setup -&gt; Unternehmensprofil -&gt; Geschäftsjahr.  HINWEIS: Benutzerdef. Gesch.jahreinst. werden NICHT unterstützt.</help>
+        <label><!-- Use Fiscal Year for Rollups --></label>
+        <name>%%%NAMESPACE%%%Use_Fiscal_Year_for_Rollups__c</name>
+    </fields>
+    <gender><!-- Feminine --></gender>
+</CustomObjectTranslation>

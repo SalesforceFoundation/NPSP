@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- カスタム割賦設定 --></value>
+    </caseValues>
+    <fields>
+        <help>カスタム間隔の対象となる期間の種類。</help>
+        <label><!-- Time Period Type --></label>
+        <name>npe03__Increment__c</name>
+    </fields>
+    <fields>
+        <help>カスタム間隔の対象となる時間。</help>
+        <label><!-- Time Period Frequency --></label>
+        <name>npe03__Value__c</name>
+    </fields>
+</CustomObjectTranslation>

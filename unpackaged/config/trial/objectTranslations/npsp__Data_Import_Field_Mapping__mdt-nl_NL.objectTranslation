@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Veldtoewijzing voor gegevensimport --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Veldtoewijzingen voor gegevensimport --></value>
+    </caseValues>
+    <fields>
+        <help>De veldtoewijzingsset voor gegevensimport bevat deze veldtoewijzing.</help>
+        <label><!-- Data Import Field Mapping Set --></label>
+        <name>%%%NAMESPACE%%%Data_Import_Field_Mapping_Set__c</name>
+        <relationshipLabel><!-- Data Import Field Mappings --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>Geeft, indien ingeschakeld, aan dat deze record is verwijderd uit de gebruikersinterface Geavanceerd toewijzen voor gegevensimport en dat deze wordt genegeerd tijdens de verwerking van NPSP-gegevensimport.</help>
+        <label><!-- Is Deleted --></label>
+        <name>%%%NAMESPACE%%%Is_Deleted__c</name>
+    </fields>
+    <fields>
+        <help>Geeft aan of het veld voor het object NPSP-gegevensimport een waarde moet bevatten. Wanneer dit verplicht is, zal de testuitvoering mislukken als dat veld geen waarde bevat.</help>
+        <label><!-- Required? --></label>
+        <name>%%%NAMESPACE%%%Required__c</name>
+        <picklistValues>
+            <masterLabel>No</masterLabel>
+            <translation>Nee</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Yes</masterLabel>
+            <translation>Ja</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>De API-naam van het veld voor het object NPSP-gegevensimport.</help>
+        <label><!-- Source Field API Name --></label>
+        <name>%%%NAMESPACE%%%Source_Field_API_Name__c</name>
+    </fields>
+    <fields>
+        <help>De API-naam van het veld voor het doelobject.</help>
+        <label><!-- Target Field API Name --></label>
+        <name>%%%NAMESPACE%%%Target_Field_API_Name__c</name>
+    </fields>
+    <fields>
+        <help>De doel Objectgroep voor gegevensimport voor deze veldtoewijzing.</help>
+        <label><!-- Target Object Mapping --></label>
+        <name>%%%NAMESPACE%%%Target_Object_Mapping__c</name>
+        <relationshipLabel><!-- Data Import Field Mappings --></relationshipLabel>
+    </fields>
+    <gender><!-- Feminine --></gender>
+</CustomObjectTranslation>

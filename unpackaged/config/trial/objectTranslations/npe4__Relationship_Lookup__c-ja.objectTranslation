@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- リレーションルックアップ --></value>
+    </caseValues>
+    <fields>
+        <help>この相互参照が有効かどうかを示します。</help>
+        <label><!-- Active --></label>
+        <name>npe4__Active__c</name>
+    </fields>
+    <fields>
+        <help>個人の性別項目が女性カスタム表示ラベルと一致する場合、または個人の敬称が性別を示す場合に使用される値。</help>
+        <label><!-- Female --></label>
+        <name>npe4__Female__c</name>
+    </fields>
+    <fields>
+        <help>個人の性別項目が男性カスタム表示ラベルと一致する場合、または個人の敬称が性別を示す場合に使用される値。</help>
+        <label><!-- Male --></label>
+        <name>npe4__Male__c</name>
+    </fields>
+    <fields>
+        <help>個人の性別項目が男性および女性カスタム表示ラベルと一致しない場合、および個人の敬称が性別を示さない場合に使用される値。</help>
+        <label><!-- Neutral --></label>
+        <name>npe4__Neutral__c</name>
+    </fields>
+</CustomObjectTranslation>

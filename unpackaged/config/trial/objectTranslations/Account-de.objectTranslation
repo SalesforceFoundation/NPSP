@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- BDE Entry FS --></label>
+        <name>%%%NAMESPACE%%%BDE_Entry_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- BDE List FS --></label>
+        <name>%%%NAMESPACE%%%BDE_List_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- Manage Household Custom --></label>
+        <name>%%%NAMESPACE%%%Manage_Household_Custom</name>
+    </fieldSets>
+    <fields>
+        <label><!-- Level --></label>
+        <name>Level__c</name>
+        <relationshipLabel><!-- Households --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Previous Level --></label>
+        <name>Previous_Level__c</name>
+        <relationshipLabel><!-- Households (Previous Level) --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Primary Contact --></label>
+        <name>npe01__One2OneContact__c</name>
+        <relationshipLabel><!-- Account --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- _SYSTEM: IsIndividual --></label>
+        <name>npe01__SYSTEMIsIndividual__c</name>
+    </fields>
+    <fields>
+        <help>Gibt an, welches Modell für das Verhalten der Kontaktbeziehung maßgeblich ist: Einzelperson (Bucket) oder Eins-zu-Eins</help>
+        <label><!-- _SYSTEM: AccountType --></label>
+        <name>npe01__SYSTEM_AccountType__c</name>
+    </fields>
+    <fields>
+        <label><!-- Average Gift --></label>
+        <name>npo02__AverageAmount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Best Gift Year Total --></label>
+        <name>npo02__Best_Gift_Year_Total__c</name>
+    </fields>
+    <fields>
+        <label><!-- Best Gift Year --></label>
+        <name>npo02__Best_Gift_Year__c</name>
+    </fields>
+    <fields>
+        <label><!-- First Gift Date --></label>
+        <name>npo02__FirstCloseDate__c</name>
+    </fields>
+    <fields>
+        <help>Verwendet bei Haushalt-Accounts Felder nicht ausgeschlossener beauftragter zugehöriger Kontakte Automatisch generiert</help>
+        <label><!-- Formal Greeting --></label>
+        <name>npo02__Formal_Greeting__c</name>
+    </fields>
+    <fields>
+        <label><!-- Household Phone --></label>
+        <name>npo02__HouseholdPhone__c</name>
+    </fields>
+    <fields>
+        <help>Verwendet bei Haushalt-Accounts Felder nicht ausgeschlossener beauftragter zugehöriger Kontakte. Automatisch generiert.</help>
+        <label><!-- Informal Greeting --></label>
+        <name>npo02__Informal_Greeting__c</name>
+    </fields>
+    <fields>
+        <label><!-- Largest Gift --></label>
+        <name>npo02__LargestAmount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Last Gift Date --></label>
+        <name>npo02__LastCloseDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Last Membership Amount --></label>
+        <name>npo02__LastMembershipAmount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Last Membership Date --></label>
+        <name>npo02__LastMembershipDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Last Membership Level --></label>
+        <name>npo02__LastMembershipLevel__c</name>
+    </fields>
+    <fields>
+        <label><!-- Last Membership Origin --></label>
+        <name>npo02__LastMembershipOrigin__c</name>
+    </fields>
+    <fields>
+        <label><!-- Last Gift Amount --></label>
+        <name>npo02__LastOppAmount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Membership End Date --></label>
+        <name>npo02__MembershipEndDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Membership Join Date --></label>
+        <name>npo02__MembershipJoinDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Number of Gifts --></label>
+        <name>npo02__NumberOfClosedOpps__c</name>
+    </fields>
+    <fields>
+        <label><!-- Number of Memberships --></label>
+        <name>npo02__NumberOfMembershipOpps__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Gifts Two Years Ago --></label>
+        <name>npo02__OppAmount2YearsAgo__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Gifts Last N Days --></label>
+        <name>npo02__OppAmountLastNDays__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Gifts Last Year --></label>
+        <name>npo02__OppAmountLastYear__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Gifts This Year --></label>
+        <name>npo02__OppAmountThisYear__c</name>
+    </fields>
+    <fields>
+        <label><!-- Number of Gifts Two Years Ago --></label>
+        <name>npo02__OppsClosed2YearsAgo__c</name>
+    </fields>
+    <fields>
+        <label><!-- Number of Gifts Last N Days --></label>
+        <name>npo02__OppsClosedLastNDays__c</name>
+    </fields>
+    <fields>
+        <label><!-- Number of Gifts Last Year --></label>
+        <name>npo02__OppsClosedLastYear__c</name>
+    </fields>
+    <fields>
+        <label><!-- Number of Gifts This Year --></label>
+        <name>npo02__OppsClosedThisYear__c</name>
+    </fields>
+    <fields>
+        <help>Gibt bei Haushalt-Accounts an, in welche namensbezogenen Felder der Haushalt-Code nicht automatisch eingetragen werden soll</help>
+        <label><!-- _SYSTEM: CUSTOM NAMING --></label>
+        <name>npo02__SYSTEM_CUSTOM_NAMING__c</name>
+        <picklistValues>
+            <masterLabel>Formal_Greeting__c</masterLabel>
+            <translation><!-- Formal_Greeting__c --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Informal_Greeting__c</masterLabel>
+            <translation><!-- Informal_Greeting__c --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Name</masterLabel>
+            <translation><!-- Name --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Smallest Gift --></label>
+        <name>npo02__SmallestAmount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Membership Amount --></label>
+        <name>npo02__TotalMembershipOppAmount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total Gifts --></label>
+        <name>npo02__TotalOppAmount__c</name>
+    </fields>
+    <fields>
+        <help>Der Batch, in dem dieser Account erstellt wurde</help>
+        <label><!-- Batch --></label>
+        <name>%%%NAMESPACE%%%Batch__c</name>
+        <relationshipLabel><!-- Accounts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>Bei aktivierter Option verwendet Anpassbare Rollups immer den &apos;verzerrten Modus&apos; für Rolllups von Hard Credits und Soft Credits für diesen Datensatz.</help>
+        <label><!-- Customizable Rollups: Force Skew Mode --></label>
+        <name>%%%NAMESPACE%%%CustomizableRollups_UseSkewMode__c</name>
+    </fields>
+    <fields>
+        <help>Die allgemeinen Programmbereiche, die diese Organisation finanziert</help>
+        <label><!-- Funding Focus --></label>
+        <name>%%%NAMESPACE%%%Funding_Focus__c</name>
+        <picklistValues>
+            <masterLabel>Animal Welfare</masterLabel>
+            <translation>Tierhilfe</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Arts and Culture</masterLabel>
+            <translation>Kunst und Kultur</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Capacity Building</masterLabel>
+            <translation>Kapazitätsaufbau</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Education</masterLabel>
+            <translation>Bildung</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Environmental</masterLabel>
+            <translation>Umwelt</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Health Services</masterLabel>
+            <translation>Gesundheitswesen</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Human Services</masterLabel>
+            <translation>Humandienstleistungen</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Gibt an, dass diese Organisation ein Geldgeber ist Kann u. a. auf Stiftungen, Behörden, Firmen zutreffen</help>
+        <label><!-- Grantmaker --></label>
+        <name>%%%NAMESPACE%%%Grantmaker__c</name>
+    </fields>
+    <fields>
+        <help>Der Name des Verwalters von zugewiesenen Geschenken im Unternehmen</help>
+        <label><!-- Matching Gift Administrator Name --></label>
+        <name>%%%NAMESPACE%%%Matching_Gift_Administrator_Name__c</name>
+    </fields>
+    <fields>
+        <help>Der maximale Betrag, den das Unternehmen jedem einzelnen Geschenk zuweist</help>
+        <label><!-- Matching Gift Amount Max --></label>
+        <name>%%%NAMESPACE%%%Matching_Gift_Amount_Max__c</name>
+    </fields>
+    <fields>
+        <help>Das kleinste Geschenk, das das Unternehmen zuweist</help>
+        <label><!-- Matching Gift Amount Min --></label>
+        <name>%%%NAMESPACE%%%Matching_Gift_Amount_Min__c</name>
+    </fields>
+    <fields>
+        <help>Der maximale Betrag, den das Unternehmen pro Jahr einem Mitarbeiter zuweist</help>
+        <label><!-- Matching Gift Annual Employee Max --></label>
+        <name>%%%NAMESPACE%%%Matching_Gift_Annual_Employee_Max__c</name>
+    </fields>
+    <fields>
+        <help>Weitere Hinweise zum Verwalter von zugewiesenen Geschenken im Unternehmen</help>
+        <label><!-- Matching Gift Comments --></label>
+        <name>%%%NAMESPACE%%%Matching_Gift_Comments__c</name>
+    </fields>
+    <fields>
+        <help>Ist dies ein Unternehmen, das zugewiesene Geschenke anbietet?</help>
+        <label><!-- Matching Gift Company --></label>
+        <name>%%%NAMESPACE%%%Matching_Gift_Company__c</name>
+    </fields>
+    <fields>
+        <help>Die E-Mail-Adresse des Verwalters von zugewiesenen Geschenken im Unternehmen</help>
+        <label><!-- Matching Gift Email --></label>
+        <name>%%%NAMESPACE%%%Matching_Gift_Email__c</name>
+    </fields>
+    <fields>
+        <help>Das Datum, an dem die Informationen über zugewiesene Geschenke zuletzt aktualisiert wurden</help>
+        <label><!-- Matching Gift Info Updated --></label>
+        <name>%%%NAMESPACE%%%Matching_Gift_Info_Updated__c</name>
+    </fields>
+    <fields>
+        <help>Der Anteil eines Geschenks, den das Unternehmen zuweist</help>
+        <label><!-- Matching Gift Percent --></label>
+        <name>%%%NAMESPACE%%%Matching_Gift_Percent__c</name>
+    </fields>
+    <fields>
+        <help>Telefonnummer des Büros des Verwalters von zugewiesenen Geschenken</help>
+        <label><!-- Matching Gift Phone --></label>
+        <name>%%%NAMESPACE%%%Matching_Gift_Phone__c</name>
+    </fields>
+    <fields>
+        <help>Einschränkungen für die Zuweisung alter Geschenke</help>
+        <label><!-- Matching Gift Request Deadline --></label>
+        <name>%%%NAMESPACE%%%Matching_Gift_Request_Deadline__c</name>
+    </fields>
+    <fields>
+        <help>Formel: Die Anzahl der Jahre, für die dieser Haushalt ein Mitglied hatte</help>
+        <label><!-- Membership Span --></label>
+        <name>%%%NAMESPACE%%%Membership_Span__c</name>
+    </fields>
+    <fields>
+        <help>Formel: Aktuell, Abgelaufen oder Kulanzzeitraum  Standardkulanzzeitraum in den Haushalt-Einstellungen</help>
+        <label><!-- Membership Status --></label>
+        <name>%%%NAMESPACE%%%Membership_Status__c</name>
+    </fields>
+    <fields>
+        <help>Die Anzahl der Kontakte im Haushalt für Haushalt-Accounts</help>
+        <label><!-- Number of Household Members --></label>
+        <name>%%%NAMESPACE%%%Number_of_Household_Members__c</name>
+    </fields>
+    <fields>
+        <label><!-- Undeliverable Billing Address --></label>
+        <name>%%%NAMESPACE%%%Undeliverable_Address__c</name>
+    </fields>
+    <layouts>
+        <layout>Household Layout</layout>
+        <sections>
+            <label>Spendeninformationen</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Spendenbeträge gesamt</label>
+            <section>Donation Totals</section>
+        </sections>
+        <sections>
+            <label>Felder</label>
+            <section>Fields</section>
+        </sections>
+        <sections>
+            <label>Mitgliedschaftsinformationen</label>
+            <section>Membership Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Household Lightning Layout</layout>
+        <sections>
+            <label>Spendeninformationen</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Spendenbeträge gesamt</label>
+            <section>Donation Totals</section>
+        </sections>
+        <sections>
+            <label>Felder</label>
+            <section>Fields</section>
+        </sections>
+        <sections>
+            <label>Mitgliedschaftsinformationen</label>
+            <section>Membership Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Organization Layout</layout>
+        <sections>
+            <label>Spendeninformationen</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Spendenbeträge gesamt</label>
+            <section>Donation Totals</section>
+        </sections>
+        <sections>
+            <label>Folder</label>
+            <section>Fields</section>
+        </sections>
+        <sections>
+            <label>Unterstützungsinformationen</label>
+            <section>Grantmaking Information</section>
+        </sections>
+        <sections>
+            <label>Information zum Spenden Ausweis</label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label>Mitgliedschaftsinformationen</label>
+            <section>Membership Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Organization Lightning Layout</layout>
+        <sections>
+            <label>Spendeninformationen</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Spendenbeträge gesamt</label>
+            <section>Donation Totals</section>
+        </sections>
+        <sections>
+            <label>Folder</label>
+            <section>Fields</section>
+        </sections>
+        <sections>
+            <label>Unterstützungsinformationen</label>
+            <section>Grantmaking Information</section>
+        </sections>
+        <sections>
+            <label>Information zum Spenden Ausweis</label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label>Mitgliedschaftsinformationen</label>
+            <section>Membership Information</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label><!-- New Donation --></label>
+        <name>New_Donation</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- New Grant --></label>
+        <name>New_Grant</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- New In-Kind Gift --></label>
+        <name>New_In_Kind_Gift</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- New Major Gift --></label>
+        <name>New_Major_Gift</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- New Matching Gift --></label>
+        <name>New_Matching_Gift</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- New Membership --></label>
+        <name>New_Membership</name>
+    </quickActions>
+    <recordTypes>
+        <description><!-- An Account representing a Household containing one or more individuals --></description>
+        <label><!-- Household Account --></label>
+        <name>HH_Account</name>
+    </recordTypes>
+    <recordTypes>
+        <description><!-- An Account representing an organization --></description>
+        <label><!-- Organization --></label>
+        <name>Organization</name>
+    </recordTypes>
+    <webLinks>
+        <label><!-- Manage_Household --></label>
+        <name>%%%NAMESPACE%%%Manage_Household</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- New_Gift --></label>
+        <name>%%%NAMESPACE%%%New_Gift</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Recalculate_Rollups --></label>
+        <name>%%%NAMESPACE%%%Recalculate_Rollups</name>
+    </webLinks>
+</CustomObjectTranslation>

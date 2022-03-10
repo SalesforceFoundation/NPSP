@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Lote</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Lotes</value>
+    </caseValues>
+    <fieldSets>
+        <label><!-- BatchDetailView --></label>
+        <name>%%%NAMESPACE%%%BatchDetailView</name>
+    </fieldSets>
+    <fields>
+        <label><!-- Batch Status --></label>
+        <name>%%%NAMESPACE%%%Batch_Status__c</name>
+        <picklistValues>
+            <masterLabel>Complete</masterLabel>
+            <translation>Completo</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>In Progress</masterLabel>
+            <translation>En progreso</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Description --></label>
+        <name>%%%NAMESPACE%%%Description__c</name>
+    </fields>
+    <fields>
+        <label><!-- Number of Items --></label>
+        <name>%%%NAMESPACE%%%Number_of_Items__c</name>
+    </fields>
+    <fields>
+        <help>Nombre API del objeto a utilizar en el lote.</help>
+        <label><!-- Object Name --></label>
+        <name>%%%NAMESPACE%%%Object_Name__c</name>
+    </fields>
+    <gender>Masculine</gender>
+    <nameFieldLabel>Nombre de lote</nameFieldLabel>
+</CustomObjectTranslation>

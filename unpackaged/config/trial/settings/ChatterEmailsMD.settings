@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ChatterEmailsMDSettings xmlns="http://soap.sforce.com/2006/04/metadata">
+    <enableChatterDigestEmailsApiOnly>false</enableChatterDigestEmailsApiOnly>
+    <enableCollaborationEmail>true</enableCollaborationEmail>
+    <enableDisplayAppDownloadBadges>true</enableDisplayAppDownloadBadges>
+    <enableEmailReplyToChatter>true</enableEmailReplyToChatter>
+    <enableEmailToChatter>false</enableEmailToChatter>
+</ChatterEmailsMDSettings>

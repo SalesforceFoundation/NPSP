@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value>ERSETZ-Beziehungsfehler</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value>ERSETZ-Beziehungsfehler</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value>ERSETZ-Beziehungsfehler</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value>ERSETZ-Beziehungsfehler</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value>ERSETZ-Beziehungsfehlers</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value>ERSETZ-Beziehungsfehler</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value>ERSETZ-Beziehungsfehler</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value>ERSETZ-Beziehungsfehlern</value>
+    </caseValues>
+    <fields>
+        <help>Datum und Uhrzeit bei Auftreten des Fehlers</help>
+        <label><!-- Error Date/Time --></label>
+        <name>npe4__Error_Date_Time__c</name>
+    </fields>
+    <fields>
+        <help>Link zum Datensatz, der den Fehler verursacht hat, falls verfügbar</help>
+        <label><!-- Error Record Link --></label>
+        <name>npe4__Error_Record_Link__c</name>
+    </fields>
+    <fields>
+        <help>Stapel-Trace für den ausgegebenen Fehler, falls bei Laufzeit verfügbar</help>
+        <label><!-- Error Stack Trace --></label>
+        <name>npe4__Error_Stack_Trace__c</name>
+    </fields>
+    <fields>
+        <help>Typ des aufgetretenen Fehlers</help>
+        <label><!-- Error Type --></label>
+        <name>npe4__Error_Type__c</name>
+    </fields>
+    <fields>
+        <help>Vollständiger Text der Fehlermeldung</help>
+        <label><!-- Full Error Message --></label>
+        <name>npe4__Full_Error_Message__c</name>
+    </fields>
+    <gender>Masculine</gender>
+    <nameFieldLabel>Beziehungsfehlername</nameFieldLabel>
+</CustomObjectTranslation>

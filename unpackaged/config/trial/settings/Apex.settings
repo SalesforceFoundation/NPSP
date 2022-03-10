@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexSettings xmlns="http://soap.sforce.com/2006/04/metadata">
+    <enableAggregateCodeCoverageOnly>false</enableAggregateCodeCoverageOnly>
+    <enableApexAccessRightsPref>true</enableApexAccessRightsPref>
+    <enableApexApprovalLockUnlock>false</enableApexApprovalLockUnlock>
+    <enableApexCtrlImplicitWithSharingPref>false</enableApexCtrlImplicitWithSharingPref>
+    <enableApexPropertyGetterPref>false</enableApexPropertyGetterPref>
+    <enableAuraApexCtrlAuthUserAccessCheckPref>true</enableAuraApexCtrlAuthUserAccessCheckPref>
+    <enableAuraApexCtrlGuestUserAccessCheckPref>false</enableAuraApexCtrlGuestUserAccessCheckPref>
+    <enableCompileOnDeploy>false</enableCompileOnDeploy>
+    <enableDisableParallelApexTesting>false</enableDisableParallelApexTesting>
+    <enableDoNotEmailDebugLog>false</enableDoNotEmailDebugLog>
+    <enableGaplessTestAutoNum>true</enableGaplessTestAutoNum>
+    <enableMngdCtrlActionAccessPref>true</enableMngdCtrlActionAccessPref>
+    <enableNonCertifiedApexMdCrud>false</enableNonCertifiedApexMdCrud>
+    <enableSecureNoArgConstructorPref>true</enableSecureNoArgConstructorPref>
+</ApexSettings>

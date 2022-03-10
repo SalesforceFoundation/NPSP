@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <comment>Action override created by Lightning App Builder during activation.</comment>
+        <content>NPSP_General_Accounting_Unit</content>
+        <formFactor>Large</formFactor>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Flexipage</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>NPSP_General_Accounting_Unit</compactLayoutAssignment>
+    <compactLayouts>
+        <fullName>NPSP_General_Accounting_Unit</fullName>
+        <fields>Name</fields>
+        <fields>%%%NAMESPACE%%%Active__c</fields>
+        <fields>%%%NAMESPACE%%%Total_Allocations__c</fields>
+        <fields>%%%NAMESPACE%%%Total_Number_of_Allocations__c</fields>
+        <label>NPSP General Accounting Unit</label>
+    </compactLayouts>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <description>Accounting units used for allocating Opportunities.</description>
+    <enableActivities>true</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableLicensing>false</enableLicensing>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>Private</externalSharingModel>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Active__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Determines whether this General Accounting Unit is available for selection on Allocations. Only active General Accounting Units are available for selection.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Determines whether this General Accounting Unit is available for selection on Allocations. Only active General Accounting Units are available for selection.</inlineHelpText>
+        <label>Active</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Average_Allocation__c</fullName>
+        <defaultValue>0</defaultValue>
+        <deprecated>false</deprecated>
+        <description>The average amount of all Allocations to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The average amount of all Allocations to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
+        <label>Average Allocation</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Description__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Additional information about this General Accounting Unit.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Additional information about this General Accounting Unit.</inlineHelpText>
+        <label>Description</label>
+        <length>32768</length>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%First_Allocation_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The Close Date of the first Opportunity allocated to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The Close Date of the first Opportunity allocated to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
+        <label>First Allocation Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Largest_Allocation__c</fullName>
+        <defaultValue>0</defaultValue>
+        <deprecated>false</deprecated>
+        <description>The amount of the largest Allocation to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The amount of the largest Allocation to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
+        <label>Largest Allocation</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Last_Allocation_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The last Opportunity Close Date of an allocation associated with this general accounting unit.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The last Opportunity Close Date of an allocation associated with this general accounting unit.</inlineHelpText>
+        <label>Last Allocation Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Number_of_Allocations_Last_N_Days__c</fullName>
+        <defaultValue>0</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Total number of allocations of opportunities in a closed and won stage in the last N days. The value of N can be modified in settings.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Total number of allocations of opportunities in a closed and won stage in the last N days. The value of N can be modified in settings.</inlineHelpText>
+        <label>Number of Allocations Last N Days</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Number_of_Allocations_Last_Year__c</fullName>
+        <defaultValue>0</defaultValue>
+        <deprecated>false</deprecated>
+        <description>The total number of Allocations last year from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The total number of Allocations last year from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
+        <label>Number of Allocations Last Year</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Number_of_Allocations_This_Year__c</fullName>
+        <defaultValue>0</defaultValue>
+        <deprecated>false</deprecated>
+        <description>The total number of Allocations this year from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The total number of Allocations this year from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
+        <label>Number of Allocations This Year</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Number_of_Allocations_Two_Years_Ago__c</fullName>
+        <defaultValue>0</defaultValue>
+        <deprecated>false</deprecated>
+        <description>The total number of Allocations two years ago from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The total number of Allocations two years ago from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
+        <label>Number of Allocations Two Years Ago</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Smallest_Allocation__c</fullName>
+        <defaultValue>0</defaultValue>
+        <deprecated>false</deprecated>
+        <description>The amount of the smallest Allocation to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The amount of the smallest Allocation to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
+        <label>Smallest Allocation</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Total_Allocations_Last_N_Days__c</fullName>
+        <defaultValue>0</defaultValue>
+        <deprecated>false</deprecated>
+        <description>The number of Allocations from Closed/Won Opportunities in the last N days. (The value of N is set in NPSP Settings, under Donations, GAU Allocations.) NPSP updates this field in a nightly Scheduled Job.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The number of Allocations from Closed/Won Opportunities in the last N days. (The value of N is set in NPSP Settings, under Donations, GAU Allocations.) NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
+        <label>Total Allocations Last N Days</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Total_Allocations_Last_Year__c</fullName>
+        <defaultValue>0</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Sum total of all allocations of opportunities in a closed and won stage last year.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Sum total of all allocations of opportunities in a closed and won stage last year.</inlineHelpText>
+        <label>Total Allocations Last Year</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Total_Allocations_This_Year__c</fullName>
+        <defaultValue>0</defaultValue>
+        <deprecated>false</deprecated>
+        <description>The total amount from Allocations from Closed/Won Opportunities this year. NPSP updates this field in a nightly Scheduled Job.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The total amount from Allocations from Closed/Won Opportunities this year. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
+        <label>Total Allocations This Year</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Total_Allocations_Two_Years_Ago__c</fullName>
+        <defaultValue>0</defaultValue>
+        <deprecated>false</deprecated>
+        <description>The total amount from Allocations from Closed/Won Opportunities two years ago. NPSP updates this field in a nightly Scheduled Job.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The total amount from Allocations from Closed/Won Opportunities two years ago. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
+        <label>Total Allocations Two Years Ago</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Total_Allocations__c</fullName>
+        <defaultValue>0</defaultValue>
+        <deprecated>false</deprecated>
+        <description>The total amount from all Allocations from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The total amount from all Allocations from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
+        <label>Total Allocations</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Total_Number_of_Allocations__c</fullName>
+        <defaultValue>0</defaultValue>
+        <deprecated>false</deprecated>
+        <description>The total number of Allocations from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The total number of Allocations from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
+        <label>Total Number of Allocations</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <label>General Accounting Unit</label>
+    <listViews>
+        <fullName>%%%NAMESPACE%%%All</fullName>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <nameField>
+        <label>General Accounting Unit Name</label>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>General Accounting Units</pluralLabel>
+    <searchLayouts>
+        <customTabListAdditionalFields>%%%NAMESPACE%%%Active__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>%%%NAMESPACE%%%Description__c</customTabListAdditionalFields>
+        <lookupDialogsAdditionalFields>%%%NAMESPACE%%%Active__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>%%%NAMESPACE%%%Description__c</lookupDialogsAdditionalFields>
+        <searchResultsAdditionalFields>%%%NAMESPACE%%%Active__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>%%%NAMESPACE%%%Description__c</searchResultsAdditionalFields>
+    </searchLayouts>
+    <sharingModel>ReadWrite</sharingModel>
+    <visibility>Public</visibility>
+    <webLinks>
+        <fullName>%%%NAMESPACE%%%Recalculate_Rollups</fullName>
+        <availability>online</availability>
+        <description>This button recalculates Allocations rollups for a single General Accounting Unit</description>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Recalculate Rollups</masterLabel>
+        <openType>sidebar</openType>
+        <page>%%%NAMESPACE%%%ALLO_RollupBTN</page>
+        <protected>false</protected>
+    </webLinks>
+</CustomObject>

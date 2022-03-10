@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>廃止-リレーションエラー</value>
+    </caseValues>
+    <fields>
+        <help>エラーが発生した日時</help>
+        <label><!-- Error Date/Time --></label>
+        <name>npe4__Error_Date_Time__c</name>
+    </fields>
+    <fields>
+        <help>エラーが発生したレコードへのリンク (使用可能な場合)。</help>
+        <label><!-- Error Record Link --></label>
+        <name>npe4__Error_Record_Link__c</name>
+    </fields>
+    <fields>
+        <help>発生したエラーのスタック追跡 (実行時に使用可能な場合)。</help>
+        <label><!-- Error Stack Trace --></label>
+        <name>npe4__Error_Stack_Trace__c</name>
+    </fields>
+    <fields>
+        <help>発生したエラーの種類</help>
+        <label><!-- Error Type --></label>
+        <name>npe4__Error_Type__c</name>
+    </fields>
+    <fields>
+        <help>エラーメッセージの完全なテキスト</help>
+        <label><!-- Full Error Message --></label>
+        <name>npe4__Full_Error_Message__c</name>
+    </fields>
+    <nameFieldLabel>リレーションエラー名</nameFieldLabel>
+</CustomObjectTranslation>

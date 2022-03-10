@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Encabezado de columna personalizado --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Encabezados de columnas personalizados --></value>
+    </caseValues>
+    <fields>
+        <help>Nombre de API del campo mostrado en la vista de lista.</help>
+        <label><!-- Field API Name --></label>
+        <name>%%%NAMESPACE%%%Field_Api_Name__c</name>
+    </fields>
+    <fields>
+        <help>La posición del campo en la vista de lista.</help>
+        <label><!-- Index --></label>
+        <name>%%%NAMESPACE%%%Index__c</name>
+    </fields>
+    <fields>
+        <help>La vista de lista (por ej. Lotes o Plantillas) que muestra este campo.</help>
+        <label><!-- List Name --></label>
+        <name>%%%NAMESPACE%%%List_Name__c</name>
+    </fields>
+    <gender><!-- Masculine --></gender>
+</CustomObjectTranslation>

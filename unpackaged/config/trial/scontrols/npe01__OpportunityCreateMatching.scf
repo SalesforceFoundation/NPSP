@@ -1,0 +1,31 @@
+<script type="text/javascript" src="/js/functions.js"></script>
+<script src="/soap/ajax/19.0/connection.js"></script>
+<script>
+var rt = sforce.connection.query("Select Id From RecordType Where SobjectType = 'Opportunity' and Name = 'Matching Donation' Limit 1");
+var oppId = "{!JSENCODE(Opportunity.Id)}";
+var url = '';
+if (rt.size > 0)
+{
+	var rts = rt.getArray("records");
+	url += '&RecordType=' + rts[0].Id;
+}
+var ocrQuery = sforce.connection.query("Select Id, ContactId from OpportunityContactRole where IsPrimary = true and OpportunityId = '" + oppId + "'");
+if (ocrQuery.size > 0)
+{
+	var ocr = ocrQuery.getArray("records");
+	url += '&conid=' + ocr[0].ContactId;
+}
+
+var oppName = "{!JSENCODE(Opportunity.Name)}";
+var accountName = "{!JSENCODE(Account.Name)}";
+var oppAmount = "{!Opportunity.Amount}";
+var oppCloseDate = "{!Opportunity.CloseDate}";
+
+url += '&opp3=' + oppName + ' Matching Donation';
+url += '&opp4=' + accountName;
+url += '&opp7=' + oppAmount;
+url += '&opp9=' + oppCloseDate;
+
+this.parent.location.href = "/006/e?retURL=%2F" + oppId + "&cancelURL=%2F" + oppId + url;
+
+</script>

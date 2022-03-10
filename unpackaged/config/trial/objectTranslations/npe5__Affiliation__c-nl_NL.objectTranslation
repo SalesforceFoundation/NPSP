@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Connectie</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Connecties</value>
+    </caseValues>
+    <fields>
+        <label><!-- Contact Link --></label>
+        <name>Contact_Link__c</name>
+    </fields>
+    <fields>
+        <label><!-- Contact --></label>
+        <name>npe5__Contact__c</name>
+        <relationshipLabel><!-- Organization Affiliations --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Description --></label>
+        <name>npe5__Description__c</name>
+    </fields>
+    <fields>
+        <label><!-- End Date --></label>
+        <name>npe5__EndDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Organization --></label>
+        <name>npe5__Organization__c</name>
+        <relationshipLabel><!-- Affiliated Contacts --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>Indien aangevinkt, zal de verwante organisatie opgeslagen worden op het Contactpersoon record.</help>
+        <label><!-- Primary --></label>
+        <name>npe5__Primary__c</name>
+    </fields>
+    <fields>
+        <label><!-- Role --></label>
+        <name>npe5__Role__c</name>
+    </fields>
+    <fields>
+        <label><!-- Start Date --></label>
+        <name>npe5__StartDate__c</name>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>npe5__Status__c</name>
+        <picklistValues>
+            <masterLabel>Current</masterLabel>
+            <translation>Huidig</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Former</masterLabel>
+            <translation>Voormalig</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Wanneer u een Opportunity voor de Organisatie maakt in deze Gelieerde Organisatie, wijst NPSP deze Opportunitycontactpersoonrol toe aan de gelieerde Contactpersoon.</help>
+        <label><!-- Related Opportunity Contact Role --></label>
+        <name>%%%NAMESPACE%%%Related_Opportunity_Contact_Role__c</name>
+        <picklistValues>
+            <masterLabel>Soft Credit</masterLabel>
+            <translation>Soft Credit</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Solicitor</masterLabel>
+            <translation>Aanvrager</translation>
+        </picklistValues>
+    </fields>
+    <gender>Feminine</gender>
+    <layouts>
+        <layout>Affiliation Layout</layout>
+        <sections>
+            <label>Connectie Informatie</label>
+            <section>Affiliation Information</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Naam van connectie</nameFieldLabel>
+</CustomObjectTranslation>

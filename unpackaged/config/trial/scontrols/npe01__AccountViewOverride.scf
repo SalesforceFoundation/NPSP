@@ -1,0 +1,11 @@
+<script type="text/javascript" src="/js/functions.js"></script>
+<script src="/soap/ajax/13.0/connection.js"></script>
+<script>
+var contactId = "{!Account.npe01__One2OneContactId__c}";
+if ( contactId != '') {
+	this.parent.location.href = "{!URLFOR($Action.Contact.View, Account.npe01__One2OneContactId__c, null, true)}";
+} else {
+	this.parent.location.href = "{!URLFOR($Action.Account.View, Account.Id, null, true)}";
+}
+
+</script>

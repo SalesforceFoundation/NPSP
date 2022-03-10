@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value>Formularvorlage</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value>Formularvorlagen</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value>Formularvorlage</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value>Formularvorlagen</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value>Formularvorlage</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value>Formularvorlagen</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value>Formularvorlage</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value>Formularvorlagen</value>
+    </caseValues>
+    <fields>
+        <help>Die Kurzbeschreibung, die Benutzer für eine Vorlage eingeben können.</help>
+        <label><!-- Description --></label>
+        <name>%%%NAMESPACE%%%Description__c</name>
+    </fields>
+    <fields>
+        <help>Die Version der Schenkungseingabe, die zum Erstellen dieser Vorlage verwendet wurde.</help>
+        <label><!-- Format Version --></label>
+        <name>%%%NAMESPACE%%%Format_Version__c</name>
+    </fields>
+    <fields>
+        <help>Die Abschnitte und Felder in dieser Vorlage zusammen mit ihrer Reihenfolge, Anforderungen und Standardwerten. Als JSON gespeichert. Nicht direkt bearbeiten.</help>
+        <label><!-- Template JSON --></label>
+        <name>%%%NAMESPACE%%%Template_JSON__c</name>
+    </fields>
+    <gender>Feminine</gender>
+    <nameFieldLabel>Name der Formularvorlage</nameFieldLabel>
+</CustomObjectTranslation>

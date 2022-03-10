@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value><!-- Datenimporteinstellung --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value><!-- Datenimporteinstellungen --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value><!-- Datenimporteinstellung --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value><!-- Datenimporteinstellungen --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value><!-- Datenimporteinstellung --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value><!-- Datenimporteinstellungen --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value><!-- Datenimporteinstellung --></value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value><!-- Datenimporteinstellungen --></value>
+    </caseValues>
+    <fields>
+        <help>Ein optionales Feld mit einer eindeutigen Kennung zum Account-Abgleich</help>
+        <label><!-- Account Custom Unique ID --></label>
+        <name>%%%NAMESPACE%%%Account_Custom_Unique_ID__c</name>
+    </fields>
+    <fields>
+        <help>Gibt an, welche Regeln bei dem Versuch des Abgleichs von Accounts in Datenimportdatensätzen mit vorhandenen Accounts befolgt werden sollen</help>
+        <label><!-- Account Matching Rule --></label>
+        <name>%%%NAMESPACE%%%Account_Matching_Rule__c</name>
+    </fields>
+    <fields>
+        <help>Die Anzahl der NPSP-Datenimportdatensätze, die bei jedem Batch verarbeitet werden sollen</help>
+        <label><!-- Batch Process Size --></label>
+        <name>%%%NAMESPACE%%%Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help>JSON für das CMT-Bereitstellungsergebnis
+{ &quot;jobId&quot;: &quot;response&quot; }</help>
+        <label><!-- CMT API Deployment Result --></label>
+        <name>%%%NAMESPACE%%%CMT_API_Status__c</name>
+    </fields>
+    <fields>
+        <help>ID der Bereitstellung benutzerdefinierter Metadaten</help>
+        <label><!-- CMT Deployment ID --></label>
+        <name>%%%NAMESPACE%%%CMT_Deployment_ID__c</name>
+    </fields>
+    <fields>
+        <help>Ein optionales Feld mit einer eindeutigen Kennung zum Kontakt-Abgleich</help>
+        <label><!-- Contact Custom Unique ID --></label>
+        <name>%%%NAMESPACE%%%Contact_Custom_Unique_ID__c</name>
+    </fields>
+    <fields>
+        <help>Gibt an, welche Regeln bei dem Versuch des Abgleichs von Kontakten in Datenimportdatensätzen mit vorhandenen Kontakten befolgt werden sollen</help>
+        <label><!-- Contact Matching Rule --></label>
+        <name>%%%NAMESPACE%%%Contact_Matching_Rule__c</name>
+    </fields>
+    <fields>
+        <help>Der Name der API für benutzerdefinierte Felddaten des Datenimport-Feldzuordnungssatzes, die standardmäßig verwendet werden soll.</help>
+        <label><!-- Default Data Import Field Mapping Set --></label>
+        <name>%%%NAMESPACE%%%Default_Data_Import_Field_Mapping_Set__c</name>
+    </fields>
+    <fields>
+        <help>Eing. d. Anz. an Tagen ab dem Spendendatum, die auf der Suche nach einer übereinst. Opp. O. Zahlung zu berücks. sind. Das Datenimp‘progr. wählt die übereinst. Opp. o. Zahl. aus, deren Datum in die Anz. an Tagen fällt UND am nächsten am Spendendatum liegt.</help>
+        <label><!-- Number of Days from Donation Date --></label>
+        <name>%%%NAMESPACE%%%Donation_Date_Range__c</name>
+    </fields>
+    <fields>
+        <help>Definiert, wie das Datenimportprogramm, die übereinstimmenden Spende handhaben soll. Sie müssen einen Wert auswählen.</help>
+        <label><!-- Donation Matching Behavior --></label>
+        <name>%%%NAMESPACE%%%Donation_Matching_Behavior__c</name>
+    </fields>
+    <fields>
+        <help>Der Entwicklername einer Apex-Klasse, der die BDI_IMatching-Oberfläche für Spenden implementiert. Keine Eingaben machen und NPSP den Abgleich vornehmen lassen.</help>
+        <label><!-- Donation Matching Implementing Class --></label>
+        <name>%%%NAMESPACE%%%Donation_Matching_Implementing_Class__c</name>
+    </fields>
+    <fields>
+        <help>Gibt an, nach welchem Feld abgegl. werden soll, wenn vers. wird, Spenden in Datenimportdatensätzen gg vorhand. Opp. u. Zahl‘en abzugleichen. Klicken Sie zum Auswählen von mehr als nur einem Feld zusätzl. auf die Strg- oder die CMD-Taste.</help>
+        <label><!-- Donation Matching Rule --></label>
+        <name>%%%NAMESPACE%%%Donation_Matching_Rule__c</name>
+    </fields>
+    <fields>
+        <help>Definiert die Weise, in der Felder des NPSP-Datenimport-Datensatzes anderen Objekten in Salesforce zugeordnet werden. Die Optionen sind &quot;Hilfetext&quot; oder &quot;Datenimport-Feldzuordnung&quot;.</help>
+        <label><!-- Field Mapping Method --></label>
+        <name>%%%NAMESPACE%%%Field_Mapping_Method__c</name>
+    </fields>
+    <fields>
+        <help>Der Entwicklername einer Apex-Klasse, der die BDI_IPostProcess-Oberfläche für NPSP-Datenimport-Datensätze implementiert.</help>
+        <label><!-- Post Process Implementing Class --></label>
+        <name>%%%NAMESPACE%%%Post_Process_Implementing_Class__c</name>
+    </fields>
+    <fields>
+        <help>Bei Akt. berechn. NPSP die Spender-Stat‘en, wenn Spenden verarb. werden. Wenn nicht, werden die Spender-Stat‘en während des nächtl. gepl. Stand‘auftrags berechnet. Die Verarbeitung dieses Batches kann durch Ausw. dieses Kontrollk. Langsamer werden.</help>
+        <label><!-- Calculate Donation Rollups with Batch --></label>
+        <name>%%%NAMESPACE%%%Run_Opportunity_Rollups_while_Processing__c</name>
+    </fields>
+    <gender><!-- Feminine --></gender>
+</CustomObjectTranslation>

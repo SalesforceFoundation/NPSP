@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- カスタム項目の対応付け --></value>
+    </caseValues>
+    <fields>
+        <help>継続支援項目から値を取得する支援項目。これらの項目は同じデータ型にする必要があります。</help>
+        <label><!-- Opportunity Field --></label>
+        <name>npe03__Opportunity_Field__c</name>
+    </fields>
+    <fields>
+        <help>支援項目にコピーする継続支援項目。これらの項目は同じデータ型にする必要があります。</help>
+        <label><!-- Recurring Donation Field --></label>
+        <name>npe03__Recurring_Donation_Field__c</name>
+    </fields>
+</CustomObjectTranslation>

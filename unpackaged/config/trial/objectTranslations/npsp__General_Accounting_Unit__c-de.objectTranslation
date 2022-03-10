@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value>Allgemeine Verrechnungseinheit</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value>Allgemeinen Verrechnungseinheiten</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value>Allgemeine Verrechnungseinheit</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value>Allgemeinen Verrechnungseinheiten</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value>Allgemeinen Verrechnungseinheit</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value>Allgemeinen Verrechnungseinheiten</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value>Allgemeinen Verrechnungseinheit</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value>Allgemeinen Verrechnungseinheiten</value>
+    </caseValues>
+    <fields>
+        <help>Aktive allgemeine Verrechnungseinheiten sind für die Auswahl für Zuordnungen verfügbar. Inaktive allgemeine Verrechnungseinheiten können keine neuen Zuordnungen haben.</help>
+        <label><!-- Active --></label>
+        <name>%%%NAMESPACE%%%Active__c</name>
+    </fields>
+    <fields>
+        <help>Der Durchschnitt aller Zuordnungen insgesamt zu dieser allgemeinen Verrechnungseinheit</help>
+        <label><!-- Average Allocation --></label>
+        <name>%%%NAMESPACE%%%Average_Allocation__c</name>
+    </fields>
+    <fields>
+        <help>Zusätzliche Informationen zu dieser allgemeinen Verrechnungseinheit</help>
+        <label><!-- Description --></label>
+        <name>%%%NAMESPACE%%%Description__c</name>
+    </fields>
+    <fields>
+        <help>Der erste Opportunity-Schlusstermin einer Zuordnung, der mit dieser allgemeinen Verrechnungseinheit verknüpft ist</help>
+        <label><!-- First Allocation Date --></label>
+        <name>%%%NAMESPACE%%%First_Allocation_Date__c</name>
+    </fields>
+    <fields>
+        <help>Die größte Zuordnung insgesamt zu dieser allgemeinen Verrechnungseinheit</help>
+        <label><!-- Largest Allocation --></label>
+        <name>%%%NAMESPACE%%%Largest_Allocation__c</name>
+    </fields>
+    <fields>
+        <help>Der letzte Opportunity-Schlusstermin einer Zuordnung, der mit dieser allgemeinen Verrechnungseinheit verknüpft ist</help>
+        <label><!-- Last Allocation Date --></label>
+        <name>%%%NAMESPACE%%%Last_Allocation_Date__c</name>
+    </fields>
+    <fields>
+        <help>Gesamtanzahl der Zuordnungen von Opportunities in einer geschlossenen und gewonnenen Phase in den letzten N Tagen Der Wert von N kann in den Einstellungen geändert werden.</help>
+        <label><!-- Number of Allocations Last N Days --></label>
+        <name>%%%NAMESPACE%%%Number_of_Allocations_Last_N_Days__c</name>
+    </fields>
+    <fields>
+        <help>Gesamtanzahl der Zuordnungen von Opportunities in einer geschlossenen und gewonnenen Phase im letzten Jahr</help>
+        <label><!-- Number of Allocations Last Year --></label>
+        <name>%%%NAMESPACE%%%Number_of_Allocations_Last_Year__c</name>
+    </fields>
+    <fields>
+        <help>Gesamtanzahl der Zuordnungen von Opportunities in einer geschlossenen und gewonnenen Phase in diesem Jahr</help>
+        <label><!-- Number of Allocations This Year --></label>
+        <name>%%%NAMESPACE%%%Number_of_Allocations_This_Year__c</name>
+    </fields>
+    <fields>
+        <help>Gesamtanzahl der Zuordnungen von Opportunities in einer geschlossenen und gewonnenen Phase vor zwei Jahren</help>
+        <label><!-- Number of Allocations Two Years Ago --></label>
+        <name>%%%NAMESPACE%%%Number_of_Allocations_Two_Years_Ago__c</name>
+    </fields>
+    <fields>
+        <help>Die kleinste Zuordnung insgesamt zu dieser allgemeinen Verrechnungseinheit</help>
+        <label><!-- Smallest Allocation --></label>
+        <name>%%%NAMESPACE%%%Smallest_Allocation__c</name>
+    </fields>
+    <fields>
+        <help>Gesamtsumme aller Zuordnungen von Opportunities in einer geschlossenen und gewonnenen Phase in den letzten N Tagen Der Wert von N kann in den Einstellungen geändert werden.</help>
+        <label><!-- Total Allocations Last N Days --></label>
+        <name>%%%NAMESPACE%%%Total_Allocations_Last_N_Days__c</name>
+    </fields>
+    <fields>
+        <help>Gesamtsumme aller Zuordnungen von Opportunities in einer geschlossenen und gewonnenen Phase im letzten Jahr</help>
+        <label><!-- Total Allocations Last Year --></label>
+        <name>%%%NAMESPACE%%%Total_Allocations_Last_Year__c</name>
+    </fields>
+    <fields>
+        <help>Gesamtsumme aller Zuordnungen von Opportunities in einer geschlossenen und gewonnenen Phase in diesem Jahr</help>
+        <label><!-- Total Allocations This Year --></label>
+        <name>%%%NAMESPACE%%%Total_Allocations_This_Year__c</name>
+    </fields>
+    <fields>
+        <help>Gesamtsumme aller Zuordnungen von Opportunities in einer geschlossenen und gewonnenen Phase vor zwei Jahren</help>
+        <label><!-- Total Allocations Two Years Ago --></label>
+        <name>%%%NAMESPACE%%%Total_Allocations_Two_Years_Ago__c</name>
+    </fields>
+    <fields>
+        <help>Gesamtsumme aller Zuordnungen von Opportunities in einer geschlossenen und gewonnenen Phase</help>
+        <label><!-- Total Allocations --></label>
+        <name>%%%NAMESPACE%%%Total_Allocations__c</name>
+    </fields>
+    <fields>
+        <help>Gesamtanzahl der Zuordnungen von Opportunities in einer geschlossenen und gewonnenen Phase</help>
+        <label><!-- Total Number of Allocations --></label>
+        <name>%%%NAMESPACE%%%Total_Number_of_Allocations__c</name>
+    </fields>
+    <gender>Feminine</gender>
+    <layouts>
+        <layout>General Accounting Unit Layout</layout>
+        <sections>
+            <label>Zuordnungsinformationen</label>
+            <section>Allocation Information</section>
+        </sections>
+        <sections>
+            <label>Zuordnungen gesamt</label>
+            <section>Allocation Totals</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Name des Verwendungszwecks</nameFieldLabel>
+    <webLinks>
+        <label><!-- Recalculate_Rollups --></label>
+        <name>%%%NAMESPACE%%%Recalculate_Rollups</name>
+    </webLinks>
+</CustomObjectTranslation>

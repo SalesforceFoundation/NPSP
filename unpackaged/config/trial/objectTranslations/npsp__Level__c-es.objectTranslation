@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Nivel</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Niveles</value>
+    </caseValues>
+    <fieldSets>
+        <label><!-- LevelEdit --></label>
+        <name>%%%NAMESPACE%%%LevelEdit</name>
+    </fieldSets>
+    <fields>
+        <help>Si este nivel esta en uso actualmente.</help>
+        <label><!-- Active --></label>
+        <name>%%%NAMESPACE%%%Active__c</name>
+    </fields>
+    <fields>
+        <help>Describe para que es este nivel, o que significa alcanzar este nivel.</help>
+        <label><!-- Description --></label>
+        <name>%%%NAMESPACE%%%Description__c</name>
+    </fields>
+    <fields>
+        <help>La plantilla del plan de acción a aplicar al objeto destino cuando este nivel es alcanzado.</help>
+        <label><!-- Engagement Plan Template --></label>
+        <name>%%%NAMESPACE%%%Engagement_Plan_Template__c</name>
+        <relationshipLabel><!-- Levels --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>El campo (nombre de la Api) en el objecto destino donde se guarda la búsqueda al nivel actual. Tenga en cuenta que este campo implícitamente define la &quot;escalera&quot; de la que este nivel es parte.</help>
+        <label><!-- Level Field --></label>
+        <name>%%%NAMESPACE%%%Level_Field__c</name>
+    </fields>
+    <fields>
+        <help>El valor debe ser menor a esta cantidad máxima para ser asignado este nivel. Si esta vacío, cualquier valor igual o mayor a la cantidad mínima será asignado a este nivel.</help>
+        <label><!-- Maximum Amount (&lt;) --></label>
+        <name>%%%NAMESPACE%%%Maximum_Amount__c</name>
+    </fields>
+    <fields>
+        <help>La cantidad menor para ser asignado a este nivel. Si esta vacío, cualquier cantidad menor a la cantidad máxima de este nivel será asignado a este nivel.</help>
+        <label><!-- Minimum Amount (&gt;=) --></label>
+        <name>%%%NAMESPACE%%%Minimum_Amount__c</name>
+    </fields>
+    <fields>
+        <help>El campo (nombre de la Api) en el objecto destino donde se guarda la búsqueda al nivel anterior. Opcional.</help>
+        <label><!-- Previous Level Field --></label>
+        <name>%%%NAMESPACE%%%Previous_Level_Field__c</name>
+    </fields>
+    <fields>
+        <help>El campo del objeto destino (nombre de la API) que define la cantidad y el período de tiempo en la que se basa este nivel.</help>
+        <label><!-- Source Field --></label>
+        <name>%%%NAMESPACE%%%Source_Field__c</name>
+    </fields>
+    <fields>
+        <help>El objeto al que se le aplica este nivel.</help>
+        <label><!-- Target --></label>
+        <name>%%%NAMESPACE%%%Target__c</name>
+        <picklistValues>
+            <masterLabel>Account</masterLabel>
+            <translation>Cuenta</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Contact</masterLabel>
+            <translation>Contacto</translation>
+        </picklistValues>
+    </fields>
+    <gender>Masculine</gender>
+    <layouts>
+        <layout>Level Layout</layout>
+        <sections>
+            <label>Área de texto largo</label>
+            <section>long text section</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Nombre de nivel</nameFieldLabel>
+    <validationRules>
+        <errorMessage><!-- Target is a required field on Level.  Please specify the Target object for this Level. --></errorMessage>
+        <name>%%%NAMESPACE%%%Target_Required</name>
+    </validationRules>
+</CustomObjectTranslation>

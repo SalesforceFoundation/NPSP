@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Automatisch gemaakte relatie --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Automatisch gemaakte relaties --></value>
+    </caseValues>
+    <fields>
+        <help>Geldige campagne types voor deze campagne lid auto-creatie. (zal leeg zijn voor Contact auto-creatie)</help>
+        <label><!-- Campaign Types --></label>
+        <name>npe4__Campaign_Types__c</name>
+    </fields>
+    <fields>
+        <help>Het veld dat met het invoegen of bijwerken de creatie van de relatie triggert</help>
+        <label><!-- Field --></label>
+        <name>npe4__Field__c</name>
+    </fields>
+    <fields>
+        <help>Het object waarmee deze Auto-Relatie geassocieerd is</help>
+        <label><!-- Object --></label>
+        <name>npe4__Object__c</name>
+    </fields>
+    <fields>
+        <help>Het Relatie Type die gecreëerd moet worden tussen het basis object en het opzoek object. Het opzoek object zal de “wederkerige” relatie krijgen, als die beschikbaar is.</help>
+        <label><!-- Relationship Type --></label>
+        <name>npe4__Relationship_Type__c</name>
+    </fields>
+    <gender><!-- Feminine --></gender>
+</CustomObjectTranslation>

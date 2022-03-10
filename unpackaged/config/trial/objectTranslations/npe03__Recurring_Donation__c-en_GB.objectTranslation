@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Recurring Donation</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Recurring Donations</value>
+    </caseValues>
+    <fieldSets>
+        <label><!-- Recurring Donations Entry Form Custom Fields --></label>
+        <name>%%%NAMESPACE%%%RD2_Entry_Form_Custom_Fields</name>
+    </fieldSets>
+    <fields>
+        <help>The amount for each installment Opportunity.</help>
+        <label><!-- Amount --></label>
+        <name>npe03__Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Contact --></label>
+        <name>npe03__Contact__c</name>
+        <relationshipLabel><!-- Recurring Donations --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>The initial inception date for this Recurring Donation. The default is the current date.</help>
+        <label><!-- Date Established --></label>
+        <name>npe03__Date_Established__c</name>
+    </fields>
+    <fields>
+        <label><!-- Donor Name --></label>
+        <name>npe03__Donor_Name__c</name>
+    </fields>
+    <fields>
+        <label><!-- Installment Amount --></label>
+        <name>npe03__Installment_Amount__c</name>
+    </fields>
+    <fields>
+        <help>How often you’ll receive the donations. NOTE: Changing the installment period for an existing Fixed-Length Recurring Donation may result in the loss and re-creation of open opportunities. Any data associated with those opportunities may be lost.</help>
+        <label><!-- Installment Period --></label>
+        <name>npe03__Installment_Period__c</name>
+        <picklistValues>
+            <masterLabel>1st and 15th</masterLabel>
+            <translation>1st and 15th</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Monthly</masterLabel>
+            <translation>Monthly</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Weekly</masterLabel>
+            <translation>Weekly</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Yearly</masterLabel>
+            <translation>Yearly</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Number of installments (donations) you expect to receive. For Fixed-Length Recurring Donations only.</help>
+        <label><!-- Number of Planned Installments --></label>
+        <name>npe03__Installments__c</name>
+    </fields>
+    <fields>
+        <help>NPSP calculates this value automatically based on the last time an installment Opportunity was marked paid (read only).</help>
+        <label><!-- Last Donation Date --></label>
+        <name>npe03__Last_Payment_Date__c</name>
+    </fields>
+    <fields>
+        <help>The date on which you want the next donation to occur. This date also determines the date of all future donations.</help>
+        <label><!-- Next Donation Date --></label>
+        <name>npe03__Next_Payment_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Open Ended Status --></label>
+        <name>npe03__Open_Ended_Status__c</name>
+        <picklistValues>
+            <masterLabel>Closed</masterLabel>
+            <translation>Closed</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>None</masterLabel>
+            <translation>None</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Open</masterLabel>
+            <translation>Open</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label><!-- Account --></label>
+        <name>npe03__Organization__c</name>
+        <relationshipLabel><!-- Recurring Donations --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>The total amount paid on this Recurring Donation. Calculated automatically as the total amount of all Closed/Won installment Opportunities (read only).</help>
+        <label><!-- Total Paid Amount --></label>
+        <name>npe03__Paid_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Campaign --></label>
+        <name>npe03__Recurring_Donation_Campaign__c</name>
+        <relationshipLabel><!-- Recurring Donations --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>Tells Salesforce how to compute the amount for each child opportunity, based on what you&apos;ve entered in the Amount field. For Fixed-Length Recurring Donations only.</help>
+        <label><!-- Schedule Type --></label>
+        <name>npe03__Schedule_Type__c</name>
+        <picklistValues>
+            <masterLabel>Divide By</masterLabel>
+            <translation>Divide By</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Multiply By</masterLabel>
+            <translation>Multiply By</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Total number of installment Opportunities paid on this Recurring Donation (read only).</help>
+        <label><!-- Number Of Paid Installments --></label>
+        <name>npe03__Total_Paid_Installments__c</name>
+    </fields>
+    <fields>
+        <label><!-- Total --></label>
+        <name>npe03__Total__c</name>
+    </fields>
+    <fields>
+        <help>The last four digits of the bank account used for this transaction.</help>
+        <label><!-- ACH Last 4 --></label>
+        <name>%%%NAMESPACE%%%ACH_Last_4__c</name>
+    </fields>
+    <fields>
+        <help>Sets future monthly, custom monthly, or quarterly donation installments to the last day of the month, regardless of Next Donation Date. Installment period must be Monthly or Quarterly, or a custom installment period using months.</help>
+        <label><!-- Always use last day of month --></label>
+        <name>%%%NAMESPACE%%%Always_Use_Last_Day_Of_Month__c</name>
+    </fields>
+    <fields>
+        <help>The expiration month of the card used for this Recurring Donation.</help>
+        <label><!-- Card Expiration Month --></label>
+        <name>%%%NAMESPACE%%%CardExpirationMonth__c</name>
+    </fields>
+    <fields>
+        <help>The expiration year of the card used for this Recurring Donation.</help>
+        <label><!-- Card Expiration Year --></label>
+        <name>%%%NAMESPACE%%%CardExpirationYear__c</name>
+    </fields>
+    <fields>
+        <help>The last four digits of the card used for this Recurring Donation.</help>
+        <label><!-- Card Last 4 --></label>
+        <name>%%%NAMESPACE%%%CardLast4__c</name>
+    </fields>
+    <fields>
+        <help>The type of change (Upgrade, Downgrade, etc.) this Update represents.</help>
+        <label><!-- Change Type --></label>
+        <name>%%%NAMESPACE%%%ChangeType__c</name>
+        <picklistValues>
+            <masterLabel>Downgrade</masterLabel>
+            <translation>Downgrade</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Upgrade</masterLabel>
+            <translation>Upgrade</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>The reason this Recurring Donation has its current Status value.</help>
+        <label><!-- Status Reason --></label>
+        <name>%%%NAMESPACE%%%ClosedReason__c</name>
+        <picklistValues>
+            <masterLabel>Card Expired</masterLabel>
+            <translation>Card Expired</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Commitment Completed</masterLabel>
+            <translation>Commitment Completed</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Deceased Donor</masterLabel>
+            <translation>Deceased Donor</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Financial Difficulty</masterLabel>
+            <translation>Financial Difficulty</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>No Longer Interested</masterLabel>
+            <translation>No Longer Interested</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Unknown</masterLabel>
+            <translation>Unknown</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>External identifier for Salesforce.org payment service integration.</help>
+        <label><!-- Elevate Recurring Id --></label>
+        <name>%%%NAMESPACE%%%CommitmentId__c</name>
+    </fields>
+    <fields>
+        <help>This Recurring Donation&apos;s total amount for the current calendar or fiscal year (read only). Includes Closed Won Opportunities plus future installments for the rest of the year.</help>
+        <label><!-- Current Year Value --></label>
+        <name>%%%NAMESPACE%%%CurrentYearValue__c</name>
+    </fields>
+    <fields>
+        <help>Sets future monthly, custom monthly, or quarterly donation installments to the selected day of the month, regardless of Next Donation Date. NOTE: If the Always use last day of month checkbox is selected, it supersedes the Day of Month value.</help>
+        <label><!-- Day of Month --></label>
+        <name>%%%NAMESPACE%%%Day_of_Month__c</name>
+        <picklistValues>
+            <masterLabel>1</masterLabel>
+            <translation>1</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>10</masterLabel>
+            <translation>10</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>11</masterLabel>
+            <translation>11</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>12</masterLabel>
+            <translation>12</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>13</masterLabel>
+            <translation>13</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>14</masterLabel>
+            <translation>14</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>15</masterLabel>
+            <translation>15</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>16</masterLabel>
+            <translation>16</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>17</masterLabel>
+            <translation>17</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>18</masterLabel>
+            <translation>18</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>19</masterLabel>
+            <translation>19</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>2</masterLabel>
+            <translation>2</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>20</masterLabel>
+            <translation>20</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>21</masterLabel>
+            <translation>21</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>22</masterLabel>
+            <translation>22</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>23</masterLabel>
+            <translation>23</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>24</masterLabel>
+            <translation>24</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>25</masterLabel>
+            <translation>25</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>26</masterLabel>
+            <translation>26</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>27</masterLabel>
+            <translation>27</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>28</masterLabel>
+            <translation>28</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>29</masterLabel>
+            <translation>29</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>3</masterLabel>
+            <translation>3</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>30</masterLabel>
+            <translation>30</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>4</masterLabel>
+            <translation>4</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>5</masterLabel>
+            <translation>5</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>6</masterLabel>
+            <translation>6</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>7</masterLabel>
+            <translation>7</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>8</masterLabel>
+            <translation>8</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>9</masterLabel>
+            <translation>9</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Last Day Of Month</masterLabel>
+            <translation><!-- Last Day Of Month --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Prevents creation of the first installment Opportunity for a new Recurring Donation, regardless of the Installment Opportunity Auto-Creation setting in NPSP Settings.</help>
+        <label><!-- Disable First Installment --></label>
+        <name>%%%NAMESPACE%%%DisableFirstInstallment__c</name>
+    </fields>
+    <fields>
+        <help>After this date, NPSP no longer creates installments for this Recurring Donation and updates Status to Closed.</help>
+        <label><!-- End Date --></label>
+        <name>%%%NAMESPACE%%%EndDate__c</name>
+    </fields>
+    <fields>
+        <help>The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as &quot;every 3 months&quot;.</help>
+        <label><!-- Installment Frequency --></label>
+        <name>%%%NAMESPACE%%%InstallmentFrequency__c</name>
+    </fields>
+    <fields>
+        <help>The last Elevate event played resulting in an update to this Recurring Donation.</help>
+        <label><!-- Last Elevate Event Played --></label>
+        <name>%%%NAMESPACE%%%LastElevateEventPlayed__c</name>
+    </fields>
+    <fields>
+        <help>An Integer that represents the last Elevate event version played resulting in an update to this Recurring Donation. Incremented automatically after each call to the Elevate API for changes. Used to prevent circular updates and to ensure the latest version is never overwritten.</help>
+        <label><!-- Last Elevate Version Played --></label>
+        <name>%%%NAMESPACE%%%LastElevateVersionPlayed__c</name>
+    </fields>
+    <fields>
+        <help>This Recurring Donation&apos;s total expected amount for the next calendar or fiscal year (read only).</help>
+        <label><!-- Next Year Value --></label>
+        <name>%%%NAMESPACE%%%NextYearValue__c</name>
+    </fields>
+    <fields>
+        <help>The form of payment for this Recurring Donation. NPSP automatically copies the selected value to each related Payment record.</help>
+        <label><!-- Payment Method --></label>
+        <name>%%%NAMESPACE%%%PaymentMethod__c</name>
+        <picklistValues>
+            <masterLabel>ACH</masterLabel>
+            <translation>ACH</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Check</masterLabel>
+            <translation>Check</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Credit Card</masterLabel>
+            <translation>Credit Card</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Select Open for an ongoing Recurring Donation. Select Fixed for a Recurring Donation that has a specific number of installments. For Fixed, you must also populate the Number of Planned Installments field.</help>
+        <label><!-- Recurring Type --></label>
+        <name>%%%NAMESPACE%%%RecurringType__c</name>
+        <picklistValues>
+            <masterLabel>Fixed</masterLabel>
+            <translation>Fixed</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Open</masterLabel>
+            <translation>Open</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>The date that new or updated schedule information (Amount, Day of Month, etc.) for this Recurring Donation takes effect. The default is the current date.</help>
+        <label><!-- Effective Date --></label>
+        <name>%%%NAMESPACE%%%StartDate__c</name>
+    </fields>
+    <fields>
+        <help>Indicates if this Recurring Donation is actively in use, temporarily suspended, or closed.</help>
+        <label><!-- Status --></label>
+        <name>%%%NAMESPACE%%%Status__c</name>
+        <picklistValues>
+            <masterLabel>Active</masterLabel>
+            <translation>Active</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Closed</masterLabel>
+            <translation>Closed</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Lapsed</masterLabel>
+            <translation>Lapsed</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Paused</masterLabel>
+            <translation>Paused</translation>
+        </picklistValues>
+    </fields>
+    <layouts>
+        <layout>Enhanced Recurring Donations Layout</layout>
+        <sections>
+            <label><!-- Donation Information --></label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label><!-- Donor Information --></label>
+            <section>Donor Information</section>
+        </sections>
+        <sections>
+            <label><!-- Statistics --></label>
+            <section>Statistics</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Recurring Donation Name</nameFieldLabel>
+    <startsWith>Consonant</startsWith>
+    <webLinks>
+        <label><!-- New_Recurring_Acct_Donation --></label>
+        <name>npe03__New_Recurring_Acct_Donation</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- New_Recurring_Donation_Pledge_Account --></label>
+        <name>npe03__New_Recurring_Donation_Pledge_Account</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Refresh_Opportunities --></label>
+        <name>npe03__Refresh_Opportunities</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Recalculate_Rollups --></label>
+        <name>%%%NAMESPACE%%%Recalculate_Rollups</name>
+    </webLinks>
+</CustomObjectTranslation>

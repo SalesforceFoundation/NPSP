@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Instelling voor aangepaste termijn --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Instellingen voor aangepaste termijn --></value>
+    </caseValues>
+    <fields>
+        <help>Het type tijdsperiode die de Aangepaste Termijn periode dekt</help>
+        <label><!-- Time Period Type --></label>
+        <name>npe03__Increment__c</name>
+    </fields>
+    <fields>
+        <help>De hoeveelheid tijd die de Aangepaste Termijn Periode dekt</help>
+        <label><!-- Time Period Frequency --></label>
+        <name>npe03__Value__c</name>
+    </fields>
+    <gender><!-- Feminine --></gender>
+</CustomObjectTranslation>

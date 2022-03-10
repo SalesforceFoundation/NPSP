@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Instelling voor huishouden --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Instellingen voor huishouden --></value>
+    </caseValues>
+    <fields>
+        <help>Indien aangevinkt, zal het systeem automatisch Huishoud namen benoemen. Informele en Formele Begroetingen.</help>
+        <label><!-- Automatic Household Naming --></label>
+        <name>npo02__Advanced_Household_Naming__c</name>
+    </fields>
+    <fields>
+        <help>Doe rollup van de donateur statistieken altijd met de primaire contact rol, en het bijbehorende huishouden, op een opportunity, zelfs als die niet van een individu komt</help>
+        <label><!-- Always Rollup to Primary Contact Role --></label>
+        <name>npo02__Always_Rollup_to_Primary_Contact__c</name>
+    </fields>
+    <fields>
+        <help>Dit is een onbelichte instelling om Huishoud benoemen code te schakelen om een asynchrone versie te gebruiken in plaats van een standaard versie.</help>
+        <label><!-- Async Household Naming --></label>
+        <name>npo02__Async_Household_Naming__c</name>
+    </fields>
+    <fields>
+        <help>Het aantal records doorgevoerd op het moment wanneer donateur statistieken worden berekend. Standaard is 200. Verminder naar een kleiner nummer wanneer de Opportunity Rollups fouten maken door systeem limieten.</help>
+        <label><!-- Rollup Batch Size --></label>
+        <name>npo02__Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help>AFGEKEURD. Trigger gedrag wordt nu bepaald op de Trigger Configuratiepagina van de NPSP instellingen.</help>
+        <label><!-- DEPRECATED-Disable_HHAfter_trigger --></label>
+        <name>npo02__DISABLE_HouseholdAfter_trigger__c</name>
+    </fields>
+    <fields>
+        <help>AFGEKEURD. Trigger gedrag wordt nu bepaald op de Trigger Configuratiepagina van de NPSP instellingen.</help>
+        <label><!-- DEPRECATED-Disable_HHBefore_trigger --></label>
+        <name>npo02__DISABLE_HouseholdBefore_trigger__c</name>
+    </fields>
+    <fields>
+        <help>AFGEKEURD. Trigger gedrag wordt nu bepaald op de Trigger Configuratiepagina van de NPSP instellingen.</help>
+        <label><!-- DEPRECATED-Disable_Household_Opp_trigger --></label>
+        <name>npo02__DISABLE_Household_Opportunity_trigger__c</name>
+    </fields>
+    <fields>
+        <help>AFGEKEURD. Trigger gedrag wordt nu bepaald op de Trigger Configuratiepagina van de NPSP instellingen.</help>
+        <label><!-- DEPRECATED-Disable_Households_trigger --></label>
+        <name>npo02__DISABLE_Households_trigger__c</name>
+    </fields>
+    <fields>
+        <help>AFGEKEURD. Trigger gedrag wordt nu bepaald op de Trigger Configuratiepagina van de NPSP instellingen.</help>
+        <label><!-- DEPRECATED-Disable_OppRollup_trigger --></label>
+        <name>npo02__DISABLE_OpportunityRollup_trigger__c</name>
+    </fields>
+    <fields>
+        <help>AFGEKEURD. Trigger gedrag wordt nu bepaald op de Trigger Configuratiepagina van de NPSP instellingen.</help>
+        <label><!-- DEPRECATED-Enable_Opp_Rollup_Triggers --></label>
+        <name>npo02__Enable_Opp_Rollup_Triggers__c</name>
+    </fields>
+    <fields>
+        <help>Maakt mogelijk om rollups te maken van gesloten opportunities totalen gebaseerd op contactrol rollen. Soft Credit rollups gebeuren in een nachtelijke batch taak, en niet met triggers. Ze kunnen handmatig gerund worden via de Rollup Donatie Batch tab.</help>
+        <label><!-- Enable Soft Credit Rollups --></label>
+        <name>npo02__Enable_Soft_Credit_Rollups__c</name>
+    </fields>
+    <fields>
+        <help>AFGEKEURD. NIeuwe versies van het NPSP zullen automatisch worden geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Enable Update Check --></label>
+        <name>npo02__Enable_Update_Check__c</name>
+    </fields>
+    <fields>
+        <help>Namen van Opportunity Record Types die uitgesloten moeten worden van Account Opportunities Rollups.</help>
+        <label><!-- Opp RecTypes Excluded for Account Rollup --></label>
+        <name>npo02__Excluded_Account_Opp_Rectypes__c</name>
+    </fields>
+    <fields>
+        <help>Waardes van het Opportunity Type veld die uitgesloten moeten worden van statistieken wanneer je rollups gebruikt voor Account Opportunities.</help>
+        <label><!-- Opp Types Excluded for Account Rollup --></label>
+        <name>npo02__Excluded_Account_Opp_Types__c</name>
+    </fields>
+    <fields>
+        <help>Namen van Opportunity Record Types die uitgesloten moeten worden van Contact Opportunities Rollups.</help>
+        <label><!-- Opp RecTypes Excluded for Contact Rollup --></label>
+        <name>npo02__Excluded_Contact_Opp_Rectypes__c</name>
+    </fields>
+    <fields>
+        <help>Waardes van het Opportunity Type veld die uitgesloten moeten worden van statistieken wanneer je rollups gebruikt voor Contactpersoon Opportunities.</help>
+        <label><!-- Opp Types Excluded for Contact Rollup --></label>
+        <name>npo02__Excluded_Contact_Opp_Types__c</name>
+    </fields>
+    <fields>
+        <help>NPSP checkt automatisch of aangepast fiscaal jaar aan staat, en schakelt Fiscaal Jaar instellingen uit als daar fouten inzitten. Deze instelling overschrijft de veiligheids-check voor gebruikers die per ongeluk aangepast fiscaal jaar hebben ingeschakeld</help>
+        <label><!-- Force Fiscal Year --></label>
+        <name>npo02__Force_Fiscal_Year__c</name>
+    </fields>
+    <fields>
+        <help>AFGEKEURD. NIeuwe versies van het NPSP zullen automatisch worden geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Has Package Update --></label>
+        <name>npo02__Has_Package_Update__c</name>
+    </fields>
+    <fields>
+        <help>Vink dit veld aan om automatisch contact rollen voor huishoud leden van het primaire contact te maken.</help>
+        <label><!-- Household Contact Roles On --></label>
+        <name>npo02__Household_Contact_Roles_On__c</name>
+    </fields>
+    <fields>
+        <help>Contactpersoon record types afgezonderd van Huishoud creatie. Deze instelling wordt genegeerd wanneer je het Huishoud Account model gebruikt.</help>
+        <label><!-- Household Creation Excluded Record Types --></label>
+        <name>npo02__Household_Creation_Excluded_Recordtypes__c</name>
+    </fields>
+    <fields>
+        <help>Het rapport ID van het Huishoud Mail Lijst Rapport gebruikt voor gedupliceerde Huishoud Campagne Mail Lijsten. Rapport moet het type hebben “Campagnes met Contactpersonen”, waar Lid Status niet gelijk is aan ‘duplicaat’.</help>
+        <label><!-- Household Mailing List Report --></label>
+        <name>npo02__Household_Mailing_List_ID__c</name>
+    </fields>
+    <fields>
+        <help>De Rol die gebruikt wordt bij het automatisch maken van Opportunity Contactpersoon Rollen voor Huishoudleden.</help>
+        <label><!-- Household Member Contact Role --></label>
+        <name>npo02__Household_Member_Contact_Role__c</name>
+    </fields>
+    <fields>
+        <help>Contactpersoon record types afgezonderd van Huishoud Opportunity Contactpersoon Rol creatie.</help>
+        <label><!-- Household OCR Excluded Record Types --></label>
+        <name>npo02__Household_OCR_Excluded_Recordtypes__c</name>
+    </fields>
+    <fields>
+        <help>Specificeert bij welke contactpersonen automatisch een Huishoud object wordt aangemaakt. Let op: dit wordt alleen gebruikt voor contactpersonen die het One-to-One of individueel account model gebruiken.</help>
+        <label><!-- Household Object Rules --></label>
+        <name>npo02__Household_Rules__c</name>
+    </fields>
+    <fields>
+        <help>AFGEKEURD. NIeuwe versies van het NPSP zullen automatisch worden geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Last Update Check --></label>
+        <name>npo02__Last_Update_Check__c</name>
+    </fields>
+    <fields>
+        <help>AFGEKEURD. NIeuwe versies van het NPSP zullen automatisch worden geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Max Package Version --></label>
+        <name>npo02__Max_Package_Version__c</name>
+    </fields>
+    <fields>
+        <help>De lengte van de bedenktijd (in dagen) nadat een lidmaatschap vervalt (laatste einddatum) voordat de status van ‘Bedenktijd’ nar ‘Vervallen’ gaat. Standaard is 30 dagen.</help>
+        <label><!-- Membership Grace Period --></label>
+        <name>npo02__Membership_Grace_Period__c</name>
+    </fields>
+    <fields>
+        <help>Namen van Opportunity Record Types, bijvoorbeeld Lidmaatschap, die je met de rollup apart van andere opportunity record types wil hebben.</help>
+        <label><!-- Membership Record Type Names --></label>
+        <name>npo02__Membership_Record_Types__c</name>
+    </fields>
+    <fields>
+        <help>Id voor de huidige geplande Opportunity Rollup Taak</help>
+        <label><!-- Opp Rollup Scheduled Job Id --></label>
+        <name>npo02__Opp_Rollup_Scheduled_Job_Id__c</name>
+    </fields>
+    <fields>
+        <help>AFGEKEURD. NIeuwe versies van het NPSP zullen automatisch worden geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Package Update URL --></label>
+        <name>npo02__Package_Update_URL__c</name>
+    </fields>
+    <fields>
+        <help>Verschaft een waarde van &apos;N dagen&apos; rollups, waar &apos;N&apos; het aantal dagen is van vandaag naar het verleden. De waarde is standaard 365 dagen.</help>
+        <label><!-- Rollup N Day Value --></label>
+        <name>npo02__Rollup_N_Day_Value__c</name>
+    </fields>
+    <fields>
+        <help>Het aantal actieve geplande Apex Banen opgezocht met het plannen van nieuwe banen</help>
+        <label><!-- Schedule Job Limit --></label>
+        <name>npo02__Schedule_Job_Limit__c</name>
+    </fields>
+    <fields>
+        <help>Lijst van Opportunity Contactpersoon Rollen rollen op te nemen in  soft credit rollups.</help>
+        <label><!-- Soft Credit Roles --></label>
+        <name>npo02__Soft_Credit_Roles__c</name>
+    </fields>
+    <fields>
+        <help>AFGEKEURD. NIeuwe versies van het NPSP zullen automatisch worden geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Update Check Interval --></label>
+        <name>npo02__Update_Check_Interval__c</name>
+    </fields>
+    <fields>
+        <help>Wanneer aangevinkt, zorgt ervoor dat dat Opp rollup totalen het Fiscale Jaar gebruikt en niet het kalenderjaar. Om Fiscale Jaar info in te stellen, ga naar Setup-&gt;Bedrijfsprofiel-&gt;Fiscaal Jaar. Aangepaste Fiscale Jaar Instellingen worden NIET ondersteund.</help>
+        <label><!-- Use Fiscal Year for Rollups --></label>
+        <name>npo02__Use_Fiscal_Year_for_Rollups__c</name>
+    </fields>
+    <fields>
+        <help>De Rol die gegeven wordt aan de contactpersonen die soft credit moeten ontvangen voor een gematchte gift</help>
+        <label><!-- Matched Donor Role --></label>
+        <name>%%%NAMESPACE%%%Matched_Donor_Role__c</name>
+    </fields>
+    <fields>
+        <help>Aantal records per te verwerken batch bij instellen van seizoensadres als postadres.</help>
+        <label><!-- Seasonal Address Batch Size --></label>
+        <name>%%%NAMESPACE%%%Seasonal_Addresses_Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help>Vink aan om Omrekeningskoersen met Datum te gebruiken wanneer Geavanceerd valutabeheer ingeschakeld is in deze Organisatie. Indien niet aangevinkt en indien ACM ingeschakeld is, gebruiken alle NPSP-totaliseringen de standaardwisselkoers voor de valuta.</help>
+        <label><!-- Use Dated Conversion Rates if available --></label>
+        <name>%%%NAMESPACE%%%Use_Dated_Conversion_Rates__c</name>
+    </fields>
+    <gender><!-- Feminine --></gender>
+</CustomObjectTranslation>

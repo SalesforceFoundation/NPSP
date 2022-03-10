@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Paramètre de dons récurrents --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Paramètres de dons récurrents --></value>
+    </caseValues>
+    <fields>
+        <help>Si sélectionné, toutes les opportunités pour des dons réguliers utiliseront la campagne sur le don régulier. Autrement, seule la première opportunité utilisera la campagne.</help>
+        <label><!-- Add Campaign to All Opportunities --></label>
+        <name>npe03__Add_Campaign_to_All_Opportunites__c</name>
+    </fields>
+    <fields>
+        <help>DÉPRÉCIÉ. Le comportement du déclencheur est désormais contrôlé dans la page Configuration de déclencheur des paramètres NPSP.</help>
+        <label><!-- DEPRECATED-Disable_Donations_trigger --></label>
+        <name>npe03__DISABLE_Donations_trigger__c</name>
+    </fields>
+    <fields>
+        <help>DÉPRÉCIÉ. Le comportement du déclencheur est désormais contrôlé dans la page Configuration de déclencheur des paramètres NPSP.</help>
+        <label><!-- DEPRECATED-Disable_RD_trigger --></label>
+        <name>npe03__DISABLE_RecurringDonations_trigger__c</name>
+    </fields>
+    <fields>
+        <help>DÉPRÉCIÉ. Les nouvelles versions de Nonprofit Success Pack seront automatiquement installées.</help>
+        <label><!-- DEPRECATED-Enable Update Check --></label>
+        <name>npe03__Enable_Update_Check__c</name>
+    </fields>
+    <fields>
+        <help>DÉPRÉCIÉ. Remplacé par les paramètres de notification dans le panneau des paramètres Erreur système.</help>
+        <label><!-- DEPRECATED-Error Email Notifications --></label>
+        <name>npe03__Error_Email_Notifications__c</name>
+    </fields>
+    <fields>
+        <help>Date et heure de la dernière mise à jour par lot des dons réguliers.</help>
+        <label><!-- Last Batch Run --></label>
+        <name>npe03__Last_Batch_Run__c</name>
+    </fields>
+    <fields>
+        <help>Restreint le nombre total de dons créés pour les dons réguliers avec date de fin. La valeur par défaut est de 50.  Des valeurs plus élevées peuvent provoquer des erreurs DML.</help>
+        <label><!-- Maximum Donations --></label>
+        <name>npe03__Maximum_Donations__c</name>
+    </fields>
+    <fields>
+        <help>Nombre de dons réguliers dont la mise à jour a échoué lors de la dernière opération par lot.</help>
+        <label><!-- Number of Failures --></label>
+        <name>npe03__Number_of_Failures__c</name>
+    </fields>
+    <fields>
+        <help>Nombre de dons réguliers dont la mise à jour a réussi lors de la dernière exécution par lot.</help>
+        <label><!-- Number of Successes --></label>
+        <name>npe03__Number_of_Successes__c</name>
+    </fields>
+    <fields>
+        <help>Détermine le comportement de toutes les opportunités ouvertes restantes lorsqu’un don régulier sans date de fin passe à un statut fermé.</help>
+        <label><!-- Open Opportunity Behavior on RD Close --></label>
+        <name>npe03__Open_Opportunity_Behavior__c</name>
+    </fields>
+    <fields>
+        <help>Nb de mois futurs pour lesquels des opportunités ouvertes sont créées avec les dons réguliers ouverts. AVERTISSEMENT : Réduire cette valeur supprime les opportunités supplémentaires. L’augmenter lance un processus par lot d’ajout d’opportunités.</help>
+        <label><!-- Opportunity Forecast Months --></label>
+        <name>npe03__Opportunity_Forecast_Months__c</name>
+    </fields>
+    <fields>
+        <help>Type d’enregistrement d’opportunité utilisé lorsque des opportunités de dons réguliers sont créées.</help>
+        <label><!-- Opportunity Record Type --></label>
+        <name>npe03__Record_Type__c</name>
+    </fields>
+    <fields>
+        <help>DÉPRÉCIÉ. Les nouvelles versions de Nonprofit Success Pack seront automatiquement installées.</help>
+        <label><!-- DEPRECATED-Update Check Interval --></label>
+        <name>npe03__Update_Check_Interval__c</name>
+    </fields>
+    <fields>
+        <help>Nombre d&apos;enregistrements à traiter à la fois lors de la migration d&apos;enregistrements de Dons récurrents existants vers le modèle de données Dons récurrents avancés.</help>
+        <label><!-- Enhanced RD Data Migration Batch Size --></label>
+        <name>%%%NAMESPACE%%%DataMigrationBatchSize__c</name>
+    </fields>
+    <fields>
+        <help>Lorsque cette option est sélectionnée, si les cumuls personnalisables sont activés, les calculs de cumuls immédiats sont désactivés lors de la création d&apos;opportunités de versement pour un Don récurrent.</help>
+        <label><!-- Disable CRLP When Creating Installments --></label>
+        <name>%%%NAMESPACE%%%DisableRollupsWhenCreatingInstallments__c</name>
+    </fields>
+    <fields>
+        <help>Lorsque cette option est activée, Salesforce remplit automatiquement le Nom du don récurrent.</help>
+        <label><!-- Automatic Recurring Donation Naming --></label>
+        <name>%%%NAMESPACE%%%EnableAutomaticNaming__c</name>
+    </fields>
+    <fields>
+        <help>Lorsque cette option est activée, NPSP crée un enregistrement Journal des modifications apportées aux dons récurrents chaque fois que les champs de montant, de planification ou de campagne d’un don récurrent sont mis à jour.</help>
+        <label><!-- Enable Recurring Donation Change Log --></label>
+        <name>%%%NAMESPACE%%%EnableChangeLog__c</name>
+    </fields>
+    <fields>
+        <help>Spécifie quand NPSP crée des Opportunités de versement pour des Dons récurrents. Le paramètre par défaut est Toujours créer le prochain versement.</help>
+        <label><!-- Installment Opportunity Auto-Creation --></label>
+        <name>%%%NAMESPACE%%%InstallmentOppAutoCreateOption__c</name>
+    </fields>
+    <fields>
+        <help>Spécifie comment NPSP crée la première opportunité de versement pour des dons récurrents. La valeur par défaut est Synchrone.</help>
+        <label><!-- Installment Opportunity Async Behavior --></label>
+        <name>%%%NAMESPACE%%%InstallmentOppFirstCreateMode__c</name>
+    </fields>
+    <fields>
+        <help>L&apos;étape d&apos;opportunité que NPSP applique à chaque nouvelle opportunité de versement lors de la création d&apos;un Don récurrent.</help>
+        <label><!-- Stage Name for Installment Opportunities --></label>
+        <name>%%%NAMESPACE%%%InstallmentOppStageName__c</name>
+    </fields>
+    <fields>
+        <help>Cette option active les Dons récurrents avancés. IMPORTANT : Vous devez activer les Dons récurrents avancés dans les Paramètres de NPSP. Leur activation dans les paramètres personnalisés peut entraîner des données incohérentes.</help>
+        <label><!-- Enhanced Recurring Donations --></label>
+        <name>%%%NAMESPACE%%%IsRecurringDonations2Enabled__c</name>
+    </fields>
+    <fields>
+        <help>Nombre de jours avant ou après la date du prochain don pendant lesquels NPSP ne crée pas d&apos;opportunité de versement si la date de fermeture de l&apos;opportunité ouverte suivante change. S&apos;applique uniquement aux dons avec une période de versement Mensuelle.</help>
+        <label><!-- Next Donation Date Match Range --></label>
+        <name>%%%NAMESPACE%%%NextDonationDateMatchRangeDays__c</name>
+    </fields>
+    <fields>
+        <help>Le format à utiliser pour la dénomination des dons récurrents.</help>
+        <label><!-- Recurring Donation Name Format --></label>
+        <name>%%%NAMESPACE%%%RecurringDonationNameFormat__c</name>
+    </fields>
+    <fields>
+        <help>Contient les confirmations et l&apos;état d&apos;activation du Don récurrent avancé.</help>
+        <label><!-- Recurring Donations Enablement State --></label>
+        <name>%%%NAMESPACE%%%RecurringDonations2EnablementState__c</name>
+    </fields>
+    <fields>
+        <help>Contient les tout derniers résultats d&apos;importation test et de migration des données.</help>
+        <label><!-- Enhanced RD Data Migration State --></label>
+        <name>%%%NAMESPACE%%%RecurringDonations2MigrationState__c</name>
+    </fields>
+    <fields>
+        <help>Le nombre d’enreg. à traiter en une fois lors de l’exécution du traitement par lots des dons réguliers. La taille par défaut est 50. Si le traitement par lots des dons réguliers échoue à cause des limites du système, réduisez-le à un nombre moins élevé.</help>
+        <label><!-- Recurring Donation Batch Size --></label>
+        <name>%%%NAMESPACE%%%Recurring_Donation_Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help>ID de déploiement des métadonnées personnalisées de mappage de statut</help>
+        <label><!-- Status Mapping Deployment Id --></label>
+        <name>%%%NAMESPACE%%%StatusMappingDeploymentId__c</name>
+    </fields>
+    <fields>
+        <help>Permet d&apos;activer l&apos;exercice fiscal pour le total des dons récurrents. Vous pouvez définir le mois de début de l&apos;exercice dans Configuration | Paramètres de la société | Exercice fiscal. REMARQUE : Utilisez uniquement l&apos;exercice standard, pas personnalisé.</help>
+        <label><!-- Use Fiscal Year for Recurring Donations --></label>
+        <name>%%%NAMESPACE%%%UseFiscalYearForRecurringDonationValue__c</name>
+    </fields>
+    <gender><!-- Masculine --></gender>
+    <startsWith><!-- Consonant --></startsWith>
+</CustomObjectTranslation>

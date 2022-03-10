@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- カスタム列ヘッダー --></value>
+    </caseValues>
+    <fields>
+        <help>リストビューに表示される項目の API 参照名。</help>
+        <label><!-- Field API Name --></label>
+        <name>%%%NAMESPACE%%%Field_Api_Name__c</name>
+    </fields>
+    <fields>
+        <help>リストビューの項目の位置。</help>
+        <label><!-- Index --></label>
+        <name>%%%NAMESPACE%%%Index__c</name>
+    </fields>
+    <fields>
+        <help>この項目を表示するリストビュー (バッチまたはテンプレート)。</help>
+        <label><!-- List Name --></label>
+        <name>%%%NAMESPACE%%%List_Name__c</name>
+    </fields>
+</CustomObjectTranslation>

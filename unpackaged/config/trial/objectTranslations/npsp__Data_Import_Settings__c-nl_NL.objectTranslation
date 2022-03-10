@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Gegevensimportinstellingen --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Gegevensimportinstellingen --></value>
+    </caseValues>
+    <fields>
+        <help>Een optioneel Uniek Id veld dat wordt gebruikt voor Account matching</help>
+        <label><!-- Account Custom Unique ID --></label>
+        <name>%%%NAMESPACE%%%Account_Custom_Unique_ID__c</name>
+    </fields>
+    <fields>
+        <help>Geeft aan welke regel gevolgd moet worden wanneer er geprobeerd wordt Accounts met een Data Import te matchen tegen bestaande Accounts.</help>
+        <label><!-- Account Matching Rule --></label>
+        <name>%%%NAMESPACE%%%Account_Matching_Rule__c</name>
+    </fields>
+    <fields>
+        <help>Het aantal NPSP data records dat kan worden geïmporteerd in elke batch</help>
+        <label><!-- Batch Process Size --></label>
+        <name>%%%NAMESPACE%%%Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help>JSON voor het resultaat van CMT-implementatie 
+{ &quot;jobId&quot;: &quot;response&quot; }</help>
+        <label><!-- CMT API Deployment Result --></label>
+        <name>%%%NAMESPACE%%%CMT_API_Status__c</name>
+    </fields>
+    <fields>
+        <help>Implementatie van ID van aangepaste metagegevens</help>
+        <label><!-- CMT Deployment ID --></label>
+        <name>%%%NAMESPACE%%%CMT_Deployment_ID__c</name>
+    </fields>
+    <fields>
+        <help>een optioneel Uniek Id veld dat wordt gebruikt voor Contactpersoon matching</help>
+        <label><!-- Contact Custom Unique ID --></label>
+        <name>%%%NAMESPACE%%%Contact_Custom_Unique_ID__c</name>
+    </fields>
+    <fields>
+        <help>Geeft aan welke regel gevolgd moet worden wanneer er geprobeerd wordt Contactpersonen met een Data import te matchen tegen bestaande Contactpersonen.</help>
+        <label><!-- Contact Matching Rule --></label>
+        <name>%%%NAMESPACE%%%Contact_Matching_Rule__c</name>
+    </fields>
+    <fields>
+        <help>De aangepaste naam van de API voor metagegevens van de record Veldtoewijzingsset voor gegevensimport, die standaard moet worden gebruikt.</help>
+        <label><!-- Default Data Import Field Mapping Set --></label>
+        <name>%%%NAMESPACE%%%Default_Data_Import_Field_Mapping_Set__c</name>
+    </fields>
+    <fields>
+        <help>Voer het aantal dagen in vanaf de Donatiedatum om een reeks te bepalen bij het zoeken naar een matchende Opp of Betaling. De Data Import kiest een matchende Opp of Betaling die in de reeks valt en het dichtst ligt in de buurt van de Donatiedatum.</help>
+        <label><!-- Number of Days from Donation Date --></label>
+        <name>%%%NAMESPACE%%%Donation_Date_Range__c</name>
+    </fields>
+    <fields>
+        <help>Bepaalt hoe de Data Import omgaat met een Matching Gift. Er moet een waarde gekozen worden.</help>
+        <label><!-- Donation Matching Behavior --></label>
+        <name>%%%NAMESPACE%%%Donation_Matching_Behavior__c</name>
+    </fields>
+    <fields>
+        <help>De developer naam van een Apex Klasse dat de BDI_IMatching interface implementeert voor Donaties. Leeg laten om het over te laten aan NPSP.</help>
+        <label><!-- Donation Matching Implementing Class --></label>
+        <name>%%%NAMESPACE%%%Donation_Matching_Implementing_Class__c</name>
+    </fields>
+    <fields>
+        <help>Bepaalt op welke velden gematcht moet worden bij het matchen van Donaties (Opportunities en Betalingen) met Data import records. Klik op Control of Command om meerdere velden te selecteren.</help>
+        <label><!-- Donation Matching Rule --></label>
+        <name>%%%NAMESPACE%%%Donation_Matching_Rule__c</name>
+    </fields>
+    <fields>
+        <help>Definieer de manier waarop velden op de record NPSP-gegevensimport worden toegewezen aan andere objecten in Salesforce. De opties zijn Help-tekst of Veldtoewijzing voor gegevensimport.</help>
+        <label><!-- Field Mapping Method --></label>
+        <name>%%%NAMESPACE%%%Field_Mapping_Method__c</name>
+    </fields>
+    <fields>
+        <help>De developer naam van een Apex Klasse dat de BDI__PostProcess interface implementeert voor NPSP Data Import records.</help>
+        <label><!-- Post Process Implementing Class --></label>
+        <name>%%%NAMESPACE%%%Post_Process_Implementing_Class__c</name>
+    </fields>
+    <fields>
+        <help>Wanneer aangevinkt, berekent NPSP donorstatistieken bij de verwerking van de donaties. Wanneer niet aangevinkt, worden donorstatistieken berekend tijdens de standaard Geplande Opdracht &apos;s nachts. Deze selectie kan de verwerking van deze batch vertragen.</help>
+        <label><!-- Calculate Donation Rollups with Batch --></label>
+        <name>%%%NAMESPACE%%%Run_Opportunity_Rollups_while_Processing__c</name>
+    </fields>
+    <gender><!-- Feminine --></gender>
+</CustomObjectTranslation>

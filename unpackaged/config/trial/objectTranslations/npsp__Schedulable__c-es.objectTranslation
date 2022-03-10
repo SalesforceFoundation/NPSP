@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>DESUSADO-Programable</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>DESUSADO-Programables</value>
+    </caseValues>
+    <fields>
+        <help>Determina si un trabajo estará activo o no.</help>
+        <label><!-- Active --></label>
+        <name>%%%NAMESPACE%%%Active__c</name>
+    </fields>
+    <fields>
+        <help>Clase que se programará para correr con cierta frecuencia.</help>
+        <label><!-- Class Name --></label>
+        <name>%%%NAMESPACE%%%Class_Name__c</name>
+    </fields>
+    <fields>
+        <help>Cuan seguido debe correr este trabajo.</help>
+        <label><!-- Frequency --></label>
+        <name>%%%NAMESPACE%%%Frequency__c</name>
+        <picklistValues>
+            <masterLabel>Daily</masterLabel>
+            <translation>Cada día</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Hourly</masterLabel>
+            <translation>Cada hora</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Monthly</masterLabel>
+            <translation>Mensual</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Quarterly</masterLabel>
+            <translation>Trimestral</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Weekly</masterLabel>
+            <translation>Semanal</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Última vez que el trabajo corrió.</help>
+        <label><!-- Last Time Run --></label>
+        <name>%%%NAMESPACE%%%Last_Time_Run__c</name>
+    </fields>
+    <gender>Masculine</gender>
+    <nameFieldLabel>Nombre del trabajo</nameFieldLabel>
+</CustomObjectTranslation>

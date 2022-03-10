@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>NPSP データインポートバッチ</value>
+    </caseValues>
+    <fieldSets>
+        <label><!-- Batch Gift Entry Tab Columns --></label>
+        <name>%%%NAMESPACE%%%BatchGiftEntryTabColumns</name>
+    </fieldSets>
+    <fields>
+        <help>組織団体のマッチングに使用する任意の一意の ID 項目</help>
+        <label><!-- Account Custom Unique ID --></label>
+        <name>%%%NAMESPACE%%%Account_Custom_Unique_ID__c</name>
+    </fields>
+    <fields>
+        <label><!-- Active Fields --></label>
+        <name>%%%NAMESPACE%%%Active_Fields__c</name>
+    </fields>
+    <fields>
+        <help>支援エントリのバッチのデフォルト項目値。直接編集しないでください。これは、バッチを編集する UI で更新する必要があります。</help>
+        <label><!-- Batch Defaults --></label>
+        <name>%%%NAMESPACE%%%Batch_Defaults__c</name>
+    </fields>
+    <fields>
+        <label><!-- Batch Description --></label>
+        <name>%%%NAMESPACE%%%Batch_Description__c</name>
+    </fields>
+    <fields>
+        <help>このバッチの作成に使用するバッチ支援エントリ機能のバージョン。</help>
+        <label><!-- Batch Gift Entry Version --></label>
+        <name>%%%NAMESPACE%%%Batch_Gift_Entry_Version__c</name>
+    </fields>
+    <fields>
+        <help>このバッチの一意の自動採番識別子。</help>
+        <label><!-- Batch Number --></label>
+        <name>%%%NAMESPACE%%%Batch_Number__c</name>
+    </fields>
+    <fields>
+        <help>各バッチで一度に処理されるレコードの数。</help>
+        <label><!-- Batch Process Size --></label>
+        <name>%%%NAMESPACE%%%Batch_Process_Size__c</name>
+    </fields>
+    <fields>
+        <help>The Batch Status is based on the Import Status of the NPSP Data Import records within the batch. If one record fails to import, the status for the batch is &quot;Failed - Needs Review.&quot;</help>
+        <label><!-- Batch Status --></label>
+        <name>%%%NAMESPACE%%%Batch_Status__c</name>
+        <picklistValues>
+            <masterLabel>Completed</masterLabel>
+            <translation>完了</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Failed - Needs Review</masterLabel>
+            <translation>失敗 - レビューが必要</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Open</masterLabel>
+            <translation>オープン</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>バッチギフトテーブルに含まれる項目の API 参照名のリスト。JSON として保存されます。</help>
+        <label><!-- Batch Table Columns --></label>
+        <name>%%%NAMESPACE%%%Batch_Table_Columns__c</name>
+    </fields>
+    <fields>
+        <help>個人のマッチングに使用する任意の一意の ID 項目</help>
+        <label><!-- Contact Custom Unique ID --></label>
+        <name>%%%NAMESPACE%%%Contact_Custom_Unique_ID__c</name>
+    </fields>
+    <fields>
+        <help>既存の個人に対してデータインポートレコード内の個人を照合するときのルールを指定します。</help>
+        <label><!-- Contact Matching Rule --></label>
+        <name>%%%NAMESPACE%%%Contact_Matching_Rule__c</name>
+    </fields>
+    <fields>
+        <help>マッチング支援または支払を探すときの [日付(支援)] からの日数を入力します。NPSP はその日数範囲内で最も近い、マッチングする支援または支払を選択します。</help>
+        <label><!-- Number of Days from Donation Date --></label>
+        <name>%%%NAMESPACE%%%Donation_Date_Range__c</name>
+    </fields>
+    <fields>
+        <help>NPSP がマッチング支援をどのように処理するか定義します。</help>
+        <label><!-- Donation Matching Behavior --></label>
+        <name>%%%NAMESPACE%%%Donation_Matching_Behavior__c</name>
+        <picklistValues>
+            <masterLabel>Best Match</masterLabel>
+            <translation>ベストマッチ</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Best Match or Create</masterLabel>
+            <translation>ベストマッチまたは作成</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Do Not Match</masterLabel>
+            <translation>マッチング不可</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>No Match</masterLabel>
+            <translation>マッチングなし</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Single Match</masterLabel>
+            <translation>シングルマッチ</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Single Match or Create</masterLabel>
+            <translation>シングルマッチまたは作成</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>支援の BDI_IMatching インターフェースを実装する Apex クラスの API 参照名。NPSP がマッチングを処理できるように、空のままにします。</help>
+        <label><!-- Donation Matching Implementing Class --></label>
+        <name>%%%NAMESPACE%%%Donation_Matching_Implementing_Class__c</name>
+    </fields>
+    <fields>
+        <help>既存の支援および支払に対してバッチレコードの支援をマッチングするとき、どの項目をマッチングするかを指定します。</help>
+        <label><!-- Donation Matching Rule --></label>
+        <name>%%%NAMESPACE%%%Donation_Matching_Rule__c</name>
+    </fields>
+    <fields>
+        <help>このバッチで入力が予測されている支援の数。</help>
+        <label><!-- Expected Count of Gifts --></label>
+        <name>%%%NAMESPACE%%%Expected_Count_of_Gifts__c</name>
+    </fields>
+    <fields>
+        <help>このバッチで入力が予測されているすべての支援の総額。</help>
+        <label><!-- Expected Total Batch Amount --></label>
+        <name>%%%NAMESPACE%%%Expected_Total_Batch_Amount__c</name>
+    </fields>
+    <fields>
+        <help>このバッチの支援エントリフォームで使用するテンプレート。</help>
+        <label><!-- Form Template --></label>
+        <name>%%%NAMESPACE%%%Form_Template__c</name>
+        <relationshipLabel><!-- NPSP Data Import Batches --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>このバッチは、バッチ支援エントリでの使用を想定しています。[バッチ支援エントリ] タブでバッチを設定すると、自動的に支援バッチとなります。この項目を手動で変更すると、意図しない結果を生むことがあります。</help>
+        <label><!-- Gift Batch --></label>
+        <name>%%%NAMESPACE%%%GiftBatch__c</name>
+    </fields>
+    <fields>
+        <help>バッチが前回処理された日時。</help>
+        <label><!-- Last Processed On --></label>
+        <name>%%%NAMESPACE%%%Last_Processed_On__c</name>
+    </fields>
+    <fields>
+        <help>NPSP バッチレコードの BDI_IPostProcess インターフェースを実装する Apex クラスの API 参照名。</help>
+        <label><!-- Post Process Implementing Class --></label>
+        <name>%%%NAMESPACE%%%Post_Process_Implementing_Class__c</name>
+    </fields>
+    <fields>
+        <help>オンの場合、関連ジョブのスケジュールに基づき、バッチは自動的に処理されます。</help>
+        <label><!-- Process Using Scheduled Job --></label>
+        <name>%%%NAMESPACE%%%Process_Using_Scheduled_Job__c</name>
+    </fields>
+    <fields>
+        <help>[最終処理日時] 項目の日付で処理に失敗したレコードの数を示します。</help>
+        <label><!-- Records Failed --></label>
+        <name>%%%NAMESPACE%%%Records_Failed__c</name>
+    </fields>
+    <fields>
+        <help>[最終処理日時] 項目の日付で処理に成功したレコードの数を示します。</help>
+        <label><!-- Records Successfully Processed --></label>
+        <name>%%%NAMESPACE%%%Records_Successfully_Processed__c</name>
+    </fields>
+    <fields>
+        <help>オンの場合、支援の総数と総額は、バッチで入力された予測合計とマッチングしなければなりません。</help>
+        <label><!-- Require Expected Totals Match --></label>
+        <name>%%%NAMESPACE%%%RequireTotalMatch__c</name>
+    </fields>
+    <fields>
+        <help>オンの場合、NPSP は支援処理時に支援者の積み上げ集計を計算します。オフの場合、支援者の積み上げ集計はデフォルトの夜間スケジュール済みジョブ時に計算されます。このチェックボックスを選択すると、バッチの処理が遅くなることがあります。</help>
+        <label><!-- Calculate Donation Rollups with Batch --></label>
+        <name>%%%NAMESPACE%%%Run_Opportunity_Rollups_while_Processing__c</name>
+    </fields>
+    <nameFieldLabel>バッチ名</nameFieldLabel>
+    <webLinks>
+        <label><!-- Process_Batch --></label>
+        <name>%%%NAMESPACE%%%Process_Batch</name>
+    </webLinks>
+</CustomObjectTranslation>

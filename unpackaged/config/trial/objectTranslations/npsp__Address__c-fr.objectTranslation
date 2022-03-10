@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Adresse</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Adresses</value>
+    </caseValues>
+    <fields>
+        <help>Contient la réponse brute ou un message d’erreur.</help>
+        <label><!-- API Response --></label>
+        <name>%%%NAMESPACE%%%API_Response__c</name>
+    </fields>
+    <fields>
+        <label><!-- Address Type --></label>
+        <name>%%%NAMESPACE%%%Address_Type__c</name>
+        <picklistValues>
+            <masterLabel>Home</masterLabel>
+            <translation>Domicile</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Other</masterLabel>
+            <translation>Autre</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Vacation Residence</masterLabel>
+            <translation>Résidence de vacances</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Work</masterLabel>
+            <translation>Travail</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Selon le pays et la zone, il peut s‘agir d’une ville, commune, municipalité, ou tout type de division administrative associée à cette adresse.</help>
+        <label><!-- Administrative Area --></label>
+        <name>%%%NAMESPACE%%%Administrative_Area__c</name>
+    </fields>
+    <fields>
+        <help>Indique si plus d’une adresse a été trouvée lors de la tentative de validation par un service externe.</help>
+        <label><!-- Ambiguous --></label>
+        <name>%%%NAMESPACE%%%Ambiguous__c</name>
+    </fields>
+    <fields>
+        <help>Le district électoral auquel appartient cette adresse.</help>
+        <label><!-- Congressional District --></label>
+        <name>%%%NAMESPACE%%%Congressional_District__c</name>
+    </fields>
+    <fields>
+        <help>Nom du comté dans lequel se trouve cette adresse.</help>
+        <label><!-- County Name --></label>
+        <name>%%%NAMESPACE%%%County_Name__c</name>
+    </fields>
+    <fields>
+        <help>Cette adresse est-elle l’adresse par défaut à utiliser pour le foyer et ses contacts ?</help>
+        <label><!-- Default Address --></label>
+        <name>%%%NAMESPACE%%%Default_Address__c</name>
+    </fields>
+    <fields>
+        <help>Si cette option est sélectionnée, cette adresse ne sera pas incluse dans les mises à jour des adresses du NCOA ou du fournisseur de vérification d’adresse.</help>
+        <label><!-- Exclude from Updates --></label>
+        <name>%%%NAMESPACE%%%Exclude_from_Updates__c</name>
+    </fields>
+    <fields>
+        <label><!-- Mailing Address --></label>
+        <name>%%%NAMESPACE%%%Formula_MailingAddress__c</name>
+    </fields>
+    <fields>
+        <label><!-- Mailing Street Address --></label>
+        <name>%%%NAMESPACE%%%Formula_MailingStreetAddress__c</name>
+    </fields>
+    <fields>
+        <help>Latitude et longitude de l’endroit.</help>
+        <label><!-- Geolocation --></label>
+        <name>%%%NAMESPACE%%%Geolocation__c</name>
+    </fields>
+    <fields>
+        <help>Le compte de foyer auquel cette adresse appartient.</help>
+        <label><!-- Account --></label>
+        <name>%%%NAMESPACE%%%Household_Account__c</name>
+        <relationshipLabel><!-- Addresses --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>La date de fin la plus récente à laquelle cette adresse a été utilisée pour ce foyer.</help>
+        <label><!-- Latest End Date --></label>
+        <name>%%%NAMESPACE%%%Latest_End_Date__c</name>
+    </fields>
+    <fields>
+        <help>La date de début la plus récente à laquelle cette adresse a été utilisée pour ce foyer.</help>
+        <label><!-- Latest Start Date --></label>
+        <name>%%%NAMESPACE%%%Latest_Start_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Mailing City --></label>
+        <name>%%%NAMESPACE%%%MailingCity__c</name>
+    </fields>
+    <fields>
+        <label><!-- Mailing Country --></label>
+        <name>%%%NAMESPACE%%%MailingCountry__c</name>
+    </fields>
+    <fields>
+        <label><!-- Mailing Zip/Postal Code --></label>
+        <name>%%%NAMESPACE%%%MailingPostalCode__c</name>
+    </fields>
+    <fields>
+        <label><!-- Mailing State/Province --></label>
+        <name>%%%NAMESPACE%%%MailingState__c</name>
+    </fields>
+    <fields>
+        <label><!-- Mailing Street2 --></label>
+        <name>%%%NAMESPACE%%%MailingStreet2__c</name>
+    </fields>
+    <fields>
+        <label><!-- Mailing Street --></label>
+        <name>%%%NAMESPACE%%%MailingStreet__c</name>
+    </fields>
+    <fields>
+        <help>La date et l’heure les plus récentes auxquelles l’adresse a été évaluée par un fournisseur NCOA.</help>
+        <label><!-- NCOA Evaluation Date --></label>
+        <name>%%%NAMESPACE%%%NCOA_Evaluation_Date__c</name>
+    </fields>
+    <fields>
+        <help>Le code de résultat du fournisseur NCOA.</help>
+        <label><!-- NCOA Result Code --></label>
+        <name>%%%NAMESPACE%%%NCOA_Result_Code__c</name>
+    </fields>
+    <fields>
+        <help>Enregistre l’adresse telle que saisie, avant vérification par un service distant, au cas où des informations sont perdues dans le processus de vérification.</help>
+        <label><!-- Pre-Verification Address --></label>
+        <name>%%%NAMESPACE%%%Pre_Verification_Address__c</name>
+    </fields>
+    <fields>
+        <help>Le jour du mois à partir duquel cette adresse ne remplace plus l’adresse par défaut.</help>
+        <label><!-- Seasonal End Day --></label>
+        <name>%%%NAMESPACE%%%Seasonal_End_Day__c</name>
+        <picklistValues>
+            <masterLabel>1</masterLabel>
+            <translation>1</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>10</masterLabel>
+            <translation>10</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>11</masterLabel>
+            <translation>11</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>12</masterLabel>
+            <translation>12</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>13</masterLabel>
+            <translation>13</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>14</masterLabel>
+            <translation>14</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>15</masterLabel>
+            <translation>15</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>16</masterLabel>
+            <translation>16</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>17</masterLabel>
+            <translation>17</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>18</masterLabel>
+            <translation>18</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>19</masterLabel>
+            <translation>19</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>2</masterLabel>
+            <translation>2</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>20</masterLabel>
+            <translation>20</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>21</masterLabel>
+            <translation>21</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>22</masterLabel>
+            <translation>22</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>23</masterLabel>
+            <translation>23</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>24</masterLabel>
+            <translation>24</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>25</masterLabel>
+            <translation>25</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>26</masterLabel>
+            <translation>26</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>27</masterLabel>
+            <translation>27</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>28</masterLabel>
+            <translation>28</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>29</masterLabel>
+            <translation>29</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>3</masterLabel>
+            <translation>3</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>30</masterLabel>
+            <translation>30</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>31</masterLabel>
+            <translation>31</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>4</masterLabel>
+            <translation>4</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>5</masterLabel>
+            <translation>5</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>6</masterLabel>
+            <translation>6</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>7</masterLabel>
+            <translation>7</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>8</masterLabel>
+            <translation>8</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>9</masterLabel>
+            <translation>9</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Le mois de l’année à partir duquel cette adresse ne remplace plus l’adresse par défaut.</help>
+        <label><!-- Seasonal End Month --></label>
+        <name>%%%NAMESPACE%%%Seasonal_End_Month__c</name>
+        <picklistValues>
+            <masterLabel>1</masterLabel>
+            <translation>1</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>10</masterLabel>
+            <translation>10</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>11</masterLabel>
+            <translation>11</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>12</masterLabel>
+            <translation>12</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>2</masterLabel>
+            <translation>2</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>3</masterLabel>
+            <translation>3</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>4</masterLabel>
+            <translation>4</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>5</masterLabel>
+            <translation>5</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>6</masterLabel>
+            <translation>6</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>7</masterLabel>
+            <translation>7</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>8</masterLabel>
+            <translation>8</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>9</masterLabel>
+            <translation>9</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Le jour du mois à partir duquel cette adresse remplace l’adresse par défaut.</help>
+        <label><!-- Seasonal Start Day --></label>
+        <name>%%%NAMESPACE%%%Seasonal_Start_Day__c</name>
+        <picklistValues>
+            <masterLabel>1</masterLabel>
+            <translation>1</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>10</masterLabel>
+            <translation>10</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>11</masterLabel>
+            <translation>11</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>12</masterLabel>
+            <translation>12</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>13</masterLabel>
+            <translation>13</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>14</masterLabel>
+            <translation>14</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>15</masterLabel>
+            <translation>15</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>16</masterLabel>
+            <translation>16</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>17</masterLabel>
+            <translation>17</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>18</masterLabel>
+            <translation>18</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>19</masterLabel>
+            <translation>19</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>2</masterLabel>
+            <translation>2</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>20</masterLabel>
+            <translation>20</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>21</masterLabel>
+            <translation>21</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>22</masterLabel>
+            <translation>22</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>23</masterLabel>
+            <translation>23</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>24</masterLabel>
+            <translation>24</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>25</masterLabel>
+            <translation>25</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>26</masterLabel>
+            <translation>26</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>27</masterLabel>
+            <translation>27</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>28</masterLabel>
+            <translation>28</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>29</masterLabel>
+            <translation>29</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>3</masterLabel>
+            <translation>3</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>30</masterLabel>
+            <translation>30</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>31</masterLabel>
+            <translation>31</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>4</masterLabel>
+            <translation>4</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>5</masterLabel>
+            <translation>5</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>6</masterLabel>
+            <translation>6</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>7</masterLabel>
+            <translation>7</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>8</masterLabel>
+            <translation>8</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>9</masterLabel>
+            <translation>9</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Le mois de l’année à partir duquel cette adresse remplace l’adresse par défaut.</help>
+        <label><!-- Seasonal Start Month --></label>
+        <name>%%%NAMESPACE%%%Seasonal_Start_Month__c</name>
+        <picklistValues>
+            <masterLabel>1</masterLabel>
+            <translation>1</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>10</masterLabel>
+            <translation>10</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>11</masterLabel>
+            <translation>11</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>12</masterLabel>
+            <translation>12</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>2</masterLabel>
+            <translation>2</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>3</masterLabel>
+            <translation>3</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>4</masterLabel>
+            <translation>4</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>5</masterLabel>
+            <translation>5</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>6</masterLabel>
+            <translation>6</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>7</masterLabel>
+            <translation>7</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>8</masterLabel>
+            <translation>8</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>9</masterLabel>
+            <translation>9</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>La circonscription locale (par exemple un « state lower district ») à laquelle appartient cette adresse.</help>
+        <label><!-- State Lower District --></label>
+        <name>%%%NAMESPACE%%%State_Lower_District__c</name>
+    </fields>
+    <fields>
+        <help>La circonscription régionale (par exemple un « state upper district ») à laquelle appartient cette adresse.</help>
+        <label><!-- State Upper District --></label>
+        <name>%%%NAMESPACE%%%State_Upper_District__c</name>
+    </fields>
+    <fields>
+        <help>Indique que l’adresse n’est pas livrable.</help>
+        <label><!-- Undeliverable --></label>
+        <name>%%%NAMESPACE%%%Undeliverable__c</name>
+    </fields>
+    <fields>
+        <help>Si cette adresse doit être vérifiée, cliquez sur le bouton « Vérifier l’adresse » en haut de cette page. Consultez la documentation d’aide dans le Power of Us Hub pour plus d’informations.</help>
+        <label><!-- Verification Status --></label>
+        <name>%%%NAMESPACE%%%Verification_Status__c</name>
+    </fields>
+    <fields>
+        <help>La date et l’heure les plus récentes auxquelles l’adresse a été vérifiée.</help>
+        <label><!-- Verified Date --></label>
+        <name>%%%NAMESPACE%%%Verified_Date__c</name>
+    </fields>
+    <fields>
+        <help>Indique si l’adresse a été vérifiée par un service externe de vérification d’adresse.</help>
+        <label><!-- Verified --></label>
+        <name>%%%NAMESPACE%%%Verified__c</name>
+    </fields>
+    <gender>Feminine</gender>
+    <layouts>
+        <layout>Address Layout</layout>
+        <sections>
+            <label>Informations saisonnières</label>
+            <section>Seasonal Information</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>ID d&apos;adresse</nameFieldLabel>
+    <startsWith>Vowel</startsWith>
+    <webLinks>
+        <label><!-- Verify_Address --></label>
+        <name>%%%NAMESPACE%%%Verify_Address</name>
+    </webLinks>
+</CustomObjectTranslation>

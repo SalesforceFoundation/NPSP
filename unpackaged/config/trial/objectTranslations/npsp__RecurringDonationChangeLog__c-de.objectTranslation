@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value>Änderungsprotokoll für wiederkehrende Spenden</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value>Änderungsprotokolle für wiederkehrende Spenden</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value>Änderungsprotokoll für wiederkehrende Spenden</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value>Änderungsprotokolle für wiederkehrende Spenden</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value>Änderungsprotokolls für wiederkehrende Spenden</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value>Änderungsprotokolle für wiederkehrende Spenden</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value>Änderungsprotokoll für wiederkehrende Spenden</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value>Änderungsprotokollen für wiederkehrende Spenden</value>
+    </caseValues>
+    <fields>
+        <help>Der Typ der Änderung (Upgrade, Downgrade usw.), den dieser Änderungsprotokoll-Datensatz darstellt.</help>
+        <label><!-- Change Type --></label>
+        <name>%%%NAMESPACE%%%ChangeType__c</name>
+        <picklistValues>
+            <masterLabel>Downgrade</masterLabel>
+            <translation>Downgrade</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Upgrade</masterLabel>
+            <translation>Upgrade</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Das Datum des Inkrafttretens der wiederkehrenden Spende, an dem diese Änderung erfolgte.</help>
+        <label><!-- Effective Date --></label>
+        <name>%%%NAMESPACE%%%EffectiveDate__c</name>
+    </fields>
+    <fields>
+        <help>Der neue Betrag für die zugeordnete wiederkehrende Spende.</help>
+        <label><!-- New Amount --></label>
+        <name>%%%NAMESPACE%%%NewAmount__c</name>
+    </fields>
+    <fields>
+        <help>Der neue Jahreswert für diese wiederkehrende Spende, basierend auf dem Betrag und dem Zeitplan.</help>
+        <label><!-- New Annual Value --></label>
+        <name>%%%NAMESPACE%%%NewAnnualValue__c</name>
+    </fields>
+    <fields>
+        <help>Die neue Kampagne für die zugeordnete wiederkehrende Spende.</help>
+        <label><!-- New Campaign --></label>
+        <name>%%%NAMESPACE%%%NewCampaign__c</name>
+        <relationshipLabel><!-- Recurring Donation Change Log (New Campaign) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>Der neue erwartete Gesamtwert für diese befristete wiederkehrende Spende, basierend auf dem Betrag und dem Zeitplan.</help>
+        <label><!-- New Expected Total Value --></label>
+        <name>%%%NAMESPACE%%%NewExpectedTotalValue__c</name>
+    </fields>
+    <fields>
+        <help>Die neue Häufigkeit der Ratenzahlungen für die zugeordnete wiederkehrende Spende.</help>
+        <label><!-- New Installment Frequency --></label>
+        <name>%%%NAMESPACE%%%NewInstallmentFrequency__c</name>
+    </fields>
+    <fields>
+        <help>Die neue Ratenlaufzeit für die zugeordnete wiederkehrende Spende.</help>
+        <label><!-- New Installment Period --></label>
+        <name>%%%NAMESPACE%%%NewInstallmentPeriod__c</name>
+    </fields>
+    <fields>
+        <help>Die neue Zahlungsmethode für die zugeordnete wiederkehrende Spende.</help>
+        <label><!-- New Payment Method --></label>
+        <name>%%%NAMESPACE%%%NewPaymentMethod__c</name>
+    </fields>
+    <fields>
+        <help>Die neue Anzahl der Raten (Spenden), mit deren Eingang Sie rechnen. Nur für befristete wiederkehrende Spenden.</help>
+        <label><!-- New Number of Planned Installments --></label>
+        <name>%%%NAMESPACE%%%NewPlannedInstallments__c</name>
+    </fields>
+    <fields>
+        <help>Der neue Wiederholungstyp für die zugeordnete wiederkehrende Spende.</help>
+        <label><!-- New Recurring Type --></label>
+        <name>%%%NAMESPACE%%%NewRecurringType__c</name>
+    </fields>
+    <fields>
+        <help>Der Grund für den neuen Status für die zugeordnete wiederkehrende Spende.</help>
+        <label><!-- New Status Reason --></label>
+        <name>%%%NAMESPACE%%%NewStatusReason__c</name>
+    </fields>
+    <fields>
+        <help>Der neue Status für die zugeordnete wiederkehrende Spende.</help>
+        <label><!-- New Status --></label>
+        <name>%%%NAMESPACE%%%NewStatus__c</name>
+    </fields>
+    <fields>
+        <help>Der vorherige Betrag für die zugeordnete wiederkehrende Spende.</help>
+        <label><!-- Previous Amount --></label>
+        <name>%%%NAMESPACE%%%PreviousAmount__c</name>
+    </fields>
+    <fields>
+        <help>Der vorherige Jahreswert für diese wiederkehrende Spende, basierend auf dem Betrag und dem Zeitplan.</help>
+        <label><!-- Previous Annual Value --></label>
+        <name>%%%NAMESPACE%%%PreviousAnnualValue__c</name>
+    </fields>
+    <fields>
+        <help>Die vorherige Kampagne für die zugeordnete wiederkehrende Spende.</help>
+        <label><!-- Previous Campaign --></label>
+        <name>%%%NAMESPACE%%%PreviousCampaign__c</name>
+        <relationshipLabel><!-- Recurring Donation Change Log (Previous Campaign) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>Der vorherige erwartete Gesamtwert für diese befristete wiederkehrende Spende, basierend auf dem Betrag und dem Zeitplan.</help>
+        <label><!-- Previous Expected Total Value --></label>
+        <name>%%%NAMESPACE%%%PreviousExpectedTotalValue__c</name>
+    </fields>
+    <fields>
+        <help>Die vorherige Häufigkeit der Ratenzahlungen für die zugeordnete wiederkehrende Spende.</help>
+        <label><!-- Previous Installment Frequency --></label>
+        <name>%%%NAMESPACE%%%PreviousInstallmentFrequency__c</name>
+    </fields>
+    <fields>
+        <help>Die vorherige Ratenlaufzeit für die zugeordnete wiederkehrende Spende.</help>
+        <label><!-- Previous Installment Period --></label>
+        <name>%%%NAMESPACE%%%PreviousInstallmentPeriod__c</name>
+    </fields>
+    <fields>
+        <help>Die vorherige Zahlungsmethode für die zugeordnete wiederkehrende Spende</help>
+        <label><!-- Previous Payment Method --></label>
+        <name>%%%NAMESPACE%%%PreviousPaymentMethod__c</name>
+    </fields>
+    <fields>
+        <help>Die vorherige Anzahl der Raten (Spenden), mit deren Eingang Sie rechnen. Nur für befristete wiederkehrende Spenden.</help>
+        <label><!-- Previous Number of Planned Installments --></label>
+        <name>%%%NAMESPACE%%%PreviousPlannedInstallments__c</name>
+    </fields>
+    <fields>
+        <help>Der vorherige Wiederholungstyp für die zugeordnete wiederkehrende Spende.</help>
+        <label><!-- Previous Recurring Type --></label>
+        <name>%%%NAMESPACE%%%PreviousRecurringType__c</name>
+    </fields>
+    <fields>
+        <help>Der Grund für den vorherigen Status für die zugeordnete wiederkehrende Spende.</help>
+        <label><!-- Previous Status Reason --></label>
+        <name>%%%NAMESPACE%%%PreviousStatusReason__c</name>
+    </fields>
+    <fields>
+        <help>Der vorherige Status für die zugeordnete wiederkehrende Spende.</help>
+        <label><!-- Previous Status --></label>
+        <name>%%%NAMESPACE%%%PreviousStatus__c</name>
+    </fields>
+    <fields>
+        <help>Die diesem Änderungsprotokoll-Datensatz zugeordnete wiederkehrende Spende.</help>
+        <label><!-- Recurring Donation --></label>
+        <name>%%%NAMESPACE%%%RecurringDonation__c</name>
+        <relationshipLabel><!-- Recurring Donation Change Log --></relationshipLabel>
+    </fields>
+    <gender>Neuter</gender>
+    <nameFieldLabel>Nummer im Änderungsprotokoll für wiederk</nameFieldLabel>
+</CustomObjectTranslation>

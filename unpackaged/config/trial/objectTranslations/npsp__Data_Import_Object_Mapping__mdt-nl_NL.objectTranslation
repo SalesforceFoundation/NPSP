@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Objecttoewijzing voor gegevensimport --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Objecttoewijzingen voor gegevensimport --></value>
+    </caseValues>
+    <fields>
+        <help>Als aangepaste Apex-logica moet worden gebruikt voor het toewijzen van de velden toe voor dit object, moet dit veld worden ingevuld met de naam van een klasse (inclusief naamruimte, indien benodigd), die de klasse BDI_ObjectMappingLogic uitbreidt en de methode populateObject overschrijft.</help>
+        <label><!-- Custom Mapping Logic Class --></label>
+        <name>%%%NAMESPACE%%%Custom_Mapping_Logic_Class__c</name>
+    </fields>
+    <fields>
+        <help>De Objectgroep voor gegevensimport, die deze record bevat.</help>
+        <label><!-- Data Import Object Mapping Set --></label>
+        <name>%%%NAMESPACE%%%Data_Import_Object_Mapping_Set__c</name>
+        <relationshipLabel><!-- Data Import Object Mappings --></relationshipLabel>
+    </fields>
+    <fields>
+        <help>De veld-API-naam voor het object NPSP-gegevensimport, waarin de ID voor de /geïmporteerde record wordt geplaatst wanneer het importeren is geslaagd. Dit is ook de plaats waar de code gaat verifiëren of deze record is geïmporteerd of is gekoppeld.</help>
+        <label><!-- Imported Record Field Name --></label>
+        <name>%%%NAMESPACE%%%Imported_Record_Field_Name__c</name>
+    </fields>
+    <fields>
+        <help>De veld-API-naam waarin het slagen of mislukken van de import wordt vastgelegd voor een record NPSP-gegevensimport.</help>
+        <label><!-- Imported Record Status Field Name --></label>
+        <name>%%%NAMESPACE%%%Imported_Record_Status_Field_Name__c</name>
+    </fields>
+    <fields>
+        <label><!-- Is Deleted --></label>
+        <name>%%%NAMESPACE%%%Is_Deleted__c</name>
+    </fields>
+    <fields>
+        <help>De objectnaam van verouderde gegevensimport van het object, waarop deze Objectgroep voor gegevensimport is gebaseerd.</help>
+        <label><!-- Legacy Data Import Object Name --></label>
+        <name>%%%NAMESPACE%%%Legacy_Data_Import_Object_Name__c</name>
+    </fields>
+    <fields>
+        <help>De API-naam van het doelobject voor deze objectgroep</help>
+        <label><!-- Object API Name --></label>
+        <name>%%%NAMESPACE%%%Object_API_Name__c</name>
+    </fields>
+    <fields>
+        <help>De record Objectgroep voor gegevensimport, die moet bestaan voordat deze record kan worden gemaakt (hetzij bovenliggend, hetzij onderliggend).</help>
+        <label><!-- Predecessor --></label>
+        <name>%%%NAMESPACE%%%Predecessor__c</name>
+    </fields>
+    <fields>
+        <help>Als deze objectgroep een onderliggend element van de voorganger is, moet dit veld &quot;opzien&quot; naar het bovenliggende element. Als het het bovenliggende element van de voorganger is, moet dit het opzoekveld voor de onderliggende record zijn.</help>
+        <label><!-- Relationship Field --></label>
+        <name>%%%NAMESPACE%%%Relationship_Field__c</name>
+    </fields>
+    <fields>
+        <help>Dit geeft aan of dit object een bovenliggend of onderliggend element van de voorganger is.</help>
+        <label><!-- Relationship To Predecessor --></label>
+        <name>%%%NAMESPACE%%%Relationship_To_Predecessor__c</name>
+        <picklistValues>
+            <masterLabel>Child</masterLabel>
+            <translation>Onderliggend element</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>No Predecessor</masterLabel>
+            <translation>Geen voorganger</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Parent</masterLabel>
+            <translation>Bovenliggend element</translation>
+        </picklistValues>
+    </fields>
+    <gender><!-- Feminine --></gender>
+    <layouts>
+        <layout>Data Import Object Mapping Layout</layout>
+        <sections>
+            <label>Details van aangepast-objectrelatie</label>
+            <section>Custom Object Relationship Details</section>
+        </sections>
+    </layouts>
+</CustomObjectTranslation>

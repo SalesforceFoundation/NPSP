@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Cuenta Contable General</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Cuentas Contables Generales</value>
+    </caseValues>
+    <fields>
+        <help>Cuentas contables generales activas están disponibles para seleccionar en asignaciones. Cuentas contables generales no pueden tener nuevas asignaciones relacionadas a ellos.</help>
+        <label><!-- Active --></label>
+        <name>%%%NAMESPACE%%%Active__c</name>
+    </fields>
+    <fields>
+        <help>El promedio de todas las asignaciones a esta cuenta contable general.</help>
+        <label><!-- Average Allocation --></label>
+        <name>%%%NAMESPACE%%%Average_Allocation__c</name>
+    </fields>
+    <fields>
+        <help>Información adicional sobre esta cuenta contable general.</help>
+        <label><!-- Description --></label>
+        <name>%%%NAMESPACE%%%Description__c</name>
+    </fields>
+    <fields>
+        <help>La primera fecha de cierre de oportunidad de una asignación asociada a esta cuenta contable general.</help>
+        <label><!-- First Allocation Date --></label>
+        <name>%%%NAMESPACE%%%First_Allocation_Date__c</name>
+    </fields>
+    <fields>
+        <help>La mayor asignación relacionada a esta cuenta contable general</help>
+        <label><!-- Largest Allocation --></label>
+        <name>%%%NAMESPACE%%%Largest_Allocation__c</name>
+    </fields>
+    <fields>
+        <help>La última fecha de cierra de oportunidad de una asignación asociada a esta cuenta contable general.</help>
+        <label><!-- Last Allocation Date --></label>
+        <name>%%%NAMESPACE%%%Last_Allocation_Date__c</name>
+    </fields>
+    <fields>
+        <help>Cantidad total de asignaciones the oportunidades cerradas ganadas en los últimos N días. El valor de N puede ser modificado en la configuración.</help>
+        <label><!-- Number of Allocations Last N Days --></label>
+        <name>%%%NAMESPACE%%%Number_of_Allocations_Last_N_Days__c</name>
+    </fields>
+    <fields>
+        <help>Cantidad total de asignaciones the oportunidades cerradas ganadas el año pasado.</help>
+        <label><!-- Number of Allocations Last Year --></label>
+        <name>%%%NAMESPACE%%%Number_of_Allocations_Last_Year__c</name>
+    </fields>
+    <fields>
+        <help>Cantidad total de asignaciones de oportunidades cerradas ganadas este año</help>
+        <label><!-- Number of Allocations This Year --></label>
+        <name>%%%NAMESPACE%%%Number_of_Allocations_This_Year__c</name>
+    </fields>
+    <fields>
+        <help>Cantidad total de asignaciones de oportunidades cerradas ganadas hace dos años.</help>
+        <label><!-- Number of Allocations Two Years Ago --></label>
+        <name>%%%NAMESPACE%%%Number_of_Allocations_Two_Years_Ago__c</name>
+    </fields>
+    <fields>
+        <help>La menor asignación relacionada a esta cuenta contable general.</help>
+        <label><!-- Smallest Allocation --></label>
+        <name>%%%NAMESPACE%%%Smallest_Allocation__c</name>
+    </fields>
+    <fields>
+        <help>Suma total de todas las asignaciones de oportunidades cerradas ganadas los últimos N días. El valor de N puede ser modificado en la configuración.</help>
+        <label><!-- Total Allocations Last N Days --></label>
+        <name>%%%NAMESPACE%%%Total_Allocations_Last_N_Days__c</name>
+    </fields>
+    <fields>
+        <help>Suma total de todas las asignaciones de oportunidades cerradas ganadas el año pasado.</help>
+        <label><!-- Total Allocations Last Year --></label>
+        <name>%%%NAMESPACE%%%Total_Allocations_Last_Year__c</name>
+    </fields>
+    <fields>
+        <help>Suma total de todas las asignaciones de oportunidades cerradas ganadas este año.</help>
+        <label><!-- Total Allocations This Year --></label>
+        <name>%%%NAMESPACE%%%Total_Allocations_This_Year__c</name>
+    </fields>
+    <fields>
+        <help>Suma total de todas las asignaciones de oportunidades cerradas ganadas hace dos años.</help>
+        <label><!-- Total Allocations Two Years Ago --></label>
+        <name>%%%NAMESPACE%%%Total_Allocations_Two_Years_Ago__c</name>
+    </fields>
+    <fields>
+        <help>Suma total de todas las asignaciones de oportunidades cerradas ganadas.</help>
+        <label><!-- Total Allocations --></label>
+        <name>%%%NAMESPACE%%%Total_Allocations__c</name>
+    </fields>
+    <fields>
+        <help>Cantidad total de asignaciones de oportunidades cerradas ganadas.</help>
+        <label><!-- Total Number of Allocations --></label>
+        <name>%%%NAMESPACE%%%Total_Number_of_Allocations__c</name>
+    </fields>
+    <gender>Feminine</gender>
+    <layouts>
+        <layout>General Accounting Unit Layout</layout>
+        <sections>
+            <label>Información de asignación</label>
+            <section>Allocation Information</section>
+        </sections>
+        <sections>
+            <label>Totales de asignación</label>
+            <section>Allocation Totals</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Nombre de Cuenta Contable General</nameFieldLabel>
+    <webLinks>
+        <label><!-- Recalculate_Rollups --></label>
+        <name>%%%NAMESPACE%%%Recalculate_Rollups</name>
+    </webLinks>
+</CustomObjectTranslation>

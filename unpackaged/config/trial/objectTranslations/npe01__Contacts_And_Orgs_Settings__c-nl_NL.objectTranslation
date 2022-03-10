@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Instelling voor contactpersonen en organisaties --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Instellingen voor contactpersonen en organisaties --></value>
+    </caseValues>
+    <fields>
+        <help>Instellingen voor het acoount model. Zouden moeten zijn &quot;Huishouden&quot; ,&quot;een-op-een&quot; of &quot;Individueel&quot;. Vervangt het aangepaste veld Contact.SystemAccountProcessor__c  Huishouden is het aanbevolen model.</help>
+        <label><!-- Account Model --></label>
+        <name>npe01__Account_Processor__c</name>
+    </fields>
+    <fields>
+        <help>AFGEKEURD. Trigger gedrag nu gecontroleerd in de Trigger Configuratiepagina van NPSP Instellingen</help>
+        <label><!-- DEPRECATED-Disable_IndividualAcc_trigger --></label>
+        <name>npe01__DISABLE_IndividualAccounts_trigger__c</name>
+    </fields>
+    <fields>
+        <help>AFGEKEURD. Trigger gedrag nu gecontroleerd in de Trigger Configuratiepagina van NPSP Instellingen</help>
+        <label><!-- DEPRECATED-Disable_OppAccount_trigger --></label>
+        <name>npe01__DISABLE_OpportunityAccount_trigger__c</name>
+    </fields>
+    <fields>
+        <help>AFGEKEURD. Trigger gedrag nu gecontroleerd in de Trigger Configuratiepagina van NPSP Instellingen</help>
+        <label><!-- DEPRECATED-Disable_OCR_trigger --></label>
+        <name>npe01__DISABLE_OpportunityContactRoles_trigger__c</name>
+    </fields>
+    <fields>
+        <help>AFGEKEURD. Trigger gedrag nu gecontroleerd in de Trigger Configuratiepagina van NPSP Instellingen</help>
+        <label><!-- DEPRECATED-Disable_OppPayments_trigger --></label>
+        <name>npe01__DISABLE_OpportunityPayments_trigger__c</name>
+    </fields>
+    <fields>
+        <help>Geeft aan of er een Opportunity aangemaakt moet worden bij het converteren van een Lead.</help>
+        <label><!-- Create Opportunity on Lead Convert --></label>
+        <name>npe01__Default_Opp_on_Convert__c</name>
+    </fields>
+    <fields>
+        <help>AFGEKEURD. Trigger gedrag nu gecontroleerd in de Trigger Configuratiepagina van NPSP Instellingen</help>
+        <label><!-- DEPRECATED-Disable Account Model Trigger --></label>
+        <name>npe01__Disable_Account_Model_Trigger__c</name>
+    </fields>
+    <fields>
+        <help>AFGEKEURD. Trigger gedrag nu gecontroleerd in de Trigger Configuratiepagina van NPSP Instellingen</help>
+        <label><!-- DEPRECATED-Enable OppContactRole Trigger --></label>
+        <name>npe01__Enable_Opportunity_Contact_Role_Trigger__c</name>
+    </fields>
+    <fields>
+        <help>Nieuwe versies van het Non-profit Starter Pakket worden automatisch geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Enable Update Check --></label>
+        <name>npe01__Enable_Update_Check__c</name>
+    </fields>
+    <fields>
+        <help>Het ID van het Account Record Type wordt gebruikt voor het huishouden Account. Als er niks is geselecteerd, zal Het Account de standaard Record Type van de gebruiker hanteren.</help>
+        <label><!-- Household Account Record Type --></label>
+        <name>npe01__HH_Account_RecordTypeID__c</name>
+    </fields>
+    <fields>
+        <help>Nieuwe versies van het Non-profit Starter Pakket worden automatisch geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Has Package Update --></label>
+        <name>npe01__Has_Package_Update__c</name>
+    </fields>
+    <fields>
+        <help>Nieuwe versies van het Non-profit Starter Pakket worden automatisch geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Last Update Check --></label>
+        <name>npe01__Last_Update_Check__c</name>
+    </fields>
+    <fields>
+        <help>Nieuwe versies van het Non-profit Starter Pakket worden automatisch geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Max Package Version --></label>
+        <name>npe01__Max_Package_Version__c</name>
+    </fields>
+    <fields>
+        <help>Het ID van het Account Record Type wordt gebruikt voor het een-op-een Accounts. Als er niks is geselecteerd, zal Het Account de standaard Record Type van de gebruiker hanteren.</help>
+        <label><!-- One-to-One Record Type --></label>
+        <name>npe01__One_to_One_RecordTypeID__c</name>
+    </fields>
+    <fields>
+        <help>De standaard rol voor de Primaire Opportunity Contact Rol die automatisch worden aangemaakt</help>
+        <label><!-- Contact Role for Individual Opps --></label>
+        <name>npe01__Opportunity_Contact_Role_Default_role__c</name>
+    </fields>
+    <fields>
+        <help>Nieuwe versies van het Non-profit Starter Pakket worden automatisch geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Package Update URL --></label>
+        <name>npe01__Package_Update_URL__c</name>
+    </fields>
+    <fields>
+        <help>Schakelt automatisch Betalingen in gecreëerd voor nieuwe Kansen / Donaties</help>
+        <label><!-- Automatic Payment Creation --></label>
+        <name>npe01__Payments_Enabled__c</name>
+    </fields>
+    <fields>
+        <help>Nieuwe versies van het Non-profit Starter Pakket worden automatisch geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Update Check Interval --></label>
+        <name>npe01__Update_Check_Interval__c</name>
+    </fields>
+    <fields>
+        <help>Enkel voor systeemgebruik: naamruimte voor functionaliteit over verschillende pakketten heen</help>
+        <label><!-- GEM Namespace --></label>
+        <name>%%%NAMESPACE%%%Advancement_Namespace__c</name>
+    </fields>
+    <fields>
+        <help>Maakt automatisch een Campagne Lid aan wanneer je een Opportunity maakt die een gerelateerde Primair Contact en Primaire Campagne bron hebben, of update die Opportunity met Gesloten/Gewonnen fase.</help>
+        <label><!-- Automatic Campaign Member Management --></label>
+        <name>%%%NAMESPACE%%%Automatic_Campaign_Member_Management__c</name>
+    </fields>
+    <fields>
+        <help>De automatische status van een campagne lid van open of gesloten of verloren opportunity’s Die een primair contact en een primaire campagne bron aan geassocieerd zit. Als het veld wordt leeg gelaten, gebruikt Salesforce de eerste niet gereageerd status</help>
+        <label><!-- Campaign Member Non Responded Status --></label>
+        <name>%%%NAMESPACE%%%Campaign_Member_Non_Responded_Status__c</name>
+    </fields>
+    <fields>
+        <help>De automatische Status van een Campagne Lid van Open of Gesloten of verloren opportunity’s Die een Primair Contact en een Primaire Campagne Bron aan geassocieerd zit. Als het veld wordt leeg gelaten, gebruikt Salesforce de eerste beantwoorde status.</help>
+        <label><!-- Campaign Member Responded Status --></label>
+        <name>%%%NAMESPACE%%%Campaign_Member_Responded_Status__c</name>
+    </fields>
+    <fields>
+        <help>De standaard Contactpersoonrol die automatisch wordt toegewezen aan de Primaire Contactpersoon voor de Opportunities wanneer de Account van de Opportunity GEEN Huishouden- of One-to-One-Account of Individuele Account is.</help>
+        <label><!-- Contact Role for Organizational Opps --></label>
+        <name>%%%NAMESPACE%%%Contact_Role_for_Organizational_Opps__c</name>
+    </fields>
+    <fields>
+        <help>Schakelt meerdere regels en automatiseringen op betalingen en opportunities in om te verzekeren dat accountinggegevens volledig en consistent zijn.</help>
+        <label><!-- Enforce Accounting Data Consistency --></label>
+        <name>%%%NAMESPACE%%%Enforce_Accounting_Data_Consistency__c</name>
+    </fields>
+    <fields>
+        <help>Het vullen van deze instelling zorgt voor het automatisch aanmaken van een contactrol voor opportunity’s met een melding naar de honoree. Het leeglaten van dit veld schakelt de melding en het automatisch aanmaken van een contact role uit.</help>
+        <label><!-- Honoree Opportunity Contact Role --></label>
+        <name>%%%NAMESPACE%%%Honoree_Opportunity_Contact_Role__c</name>
+    </fields>
+    <fields>
+        <help>Schakelt Adresbeheer uit voor rekeningen van Huishoudens wanneer dit is geselecteerd.</help>
+        <label><!-- Household Account Addresses Disabled --></label>
+        <name>%%%NAMESPACE%%%Household_Account_Addresses_Disabled__c</name>
+    </fields>
+    <fields>
+        <help>Bepaald het maximum aantal betalingen beschikbaar in de betalingscreatie wizard</help>
+        <label><!-- Max Payments --></label>
+        <name>%%%NAMESPACE%%%Max_Payments__c</name>
+    </fields>
+    <fields>
+        <help>Het vullen van deze instelling zorgt voor het automatisch aanmaken van een contactrol voor opportunity’s met een melding naar het contact. Het leeglaten van dit veld schakelt de melding en het automatisch aanmaken van een contact role uit.</help>
+        <label><!-- Notification Recipient Opp Contact Role --></label>
+        <name>%%%NAMESPACE%%%Notification_Recipient_Opp_Contact_Role__c</name>
+    </fields>
+    <fields>
+        <help>Namen van Opportunity record types worden weggelaten als er een betaling wordt aangemaakt</help>
+        <label><!-- Excluded Opp Record Types --></label>
+        <name>%%%NAMESPACE%%%Opp_RecTypes_Excluded_for_Payments__c</name>
+    </fields>
+    <fields>
+        <help>Waardes voor het Opportynity type veld die uitgesloten moeten worden als er een betaling wordt aangemaakt</help>
+        <label><!-- Excluded Opp Types --></label>
+        <name>%%%NAMESPACE%%%Opp_Types_Excluded_for_Payments__c</name>
+    </fields>
+    <fields>
+        <help>Schakelt Adresbeheer in voor rekeningen van Huishoudens wanneer dit is geselecteerd.</help>
+        <label><!-- Organizational Account Addresses Enabled --></label>
+        <name>%%%NAMESPACE%%%Organizational_Account_Addresses_Enabled__c</name>
+    </fields>
+    <fields>
+        <help>Kies de fase die een Opportunity moet worden wanneer het totale betalingsbedrag is gelijk aan het Opportunity bedrag. Als er geen fase is geselecteerd, dan zullen opportunities niet automatisch worden overgezet wanneer de betalingen compleet zijn.</help>
+        <label><!-- Opportunity Stage for When Fully Paid --></label>
+        <name>%%%NAMESPACE%%%Payments_Auto_Close_Stage_Name__c</name>
+    </fields>
+    <fields>
+        <help>Wanneer ingeschakeld, Veranderingen aan één contact of bedrijfs adres veld update het huidige adres, in plaats van een nieuwe adres aan te maken</help>
+        <label><!-- Simple Address Change Treated as Update --></label>
+        <name>%%%NAMESPACE%%%Simple_Address_Change_Treated_as_Update__c</name>
+    </fields>
+    <gender><!-- Feminine --></gender>
+</CustomObjectTranslation>
