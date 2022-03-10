@@ -895,11 +895,11 @@ public inherited sharing class Addresses extends fflib_SObjects2 {
         }
     }
 
-    private static void resetLatestEndDateFor(Address__c address) {
+    private void resetLatestEndDateFor(Address__c address) {
         address.Latest_End_Date__c = NULL;
     }
 
-    private static void resetLatestStartDateFor(Address__c address) {
+    private void resetLatestStartDateFor(Address__c address) {
         address.Latest_Start_Date__c = System.today();
     }
 
