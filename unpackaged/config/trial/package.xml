@@ -2104,13 +2104,6 @@
         <name>ReportType</name>
     </types>
     <types>
-        <members>npe01__AccountViewOverride</members>
-        <members>npe01__ContactDonationCredit</members>
-        <members>npe01__OpportunityCreateMatching</members>
-        <members>npo02__HouseholdTransactionHistory</members>
-        <name>Scontrol</name>
-    </types>
-    <types>
         <members>Account</members>
         <members>AccountIntelligence</members>
         <members>Actions</members>
