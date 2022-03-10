@@ -529,7 +529,7 @@ export default class rd2EntryForm extends LightningElement {
         const period = getFieldValue(this.record, FIELD_INSTALLMENT_PERIOD);
         const campaignId = getFieldValue(this.record, FIELD_CAMPAIGN);
 
-        const hasFrequencyField = allFields.hasOwnProperty(FIELD_INSTALLMENT_FREQUENCY.fieldApiName);
+        const hasFrequencyField = FIELD_INSTALLMENT_FREQUENCY.fieldApiName in allFields;
         const amountChanged = amount !== Number(allFields[FIELD_AMOUNT.fieldApiName]);
         const frequencyChanged =
             hasFrequencyField && frequency !== Number(allFields[FIELD_INSTALLMENT_FREQUENCY.fieldApiName]);
