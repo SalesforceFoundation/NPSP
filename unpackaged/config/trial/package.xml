@@ -22,7 +22,6 @@
         <name>CleanDataService</name>
     </types>
     <types>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%NPSP_Address_Compact_Layout</members>
         <members>%%%NAMESPACE%%%Allocation__c.NPSP_GAU_Allocation</members>
         <members>%%%NAMESPACE%%%Engagement_Plan_Template__c.NPSP_Engagement_Plan_Template</members>
         <members>%%%NAMESPACE%%%Engagement_Plan__c.NPSP_Engagement_Plan</members>
@@ -77,7 +76,6 @@
         <name>CustomApplication</name>
     </types>
     <types>
-        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Household_Account__c</members>
         <members>%%%NAMESPACE%%%Engagement_Plan__c.%%%NAMESPACE%%%Engagement_Plan_Template__c</members>
         <members>%%%NAMESPACE%%%Grant_Deadline__c.%%%NAMESPACE%%%Opportunity__c</members>
         <members>Account.%%%NAMESPACE%%%Batch__c</members>
