@@ -135,8 +135,6 @@ public inherited sharing class Households extends fflib_SObjects2 {
             contactsNeedingAddressesCreated) {
         //Create household addresses from Contacts instead of from
         // the Account to include mapping of the Primary Address Type.
-        //Deactivate the Trigger that syncs Addresses to Accounts anc Contacts,
-        // since the Household Account and Contact are already configured correctly.
         Households.createAddressFromContactAndSetCurrentAddressLookupId
                 (contactsNeedingAddressesCreated, true);
     }
