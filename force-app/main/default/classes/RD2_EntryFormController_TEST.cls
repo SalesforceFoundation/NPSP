@@ -79,7 +79,7 @@ private with sharing class RD2_EntryFormController_TEST {
         Id accountId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
 
         Test.startTest();
-        RD2_EntryFormController.RD2AppView initialView = RD2_EntryFormController.getInitialView(accountId, null);
+        RD2_AppView initialView = RD2_EntryFormController.getInitialView(accountId, null);
         Test.stopTest();
 
         System.assertEquals(RD2_NamingService.isAutomaticNamingEnabled, initialView.isAutoNamingEnabled,
@@ -100,7 +100,7 @@ private with sharing class RD2_EntryFormController_TEST {
     @IsTest
     private static void newRecordShouldDefaultStartDate() {
         Test.startTest();
-        RD2_EntryFormController.RD2AppView initialView = RD2_EntryFormController.getInitialView(null, null);
+        RD2_AppView initialView = RD2_EntryFormController.getInitialView(null, null);
         Test.stopTest();
 
         System.assertEquals(initialView.record.dateEstablished, Date.today(), 'Date established should default to today.');
@@ -113,7 +113,7 @@ private with sharing class RD2_EntryFormController_TEST {
     @IsTest
     private static void newRecordShouldDefaultDateEstablished() {
         Test.startTest();
-        RD2_EntryFormController.RD2AppView initialView = RD2_EntryFormController.getInitialView(null, null);
+        RD2_AppView initialView = RD2_EntryFormController.getInitialView(null, null);
         Test.stopTest();
 
         System.assertEquals(initialView.record.startDate, Date.today(), 'Start date should default to today.');
@@ -130,7 +130,7 @@ private with sharing class RD2_EntryFormController_TEST {
         RD2_ElevateIntegrationService_TEST.enableElevateUserPermissions();
 
         Test.startTest();
-        RD2_EntryFormController.RD2AppView initialView = RD2_EntryFormController.getInitialView(accountId, null);
+        RD2_AppView initialView = RD2_EntryFormController.getInitialView(accountId, null);
         Test.stopTest();
 
         System.assertEquals(true, initialView.isElevateCustomer,
@@ -157,7 +157,7 @@ private with sharing class RD2_EntryFormController_TEST {
         insert rd;
 
         Test.startTest();
-        RD2_EntryFormController.RD2AppView view = RD2_EntryFormController.getInitialView(a.Id, rd.Id);
+        RD2_AppView view = RD2_EntryFormController.getInitialView(a.Id, rd.Id);
         String donorType = view.record.donorType;
         String period = view.record.recurringPeriod;
         Test.stopTest();
@@ -179,7 +179,7 @@ private with sharing class RD2_EntryFormController_TEST {
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
         Test.startTest();
-        RD2_EntryFormController.RD2AppView view = RD2_EntryFormController.getInitialView(null, rd.Id);
+        RD2_AppView view = RD2_EntryFormController.getInitialView(null, rd.Id);
         String donorType = view.record.donorType;
         String period = view.record.recurringPeriod;
         Integer frequency = view.record.recurringFrequency;
@@ -233,12 +233,12 @@ private with sharing class RD2_EntryFormController_TEST {
     @IsTest
     private static void shouldReturnRD2CustomFieldsWithoutNPSPNameSpaceAndExcludedFields() {
         Test.startTest();
-        List<RD2_EntryFormController.CustomField> customFields = RD2_EntryFormController.getCustomFieldSectionFields();
+        List<RD2_CustomField> customFields = RD2_EntryFormController.getCustomFieldSectionFields();
         Test.stopTest();
 
         Set<String> excludedCustomFields = RD2_Settings.getExcludedCustomFields();
 
-        for (RD2_EntryFormController.CustomField field : customFields) {
+        for (RD2_CustomField field : customFields) {
             System.assert(!excludedCustomFields.contains(field.apiName),
                 'Excluded fields should not be return:' + field.apiName);
             System.assert(!field.apiName.startsWith('npsp__'),
@@ -681,7 +681,7 @@ private with sharing class RD2_EntryFormController_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         Contact donorContact = getContact();
 
-        RD2_EntryFormController.RD2SaveRequest req = new RD2_EntryFormController.RD2SaveRequest();
+        RD2_SaveRequest req = new RD2_SaveRequest();
 
         req.dayOfMonth = '15';
         req.startDate = Date.newInstance(2022, 1, 15);
@@ -694,7 +694,7 @@ private with sharing class RD2_EntryFormController_TEST {
         req.recurringPeriod = 'Monthly';
         req.paymentMethod = 'Credit Card';
 
-        RD2_EntryFormController.RD2SaveResult result = RD2_EntryFormController.saveRecurringDonation(req);
+        RD2_SaveResult result = RD2_EntryFormController.saveRecurringDonation(req);
 
         System.assert(result.success, 'RD not inserted successfully');
         System.assertNotEquals(result.recordId, null, 'Save result should have an Id');
@@ -706,7 +706,7 @@ private with sharing class RD2_EntryFormController_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         Contact donorContact = getContact();
 
-        RD2_EntryFormController.RD2SaveRequest req = new RD2_EntryFormController.RD2SaveRequest();
+        RD2_SaveRequest req = new RD2_SaveRequest();
 
         req.dayOfMonth = '15';
         req.startDate = Date.newInstance(2022, 1, 15);
@@ -719,7 +719,7 @@ private with sharing class RD2_EntryFormController_TEST {
         req.recurringPeriod = 'Monthly';
         req.paymentMethod = 'Credit Card';
 
-        RD2_EntryFormController.RD2SaveResult result = RD2_EntryFormController.saveRecurringDonation(req);
+        RD2_SaveResult result = RD2_EntryFormController.saveRecurringDonation(req);
 
         System.assertEquals(false, result.success, 'Expected RD2SaveResult success to be false');
         System.assertEquals(null, result.recordId, 'Expected empty record Id');

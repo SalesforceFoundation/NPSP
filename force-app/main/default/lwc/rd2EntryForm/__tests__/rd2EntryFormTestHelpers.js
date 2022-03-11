@@ -11,8 +11,6 @@ import accountPartialDescribe from "./data/accountPartialDescribe.json";
 import installmentPeriodPicklistValues from "./data/installmentPeriodPicklistValues.json";
 import dayOfMonthPicklistValues from "./data/dayOfMonthPicklistValues.json";
 
-export const mockRecordEditFormSubmit = jest.fn();
-
 export const setupWireMocksForElevate = async () => {
     getObjectInfo.emit(recurringDonationObjectInfo, (config) => {
         return config.objectApiName === RECURRING_DONATION_OBJECT.objectApiName;
@@ -68,11 +66,6 @@ export class RD2FormController {
 
     constructor(element) {
         this.element = element;
-    }
-
-    setupSubmitMock() {
-        const element = this.element.shadowRoot.querySelector('[data-id="outerRecordEditForm"]');
-        element.submit = mockRecordEditFormSubmit;
     }
 
     setDefaultDateValues() {

@@ -1,4 +1,6 @@
 import {
+    RECORD_SAVED,
+    RECORD_SAVE_FAILED,
     SET_CONTACT_ID,
     SET_ACCOUNT_ID,
     SET_CAMPAIGN_ID,
@@ -20,7 +22,9 @@ import {
     SET_PAYMENT_METHOD,
     SET_PLANNED_INSTALLMENTS,
     INITIAL_VIEW_LOAD,
-    CUSTOM_FIELD_CHANGE, SET_PAYMENT_TOKEN, COMMITMENT_RESPONSE
+    CUSTOM_FIELD_CHANGE,
+    SET_PAYMENT_TOKEN,
+    COMMITMENT_RESPONSE
 } from "./actions";
 
 import {
@@ -93,6 +97,10 @@ const DEFAULT_INITIAL_STATE = {
     //Permissions
     InstallmentPeriodPermissions: {},
     InstallmentFrequencyPermissions: {},
+
+    //On Save/Submit Results
+    errors: [],
+    saveSuccess: null
 };
 
 const isRecurringTypeChanged = (state) => {
@@ -185,6 +193,25 @@ const handleCommitmentResponse = (state, payload) => {
         commitmentId: payload.id,
     };
 };
+
+const handleRecordSaved = (state, payload) => {
+    const { recordId, recordName, success } = payload;
+    return {
+        ...state,
+        recordId,
+        recordName,
+        saveSuccess: success
+    };
+};
+
+const handleRecordSaveError = (state, payload) => {
+    const { errors, success } = payload;
+    return {
+        ...state,
+        errors,
+        saveSuccess: success
+    };
+}
 
 const setAccountId = (state, accountId) => {
     return {
@@ -396,6 +423,10 @@ export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
             return setCustomField(state, action.payload);
         case COMMITMENT_RESPONSE:
             return handleCommitmentResponse(state, action.payload);
+        case RECORD_SAVED:
+            return handleRecordSaved(state, action.payload);
+        case RECORD_SAVE_FAILED:
+            return handleRecordSaveError(state, action.payload);
         case SET_CONTACT_ID:
             return setContactId(state, action.payload);
         case SET_ACCOUNT_ID:

@@ -25,8 +25,9 @@
                 </h2>
             </header>
 
-            <lightning-record-edit-form record-id={recordId} object-api-name="npe03__Recurring_Donation__c"
-                onsubmit={handleSubmit} onerror={handleSaveError} onsuccess={handleSuccess} data-id="outerRecordEditForm">
+            <lightning-record-edit-form record-id={recordId}
+                                        object-api-name="npe03__Recurring_Donation__c"
+                                        data-id="outerRecordEditForm">
                 <div class="slds-modal__content slds-p-top_none slds-p-horizontal_medium slds-p-bottom_medium" id="modal-content-id-1">
                     <template if:true={isLoading}>
                         <div class="slds-grid slds-grid_align-center">
