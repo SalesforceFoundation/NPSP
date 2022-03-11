@@ -34,8 +34,8 @@
 * @description Update Elevate Commitment In Bulk
 */
 public with sharing class RD2_UpdateCommitmentBulkService {
-    private Integer PROCESS_LEFTOVER = 5;
-    private Integer REQUEST_SIZE = 50;
+    private Integer apiCallOutCounter = 5;
+    private final Integer REQUEST_SIZE = 50;
    
     private ERR_LogService.Logger logger = new ERR_LogService.Logger(
         ERR_Handler_API.Context.Elevate,
@@ -68,12 +68,12 @@ public with sharing class RD2_UpdateCommitmentBulkService {
     }
 
     public void processCommitments() {
-        if (this.commitments == null || this.commitments.isEmpty() || PROCESS_LEFTOVER == 0) {
+        if (this.commitments == null || this.commitments.isEmpty() || apiCallOutCounter == 0) {
             this.logger.processErrors();
             return;
         }
 
-        PROCESS_LEFTOVER--;
+        apiCallOutCounter--;
 
         RequestBody reqBody = new RequestBody();
         reqBody.commitments =  getCommitmentsToProcess();
@@ -106,7 +106,7 @@ public with sharing class RD2_UpdateCommitmentBulkService {
 
     private HttpRequest buildBulkStatusUpdateRequest(RequestBody reqBody) {
         return new PS_Request.Builder()
-        .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT_STATUS_BULK)
+        .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT_UPDATE_BULK)
         .withMethod(UTIL_Http.Method.POST)
         .withRecommendedTimeout()
         .withBody(JSON.serialize(reqBody))
