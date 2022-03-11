@@ -256,19 +256,19 @@ public with sharing class USER_UserService {
         return ref;
     }
 
-        /** 
+    /** 
     * @author Salesforce.org
     * @date 2021
     * @description method to return contact related to current user.
     */
     public static Id getContactIdByUserId() {
         Id userId = UserInfo.getUserId();
-        List<User> contactId = [SELECT ContactId
+        User userQueried = [SELECT ContactId
                                 FROM User
                                 WHERE Id =: userId
                                 WITH SECURITY_ENFORCED
                                 LIMIT 1];
-        return contactId.get(0).ContactId;
+        return userQueried.ContactId;
     }
     
     /*********************************************************************************************************

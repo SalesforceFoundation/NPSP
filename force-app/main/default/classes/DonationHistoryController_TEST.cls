@@ -91,19 +91,8 @@ public class DonationHistoryController_TEST {
         );
         
         List<Opportunity> recordsOpp = new List<Opportunity> {opportunityHardCreditOfContact0, opportunityAnotherHardCreditOfContact0, opportunityForContact1, anotherOpportunityForContact1};
-        // recordsOpp.add(opportunityHardCredit);
-        // recordsOpp.add(opportunitySoftCredit);
 
         insert recordsOpp;
-        
-                if (!Schema.sObjectType.Profile.isAccessible()) {
-            NoAccessException ex = new NoAccessException();
-            ex.setMessage('Profile');
-            throw ex;
-        }
-   
-        
-
     }
 
     /**
@@ -118,7 +107,7 @@ public class DonationHistoryController_TEST {
         Test.startTest();
 
         DonationHistoryController.DonationHistoryAppView donationHistory = 
-            DonationHistoryController.getDonationHistory(testContact.Id, 0, 'lifetime');
+        DonationHistoryController.getDonationHistory(testContact.Id, 0, 'lifetime');
 
         Test.stopTest();
 

@@ -19,12 +19,11 @@ export default class DonationHistoryFilter extends LightningElement {
     value = LIFETIME_VALUE;
     
     connectedCallback() {
-        this.getYearsByContact();
+        this.getYearsWithDonationsByContact();
     }
 
-    getYearsByContact(){
+    getYearsWithDonationsByContact(){
     getYearsWithDonation({contactId : this.contactId})
-
         .then(
             result => {
                 this.options = this.generateOptionsFromYearsList(this.generateYearList(result));
