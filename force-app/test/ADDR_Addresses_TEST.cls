@@ -2158,8 +2158,10 @@ public with sharing class ADDR_Addresses_TEST {
         Address__c nonDefaultAddress = [SELECT Default_Address__c FROM Address__c WHERE Id = :testAddresses[1].Id];
 
         Test.startTest();
-            nonDefaultAddress.Default_Address__c = true;
-            update nonDefaultAddress;
+
+        nonDefaultAddress.Default_Address__c = true;
+        update nonDefaultAddress;
+
         Test.stopTest();
 
         Address__c newDefaultAddress = [SELECT Default_Address__c, Latest_Start_Date__c, Latest_End_Date__c
@@ -2176,8 +2178,12 @@ public with sharing class ADDR_Addresses_TEST {
                 ' set to true.');
         System.assertEquals(System.today(), previousDefaultAddress.Latest_End_Date__c, 'The latest end date on the ' +
                 'previous default address should be set to today.');
+        System.assertEquals(System.today(), previousDefaultAddress.Latest_Start_Date__c, 'The latest start date on ' +
+                'the previous default address should be set to today and remain unchanged.');
         System.assertEquals(System.today(), newDefaultAddress.Latest_Start_Date__c, 'The latest start date on the ' +
                 'new default address should be set to today.');
+        System.assertEquals(null, newDefaultAddress.Latest_End_Date__c, 'The latest end date on the ' +
+                'new default address should be set to null.');
     }
 
     @IsTest
@@ -2203,8 +2209,10 @@ public with sharing class ADDR_Addresses_TEST {
                                      WHERE Id = :testContact.Current_Address__c];
 
         Test.startTest();
-            defaultAddress.Default_Address__c = false;
-            update defaultAddress;
+
+        defaultAddress.Default_Address__c = false;
+        update defaultAddress;
+
         Test.stopTest();
 
         Address__c updatedDefaultAddress = [SELECT Default_Address__c, Latest_Start_Date__c, Latest_End_Date__c
@@ -2238,7 +2246,9 @@ public with sharing class ADDR_Addresses_TEST {
         testAddresses[1].Household_Account__c = testContact.AccountId;
 
         Test.startTest();
-            insert testAddresses[1];
+
+        insert testAddresses[1];
+
         Test.stopTest();
 
         Address__c updatedTestAddress = [SELECT Default_Address__c, Latest_Start_Date__c, Latest_End_Date__c
@@ -2274,10 +2284,12 @@ public with sharing class ADDR_Addresses_TEST {
                                   WHERE Id = :testAddresses[1].Id
                                   LIMIT 1];
         Test.startTest();
-            testAddress.Latest_Start_Date__c = System.today() - 2;
-            testAddress.Latest_End_Date__c = System.today() - 1;
 
-            update testAddress;
+        testAddress.Latest_Start_Date__c = System.today() - 2;
+        testAddress.Latest_End_Date__c = System.today() - 1;
+
+        update testAddress;
+
         Test.stopTest();
 
         Address__c updatedTestAddress = [SELECT Default_Address__c, Latest_Start_Date__c, Latest_End_Date__c
