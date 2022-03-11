@@ -2299,9 +2299,9 @@ public with sharing class ADDR_Addresses_TEST {
         System.assertEquals(false, updatedTestAddress.Default_Address__c, 'The previous default address should be' +
                 ' set to false.');
         System.assertEquals(System.today() - 1, updatedTestAddress.Latest_End_Date__c, 'The latest end date on the ' +
-                'new address should be null.');
+                'non-default address should not have changed.');
         System.assertEquals(System.today() - 2, updatedTestAddress.Latest_Start_Date__c, 'The latest start date on the ' +
-                'new address should be null.');
+                'non-default address should not have changed.');
     }
 
     // Helpers
