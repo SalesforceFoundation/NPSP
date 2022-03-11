@@ -2073,7 +2073,7 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void addressShouldBePropagatedToAccountsAndContactsOnMultipleTriggerCalls() {
-        Integer totalHH = 20;
+        Integer totalHH = 205;
         Integer totalContactPerHH = 1;
         UTIL_Debug.disableDebugLogging();
         UTIL_UnitTestData_TEST.disableAffiliationsTriggers();
