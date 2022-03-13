@@ -32,7 +32,7 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>%%%NAMESPACE%%%RecurringType__c</field>
+                <field>npsp__RecurringType__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
@@ -44,7 +44,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>%%%NAMESPACE%%%Day_of_Month__c</field>
+                <field>npsp__Day_of_Month__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
@@ -52,7 +52,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>%%%NAMESPACE%%%PaymentMethod__c</field>
+                <field>npsp__PaymentMethod__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -65,11 +65,11 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>%%%NAMESPACE%%%InstallmentFrequency__c</field>
+                <field>npsp__InstallmentFrequency__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>%%%NAMESPACE%%%StartDate__c</field>
+                <field>npsp__StartDate__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
@@ -90,7 +90,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>%%%NAMESPACE%%%Status__c</field>
+                <field>npsp__Status__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -100,7 +100,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>%%%NAMESPACE%%%ClosedReason__c</field>
+                <field>npsp__ClosedReason__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -113,11 +113,11 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>%%%NAMESPACE%%%CurrentYearValue__c</field>
+                <field>npsp__CurrentYearValue__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>%%%NAMESPACE%%%NextYearValue__c</field>
+                <field>npsp__NextYearValue__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -168,17 +168,17 @@
     <platformActionList>
         <actionListContext>Record</actionListContext>
         <platformActionListItems>
-            <actionName>%%%NAMESPACE%%%NewTask</actionName>
+            <actionName>npsp__NewTask</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>0</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>npe03__Recurring_Donation__c.%%%NAMESPACE%%%Close_Recurring_Donation</actionName>
+            <actionName>npe03__Recurring_Donation__c.npsp__Close_Recurring_Donation</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>1</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>npe03__Recurring_Donation__c.%%%NAMESPACE%%%Pause</actionName>
+            <actionName>npe03__Recurring_Donation__c.npsp__Pause</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>2</sortOrder>
         </platformActionListItems>
@@ -205,10 +205,10 @@
     </platformActionList>
     <quickActionList>
         <quickActionListItems>
-            <quickActionName>%%%NAMESPACE%%%NewTask</quickActionName>
+            <quickActionName>npsp__NewTask</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>npe03__Recurring_Donation__c.%%%NAMESPACE%%%Close_Recurring_Donation</quickActionName>
+            <quickActionName>npe03__Recurring_Donation__c.npsp__Close_Recurring_Donation</quickActionName>
         </quickActionListItems>
     </quickActionList>
     <relatedLists>
@@ -220,14 +220,14 @@
         <relatedList>Opportunity.npe03__Recurring_Donation__c</relatedList>
     </relatedLists>
     <relatedLists>
-        <customButtons>%%%NAMESPACE%%%Manage_Allocations</customButtons>
+        <customButtons>npsp__Manage_Allocations</customButtons>
         <excludeButtons>MassChangeOwner</excludeButtons>
         <excludeButtons>New</excludeButtons>
         <fields>NAME</fields>
-        <fields>%%%NAMESPACE%%%General_Accounting_Unit__c</fields>
-        <fields>%%%NAMESPACE%%%Amount__c</fields>
-        <fields>%%%NAMESPACE%%%Percent__c</fields>
-        <relatedList>%%%NAMESPACE%%%Allocation__c.%%%NAMESPACE%%%Recurring_Donation__c</relatedList>
+        <fields>npsp__General_Accounting_Unit__c</fields>
+        <fields>npsp__Amount__c</fields>
+        <fields>npsp__Percent__c</fields>
+        <relatedList>npsp__Allocation__c.npsp__Recurring_Donation__c</relatedList>
     </relatedLists>
     <relatedLists>
         <relatedList>RelatedNoteList</relatedList>

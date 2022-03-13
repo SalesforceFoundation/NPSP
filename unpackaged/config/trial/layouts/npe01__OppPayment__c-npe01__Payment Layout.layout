@@ -64,7 +64,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>%%%NAMESPACE%%%Batch_Number__c</field>
+                <field>npsp__Batch_Number__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
