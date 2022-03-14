@@ -134,12 +134,16 @@ public with sharing class RD2_UpdateCommitmentBulkService {
     }
 
     public class RequestBody {
+        @TestVisible
         List<Commitment> commitments;
     }
 
     public class Commitment {
+        @TestVisible
         String id;
+        @TestVisible
         String status;
+        @TestVisible
         String statusUpdateReason;
 
         public Commitment(npe03__Recurring_Donation__c rd) {
