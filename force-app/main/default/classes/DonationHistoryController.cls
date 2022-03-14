@@ -79,7 +79,7 @@ public with sharing class DonationHistoryController {
     @AuraEnabled(cacheable=true)
     public static DonationHistoryAppView getDonationHistory(Id contactId, Integer offset, String filter) {
         contactId = (contactId == null ? getContactIdByUserId() : contactId );
-		DonationHistoryService service = new DonationHistoryService(contactId, offset, filter);
+        DonationHistoryService service = new DonationHistoryService(contactId, offset, filter);
         try {
             Boolean paymentsEnabled = service.checkIfPaymentsAreEnabled();
             DonationHistoryAppView donationHistories = new DonationHistoryAppView();
