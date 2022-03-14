@@ -36,7 +36,7 @@
 *
 */
 public without sharing class RD2_OpportunityEvaluation_BATCH
-    implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
+    implements Database.Batchable<SObject>, Database.AllowsCallouts, Database.Stateful, Schedulable {
 
     /**
     * @description Batch size for Apex Job. Uses default if the Custom Setting batch size is not provided.
