@@ -1180,6 +1180,40 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
     }
 
     @isTest
+    private static void shouldCallBulkStatusAPIWhenAutomationUpdateElevateRDStatus() {
+        Date startDate = Date.newInstance(2020, 1, 1);
+        Date currentDate = Date.newInstance(2020, 3, 7);
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_StatusAutomationService_TEST.setupStatusAutomationSettings(10, 20);
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
+        
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+        .withStartDate(startDate)
+        .withStatusActive()
+        .withLastPaymentDate(Date.newInstance(2020, 1, 15))
+        .withCommitmentId('random-id')
+        .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
+        .build();
+        insert rd;
+        
+        UTIL_Http_TEST.CalloutMock calloutMock = UTIL_Http_TEST.mockSuccessCalloutResponse(
+            RD2_UpdateCommitmentBulkService_TEST.mockSuccessResponseBody(1)
+        );
+        runBatch(new RD2_OpportunityEvaluation_BATCH(currentDate));
+
+        assertBatchJobIteration(1);
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(RD2_Constants.STATUS_ACTIVE, rd.Status__c,
+            'ElevateRD should still be Active because due to Bulk API being Async');
+        System.assertEquals(1, calloutMock.getCalloutCounter(),
+            '1 callout should be made when there is less than 50 records in the transaction.');
+        System.assertEquals(0, errorGateway.getRecords().size(),
+            'No error record should be created when the callout is successful');
+    }
+
+    @isTest
     private static void verifyRDBatchSizeSizeIsCappedWhenElevateAndStatusAutomationAreEnabled() {
         RD2_Settings_TEST.setUpConfiguration(
             new Map<String, Object>{

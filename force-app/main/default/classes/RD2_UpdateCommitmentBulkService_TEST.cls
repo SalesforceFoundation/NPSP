@@ -149,7 +149,7 @@ public class RD2_UpdateCommitmentBulkService_TEST {
         }
     }
 
-    private static String mockSuccessResponseBody(Integer recordCount) {
+    public static String mockSuccessResponseBody(Integer recordCount) {
         return '{"id":"' + 'radom-batch-id'
             + '","createdAt": "2021-12-15T20:45:25.000+0000"'
             + '","status":"CREATED","statusReason":"COMMITMENT_CREATED"'
