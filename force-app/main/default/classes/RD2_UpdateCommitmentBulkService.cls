@@ -89,12 +89,7 @@ public with sharing class RD2_UpdateCommitmentBulkService {
         } catch (Exception ex) {
             response = requestService.buildErrorResponse(ex);
         }
-        String abc = request.getHeader(PS_IntegrationServiceConfig.JWT_TOKEN);
-        System.debug(request.getHeader(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS));
-        // System.debug(abc.subString(0, 120));
-        // System.debug(abc.subString(120, 240));
-        // System.debug(abc.subString(240, abc.length()));
-        System.debug(request.getEndpoint());
+
         processResponse(response);
         processCommitments();
     }
@@ -115,7 +110,7 @@ public with sharing class RD2_UpdateCommitmentBulkService {
     private HttpRequest buildBulkStatusUpdateRequest(RequestBody reqBody) {
         return new PS_Request.Builder()
             .withMethod(UTIL_Http.Method.POST)
-            .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT)
+            .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT_UPDATE_BULK)
             .withRecommendedTimeout()
             .withBody(JSON.serialize(reqBody))
             .build();

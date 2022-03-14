@@ -57,7 +57,6 @@ public class RD2_UpdateCommitmentBulkService_TEST {
             'No error record should be created when the callout is successful');
     }
 
-
     @isTest
     private static void verifyOnly2CalloutWillbeMadeWhenTotalProcessRecordIsBetween50and100() {
         Integer recordCount = 100;
