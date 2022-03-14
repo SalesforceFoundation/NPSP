@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>View</actionName>
+        <comment>Action override created by Lightning App Builder during activation.</comment>
+        <content>NPSP_Relationship_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Flexipage</type>
+    </actionOverrides>
+    <compactLayoutAssignment>NPSP_Relationship_Compact_Layout_Unmanaged</compactLayoutAssignment>
+    <compactLayouts>
+        <fullName>NPSP_Relationship_Compact_Layout_Unmanaged</fullName>
+        <fields>Name</fields>
+        <fields>npe4__Contact__c</fields>
+        <fields>npe4__RelatedContact__c</fields>
+        <label>NPSP Relationship Compact Layout (Unmanaged)</label>
+    </compactLayouts>
+    <fields>
+        <fullName>npe4__Type__c</fullName>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Spouse</fullName>
+                    <default>false</default>
+                    <label>Spouse</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <enableReports>true</enableReports>
+</CustomObject>
