@@ -1211,6 +1211,14 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
             '1 callout should be made when there is less than 50 records in the transaction.');
         System.assertEquals(0, errorGateway.getRecords().size(),
             'No error record should be created when the callout is successful');
+
+        RD2_UpdateCommitmentBulkService.RequestBody requestBody = (RD2_UpdateCommitmentBulkService.RequestBody) JSON.deserialize(
+            calloutMock.getRequestBody(),
+            RD2_UpdateCommitmentBulkService.RequestBody.class
+        );
+        System.assertEquals(1, requestBody.commitments.size(), '1 Commitment should be included in the payload');
+        System.assertEquals('random-id', requestBody.commitments[0].id, 'The commitment Id should match the Recurring Donation Commitment Id');
+        System.assertEquals(RD2_Constants.STATUS_CLOSED, requestBody.commitments[0].status, 'The commitment status should be set to Closed');
     }
 
     @isTest

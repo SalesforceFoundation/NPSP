@@ -159,7 +159,9 @@ public with sharing class UTIL_Http_TEST {
         Integer statusCode;
         String status;
         String body;
+        String requestBody;
         Integer calloutCounter = 0;
+        HttpRequest request;
 
         /**
         * @description Constructor
@@ -206,7 +208,8 @@ public with sharing class UTIL_Http_TEST {
         * @return HttpResponse
         */
         public HttpResponse respond(HttpRequest request) {
-            calloutCounter++;
+            this.request = request;
+            this.calloutCounter++;
             HttpResponse response = new HttpResponse();
             response.setHeader('Content-Type', 'application/json');
             response.setStatusCode(statusCode);
@@ -217,6 +220,10 @@ public with sharing class UTIL_Http_TEST {
             }
 
             return response;
+        }
+
+        public String getRequestBody() {
+            return this.request.getBody();
         }
 
         public Integer getCalloutCounter() {
