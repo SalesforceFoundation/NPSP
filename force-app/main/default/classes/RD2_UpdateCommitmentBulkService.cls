@@ -34,8 +34,8 @@
 * @description Update Elevate Commitment In Bulk
 */
 public with sharing class RD2_UpdateCommitmentBulkService {
-    private Integer apiCallOutCounter = 5;
-    private final Integer REQUEST_SIZE = 50;
+    public static Integer apiCallOutCounter = 5;
+    public static final Integer REQUEST_SIZE = 50;
    
     private ERR_LogService.Logger logger = new ERR_LogService.Logger(
         ERR_Handler_API.Context.Elevate,
@@ -79,14 +79,18 @@ public with sharing class RD2_UpdateCommitmentBulkService {
         reqBody.commitments =  getCommitmentsToProcess();
 
         HttpRequest request = buildBulkStatusUpdateRequest(reqBody);
-
         UTIL_Http.Response response;
         try {
             response = requestService.sendRequest(request);
         } catch (Exception ex) {
             response = requestService.buildErrorResponse(ex);
         }
-
+        String abc = request.getHeader(PS_IntegrationServiceConfig.JWT_TOKEN);
+        System.debug(request.getHeader(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS));
+        // System.debug(abc.subString(0, 120));
+        // System.debug(abc.subString(120, 240));
+        // System.debug(abc.subString(240, abc.length()));
+        System.debug(request.getEndpoint());
         processResponse(response);
         processCommitments();
     }
@@ -106,11 +110,11 @@ public with sharing class RD2_UpdateCommitmentBulkService {
 
     private HttpRequest buildBulkStatusUpdateRequest(RequestBody reqBody) {
         return new PS_Request.Builder()
-        .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT_UPDATE_BULK)
-        .withMethod(UTIL_Http.Method.POST)
-        .withRecommendedTimeout()
-        .withBody(JSON.serialize(reqBody))
-        .build();
+            .withMethod(UTIL_Http.Method.POST)
+            .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT)
+            .withRecommendedTimeout()
+            .withBody(JSON.serialize(reqBody))
+            .build();
     }
 
     private void processResponse(UTIL_Http.Response response) {

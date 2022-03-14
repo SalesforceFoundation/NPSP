@@ -51,6 +51,13 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
                     configValue = 50;
                 }
 
+                if (RD2_ElevateIntegrationService.isIntegrationEnabled() &&
+                    (rd2Settings.isStatusAutomationForClosedEnabled() || rd2Settings.isStatusAutomationForLapsedEnabled())
+                ) {
+                    Decimal maxSize = RD2_UpdateCommitmentBulkService.apiCallOutCounter * RD2_UpdateCommitmentBulkService.REQUEST_SIZE;
+                    configValue = (configValue > maxSize ) ? maxSize : configValue;
+                }
+
                 batchSize = configValue.intValue();
             }
             return batchSize;
@@ -96,6 +103,17 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
             }
             return disableRollups;
         } private set;
+    }
+
+    @TestVisible
+    private static RD2_Settings rd2Settings {
+        get {
+            if (rd2Settings == null) {
+                rd2Settings = RD2_Settings.getInstance();
+            }
+            return rd2Settings;
+        }
+        set;
     }
 
     /**
