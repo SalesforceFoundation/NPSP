@@ -159,6 +159,7 @@ public with sharing class UTIL_Http_TEST {
         Integer statusCode;
         String status;
         String body;
+        Integer calloutCounter = 0;
 
         /**
         * @description Constructor
@@ -205,6 +206,7 @@ public with sharing class UTIL_Http_TEST {
         * @return HttpResponse
         */
         public HttpResponse respond(HttpRequest request) {
+            calloutCounter++;
             HttpResponse response = new HttpResponse();
             response.setHeader('Content-Type', 'application/json');
             response.setStatusCode(statusCode);
@@ -216,6 +218,10 @@ public with sharing class UTIL_Http_TEST {
 
             return response;
         }
+
+        public Integer getCalloutCounter() {
+            return calloutCounter;
+        }
     }
 
     // Helpers
@@ -225,11 +231,12 @@ public with sharing class UTIL_Http_TEST {
      * @description Simulates a success callout response
      * @return void
      */
-    public static void mockSuccessCalloutResponse(String responseBody) {
+    public static CalloutMock mockSuccessCalloutResponse(String responseBody) {
         CalloutMock callout = new CalloutMock()
             .withBody(responseBody);
 
         Test.setMock(HttpCalloutMock.class, callout);
+        return callout;
     }
 
     /****

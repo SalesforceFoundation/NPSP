@@ -41,7 +41,6 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     /**
     * @description Batch size for Apex Job. Uses default if the Custom Setting batch size is not provided.
     */
-    @TestVisible
     public Integer batchSize {
         get {
             if (batchSize == null) {

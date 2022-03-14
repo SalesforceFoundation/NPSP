@@ -1179,6 +1179,62 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
             'The parent Contact should be mark as Former Sustainer');
     }
 
+    @isTest
+    private static void verifyRDBatchSizeSizeIsCappedWhenElevateAndStatusAutomationAreEnabled() {
+        RD2_Settings_TEST.setUpConfiguration(
+            new Map<String, Object>{
+                'StatusAutomationDaysForLapsed__c' => 10,
+                'Recurring_Donation_Batch_Size__c' => 500
+            }
+        );
+
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
+
+        Test.startTest();
+        RD2_OpportunityEvaluation_BATCH batch = new RD2_OpportunityEvaluation_BATCH();
+        Integer batchSize = batch.batchSize;
+        Test.stopTest();
+
+        System.assertEquals(250, batchSize,
+            'The batch should be capped at 250 when both Elevate and Status Automation are enabled');
+    }
+
+    @isTest
+    private static void verifyRDBatchSizeSizeIsNotCappedWhenElevateIsDisabled() {
+        RD2_Settings_TEST.setUpConfiguration(
+            new Map<String, Object>{
+                'StatusAutomationDaysForLapsed__c' => 10,
+                'Recurring_Donation_Batch_Size__c' => 500
+            }
+        );
+
+        Test.startTest();
+        RD2_OpportunityEvaluation_BATCH batch = new RD2_OpportunityEvaluation_BATCH();
+        Integer batchSize = batch.batchSize;
+        Test.stopTest();
+
+        System.assertEquals(500, batchSize,
+            'The batch should be set to Custom Setting Recurring_Donation_Batch_Size__c value');
+    }
+
+    @isTest
+    private static void verifyRDBatchSizeSizeIsNotCappedWhenStatusAutomationIsDisabled() {
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
+
+        RD2_Settings_TEST.setUpConfiguration(
+            new Map<String, Object>{
+                'Recurring_Donation_Batch_Size__c' => 500
+            }
+        );
+
+        Test.startTest();
+        RD2_OpportunityEvaluation_BATCH batch = new RD2_OpportunityEvaluation_BATCH();
+        Integer batchSize = batch.batchSize;
+        Test.stopTest();
+
+        System.assertEquals(500, batchSize,
+            'The batch should be set to Custom Setting Recurring_Donation_Batch_Size__c value');
+    }
 
     // Helpers
     //////////////
