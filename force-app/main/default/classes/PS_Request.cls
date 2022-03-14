@@ -418,7 +418,8 @@ public inherited sharing class PS_Request {
 
         private Boolean isCommitmentEndpoint () {
             return endpoint == ElevateEndpoint.COMMITMENT
-                    || endpoint == ElevateEndpoint.COMMITMENT_CANCEL;
+                    || endpoint == ElevateEndpoint.COMMITMENT_CANCEL
+                    || endpoint == ElevateEndpoint.COMMITMENT_UPDATE_BULK;
         }
     }
 }

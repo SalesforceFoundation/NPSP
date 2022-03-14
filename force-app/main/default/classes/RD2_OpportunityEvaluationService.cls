@@ -201,6 +201,16 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         set;
     }
 
+    private RD2_UpdateCommitmentBulkService commitmentBulkService {
+        get {
+            if (commitmentBulkService == null) {
+                commitmentBulkService = new RD2_UpdateCommitmentBulkService();
+            }
+            return commitmentBulkService;
+        }
+        set;
+    }
+
     /**
      * @description Recurring Donation Id's to be processed
      */
@@ -377,6 +387,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         List<npe03__Recurring_Donation__c> newOppRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> updateOppRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> closeOppRds = new List<npe03__Recurring_Donation__c>();
+        List<npe03__Recurring_Donation__c> updateElevateRds = new List<npe03__Recurring_Donation__c>();
         List<RD2_RecurringDonation> rdRecords = new List<RD2_RecurringDonation>();
 
         setOldRdListIfNull();
@@ -400,6 +411,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
             if (isBatchContext) {
                 rdRecord.statusAutomationReviseStatus(scheduleService);
+
+                if (rdRecord.isElevateRecord() && rdRecord.hasStatusAutomationReviseStatus()) {
+                    updateElevateRds.add(rd);
+                }
             }
 
             //evaluate Opportunities
@@ -432,6 +447,9 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         toggleTriggerState(true);
 
         evaluateSustainers();
+
+        commitmentBulkService.withCommitments(updateElevateRds)
+            .processCommitments();
 
         dbService.processErrors();
 
