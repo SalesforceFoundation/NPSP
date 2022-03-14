@@ -36,16 +36,16 @@
 public with sharing class DonationHistoryController {
 
     @TestVisible
-    private static DonationHistoryService service {
+    private static DonationHistoryService historyService {
         get {
-            if (service == null) {
-                service = new DonationHistoryService();
+            if (historyService == null) {
+                historyService = new DonationHistoryService();
             }
-            return service;
+            return historyService;
         }
 
         set {
-            service = value;
+            historyService = value;
         }
     }
     /** 
@@ -92,12 +92,12 @@ public with sharing class DonationHistoryController {
     @AuraEnabled(cacheable=true)
     public static DonationHistoryAppView getDonationHistory(Id contactId, Integer offset, String filter) {
         try {
-            Boolean paymentsEnabled = service.checkIfPaymentsAreEnabled();
+            Boolean paymentsEnabled = historyService.checkIfPaymentsAreEnabled();
             DonationHistoryAppView donationHistories = new DonationHistoryAppView();
-            donationHistories.donations = buildHistoryFromOpportunities(service.getDonationHistory(contactId, offset, filter), contactId, paymentsEnabled);
-            donationHistories.totalNumberOfRecords = service.getTotalNumberOfRecords();
+            donationHistories.donations = buildHistoryFromOpportunities(historyService.getDonationHistory(contactId, offset, filter), contactId, paymentsEnabled);
+            donationHistories.totalNumberOfRecords = historyService.getTotalNumberOfRecords();
             donationHistories.isPaymentsEnabled = paymentsEnabled;
-            donationHistories.paymentMethodLabel = service.getPaymentMethodLabel();
+            donationHistories.paymentMethodLabel = historyService.getPaymentMethodLabel();
             return donationHistories;
         } catch(AuraHandledException ex) {
             throw new AuraHandledException(ex.getMessage());
@@ -112,7 +112,7 @@ public with sharing class DonationHistoryController {
     @AuraEnabled(cacheable=true)
     public static List<String> getYearsWithDonations(Id contactId) {
         try {
-            return service.getYearsWithDonationsForContact(contactId);
+            return historyService.getYearsWithDonationsForContact(contactId);
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }

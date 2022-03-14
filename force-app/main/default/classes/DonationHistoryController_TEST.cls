@@ -71,7 +71,7 @@ public class DonationHistoryController_TEST {
         DonationHistoryService service = new DonationHistoryService();
         service.selector = (DonationHistorySelector) Test.createStub(DonationHistorySelector.class, mock);
 
-        DonationHistoryController.service = service;
+        DonationHistoryController.historyService = service;
         Test.startTest();
         DonationHistoryController.DonationHistoryAppView donationHistory = 
             DonationHistoryController.getDonationHistory(new IdGen().generate(Contact.SObjectType), 0, 'lifetime');
@@ -96,7 +96,7 @@ public class DonationHistoryController_TEST {
             DonationHistoryService service = new DonationHistoryService();
             service.selector = (DonationHistorySelector) Test.createStub(DonationHistorySelector.class, mock);
 
-            DonationHistoryController.service = service;
+            DonationHistoryController.historyService = service;
             Test.startTest();
             System.runAs(u){
                 DonationHistoryController.DonationHistoryAppView donationHistory = 
@@ -130,7 +130,7 @@ public class DonationHistoryController_TEST {
         DonationHistoryService service = new DonationHistoryService();
         service.selector = (DonationHistorySelector) Test.createStub(DonationHistorySelector.class, mock);
 
-        DonationHistoryController.service = service;       
+        DonationHistoryController.historyService = service;       
        
         Test.startTest();
         DonationHistoryController.DonationHistoryAppView donationHistory = DonationHistoryController.getDonationHistory(new IdGen().generate(Contact.SObjectType), 0, '2019');
@@ -146,7 +146,7 @@ public class DonationHistoryController_TEST {
         DonationHistorySelectorMock mock = new DonationHistorySelectorMock(null, null, years);
         DonationHistoryService service = new DonationHistoryService();
         service.selector = (DonationHistorySelector) Test.createStub(DonationHistorySelector.class, mock);
-        DonationHistoryController.service = service;
+        DonationHistoryController.historyService = service;
 
         List<String> donationsYears = DonationHistoryController.getYearsWithDonations(new IdGen().generate(Contact.SObjectType));
         System.assertNotEquals(null, donationsYears, 'donationsYears should not be null');
