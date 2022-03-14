@@ -876,7 +876,7 @@ flows:
             4:
                 task: run_tests
 
-    config_trial_complete:
+    config_trial_org:
         steps:
             # TODO: Update once we can test with a Beta instead of 2GP
             #1:
@@ -894,6 +894,10 @@ flows:
             6:
                 flow: enable_gift_entry
             7:
+                task: deploy_trial_translations
+            8:
+                task: deploy_reports
+            9:
                 task: update_admin_profile
 
     config_trial:
