@@ -387,4 +387,16 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
     private static void setUpConfiguration() {
         insert getConfigurations();
     }
+
+    public static void enableElevateIntegrationService() {
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+        .withIsIntegrationEnabled(true)
+        .withHasIntegrationPermissions(true);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+    }
 }

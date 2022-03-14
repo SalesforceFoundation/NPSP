@@ -510,13 +510,7 @@ private with sharing class RD2_EntryFormController_TEST {
     private static void shouldThrowExceptionWhenRDFieldValueIsInvalid() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
-        .withIsIntegrationEnabled(true)
-        .withHasIntegrationPermissions(false);
-        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
-            PS_IntegrationServiceConfig.class,
-            configStub
-        );
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
 
         npe03__Recurring_Donation__c rd = buildRecurringDonation();
         RD2_QueryService selectorStub = (RD2_QueryService)Test.createStub(

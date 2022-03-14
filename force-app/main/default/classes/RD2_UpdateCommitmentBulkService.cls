@@ -68,7 +68,11 @@ public with sharing class RD2_UpdateCommitmentBulkService {
     }
 
     public void processCommitments() {
-        if (this.commitments == null || this.commitments.isEmpty() || apiCallOutCounter == 0) {
+        if (this.commitments == null
+            || !RD2_ElevateIntegrationService.isIntegrationEnabled()
+            || this.commitments.isEmpty()
+            || apiCallOutCounter == 0
+        ) {
             this.logger.processErrors();
             return;
         }
