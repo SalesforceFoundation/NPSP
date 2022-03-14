@@ -435,7 +435,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
 
         toggleTriggerState(false);
-
+        commitmentBulkService
+            .withCommitments(updateElevateRds)
+            .processCommitments();
+    
         oppService
             .createOpportunities(newOppRDs)
             .updateOpportunities(updateOppRDs, rdIdsWhereScheduleChanged)
@@ -447,9 +450,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         toggleTriggerState(true);
 
         evaluateSustainers();
-
-        commitmentBulkService.withCommitments(updateElevateRds)
-            .processCommitments();
 
         dbService.processErrors();
 
