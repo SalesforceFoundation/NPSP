@@ -76,6 +76,7 @@
         <members>NPSP_Payment</members>
         <members>NPSP_Recurring_Donation</members>
         <members>NPSP_Relationship_Record_Page</members>
+        <members>Nonprofit_Success_Pack_UtilityBar</members>
         <name>FlexiPage</name>
     </types>
     <types>
