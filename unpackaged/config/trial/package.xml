@@ -47,6 +47,7 @@
         <members>Campaign.Amount_to_Goal__c</members>
         <members>Contact.Gender__c</members>
         <members>Opportunity.StageName</members>
+        <members>Opportunity.Type</members>
         <members>npe01__OppPayment__c.Payment_Status__c</members>
         <members>npe4__Relationship__c.npe4__Type__c</members>
         <members>npe5__Affiliation__c.Contact_Link__c</members>
@@ -230,6 +231,7 @@
         <members>CampaignType</members>
         <members>ContactRole</members>
         <members>OpportunityStage</members>
+        <members>OpportunityType</members>
         <name>StandardValueSet</name>
     </types>
     <types>
