@@ -93,21 +93,22 @@ public with sharing class RD2_UpdateCommitmentBulkService {
 
         this.logger.processErrors();
     }
-    private Boolean noCommitmentToProcess() {
-        return this.commitments == null|| this.commitments.isEmpty();
-    }
 
     private List<Commitment> getCommitmentsToProcess() {
         List<Commitment> toProcess = new List<Commitment>();
 
         for (Integer i = 0; i < REQUEST_SIZE; i++) {
-            if (this.commitments.size() == 0) {
+            if (noCommitmentToProcess()) {
                 break;
             }
 
             toProcess.add(this.commitments.remove(0));
         }
         return toProcess;
+    }
+
+    private Boolean noCommitmentToProcess() {
+        return this.commitments == null || this.commitments.isEmpty();
     }
 
     private HttpRequest buildBulkStatusUpdateRequest(RequestBody reqBody) {
