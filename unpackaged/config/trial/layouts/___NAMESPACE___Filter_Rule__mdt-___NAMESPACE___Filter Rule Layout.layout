@@ -19,17 +19,17 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>npsp__Object__c</field>
+                <field>%%%NAMESPACE%%%Object__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>npsp__Operator__c</field>
+                <field>%%%NAMESPACE%%%Operator__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>npsp__Filter_Group__c</field>
+                <field>%%%NAMESPACE%%%Filter_Group__c</field>
             </layoutItems>
             <layoutItems>
                 <emptySpace>true</emptySpace>
@@ -39,11 +39,11 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>npsp__Field__c</field>
+                <field>%%%NAMESPACE%%%Field__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Constant__c</field>
+                <field>%%%NAMESPACE%%%Constant__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -74,7 +74,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Is_Deleted__c</field>
+                <field>%%%NAMESPACE%%%Is_Deleted__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>

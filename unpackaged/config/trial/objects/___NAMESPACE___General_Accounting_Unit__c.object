@@ -28,12 +28,12 @@
     <enableActivities>true</enableActivities>
     <enableReports>true</enableReports>
     <searchLayouts>
-        <customTabListAdditionalFields>npsp__Active__c</customTabListAdditionalFields>
-        <customTabListAdditionalFields>npsp__Description__c</customTabListAdditionalFields>
-        <lookupDialogsAdditionalFields>npsp__Active__c</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>npsp__Description__c</lookupDialogsAdditionalFields>
-        <searchResultsAdditionalFields>npsp__Active__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>npsp__Description__c</searchResultsAdditionalFields>
+        <customTabListAdditionalFields>%%%NAMESPACE%%%Active__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>%%%NAMESPACE%%%Description__c</customTabListAdditionalFields>
+        <lookupDialogsAdditionalFields>%%%NAMESPACE%%%Active__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>%%%NAMESPACE%%%Description__c</lookupDialogsAdditionalFields>
+        <searchResultsAdditionalFields>%%%NAMESPACE%%%Active__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>%%%NAMESPACE%%%Description__c</searchResultsAdditionalFields>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <description>Accounting units used for allocating Opportunities.</description>

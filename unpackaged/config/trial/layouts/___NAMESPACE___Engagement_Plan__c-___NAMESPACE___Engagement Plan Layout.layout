@@ -9,7 +9,7 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>npsp__Engagement_Plan_Template__c</field>
+                <field>%%%NAMESPACE%%%Engagement_Plan_Template__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
@@ -17,33 +17,33 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Status__c</field>
+                <field>%%%NAMESPACE%%%Status__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Total_Tasks__c</field>
+                <field>%%%NAMESPACE%%%Total_Tasks__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Completed_Tasks__c</field>
+                <field>%%%NAMESPACE%%%Completed_Tasks__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Account__c</field>
+                <field>%%%NAMESPACE%%%Account__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Contact__c</field>
+                <field>%%%NAMESPACE%%%Contact__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Campaign__c</field>
+                <field>%%%NAMESPACE%%%Campaign__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Case__c</field>
+                <field>%%%NAMESPACE%%%Case__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -79,9 +79,9 @@
     </layoutSections>
     <miniLayout>
         <fields>Name</fields>
-        <fields>npsp__Status__c</fields>
-        <fields>npsp__Engagement_Plan_Template__c</fields>
-        <fields>npsp__Total_Tasks__c</fields>
+        <fields>%%%NAMESPACE%%%Status__c</fields>
+        <fields>%%%NAMESPACE%%%Engagement_Plan_Template__c</fields>
+        <fields>%%%NAMESPACE%%%Total_Tasks__c</fields>
     </miniLayout>
     <relatedLists>
         <fields>TASK.SUBJECT</fields>
@@ -94,7 +94,7 @@
         <fields>TASK.PRIORITY</fields>
         <fields>CORE.USERS.FULL_NAME</fields>
         <fields>TASK.LAST_UPDATE</fields>
-        <relatedList>Activity.npsp__Engagement_Plan__c</relatedList>
+        <relatedList>Activity.%%%NAMESPACE%%%Engagement_Plan__c</relatedList>
     </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>
     <showHighlightsPanel>false</showHighlightsPanel>

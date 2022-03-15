@@ -13,23 +13,23 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Datetime__c</field>
+                <field>%%%NAMESPACE%%%Datetime__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Context_Type__c</field>
+                <field>%%%NAMESPACE%%%Context_Type__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Error_Type__c</field>
+                <field>%%%NAMESPACE%%%Error_Type__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Record_URL__c</field>
+                <field>%%%NAMESPACE%%%Record_URL__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Full_Message__c</field>
+                <field>%%%NAMESPACE%%%Full_Message__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -39,23 +39,23 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Email_Sent__c</field>
+                <field>%%%NAMESPACE%%%Email_Sent__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Posted_in_Chatter__c</field>
+                <field>%%%NAMESPACE%%%Posted_in_Chatter__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Object_Type__c</field>
+                <field>%%%NAMESPACE%%%Object_Type__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Stack_Trace__c</field>
+                <field>%%%NAMESPACE%%%Stack_Trace__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Related_Record_ID__c</field>
+                <field>%%%NAMESPACE%%%Related_Record_ID__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>

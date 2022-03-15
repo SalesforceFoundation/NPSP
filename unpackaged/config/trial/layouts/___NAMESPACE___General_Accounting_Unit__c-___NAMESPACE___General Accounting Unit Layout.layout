@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customButtons>npsp__Recalculate_Rollups</customButtons>
+    <customButtons>%%%NAMESPACE%%%Recalculate_Rollups</customButtons>
     <excludeButtons>Submit</excludeButtons>
     <layoutSections>
         <customLabel>false</customLabel>
@@ -14,13 +14,13 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Description__c</field>
+                <field>%%%NAMESPACE%%%Description__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Active__c</field>
+                <field>%%%NAMESPACE%%%Active__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -33,25 +33,25 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Last_Allocation_Date__c</field>
+                <field>%%%NAMESPACE%%%Last_Allocation_Date__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__First_Allocation_Date__c</field>
+                <field>%%%NAMESPACE%%%First_Allocation_Date__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Largest_Allocation__c</field>
+                <field>%%%NAMESPACE%%%Largest_Allocation__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Average_Allocation__c</field>
+                <field>%%%NAMESPACE%%%Average_Allocation__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Smallest_Allocation__c</field>
+                <field>%%%NAMESPACE%%%Smallest_Allocation__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -64,45 +64,45 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Total_Allocations__c</field>
+                <field>%%%NAMESPACE%%%Total_Allocations__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Total_Allocations_Last_N_Days__c</field>
+                <field>%%%NAMESPACE%%%Total_Allocations_Last_N_Days__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Total_Allocations_This_Year__c</field>
+                <field>%%%NAMESPACE%%%Total_Allocations_This_Year__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Total_Allocations_Two_Years_Ago__c</field>
+                <field>%%%NAMESPACE%%%Total_Allocations_Two_Years_Ago__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Total_Allocations_Last_Year__c</field>
+                <field>%%%NAMESPACE%%%Total_Allocations_Last_Year__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Total_Number_of_Allocations__c</field>
+                <field>%%%NAMESPACE%%%Total_Number_of_Allocations__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Number_of_Allocations_Last_N_Days__c</field>
+                <field>%%%NAMESPACE%%%Number_of_Allocations_Last_N_Days__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Number_of_Allocations_Last_Year__c</field>
+                <field>%%%NAMESPACE%%%Number_of_Allocations_Last_Year__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Number_of_Allocations_This_Year__c</field>
+                <field>%%%NAMESPACE%%%Number_of_Allocations_This_Year__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Number_of_Allocations_Two_Years_Ago__c</field>
+                <field>%%%NAMESPACE%%%Number_of_Allocations_Two_Years_Ago__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -142,8 +142,8 @@
     </layoutSections>
     <miniLayout>
         <fields>Name</fields>
-        <fields>npsp__Active__c</fields>
-        <fields>npsp__Description__c</fields>
+        <fields>%%%NAMESPACE%%%Active__c</fields>
+        <fields>%%%NAMESPACE%%%Description__c</fields>
     </miniLayout>
     <platformActionList>
         <actionListContext>Record</actionListContext>
@@ -158,7 +158,7 @@
             <sortOrder>1</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>npsp__Recalculate_Rollups</actionName>
+            <actionName>%%%NAMESPACE%%%Recalculate_Rollups</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>2</sortOrder>
         </platformActionListItems>
@@ -190,10 +190,10 @@
     </platformActionList>
     <relatedLists>
         <fields>NAME</fields>
-        <fields>npsp__Opportunity__c</fields>
-        <fields>npsp__Percent__c</fields>
-        <fields>npsp__Amount__c</fields>
-        <relatedList>npsp__Allocation__c.npsp__General_Accounting_Unit__c</relatedList>
+        <fields>%%%NAMESPACE%%%Opportunity__c</fields>
+        <fields>%%%NAMESPACE%%%Percent__c</fields>
+        <fields>%%%NAMESPACE%%%Amount__c</fields>
+        <relatedList>%%%NAMESPACE%%%Allocation__c.%%%NAMESPACE%%%General_Accounting_Unit__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>TASK.SUBJECT</fields>

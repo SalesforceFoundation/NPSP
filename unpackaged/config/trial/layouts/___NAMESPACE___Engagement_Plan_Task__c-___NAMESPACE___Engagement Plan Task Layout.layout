@@ -13,49 +13,49 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>npsp__Engagement_Plan_Template__c</field>
+                <field>%%%NAMESPACE%%%Engagement_Plan_Template__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Assigned_To__c</field>
+                <field>%%%NAMESPACE%%%Assigned_To__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Comments__c</field>
+                <field>%%%NAMESPACE%%%Comments__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Days_After__c</field>
+                <field>%%%NAMESPACE%%%Days_After__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Parent_Task__c</field>
+                <field>%%%NAMESPACE%%%Parent_Task__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Priority__c</field>
+                <field>%%%NAMESPACE%%%Priority__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Reminder__c</field>
+                <field>%%%NAMESPACE%%%Reminder__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Reminder_Time__c</field>
+                <field>%%%NAMESPACE%%%Reminder_Time__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Send_Email__c</field>
+                <field>%%%NAMESPACE%%%Send_Email__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Status__c</field>
+                <field>%%%NAMESPACE%%%Status__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Type__c</field>
+                <field>%%%NAMESPACE%%%Type__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>

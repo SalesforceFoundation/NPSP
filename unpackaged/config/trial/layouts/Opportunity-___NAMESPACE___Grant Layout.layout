@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customButtons>npsp__Refresh_Name</customButtons>
-    <customButtons>npsp__Email_Acknowledgment</customButtons>
+    <customButtons>%%%NAMESPACE%%%Refresh_Name</customButtons>
+    <customButtons>%%%NAMESPACE%%%Email_Acknowledgment</customButtons>
     <excludeButtons>Submit</excludeButtons>
     <layoutSections>
         <customLabel>true</customLabel>
@@ -19,7 +19,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Primary_Contact__c</field>
+                <field>%%%NAMESPACE%%%Primary_Contact__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
@@ -45,11 +45,11 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Acknowledgment_Status__c</field>
+                <field>%%%NAMESPACE%%%Acknowledgment_Status__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Acknowledgment_Date__c</field>
+                <field>%%%NAMESPACE%%%Acknowledgment_Date__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -75,45 +75,45 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Requested_Amount__c</field>
+                <field>%%%NAMESPACE%%%Requested_Amount__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Grant_Requirements_Website__c</field>
+                <field>%%%NAMESPACE%%%Grant_Requirements_Website__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Grant_Contract_Number__c</field>
+                <field>%%%NAMESPACE%%%Grant_Contract_Number__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Grant_Program_Area_s__c</field>
+                <field>%%%NAMESPACE%%%Grant_Program_Area_s__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Previous_Grant_Opportunity__c</field>
+                <field>%%%NAMESPACE%%%Previous_Grant_Opportunity__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Grant_Contract_Date__c</field>
+                <field>%%%NAMESPACE%%%Grant_Contract_Date__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Grant_Period_Start_Date__c</field>
+                <field>%%%NAMESPACE%%%Grant_Period_Start_Date__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Grant_Period_End_Date__c</field>
+                <field>%%%NAMESPACE%%%Grant_Period_End_Date__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Next_Grant_Deadline_Due_Date__c</field>
+                <field>%%%NAMESPACE%%%Next_Grant_Deadline_Due_Date__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Is_Grant_Renewal__c</field>
+                <field>%%%NAMESPACE%%%Is_Grant_Renewal__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -174,7 +174,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Batch_Number__c</field>
+                <field>%%%NAMESPACE%%%Batch_Number__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -225,12 +225,12 @@
             <sortOrder>2</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>npsp__Manage_Soft_Credits</actionName>
+            <actionName>%%%NAMESPACE%%%Manage_Soft_Credits</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>3</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>npsp__Refresh_Name</actionName>
+            <actionName>%%%NAMESPACE%%%Refresh_Name</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>4</sortOrder>
         </platformActionListItems>
@@ -260,7 +260,7 @@
             <sortOrder>9</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>Opportunity.npsp__New_Payment</actionName>
+            <actionName>Opportunity.%%%NAMESPACE%%%New_Payment</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>10</sortOrder>
         </platformActionListItems>
@@ -270,19 +270,19 @@
             <quickActionName>FeedItem.TextPost</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>Opportunity.npsp__Quick_Update</quickActionName>
+            <quickActionName>Opportunity.%%%NAMESPACE%%%Quick_Update</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>Opportunity.npsp__New_Payment</quickActionName>
+            <quickActionName>Opportunity.%%%NAMESPACE%%%New_Payment</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>npsp__New_Recurring_Donation</quickActionName>
+            <quickActionName>%%%NAMESPACE%%%New_Recurring_Donation</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>npsp__NewContact</quickActionName>
+            <quickActionName>%%%NAMESPACE%%%NewContact</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>npsp__NewAccount</quickActionName>
+            <quickActionName>%%%NAMESPACE%%%NewAccount</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
             <quickActionName>FeedItem.ContentPost</quickActionName>
@@ -328,22 +328,22 @@
         <relatedList>npe01__OppPayment__c.npe01__Opportunity__c</relatedList>
     </relatedLists>
     <relatedLists>
-        <customButtons>npsp__Manage_Allocations</customButtons>
+        <customButtons>%%%NAMESPACE%%%Manage_Allocations</customButtons>
         <excludeButtons>MassChangeOwner</excludeButtons>
         <excludeButtons>New</excludeButtons>
         <fields>NAME</fields>
-        <fields>npsp__General_Accounting_Unit__c</fields>
-        <fields>npsp__Amount__c</fields>
-        <fields>npsp__Percent__c</fields>
-        <relatedList>npsp__Allocation__c.npsp__Opportunity__c</relatedList>
+        <fields>%%%NAMESPACE%%%General_Accounting_Unit__c</fields>
+        <fields>%%%NAMESPACE%%%Amount__c</fields>
+        <fields>%%%NAMESPACE%%%Percent__c</fields>
+        <relatedList>%%%NAMESPACE%%%Allocation__c.%%%NAMESPACE%%%Opportunity__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
-        <fields>npsp__Grant_Deadline_Due_Date__c</fields>
-        <fields>npsp__Grant_Deliverable_Close_Date__c</fields>
-        <fields>npsp__Grant_Deliverable_Requirements__c</fields>
-        <relatedList>npsp__Grant_Deadline__c.npsp__Opportunity__c</relatedList>
-        <sortField>npsp__Grant_Deadline_Due_Date__c</sortField>
+        <fields>%%%NAMESPACE%%%Grant_Deadline_Due_Date__c</fields>
+        <fields>%%%NAMESPACE%%%Grant_Deliverable_Close_Date__c</fields>
+        <fields>%%%NAMESPACE%%%Grant_Deliverable_Requirements__c</fields>
+        <relatedList>%%%NAMESPACE%%%Grant_Deadline__c.%%%NAMESPACE%%%Opportunity__c</relatedList>
+        <sortField>%%%NAMESPACE%%%Grant_Deadline_Due_Date__c</sortField>
         <sortOrder>Asc</sortOrder>
     </relatedLists>
     <relatedLists>
@@ -351,7 +351,7 @@
         <fields>ACCOUNT.NAME</fields>
         <fields>OPPORTUNITY.CLOSE_DATE</fields>
         <fields>OPPORTUNITY.AMOUNT</fields>
-        <relatedList>Opportunity.npsp__Previous_Grant_Opportunity__c</relatedList>
+        <relatedList>Opportunity.%%%NAMESPACE%%%Previous_Grant_Opportunity__c</relatedList>
         <sortField>OPPORTUNITY.CLOSE_DATE</sortField>
         <sortOrder>Desc</sortOrder>
     </relatedLists>

@@ -13,19 +13,19 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>npsp__Class__c</field>
+                <field>%%%NAMESPACE%%%Class__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>npsp__Object__c</field>
+                <field>%%%NAMESPACE%%%Object__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Trigger_Action__c</field>
+                <field>%%%NAMESPACE%%%Trigger_Action__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Load_Order__c</field>
+                <field>%%%NAMESPACE%%%Load_Order__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -35,15 +35,15 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Active__c</field>
+                <field>%%%NAMESPACE%%%Active__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Asynchronous__c</field>
+                <field>%%%NAMESPACE%%%Asynchronous__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__User_Managed__c</field>
+                <field>%%%NAMESPACE%%%User_Managed__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -78,8 +78,8 @@
         <style>CustomLinks</style>
     </layoutSections>
     <miniLayout>
-        <fields>npsp__Class__c</fields>
-        <fields>npsp__Object__c</fields>
+        <fields>%%%NAMESPACE%%%Class__c</fields>
+        <fields>%%%NAMESPACE%%%Object__c</fields>
     </miniLayout>
     <showEmailCheckbox>false</showEmailCheckbox>
     <showHighlightsPanel>false</showHighlightsPanel>

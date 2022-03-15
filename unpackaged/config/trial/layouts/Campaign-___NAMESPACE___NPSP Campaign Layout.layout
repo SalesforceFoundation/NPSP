@@ -232,14 +232,14 @@
         <relatedList>RelatedCampaignMemberStatusList</relatedList>
     </relatedLists>
     <relatedLists>
-        <customButtons>npsp__Manage_Allocations</customButtons>
+        <customButtons>%%%NAMESPACE%%%Manage_Allocations</customButtons>
         <excludeButtons>New</excludeButtons>
         <fields>NAME</fields>
-        <fields>npsp__General_Accounting_Unit__c</fields>
-        <fields>npsp__Amount__c</fields>
-        <fields>npsp__Percent__c</fields>
-        <fields>npsp__Opportunity__c</fields>
-        <relatedList>npsp__Allocation__c.npsp__Campaign__c</relatedList>
+        <fields>%%%NAMESPACE%%%General_Accounting_Unit__c</fields>
+        <fields>%%%NAMESPACE%%%Amount__c</fields>
+        <fields>%%%NAMESPACE%%%Percent__c</fields>
+        <fields>%%%NAMESPACE%%%Opportunity__c</fields>
+        <relatedList>%%%NAMESPACE%%%Allocation__c.%%%NAMESPACE%%%Campaign__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>CAMPAIGN.NAME</fields>

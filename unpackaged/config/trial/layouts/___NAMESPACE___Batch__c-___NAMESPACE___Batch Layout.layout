@@ -13,15 +13,15 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>npsp__Object_Name__c</field>
+                <field>%%%NAMESPACE%%%Object_Name__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Number_of_Items__c</field>
+                <field>%%%NAMESPACE%%%Number_of_Items__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Description__c</field>
+                <field>%%%NAMESPACE%%%Description__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -31,7 +31,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Batch_Status__c</field>
+                <field>%%%NAMESPACE%%%Batch_Status__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -66,7 +66,7 @@
         <style>CustomLinks</style>
     </layoutSections>
     <miniLayout>
-        <fields>npsp__Object_Name__c</fields>
+        <fields>%%%NAMESPACE%%%Object_Name__c</fields>
     </miniLayout>
     <showEmailCheckbox>false</showEmailCheckbox>
     <showHighlightsPanel>false</showHighlightsPanel>

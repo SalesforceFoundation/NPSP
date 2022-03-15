@@ -26,15 +26,15 @@
         <label>NPSP Address Compact Layout</label>
     </compactLayouts>
     <searchLayouts>
-        <lookupDialogsAdditionalFields>npsp__Formula_MailingAddress__c</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>npsp__Household_Account__c</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>npsp__Address_Type__c</lookupDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>npsp__Formula_MailingAddress__c</lookupPhoneDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>npsp__Household_Account__c</lookupPhoneDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>npsp__Address_Type__c</lookupPhoneDialogsAdditionalFields>
-        <searchFilterFields>npsp__Formula_MailingAddress__c</searchFilterFields>
-        <searchFilterFields>npsp__Household_Account__c</searchFilterFields>
-        <searchFilterFields>npsp__Address_Type__c</searchFilterFields>
+        <lookupDialogsAdditionalFields>%%%NAMESPACE%%%Formula_MailingAddress__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>%%%NAMESPACE%%%Household_Account__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>%%%NAMESPACE%%%Address_Type__c</lookupDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>%%%NAMESPACE%%%Formula_MailingAddress__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>%%%NAMESPACE%%%Household_Account__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>%%%NAMESPACE%%%Address_Type__c</lookupPhoneDialogsAdditionalFields>
+        <searchFilterFields>%%%NAMESPACE%%%Formula_MailingAddress__c</searchFilterFields>
+        <searchFilterFields>%%%NAMESPACE%%%Household_Account__c</searchFilterFields>
+        <searchFilterFields>%%%NAMESPACE%%%Address_Type__c</searchFilterFields>
         <searchResultsAdditionalFields>%%%NAMESPACE%%%Household_Account__c</searchResultsAdditionalFields>
         <searchResultsAdditionalFields>%%%NAMESPACE%%%Address_Type__c</searchResultsAdditionalFields>
         <searchResultsAdditionalFields>%%%NAMESPACE%%%Formula_MailingAddress__c</searchResultsAdditionalFields>

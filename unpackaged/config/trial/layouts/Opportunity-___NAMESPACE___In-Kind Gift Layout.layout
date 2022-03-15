@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customButtons>npsp__Email_Acknowledgment</customButtons>
+    <customButtons>%%%NAMESPACE%%%Email_Acknowledgment</customButtons>
     <excludeButtons>Submit</excludeButtons>
     <layoutSections>
         <customLabel>true</customLabel>
@@ -18,7 +18,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Primary_Contact__c</field>
+                <field>%%%NAMESPACE%%%Primary_Contact__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -48,11 +48,11 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Acknowledgment_Status__c</field>
+                <field>%%%NAMESPACE%%%Acknowledgment_Status__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Acknowledgment_Date__c</field>
+                <field>%%%NAMESPACE%%%Acknowledgment_Date__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -65,19 +65,19 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Fair_Market_Value__c</field>
+                <field>%%%NAMESPACE%%%Fair_Market_Value__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__In_Kind_Donor_Declared_Value__c</field>
+                <field>%%%NAMESPACE%%%In_Kind_Donor_Declared_Value__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__In_Kind_Type__c</field>
+                <field>%%%NAMESPACE%%%In_Kind_Type__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__In_Kind_Description__c</field>
+                <field>%%%NAMESPACE%%%In_Kind_Description__c</field>
             </layoutItems>
         </layoutColumns>
         <style>OneColumn</style>
@@ -90,37 +90,37 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Tribute_Type__c</field>
+                <field>%%%NAMESPACE%%%Tribute_Type__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Honoree_Contact__c</field>
+                <field>%%%NAMESPACE%%%Honoree_Contact__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Honoree_Name__c</field>
+                <field>%%%NAMESPACE%%%Honoree_Name__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Notification_Message__c</field>
+                <field>%%%NAMESPACE%%%Notification_Message__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Notification_Preference__c</field>
+                <field>%%%NAMESPACE%%%Notification_Preference__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Notification_Recipient_Contact__c</field>
+                <field>%%%NAMESPACE%%%Notification_Recipient_Contact__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Notification_Recipient_Name__c</field>
+                <field>%%%NAMESPACE%%%Notification_Recipient_Name__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Notification_Recipient_Information__c</field>
+                <field>%%%NAMESPACE%%%Notification_Recipient_Information__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -150,7 +150,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Batch_Number__c</field>
+                <field>%%%NAMESPACE%%%Batch_Number__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -201,12 +201,12 @@
             <sortOrder>2</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>npsp__Manage_Soft_Credits</actionName>
+            <actionName>%%%NAMESPACE%%%Manage_Soft_Credits</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>3</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>npsp__Refresh_Name</actionName>
+            <actionName>%%%NAMESPACE%%%Refresh_Name</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>4</sortOrder>
         </platformActionListItems>
@@ -236,7 +236,7 @@
             <sortOrder>9</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>Opportunity.npsp__New_Payment</actionName>
+            <actionName>Opportunity.%%%NAMESPACE%%%New_Payment</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>10</sortOrder>
         </platformActionListItems>
@@ -246,10 +246,10 @@
             <quickActionName>FeedItem.TextPost</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>Opportunity.npsp__Quick_Update</quickActionName>
+            <quickActionName>Opportunity.%%%NAMESPACE%%%Quick_Update</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>npsp__NewContact</quickActionName>
+            <quickActionName>%%%NAMESPACE%%%NewContact</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
             <quickActionName>FeedItem.ContentPost</quickActionName>

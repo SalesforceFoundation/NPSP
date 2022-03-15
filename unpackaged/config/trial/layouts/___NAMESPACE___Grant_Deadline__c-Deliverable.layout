@@ -15,21 +15,21 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>npsp__Opportunity__c</field>
+                <field>%%%NAMESPACE%%%Opportunity__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Type__c</field>
+                <field>%%%NAMESPACE%%%Type__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Grant_Deadline_Due_Date__c</field>
+                <field>%%%NAMESPACE%%%Grant_Deadline_Due_Date__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Grant_Deliverable_Close_Date__c</field>
+                <field>%%%NAMESPACE%%%Grant_Deliverable_Close_Date__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -42,7 +42,7 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Grant_Deliverable_Requirements__c</field>
+                <field>%%%NAMESPACE%%%Grant_Deliverable_Requirements__c</field>
             </layoutItems>
         </layoutColumns>
         <style>OneColumn</style>
@@ -78,9 +78,9 @@
     </layoutSections>
     <miniLayout>
         <fields>Name</fields>
-        <fields>npsp__Opportunity__c</fields>
-        <fields>npsp__Grant_Deadline_Due_Date__c</fields>
-        <fields>npsp__Type__c</fields>
+        <fields>%%%NAMESPACE%%%Opportunity__c</fields>
+        <fields>%%%NAMESPACE%%%Grant_Deadline_Due_Date__c</fields>
+        <fields>%%%NAMESPACE%%%Type__c</fields>
     </miniLayout>
     <platformActionList>
         <actionListContext>Record</actionListContext>

@@ -14,37 +14,37 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>npsp__Target__c</field>
+                <field>%%%NAMESPACE%%%Target__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>npsp__Source_Field__c</field>
+                <field>%%%NAMESPACE%%%Source_Field__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>npsp__Level_Field__c</field>
+                <field>%%%NAMESPACE%%%Level_Field__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Previous_Level_Field__c</field>
+                <field>%%%NAMESPACE%%%Previous_Level_Field__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Active__c</field>
+                <field>%%%NAMESPACE%%%Active__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Minimum_Amount__c</field>
+                <field>%%%NAMESPACE%%%Minimum_Amount__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Maximum_Amount__c</field>
+                <field>%%%NAMESPACE%%%Maximum_Amount__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Engagement_Plan_Template__c</field>
+                <field>%%%NAMESPACE%%%Engagement_Plan_Template__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -57,7 +57,7 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Description__c</field>
+                <field>%%%NAMESPACE%%%Description__c</field>
             </layoutItems>
         </layoutColumns>
         <style>OneColumn</style>
@@ -97,9 +97,9 @@
     </layoutSections>
     <miniLayout>
         <fields>Name</fields>
-        <fields>npsp__Target__c</fields>
-        <fields>npsp__Source_Field__c</fields>
-        <fields>npsp__Level_Field__c</fields>
+        <fields>%%%NAMESPACE%%%Target__c</fields>
+        <fields>%%%NAMESPACE%%%Source_Field__c</fields>
+        <fields>%%%NAMESPACE%%%Level_Field__c</fields>
     </miniLayout>
     <relatedLists>
         <relatedList>RelatedContentNoteList</relatedList>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customButtons>npsp__Manage_Household</customButtons>
-    <customButtons>npsp__Recalculate_Rollups</customButtons>
+    <customButtons>%%%NAMESPACE%%%Manage_Household</customButtons>
+    <customButtons>%%%NAMESPACE%%%Recalculate_Rollups</customButtons>
     <excludeButtons>DataDotComAccountInsights</excludeButtons>
     <excludeButtons>IncludeOffline</excludeButtons>
     <excludeButtons>Share</excludeButtons>
@@ -36,7 +36,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Number_of_Household_Members__c</field>
+                <field>%%%NAMESPACE%%%Number_of_Household_Members__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -209,11 +209,11 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Membership_Span__c</field>
+                <field>%%%NAMESPACE%%%Membership_Span__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Membership_Status__c</field>
+                <field>%%%NAMESPACE%%%Membership_Status__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -274,7 +274,7 @@
             <sortOrder>0</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>npsp__Manage_Household</actionName>
+            <actionName>%%%NAMESPACE%%%Manage_Household</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>1</sortOrder>
         </platformActionListItems>
@@ -284,12 +284,12 @@
             <sortOrder>2</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>npsp__Recalculate_Rollups</actionName>
+            <actionName>%%%NAMESPACE%%%Recalculate_Rollups</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>3</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>npsp__NewContact</actionName>
+            <actionName>%%%NAMESPACE%%%NewContact</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>4</sortOrder>
         </platformActionListItems>
@@ -334,19 +334,19 @@
             <quickActionName>FeedItem.TextPost</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>npsp__NewContact</quickActionName>
+            <quickActionName>%%%NAMESPACE%%%NewContact</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>Account.npsp__Quick_Household_Update</quickActionName>
+            <quickActionName>Account.%%%NAMESPACE%%%Quick_Household_Update</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>Account.npsp__New_Address</quickActionName>
+            <quickActionName>Account.%%%NAMESPACE%%%New_Address</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
             <quickActionName>FeedItem.ContentPost</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>npsp__NewTask</quickActionName>
+            <quickActionName>%%%NAMESPACE%%%NewTask</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
             <quickActionName>SendEmail</quickActionName>
@@ -386,21 +386,21 @@
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
-        <fields>npsp__Address_Type__c</fields>
-        <fields>npsp__Formula_MailingAddress__c</fields>
-        <fields>npsp__Default_Address__c</fields>
+        <fields>%%%NAMESPACE%%%Address_Type__c</fields>
+        <fields>%%%NAMESPACE%%%Formula_MailingAddress__c</fields>
+        <fields>%%%NAMESPACE%%%Default_Address__c</fields>
         <fields>LAST_UPDATE</fields>
-        <relatedList>npsp__Address__c.npsp__Household_Account__c</relatedList>
-        <sortField>npsp__Default_Address__c</sortField>
+        <relatedList>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Household_Account__c</relatedList>
+        <sortField>%%%NAMESPACE%%%Default_Address__c</sortField>
         <sortOrder>Desc</sortOrder>
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
-        <fields>npsp__Engagement_Plan_Template__c</fields>
+        <fields>%%%NAMESPACE%%%Engagement_Plan_Template__c</fields>
         <fields>CREATEDBY_USER</fields>
         <fields>LAST_UPDATE</fields>
-        <fields>npsp__Status__c</fields>
-        <relatedList>npsp__Engagement_Plan__c.npsp__Account__c</relatedList>
+        <fields>%%%NAMESPACE%%%Status__c</fields>
+        <relatedList>%%%NAMESPACE%%%Engagement_Plan__c.%%%NAMESPACE%%%Account__c</relatedList>
         <sortField>CREATEDBY_USER</sortField>
         <sortOrder>Desc</sortOrder>
     </relatedLists>

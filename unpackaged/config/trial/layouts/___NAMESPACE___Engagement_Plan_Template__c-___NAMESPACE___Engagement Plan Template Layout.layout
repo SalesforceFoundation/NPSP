@@ -13,19 +13,19 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Automatically_Update_Child_Task_Due_Date__c</field>
+                <field>%%%NAMESPACE%%%Automatically_Update_Child_Task_Due_Date__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Default_Assignee__c</field>
+                <field>%%%NAMESPACE%%%Default_Assignee__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Skip_Weekends__c</field>
+                <field>%%%NAMESPACE%%%Skip_Weekends__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Description__c</field>
+                <field>%%%NAMESPACE%%%Description__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -35,15 +35,15 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Total_Engagement_Plans__c</field>
+                <field>%%%NAMESPACE%%%Total_Engagement_Plans__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Total_Tasks__c</field>
+                <field>%%%NAMESPACE%%%Total_Tasks__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Reschedule_To__c</field>
+                <field>%%%NAMESPACE%%%Reschedule_To__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -79,25 +79,25 @@
     </layoutSections>
     <relatedLists>
         <fields>NAME</fields>
-        <fields>npsp__Assigned_To__c</fields>
-        <fields>npsp__Days_After__c</fields>
-        <fields>npsp__Parent_Task__c</fields>
-        <fields>npsp__Reminder__c</fields>
-        <fields>npsp__Send_Email__c</fields>
-        <fields>npsp__Priority__c</fields>
-        <fields>npsp__Type__c</fields>
-        <relatedList>npsp__Engagement_Plan_Task__c.npsp__Engagement_Plan_Template__c</relatedList>
+        <fields>%%%NAMESPACE%%%Assigned_To__c</fields>
+        <fields>%%%NAMESPACE%%%Days_After__c</fields>
+        <fields>%%%NAMESPACE%%%Parent_Task__c</fields>
+        <fields>%%%NAMESPACE%%%Reminder__c</fields>
+        <fields>%%%NAMESPACE%%%Send_Email__c</fields>
+        <fields>%%%NAMESPACE%%%Priority__c</fields>
+        <fields>%%%NAMESPACE%%%Type__c</fields>
+        <relatedList>%%%NAMESPACE%%%Engagement_Plan_Task__c.%%%NAMESPACE%%%Engagement_Plan_Template__c</relatedList>
     </relatedLists>
     <relatedLists>
-        <fields>npsp__Opportunity__c</fields>
-        <fields>npsp__Recurring_Donation__c</fields>
-        <fields>npsp__Contact__c</fields>
-        <fields>npsp__Case__c</fields>
-        <fields>npsp__Campaign__c</fields>
-        <fields>npsp__Account__c</fields>
+        <fields>%%%NAMESPACE%%%Opportunity__c</fields>
+        <fields>%%%NAMESPACE%%%Recurring_Donation__c</fields>
+        <fields>%%%NAMESPACE%%%Contact__c</fields>
+        <fields>%%%NAMESPACE%%%Case__c</fields>
+        <fields>%%%NAMESPACE%%%Campaign__c</fields>
+        <fields>%%%NAMESPACE%%%Account__c</fields>
         <fields>CREATED_DATE</fields>
         <fields>CREATEDBY_USER</fields>
-        <relatedList>npsp__Engagement_Plan__c.npsp__Engagement_Plan_Template__c</relatedList>
+        <relatedList>%%%NAMESPACE%%%Engagement_Plan__c.%%%NAMESPACE%%%Engagement_Plan_Template__c</relatedList>
     </relatedLists>
     <relatedLists>
         <relatedList>RelatedContentNoteList</relatedList>

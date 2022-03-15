@@ -75,23 +75,23 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__CompanyStreet__c</field>
+                <field>%%%NAMESPACE%%%CompanyStreet__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__CompanyCity__c</field>
+                <field>%%%NAMESPACE%%%CompanyCity__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__CompanyState__c</field>
+                <field>%%%NAMESPACE%%%CompanyState__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__CompanyPostalCode__c</field>
+                <field>%%%NAMESPACE%%%CompanyPostalCode__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__CompanyCountry__c</field>
+                <field>%%%NAMESPACE%%%CompanyCountry__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>

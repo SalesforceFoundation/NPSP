@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customButtons>npsp__Verify_Address</customButtons>
+    <customButtons>%%%NAMESPACE%%%Verify_Address</customButtons>
     <excludeButtons>Submit</excludeButtons>
     <layoutSections>
         <customLabel>false</customLabel>
@@ -14,25 +14,25 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>npsp__Household_Account__c</field>
+                <field>%%%NAMESPACE%%%Household_Account__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Address_Type__c</field>
+                <field>%%%NAMESPACE%%%Address_Type__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Default_Address__c</field>
+                <field>%%%NAMESPACE%%%Default_Address__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Latest_Start_Date__c</field>
+                <field>%%%NAMESPACE%%%Latest_Start_Date__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Latest_End_Date__c</field>
+                <field>%%%NAMESPACE%%%Latest_End_Date__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -45,27 +45,27 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__MailingStreet__c</field>
+                <field>%%%NAMESPACE%%%MailingStreet__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__MailingStreet2__c</field>
+                <field>%%%NAMESPACE%%%MailingStreet2__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__MailingCity__c</field>
+                <field>%%%NAMESPACE%%%MailingCity__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__MailingState__c</field>
+                <field>%%%NAMESPACE%%%MailingState__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__MailingPostalCode__c</field>
+                <field>%%%NAMESPACE%%%MailingPostalCode__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__MailingCountry__c</field>
+                <field>%%%NAMESPACE%%%MailingCountry__c</field>
             </layoutItems>
         </layoutColumns>
         <style>OneColumn</style>
@@ -78,21 +78,21 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Seasonal_Start_Month__c</field>
+                <field>%%%NAMESPACE%%%Seasonal_Start_Month__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Seasonal_End_Month__c</field>
+                <field>%%%NAMESPACE%%%Seasonal_End_Month__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Seasonal_Start_Day__c</field>
+                <field>%%%NAMESPACE%%%Seasonal_Start_Day__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Seasonal_End_Day__c</field>
+                <field>%%%NAMESPACE%%%Seasonal_End_Day__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -134,7 +134,7 @@
             <sortOrder>0</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>npsp__Address__c.npsp__Update_Address</actionName>
+            <actionName>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Update_Address</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>1</sortOrder>
         </platformActionListItems>
@@ -159,13 +159,13 @@
             <quickActionName>FeedItem.TextPost</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>npsp__Address__c.npsp__Update_Address</quickActionName>
+            <quickActionName>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Update_Address</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
             <quickActionName>FeedItem.ContentPost</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>npsp__NewTask</quickActionName>
+            <quickActionName>%%%NAMESPACE%%%NewTask</quickActionName>
         </quickActionListItems>
     </quickActionList>
     <showEmailCheckbox>false</showEmailCheckbox>

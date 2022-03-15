@@ -13,17 +13,17 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>npsp__Opportunity__c</field>
+                <field>%%%NAMESPACE%%%Opportunity__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Grant_Deadline_Due_Date__c</field>
+                <field>%%%NAMESPACE%%%Grant_Deadline_Due_Date__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Grant_Deliverable_Close_Date__c</field>
+                <field>%%%NAMESPACE%%%Grant_Deliverable_Close_Date__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -36,7 +36,7 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Grant_Deliverable_Requirements__c</field>
+                <field>%%%NAMESPACE%%%Grant_Deliverable_Requirements__c</field>
             </layoutItems>
         </layoutColumns>
         <style>OneColumn</style>
