@@ -246,16 +246,6 @@
         <name>StandardValueSetTranslation</name>
     </types>
     <types>
-        <members>de</members>
-        <members>en_US</members>
-        <members>es</members>
-        <members>fr</members>
-        <members>iw</members>
-        <members>ja</members>
-        <members>nl_NL</members>
-        <name>Translations</name>
-    </types>
-    <types>
         <members>Contact.Contact_Preferred_Email</members>
         <members>Contact.Contact_Preferred_Phone</members>
         <name>ValidationRule</name>
