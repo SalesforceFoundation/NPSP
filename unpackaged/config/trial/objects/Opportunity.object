@@ -64,15 +64,15 @@
         <fullName>In-Kind Gift</fullName>
         <isActive>true</isActive>
         <values>
-            <fullName>Cultivating</fullName>
-            <default>false</default>
-        </values>
-        <values>
             <fullName>In-Kind Not Yet Received</fullName>
             <default>false</default>
         </values>
         <values>
             <fullName>In-Kind Received</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Prospecting</fullName>
             <default>false</default>
         </values>
         <values>
@@ -287,6 +287,27 @@
             <values>
                 <fullName>Pipeline</fullName>
                 <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>StageName</picklist>
+            <values>
+                <fullName>Application Submitted</fullName>
+            </values>
+            <values>
+                <fullName>Awarded</fullName>
+            </values>
+            <values>
+                <fullName>Declined</fullName>
+            </values>
+            <values>
+                <fullName>LOI Submitted</fullName>
+            </values>
+            <values>
+                <fullName>Prospecting</fullName>
+            </values>
+            <values>
+                <fullName>Withdrawn</fullName>
             </values>
         </picklistValues>
         <picklistValues>
@@ -659,6 +680,39 @@
             <values>
                 <fullName>New Funding</fullName>
                 <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>StageName</picklist>
+            <values>
+                <fullName>Awarded</fullName>
+            </values>
+            <values>
+                <fullName>Closed Won</fullName>
+            </values>
+            <values>
+                <fullName>Cultivation</fullName>
+            </values>
+            <values>
+                <fullName>Declined</fullName>
+            </values>
+            <values>
+                <fullName>Identification</fullName>
+            </values>
+            <values>
+                <fullName>Proposal/Review</fullName>
+            </values>
+            <values>
+                <fullName>Qualification</fullName>
+            </values>
+            <values>
+                <fullName>Solicitation</fullName>
+            </values>
+            <values>
+                <fullName>Verbal Commitment</fullName>
+            </values>
+            <values>
+                <fullName>Withdrawn</fullName>
             </values>
         </picklistValues>
         <picklistValues>
@@ -1154,6 +1208,12 @@
         </filters>
         <label>Won</label>
     </listViews>
+    <fields>
+        <fullName>StageName</fullName>
+        <trackFeedHistory>true</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
     <searchLayouts>
         <customTabListAdditionalFields>OPPORTUNITY.NAME</customTabListAdditionalFields>
         <customTabListAdditionalFields>ACCOUNT.NAME</customTabListAdditionalFields>
@@ -1161,7 +1221,7 @@
         <customTabListAdditionalFields>OPPORTUNITY.STAGE_NAME</customTabListAdditionalFields>
         <customTabListAdditionalFields>OPPORTUNITY.CLOSE_DATE</customTabListAdditionalFields>
         <customTabListAdditionalFields>OPPORTUNITY.RECORDTYPE</customTabListAdditionalFields>
-        <listViewButtons>%%%NAMESPACE%%%Email_Acknowledgments</listViewButtons>
+        <listViewButtons>Email_Acknowledgments</listViewButtons>
         <lookupDialogsAdditionalFields>OPPORTUNITY.NAME</lookupDialogsAdditionalFields>
         <lookupDialogsAdditionalFields>ACCOUNT.NAME</lookupDialogsAdditionalFields>
         <lookupDialogsAdditionalFields>OPPORTUNITY.AMOUNT</lookupDialogsAdditionalFields>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Nonprofit Success Pack</fullName>
     <types>
         <members>NPSP_Home</members>
         <name>ApexPage</name>
@@ -47,6 +46,7 @@
         <members>Account.Previous_Level__c</members>
         <members>Campaign.Amount_to_Goal__c</members>
         <members>Contact.Gender__c</members>
+        <members>Opportunity.StageName</members>
         <members>npe01__OppPayment__c.Payment_Status__c</members>
         <members>npe4__Relationship__c.npe4__Type__c</members>
         <members>npe5__Affiliation__c.Contact_Link__c</members>

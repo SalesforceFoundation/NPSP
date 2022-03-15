@@ -12,7 +12,7 @@
     <compactLayouts>
         <fullName>NPSP_Address_Compact_Layout_Unmanaged</fullName>
         <fields>Name</fields>
-        <fields>%%%NAMESPACE%%%`Household_Account__c</fields>
+        <fields>%%%NAMESPACE%%%Household_Account__c</fields>
         <fields>%%%NAMESPACE%%%Default_Address__c</fields>
         <fields>%%%NAMESPACE%%%Address_Type__c</fields>
         <fields>%%%NAMESPACE%%%Formula_MailingAddress__c</fields>
@@ -40,7 +40,6 @@
         <searchResultsAdditionalFields>%%%NAMESPACE%%%Formula_MailingAddress__c</searchResultsAdditionalFields>
         <searchResultsAdditionalFields>%%%NAMESPACE%%%Default_Address__c</searchResultsAdditionalFields>
     </searchLayouts>
-
     <label>Address</label>
     <pluralLabel>Addresses</pluralLabel>
     <nameField>
