@@ -36,7 +36,6 @@
 public with sharing class RD2_UpdateCommitmentBulkService {
     public static final Integer MAXIMUM_API_CALL_PER_TRANSACTION = 5;
     public static final Integer REQUEST_SIZE = 50;
-    private Integer apiCallOutCounter = MAXIMUM_API_CALL_PER_TRANSACTION;
    
     private ERR_LogService.Logger logger = new ERR_LogService.Logger(
         ERR_Handler_API.Context.Elevate,
@@ -69,30 +68,33 @@ public with sharing class RD2_UpdateCommitmentBulkService {
     }
 
     public void processCommitments() {
-        if (this.commitments == null
-            || !RD2_ElevateIntegrationService.isIntegrationEnabled()
-            || this.commitments.isEmpty()
-            || apiCallOutCounter == 0
-        ) {
-            this.logger.processErrors();
+        if (!RD2_ElevateIntegrationService.isIntegrationEnabled() ) {
             return;
         }
 
-        apiCallOutCounter--;
+        for (Integer i = 0; i < MAXIMUM_API_CALL_PER_TRANSACTION; i++) {
+            if (noCommitmentToProcess()) {
+                break;
+            }
 
-        RequestBody reqBody = new RequestBody();
-        reqBody.commitments =  getCommitmentsToProcess();
+            RequestBody reqBody = new RequestBody();
+            reqBody.commitments =  getCommitmentsToProcess();
 
-        HttpRequest request = buildBulkStatusUpdateRequest(reqBody);
-        UTIL_Http.Response response;
-        try {
-            response = requestService.sendRequest(request);
-        } catch (Exception ex) {
-            response = requestService.buildErrorResponse(ex);
+            HttpRequest request = buildBulkStatusUpdateRequest(reqBody);
+            UTIL_Http.Response response;
+            try {
+                response = requestService.sendRequest(request);
+            } catch (Exception ex) {
+                response = requestService.buildErrorResponse(ex);
+            }
+
+            processResponse(response);
         }
 
-        processResponse(response);
-        processCommitments();
+        this.logger.processErrors();
+    }
+    private Boolean noCommitmentToProcess() {
+        return this.commitments == null|| this.commitments.isEmpty();
     }
 
     private List<Commitment> getCommitmentsToProcess() {
