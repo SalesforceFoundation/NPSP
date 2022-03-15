@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customButtons>npsp__Recalculate_Rollups</customButtons>
-    <customButtons>npe4__Relationships_Viewer</customButtons>
+    <customButtons>%%%NAMESPACE%%%Recalculate_Rollups</customButtons>
+    <customButtons>Relationships_Viewer</customButtons>
     <excludeButtons>Clone</excludeButtons>
     <excludeButtons>DisableCustomerPortal</excludeButtons>
     <excludeButtons>DisablePartnerPortal</excludeButtons>
@@ -32,7 +32,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Primary_Affiliation__c</field>
+                <field>%%%NAMESPACE%%%Primary_Affiliation__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -50,11 +50,11 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Deceased__c</field>
+                <field>%%%NAMESPACE%%%Deceased__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Do_Not_Contact__c</field>
+                <field>%%%NAMESPACE%%%Do_Not_Contact__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -143,11 +143,11 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__Current_Address__c</field>
+                <field>%%%NAMESPACE%%%Current_Address__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>npsp__is_Address_Override__c</field>
+                <field>%%%NAMESPACE%%%is_Address_Override__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns/>
@@ -273,7 +273,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Soft_Credit_Last_N_Days__c</field>
+                <field>%%%NAMESPACE%%%Soft_Credit_Last_N_Days__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
@@ -289,49 +289,49 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Largest_Soft_Credit_Amount__c</field>
+                <field>%%%NAMESPACE%%%Largest_Soft_Credit_Amount__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Last_Soft_Credit_Amount__c</field>
+                <field>%%%NAMESPACE%%%Last_Soft_Credit_Amount__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__First_Soft_Credit_Amount__c</field>
+                <field>%%%NAMESPACE%%%First_Soft_Credit_Amount__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Number_of_Soft_Credits__c</field>
+                <field>%%%NAMESPACE%%%Number_of_Soft_Credits__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Number_of_Soft_Credits_Last_N_Days__c</field>
+                <field>%%%NAMESPACE%%%Number_of_Soft_Credits_Last_N_Days__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Number_of_Soft_Credits_This_Year__c</field>
+                <field>%%%NAMESPACE%%%Number_of_Soft_Credits_This_Year__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Number_of_Soft_Credits_Last_Year__c</field>
+                <field>%%%NAMESPACE%%%Number_of_Soft_Credits_Last_Year__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Number_of_Soft_Credits_Two_Years_Ago__c</field>
+                <field>%%%NAMESPACE%%%Number_of_Soft_Credits_Two_Years_Ago__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Largest_Soft_Credit_Date__c</field>
+                <field>%%%NAMESPACE%%%Largest_Soft_Credit_Date__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__First_Soft_Credit_Date__c</field>
+                <field>%%%NAMESPACE%%%First_Soft_Credit_Date__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>npsp__Last_Soft_Credit_Date__c</field>
+                <field>%%%NAMESPACE%%%Last_Soft_Credit_Date__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -480,17 +480,17 @@
             <sortOrder>4</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>npsp__Recalculate_Rollups</actionName>
+            <actionName>%%%NAMESPACE%%%Recalculate_Rollups</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>5</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>Contact.npsp__New_Affiliation</actionName>
+            <actionName>Contact.%%%NAMESPACE%%%New_Affiliation</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>6</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>Contact.npsp__New_Relationship</actionName>
+            <actionName>Contact.%%%NAMESPACE%%%New_Relationship</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>7</sortOrder>
         </platformActionListItems>
@@ -515,12 +515,12 @@
             <sortOrder>11</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>npsp__NewTask</actionName>
+            <actionName>%%%NAMESPACE%%%NewTask</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>12</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>npsp__LogACall</actionName>
+            <actionName>%%%NAMESPACE%%%LogACall</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>13</sortOrder>
         </platformActionListItems>
@@ -550,25 +550,25 @@
             <quickActionName>FeedItem.TextPost</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>Contact.npsp__Quick_Update</quickActionName>
+            <quickActionName>Contact.%%%NAMESPACE%%%Quick_Update</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>Contact.npsp__New_Relationship</quickActionName>
+            <quickActionName>Contact.%%%NAMESPACE%%%New_Relationship</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>Contact.npsp__New_Affiliation</quickActionName>
+            <quickActionName>Contact.%%%NAMESPACE%%%New_Affiliation</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>Contact.npsp__New_Recurring_Donation</quickActionName>
+            <quickActionName>Contact.%%%NAMESPACE%%%New_Recurring_Donation</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
             <quickActionName>FeedItem.ContentPost</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>npsp__LogACall</quickActionName>
+            <quickActionName>%%%NAMESPACE%%%LogACall</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>npsp__NewTask</quickActionName>
+            <quickActionName>%%%NAMESPACE%%%NewTask</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
             <quickActionName>SendEmail</quickActionName>
@@ -584,7 +584,7 @@
         <relatedContentItems>
             <layoutItem>
                 <behavior>Readonly</behavior>
-                <field>npsp__Primary_Affiliation__c</field>
+                <field>%%%NAMESPACE%%%Primary_Affiliation__c</field>
             </layoutItem>
         </relatedContentItems>
     </relatedContent>
@@ -594,7 +594,7 @@
         <fields>npe4__Type__c</fields>
         <fields>npe4__Relationship_Explanation__c</fields>
         <fields>npe4__Status__c</fields>
-        <fields>npsp__Related_Opportunity_Contact_Role__c</fields>
+        <fields>%%%NAMESPACE%%%Related_Opportunity_Contact_Role__c</fields>
         <relatedList>npe4__Relationship__c.npe4__Contact__c</relatedList>
     </relatedLists>
     <relatedLists>
@@ -604,7 +604,7 @@
         <fields>npe5__Status__c</fields>
         <fields>npe5__StartDate__c</fields>
         <fields>npe5__EndDate__c</fields>
-        <fields>npsp__Related_Opportunity_Contact_Role__c</fields>
+        <fields>%%%NAMESPACE%%%Related_Opportunity_Contact_Role__c</fields>
         <fields>npe5__Primary__c</fields>
         <relatedList>npe5__Affiliation__c.npe5__Contact__c</relatedList>
         <sortField>npe5__Primary__c</sortField>
@@ -612,11 +612,11 @@
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
-        <fields>npsp__Engagement_Plan_Template__c</fields>
-        <fields>npsp__Status__c</fields>
+        <fields>%%%NAMESPACE%%%Engagement_Plan_Template__c</fields>
+        <fields>%%%NAMESPACE%%%Status__c</fields>
         <fields>CREATEDBY_USER</fields>
         <fields>LAST_UPDATE</fields>
-        <relatedList>npsp__Engagement_Plan__c.npsp__Contact__c</relatedList>
+        <relatedList>%%%NAMESPACE%%%Engagement_Plan__c.%%%NAMESPACE%%%Contact__c</relatedList>
         <sortField>LAST_UPDATE</sortField>
         <sortOrder>Desc</sortOrder>
     </relatedLists>
