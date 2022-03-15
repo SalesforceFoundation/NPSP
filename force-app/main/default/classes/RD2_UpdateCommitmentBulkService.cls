@@ -34,8 +34,9 @@
 * @description Update Elevate Commitment In Bulk
 */
 public with sharing class RD2_UpdateCommitmentBulkService {
-    public static Integer apiCallOutCounter = 5;
+    public static final Integer MAXIMUM_API_CALL_PER_TRANSACTION = 5;
     public static final Integer REQUEST_SIZE = 50;
+    private Integer apiCallOutCounter = MAXIMUM_API_CALL_PER_TRANSACTION;
    
     private ERR_LogService.Logger logger = new ERR_LogService.Logger(
         ERR_Handler_API.Context.Elevate,

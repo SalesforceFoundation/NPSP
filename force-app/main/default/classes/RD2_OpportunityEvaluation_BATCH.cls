@@ -44,20 +44,7 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     public Integer batchSize {
         get {
             if (batchSize == null) {
-                Decimal configValue = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c;
-
-                if (configValue == null) {
-                    configValue = 50;
-                }
-
-                if (RD2_ElevateIntegrationService.isIntegrationEnabled() &&
-                    (rd2Settings.isStatusAutomationForClosedEnabled() || rd2Settings.isStatusAutomationForLapsedEnabled())
-                ) {
-                    Decimal maxSize = RD2_UpdateCommitmentBulkService.apiCallOutCounter * RD2_UpdateCommitmentBulkService.REQUEST_SIZE;
-                    configValue = (configValue > maxSize ) ? maxSize : configValue;
-                }
-
-                batchSize = configValue.intValue();
+               batchSize = getBatchSize();
             }
             return batchSize;
         }
@@ -240,6 +227,24 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
             ex.setMessage(System.Label.RD2_PauseStatusMustExist);
             ERR_Handler.processError(ex, ERR_Handler_API.Context.RD);
         }
+    }
+
+    private Integer getBatchSize() {
+        Decimal configValue = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c;
+
+        if (configValue == null) {
+            configValue = 50;
+        }
+
+        if (RD2_ElevateIntegrationService.isIntegrationEnabled() &&
+            (rd2Settings.isStatusAutomationForClosedEnabled() || rd2Settings.isStatusAutomationForLapsedEnabled())
+        ) {
+            Decimal maxSize = RD2_UpdateCommitmentBulkService.MAXIMUM_API_CALL_PER_TRANSACTION
+                * RD2_UpdateCommitmentBulkService.REQUEST_SIZE;
+            configValue = (configValue > maxSize ) ? maxSize : configValue;
+        }
+
+        return configValue.intValue();
     }
 
     /**

@@ -125,7 +125,7 @@ public class RD2_UpdateCommitmentBulkService_TEST {
 
     @isTest
     private static void verifyMaximum5ErrorRecordsWithElevateBulkApiErrorWillBeLoggedWhenCalloutFail() {
-        Integer recordCount = 250;
+        Integer recordCount = 251;
         PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         UTIL_Http_TEST.mockBadRequestCalloutResponse();

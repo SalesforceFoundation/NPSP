@@ -390,8 +390,8 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
 
     public static void enableElevateIntegrationService() {
         PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
-        .withIsIntegrationEnabled(true)
-        .withHasIntegrationPermissions(false);
+            .withIsIntegrationEnabled(true)
+            .withHasIntegrationPermissions(false);
         RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
             PS_IntegrationServiceConfig.class,
             configStub
