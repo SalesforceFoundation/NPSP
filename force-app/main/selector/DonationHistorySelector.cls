@@ -41,7 +41,6 @@ public inherited sharing class DonationHistorySelector {
     public List<OpportunityContactRole> getWonOpportunityContactRolesByContactId(Id contactId) {
         return [
             SELECT Id, 
-                Opportunity.Name, 
                 Opportunity.CloseDate, 
                 Opportunity.Amount, 
                 Contact.Email, 

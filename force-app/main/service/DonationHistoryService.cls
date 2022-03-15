@@ -71,8 +71,7 @@ public with sharing class DonationHistoryService {
     private Boolean hasAccessToDonationHistory() {
         return permissions.canRead(Opportunity.SObjectType, new Set<SObjectField>{
             Opportunity.Amount,
-            Opportunity.CloseDate,
-            Opportunity.Name
+            Opportunity.CloseDate
         }) && permissions.canRead(Contact.SObjectType, new Set<SObjectField>{
             Contact.Email,
             Contact.Name
