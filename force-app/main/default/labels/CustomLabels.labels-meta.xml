@@ -12815,7 +12815,7 @@ Selecting Don&apos;t Auto Schedule Default NPSP Jobs tells NPSP not to check for
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHHNameRefreshTitle</shortDescription>
-        <value>Refresh Household Names</value>
+        <value>Refresh Household Data</value>
     </labels>
     <labels>
         <fullName>stgHelpAccountModel</fullName>
@@ -13597,6 +13597,14 @@ This change updates Opportunity Contact Role records. Before starting this proce
 ● Visual Workflows&lt;br/&gt;
 ● Custom Triggers&lt;br/&gt;&lt;br/&gt;
 Once the process is 100% complete, you can safely leave or refresh this page.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpDeceasedBatch</fullName>
+        <categories>NPSP Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Content of the &quot;Recalculate Deceased Household Accounts&quot; page</shortDescription>
+        <value>This utility recalculates the value in the All Household Members Deceased field on Household Accounts. Run this utility to ensure that the value correctly reflects the status of the Deceased field on related Contacts. This process may take some time, but you can safely close this page and the process will continue in the background.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDAddCampaign</fullName>
@@ -14605,6 +14613,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>true</protected>
         <shortDescription>Menu title for the Duplicate Primary OCRs in NPSP Settings</shortDescription>
         <value>Remove Duplicate Primary OCRs</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelDeceasedBatch</fullName>
+        <categories>NPSP Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Menu title for the Batch job to recalculate All Members Deceased</shortDescription>
+        <value>Recalculate Deceased Household Accounts</value>
     </labels>
     <labels>
         <fullName>stgLabelRDFieldMap</fullName>
