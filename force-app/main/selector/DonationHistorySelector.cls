@@ -33,9 +33,7 @@
 * @description Donation History Selector class.
 */
 public inherited sharing class DonationHistorySelector {
-    /** 
-    * @author Salesforce.org
-    * @date 2021
+    /**
     * @description method to return Opportunity and Payment data.
     */
   public List<Opportunity> getWonOpportunitiesByContactId( Id contactId, Integer offset ) {
@@ -111,11 +109,9 @@ public inherited sharing class DonationHistorySelector {
                 ORDER BY Calendar_YEAR(CloseDate) DESC]);
     }
 
-   /** 
-    * @author Salesforce.org
-    * @date 2021
-    * @description method to return total number of record
-    */
+    /** 
+     * @description method to return total number of record
+     */
     public Integer getTotalNumberOfRecords( Id contactId ) {
         Integer totalRecords = [SELECT COUNT()
                                 FROM Opportunity
@@ -125,9 +121,9 @@ public inherited sharing class DonationHistorySelector {
         return totalRecords;
     }
 
+
+
     /** 
-    * @author Salesforce.org
-    * @date 2021
     * @description method to return total number of record
     */
     public Integer getTotalNumberOfRecordsWithYear( Id contactId, Integer year ) {

@@ -69,9 +69,8 @@ public with sharing class DonationHistoryService {
         }) && permissions.canRead(Contact.SObjectType, new Set<SObjectField>{
             Contact.Email,
             Contact.Name
-        }) && permissions.canRead(Partial_Soft_Credit__c.SObjectType, new Set<SObjectField>{
-            Partial_Soft_Credit__c.Amount__c,
-            Partial_Soft_Credit__c.Contact_Role_ID__c
+        }) && permissions.canRead(User.SObjectType, new Set<SObjectField>{
+            User.ContactId
         }) && permissions.canRead(npe01__OppPayment__c.SObjectType, new Set<SObjectField>{
             npe01__OppPayment__c.npe01__Payment_Method__c,
             npe01__OppPayment__c.npe01__Opportunity__c

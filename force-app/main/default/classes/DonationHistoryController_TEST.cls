@@ -73,6 +73,7 @@ public class DonationHistoryController_TEST {
 
         DonationHistoryController.historyService = service;
         Test.startTest();
+
         DonationHistoryController.DonationHistoryAppView donationHistory = 
             DonationHistoryController.getDonationHistory(new IdGen().generate(Contact.SObjectType), 0, 'lifetime');
         Test.stopTest();
@@ -98,11 +99,13 @@ public class DonationHistoryController_TEST {
 
             DonationHistoryController.historyService = service;
             Test.startTest();
+
             System.runAs(u){
                 DonationHistoryController.DonationHistoryAppView donationHistory = 
                 DonationHistoryController.getDonationHistory(new IdGen().generate(Contact.getSObjectType()), 0, 'lifetime'); 
             }
 	        Test.stopTest();
+
         } catch(Exception e){
             message = e.getMessage();
         }
