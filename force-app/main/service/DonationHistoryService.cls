@@ -37,6 +37,7 @@ public with sharing class DonationHistoryService {
     private String filter;
     private Integer offset;
 
+    
     public DonationHistoryService(Id contactId, Integer offset, String filter) {
         this.contactId = contactId;
         this.filter = filter;
@@ -77,9 +78,8 @@ public with sharing class DonationHistoryService {
         }) && permissions.canRead(Contact.SObjectType, new Set<SObjectField>{
             Contact.Email,
             Contact.Name
-        }) && permissions.canRead(Partial_Soft_Credit__c.SObjectType, new Set<SObjectField>{
-            Partial_Soft_Credit__c.Amount__c,
-            Partial_Soft_Credit__c.Contact_Role_ID__c
+        }) && permissions.canRead(User.SObjectType, new Set<SObjectField>{
+            User.ContactId
         }) && permissions.canRead(npe01__OppPayment__c.SObjectType, new Set<SObjectField>{
             npe01__OppPayment__c.npe01__Payment_Method__c,
             npe01__OppPayment__c.npe01__Opportunity__c
@@ -132,7 +132,8 @@ public with sharing class DonationHistoryService {
         return convertAggregateResultListToStringList(selector.getYearsWithDonationForContact(contactId));
      }
 
-    /**
+
+/**
      * @description converts a List<AggregateResult> in a List<String> .
      * @param result The list with with the aggregate results from the database.
      * @return List<String> the list of the values in the expr0 represented as String.

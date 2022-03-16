@@ -80,6 +80,7 @@ public class DonationHistoryController_TEST {
             CloseDate=myDateTime
         );
 
+
         Opportunity anotherOpportunityForContact1 = new Opportunity(
             Name='SoftCredit1', 
             AccountId=accSrc.Id, 
@@ -90,8 +91,7 @@ public class DonationHistoryController_TEST {
         );
         
         List<Opportunity> recordsOpp = new List<Opportunity> {opportunityHardCreditOfContact0, opportunityAnotherHardCreditOfContact0, opportunityForContact1, anotherOpportunityForContact1};
-        // recordsOpp.add(opportunityHardCredit);
-        // recordsOpp.add(opportunitySoftCredit);
+
         insert recordsOpp;
     }
 
@@ -105,8 +105,10 @@ public class DonationHistoryController_TEST {
         Contact testContact = findContactByFirstname('TestFirstName10');
         
         Test.startTest();
+
         DonationHistoryController.DonationHistoryAppView donationHistory = 
-            DonationHistoryController.getDonationHistory(testContact.Id, 0, 'lifetime');
+        DonationHistoryController.getDonationHistory(testContact.Id, 0, 'lifetime');
+
         Test.stopTest();
 
         System.assertEquals(2, donationHistory.donations.size(), 'Should return only 2 record');
@@ -122,8 +124,10 @@ public class DonationHistoryController_TEST {
         Contact testContact = findContactByFirstname('TestFirstName12');
         
         Test.startTest();
+
         DonationHistoryController.DonationHistoryAppView donationHistory = 
         DonationHistoryController.getDonationHistory(testContact.Id, 0, 'lifetime');
+
         Test.stopTest();
         System.assertEquals(0, donationHistory.donations.size(), 'Should not return records');
         System.assertEquals(0, donationHistory.totalNumberOfRecords, 'Should return 0 number of records');
@@ -141,16 +145,19 @@ public class DonationHistoryController_TEST {
         String message = '';
         try{
             Test.startTest();
+
             System.runAs(u){
                 DonationHistoryController.DonationHistoryAppView donationHistory = 
                 DonationHistoryController.getDonationHistory(testContact.Id, 0, 'lifetime'); 
             }
 	        Test.stopTest();
+
         } catch(Exception e){
             message = e.getMessage();
         }
         System.assertEquals('Insufficient Permissions', message, 'should not have access to donationHistory');
     }
+
 
     @IsTest
     private static void shouldReturnYearsForFilter() {
@@ -186,4 +193,5 @@ public class DonationHistoryController_TEST {
         return null;
     }
     
+
 }

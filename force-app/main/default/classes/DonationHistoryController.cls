@@ -69,6 +69,7 @@ public with sharing class DonationHistoryController {
             this.paymentMethod = paymentMethod;
         }
     }
+
     
     /** 
     * @author Salesforce.org
@@ -77,6 +78,7 @@ public with sharing class DonationHistoryController {
     */
     @AuraEnabled(cacheable=true)
     public static DonationHistoryAppView getDonationHistory(Id contactId, Integer offset, String filter) {
+        contactId = (contactId == null ? getContactIdByUserId() : contactId );
         DonationHistoryService service = new DonationHistoryService(contactId, offset, filter);
         try {
             Boolean paymentsEnabled = service.checkIfPaymentsAreEnabled();
@@ -99,6 +101,7 @@ public with sharing class DonationHistoryController {
     @AuraEnabled(cacheable=true)
     public static List<String> getYearsWithDonations(Id contactId) {
         try {
+            contactId = (contactId == null ? getContactIdByUserId() : contactId );
             return new DonationHistoryService(contactId).getYearsWithDonationsForContact();
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
@@ -124,5 +127,10 @@ public with sharing class DonationHistoryController {
             }
         }
         return donationHistories;
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static Id getContactIdByUserId(){
+        return USER_UserService.getContactIdByUserId();
     }
 }
