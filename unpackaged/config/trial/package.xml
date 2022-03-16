@@ -218,6 +218,7 @@
         <members>Opportunity</members>
         <members>PathAssistant</members>
         <members>Security</members>
+        <members>UserEngagement</members>
         <members>UserInterface</members>
         <name>Settings</name>
     </types>
