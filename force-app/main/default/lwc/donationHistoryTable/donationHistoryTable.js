@@ -39,10 +39,10 @@ export default class DonationHistoryTable extends LightningElement {
                 month: "numeric",
                 day: "numeric",
             },
-            cellAttributes: { alignment: 'right' }},
-            { label: donationHistoryDonorLabel, fieldName: 'name', type: 'text' },
-            { label: commonAmount, fieldName: 'amount', type: 'currency', },
-            { label: this.paymentMethodLabel, fieldName: 'paymentMethod', type: 'text', },
+            cellAttributes: { alignment: 'right' }, hideDefaultActions: true},
+            { label: donationHistoryDonorLabel, fieldName: 'name', type: 'text', hideDefaultActions: true },
+            { label: commonAmount, fieldName: 'amount', type: 'currency', hideDefaultActions: true },
+            { label: this.paymentMethodLabel, fieldName: 'paymentMethod', type: 'text', hideDefaultActions: true },
         ];
     }
     
