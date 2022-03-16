@@ -49,7 +49,6 @@ class Rd2Service {
             const action = { type: ACTIONS.INITIAL_VIEW_LOAD, payload: initialView };
             return this.dispatch(state, action);
         } catch (ex) {
-            // TODO - Dispatch error action
             console.log("Error: ", ex);
             return state;
         }

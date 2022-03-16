@@ -658,7 +658,7 @@ export default class rd2EntryForm extends LightningElement {
 
             if (saveResult.success === true) {
                 this.perform({
-                    action: ACTIONS.RECORD_SAVED,
+                    type: ACTIONS.RECORD_SAVED,
                     payload: saveResult
                 });
                 this.handleSuccess();
@@ -784,6 +784,10 @@ export default class rd2EntryForm extends LightningElement {
             if (field.value) {
                 field.clean();
             }
+        });
+
+        this.perform({
+            type: ACTIONS.RESET
         });
 
         if (!isNull(this.donorComponent)) {

@@ -1,6 +1,6 @@
 import {
     RECORD_SAVED,
-    RECORD_SAVE_FAILED,
+    RESET,
     SET_CONTACT_ID,
     SET_ACCOUNT_ID,
     SET_CAMPAIGN_ID,
@@ -98,8 +98,6 @@ const DEFAULT_INITIAL_STATE = {
     InstallmentPeriodPermissions: {},
     InstallmentFrequencyPermissions: {},
 
-    //On Save/Submit Results
-    saveSuccess: null
 };
 
 const isRecurringTypeChanged = (state) => {
@@ -194,12 +192,12 @@ const handleCommitmentResponse = (state, payload) => {
 };
 
 const handleRecordSaved = (state, payload) => {
-    const { recordId, recordName, success } = payload;
+    const { recordId, recordName } = payload;
+    console.log({recordId, recordName})
     return {
         ...state,
         recordId,
         recordName,
-        saveSuccess: success
     };
 };
 
@@ -407,6 +405,10 @@ const loadInitialView = (state, payload) => {
     };
 };
 
+const resetToInitial = () => {
+    return DEFAULT_INITIAL_STATE;
+};
+
 export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
     switch (action.type) {
         case CUSTOM_FIELD_CHANGE:
@@ -415,8 +417,8 @@ export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
             return handleCommitmentResponse(state, action.payload);
         case RECORD_SAVED:
             return handleRecordSaved(state, action.payload);
-        case RECORD_SAVE_FAILED:
-            return handleRecordSaveError(state, action.payload);
+        case RESET:
+            return resetToInitial();
         case SET_CONTACT_ID:
             return setContactId(state, action.payload);
         case SET_ACCOUNT_ID:
