@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>ACCOUNT.NAME</field>
+    </columns>
+    <columns>
+        <field>Account.npe01__One2OneContact__c</field>
+    </columns>
+    <columns>
+        <field>Account.npo02__TotalOppAmount__c</field>
+    </columns>
+    <columns>
+        <field>Account.npo02__AverageAmount__c</field>
+    </columns>
+    <columns>
+        <field>Account.npo02__OppAmountLastYear__c</field>
+    </columns>
+    <columns>
+        <field>ADDRESS1_CITY</field>
+    </columns>
+    <columns>
+        <field>ADDRESS1_STATE</field>
+    </columns>
+    <columns>
+        <field>PHONE1</field>
+    </columns>
+    <columns>
+        <field>Account.npo02__HouseholdPhone__c</field>
+    </columns>
+    <description>Accounts that donated some year, but unfortunately not this year (SYBUNT)</description>
+    <filter>
+        <criteriaItems>
+            <column>Account.npo02__TotalOppAmount__c</column>
+            <isUnlocked>false</isUnlocked>
+            <operator>greaterThan</operator>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>Account.npo02__OppAmountThisYear__c</column>
+            <isUnlocked>false</isUnlocked>
+            <operator>equals</operator>
+            <value>0</value>
+        </criteriaItems>
+
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>RECORDTYPE</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>Account SYBUNT</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>AccountList</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>ACCOUNT.NAME</sortColumn>
+    <sortOrder>Asc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>CREATED_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

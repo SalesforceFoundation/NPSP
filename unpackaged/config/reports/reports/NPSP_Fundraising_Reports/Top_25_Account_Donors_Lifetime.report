@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>ACCOUNT.NAME</field>
+    </columns>
+    <columns>
+        <field>Account.npe01__One2OneContact__c</field>
+    </columns>
+    <columns>
+        <field>RECORDTYPE</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Account.npo02__TotalOppAmount__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Account.npo02__OppAmountThisYear__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Account.npo02__OppAmountLastYear__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Account.npo02__LastOppAmount__c</field>
+    </columns>
+    <columns>
+        <field>Account.npo02__LastCloseDate__c</field>
+    </columns>
+    <description>List of 25 top Account donors, based on Total Gifts.</description>
+    <format>Tabular</format>
+    <name>Top 25 Account Donors Lifetime</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>AccountList</reportType>
+    <rowLimit>25</rowLimit>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+    <sortColumn>Account.npo02__TotalOppAmount__c</sortColumn>
+    <sortOrder>Desc</sortOrder>
+    <timeFrameFilter>
+        <dateColumn>CREATED_DATE</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>
