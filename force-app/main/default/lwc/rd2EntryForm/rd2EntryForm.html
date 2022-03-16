@@ -42,11 +42,14 @@
                     <div class="error-container">
                         <template if:true={error.detail}>
                             <c-util-page-level-message title={error.header}
-                                variant="error"
-                                icon-name="utility:error" icon-size="x-small" icon-variant="inverse" data-id="error"
-                                data-qa-locator="error">
-
-                                <p slot="body" class="slds-p-horizontal_medium slds-p-vertical_xx-small slds-text-color_error">
+                                                       variant="error"
+                                                       icon-name="utility:error"
+                                                       icon-size="x-small"
+                                                       icon-variant="inverse"
+                                                       data-id="error"
+                                                       data-qa-locator="error">
+                                <p slot="body"
+                                   class="slds-p-horizontal_medium slds-p-vertical_xx-small slds-text-color_error">
                                     <lightning-formatted-text value={error.detail}></lightning-formatted-text>
                                 </p>
                             </c-util-page-level-message>

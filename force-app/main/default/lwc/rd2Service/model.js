@@ -99,7 +99,6 @@ const DEFAULT_INITIAL_STATE = {
     InstallmentFrequencyPermissions: {},
 
     //On Save/Submit Results
-    errors: [],
     saveSuccess: null
 };
 
@@ -203,15 +202,6 @@ const handleRecordSaved = (state, payload) => {
         saveSuccess: success
     };
 };
-
-const handleRecordSaveError = (state, payload) => {
-    const { errors, success } = payload;
-    return {
-        ...state,
-        errors,
-        saveSuccess: success
-    };
-}
 
 const setAccountId = (state, accountId) => {
     return {

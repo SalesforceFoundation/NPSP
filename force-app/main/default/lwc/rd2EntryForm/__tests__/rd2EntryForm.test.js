@@ -9,6 +9,7 @@ import handleCommitment from "@salesforce/apex/RD2_EntryFormController.handleCom
 import saveRecurringDonation from "@salesforce/apex/RD2_EntryFormController.saveRecurringDonation";
 
 import RD2_EntryFormMissingPermissions from "@salesforce/label/c.RD2_EntryFormMissingPermissions";
+import commonUnknownError from "@salesforce/label/c.commonUnknownError";
 import RD2_EntryFormHeader from "@salesforce/label/c.RD2_EntryFormHeader";
 import commonEdit from "@salesforce/label/c.commonEdit";
 
@@ -205,6 +206,43 @@ describe("c-rd2-entry-form", () => {
 
             const currencyIsoCodeField = controller.currencyIsoCode();
             expect(currencyIsoCodeField.element).toBeTruthy();
+        });
+
+        it("when single validation rule triggers on save, displays error on screen", async () => {
+            getInitialView.mockResolvedValue({
+                ...initialViewResponse,
+                isElevateCustomer: true,
+            });
+
+            const element = createRd2EntryForm();
+            await flushPromises();
+
+            const controller = new RD2FormController(element);
+
+            saveRecurringDonation.mockResolvedValue({
+                success: false,
+                errors: [
+                    {
+                        message: "Invalid endpoint.",
+                        fields: []
+                    }
+                ]
+            });
+
+            controller.contactLookup().changeValue("001fakeContactId");
+            controller.amount().changeValue(1.0);
+            controller.paymentMethod().changeValue("Check");
+
+            controller.saveButton().click();
+
+            await flushPromises();
+
+            expect(saveRecurringDonation).toHaveBeenCalled();
+            const errorPageLevelMessage = controller.errorPageLevelMessage();
+            expect(errorPageLevelMessage).toBeTruthy();
+            expect(errorPageLevelMessage.title).toBe(commonUnknownError);
+            const errorFormattedText = controller.errorFormattedText();
+            expect(errorFormattedText.value).toBe("Invalid endpoint.");
         });
     });
 

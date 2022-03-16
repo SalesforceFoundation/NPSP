@@ -225,4 +225,12 @@ export class RD2FormController {
     changeTypePicklist() {
         return this.element.shadowRoot.querySelector('lightning-input-field[data-id="changeType"]');
     }
+
+    errorPageLevelMessage() {
+        return this.element.shadowRoot.querySelector("c-util-page-level-message[data-id='error']");
+    }
+
+    errorFormattedText() {
+        return this.element.shadowRoot.querySelector("c-util-page-level-message[data-id='error'] p lightning-formatted-text");
+    }
 }

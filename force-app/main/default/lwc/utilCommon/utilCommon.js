@@ -458,6 +458,7 @@ const validateJSONString = (str) => {
 /***
  * @description Contruct error wrapper from the error event
  *   error.body is the error from apex calls
+ *   error is an Array when handling SaveResults
  *   error.body.output.errors is for AuraHandledException messages
  *   error.body.message errors is the error from wired service
  *   error.detail.output.errors is the error from record-edit-forms
@@ -470,6 +471,14 @@ const constructErrorMessage = (error) => {
     if (typeof error === 'string' || error instanceof String) {
         message = error;
 
+    } else if (Array.isArray(error.errors)) {
+        message = error.errors.map(e => {
+            if (e.fields.length && e.fields.length > 0) {
+                const fields = e.fields.join(', ');
+                return `${fields} - ${e.message}`;
+            }
+            return e.message;
+        }).join(', ');
     } else if (error.message) {
         message = error.message;
 

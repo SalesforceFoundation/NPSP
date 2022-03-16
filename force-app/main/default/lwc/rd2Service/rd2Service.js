@@ -63,14 +63,7 @@ class Rd2Service {
         } catch (ex) {
             console.error(ex);
         }
-
-        if (result.success) {
-            const action = { type: ACTIONS.RECORD_SAVED, payload: result };
-            return this.dispatch(rd2State, action);
-        }
-
-        const action = { type: ACTIONS.RECORD_SAVE_FAILED, payload: result };
-        return this.dispatch(rd2State, action);
+        return result;
     }
 
     /***

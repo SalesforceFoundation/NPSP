@@ -654,11 +654,16 @@ export default class rd2EntryForm extends LightningElement {
     async processSubmit() {
         try {
             this.loadingText = this.customLabels.savingRDMessage;
-            this.rd2State = await this.rd2Service.save(this.rd2State);
-            if (this.rd2State.saveSuccess === true) {
+            const saveResult = await this.rd2Service.save(this.rd2State);
+
+            if (saveResult.success === true) {
+                this.perform({
+                    action: ACTIONS.RECORD_SAVED,
+                    payload: saveResult
+                });
                 this.handleSuccess();
             } else {
-                this.handleSaveError();
+                this.handleSaveError(saveResult);
             }
 
         } catch (error) {

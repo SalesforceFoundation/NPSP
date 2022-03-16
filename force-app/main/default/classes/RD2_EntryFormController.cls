@@ -221,8 +221,14 @@ public with sharing class RD2_EntryFormController {
         } else {
             sr = Database.insert(rd, false);
         }
-        npe03__Recurring_Donation__c record = selector.getRecurringDonationForUI(rd.Id);
-        return new RD2_SaveResult(sr, record);
+
+        if (sr.success) {
+            npe03__Recurring_Donation__c record = selector.getRecurringDonationForUI(rd.Id);
+            return new RD2_SaveResult(sr, record);
+        } else {
+            return new RD2_SaveResult(sr);
+        }
+
     }
 
     /***

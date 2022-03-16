@@ -41,9 +41,13 @@ public class RD2_SaveResult {
     @AuraEnabled public List<RD2_SaveError> errors;
 
     public RD2_SaveResult(Database.SaveResult result, npe03__Recurring_Donation__c rd) {
+        this(result);
+        this.recordName = rd.Name;
+    }
+
+    public RD2_SaveResult(Database.SaveResult result) {
         this.success = result.isSuccess();
         this.recordId = result.id;
-        this.recordName = rd.Name;
         if (!this.success) {
             this.errors = new List<RD2_SaveError>();
             for(Database.Error err : result.getErrors()) {
