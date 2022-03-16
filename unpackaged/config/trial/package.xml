@@ -171,6 +171,10 @@
         <name>PermissionSet</name>
     </types>
     <types>
+        <members>Admin</members>
+        <name>Profile</name>
+    </types>
+    <types>
         <members>ContactPageGuidance</members>
         <members>GetStartedwithNPSP</members>
         <members>NPSPContactMergeGuidance</members>
