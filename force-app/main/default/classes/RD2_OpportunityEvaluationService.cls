@@ -201,6 +201,16 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         set;
     }
 
+    private  RD2_StatusAutomationService statusAutomationServce {
+        get {
+            if (statusAutomationServce == null) {
+                statusAutomationServce = new RD2_StatusAutomationService();
+            }
+            return statusAutomationServce;
+        }
+        set;
+    }
+
     private RD2_UpdateCommitmentBulkService commitmentBulkService {
         get {
             if (commitmentBulkService == null) {
@@ -410,10 +420,21 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 .reviseNextDonationDate(scheduleService);
 
             if (isBatchContext) {
-                rdRecord.statusAutomationReviseStatus(scheduleService);
+                String statusAutomationStatus;
+                if(statusAutomationServce.shouldMarkRDAsClosed(rdRecord, scheduleService)) {
+                        statusAutomationStatus = rdSettings.statusAutomationClosedValue;
 
-                if (rdRecord.isElevateRecord() && rdRecord.hasStatusAutomationReviseStatus()) {
-                    updateElevateRds.add(rd);
+                } else if (statusAutomationServce.shouldMarkRDAsLapsed(rdRecord, scheduleService)) {
+                    statusAutomationStatus = rdSettings.statusAutomationLapsedValue;
+                }
+
+                if (String.isNotBlank(statusAutomationStatus)) {
+                    rdRecord.setStatus(statusAutomationStatus);
+                    if (rdRecord.isElevateRecord()) {
+                        updateElevateRds.add(rd);
+                    } else {
+                        rdRecord.addChangeField(npe03__Recurring_Donation__c.Status__c);
+                    }
                 }
             }
 
@@ -505,7 +526,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         changeLogService.insertChangeLogRecords();
     }
-
+    
     private void evaluateSustainers() {
         RD2_SustainerEvaluationService sustainerService = new RD2_SustainerEvaluationService()
             .withBatchContext(isBatchContext)

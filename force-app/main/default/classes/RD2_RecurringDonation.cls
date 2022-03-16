@@ -316,31 +316,6 @@ public inherited sharing class RD2_RecurringDonation {
         }
     }
 
-    public RD2_RecurringDonation statusAutomationReviseStatus(RD2_ScheduleService scheduleService) {
-        RD2_StatusAutomationService statusAutomationServce = new RD2_StatusAutomationService();
-
-        if (statusAutomationServce.shouldMarkRDAsClosed(this, scheduleService)) {
-            rd.Status__c = rdSettings.statusAutomationClosedValue;
-            hasStatusAutomationReviseStatus = true;
-            if (!isElevateRecord()) {
-                changedFields.add(npe03__Recurring_Donation__c.Status__c);
-            }
-
-        } else if(statusAutomationServce.shouldMarkRDAsLapsed(this, scheduleService)) {
-            rd.Status__c = rdSettings.statusAutomationLapsedValue;
-            hasStatusAutomationReviseStatus = true;
-            if (!isElevateRecord()) {
-                changedFields.add(npe03__Recurring_Donation__c.Status__c);
-            }
-        }
-
-        return this;
-    }
-
-    private boolean hasStatusAutomationReviseStatus = false;
-    public Boolean hasStatusAutomationReviseStatus() {
-        return hasStatusAutomationReviseStatus;
-    }
     /**
     * @description Sets the Number of Planned Installments to null when RecurringType is Open
     * and Number of Planned Installments = 1 (default)
@@ -434,6 +409,14 @@ public inherited sharing class RD2_RecurringDonation {
     */
     public Boolean isClosed() {
         return state == RD2_Constants.STATUS_CLOSED;
+    }
+
+    public void setStatus(String status) {
+        rd.Status__c = status;
+    }
+
+    public void addChangeField(SObjectField rdField) {
+        changedFields.add(rdField);
     }
 
     /**
@@ -662,5 +645,4 @@ public inherited sharing class RD2_RecurringDonation {
     public Object getValue(SObjectField rdField){
         return rd.get(rdField);
     }
-
 }
