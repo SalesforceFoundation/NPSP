@@ -295,5 +295,5 @@
         <members>Contact.npo02__Contact%2EPreferred_Phone%5F%5Fc WithHousehold</members>
         <name>WorkflowRule</name>
     </types>
-    <version>53.0</version>
+    <version>54.0</version>
 </Package>
