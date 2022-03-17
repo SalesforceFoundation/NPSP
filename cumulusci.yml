@@ -891,6 +891,7 @@ flows:
                 flow: config_trial
             5:
                 task: test_data_relationships
+                ignore_failure: true
             6:
                 task: deploy_trial_translations
             7:
