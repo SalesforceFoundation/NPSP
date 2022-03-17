@@ -5,6 +5,11 @@
         <default>true</default>
         <visible>true</visible>
     </applicationVisibilities>
+    <applicationVisibilities>
+        <application>Nonprofit_CRM</application>
+        <default>false</default>
+        <visible>false</visible>
+    </applicationVisibilities>
     <layoutAssignments>
         <layout>Account-%%%NAMESPACE%%%Household Layout</layout>
         <recordType>Account.HH_Account</recordType>
