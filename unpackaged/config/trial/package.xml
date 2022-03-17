@@ -41,7 +41,6 @@
     <types>
         <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%Household_Account__c</members>
         <members>%%%NAMESPACE%%%Engagement_Plan__c.%%%NAMESPACE%%%Engagement_Plan_Template__c</members>
-        <members>%%%NAMESPACE%%%Error_Settings__c.%%%NAMESPACE%%%Respect_Duplicate_Rule_Settings__c</members>
         <members>%%%NAMESPACE%%%Grant_Deadline__c.%%%NAMESPACE%%%Opportunity__c</members>
         <members>Account.Level__c</members>
         <members>Account.Previous_Level__c</members>
@@ -49,12 +48,7 @@
         <members>Contact.Gender__c</members>
         <members>Opportunity.StageName</members>
         <members>Opportunity.Type</members>
-        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Automatic_Campaign_Member_Management__c</members>
-        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Honoree_Opportunity_Contact_Role__c</members>
-        <members>npe01__Contacts_And_Orgs_Settings__c.%%%NAMESPACE%%%Notification_Recipient_Opp_Contact_Role__c</members>
         <members>npe01__OppPayment__c.Payment_Status__c</members>
-        <members>npe03__Recurring_Donations_Settings__c.%%%NAMESPACE%%%RecurringDonationNameFormat__c</members>
-        <members>npe4__Relationship_Settings__c.npe4__Gender_Field__c</members>
         <members>npe4__Relationship__c.npe4__Type__c</members>
         <members>npe5__Affiliation__c.Contact_Link__c</members>
         <name>CustomField</name>

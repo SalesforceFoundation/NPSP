@@ -894,7 +894,6 @@ flows:
                 ignore_failure: true
             6:
                 task: execute_anon
-                ## Configure RD2 to not create installments, disable household addresses and enable automatic naming
                 options:
                     path: scripts/trial/TrialCustomSettingsDefaults.cls
                     apex: updateCustomSettingsDefaults();
