@@ -100,7 +100,24 @@ public with sharing class DonationHistoryService {
         } else {
             throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
         }
-        
+    }
+
+    public String getRequiredPaymentMethodForOpportunities(List<npe01__OppPayment__c> paymentListForOpportunity){
+        String paymentMethodToReturn = '';
+		if(paymentListForOpportunity.Size() > 1){
+            for(npe01__OppPayment__c p : paymentListForOpportunity){
+                if(p.npe01__Paid__c){
+                    paymentMethodToReturn= p.npe01__Payment_Method__c;
+                    break;
+                }
+           	}
+            if(paymentMethodToReturn==''){
+                paymentMethodToReturn =  paymentListForOpportunity.get(0).npe01__Payment_Method__c;
+            }
+        }else{
+            paymentMethodToReturn =  paymentListForOpportunity.get(0).npe01__Payment_Method__c;
+        }
+        return paymentMethodToReturn;
     }
 
     private boolean shouldApplyFilterByYear(String filter) {

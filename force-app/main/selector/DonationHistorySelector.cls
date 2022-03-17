@@ -48,9 +48,7 @@ public inherited sharing class DonationHistorySelector {
                     SELECT npe01__Payment_Method__c,
                         npe01__Paid__c
                     FROM npe01__OppPayment__r 
-                    WHERE npe01__Paid__c = true
                     ORDER BY npe01__Payment_Date__c
-                    LIMIT 1
                 )
             FROM Opportunity
             WHERE IsWon = true 
@@ -80,9 +78,7 @@ public inherited sharing class DonationHistorySelector {
                         SELECT npe01__Payment_Method__c,
                             npe01__Paid__c
                         FROM npe01__OppPayment__r 
-                        WHERE npe01__Paid__c = true
                         ORDER BY npe01__Payment_Date__c
-                        LIMIT 1
                     ) 
             FROM Opportunity
             WHERE IsWon = true 
