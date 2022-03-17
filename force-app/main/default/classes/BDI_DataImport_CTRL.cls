@@ -55,7 +55,7 @@ public with sharing class BDI_DataImport_CTRL {
     /*******************************************************************************************************
     * @description Ids in context for processing if provided
     */
-    public Set<Id> dataImportIds { get; set; }
+    public List<Id> dataImportIds { get; set; }
 
     /*******************************************************************************************************
     * @description when the batch process was started
@@ -92,7 +92,7 @@ public with sharing class BDI_DataImport_CTRL {
         String diIds = ApexPages.currentPage().getParameters().get('diIds');
 
         if (diIds != null) {
-            dataImportIds = new Set<Id>();
+            dataImportIds = new List<Id>();
             for (String s : diIds.split(',')) {
                 dataImportIds.add(s);
             }

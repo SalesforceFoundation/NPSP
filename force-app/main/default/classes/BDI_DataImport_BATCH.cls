@@ -62,7 +62,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     /*******************************************************************************************************
     * @description the optional Data Import Ids being processed
     */
-    public Set<Id> dataImportIds;
+    public List<Id> dataImportIds;
 
     /*******************************************************************************************************
     * @description constructor, which sets up our initial soql
@@ -95,7 +95,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     * @param dataImportIds the specific dataImportIds to process
     * @param isDryRun whether to run in Dry Run mode or commit records.
     */
-    public BDI_DataImport_BATCH(Boolean isDryRun, Set<Id> dataImportIds) {
+    public BDI_DataImport_BATCH(Boolean isDryRun, List<Id> dataImportIds) {
         this(null, dataImportIds, new BDI_DataImportService(isDryRun, BDI_DataImportService.getDefaultMappingService()));
     }
 
@@ -106,7 +106,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     * @param dataImportIds specific data import record ids to process
     * @param dataImportService instance of data import service that will process the batches
     */
-    public BDI_DataImport_BATCH(Id batchId, Set<Id> dataImportIds, BDI_DataImportService dataImportService) {
+    public BDI_DataImport_BATCH(Id batchId, List<Id> dataImportIds, BDI_DataImportService dataImportService) {
         // remember our batchId
         this.batchId = batchId;
 
