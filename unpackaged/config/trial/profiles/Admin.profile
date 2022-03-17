@@ -6,7 +6,7 @@
         <visible>true</visible>
     </applicationVisibilities>
     <applicationVisibilities>
-        <application>Nonprofit_CRM</application>
+        <application>%%%NAMESPACE%%%Nonprofit_CRM</application>
         <default>false</default>
         <visible>false</visible>
     </applicationVisibilities>
