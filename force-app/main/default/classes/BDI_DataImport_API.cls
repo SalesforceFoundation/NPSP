@@ -109,7 +109,7 @@ global with sharing class BDI_DataImport_API {
                 listResult.add(new ProcessDataImportBatchesResult(Database.executeBatch(batch, integer.valueOf(batch.diSettings.Batch_Size__c))));
             } catch (exception ex) {
                 Database.rollback(sp);
-                ex.setMessage('Error encountered in batch: ' + batchId + '. ' + ex.getMessage());
+                ex.setMessage(System.label.bdiAPIBatchError + ' ' + batchId + '. ' + ex.getMessage());
                 throw ex;
             }
         }
@@ -128,6 +128,54 @@ global with sharing class BDI_DataImport_API {
             BDI_DataImportService.getDefaultMappingService());
         bdi.process(null, diSettings, listDI);
     }
+
+    /*******************************************************************************************************
+    * @description Query and then process the provided list of DataImport Ids.
+    * @param diSettings the settings to control processing behavior
+    * @param dataImportIds a set of Data Import ids to query and process
+    * @param isDryRun whether to process in Dry Run mode or commit records.
+    * @return void
+    */
+    global static Id processDataImportRecords(Data_Import_Settings__c diSettings,
+                                                Set<Id> dataImportIds,
+                                                Boolean isDryRun) {
+        Id apexJobId;
+        if (dataImportIds != null && dataImportIds.size() > 0) {
+            // Use configured data import settings if none provided.
+            if (diSettings == null) {
+                diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+            }
+            Savepoint sp = Database.setSavepoint();
+            try {
+                BDI_DataImport_BATCH batch = new BDI_DataImport_BATCH(isDryRun,dataImportIds);
+                apexJobId = Database.executeBatch(batch, integer.valueOf(diSettings.Batch_Size__c));
+            } catch (Exception ex) {
+                Database.rollback(sp);
+                ex.setMessage(System.label.bdiAPISelectedError + ' ' + ex.getMessage());
+                throw ex;
+            }
+        }
+        return apexJobId;
+    }
+    /*
+    global static void processDataImportRecords(Data_Import_Settings__c diSettings,
+                                                Set<Id> dataImportIds,
+                                                Boolean isDryRun) {
+        if (dataImportIds != null && dataImportIds.size() > 0) {
+            String queryString = BDI_DataImportService.strSoqlForDataImportProcess(dataImportIds);
+
+            if (diSettings == null) {
+                diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+            }
+
+            DataImport__c[] listDI = Database.query(queryString);
+
+            BDI_DataImportService bdi = new BDI_DataImportService(isDryRun,
+                    BDI_DataImportService.getDefaultMappingService());
+            bdi.process(null, diSettings, listDI);
+        }
+    }
+    */
 
     /*******************************************************************************************************
     * @description The return result object for each batch that is provided to processDataImportBatches()

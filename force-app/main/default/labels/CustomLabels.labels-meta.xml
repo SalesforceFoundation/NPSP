@@ -3844,6 +3844,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Retiring Batch Data Entry</value>
     </labels>
     <labels>
+        <fullName>bdiAPIBatchError</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiAPIBatchError</shortDescription>
+        <value>Error encountered in batch:</value>
+    </labels>
+    <labels>
+        <fullName>bdiAPISelectedError</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiAPISelectedError</shortDescription>
+        <value>Error encountered processing Data Import records:</value>
+    </labels>
+    <labels>
         <fullName>bdiAccountCustomIdError</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -5006,6 +5022,38 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>bdiRunBtn</shortDescription>
         <value>Begin Data Import Process</value>
+    </labels>
+    <labels>
+        <fullName>bdiSelectCantProcessImportedRecords</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiSelectCantProcessImportedRecords</shortDescription>
+        <value>Only Data Import records with a status other than &apos;Imported&apos; may be selected.</value>
+    </labels>
+    <labels>
+        <fullName>bdiSelectNoDIRecordsSelected</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiSelectNoDIRecordsSelected</shortDescription>
+        <value>No Data Import records were selected for processing.</value>
+    </labels>
+    <labels>
+        <fullName>bdiSelectReturnToListView</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiSelectReturnToListView</shortDescription>
+        <value>Return to List View</value>
+    </labels>
+    <labels>
+        <fullName>bdiSelectTooManyDIRecords</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiSelectTooManyDIRecords</shortDescription>
+        <value>Must process {0} or fewer Data Import records at a time.</value>
     </labels>
     <labels>
         <fullName>bdiSettingsSectionContactMatching</fullName>

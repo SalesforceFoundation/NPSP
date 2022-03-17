@@ -86,10 +86,10 @@ global with sharing class BDI_DataImportService {
 
     /*******************************************************************************************************
     * @description constructs the soql String to run a Data Import process for list of DataImport ids.
-    * @param dataImportIds list of data import ids to include in query
+    * @param dataImportIds set of data import ids to include in query
     * @return String the soql String
     */
-    public static String strSoqlForDataImportProcess(List<Id> dataImportIds) {
+    public static String strSoqlForDataImportProcess(Set<Id> dataImportIds) {
         List<String> whereClauses = new List<String>{
             'Status__c != \'' + BDI_DataImport_API.bdiImported + '\'',
             'Id =: dataImportIds'
