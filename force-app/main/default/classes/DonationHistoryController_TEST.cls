@@ -178,7 +178,7 @@ public class DonationHistoryController_TEST {
                 return yearsWithDonation;
             }
 
-            if (stubbedMethodName.equals('getTotalNumberOfRecords')) {
+            if (stubbedMethodName.equals('getTotalNumberOfRecords') || stubbedMethodName.equals('getTotalNumberOfRecordsWithYear')) {
                 if (totalRecords != null) {
                     return totalRecords;
                 }
