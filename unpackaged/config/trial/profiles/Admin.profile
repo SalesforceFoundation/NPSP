@@ -25,6 +25,9 @@
         <layout>Campaign-%%%NAMESPACE%%%NPSP Campaign Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
+        <layout>Contact-Contact Lightning Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
         <layout>Opportunity-%%%NAMESPACE%%%Donation Layout</layout>
         <recordType>Opportunity.NPSP_Default</recordType>
     </layoutAssignments>
