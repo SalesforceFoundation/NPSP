@@ -33,4 +33,15 @@
     </fields>
     <label>Contacts And Orgs Settings</label>
     <visibility>Public</visibility>
+    <fields>
+        <fullName>npsp__Automatic_Campaign_Member_Management__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Automatically creates a Campaign Member when you create an Opportunity that has a Primary Contact and a Primary Campaign source associated with it, or update that Opportunity with a Closed/Won stage.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Automatically creates a Campaign Member when you create an Opportunity that has a Primary Contact and a Primary Campaign source associated with it, or update that Opportunity with a Closed/Won stage.</inlineHelpText>
+        <label>Automatic Campaign Member Management</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
 </CustomObject>
