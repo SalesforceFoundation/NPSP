@@ -55,4 +55,10 @@ public class RD2_SaveResult {
             }
         }
     }
+
+    public RD2_SaveResult(String errorMessage) {
+        this.success = false;
+        this.errors = new List<RD2_SaveError>();
+        this.errors.add(new RD2_SaveError(errorMessage));
+    }
 }

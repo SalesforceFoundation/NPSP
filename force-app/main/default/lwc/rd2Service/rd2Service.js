@@ -128,6 +128,14 @@ class Rd2Service {
         }
     }
 
+    getCustomFieldValues({ customFieldSets }) {
+        let fieldValues = {};
+        for (const field of customFieldSets) {
+            fieldValues[field.apiName] = field.value;
+        }
+        return fieldValues;
+    }
+
     getSaveRequest(rd2State) {
         const {
             recordId,
@@ -153,8 +161,9 @@ class Rd2Service {
             cardExpirationMonth,
             cardExpirationYear,
             paymentMethod,
-            customFieldValues,
         } = rd2State;
+
+        const customFieldValues = this.getCustomFieldValues(rd2State);
 
         return {
             recordId,

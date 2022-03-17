@@ -70,6 +70,17 @@ public with sharing class RD2_EntryFormController {
         set;
     }
 
+    @TestVisible
+    private static UTIL_Permissions permissions {
+        get {
+            if (permissions == null) {
+                permissions = UTIL_Permissions.getInstance();
+            }
+            return permissions;
+        }
+        set;
+    }
+
     /***
     * @description Retrieves the record type id for the household account record type
     */
@@ -89,7 +100,7 @@ public with sharing class RD2_EntryFormController {
         RD2_AppView view = new RD2_AppView();
 
         view.hasRequiredPermissions = hasRequiredFieldPermissions();
-        if(!view.hasRequiredPermissions) {
+        if (!view.hasRequiredPermissions) {
             return view;
         }
 
@@ -149,6 +160,29 @@ public with sharing class RD2_EntryFormController {
         Boolean isContactDonor = rd.npe03__Organization__r.RecordTypeId == hhRecordTypeId
                 || (rd.npe03__Organization__c == null && rd.npe03__Contact__r.Account.RecordTypeId == hhRecordTypeId);
         return isContactDonor;
+    }
+
+    @TestVisible
+    private static Boolean hasRequiredSavePermissions(RD2_SaveRequest request) {
+        Set<String> requiredFields = new Set<String>{
+                String.valueOf(npe03__Recurring_Donation__c.Status__c),
+                String.valueOf(npe03__Recurring_Donation__c.ClosedReason__c),
+                String.valueOf(npe03__Recurring_Donation__c.npe03__Contact__c),
+                String.valueOf(npe03__Recurring_Donation__c.npe03__Organization__c),
+                String.valueOf(npe03__Recurring_Donation__c.npe03__Date_Established__c),
+                String.valueOf(npe03__Recurring_Donation__c.npe03__Amount__c),
+                String.valueOf(npe03__Recurring_Donation__c.npe03__Installment_Period__c),
+                String.valueOf(npe03__Recurring_Donation__c.InstallmentFrequency__c),
+                String.valueOf(npe03__Recurring_Donation__c.StartDate__c),
+                String.valueOf(npe03__Recurring_Donation__c.Day_of_Month__c),
+                String.valueOf(npe03__Recurring_Donation__c.npe03__Installments__c),
+                String.valueOf(npe03__Recurring_Donation__c.RecurringType__c),
+                String.valueOf(npe03__Recurring_Donation__c.npe03__Recurring_Donation_Campaign__c),
+                String.valueOf(npe03__Recurring_Donation__c.CommitmentId__c),
+                String.valueOf(npe03__Recurring_Donation__c.PaymentMethod__c)
+        };
+        requiredFields.addAll(request.getCustomFieldNames());
+        return permissions.canUpdate(npe03__Recurring_Donation__c.SObjectType, requiredFields);
     }
 
     /**
@@ -216,6 +250,11 @@ public with sharing class RD2_EntryFormController {
     public static RD2_SaveResult saveRecurringDonation(RD2_SaveRequest saveRequest) {
         npe03__Recurring_Donation__c rd = saveRequest.toRecord();
         Database.SaveResult sr;
+
+        if (!hasRequiredSavePermissions(saveRequest)) {
+            return new RD2_SaveResult(Label.commonAccessErrorMessage);
+        }
+
         if (rd.Id != null) {
             sr = Database.update(rd, false);
         } else {
@@ -228,7 +267,6 @@ public with sharing class RD2_EntryFormController {
         } else {
             return new RD2_SaveResult(sr);
         }
-
     }
 
     /***

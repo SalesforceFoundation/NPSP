@@ -210,13 +210,19 @@ const setAccountId = (state, accountId) => {
 
 const setCustomField = (state, { fieldName, value }) => {
     const { customFieldSets } = state;
-
+    const updatedFieldSets = customFieldSets.map(field => {
+        if (field.apiName === fieldName) {
+            return {
+                ...field,
+                value
+            }
+        } else {
+            return field;
+        }
+    });
     return {
         ...state,
-        customFieldsSet: {
-            ...customFieldSets,
-            [fieldName]: value,
-        },
+       customFieldSets: updatedFieldSets
     };
 };
 

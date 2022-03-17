@@ -92,4 +92,8 @@ public with sharing class RD2_SaveRequest {
 
         return rd;
     }
+
+    public Set<String> getCustomFieldNames() {
+        return customFieldValues.keySet();
+    }
 }

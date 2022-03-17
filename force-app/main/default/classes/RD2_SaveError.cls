@@ -42,4 +42,9 @@ public class RD2_SaveError {
         this.message = err.getMessage();
         this.fields = err.getFields();
     }
+
+    public RD2_SaveError(String errorMessage) {
+        this.message = errorMessage;
+        this.fields = new List<String>();
+    }
 }
