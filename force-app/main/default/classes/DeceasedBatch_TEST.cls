@@ -36,8 +36,6 @@
 @IsTest
 private class DeceasedBatch_TEST {
 
-    private static IDGenerator generator = new IDGenerator();
-
     @IsTest
     private static void shouldAddAllMembersToAccountMap() {
         List<Contact> contacts = getContactsWithAccount(3);
@@ -210,11 +208,11 @@ private class DeceasedBatch_TEST {
     private static List<Contact> getContactsWithAccount(Integer contactsPerAccount) {
         Account testAccount = UTIL_UnitTestData_TEST.buildHouseholdAccount();
         testAccount.All_Members_Deceased__c = false;
-        testAccount.Id = generator.generate(Account.SObjectType);
+        testAccount.Id = UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
 
         List<Contact> contacts = UTIL_UnitTestData_TEST.getContacts(contactsPerAccount);
         for (Contact testContact : contacts) {
-            testContact.Id = generator.generate(Contact.SObjectType);
+            testContact.Id = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
             testContact.Account = testAccount;
             testContact.AccountId = testAccount.Id;
             testContact.Deceased__c = false;
@@ -235,25 +233,6 @@ private class DeceasedBatch_TEST {
             } else {
                 testContact.Deceased__c = true;
             }
-        }
-    }
-
-    /**
-     * Credit to fflib-apex-mocks fflib_IDGenerator
-     * https://github.com/apex-enterprise-patterns/fflib-apex-mocks/blob/master/sfdx-source/apex-mocks/main/classes/fflib_IDGenerator.cls
-     */
-    private class IDGenerator {
-        private Integer fakeIdCount = 0;
-        private final String ID_PATTERN = '000000000000';
-
-
-        private Id generate(Schema.SObjectType sObjectType) {
-            String keyPrefix = UTIL_Describe.getObjectDescribe(sObjectType).getKeyPrefix();
-            fakeIdCount++;
-
-            String fakeIdPrefix = ID_PATTERN.substring(0, ID_PATTERN.length() - String.valueOf(fakeIdCount).length());
-
-            return Id.valueOf(keyPrefix + fakeIdPrefix + fakeIdCount);
         }
     }
 }
