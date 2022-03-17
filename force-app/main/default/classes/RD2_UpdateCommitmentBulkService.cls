@@ -81,7 +81,6 @@ public with sharing class RD2_UpdateCommitmentBulkService {
             reqBody.commitments =  getCommitmentsToProcess();
 
             HttpRequest request = buildBulkStatusUpdateRequest(reqBody);
-            String jwt = request.getHeader(PS_IntegrationServiceConfig.JWT_TOKEN);
 
             UTIL_Http.Response response;
             try {
