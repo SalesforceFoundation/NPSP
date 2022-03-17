@@ -22,7 +22,7 @@ public static void setContactsAndOrgDefaults() {
 
 public static void setRelationshipDefaults() {
     npe4__Relationship_Settings__c relationshipSettings = npe4__Relationship_Settings__c.getOrgDefaults();
-    relationshipSettings.npe4__Gender_Field__c = String.valueOf(Contact.Gender__c);
+    relationshipSettings.npe4__Gender_Field__c = 'Gender__c';
 
     settingsToUpdate.add(relationshipSettings);
 }
