@@ -52,16 +52,16 @@ public with sharing class RD2_UpdateCommitmentBulkService {
         set;
     }
 
-    private List<Commitment> commitments;
+    private List<RD2_Commitment> commitments;
 
     public RD2_UpdateCommitmentBulkService withCommitments(List<npe03__Recurring_Donation__c> rds) {
         if (rds == null || rds.isEmpty()) {
             return this;
         }
 
-        this.commitments = new List<Commitment>();
+        this.commitments = new List<RD2_Commitment>();
         for (npe03__Recurring_Donation__c rd : rds) {
-            this.commitments.add(new Commitment(rd));
+            this.commitments.add(new RD2_Commitment(rd));
         }
 
         return this;
@@ -81,6 +81,8 @@ public with sharing class RD2_UpdateCommitmentBulkService {
             reqBody.commitments =  getCommitmentsToProcess();
 
             HttpRequest request = buildBulkStatusUpdateRequest(reqBody);
+            String jwt = request.getHeader(PS_IntegrationServiceConfig.JWT_TOKEN);
+
             UTIL_Http.Response response;
             try {
                 response = requestService.sendRequest(request);
@@ -94,8 +96,8 @@ public with sharing class RD2_UpdateCommitmentBulkService {
         this.logger.processErrors();
     }
 
-    private List<Commitment> getCommitmentsToProcess() {
-        List<Commitment> toProcess = new List<Commitment>();
+    private List<RD2_Commitment> getCommitmentsToProcess() {
+        List<RD2_Commitment> toProcess = new List<RD2_Commitment>();
 
         for (Integer i = 0; i < REQUEST_SIZE; i++) {
             if (noCommitmentToProcess()) {
@@ -139,21 +141,6 @@ public with sharing class RD2_UpdateCommitmentBulkService {
 
     public class RequestBody {
         @TestVisible
-        List<Commitment> commitments;
-    }
-
-    public class Commitment {
-        @TestVisible
-        String id;
-        @TestVisible
-        String status;
-        @TestVisible
-        String statusUpdateReason;
-
-        public Commitment(npe03__Recurring_Donation__c rd) {
-            id = rd.CommitmentId__c;
-            status = rd.Status__c;
-            statusUpdateReason = rd.ClosedReason__c;
-        }
+        List<RD2_Commitment> commitments;
     }
 }
