@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>Hierarchy</customSettingsType>
+    <description>Application settings for the Contacts and Organizations package of the Nonprofit Success Pack</description>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>npsp__Honoree_Opportunity_Contact_Role__c</fullName>
+        <deprecated>false</deprecated>
+        <defaultValue>Honoree</defaultValue>
+        <description>Populating this setting will automatically create a Contact Role for Opportunities with an honoree Contact. Leaving this field blank will disable automatic Contact Role creation for the honoree.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Populating this setting will auto-create a contact role for opportunities with an honoree contact. Leaving this field blank will disable automatic contact role creation for the honoree.</inlineHelpText>
+        <label>Honoree Opportunity Contact Role</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>npsp__Notification_Recipient_Opp_Contact_Role__c</fullName>
+        <deprecated>false</deprecated>
+        <defaultValue>Notification Recipient</defaultValue>
+        <description>Populating this setting will automatically create a Contact Role for Opportunities with a notification recipient Contact. Leaving this field blank will disable automatic Contact Role creation for the notification recipient.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Populating this setting will auto-create a contact role for opportunities with a notification recipient contact. Leaving this field blank will disable automatic contact role creation for the notification recipient.</inlineHelpText>
+        <label>Notification Recipient Opp Contact Role</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>Contacts And Orgs Settings</label>
+    <visibility>Public</visibility>
+</CustomObject>
