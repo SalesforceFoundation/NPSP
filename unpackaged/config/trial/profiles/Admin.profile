@@ -23,6 +23,19 @@
     </layoutAssignments>
     <layoutAssignments>
         <layout>Campaign-%%%NAMESPACE%%%NPSP Campaign Layout</layout>
+        <recordType>Campaign.Event</recordType>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>Campaign-%%%NAMESPACE%%%NPSP Campaign Layout</layout>
+        <recordType>Campaign.Fundraising</recordType>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>Campaign-%%%NAMESPACE%%%NPSP Campaign Layout</layout>
+        <recordType>Campaign.General</recordType>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>Campaign-%%%NAMESPACE%%%NPSP Campaign Layout</layout>
+        <recordType>Campaign.Marketing</recordType>
     </layoutAssignments>
     <layoutAssignments>
         <layout>Contact-Contact Lightning Layout</layout>
