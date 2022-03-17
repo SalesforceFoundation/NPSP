@@ -98,7 +98,7 @@ public with sharing class DonationHistoryController {
             Boolean paymentsEnabled = historyService.checkIfPaymentsAreEnabled();
             DonationHistoryAppView donationHistories = new DonationHistoryAppView();
             donationHistories.donations = buildHistoryFromOpportunities(historyService.getDonationHistory(contactId, offset, filter), contactId, paymentsEnabled);
-            donationHistories.totalNumberOfRecords = historyService.getTotalNumberOfRecords();
+            donationHistories.totalNumberOfRecords = historyService.getTotalNumberOfRecords(contactId, filter);
             donationHistories.isPaymentsEnabled = paymentsEnabled;
             donationHistories.paymentMethodLabel = historyService.getPaymentMethodLabel();
             return donationHistories;

@@ -33,9 +33,6 @@
 * @description Donation History Service class in NPSP.
 */
 public with sharing class DonationHistoryService {
-    private Id contactId;
-    private String filter;
-    private Integer offset;
 
     @TestVisible
     private UTIL_Permissions permissions {
@@ -129,10 +126,10 @@ public with sharing class DonationHistoryService {
     * @description method to return Donation History Number of Records for infinite scroll.
     * @param contactId contact id which is going to be requested.
     */
-    public Integer getTotalNumberOfRecords() {
+    public Integer getTotalNumberOfRecords(Id contactId, String filter) {
         if (shouldApplyFilterByYear(filter)) {
             return selector.getTotalNumberOfRecordsWithYear(contactId, Integer.valueOf(filter));
         }
-        return selector.getTotalNumberOfRecords(this.contactId);
+        return selector.getTotalNumberOfRecords(contactId);
     }
 }
