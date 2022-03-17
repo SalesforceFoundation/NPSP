@@ -11,7 +11,7 @@ import accountPartialDescribe from "./data/accountPartialDescribe.json";
 import installmentPeriodPicklistValues from "./data/installmentPeriodPicklistValues.json";
 import dayOfMonthPicklistValues from "./data/dayOfMonthPicklistValues.json";
 
-export const setupWireMocksForElevate = async () => {
+export const setupWireMocks = async () => {
     getObjectInfo.emit(recurringDonationObjectInfo, (config) => {
         return config.objectApiName === RECURRING_DONATION_OBJECT.objectApiName;
     });

@@ -11,7 +11,9 @@ describe("rd2 model", () => {
     });
 
     it("has a default initial state", () => {
-        expect(rd2State.installmentFrequency).toBe(1);
+        expect(rd2State.recurringFrequency).toBe(1);
+        expect(rd2State.isElevateCustomer).toBe(false);
+        expect(rd2State.donorType).toBe('Contact');
     });
 
     it("loads an initial view", () => {
