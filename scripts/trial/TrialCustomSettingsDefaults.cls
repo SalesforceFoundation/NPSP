@@ -31,7 +31,9 @@ public static void setRecurringDonationDefaults() {
     npe03__Recurring_Donations_Settings__c recurringDonationsSettings =
         npe03__Recurring_Donations_Settings__c.getOrgDefaults();
 
-    recurringDonationsSettings.%%%NAMESPACE%%%RecurringDonationNameFormat__c = '{!npe03__Donor_Name__c} {!npe03__Amount__c} - Recurring';
+    recurringDonationsSettings.%%%NAMESPACE%%%RecurringDonationNameFormat__c =
+            '{!npe03__Donor_Name__c} {!npe03__Amount__c} - Recurring';
+    recurringDonationsSettings.%%%NAMESPACE%%%EnableAutomaticNaming__c = true;
 
     settingsToUpdate.add(recurringDonationsSettings);
 }
