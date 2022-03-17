@@ -47,7 +47,9 @@ public inherited sharing class AddressService {
 
     /*******************************************************************************************************
     * @description Utility to copy Address fields between Contacts and Accounts (or vice-versa).
-    * Handles instances where State and Country picklists are enabled, and multiline street addresses.
+    * Doesn't do anything special when State and Country picklists are enabled (the
+     * platform will fill out State and Country Code values using the values from the
+     * picklist fields), and multiline street addresses.
     * @param sobjSrc the source Contact or Account
     * @param strFieldPrefixSrc the address fields to copy from, ie., Mailing, Other, Shipping, Billing
     * @param sobjDst the destination Contact or Account
@@ -61,11 +63,6 @@ public inherited sharing class AddressService {
         sobjDst.put(strFieldPrefixDst + 'Country', sobjSrc.get(strFieldPrefixSrc + 'Country'));
         sobjDst.put(strFieldPrefixDst + 'Latitude', sobjSrc.get(strFieldPrefixSrc + 'Latitude'));
         sobjDst.put(strFieldPrefixDst + 'Longitude', sobjSrc.get(strFieldPrefixSrc + 'Longitude'));
-
-        if (orgConfig.isStateCountryPicklistsEnabled()) {
-            sobjDst.put(strFieldPrefixDst + 'StateCode', sobjSrc.get(strFieldPrefixSrc + 'StateCode'));
-            sobjDst.put(strFieldPrefixDst + 'CountryCode', sobjSrc.get(strFieldPrefixSrc + 'CountryCode'));
-        }
     }
 
     /*******************************************************************************************************
@@ -129,69 +126,36 @@ public inherited sharing class AddressService {
 
     /*******************************************************************************************************
     * @description Utility to copy Address fields from an Address object to a Contact or Account.
-    * Handles instances where State and Country picklists are enabled, and multiline street addresses.
-    * @param addr the Address object to copy from
+    * Doesn't do anything special when State and Country picklists are enabled (Allows the
+     * platform to populate state and country code values), and multiline street addresses.
+    * @param anAddress the Address object to copy from
     * @param sobjDst the destination Contact or Account
     * @param strFieldPrefix the address fields to copy to, ie., Mailing, Other, Shipping, Billing
     * @param strFieldAddrType an optional Address Type field on sobjDst to copy to
-    * @return void
     */
     public void copyOntoSObject(IAddress anAddress, SObject sobjDst,
             String strFieldPrefix, String strFieldAddrType) {
         Address__c addr = (Address__c) anAddress.getRecord();
+
+        String undeliverableField = UTIL_Namespace.StrAllNSPrefix('Undeliverable__c');
+        Set<String> populatedFieldsAsMapKeySet =
+                anAddress.getRecord().getPopulatedFieldsAsMap().keySet();
+        if (populatedFieldsAsMapKeySet.contains(undeliverableField)) {
+            String undeliverableAddressField =
+                    UTIL_Namespace.StrAllNSPrefix('Undeliverable_Address__c');
+            sobjDst.put(undeliverableAddressField, anAddress.isUndeliverable());
+        }
 
         sobjDst.put(strFieldPrefix + 'Street', anAddress.multilineStreet());
         sobjDst.put(strFieldPrefix + 'City', addr.MailingCity__c);
         sobjDst.put(strFieldPrefix + 'PostalCode', addr.MailingPostalCode__c);
         sobjDst.put(strFieldPrefix + 'Latitude', addr.Geolocation__Latitude__s);
         sobjDst.put(strFieldPrefix + 'Longitude', addr.Geolocation__Longitude__s);
+        sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
+        sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
 
-        if (!orgConfig.isStateCountryPicklistsEnabled()) {
-            sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
-            sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
-        } else {
-            if (addr.MailingCountry__c != null) {
-                if (orgConfig.validCountriesByLabel().containsKey(addr.MailingCountry__c
-                        .toUpperCase()
-                )) {
-                    sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
-                    sobjDst.put(strFieldPrefix + 'CountryCode',
-                            orgConfig.validCountriesByLabel().get(
-                                    addr.MailingCountry__c.toUpperCase()));
-                } else if (orgConfig.validCountriesByCode().containsKey(addr.MailingCountry__c
-                        .toUpperCase())) {
-                    sobjDst.put(strFieldPrefix + 'CountryCode', addr.MailingCountry__c.toUpperCase());
-                    sobjDst.put(strFieldPrefix + 'Country',
-                            orgConfig.validCountriesByCode().get(
-                                    addr.MailingCountry__c.toUpperCase()));
-                } else {
-                    // allow the invalid country to be placed in the country field, so Salesforce will generate the error.
-                    sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
-                }
-            } else { // MailingCountry = null
-                sobjDst.put(strFieldPrefix + 'CountryCode', null);
-                sobjDst.put(strFieldPrefix + 'Country', null);
-            }
-            if (addr.MailingState__c != null) {
-                if (orgConfig.validStatesByLabel().containsKey(addr.MailingState__c
-                        .toUpperCase())) {
-                    sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
-                    sobjDst.put(strFieldPrefix + 'StateCode', orgConfig.validStatesByLabel()
-                            .get(addr
-                                    .MailingState__c.toUpperCase()));
-                } else {
-                    // too expensive for us to create the map of CountryCode|StateCode to StateLabel
-                    // so we will just try to save any state that isn't a label as a code.
-                    sobjDst.put(strFieldPrefix + 'StateCode', addr.MailingState__c.toUpperCase());
-                }
-            } else { // MailingState = null
-                sobjDst.put(strFieldPrefix + 'StateCode', null);
-                sobjDst.put(strFieldPrefix + 'State', null);
-            }
-        }
-
-        if (strFieldAddrType != null)
+        if (strFieldAddrType != null) {
             sobjDst.put(strFieldAddrType, addr.Address_Type__c);
-
+        }
     }
 }

@@ -101,6 +101,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
 
         Contacts contacts = new Contacts(newSObjects);
         contacts.resetDeprecatedFields();
+        contacts.resetSustainerFields();
 
         if (CAO_Constants.isHHAccountModel()) {
             householdServiceInstance.createOneToOneAndHouseholdAccountsFor(
@@ -248,6 +249,10 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
             LegacyHouseholds.attachToBucketAccount(
                     contacts.publicContactsWithNonNullAccountIds()
             );
+        }
+
+        if (RD2_SustainerEvaluationService.isSustainerUpdateEnabled == false) {
+            contacts.resetSustainerFields();
         }
     }
 
@@ -826,7 +831,17 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
             // in which case we don't want to create a new address.
 
             // if the contacts address changed or if the contact with an address moves to a new household remember the contact
-            if (npspContact.isAddressChanged()) {
+            // if the Current_Address__c field is changing, the after update context will 
+            // handle syncing the address fields
+            Boolean currentAddressChanged = false;
+            if (npspContact.oldVersion() != null && npspContact.oldVersion().getRecord() != null) {
+                Id oldCurrentAddress = npspContact.oldVersion().getRecord().Current_Address__c;
+                Id currentAddress = npspContact.getRecord().Current_Address__c;
+                if (currentAddress != oldCurrentAddress) {
+                    currentAddressChanged = true;
+                }
+            }
+            if (!currentAddressChanged && npspContact.isAddressChanged()) {
                 consWithAddressChanges.add(npspContact.getRecord());
             }
         }

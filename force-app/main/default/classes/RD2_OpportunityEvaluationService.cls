@@ -431,6 +431,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         toggleTriggerState(true);
 
+        evaluateSustainers();
+
         dbService.processErrors();
 
         return this;
@@ -484,6 +486,21 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
 
         changeLogService.insertChangeLogRecords();
+    }
+
+    private void evaluateSustainers() {
+        RD2_SustainerEvaluationService sustainerService = new RD2_SustainerEvaluationService()
+            .withBatchContext(isBatchContext)
+            .withRecurringDonations(rds)
+            .withRecurringDonations(oldRds);
+    
+        if (isBatchContext) {
+            TDTM_Config_API.disableAllTriggers();
+        }
+        RD2_SustainerEvaluationService.setSustainerUpdateEnabled(true);
+        dbService.updateRecords(sustainerService.getContactsWithSustainerChanged());
+        dbService.updateRecords(sustainerService.getAccountsWithSustainerChanged());
+        RD2_SustainerEvaluationService.setSustainerUpdateEnabled(false);
     }
 
     /**

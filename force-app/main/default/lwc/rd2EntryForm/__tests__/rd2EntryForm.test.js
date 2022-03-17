@@ -1,24 +1,17 @@
 import { createElement } from "lwc";
 import Rd2EntryForm from "c/rd2EntryForm";
-import { getObjectInfo, getPicklistValues } from "lightning/uiObjectInfoApi";
+import { RD2FormController, setupWireMocksForElevate, mockRecordEditFormSubmit } from "./rd2EntryFormTestHelpers";
 import { getRecord } from "lightning/uiRecordApi";
 import { mockGetIframeReply } from "c/psElevateTokenHandler";
 
 import getInitialView from "@salesforce/apex/RD2_EntryFormController.getInitialView";
 import handleCommitment from "@salesforce/apex/RD2_EntryFormController.handleCommitment";
+import saveRecurringDonation from "@salesforce/apex/RD2_EntryFormController.saveRecurringDonation";
 
 import RD2_EntryFormMissingPermissions from "@salesforce/label/c.RD2_EntryFormMissingPermissions";
-import FIELD_INSTALLMENT_PERIOD from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c";
-import FIELD_DAY_OF_MONTH from "@salesforce/schema/npe03__Recurring_Donation__c.Day_of_Month__c";
-import RECURRING_DONATION_OBJECT from "@salesforce/schema/npe03__Recurring_Donation__c";
-import ACCOUNT_OBJECT from "@salesforce/schema/Account";
-import CONTACT_OBJECT from "@salesforce/schema/Contact";
+import RD2_EntryFormHeader from "@salesforce/label/c.RD2_EntryFormHeader";
+import commonEdit from "@salesforce/label/c.commonEdit";
 
-const recurringDonationObjectInfo = require("../../../../../../tests/__mocks__/apex/data/recurringDonationObjectInfo.json");
-const installmentPeriodPicklistValues = require("./data/installmentPeriodPicklistValues.json");
-const dayOfMonthPicklistValues = require("./data/dayOfMonthPicklistValues.json");
-const contactPartialDescribe = require("./data/contactPartialDescribe.json");
-const accountPartialDescribe = require("./data/accountPartialDescribe.json");
 const contactGetRecord = require("./data/contactGetRecord.json");
 const accountGetRecord = require("./data/accountGetRecord.json");
 const rd2WithCardCommitment = require("./data/rd2WithCardCommitment.json");
@@ -32,9 +25,9 @@ const rd2WithACHCommitmentInitialView = require("./data/rd2WithACHCommitmentInit
 const rd2WithoutCommitmentInitialView = require("./data/rd2WithoutCommitmentInitialView.json");
 
 jest.mock("@salesforce/apex/RD2_EntryFormController.getInitialView", () => ({ default: jest.fn() }), { virtual: true });
+jest.mock("@salesforce/apex/RD2_EntryFormController.saveRecurringDonation", () => ({ default: jest.fn() }), { virtual: true });
 
 const mockScrollIntoView = jest.fn();
-const mockRecordEditFormSubmit = jest.fn();
 
 const FAKE_ACH_RD2_ID = "a0963000008pebAAAQ";
 const FAKE_CARD_RD2_ID = "a0963000008oxZnAAI";
@@ -110,7 +103,7 @@ describe("c-rd2-entry-form", () => {
             await flushPromises();
 
             await setupWireMocksForElevate();
-            controller.setDefaultInputFieldValues();
+            controller.setDefaultDateValues();
 
             controller.paymentMethod().changeValue("Credit Card");
 
@@ -127,7 +120,7 @@ describe("c-rd2-entry-form", () => {
             await flushPromises();
 
             await setupWireMocksForElevate();
-            controller.setDefaultInputFieldValues();
+            controller.setDefaultDateValues();
 
             controller.paymentMethod().changeValue("ACH");
 
@@ -146,7 +139,7 @@ describe("c-rd2-entry-form", () => {
 
             await setupWireMocksForElevate();
 
-            controller.setDefaultInputFieldValues();
+            controller.setDefaultDateValues();
             controller.paymentMethod().changeValue("ACH");
             await flushPromises();
 
@@ -162,6 +155,53 @@ describe("c-rd2-entry-form", () => {
 
             const elevateWidget = controller.elevateWidget();
             expect(elevateWidget).toBeFalsy();
+        });
+
+        it('displays label for new recurring donations in header', () => {
+            const element = createRd2EntryForm();
+            const controller = new RD2FormController(element);
+            const header = controller.header();
+
+            expect(header).toBeTruthy();
+            expect(header.textContent).toBe(RD2_EntryFormHeader);
+        });
+
+        it("renders custom fields when one field is defined", async () => {
+            getInitialView.mockResolvedValue({
+                ...initialViewResponse,
+                customFieldSets: [
+                    {
+                        apiName: "Custom1__c",
+                        required: false,
+                    },
+                ],
+            });
+
+            const element = createRd2EntryForm();
+            const controller = new RD2FormController(element);
+
+            await flushPromises();
+
+            expect(controller.customFieldsSection()).toBeTruthy();
+            expect(controller.customFields()).toHaveLength(1);
+        });
+
+        it('when multicurrency enabled, displays currency field', async () => {
+            getInitialView.mockResolvedValue({
+                ...initialViewResponse,
+                isElevateCustomer: true,
+                isMultiCurrencyEnabled: true,
+            });
+
+            const element = createRd2EntryForm();
+            await flushPromises();
+
+            await setupWireMocksForElevate();
+
+            const controller = new RD2FormController(element);
+
+            const currencyIsoCodeField = controller.currencyIsoCode();
+            expect(currencyIsoCodeField.element).toBeTruthy();
         });
     });
 
@@ -180,7 +220,7 @@ describe("c-rd2-entry-form", () => {
 
             await setupWireMocksForElevate();
 
-            controller.setDefaultInputFieldValues();
+            controller.setDefaultDateValues();
             controller.setupSubmitMock();
             controller.contactLookup().changeValue("001fakeContactId");
             await flushPromises();
@@ -216,6 +256,31 @@ describe("c-rd2-entry-form", () => {
                 InstallmentFrequency__c: 1,
             };
             validateCommitmentMessage(EXPECTED_RECORD);
+            // TODO: When submit is swapped out, use this expect block instead.
+            // expect(saveRecurringDonation).toHaveBeenCalled();
+            // expect(saveRecurringDonation).toHaveBeenCalledWith({
+            //     achLastFour: "5432",
+            //     cardExpirationMonth: null,
+            //     cardExpirationYear: null,
+            //     cardLastFour: null,
+            //     commitmentId: "ffd252d6-7ffc-46a0-994f-00f7582263d2",
+            //     currencyIsoCode: null,
+            //     dayOfMonth: "6",
+            //     paymentMethod: "ACH",
+            //     paymentToken: "a_dummy_token",
+            //     recordId: null,
+            //     recordName: "",
+            //     recurringFrequency: 1,
+            //     recurringType: "Open",
+            //     recurringStatus: null,
+            //     startDate: "2021-02-03",
+            //     donationValue: 1,
+            //     contactId: "001fakeContactId",
+            //     accountId: null,
+            //     dateEstablished: "2021-02-03",
+            //     recurringPeriod: "Monthly",
+            //     plannedInstallments: null,
+            // });
             expect(mockRecordEditFormSubmit).toHaveBeenCalled();
             expect(mockRecordEditFormSubmit).toHaveBeenCalledWith({
                 ACH_Last_4__c: "5432",
@@ -233,6 +298,7 @@ describe("c-rd2-entry-form", () => {
                 npe03__Date_Established__c: "2021-02-03",
                 npe03__Installment_Period__c: "Monthly",
                 npe03__Installments__c: null,
+                npe03__Recurring_Donation_Campaign__c: null
             });
         });
 
@@ -244,7 +310,7 @@ describe("c-rd2-entry-form", () => {
 
             await setupWireMocksForElevate();
 
-            controller.setDefaultInputFieldValues();
+            controller.setDefaultDateValues();
             controller.dayOfMonth().setValue("6");
             controller.donorType().changeValue("Account");
             controller.paymentMethod().changeValue("ACH");
@@ -287,16 +353,51 @@ describe("c-rd2-entry-form", () => {
         });
     });
 
-    describe("edit mode", () => {
+    describe("editing existing record", () => {
         beforeEach(() => {
             setupIframeReply();
+        });
+
+        it('displays label with record name in header', async () => {
+            getInitialView.mockResolvedValue(rd2WithCardCommitmentInitialView);
+            const element = createRd2EditForm(FAKE_CARD_RD2_ID);
+            const controller = new RD2FormController(element);
+            const header = controller.header();
+            await flushPromises();
+
+            const { recordName } = rd2WithCardCommitmentInitialView.record;
+
+            expect(header).toBeTruthy();
+            expect(header.textContent).toBe(`${commonEdit} ${recordName}`);
+        });
+
+        it('when multicurrency enabled, populates multicurrency field', async () => {
+            const { record } = rd2WithCardCommitmentInitialView;
+            getInitialView.mockResolvedValue({
+                ...rd2WithCardCommitmentInitialView,
+                isMultiCurrencyEnabled: true,
+                record: {
+                    ...record,
+                    currencyIsoCode: 'USD'
+                }
+            });
+
+            const element = createRd2EntryForm();
+            await flushPromises();
+
+            await setupWireMocksForElevate();
+
+            const controller = new RD2FormController(element);
+
+            const currencyIsoCodeField = controller.currencyIsoCode();
+            expect(currencyIsoCodeField.element).toBeTruthy();
+            expect(currencyIsoCodeField.getValue()).toBe('USD');
         });
 
         it("rd2 record with card payment, when editing, displays card information", async () => {
             getInitialView.mockResolvedValue(rd2WithCardCommitmentInitialView);
             const element = createRd2EditForm(FAKE_CARD_RD2_ID);
             const controller = new RD2FormController(element);
-            await flushPromises();
 
             await setupWireMocksForElevate();
 
@@ -305,7 +406,6 @@ describe("c-rd2-entry-form", () => {
             });
 
             await flushPromises();
-            controller.setDefaultInputFieldValuesEdit();
 
             const elevateWidget = controller.elevateWidget();
             expect(elevateWidget).toBeTruthy();
@@ -326,7 +426,6 @@ describe("c-rd2-entry-form", () => {
             });
             await flushPromises();
 
-            controller.setDefaultInputFieldValuesEdit();
 
             const elevateWidget = controller.elevateWidget();
             expect(elevateWidget).toBeTruthy();
@@ -354,7 +453,6 @@ describe("c-rd2-entry-form", () => {
                 return config.recordId === "001fakeContactId";
             });
 
-            controller.setDefaultInputFieldValuesEdit();
             await flushPromises();
 
             expect(controller.elevateWidget()).toBeTruthy();
@@ -381,7 +479,6 @@ describe("c-rd2-entry-form", () => {
                 return config.recordId === "001fakeContactId";
             });
 
-            controller.setDefaultInputFieldValues();
 
             expect(controller.elevateWidget()).toBeNull();
 
@@ -414,9 +511,10 @@ describe("c-rd2-entry-form", () => {
 
             await flushPromises();
 
-            controller.setDefaultInputFieldValuesEdit();
+            controller.setDefaultDateValues();
 
             controller.paymentMethod().changeValue("ACH");
+            controller.dayOfMonth().changeValue("6");
 
             await flushPromises();
 
@@ -474,7 +572,7 @@ describe("c-rd2-entry-form", () => {
                 return config.recordId === "001fakeContactId";
             });
 
-            controller.setDefaultInputFieldValuesEdit();
+            controller.setDefaultDateValues();
             controller.setupSubmitMock();
             await flushPromises();
 
@@ -498,6 +596,7 @@ describe("c-rd2-entry-form", () => {
                 CardExpirationYear__c: null,
                 CardLast4__c: null,
                 ChangeType__c: "",
+                ClosedReason__c: null,
                 CommitmentId__c: "ffd252d6-7ffc-46a0-994f-00f7582263d2",
                 Day_of_Month__c: "6",
                 Id: "a0963000008oxZnAAI",
@@ -511,6 +610,7 @@ describe("c-rd2-entry-form", () => {
                 npe03__Date_Established__c: "2021-02-03",
                 npe03__Installment_Period__c: "Monthly",
                 npe03__Installments__c: null,
+                npe03__Recurring_Donation_Campaign__c: null
             });
         });
 
@@ -536,7 +636,7 @@ describe("c-rd2-entry-form", () => {
                 return config.recordId === "001fakeContactId";
             });
 
-            controller.setDefaultInputFieldValuesEdit();
+            controller.setDefaultDateValues();
             controller.setupSubmitMock();
             await flushPromises();
 
@@ -559,6 +659,7 @@ describe("c-rd2-entry-form", () => {
                 CardExpirationYear__c: "2023",
                 CardLast4__c: "1111",
                 ChangeType__c: "",
+                ClosedReason__c: null,
                 CommitmentId__c: "ffd252d6-7ffc-46a0-994f-00f7582263d2",
                 Day_of_Month__c: "6",
                 Id: "a0963000008pebAAAQ",
@@ -572,6 +673,7 @@ describe("c-rd2-entry-form", () => {
                 npe03__Date_Established__c: "2021-02-03",
                 npe03__Installment_Period__c: "Monthly",
                 npe03__Installments__c: null,
+                npe03__Recurring_Donation_Campaign__c: null,
             });
         });
     });
@@ -600,7 +702,6 @@ describe("c-rd2-entry-form", () => {
                 return config.recordId === "001fakeContactId";
             });
 
-            controller.setDefaultInputFieldValuesEdit();
 
             await flushPromises();
         });
@@ -680,8 +781,6 @@ describe("c-rd2-entry-form", () => {
             getRecord.emit(contactGetRecord, (config) => {
                 return config.recordId === "001fakeContactId";
             });
-
-            controller.setDefaultInputFieldValuesEdit("Fixed");
 
             await flushPromises();
         });
@@ -781,214 +880,3 @@ const validateIframeMessage = (tokenizeMockCall, expectedParams) => {
         undefined
     );
 };
-
-const setupWireMocksForElevate = async () => {
-    getObjectInfo.emit(recurringDonationObjectInfo, (config) => {
-        return config.objectApiName === RECURRING_DONATION_OBJECT.objectApiName;
-    });
-
-    getObjectInfo.emit(contactPartialDescribe, (config) => {
-        return config.objectApiName.objectApiName === CONTACT_OBJECT.objectApiName;
-    });
-
-    getObjectInfo.emit(accountPartialDescribe, (config) => {
-        return config.objectApiName.objectApiName === ACCOUNT_OBJECT.objectApiName;
-    });
-
-    getPicklistValues.emit(installmentPeriodPicklistValues, (config) => {
-        return config.fieldApiName.fieldApiName === FIELD_INSTALLMENT_PERIOD.fieldApiName;
-    });
-
-    getPicklistValues.emit(dayOfMonthPicklistValues, (config) => {
-        return config.fieldApiName.fieldApiName === FIELD_DAY_OF_MONTH.fieldApiName;
-    });
-
-    await flushPromises();
-};
-
-class RD2FormController {
-    element;
-
-    constructor(element) {
-        this.element = element;
-    }
-
-    setupSubmitMock() {
-        const element = this.element.shadowRoot.querySelector('[data-id="outerRecordEditForm"]');
-        element.submit = mockRecordEditFormSubmit;
-    }
-
-    async setDefaultInputFieldValues(recurringType = "Open") {
-        this.recurringType().changeValue(recurringType);
-        await flushPromises();
-        if (recurringType === "Fixed") {
-            this.plannedInstallments().setValue(12);
-        }
-        this.recurringPeriod().changeValue("Monthly");
-        this.dateEstablished().changeValue("2021-02-03");
-        this.startDate().changeValue("2021-02-03");
-        this.dayOfMonth().setValue("6");
-    }
-
-    setDefaultInputFieldValuesEdit(recurringType = "Open") {
-        this.status().setValue("Active");
-        this.amount().setValue(0.5);
-        this.setDefaultInputFieldValues(recurringType);
-    }
-
-    donorSection() {
-        return this.element.shadowRoot.querySelector("c-rd2-entry-form-donor-section");
-    }
-
-    scheduleSection() {
-        return this.element.shadowRoot.querySelector("c-rd2-entry-form-schedule-section");
-    }
-
-    elevateWidget() {
-        return this.element.shadowRoot.querySelector("c-rd2-elevate-credit-card-form");
-    }
-
-    amount() {
-        const field = this.element.shadowRoot.querySelector('lightning-input-field[data-id="amountField"]');
-        return new RD2FormField(field);
-    }
-
-    dateEstablished() {
-        const donorSection = this.donorSection();
-        const field = donorSection.shadowRoot.querySelector('lightning-input-field[data-id="dateEstablished"]');
-        return new RD2FormField(field);
-    }
-
-    donorType() {
-        const donorSection = this.donorSection();
-        const field = donorSection.shadowRoot.querySelector('lightning-combobox[data-id="donorType"]');
-        return new RD2FormField(field);
-    }
-
-    contactLookup() {
-        const donorSection = this.donorSection();
-        const field = donorSection.shadowRoot.querySelector('lightning-input-field[data-id="contactLookup"]');
-        return new RD2FormField(field);
-    }
-
-    accountLookup() {
-        const donorSection = this.donorSection();
-        const field = donorSection.shadowRoot.querySelector('lightning-input-field[data-id="accountLookup"]');
-        return new RD2FormField(field);
-    }
-
-    paymentMethod() {
-        const field = this.element.shadowRoot.querySelector('lightning-input-field[data-id="paymentMethod"]');
-        return new RD2FormField(field);
-    }
-
-    last4() {
-        const widget = this.elevateWidget();
-        return widget.shadowRoot.querySelector('lightning-formatted-text[data-qa-locator="text Last Four Digits"]');
-    }
-
-    cardExpriation() {
-        const widget = this.elevateWidget();
-        return widget.shadowRoot.querySelector('lightning-formatted-text[data-qa-locator="text Expiration Date"]');
-    }
-
-    dayOfMonth() {
-        const scheduleSection = this.scheduleSection();
-        const field = scheduleSection.shadowRoot.querySelector('lightning-input-field[data-id="dayOfMonth"]');
-        return new RD2FormField(field);
-    }
-
-    recurringType() {
-        const scheduleSection = this.scheduleSection();
-        const field = scheduleSection.shadowRoot.querySelector('lightning-input-field[data-id="RecurringType__c"]');
-        return new RD2FormField(field);
-    }
-
-    recurringPeriod() {
-        const scheduleSection = this.scheduleSection();
-        const field = scheduleSection.shadowRoot.querySelector('lightning-combobox[data-id="recurringPeriod"]');
-        return new RD2FormField(field);
-    }
-
-    installmentPeriod() {
-        const scheduleSection = this.scheduleSection();
-        const field = scheduleSection.shadowRoot.querySelector('lightning-combobox[data-id="installmentPeriod"]');
-        return new RD2FormField(field);
-    }
-
-    installmentFrequency() {
-        const scheduleSection = this.scheduleSection();
-        const field = scheduleSection.shadowRoot.querySelector('lightning-combobox[data-id="installmentFrequency"]');
-        return new RD2FormField(field);
-    }
-
-    plannedInstallments() {
-        const scheduleSection = this.scheduleSection();
-        const field = scheduleSection.shadowRoot.querySelector('lightning-input-field[data-id="plannedInstallments"]');
-        return new RD2FormField(field);
-    }
-
-    startDate() {
-        const scheduleSection = this.scheduleSection();
-        const field = scheduleSection.shadowRoot.querySelector('lightning-input-field[data-id="startDate"]');
-        return new RD2FormField(field);
-    }
-
-    status() {
-        const field = this.element.shadowRoot.querySelector('lightning-input-field[data-id="status"]');
-        return new RD2FormField(field);
-    }
-
-    cardholderName() {
-        const field = this.elevateWidget().shadowRoot.querySelector('[data-id="cardholderName"]');
-        return new RD2FormField(field);
-    }
-
-    saveButton() {
-        return this.element.shadowRoot.querySelector('lightning-button[data-id="submitButton"]');
-    }
-
-    disableElevateButton() {
-        return this.elevateWidget().shadowRoot.querySelector(
-            'lightning-button[data-qa-locator="button Do Not Use Elevate"]'
-        );
-    }
-
-    updatePaymentButton() {
-        return this.elevateWidget().shadowRoot.querySelector(
-            'lightning-button[data-qa-locator="button Update Payment Information"]'
-        );
-    }
-
-    cancelUpdatePaymentButton() {
-        return this.elevateWidget().shadowRoot.querySelector(
-            'lightning-button[data-qa-locator="button Cancel Update Payment Information"]'
-        );
-    }
-
-    changeTypePicklist() {
-        return this.element.shadowRoot.querySelector('lightning-input-field[data-id="changeType"]');
-    }
-}
-
-class RD2FormField {
-    element;
-
-    constructor(element) {
-        this.element = element;
-    }
-
-    setValue(value) {
-        this.element.value = value;
-    }
-
-    changeValue(value) {
-        this.setValue(value);
-        this.dispatchChangeEvent();
-    }
-
-    dispatchChangeEvent() {
-        const { value } = this.element;
-        this.element.dispatchEvent(new CustomEvent("change", { detail: { value } }));
-    }
-}

@@ -48,6 +48,8 @@ private with sharing class RD2_EntryFormController_TEST {
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
 
+    private static OrgConfig orgConfig = new OrgConfig();
+
     /****
     * @description Creates data required for unit tests
     */
@@ -648,69 +650,54 @@ private with sharing class RD2_EntryFormController_TEST {
             'The response status should match: ' + response);
     }
 
-    /**
-    * @description Verifies Donor Address is returned when a Contact Id is passed
-    */
     @IsTest
-    private static void shouldReturnAddressWhenDonorIsContact() {
-        Contact donorContact = getContact();
-        String streetLine1 = 'Test Street';
-        String streetLine2 = 'Test Line 2';
-
-        donorContact.MailingStreet = streetLine1 + '\n' + streetLine2;
-        donorContact.MailingCity = 'Test City';
-        donorContact.MailingState = 'Test State';
-        donorContact.MailingCountry = 'Test Country';
-        update donorContact;
-
-        Address__c donorAddress = RD2_EntryFormController.getDonorAddress(donorContact.Id);
-
-        System.assertEquals(donorAddress.MailingCity__c, donorContact.MailingCity, 'Contact and Address do not match');
-        System.assertEquals(donorAddress.MailingState__c, donorContact.MailingState, 'Contact and Address do not match');
-        System.assertEquals(donorAddress.MailingCountry__c, donorContact.MailingCountry, 'Contact and Address do not match');
-        System.assertEquals(donorAddress.MailingStreet__c, streetLine1, 'Contact and Address do not match');
-        System.assertEquals(donorAddress.MailingStreet2__c, streetLine2, 'Contact and Address do not match');
-    }
-    
-    /**
-    * @description Verifies Donor Address is returned when an Account Id is passed
-    */
-    @IsTest
-    private static void shouldReturnAddressWhenDonorIsAccount() {
-        Account donorAccount = UTIL_UnitTestData_TEST.buildOrganizationAccount();
-        String streetLine1 = 'Test Street';
-        String streetLine2 = 'Test Line 2';
-
-        donorAccount.BillingStreet = streetLine1 + '\n' + streetLine2;
-        donorAccount.BillingCity = 'Test City';
-        donorAccount.BillingState = 'Test State';
-        donorAccount.BillingCountry = 'Test Country';
-        insert donorAccount;
-
-        Address__c donorAddress = RD2_EntryFormController.getDonorAddress(donorAccount.Id);
-
-        System.assertEquals(donorAddress.MailingCity__c, donorAccount.BillingCity, 'Account and Address do not match');
-        System.assertEquals(donorAddress.MailingState__c, donorAccount.BillingState, 'Account and Address do not match');
-        System.assertEquals(donorAddress.MailingCountry__c, donorAccount.BillingCountry, 'Account and Address do not match');
-        System.assertEquals(donorAddress.MailingStreet__c, streetLine1, 'Account and Address do not match');
-        System.assertEquals(donorAddress.MailingStreet2__c, streetLine2, 'Account and Address do not match');
-    }
-
-    @IsTest
-    private static void shouldThrowExceptionWhenGetDonorAddressWithoutPermissions() {
-        RD2_EntryFormController.permissions = 
-            (UTIL_Permissions) Test.createStub(UTIL_Permissions.class, new UTIL_PermissionsMock(false, false));
+    private static void canSaveRecurringDonation() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         Contact donorContact = getContact();
 
-        AuraHandledException caughtException;
-        try {
-            RD2_EntryFormController.getDonorAddress(donorContact.Id);
-        } catch (AuraHandledException ex) {
-            caughtException = ex;
-        }
-        System.assertNotEquals(null, caughtException, 'There should be an Exception');
-        System.assertEquals(Label.commonPermissionErrorMessage, caughtException.getMessage(), 
-            'The Exception message does not match');
+        RD2_EntryFormController.RD2SaveRequest req = new RD2_EntryFormController.RD2SaveRequest();
+
+        req.dayOfMonth = '15';
+        req.startDate = Date.newInstance(2022, 1, 15);
+        req.dateEstablished = Date.newInstance(2022, 1, 15);
+        req.recurringFrequency = 1;
+        req.contactId = donorContact.Id;
+        req.recurringStatus = 'Active';
+        req.donationValue = 5;
+        req.recurringType = 'Open';
+        req.recurringPeriod = 'Monthly';
+        req.paymentMethod = 'Credit Card';
+
+        RD2_EntryFormController.RD2SaveResult result = RD2_EntryFormController.saveRecurringDonation(req);
+
+        System.assert(result.success, 'RD not inserted successfully');
+        System.assertNotEquals(result.recordId, null, 'Save result should have an Id');
+    }
+
+
+    @IsTest
+    private static void saveResponseIncludesErrorInformation() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        Contact donorContact = getContact();
+
+        RD2_EntryFormController.RD2SaveRequest req = new RD2_EntryFormController.RD2SaveRequest();
+
+        req.dayOfMonth = '15';
+        req.startDate = Date.newInstance(2022, 1, 15);
+        req.dateEstablished = Date.newInstance(2022, 1, 15);
+        req.recurringFrequency = 1;
+        req.contactId = donorContact.Id;
+        req.recurringStatus = 'Active';
+        req.donationValue = -1;
+        req.recurringType = 'Open';
+        req.recurringPeriod = 'Monthly';
+        req.paymentMethod = 'Credit Card';
+
+        RD2_EntryFormController.RD2SaveResult result = RD2_EntryFormController.saveRecurringDonation(req);
+
+        System.assertEquals(false, result.success, 'Expected RD2SaveResult success to be false');
+        System.assertEquals(null, result.recordId, 'Expected empty record Id');
+        System.assertEquals(Label.RD2_AmountMustBeValid, result.errors[0].message, 'Wrong error message');
     }
 
     // Helpers
@@ -783,32 +770,6 @@ private with sharing class RD2_EntryFormController_TEST {
                 List<Object> listOfArgs
         ) {
             return this.rd;
-        }
-    }
-
-    private class UTIL_PermissionsMock implements StubProvider {
-
-        Boolean canRead;
-        Boolean canCreate;
-
-        public UTIL_PermissionsMock(Boolean canRead, Boolean canCreate) {
-            this.canCreate = canCreate;
-            this.canRead = canRead;
-        }
-
-        public Object handleMethodCall(Object stubbedObject, String stubbedMethodName,
-                Type returnType, List<Type> listOfParamTypes, List<String> listOfParamNames,
-                List<Object> listOfArgs) {
-
-            switch on stubbedMethodName {
-                when 'canRead' {
-                    return this.canRead;
-                }
-                when 'canCreate' {
-                    return this.canCreate;
-                }
-            }
-            return null;
         }
     }
 

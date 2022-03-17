@@ -108,6 +108,9 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         List<SObject> rds, List<SObject> oldRds,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult
     ) {
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            TDTM_TriggerHandler.enableOldListCachingEvaluation();
+        }
 
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             return null;
@@ -127,19 +130,43 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         // Insert/Update any pending RecurringDonationSchedule records before the
         // evaluation service is called so that the full schedule is available to the
         // service to determine what Opportunities to insert or modify
-        TDTM_TriggerHandler.processDML(dmlActions);
+        TDTM_TriggerHandler.processDMLWithErrors(dmlActions);
         dmlActions = null;
 
         findMatchingElevateOpps(rds, triggerAction);
 
-        evaluateOpportunities(rds, oldRds, triggerAction);
+        if (TDTM_TriggerHandler.noErrorInCurrentTransaction(objResult, rds)) {
+            evaluateOpportunities(rds, oldRds, triggerAction);
+        }
 
         dispatchToIntegrationGateway(rds, oldRds, triggerAction);
 
         cancelCommitments(rds, oldRds, triggerAction);
 
+        updateSustainerForDeleteAndUndelete(rds, oldRds, triggerAction);
+        
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
         return dmlActions;
+    }
+
+    private void updateSustainerForDeleteAndUndelete(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
+        if (triggerAction != TDTM_Runnable.Action.AfterDelete && triggerAction != TDTM_Runnable.Action.AfterUndelete) {
+            return;
+        }
+
+        RD2_SustainerEvaluationService sustainerService = new RD2_SustainerEvaluationService()
+        .withRecurringDonations(rds)
+        .withRecurringDonations(oldRds);
+
+        RD2_SustainerEvaluationService.setSustainerUpdateEnabled(true);
+
+        DmlWrapper sustainerDMLAction = new DmlWrapper();
+        sustainerDMLAction.objectsToUpdate = sustainerService.getContactsWithSustainerChanged();
+        TDTM_TriggerHandler.processDML(sustainerDMLAction);
+
+        sustainerDMLAction.objectsToUpdate = sustainerService.getAccountsWithSustainerChanged();
+        TDTM_TriggerHandler.processDML(sustainerDMLAction);
+        RD2_SustainerEvaluationService.setSustainerUpdateEnabled(false);
     }
 
     /***
@@ -280,12 +307,10 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         new RD2_DataRegulationService(currentDate)
             .adjust(rds, oldRds);
 
-        List<RD2_ValidationService.ErrorRecord> errorRds = new RD2_ValidationService(rds, oldRds)
+        List<ErrorRecord> errorRds = new RD2_ValidationService(rds, oldRds)
             .validate();
-
-        for (RD2_ValidationService.ErrorRecord errorRd : errorRds) {
-            errorRd.getRecord().addError(errorRd.getFirstError());
-        }
+        
+        dmlActions.objectsWithError.addAll(errorRds);
     }
 
     /**

@@ -40,10 +40,13 @@ public class TDTM_TriggerHandler {
     
     private static Boolean defaultRecordsInserted = false;
     
+    private static Boolean useDefaultCachingStrategy = true;
+    private static Map<Schema.DescribeSobjectResult, Integer> processedRecordCountBySobjectType = new Map<Schema.DescribeSobjectResult, Integer>();
+
     public static Boolean suppressDebugAssertAfterErrorLogging = false;
 
-    public static Boolean disableTDTM = false;
-    
+    public static Boolean disableTDTM = false;  
+  
     /*******************************************************************************************************
     * @description Method to be called from each of the triggers (only one per object) that follow the TDTM 
     * design. Figures out which classes need to be called, and calls them.
@@ -102,6 +105,7 @@ public class TDTM_TriggerHandler {
         List<SObject> classesToCall = dao.getClassesToCallForObject(describeObj.getLocalName(), thisAction);
 //        UTIL_Debug.debug(LoggingLevel.WARN, '****Classes To Call for ' + describeObj.getLocalName() + ': ' + JSON.serializePretty(classesToCall));
 
+        storeCurrentProcessedRecordCount(thisAction, newList, describeObj);
         // fixup our trigger lists to deal with workflow rules
         oldList = fixupOldList(thisAction, newList, oldList, describeObj);
 
@@ -280,6 +284,26 @@ public class TDTM_TriggerHandler {
     }
     
     /*******************************************************************************************************
+    * @description Performs pending Errors and DML operations, on the records stored in the DMLWrapper that it gets as parameter.
+    * We want this method to be static so that it can be called from the future method in TDTM_Runnable.
+    * @param dmlWrapper The class that contains the records that need to have DML performed on.
+    * @return void
+    */
+    public static void processDMLWithErrors(TDTM_Runnable.DmlWrapper dmlWrapper) {
+        processDMLError(dmlWrapper);
+        processDMLAllOrNothing(dmlWrapper, true);
+    }
+
+    private static void processDMLError(TDTM_Runnable.DmlWrapper dmlWrapper) {
+        if (dmlWrapper.objectsWithError?.isEmpty()) {
+            return;
+        }
+
+        for (ErrorRecord errorRecord : dmlWrapper.objectsWithError) {
+            errorRecord.getRecord()?.addError(errorRecord.getFirstError());
+        }
+    }
+    /*******************************************************************************************************
     * @description Performs pending DML operations, on the records stored in the DMLWrapper that it gets as parameter.
     * We want this method to be static so that it can be called from the future method in TDTM_Runnable.
     * @param dmlWrapper The class that contains the records that need to have DML performed on.
@@ -314,8 +338,14 @@ public class TDTM_TriggerHandler {
         if (!dmlWrapper.objectsToUpdate.isEmpty()) {
             updateResults = UTIL_DMLService.updateRecords(dmlWrapper.objectsToUpdate, allOrNothing);
         }
-        List<Database.DeleteResult> deleteResults = Database.delete(dmlWrapper.objectsToDelete, allOrNothing);        
-        List<Database.UndeleteResult> undeleteResults = Database.undelete(dmlWrapper.objectsToUndelete, allOrNothing); //Not yet using this one, afaik, but no reason not to support it.
+        List<Database.DeleteResult> deleteResults;
+        if (!dmlWrapper.objectsToDelete.isEmpty()) {
+            deleteResults = Database.delete(dmlWrapper.objectsToDelete, allOrNothing);
+        }
+        List<Database.UndeleteResult> undeleteResults;
+        if (!dmlWrapper.objectsToUndelete.isEmpty()) {
+            undeleteResults = Database.undelete(dmlWrapper.objectsToUndelete, allOrNothing); //Not yet using this one, afaik, but no reason not to support it.
+        }
         
         //@TODO: We cannot support upsert because you cannot do upsert on SObject. You have to specify the actual type.        
         //Also, should we support Database.merge?
@@ -351,13 +381,12 @@ public class TDTM_TriggerHandler {
     */
     private static List<SObject> fixupOldList(TDTM_Runnable.Action triggerAction, List<SObject> newList, List<SObject> oldList,
         Schema.DescribeSObjectResult describeObj) {
-
         // return cached objects if we have them
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             List<SObject> listSObj = new List<SObject>();
             Map<Id, SObject> mapIdToSObj = mapDescObjToMapOldForUpdates.get(describeObj);
             if (mapIdToSObj != null) {
-
+    
                 for (SObject sobj : oldList) {
                     SObject sobjCached = mapIdToSObj.get(sobj.Id);
                     if (sobjCached != null) {
@@ -366,7 +395,7 @@ public class TDTM_TriggerHandler {
                         listSObj.add(sobj);
                     }
                 }
-
+    
                 // update oldList with the correct cached state of the objects
                 oldList = listSObj;
                 //UTIL_Debug.debug(LoggingLevel.WARN, '**** fixup oldList to : ' + oldList);
@@ -377,11 +406,35 @@ public class TDTM_TriggerHandler {
 
         // now cache objects for future Update calls
         if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-            mapDescObjToMapOldForUpdates.put(describeObj, new Map<Id, SObject>(newList));
+            if (shouldCacheOldList(describeObj, newList)) {
+                mapDescObjToMapOldForUpdates.put(describeObj, new Map<Id, SObject>(newList));
+            }
+
             //UTIL_Debug.debug(LoggingLevel.WARN, '**** cached newList: ' + newList);
         }
 
         return oldList;
     }
 
+    public static void enableOldListCachingEvaluation() {
+        useDefaultCachingStrategy = false;
+    }
+
+    public static Boolean noErrorInCurrentTransaction(Schema.DescribeSObjectResult describeObj, List<SObject> newList) {
+        return processedRecordCountBySobjectType.get(describeObj) == newList?.size();
+    }
+
+    private static Boolean shouldCacheOldList(Schema.DescribeSObjectResult describeObj, List<SObject> newList) {
+        return useDefaultCachingStrategy || noErrorInCurrentTransaction(describeObj, newList);
+    }
+
+    private static void storeCurrentProcessedRecordCount(
+        TDTM_Runnable.Action triggerAction,
+        List<SObject> newList,
+        Schema.DescribeSObjectResult describeObj
+    ) {
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            processedRecordCountBySobjectType.put(describeObj, newList?.size());
+        }
+    }
 }

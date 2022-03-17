@@ -38,6 +38,7 @@
     "recordId": "a09S000000HAfRHIA1",
     "plannedInstallments": null,
     "paymentToken": null,
+    "nextDonationDate": "2021-05-29",
     "donorType": "Contact",
     "donationValue": 0.5,
     "dayOfMonth": "29",
