@@ -65,7 +65,7 @@ public class DeceasedBatch implements Database.Batchable<sObject>, Database.Stat
     private Map<Id, Boolean> getAllMembersDeceasedById(List<Contact> scope) {
         Map<Id, Boolean> allMembersDeceasedById = new Map<Id, Boolean>();
         for (Contact householdMember : scope) {
-            if (allMembersDeceasedById.get(householdMember.AccountId) == null) {
+            if (!allMembersDeceasedById.containsKey(householdMember.AccountId)) {
                 allMembersDeceasedById.put(householdMember.AccountId, householdMember.Account.All_Members_Deceased__c);
             }
         }
@@ -92,34 +92,42 @@ public class DeceasedBatch implements Database.Batchable<sObject>, Database.Stat
 
     @TestVisible
     private List<Account> getAllMembersDeceasedUpdates(List<Contact> contacts, Map<Id, Boolean> allMembersDeceasedById) {
-        Id previousAccountId;
+        Id previousAccount;
         Boolean currentAllMembersDeceasedSetting;
-        Boolean calculatedAllMembersDeceasedSetting;
-        List<Account> allMembersDeceasedUpdates = new List<Account>();
+        Boolean calculatedDeceasedSetting;
+        List<Account> deceasedUpdates = new List<Account>();
 
         for (Contact householdMember : contacts) {
             if (!allMembersDeceasedById.containsKey(householdMember.AccountId)) {
                 continue;
             }
 
-            if (previousAccountId != householdMember.AccountId) {
-                if (currentAllMembersDeceasedSetting != calculatedAllMembersDeceasedSetting) {
-                    allMembersDeceasedUpdates.add(new Account(
-                        Id = previousAccountId,
-                        All_Members_Deceased__c = calculatedAllMembersDeceasedSetting)
-                    );
+            if (previousAccount != householdMember.AccountId) {
+                if (currentAllMembersDeceasedSetting != calculatedDeceasedSetting) {
+                    deceasedUpdates.add(newUpdatedAccount(previousAccount, calculatedDeceasedSetting));
                 }
-                previousAccountId = householdMember.AccountId;
+                previousAccount = householdMember.AccountId;
                 currentAllMembersDeceasedSetting = allMembersDeceasedById.get(householdMember.AccountId);
-                calculatedAllMembersDeceasedSetting = true;
+                calculatedDeceasedSetting = true;
             }
 
             if (householdMember.Deceased__c != true) {
-                calculatedAllMembersDeceasedSetting = false;
+                calculatedDeceasedSetting = false;
             }
         }
 
-        return allMembersDeceasedUpdates;
+        if (currentAllMembersDeceasedSetting != calculatedDeceasedSetting) {
+            deceasedUpdates.add(newUpdatedAccount(previousAccount, calculatedDeceasedSetting));
+        }
+
+        return deceasedUpdates;
+    }
+
+    private Account newUpdatedAccount(Id previousAccountId, Boolean calculatedAllMembersDeceasedSetting) {
+        return new Account(
+            Id = previousAccountId,
+            All_Members_Deceased__c = calculatedAllMembersDeceasedSetting
+        );
     }
 
     private void updateModifiedAccounts(List<Account> allMembersDeceasedUpdates) {
