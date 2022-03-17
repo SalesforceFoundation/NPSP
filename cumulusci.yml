@@ -893,14 +893,20 @@ flows:
                 task: test_data_relationships
                 ignore_failure: true
             6:
-                task: deploy_trial_translations
+                task: execute_anon
+                ## Configure RD2 to not create installments, disable household addresses and enable automatic naming
+                options:
+                    path: scripts/trial/TrialCustomSettingsDefaults.cls
+                    apex: updateCustomSettingsDefaults();
             7:
-                task: deploy_reports
+                task: deploy_trial_translations
             8:
-                flow: enable_rd2
+                task: deploy_reports
             9:
-                flow: enable_gift_entry
+                flow: enable_rd2
             10:
+                flow: enable_gift_entry
+            11:
                 task: update_admin_profile
 
     config_trial:
