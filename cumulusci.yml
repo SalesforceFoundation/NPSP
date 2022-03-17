@@ -890,14 +890,16 @@ flows:
             4:
                 flow: config_trial
             5:
-                flow: enable_rd2
+                task: test_data_relationships
             6:
-                flow: enable_gift_entry
-            7:
                 task: deploy_trial_translations
-            8:
+            7:
                 task: deploy_reports
+            8:
+                flow: enable_rd2
             9:
+                flow: enable_gift_entry
+            10:
                 task: update_admin_profile
 
     config_trial:
