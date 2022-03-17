@@ -34,6 +34,20 @@
 * @description Class for list donation history by credit type.
 */
 public with sharing class DonationHistoryController {
+
+    @TestVisible
+    private static DonationHistoryService historyService {
+        get {
+            if (historyService == null) {
+                historyService = new DonationHistoryService();
+            }
+            return historyService;
+        }
+
+        set {
+            historyService = value;
+        }
+    }
     /** 
     * @author Salesforce.org
     * @date 2021
@@ -79,14 +93,14 @@ public with sharing class DonationHistoryController {
     @AuraEnabled(cacheable=true)
     public static DonationHistoryAppView getDonationHistory(Id contactId, Integer offset, String filter) {
         contactId = (contactId == null ? getContactIdByUserId() : contactId );
-        DonationHistoryService service = new DonationHistoryService(contactId, offset, filter);
+        DonationHistoryService service = new DonationHistoryService();
         try {
-            Boolean paymentsEnabled = service.checkIfPaymentsAreEnabled();
+            Boolean paymentsEnabled = historyService.checkIfPaymentsAreEnabled();
             DonationHistoryAppView donationHistories = new DonationHistoryAppView();
-            donationHistories.donations = buildHistoryFromOpportunities(service.getDonationHistory(), contactId, paymentsEnabled);
-            donationHistories.totalNumberOfRecords = service.getTotalNumberOfRecords();
+            donationHistories.donations = buildHistoryFromOpportunities(historyService.getDonationHistory(contactId, offset, filter), contactId, paymentsEnabled);
+            donationHistories.totalNumberOfRecords = historyService.getTotalNumberOfRecords();
             donationHistories.isPaymentsEnabled = paymentsEnabled;
-            donationHistories.paymentMethodLabel = service.getPaymentMethodLabel();
+            donationHistories.paymentMethodLabel = historyService.getPaymentMethodLabel();
             return donationHistories;
         } catch(AuraHandledException ex) {
             throw new AuraHandledException(ex.getMessage());
@@ -101,8 +115,9 @@ public with sharing class DonationHistoryController {
     @AuraEnabled(cacheable=true)
     public static List<String> getYearsWithDonations(Id contactId) {
         try {
+
             contactId = (contactId == null ? getContactIdByUserId() : contactId );
-            return new DonationHistoryService(contactId).getYearsWithDonationsForContact();
+            return historyService.getYearsWithDonationsForContact(contactId);
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }

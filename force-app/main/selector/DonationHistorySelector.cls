@@ -100,18 +100,18 @@ public inherited sharing class DonationHistorySelector {
      * @param contactId Id the contact id.
      * @returns List<AggregateResult> Selecting the Calenday_Year of the Opportunity.CloseDate
      */
-    public List<AggregateResult> getYearsWithDonationForContact(Id contactId) {
-        return [SELECT   Calendar_Year(CloseDate) closeYear
+    public List<String> getYearsWithDonationForContact(Id contactId) {
+        return convertAggregateResultListToStringList([SELECT   Calendar_Year(CloseDate) closeYear
                 FROM     Opportunity 
                 WHERE    IsWon = true 
                 AND      ContactId =:contactId 
                 GROUP BY Calendar_YEAR(CloseDate)
-                ORDER BY Calendar_YEAR(CloseDate) DESC];
+                ORDER BY Calendar_YEAR(CloseDate) DESC]);
     }
-    
+
     /** 
-    * @description method to return total number of record
-    */
+     * @description method to return total number of record
+     */
     public Integer getTotalNumberOfRecords( Id contactId ) {
         Integer totalRecords = [SELECT COUNT()
                                 FROM Opportunity
@@ -136,4 +136,16 @@ public inherited sharing class DonationHistorySelector {
         return totalRecords;
     }
 
+    /**
+     * @description converts a List<AggregateResult> in a List<String> .
+     * @param result The list with with the aggregate results from the database.
+     * @return List<String> the list of the values in the expr0 represented as String.
+     */ 
+    private List<String> convertAggregateResultListToStringList(List<AggregateResult> results) {
+        List<String> aggregateResultsAsStrings = new List<String>();
+        for(AggregateResult result : results) {
+            aggregateResultsAsStrings.add(String.valueOf(result.get('closeYear')));
+        }
+        return aggregateResultsAsStrings;
+    }
 }

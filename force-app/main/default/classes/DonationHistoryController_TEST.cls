@@ -35,65 +35,7 @@
 */
 @IsTest
 public class DonationHistoryController_TEST {
-    /** 
-    * @author Salesforce.org
-    * @date 2021
-    * @description Method to generate test data.
-    */
-    @TestSetup
-    static void makeData() {
-        Date myDateTime = Date.newInstance(2020, 2, 2);
-        Date dateTimeInPast = Date.newInstance(2019, 2, 2);
-        UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, 1, 3, 1);
-        Account accSrc = UTIL_UnitTestData_TEST.listAccT[0];
-        list<Contact> listConSrc = UTIL_UnitTestData_TEST.listConT;
-
-        /** 
-         * opportunityHardCreditOfContact0 its a hard credit for contact 0. opportunityForContact1, anotherOpportunityForContact1 are related to the same account  which contact 0 is
-         * related but they should not appear in the query as they are not hard credit for contact0. They could be soft credit for contact 0 but the entire configuration is not needed
-         * for this test purpose.
-        */
-        Opportunity opportunityHardCreditOfContact0 = new Opportunity(
-            Name='HardCredit1', 
-            AccountId=accSrc.Id, 
-            Primary_Contact__c=listConSrc[0].Id, 
-            Amount=400, 
-            StageName='Closed Won', 
-            CloseDate=myDateTime
-        );
-
-        Opportunity opportunityAnotherHardCreditOfContact0 = new Opportunity(
-            Name='HardCredit2', 
-            AccountId=accSrc.Id, 
-            Primary_Contact__c=listConSrc[0].Id, 
-            Amount=400, 
-            StageName='Closed Won', 
-            CloseDate=dateTimeInPast
-        );
-
-        Opportunity opportunityForContact1 = new Opportunity(
-            Name='SoftCredit1', 
-            AccountId=accSrc.Id, 
-            Primary_Contact__c=listConSrc[1].Id, 
-            Amount=200, 
-            StageName='Closed Won', 
-            CloseDate=myDateTime
-        );
-
-
-        Opportunity anotherOpportunityForContact1 = new Opportunity(
-            Name='SoftCredit1', 
-            AccountId=accSrc.Id, 
-            Primary_Contact__c=listConSrc[1].Id, 
-            Amount=200, 
-            StageName='Closed Won', 
-            CloseDate=dateTimeInPast
-        );
-        
-        List<Opportunity> recordsOpp = new List<Opportunity> {opportunityHardCreditOfContact0, opportunityAnotherHardCreditOfContact0, opportunityForContact1, anotherOpportunityForContact1};
-
-        insert recordsOpp;
-    }
+    
 
     /**
     * @author Salesforce.org
@@ -102,35 +44,42 @@ public class DonationHistoryController_TEST {
     */
     @IsTest
     private static void shouldReturnExpectedDonationHistoryResult() {
-        Contact testContact = findContactByFirstname('TestFirstName10');
-        
+        Date myDateTime = Date.newInstance(2020, 2, 2);
+        Date dateTimeInPast = Date.newInstance(2019, 2, 2);
+
+        IdGen gen = new IdGen();
+        Opportunity opportunityHardCreditOfContact0 = new Opportunity(
+            Name = 'HardCredit1', 
+            AccountId = gen.generate(Account.SObjectType),
+            Primary_Contact__c= gen.generate(Contact.SObjectType), 
+            Amount = 400, 
+            StageName = 'Closed Won', 
+            CloseDate = myDateTime
+        );
+
+        Opportunity opportunityAnotherHardCreditOfContact0 = new Opportunity(
+            Name = 'HardCredit2', 
+            AccountId = gen.generate(Account.SObjectType), 
+            Primary_Contact__c = gen.generate(Contact.SObjectType), 
+            Amount = 400, 
+            StageName = 'Closed Won', 
+            CloseDate = dateTimeInPast
+        );
+
+        List<SObject> records = new List<SObject> {opportunityHardCreditOfContact0, opportunityAnotherHardCreditOfContact0};
+        DonationHistorySelectorMock mock = new DonationHistorySelectorMock(records, null, null);
+        DonationHistoryService service = new DonationHistoryService();
+        service.selector = (DonationHistorySelector) Test.createStub(DonationHistorySelector.class, mock);
+
+        DonationHistoryController.historyService = service;
         Test.startTest();
 
         DonationHistoryController.DonationHistoryAppView donationHistory = 
-        DonationHistoryController.getDonationHistory(testContact.Id, 0, 'lifetime');
-
+            DonationHistoryController.getDonationHistory(new IdGen().generate(Contact.SObjectType), 0, 'lifetime');
         Test.stopTest();
 
+        System.debug(donationHistory);
         System.assertEquals(2, donationHistory.donations.size(), 'Should return only 2 record');
-    }
-
-    /**
-    * @author Salesforce.org
-    * @date 2021
-    * @description Method to test case in which data should not be returned.
-    */
-    @IsTest
-    private static void shouldNotReturnDonationHistory() {
-        Contact testContact = findContactByFirstname('TestFirstName12');
-        
-        Test.startTest();
-
-        DonationHistoryController.DonationHistoryAppView donationHistory = 
-        DonationHistoryController.getDonationHistory(testContact.Id, 0, 'lifetime');
-
-        Test.stopTest();
-        System.assertEquals(0, donationHistory.donations.size(), 'Should not return records');
-        System.assertEquals(0, donationHistory.totalNumberOfRecords, 'Should return 0 number of records');
     }
 
     /**
@@ -141,14 +90,19 @@ public class DonationHistoryController_TEST {
     @IsTest
     private static void shouldThrowAccessException() {
         User u = UTIL_UnitTestData_TEST.createUser('Minimum Access - Salesforce');
-        Contact testContact = findContactByFirstname('TestFirstName10');
+
         String message = '';
         try{
+            DonationHistorySelectorMock mock = new DonationHistorySelectorMock(null, null, null);
+            DonationHistoryService service = new DonationHistoryService();
+            service.selector = (DonationHistorySelector) Test.createStub(DonationHistorySelector.class, mock);
+
+            DonationHistoryController.historyService = service;
             Test.startTest();
 
             System.runAs(u){
                 DonationHistoryController.DonationHistoryAppView donationHistory = 
-                DonationHistoryController.getDonationHistory(testContact.Id, 0, 'lifetime'); 
+                DonationHistoryController.getDonationHistory(new IdGen().generate(Contact.getSObjectType()), 0, 'lifetime'); 
             }
 	        Test.stopTest();
 
@@ -157,41 +111,98 @@ public class DonationHistoryController_TEST {
         }
         System.assertEquals('Insufficient Permissions', message, 'should not have access to donationHistory');
     }
-
-
-    @IsTest
-    private static void shouldReturnYearsForFilter() {
-        Contact thecontact = findContactByFirstname('TestFirstName11');
-       
-        List<String> donationsYears = DonationHistoryController.getYearsWithDonations(thecontact.id);
-        System.assertNotEquals(null, donationsYears, 'donationsYears should not be null');
-        System.assertEquals(2, donationsYears.size(), 'donationsYears should have 2 elements');
-        System.assertEquals('2020', donationsYears[0], 'donationsYears should be in descendent order');
-
-    }
     
     @IsTest
     private static void shouldReturnOneElementFor2019(){
         
-        Contact testContact =findContactByFirstname('TestFirstName10');        
+        Date myDateTime = Date.newInstance(2020, 2, 2);
+        Date dateTimeInPast = Date.newInstance(2019, 2, 2);
+        IdGen gen = new IdGen();
+
+        Opportunity opportunityHardCreditOfContact0 = new Opportunity(
+            Name = 'HardCredit1', 
+            AccountId = gen.generate(Account.SObjectType), 
+            Primary_Contact__c = gen.generate(Contact.SObjectType), 
+            Amount = 400, 
+            StageName = 'Closed Won', 
+            CloseDate = myDateTime
+        );
+
+        List<SObject> records = new List<SObject> {opportunityHardCreditOfContact0};
+        DonationHistorySelectorMock mock = new DonationHistorySelectorMock(records, null, null);
+        DonationHistoryService service = new DonationHistoryService();
+        service.selector = (DonationHistorySelector) Test.createStub(DonationHistorySelector.class, mock);
+
+        DonationHistoryController.historyService = service;       
        
         Test.startTest();
-        DonationHistoryController.DonationHistoryAppView donationHistory = DonationHistoryController.getDonationHistory(testContact.Id, 0, '2019');
+        DonationHistoryController.DonationHistoryAppView donationHistory = DonationHistoryController.getDonationHistory(new IdGen().generate(Contact.SObjectType), 0, '2019');
         Test.stopTest();
 
         System.assertNotEquals(null, donationHistory, 'Donation History should not be empty');
         System.assertEquals(1, donationHistory.donations.size(), 'donationHistory should contain only one element');
     }
 
-    private static Contact findContactByFirstName(String firstName) {
-        for (Contact c : [SELECT ID, FirstName
-                          FROM Contact]) {
-            if (c.Firstname == firstName) {
-                return c;
-            }
-        }
-        return null;
-    }
-    
+    @isTest
+    private static void shouldReturnYearsForFilter(){
+        List<String> years = new List<String> {'2020', '2019'};
+        DonationHistorySelectorMock mock = new DonationHistorySelectorMock(null, null, years);
+        DonationHistoryService service = new DonationHistoryService();
+        service.selector = (DonationHistorySelector) Test.createStub(DonationHistorySelector.class, mock);
+        DonationHistoryController.historyService = service;
 
+        List<String> donationsYears = DonationHistoryController.getYearsWithDonations(new IdGen().generate(Contact.SObjectType));
+        System.assertNotEquals(null, donationsYears, 'donationsYears should not be null');
+        System.assertEquals(2, donationsYears.size(), 'donationsYears should have 2 elements');
+        System.assertEquals('2020', donationsYears[0], 'donationsYears should be in descendent order');
+    }
+
+    
+    public class DonationHistorySelectorMock implements System.StubProvider{
+        private SObject[] objectsToReturn;
+        private Integer totalRecords;
+        private List<String> yearsWithDonation;
+
+
+        public DonationHistorySelectorMock(SObject[] objectToReturn, Integer totalRecords, List<String> yearsWithDonation) {
+            this.objectsToReturn = objectToReturn;
+            this.totalRecords = totalRecords;
+            this.yearsWithDonation = yearsWithDonation;
+        }
+
+        public Object handleMethodCall(Object stubbedObject, String stubbedMethodName, 
+        Type returnType, List<Type> listOfParamTypes, List<String> listOfParamNames, 
+        List<Object> listOfArgs) {
+
+            if (stubbedMethodName.equals('getYearsWithDonationForContact')) {
+                return yearsWithDonation;
+            }
+
+            if (stubbedMethodName.equals('getTotalNumberOfRecords')) {
+                if (totalRecords != null) {
+                    return totalRecords;
+                }
+                return objectsToReturn.size();
+            }
+            return objectsToReturn;
+        }
+
+    }
+
+    public class IdGen {
+        private  Integer fakeIdCount = 0;
+        private  final String ID_PATTERN = '000000000000';
+
+        /**
+         * Generate a fake Salesforce Id for the given SObjectType
+         */
+        public Id generate(Schema.SObjectType sobjectType) {
+            String keyPrefix = sobjectType.getDescribe().getKeyPrefix();
+            fakeIdCount++;
+
+            String fakeIdPrefix = ID_PATTERN.substring(0, 12 - fakeIdCount.format().length());
+
+            return Id.valueOf(keyPrefix + fakeIdPrefix + fakeIdCount);
+        }
+    }
 }
