@@ -7474,14 +7474,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>This form contains fields that can&apos;t be found. Please check with your administrator.</value>
     </labels>
     <labels>
-        <fullName>geRecurringScheduleInformation</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Header for Gift Schedule modal</shortDescription>
-        <value>Recurring Schedule Information</value>
-    </labels>
-    <labels>
         <fullName>geAddSchedule</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
