@@ -675,7 +675,7 @@ export default class rd2EntryForm extends LightningElement {
      * @description Clears the error notification
      */
     clearError() {
-        this.error = {};
+        this.setError({});
     }
 
     /***
@@ -684,17 +684,17 @@ export default class rd2EntryForm extends LightningElement {
      */
     handleSaveError(error) {
         try {
-            this.error = constructErrorMessage(error);
+            const constructedError = constructErrorMessage(error);
             // Transform the error to a user-friendly error and log it when
             // the RD insert failed but the Elevate commitment has been created
             if (isNull(this.rd2State.recordId) && !isEmpty(this.getCommitmentId())) {
-                this.error.detail = format(this.customLabels.commitmentFailedMessage, [
+                constructedError.detail = format(this.customLabels.commitmentFailedMessage, [
                     this.getCommitmentId(),
                     this.error.detail,
                 ]);
-
                 logError({ recordId: this.rd2State.recordId, errorMessage: this.error.detail }).catch(() => {});
             }
+            this.setError(constructedError);
         } catch (ex) {
             console.error('Unhandled save error', ex);
         }
@@ -707,8 +707,12 @@ export default class rd2EntryForm extends LightningElement {
      * @description Handle error and disable the Save button
      */
     handleError(error) {
-        this.error = error && error.detail ? error : constructErrorMessage(error);
+        this.setError(error);
         this.disableSaveButton();
+    }
+
+    setError(error) {
+        this.error = error;
     }
 
     disableSaveButton() {
@@ -717,15 +721,6 @@ export default class rd2EntryForm extends LightningElement {
 
     enableSaveButton() {
         this.isSaveButtonDisabled = false;
-    }
-
-    /**
-     * @description Scroll to error if the error is rendered
-     */
-    renderedCallback() {
-        if (this.error && this.error.detail && this.isLoading === false) {
-            this.template.querySelector(".error-container").scrollIntoView(true);
-        }
     }
 
     /**
@@ -808,6 +803,10 @@ export default class rd2EntryForm extends LightningElement {
         });
         const field = this.template.querySelector('lightning-input-field[data-id="paymentMethod"]');
         field.reset();
+    }
+
+    get errorContainer() {
+        return this.template.querySelector(".error-container");
     }
 
     get headerLabel() {
