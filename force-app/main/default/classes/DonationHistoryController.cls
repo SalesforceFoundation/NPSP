@@ -35,56 +35,117 @@
 */
 public with sharing class DonationHistoryController {
 
+    @TestVisible
+    private static DonationHistoryService historyService {
+        get {
+            if (historyService == null) {
+                historyService = new DonationHistoryService();
+            }
+            return historyService;
+        }
+
+        set {
+            historyService = value;
+        }
+    }
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description Donation History App view inner class.
+    */
+    public class DonationHistoryAppView {
+        @AuraEnabled public List<DonationHistoryView> donations;
+        @AuraEnabled public Boolean isPaymentsEnabled;
+        @AuraEnabled public String paymentMethodLabel;
+        @AuraEnabled public Integer totalNumberOfRecords;
+    }
+
+    private static final String EMPTY_PAYMENT_METHOD = '-';
+    
     /** 
     * @author Salesforce.org
     * @date 2021
     * @description Donation History inner class.
     */
-    public class DonationHistoryView{
+    public class DonationHistoryView {
         @AuraEnabled public Id id;
         @AuraEnabled public String name;
-        @AuraEnabled public Boolean isPrimary;
         @AuraEnabled public Date closeDate;
-        @AuraEnabled public String role;
         @AuraEnabled public String creditType;
         @AuraEnabled public Decimal amount;
         @AuraEnabled public String paymentMethod;
-        public DonationHistoryView(OpportunityContactRole ocr, String type){
+        public DonationHistoryView(Opportunity ocr, String paymentMethod) {
             this.id = ocr.Id;
-            this.isPrimary = ocr.isPrimary;
-            this.closeDate = ocr.Opportunity.CloseDate;
-            this.role = ocr.Role;
-            this.amount = ocr.Opportunity.Amount;
-            this.creditType = type;
-            this.paymentMethod = 'Cash';
+            this.name = ocr.Name;
+            this.closeDate = ocr.CloseDate;
+            this.amount = ocr.Amount;
+            this.creditType = System.Label.CRLP_HardCredit;
+            this.paymentMethod = paymentMethod;
         }
     }
 
+    
     /** 
     * @author Salesforce.org
     * @date 2021
     * @description method to return Donation History list.
     */
     @AuraEnabled(cacheable=true)
-    public static List<DonationHistoryView> getDonationHistory(Id contactId) {
-        DonationHistoryService service = new DonationHistoryService(contactId);
+    public static DonationHistoryAppView getDonationHistory(Id contactId, Integer offset, String filter) {
+        contactId = (contactId == null ? getContactIdByUserId() : contactId );
+        DonationHistoryService service = new DonationHistoryService();
         try {
-            List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
-            service.buildDonationHistory();
-            donationHistories.addAll(buildHistoryFromOCRs(service.getHardCredits(), System.Label.CRLP_HardCredit));
-            donationHistories.addAll(buildHistoryFromOCRs(service.getSoftCredits(), System.Label.CRLP_SoftCredit));
-            donationHistories.addAll(buildHistoryFromOCRs(service.getPartialSoftCredits(), service.getSoftCreditLabel()));
+            Boolean paymentsEnabled = historyService.checkIfPaymentsAreEnabled();
+            DonationHistoryAppView donationHistories = new DonationHistoryAppView();
+            donationHistories.donations = buildHistoryFromOpportunities(historyService.getDonationHistory(contactId, offset, filter), contactId, paymentsEnabled);
+            donationHistories.totalNumberOfRecords = historyService.getTotalNumberOfRecords(contactId, filter);
+            donationHistories.isPaymentsEnabled = paymentsEnabled;
+            donationHistories.paymentMethodLabel = historyService.getPaymentMethodLabel();
             return donationHistories;
         } catch(AuraHandledException ex) {
             throw new AuraHandledException(ex.getMessage());
         }
     }
 
-    private static List<DonationHistoryView> buildHistoryFromOCRs(List<OpportunityContactRole> contactRoles, String type) {
+    /**
+     * @description returns the years when the contact made at least 1 donation
+     * @param contactId Id of the contact
+     * @return List<String>
+     */
+    @AuraEnabled(cacheable=true)
+    public static List<String> getYearsWithDonations(Id contactId) {
+        try {
+
+            contactId = (contactId == null ? getContactIdByUserId() : contactId );
+            return historyService.getYearsWithDonationsForContact(contactId);
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description method creates list of DonationHistoryView to return to LWC
+    * @return List<DonationHistoryView>
+    */
+    private static List<DonationHistoryView> buildHistoryFromOpportunities(List<Opportunity> opportunities, Id contactId, Boolean includePaymentMethod) {
         List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
-        for(OpportunityContactRole role : contactRoles) {
-            donationHistories.add(new DonationHistoryView(role, type));
+        for (Opportunity opp : opportunities) {
+            if(opp.npe01__OppPayment__r != null && opp.npe01__OppPayment__r.size() > 0){
+                String paymentMethod = includePaymentMethod
+                	? opp.npe01__OppPayment__r.get(0).npe01__Payment_Method__c
+                	: EMPTY_PAYMENT_METHOD;
+            	donationHistories.add(new DonationHistoryView(opp, paymentMethod));
+            } else {
+                donationHistories.add(new DonationHistoryView(opp, EMPTY_PAYMENT_METHOD));
+            }
         }
         return donationHistories;
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static Id getContactIdByUserId(){
+        return USER_UserService.getContactIdByUserId();
     }
 }

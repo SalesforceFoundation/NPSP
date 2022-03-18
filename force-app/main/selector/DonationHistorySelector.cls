@@ -33,43 +33,119 @@
 * @description Donation History Selector class.
 */
 public inherited sharing class DonationHistorySelector {
-    /** 
-    * @author Salesforce.org
-    * @date 2021
-    * @description method to return OpportunityContactRole data.
+    /**
+    * @description method to return Opportunity and Payment data.
     */
-    public List<OpportunityContactRole> getWonOpportunityContactRolesByContactId(Id contactId) {
+  public List<Opportunity> getWonOpportunitiesByContactId( Id contactId, Integer offset ) {
         return [
             SELECT Id, 
-                Opportunity.CloseDate, 
-                Opportunity.Amount, 
-                Contact.Email, 
-                Contact.Name, 
-                Role, 
-                IsPrimary
-            FROM OpportunityContactRole 
-            WHERE Opportunity.IsWon = true 
-            AND ContactId =:contactId 
+                Name, 
+                CloseDate, 
+                Amount, 
+                Primary_Contact__r.Email, 
+                Primary_Contact__r.Name,
+                (
+                    SELECT npe01__Payment_Method__c,
+                        npe01__Paid__c
+                    FROM npe01__OppPayment__r 
+                    WHERE npe01__Paid__c = true
+                    ORDER BY npe01__Payment_Date__c
+                    LIMIT 1
+                )
+            FROM Opportunity
+            WHERE IsWon = true 
+            AND Primary_Contact__r.Id =:contactId 
             WITH SECURITY_ENFORCED
-            ORDER BY Opportunity.CloseDate 
-            DESC LIMIT 2000
+            ORDER BY CloseDate 
+            DESC LIMIT 50
+            OFFSET :offset
         ];
     }
-    /** 
-    * @author Salesforce.org
-    * @date 2021
-    * @description method to return Partial_Soft_Credit__c data.
-    */
-    public List<Partial_Soft_Credit__c> getPartialSoftCredits(Set<Id> opportunityContactRoleIds) {
+
+    /**
+     * @description Returns the OpportunityContactRole won in a specific year.
+     * @param contactId the contact id.
+     * @param year Integer filter of year.
+     * @return List<OpportunityContactRole>
+     */
+    public List<Opportunity> getWonOpportunitiesByContactIdAndYear(Id contactId, Integer offset, Integer year) {
         return [
-            SELECT 
-                Id, 
-                Amount__c, 
-                Role_Name__c,
-                Contact_Role_ID__c 
-            FROM Partial_Soft_Credit__c 
-            WHERE Contact_Role_ID__c IN :opportunityContactRoleIds
+            SELECT  Id, 
+                    Name, 
+                    CloseDate, 
+                    Amount, 
+                    Primary_Contact__r.Email, 
+                    Primary_Contact__r.Name,
+                    (
+                        SELECT npe01__Payment_Method__c,
+                            npe01__Paid__c
+                        FROM npe01__OppPayment__r 
+                        WHERE npe01__Paid__c = true
+                        ORDER BY npe01__Payment_Date__c
+                        LIMIT 1
+                    ) 
+            FROM Opportunity
+            WHERE IsWon = true 
+                AND Primary_Contact__r.Id =:contactId 
+                AND Calendar_Year(CloseDate) = :year
             WITH SECURITY_ENFORCED
+            ORDER BY Opportunity.CloseDate 
+            DESC LIMIT 50
+            OFFSET :offset
         ];
-    }   
+    }
+
+    /**
+     * @description Returns the years in which the contact has made at least 1 donation.
+     * @param contactId Id the contact id.
+     * @returns List<AggregateResult> Selecting the Calenday_Year of the Opportunity.CloseDate
+     */
+    public List<String> getYearsWithDonationForContact(Id contactId) {
+        return convertAggregateResultListToStringList([SELECT   Calendar_Year(CloseDate) closeYear
+                FROM     Opportunity 
+                WHERE    IsWon = true 
+                AND      ContactId =:contactId 
+                GROUP BY Calendar_YEAR(CloseDate)
+                ORDER BY Calendar_YEAR(CloseDate) DESC]);
+    }
+
+    /** 
+     * @description method to return total number of record
+     */
+    public Integer getTotalNumberOfRecords( Id contactId ) {
+        Integer totalRecords = [SELECT COUNT()
+                                FROM Opportunity
+                                WHERE IsWon = true
+                                AND Primary_Contact__r.Id =:contactId
+                                WITH SECURITY_ENFORCED];
+        return totalRecords;
+    }
+
+
+
+    /** 
+    * @description method to return total number of record
+    */
+    public Integer getTotalNumberOfRecordsWithYear( Id contactId, Integer year ) {
+        Integer totalRecords = [SELECT COUNT()
+                                FROM Opportunity
+                                WHERE IsWon = true
+                                AND Primary_Contact__r.Id =:contactId
+                                AND Calendar_Year(CloseDate) = :year
+                                WITH SECURITY_ENFORCED];
+        return totalRecords;
+    }
+
+    /**
+     * @description converts a List<AggregateResult> in a List<String> .
+     * @param result The list with with the aggregate results from the database.
+     * @return List<String> the list of the values in the expr0 represented as String.
+     */ 
+    private List<String> convertAggregateResultListToStringList(List<AggregateResult> results) {
+        List<String> aggregateResultsAsStrings = new List<String>();
+        for(AggregateResult result : results) {
+            aggregateResultsAsStrings.add(String.valueOf(result.get('closeYear')));
+        }
+        return aggregateResultsAsStrings;
+    }
 }
