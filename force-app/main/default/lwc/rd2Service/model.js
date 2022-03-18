@@ -13,6 +13,7 @@ import {
     SET_DATE_ESTABLISHED,
     SET_ERROR,
     SET_PERIOD_TYPE,
+    SET_RECORD_NAME,
     SET_RECURRING_TYPE,
     SET_RECURRING_PERIOD,
     SET_RECURRING_FREQUENCY,
@@ -24,7 +25,7 @@ import {
     INITIAL_VIEW_LOAD,
     CUSTOM_FIELD_CHANGE,
     SET_PAYMENT_TOKEN,
-    COMMITMENT_RESPONSE
+    COMMITMENT_RESPONSE,
 } from "./actions";
 
 import {
@@ -97,7 +98,6 @@ const DEFAULT_INITIAL_STATE = {
     //Permissions
     InstallmentPeriodPermissions: {},
     InstallmentFrequencyPermissions: {},
-
 };
 
 const isRecurringTypeChanged = (state) => {
@@ -157,7 +157,7 @@ const getCardFields = (cardData) => {
         cardLastFour: last4,
         cardExpirationMonth: expirationMonth,
         cardExpirationYear: expirationYear,
-        achLastFour: null
+        achLastFour: null,
     };
 };
 
@@ -167,9 +167,9 @@ const getAchFields = (achData) => {
         cardLastFour: null,
         cardExpirationMonth: null,
         cardExpirationYear: null,
-        achLastFour: last4
+        achLastFour: last4,
     };
-}
+};
 
 const handleCommitmentResponse = (state, payload) => {
     const { cardData, achData } = payload;
@@ -193,7 +193,6 @@ const handleCommitmentResponse = (state, payload) => {
 
 const handleRecordSaved = (state, payload) => {
     const { recordId, recordName } = payload;
-    console.log({recordId, recordName})
     return {
         ...state,
         recordId,
@@ -210,19 +209,19 @@ const setAccountId = (state, accountId) => {
 
 const setCustomField = (state, { fieldName, value }) => {
     const { customFieldSets } = state;
-    const updatedFieldSets = customFieldSets.map(field => {
+    const updatedFieldSets = customFieldSets.map((field) => {
         if (field.apiName === fieldName) {
             return {
                 ...field,
-                value
-            }
+                value,
+            };
         } else {
             return field;
         }
     });
     return {
         ...state,
-       customFieldSets: updatedFieldSets
+        customFieldSets: updatedFieldSets,
     };
 };
 
@@ -295,7 +294,7 @@ const setPeriodType = (state, periodType) => {
 const setPaymentToken = (state, paymentToken) => {
     return {
         ...state,
-        paymentToken
+        paymentToken,
     };
 };
 
@@ -307,6 +306,13 @@ const setPlannedInstallments = (state, plannedInstallments) => {
     return {
         ...newState,
         changeType: getChangeType(newState),
+    };
+};
+
+const setRecordName = (state, recordName) => {
+    return {
+        ...state,
+        recordName,
     };
 };
 
@@ -345,14 +351,14 @@ const setRecurringType = (state, recurringType) => {
 };
 
 const setStatus = (state, recurringStatus) => {
-   return {
+    return {
         ...state,
         recurringStatus,
     };
 };
 
 const setStatusReason = (state, statusReason) => {
-   return {
+    return {
         ...state,
         statusReason,
     };
@@ -449,6 +455,8 @@ export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
             return setPaymentToken(state, action.payload);
         case SET_PLANNED_INSTALLMENTS:
             return setPlannedInstallments(state, action.payload);
+        case SET_RECORD_NAME:
+            return setRecordName(state, action.payload);
         case SET_RECURRING_PERIOD:
             return setRecurringPeriod(state, action.payload);
         case SET_RECURRING_FREQUENCY:

@@ -187,7 +187,66 @@ describe("c-rd2-entry-form", () => {
             await flushPromises();
 
             expect(controller.customFieldsSection()).toBeTruthy();
-            expect(controller.customFields()).toHaveLength(1);
+            const customFields = controller.customFields();
+            expect(customFields).toHaveLength(1);
+            expect(customFields[0].fieldName).toBe("Custom1__c");
+            expect(customFields[0].required).toBe(false);
+        });
+
+        it("when auto naming enabled, allows user to update name field", async () => {
+            getInitialView.mockResolvedValue({
+                ...initialViewResponse,
+                isAutoNamingEnabled: false,
+            });
+
+            saveRecurringDonation.mockResolvedValue({
+                success: true,
+                recordId: FAKE_ACH_RD2_ID,
+                recordName: "Some Test Name",
+            });
+
+            const element = createRd2EntryForm();
+            const controller = new RD2FormController(element);
+            await flushPromises();
+            await setupWireMocks();
+
+            const nameField = controller.recordName();
+            expect(nameField).toBeTruthy();
+            nameField.changeValue("Some Test Name");
+            controller.contactLookup().changeValue("001fakeContactId");
+            controller.amount().changeValue(1.0);
+            controller.paymentMethod().changeValue("Check");
+
+            controller.saveButton().click();
+
+            expect(saveRecurringDonation).toHaveBeenCalledWith({
+                saveRequest: {
+                    achLastFour: null,
+                    cardExpirationMonth: null,
+                    cardExpirationYear: null,
+                    cardLastFour: null,
+                    campaignId: null,
+                    commitmentId: null,
+                    currencyIsoCode: null,
+                    dayOfMonth: "15",
+                    paymentMethod: "Check",
+                    paymentToken: null,
+                    recordId: null,
+                    recordName: "Some Test Name",
+                    recurringFrequency: 1,
+                    recurringType: "Open",
+                    recurringStatus: null,
+                    startDate: "2021-02-03",
+                    donationValue: 1,
+                    contactId: "001fakeContactId",
+                    accountId: null,
+                    dateEstablished: "2021-02-03",
+                    recurringPeriod: "Monthly",
+                    plannedInstallments: null,
+                    statusReason: null,
+                    customFieldValues: {},
+                },
+            });
         });
 
         it("when multicurrency enabled, displays currency field", async () => {

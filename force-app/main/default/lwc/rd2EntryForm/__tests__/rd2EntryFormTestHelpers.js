@@ -129,6 +129,11 @@ export class RD2FormController {
         return new RD2FormField(field);
     }
 
+    recordName() {
+        const field = this.element.shadowRoot.querySelector('lightning-input-field[data-id="recordName"]');
+        return new RD2FormField(field);
+    }
+
     last4() {
         const widget = this.elevateWidget();
         return widget.shadowRoot.querySelector('lightning-formatted-text[data-qa-locator="text Last Four Digits"]');

@@ -294,7 +294,7 @@ export default class rd2EntryForm extends LightningElement {
     handleNameChange(event) {
         this.perform({
             type: ACTIONS.SET_RECORD_NAME,
-            payload: event.detail,
+            payload: event.target.value,
         });
     }
 
