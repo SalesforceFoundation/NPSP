@@ -6262,6 +6262,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Update</value>
     </labels>
     <labels>
+        <fullName>commonDate</fullName>
+        <categories>Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Date</shortDescription>
+        <value>Date</value>
+    </labels>
+    <labels>
         <fullName>commonViewAll</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -7632,6 +7640,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Link label of checklist item Go Further in Get Started</shortDescription>
         <value>Discover more about NPSP in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>donationHistoryFilterSelectAYear</fullName>
+        <categories>Donors</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>label for select a year in donations filter</shortDescription>
+        <value>Select a year</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemGoFurtherTitle</fullName>
