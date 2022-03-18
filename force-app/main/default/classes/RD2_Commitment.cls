@@ -42,8 +42,9 @@ public class RD2_Commitment {
     String statusUpdateReason;
 
     public RD2_Commitment(npe03__Recurring_Donation__c rd) {
+      RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
         id = rd.CommitmentId__c;
-        status = rd.Status__c;
+        status = rdRecord.getState();
         statusUpdateReason = rd.ClosedReason__c;
     }
 }
