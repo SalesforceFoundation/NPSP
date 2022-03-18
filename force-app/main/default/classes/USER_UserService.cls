@@ -256,6 +256,21 @@ public with sharing class USER_UserService {
         return ref;
     }
 
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description method to return contact related to current user.
+    */
+    public static Id getContactIdByUserId() {
+        Id userId = UserInfo.getUserId();
+        User userQueried = [SELECT ContactId
+                                FROM User
+                                WHERE Id =: userId
+                                WITH SECURITY_ENFORCED
+                                LIMIT 1];
+        return userQueried.ContactId;
+    }
+    
     /*********************************************************************************************************
     * @description Returns true if the User is currently running the Lightning Experience UI
     * @return True or False
