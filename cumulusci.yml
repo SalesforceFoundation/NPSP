@@ -885,8 +885,6 @@ flows:
                 flow: install_2gp_commit #task: install_managed
             3:
                 task: deploy_post
-                options:
-                    unmanaged: False
             4:
                 flow: config_trial
             5:

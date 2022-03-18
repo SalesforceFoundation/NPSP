@@ -17,9 +17,7 @@ public static void setContactsAndOrgDefaults() {
     contactSettings.%%%NAMESPACE%%%Notification_Recipient_Opp_Contact_Role__c = 'Notification Recipient';
     contactSettings.%%%NAMESPACE%%%Automatic_Campaign_Member_Management__c = true;
     contactSettings.%%%NAMESPACE%%%Simple_Address_Change_Treated_as_Update__c = true;
-    contactSettings.%%%NAMESPACE%%%Opp_RecTypes_Excluded_for_Payments__c = UTIL_RecordTypes.getRecordTypeId(
-        Opportunity.SObjectType, 'InKindGift'
-    );
+    contactSettings.%%%NAMESPACE%%%Opp_RecTypes_Excluded_for_Payments__c = getOppRecordType('InKindGift');
 
     settingsToUpdate.add(contactSettings);
 }
@@ -38,8 +36,7 @@ public static void setRecurringDonationDefaults() {
     recurringDonationsSettings.%%%NAMESPACE%%%RecurringDonationNameFormat__c =
             '{!npe03__Donor_Name__c} {!npe03__Amount__c} - Recurring';
     recurringDonationsSettings.%%%NAMESPACE%%%EnableAutomaticNaming__c = true;
-    recurringDonationsSettings.npe03__Record_Type__c = UTIL_RecordTypes.getRecordTypeId(
-        Opportunity.SObjectType,'Donation');
+    recurringDonationsSettings.npe03__Record_Type__c = getOppRecordType('Donation');
 
     settingsToUpdate.add(recurringDonationsSettings);
 }
@@ -49,6 +46,17 @@ public static void setErrorNotificationDefaults() {
     errorSettings.%%%NAMESPACE%%%Respect_Duplicate_Rule_Settings__c = true;
 
     settingsToUpdate.add(errorSettings);
+}
+
+/**
+ * @description Retrieve the specified record type, or the first active RT if that fails
+ */
+public static String getOppRecordType(String rtDevName) {
+    Recordtypeinfo oppRt = Schema.SObjectType.Opportunity.getRecordTypeInfosByDeveloperName().get(rtDevName);
+    if (oppRt == null) {
+        oppRt = Schema.SObjectType.Opportunity.getRecordTypeInfosByDeveloperName().get('NPSP_Default');
+    }
+    return oppRt.getRecordTypeId();
 }
 
 
