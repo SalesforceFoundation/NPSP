@@ -38,6 +38,8 @@ public static void setRecurringDonationDefaults() {
     recurringDonationsSettings.%%%NAMESPACE%%%RecurringDonationNameFormat__c =
             '{!npe03__Donor_Name__c} {!npe03__Amount__c} - Recurring';
     recurringDonationsSettings.%%%NAMESPACE%%%EnableAutomaticNaming__c = true;
+    recurringDonationsSettings.npe03__Record_Type__c = UTIL_RecordTypes.getRecordTypeId(
+        Opportunity.SObjectType,'Donation');
 
     settingsToUpdate.add(recurringDonationsSettings);
 }
