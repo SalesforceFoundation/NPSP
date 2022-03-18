@@ -69,7 +69,40 @@
         <recordType>Opportunity.Membership</recordType>
     </layoutAssignments>
     <recordTypeVisibilities>
+        <default>false</default>
+        <recordType>Account.HH_Account</recordType>
+        <visible>true</visible>
+    </recordTypeVisibilities>
+    <recordTypeVisibilities>
         <default>true</default>
+        <personAccountDefault>true</personAccountDefault>
+        <recordType>Account.Organization</recordType>
+        <visible>true</visible>
+    </recordTypeVisibilities>
+    <recordTypeVisibilities>
+        <default>false</default>
+        <recordType>Campaign.Event</recordType>
+        <visible>true</visible>
+    </recordTypeVisibilities>
+    <recordTypeVisibilities>
+        <default>false</default>
+        <recordType>Campaign.Fundraising</recordType>
+        <visible>true</visible>
+    </recordTypeVisibilities>
+    <recordTypeVisibilities>
+        <default>true</default>
+        <personAccountDefault>true</personAccountDefault>
+        <recordType>Campaign.General</recordType>
+        <visible>true</visible>
+    </recordTypeVisibilities>
+    <recordTypeVisibilities>
+        <default>false</default>
+        <recordType>Campaign.Marketing</recordType>
+        <visible>true</visible>
+    </recordTypeVisibilities>
+    <recordTypeVisibilities>
+        <default>true</default>
+        <personAccountDefault>true</personAccountDefault>
         <recordType>Opportunity.Donation</recordType>
         <visible>true</visible>
     </recordTypeVisibilities>
@@ -97,11 +130,6 @@
         <default>false</default>
         <recordType>Opportunity.Membership</recordType>
         <visible>true</visible>
-    </recordTypeVisibilities>
-    <recordTypeVisibilities>
-        <default>false</default>
-        <recordType>Opportunity.NPSP_Default</recordType>
-        <visible>false</visible>
     </recordTypeVisibilities>
     <tabVisibilities>
         <tab>%%%NAMESPACE%%%Address__c</tab>
