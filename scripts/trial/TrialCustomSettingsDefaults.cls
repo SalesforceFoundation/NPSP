@@ -16,6 +16,10 @@ public static void setContactsAndOrgDefaults() {
     contactSettings.%%%NAMESPACE%%%Honoree_Opportunity_Contact_Role__c = 'Honoree';
     contactSettings.%%%NAMESPACE%%%Notification_Recipient_Opp_Contact_Role__c = 'Notification Recipient';
     contactSettings.%%%NAMESPACE%%%Automatic_Campaign_Member_Management__c = true;
+    contactSettings.%%%NAMESPACE%%%Simple_Address_Change_Treated_as_Update__c = true;
+    contactSettings.%%%NAMESPACE%%%Opp_RecTypes_Excluded_for_Payments__c = UTIL_RecordTypes.getRecordTypeId(
+        Opportunity.SObjectType, 'InKindGift'
+    );
 
     settingsToUpdate.add(contactSettings);
 }
