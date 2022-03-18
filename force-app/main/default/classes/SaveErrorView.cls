@@ -32,33 +32,19 @@
 /**
 * @author Salesforce.org
 * @date 2022
-* @description View class representing a successful Save of a Recurring Donation
+* @description View class for errors encountered while saving a Recurring Donation
 */
-public class RD2_SaveResult {
-    @AuraEnabled public Boolean success;
-    @AuraEnabled public Id recordId;
-    @AuraEnabled public String recordName;
-    @AuraEnabled public List<RD2_SaveError> errors;
+public class SaveErrorView {
+    @AuraEnabled public String message;
+    @AuraEnabled public List<String> fields;
 
-    public RD2_SaveResult(Database.SaveResult result, npe03__Recurring_Donation__c rd) {
-        this(result);
-        this.recordName = rd.Name;
+    public SaveErrorView(Database.Error err) {
+        this.message = err.getMessage();
+        this.fields = err.getFields();
     }
 
-    public RD2_SaveResult(Database.SaveResult result) {
-        this.success = result.isSuccess();
-        this.recordId = result.id;
-        if (!this.success) {
-            this.errors = new List<RD2_SaveError>();
-            for(Database.Error err : result.getErrors()) {
-                this.errors.add(new RD2_SaveError(err));
-            }
-        }
-    }
-
-    public RD2_SaveResult(String errorMessage) {
-        this.success = false;
-        this.errors = new List<RD2_SaveError>();
-        this.errors.add(new RD2_SaveError(errorMessage));
+    public SaveErrorView(String errorMessage) {
+        this.message = errorMessage;
+        this.fields = new List<String>();
     }
 }

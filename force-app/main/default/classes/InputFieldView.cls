@@ -32,19 +32,19 @@
 /**
 * @author Salesforce.org
 * @date 2022
-* @description View class for errors encountered while saving a Recurring Donation
+* @description Wrapper class for custom fields in the Recurring Donations App
 */
-public class RD2_SaveError {
-    @AuraEnabled public String message;
-    @AuraEnabled public List<String> fields;
+public class InputFieldView {
+    @AuraEnabled public String apiName;
+    @AuraEnabled public Boolean required;
+    @AuraEnabled public Object value;
 
-    public RD2_SaveError(Database.Error err) {
-        this.message = err.getMessage();
-        this.fields = err.getFields();
-    }
-
-    public RD2_SaveError(String errorMessage) {
-        this.message = errorMessage;
-        this.fields = new List<String>();
+    /***
+    * @description Constructor for the CustomField class
+    * @param field A FieldSetMember reference to the field to be included
+    */
+    public InputFieldView(Schema.FieldSetMember field) {
+        this.apiName = field.getFieldPath();
+        this.required = field.getDbRequired() || field.getRequired();
     }
 }

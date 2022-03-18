@@ -32,19 +32,33 @@
 /**
 * @author Salesforce.org
 * @date 2022
-* @description Wrapper class for custom fields in the Recurring Donations App
+* @description View class representing a successful Save of a Recurring Donation
 */
-public class RD2_CustomField {
-    @AuraEnabled public String apiName;
-    @AuraEnabled public Boolean required;
-    @AuraEnabled public Object value;
+public class SaveResultView {
+    @AuraEnabled public Boolean success;
+    @AuraEnabled public Id recordId;
+    @AuraEnabled public String recordName;
+    @AuraEnabled public List<SaveErrorView> errors;
 
-    /***
-    * @description Constructor for the CustomField class
-    * @param field A FieldSetMember reference to the field to be included
-    */
-    public RD2_CustomField(Schema.FieldSetMember field) {
-        this.apiName = field.getFieldPath();
-        this.required = field.getDbRequired() || field.getRequired();
+    public SaveResultView(Database.SaveResult result, npe03__Recurring_Donation__c rd) {
+        this(result);
+        this.recordName = rd.Name;
+    }
+
+    public SaveResultView(Database.SaveResult result) {
+        this.success = result.isSuccess();
+        this.recordId = result.id;
+        if (!this.success) {
+            this.errors = new List<SaveErrorView>();
+            for(Database.Error err : result.getErrors()) {
+                this.errors.add(new SaveErrorView(err));
+            }
+        }
+    }
+
+    public SaveResultView(String errorMessage) {
+        this.success = false;
+        this.errors = new List<SaveErrorView>();
+        this.errors.add(new SaveErrorView(errorMessage));
     }
 }

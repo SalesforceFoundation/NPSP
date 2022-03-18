@@ -40,7 +40,7 @@ public class RD2_AppView {
     @AuraEnabled public String parentSObjectType;
     @AuraEnabled public Map<String, Boolean> InstallmentPeriodPermissions;
     @AuraEnabled public Map<String, Boolean> InstallmentFrequencyPermissions;
-    @AuraEnabled public List<RD2_CustomField> customFieldSets;
+    @AuraEnabled public List<InputFieldView> customFieldSets;
     @AuraEnabled public Boolean isElevateCustomer;
     @AuraEnabled public Boolean isChangeLogEnabled;
     @AuraEnabled public Map<String, Integer> periodToYearlyFrequencyMap;
@@ -77,7 +77,7 @@ public class RD2_AppView {
     }
 
     private void populateCustomFieldValues(npe03__Recurring_Donation__c record) {
-        for(RD2_CustomField f : this.customFieldSets) {
+        for(InputFieldView f : this.customFieldSets) {
             Object val = record.get(f.apiName);
             f.value = val;
         }

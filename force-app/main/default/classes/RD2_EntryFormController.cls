@@ -236,23 +236,23 @@ public with sharing class RD2_EntryFormController {
     * @return List<RD2_AppView
     */
     @TestVisible
-    private static List<RD2_CustomField> getCustomFieldSectionFields() {
-        List<RD2_CustomField> fields = new List<RD2_CustomField>();
+    private static List<InputFieldView> getCustomFieldSectionFields() {
+        List<InputFieldView> fields = new List<InputFieldView>();
 
         for (Schema.FieldSetMember field : settings.getCustomFieldSetMembers()) {
-            fields.add(new RD2_CustomField(field));
+            fields.add(new InputFieldView(field));
         }
 
         return fields;
     }
 
     @AuraEnabled
-    public static RD2_SaveResult saveRecurringDonation(RD2_SaveRequest saveRequest) {
+    public static SaveResultView saveRecurringDonation(RD2_SaveRequest saveRequest) {
         npe03__Recurring_Donation__c rd = saveRequest.toRecord();
         Database.SaveResult sr;
 
         if (!hasRequiredSavePermissions(saveRequest)) {
-            return new RD2_SaveResult(Label.commonAccessErrorMessage);
+            return new SaveResultView(Label.commonAccessErrorMessage);
         }
 
         if (rd.Id != null) {
@@ -263,9 +263,9 @@ public with sharing class RD2_EntryFormController {
 
         if (sr.success) {
             npe03__Recurring_Donation__c record = selector.getRecurringDonationForUI(rd.Id);
-            return new RD2_SaveResult(sr, record);
+            return new SaveResultView(sr, record);
         } else {
-            return new RD2_SaveResult(sr);
+            return new SaveResultView(sr);
         }
     }
 

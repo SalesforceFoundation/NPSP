@@ -233,12 +233,12 @@ private with sharing class RD2_EntryFormController_TEST {
     @IsTest
     private static void shouldReturnRD2CustomFieldsWithoutNPSPNameSpaceAndExcludedFields() {
         Test.startTest();
-        List<RD2_CustomField> customFields = RD2_EntryFormController.getCustomFieldSectionFields();
+        List<InputFieldView> customFields = RD2_EntryFormController.getCustomFieldSectionFields();
         Test.stopTest();
 
         Set<String> excludedCustomFields = RD2_Settings.getExcludedCustomFields();
 
-        for (RD2_CustomField field : customFields) {
+        for (InputFieldView field : customFields) {
             System.assert(!excludedCustomFields.contains(field.apiName),
                 'Excluded fields should not be return:' + field.apiName);
             System.assert(!field.apiName.startsWith('npsp__'),
@@ -694,7 +694,7 @@ private with sharing class RD2_EntryFormController_TEST {
         req.recurringPeriod = 'Monthly';
         req.paymentMethod = 'Credit Card';
 
-        RD2_SaveResult result = RD2_EntryFormController.saveRecurringDonation(req);
+        SaveResultView result = RD2_EntryFormController.saveRecurringDonation(req);
 
         System.assert(result.success, 'RD not inserted successfully');
         System.assertNotEquals(result.recordId, null, 'Save result should have an Id');
@@ -764,7 +764,7 @@ private with sharing class RD2_EntryFormController_TEST {
         req.recurringPeriod = 'Monthly';
         req.paymentMethod = 'Credit Card';
 
-        RD2_SaveResult result = RD2_EntryFormController.saveRecurringDonation(req);
+        SaveResultView result = RD2_EntryFormController.saveRecurringDonation(req);
 
         System.assertEquals(false, result.success, 'Expected RD2SaveResult success to be false');
         System.assertEquals(null, result.recordId, 'Expected empty record Id');
