@@ -1,7 +1,7 @@
 import { createElement } from "lwc";
 import Rd2EntryForm from "c/rd2EntryForm";
 import { RD2FormController, setupWireMocks } from "./rd2EntryFormTestHelpers";
-import { getRecord } from "lightning/uiRecordApi";
+import { getRecord, getRecordNotifyChange } from "lightning/uiRecordApi";
 import { mockGetIframeReply } from "c/psElevateTokenHandler";
 
 import getInitialView from "@salesforce/apex/RD2_EntryFormController.getInitialView";
@@ -284,9 +284,9 @@ describe("c-rd2-entry-form", () => {
                 errors: [
                     {
                         message: "Invalid endpoint.",
-                        fields: []
-                    }
-                ]
+                        fields: [],
+                    },
+                ],
             });
 
             controller.contactLookup().changeValue("001fakeContactId");
@@ -789,6 +789,33 @@ describe("c-rd2-entry-form", () => {
             expect(mockHandleCloseModal).toHaveBeenCalledTimes(1);
             const { detail } = mockHandleCloseModal.mock.calls[0][0];
             expect(detail).toMatchObject({ recordId: FAKE_ACH_RD2_ID });
+            expect(getRecordNotifyChange).toHaveBeenCalledWith([{ recordId: FAKE_ACH_RD2_ID }]);
+        });
+
+        it("on update of record, informs LDS the record has been updated", async () => {
+            getInitialView.mockResolvedValue(rd2WithoutCommitmentInitialView);
+
+            const element = createRd2EntryForm();
+            await flushPromises();
+
+            await setupWireMocks();
+            const controller = new RD2FormController(element);
+
+            saveRecurringDonation.mockResolvedValue({
+                success: true,
+                recordId: FAKE_ACH_RD2_ID,
+                recordName: "Test Record Name",
+            });
+
+            controller.contactLookup().changeValue("001fakeContactId");
+            controller.amount().changeValue(1.0);
+            controller.paymentMethod().changeValue("Check");
+
+            controller.saveButton().click();
+
+            await flushPromises();
+
+            expect(getRecordNotifyChange).toHaveBeenCalledWith([{ recordId: FAKE_ACH_RD2_ID }]);
         });
     });
 
