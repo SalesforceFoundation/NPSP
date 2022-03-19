@@ -681,7 +681,7 @@ export default class rd2EntryForm extends LightningElement {
      * @description Clears the error notification
      */
     clearError() {
-        this.setError({});
+        this.error = {};
     }
 
     /***
@@ -718,6 +718,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     setError(error) {
+        this.template.querySelector(".error-container").scrollIntoView();
         this.error = error;
     }
 
