@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardValueSetTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <valueTranslation>
+        <masterLabel>Application Submitted</masterLabel>
+        <translation>Solicitud enviada</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Awarded</masterLabel>
+        <translation>Otorgado</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Closed Lost</masterLabel>
+        <translation>Cerrada perdida</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Closed Won</masterLabel>
+        <translation>Cerrado ganada</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Cultivation</masterLabel>
+        <translation>Cultivo</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Declined</masterLabel>
+        <translation>Declinado</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Identification</masterLabel>
+        <translation>Identificación</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>In-Kind Not Yet Received</masterLabel>
+        <translation>En especie no recibido aún</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>In-Kind Received</masterLabel>
+        <translation>En especie recibido</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>LOI Submitted</masterLabel>
+        <translation>LOI enviado</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Pledged</masterLabel>
+        <translation>Comprometidas</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Posted</masterLabel>
+        <translation>Registrado</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Proposal/Review</masterLabel>
+        <translation>Propuesta/Revisión</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Prospecting</masterLabel>
+        <translation>Prospección de clientes</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Qualification</masterLabel>
+        <translation>Calificación</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Solicitation</masterLabel>
+        <translation>Solicitud</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Verbal Commitment</masterLabel>
+        <translation>Compromiso verbal</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Withdrawn</masterLabel>
+        <translation>Retirado</translation>
+    </valueTranslation>
+</StandardValueSetTranslation>
