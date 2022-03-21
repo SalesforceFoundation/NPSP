@@ -34,24 +34,6 @@ export default class DonationHistoryTable extends LightningElement {
         this.retrieveDonationHistory();
     }
 
-
-    @wire(getObjectInfo, { objectApiName: DATA_IMPORT })
-    oppInfo({ data, error }) {
-        if (data) {
-            this.paymentMethodLabel = data.fields[PAYMENT_FIELD.fieldApiName].label
-        };
-        this.columns = [
-            { label: RD2_ScheduleVisualizerColumnDate, fieldName: 'closeDate', type: 'date-local', typeAttributes:{
-                year: "numeric",
-                month: "numeric",
-                day: "numeric",
-            },
-            cellAttributes: { alignment: 'right' }},
-            { label: commonAmount, fieldName: 'amount', type: 'currency', },
-            { label: this.paymentMethodLabel, fieldName: 'paymentMethod', type: 'text', },
-        ];
-    }
-
     @api
     get filter() {
         return this._filter;
@@ -85,12 +67,6 @@ export default class DonationHistoryTable extends LightningElement {
                             day: "numeric",
                         },
                         cellAttributes: { alignment: "right" },
-                        hideDefaultActions: true
-                    },
-                    {
-                        label: donationHistoryDonorLabel,
-                        fieldName: "name",
-                        type: "text",
                         hideDefaultActions: true
                     },
                     { label: commonAmount, fieldName: "amount", type: "currency", hideDefaultActions: true },
