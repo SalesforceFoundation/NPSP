@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Prompt xmlns="http://soap.sforce.com/2006/04/metadata">
+    <masterLabel>NPSP Contact Merge Guidance</masterLabel>
+    <promptVersions>
+        <actionButtonLabel>Find and Merge Duplicates</actionButtonLabel>
+        <actionButtonLink>https://powerofus.force.com/s/article/NPSP-Merging-Contacts</actionButtonLink>
+        <body>&lt;p&gt;Keeping your data clean and reliable is one of the most important ways to instill confidence in your system. &lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Use NPSP Duplicate rules to identify duplicate contacts. Then use NPSP Contact Merge to merge duplicates into a single record without losing data from any related households, activities or opportunities. &lt;/p&gt;</body>
+        <customApplication>Nonprofit_Success_Pack</customApplication>
+        <delayDays>1</delayDays>
+        <description>Prompt for new Admins to understand when and how to merge contacts</description>
+        <displayType>DockedComposer</displayType>
+        <header>NPSP How To Tips</header>
+        <isPublished>true</isPublished>
+        <masterLabel>NPSP Contact Merge Guidance</masterLabel>
+        <publishedDate>2021-03-31</publishedDate>
+        <shouldDisplayActionButton>true</shouldDisplayActionButton>
+        <shouldIgnoreGlobalDelay>true</shouldIgnoreGlobalDelay>
+        <startDate>2020-11-04</startDate>
+        <targetPageKey1>%%%NAMESPACE%%%Contact_Merge</targetPageKey1>
+        <targetPageType>standard__navItemPage</targetPageType>
+        <timesToDisplay>5</timesToDisplay>
+        <title>Merge Duplicate Contacts</title>
+        <uiFormulaRule>
+            <criteria>
+                <leftValue>{!$User.Profile.Key}</leftValue>
+                <operator>EQUAL</operator>
+                <rightValue>Admin</rightValue>
+            </criteria>
+        </uiFormulaRule>
+        <userAccess>Everyone</userAccess>
+        <userProfileAccess>SpecificProfiles</userProfileAccess>
+        <versionNumber>1</versionNumber>
+        <videoLink>https://play.vidyard.com/79ydiCu6PjzEyykRkoXs4o</videoLink>
+    </promptVersions>
+</Prompt>
