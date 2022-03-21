@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Prompt xmlns="http://soap.sforce.com/2006/04/metadata">
+    <masterLabel>Report Guidance</masterLabel>
+    <promptVersions>
+        <actionButtonLabel>Learn About Reports</actionButtonLabel>
+        <actionButtonLink>https://sfdc.co/QVnrG</actionButtonLink>
+        <body>&lt;p&gt;Bring your data to life by leveraging Reports. NPSP comes with a number of reports you can take advantage of immediately. &lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;To get started, select ‘All Reports’ from the menu on the left to see which reports are available to you. Learn more about these specific reports in the &lt;a href=&quot;https://powerofus.force.com/s/article/NPSP-Reports-Workbook&quot; rel=&quot;noopener noreferrer&quot; target=&quot;_blank&quot;&gt;Power of Us Hub&lt;/a&gt;. &lt;/p&gt;</body>
+        <customApplication>Nonprofit_Success_Pack</customApplication>
+        <delayDays>1</delayDays>
+        <description>Prompt for new Admins with information around Reporting</description>
+        <displayType>DockedComposer</displayType>
+        <header>NPSP How To Tips</header>
+        <isPublished>true</isPublished>
+        <masterLabel>Report Guidance</masterLabel>
+        <publishedDate>2021-03-31</publishedDate>
+        <shouldDisplayActionButton>true</shouldDisplayActionButton>
+        <shouldIgnoreGlobalDelay>true</shouldIgnoreGlobalDelay>
+        <startDate>2020-10-28</startDate>
+        <targetPageKey1>Report</targetPageKey1>
+        <targetPageKey2>home</targetPageKey2>
+        <targetPageType>standard__objectPage</targetPageType>
+        <timesToDisplay>5</timesToDisplay>
+        <title>View Reports</title>
+        <uiFormulaRule>
+            <criteria>
+                <leftValue>{!$User.Profile.Key}</leftValue>
+                <operator>EQUAL</operator>
+                <rightValue>Admin</rightValue>
+            </criteria>
+        </uiFormulaRule>
+        <userAccess>Everyone</userAccess>
+        <userProfileAccess>SpecificProfiles</userProfileAccess>
+        <versionNumber>1</versionNumber>
+        <videoLink>https://play.vidyard.com/Ne5NEhCKbhfi2XVvbdyNaF</videoLink>
+    </promptVersions>
+</Prompt>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Prompt xmlns="http://soap.sforce.com/2006/04/metadata">
+    <masterLabel>Get Started with NPSP</masterLabel>
+    <promptVersions>
+        <actionButtonLabel>Get Started with NPSP</actionButtonLabel>
+        <actionButtonLink>/lightning/n/%%%NAMESPACE%%%GetStartedEndUser</actionButtonLink>
+        <body>The page you’re currently viewing (NPSP Get Started - Admin) will help you, the System Administrator, configure Salesforce for your org. Share the Get Started with NPSP tab with your staff to help them learn to use Salesforce too!</body>
+        <customApplication>Nonprofit_Success_Pack</customApplication>
+        <delayDays>10</delayDays>
+        <description>Tells admins about the Get Started with NPSP page for end users</description>
+        <dismissButtonLabel>Got it!</dismissButtonLabel>
+        <displayPosition>TopLeft</displayPosition>
+        <displayType>FloatingPanel</displayType>
+        <isPublished>true</isPublished>
+        <masterLabel>Get Started with NPSP</masterLabel>
+        <publishedDate>2021-03-31</publishedDate>
+        <shouldDisplayActionButton>true</shouldDisplayActionButton>
+        <shouldIgnoreGlobalDelay>false</shouldIgnoreGlobalDelay>
+        <startDate>2021-03-08</startDate>
+        <targetPageKey1>%%%NAMESPACE%%%GetStarted</targetPageKey1>
+        <targetPageType>standard__navItemPage</targetPageType>
+        <timesToDisplay>5</timesToDisplay>
+        <title>Help Users Get Started with NPSP</title>
+        <uiFormulaRule>
+            <criteria>
+                <leftValue>{!$User.Profile.Key}</leftValue>
+                <operator>EQUAL</operator>
+                <rightValue>Admin</rightValue>
+            </criteria>
+        </uiFormulaRule>
+        <userAccess>Everyone</userAccess>
+        <userProfileAccess>SpecificProfiles</userProfileAccess>
+        <versionNumber>1</versionNumber>
+    </promptVersions>
+</Prompt>
