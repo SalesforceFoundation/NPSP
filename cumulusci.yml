@@ -876,6 +876,36 @@ flows:
             4:
                 task: run_tests
 
+    config_trial_org:
+        steps:
+            # TODO: Update once we can test with a Beta instead of 2GP
+            #1:
+            #    flow: dependencies
+            2:
+                flow: install_2gp_commit #task: install_managed
+            3:
+                task: deploy_post
+            4:
+                flow: config_trial
+            5:
+                task: test_data_relationships
+                ignore_failure: true
+            6:
+                task: execute_anon
+                options:
+                    path: scripts/trial/TrialCustomSettingsDefaults.cls
+                    apex: updateCustomSettingsDefaults();
+            7:
+                task: deploy_trial_translations
+            8:
+                task: deploy_reports
+            9:
+                flow: enable_rd2
+            10:
+                flow: enable_gift_entry
+            11:
+                task: update_admin_profile
+
     config_trial:
         steps:
             1:
@@ -1026,25 +1056,6 @@ flows:
                 # Wait until after the data migration job has completed
                 options:
                     class_name: RD2_DataMigration_BATCH
-
-    enable_rd2_managed:
-        description: 'Fully configures and enables a Scratch org with Enhanced Recurring Donations (managed package only)'
-        group: NPSP
-        steps:
-            1:
-                flow: enable_rd2
-                options:
-                    enable_crlp:
-                        managed: true
-                        param1: false
-                    custom_settings_value_wait:
-                        managed: true
-                    execute_anon:
-                        managed: true
-                        unmanaged: false
-                    deploy_rd2_config:
-                        managed: true
-                        unmanaged: false
 
     config_managed:
         steps:
