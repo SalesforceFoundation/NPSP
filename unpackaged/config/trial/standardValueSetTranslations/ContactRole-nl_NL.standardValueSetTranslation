@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardValueSetTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <valueTranslation>
+        <masterLabel>Decision Maker</masterLabel>
+        <translation>Beleidsvormer</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Donor</masterLabel>
+        <translation>Donor</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Grant Manager</masterLabel>
+        <translation><!-- Grant Manager --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Honoree</masterLabel>
+        <translation>Bekroonde persoon</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Household Member</masterLabel>
+        <translation>Lid van huishouden</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Influencer</masterLabel>
+        <translation>Beïnvloeder</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Matched Donor</masterLabel>
+        <translation>Gekoppelde donor</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Notification Recipient</masterLabel>
+        <translation>Ontvanger van kennisgeving</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Other</masterLabel>
+        <translation>Overige</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Soft Credit</masterLabel>
+        <translation>&quot;Soft credit&quot;</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Solicitor</masterLabel>
+        <translation>Advocaat/notaris</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Workplace Giving</masterLabel>
+        <translation><!-- Workplace Giving --></translation>
+    </valueTranslation>
+</StandardValueSetTranslation>

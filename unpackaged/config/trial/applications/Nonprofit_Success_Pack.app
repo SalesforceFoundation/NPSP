@@ -7,22 +7,23 @@
         <shouldOverrideOrgTheme>false</shouldOverrideOrgTheme>
     </brand>
     <description>(Lightning Experience) Manage your nonprofit processes.</description>
+    <formFactors>Small</formFactors>
     <formFactors>Large</formFactors>
     <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
     <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
     <label>Nonprofit Success Pack</label>
     <navType>Standard</navType>
-    <tabs>%%%NAMESPACE%%%GetStartedEndUser</tabs>
+    <setupExperience>all</setupExperience>
     <tabs>%%%NAMESPACE%%%GetStarted</tabs>
-    <tabs>standard-home</tabs>
+    <tabs>%%%NAMESPACE%%%GetStartedEndUser</tabs>
     <tabs>standard-Account</tabs>
     <tabs>standard-Contact</tabs>
-    <tabs>standard-Lead</tabs>
     <tabs>standard-Opportunity</tabs>
+    <tabs>npe03__Recurring_Donation__c</tabs>
     <tabs>standard-Campaign</tabs>
     <tabs>standard-report</tabs>
-    <tabs>npe03__Recurring_Donation__c</tabs>
-    <tabs>%%%NAMESPACE%%%Level__c</tabs>
+    <tabs>standard-Dashboard</tabs>
+    <tabs>%%%NAMESPACE%%%NPSP_Settings</tabs>
     <uiType>Lightning</uiType>
     <utilityBar>Nonprofit_Success_Pack_UtilityBar</utilityBar>
 </CustomApplication>
