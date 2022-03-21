@@ -1,16 +1,9 @@
 import { api, LightningElement, wire, track } from 'lwc';
-import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import DATA_IMPORT from '@salesforce/schema/DataImport__c';
-import PAYMENT_FIELD from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import donationHistoryDatatableAriaLabel from '@salesforce/label/c.donationHistoryDatatableAriaLabel';
-import RD2_ScheduleVisualizerColumnDate from '@salesforce/label/c.RD2_ScheduleVisualizerColumnDate';
 import getDonationHistory from '@salesforce/apex/DonationHistoryController.getDonationHistory';
 import commonAmount from '@salesforce/label/c.commonAmount';
-import donationHistoryDonorLabel from '@salesforce/label/c.donationHistoryDonorLabel';
 import commonDate from "@salesforce/label/c.commonDate";
-import getContactIdByUserId from "@salesforce/apex/DonationHistoryController.getContactIdByUserId";
 
-const RECORDS_TO_LOAD = 50;
 export default class DonationHistoryTable extends LightningElement {
     @api contactId;
 
@@ -92,19 +85,22 @@ export default class DonationHistoryTable extends LightningElement {
                             day: "numeric",
                         },
                         cellAttributes: { alignment: "right" },
+                        hideDefaultActions: true
                     },
                     {
                         label: donationHistoryDonorLabel,
                         fieldName: "name",
                         type: "text",
+                        hideDefaultActions: true
                     },
-                    { label: commonAmount, fieldName: "amount", type: "currency" },
+                    { label: commonAmount, fieldName: "amount", type: "currency", hideDefaultActions: true },
                 ];
                 if (this.arePaymentsEnabled) {
                     this.columns.push({
                         label: this.paymentMethodLabel,
                         fieldName: "paymentMethod",
                         type: "text",
+                        hideDefaultActions: true
                     });
                 }
             }
