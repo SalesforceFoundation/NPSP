@@ -97,7 +97,7 @@ as well as many other features needed to define the workspace for the org's inte
 
 | Name                          | Type | Description                                                                                  |
 | ----------------------------- | ---- | -------------------------------------------------------------------------------------------- |
-| `enable_rd2` | Flow | Fully enables NPSP Enhanced Recurring Donations, including enabling CRLP and running the data migration (unmanaged only)
+| `enable_rd2` | Flow | Fully enables NPSP Enhanced Recurring Donations, including enabling CRLP and running the data migration
 | `deploy_rd2_config`  | Task | Deploys the Unpackaged Metadata needed for Enhanced Recurring Donations (unmanaged only)
 
 ### Static Analysis
