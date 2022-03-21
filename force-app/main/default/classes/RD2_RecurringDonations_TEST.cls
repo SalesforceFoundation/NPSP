@@ -38,10 +38,11 @@
 private with sharing class RD2_RecurringDonations_TEST {
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.RecurringDonationScheduleGateway rdScheduleGateway = new TEST_SObjectGateway.RecurringDonationScheduleGateway();
-
+    private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
     private static final Date DATE_ESTABLISHED = Date.newInstance(2019, 9, 15);
     private static final String COMMITMENT_ID = RD2_ElevateIntegrationService_TEST.COMMITMENT_ID;
     private static final String DAY_OF_MONTH = '1';
+    private static final Integer RD_AMOUNT = 100;
 
     /****
     * @description Creates data required for unit tests
@@ -1137,6 +1138,45 @@ private with sharing class RD2_RecurringDonations_TEST {
             'The instrumentation service should have indicated Enhanced Recurring Donations');
     }
 
+    @IsTest
+    private static void shouldUpdateSchedulesOnGoodBulkRDUpdate() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
+
+        npe03__Recurring_Donation__c badRd = getRecurringDonationMonthlyBuilder().build();
+        npe03__Recurring_Donation__c goodRd = getRecurringDonationMonthlyBuilder().build();
+        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>{ badRd, goodRd };
+        
+        insert recurringDonations;
+        List<RecurringDonationSchedule__c> schedules = rdScheduleGateway.getRecords(goodRd);
+        
+        System.assertEquals(goodRd.npe03__Amount__c, schedules[0].InstallmentAmount__c, 'RD should have the correct schedule setup');
+        
+        badRd.npe03__Amount__c = 0;
+        goodRd.npe03__Amount__c = goodRd.npe03__Amount__c + 10;
+
+        Test.startTest();
+        Database.update(recurringDonations, false);
+        Test.stopTest();
+        
+        schedules = rdScheduleGateway.getRecords(goodRd);
+        for (RecurringDonationSchedule__c schedule : schedules) {
+            if (schedule.Active__c) {
+                System.assertEquals(goodRd.npe03__Amount__c, schedule.InstallmentAmount__c,
+                'RD should have the correct schedule setup');
+            } else {
+                System.assertEquals(schedule.StartDate__c.addDays(-1), schedule.EndDate__c,
+                    'The old schedule should have an end date before start date.');
+            }
+        }
+
+        List<Opportunity> opps = oppGateway.getRecords(goodRd);
+        For (Opportunity opp : opps) {
+            System.assertEquals(goodRd.npe03__Amount__c, opp.Amount, 'Opp Installment amount should be updated');
+        }
+    }   
+
+
     // Helpers
     ///////////////////
 
@@ -1187,7 +1227,7 @@ private with sharing class RD2_RecurringDonations_TEST {
     private static TEST_RecurringDonationBuilder getRecurringDonationBaseBuilder() {
         return TEST_RecurringDonationBuilder.constructEnhancedBuilder()
             .withContact(getContact().Id)
-            .withAmount(100)
+            .withAmount(RD_AMOUNT)
             .withPaymentMethod('Credit Card')
             .withInstallmentFrequency(1)
             .withDateEstablished(DATE_ESTABLISHED)
@@ -1225,7 +1265,7 @@ private with sharing class RD2_RecurringDonations_TEST {
     private static npe03__Recurring_Donation__c testAndAssertAccountIsAutoPopulated(Contact contact) {
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withContact(contact.Id)
-            .withAmount(100)
+            .withAmount(RD_AMOUNT)
             .withDefaultValues()
             .build();
 
