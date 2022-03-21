@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardValueSetTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <valueTranslation>
+        <masterLabel>Decision Maker</masterLabel>
+        <translation>Décideur</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Donor</masterLabel>
+        <translation>Donateur</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Grant Manager</masterLabel>
+        <translation><!-- Grant Manager --></translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Honoree</masterLabel>
+        <translation>Personne honorée</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Household Member</masterLabel>
+        <translation>Membre du foyer</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Influencer</masterLabel>
+        <translation>Influenceur</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Matched Donor</masterLabel>
+        <translation>Donateur jumelé</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Notification Recipient</masterLabel>
+        <translation>Destinataire de notification</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Other</masterLabel>
+        <translation>Autre</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Soft Credit</masterLabel>
+        <translation>Crédit indirect</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Solicitor</masterLabel>
+        <translation>Solliciteur</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Workplace Giving</masterLabel>
+        <translation><!-- Workplace Giving --></translation>
+    </valueTranslation>
+</StandardValueSetTranslation>

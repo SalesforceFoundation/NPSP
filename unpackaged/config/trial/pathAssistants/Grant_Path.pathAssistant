@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PathAssistant xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>true</active>
+    <entityName>Opportunity</entityName>
+    <fieldName>StageName</fieldName>
+    <masterLabel>Grant Path</masterLabel>
+    <pathAssistantSteps>
+        <fieldNames>CloseDate</fieldNames>
+        <fieldNames>%%%NAMESPACE%%%Ask_Date__c</fieldNames>
+        <fieldNames>%%%NAMESPACE%%%Requested_Amount__c</fieldNames>
+        <fieldNames>Amount</fieldNames>
+        <picklistValueName>Application Submitted</picklistValueName>
+    </pathAssistantSteps>
+    <pathAssistantSteps>
+        <fieldNames>CloseDate</fieldNames>
+        <fieldNames>Amount</fieldNames>
+        <fieldNames>%%%NAMESPACE%%%Grant_Contract_Date__c</fieldNames>
+        <fieldNames>%%%NAMESPACE%%%Grant_Period_Start_Date__c</fieldNames>
+        <fieldNames>%%%NAMESPACE%%%Grant_Period_End_Date__c</fieldNames>
+        <picklistValueName>Awarded</picklistValueName>
+    </pathAssistantSteps>
+    <pathAssistantSteps>
+        <fieldNames>CloseDate</fieldNames>
+        <fieldNames>Amount</fieldNames>
+        <fieldNames>%%%NAMESPACE%%%Closed_Lost_Reason__c</fieldNames>
+        <picklistValueName>Declined</picklistValueName>
+    </pathAssistantSteps>
+    <pathAssistantSteps>
+        <fieldNames>CloseDate</fieldNames>
+        <fieldNames>%%%NAMESPACE%%%Requested_Amount__c</fieldNames>
+        <fieldNames>Amount</fieldNames>
+        <fieldNames>%%%NAMESPACE%%%Grant_Program_Area_s__c</fieldNames>
+        <fieldNames>%%%NAMESPACE%%%Grant_Requirements_Website__c</fieldNames>
+        <picklistValueName>LOI Submitted</picklistValueName>
+    </pathAssistantSteps>
+    <pathAssistantSteps>
+        <fieldNames>CloseDate</fieldNames>
+        <fieldNames>%%%NAMESPACE%%%Grant_Program_Area_s__c</fieldNames>
+        <fieldNames>%%%NAMESPACE%%%Grant_Requirements_Website__c</fieldNames>
+        <fieldNames>%%%NAMESPACE%%%Is_Grant_Renewal__c</fieldNames>
+        <fieldNames>%%%NAMESPACE%%%Previous_Grant_Opportunity__c</fieldNames>
+        <picklistValueName>Prospecting</picklistValueName>
+    </pathAssistantSteps>
+    <pathAssistantSteps>
+        <fieldNames>CloseDate</fieldNames>
+        <fieldNames>Amount</fieldNames>
+        <fieldNames>%%%NAMESPACE%%%Closed_Lost_Reason__c</fieldNames>
+        <picklistValueName>Withdrawn</picklistValueName>
+    </pathAssistantSteps>
+    <recordTypeName>Grant</recordTypeName>
+</PathAssistant>

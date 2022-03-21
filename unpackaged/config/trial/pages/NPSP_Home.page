@@ -1,0 +1,52 @@
+<apex:page docType="html-5.0" title="Getting Started with the NPSP" showHeader="false" sidebar="false">
+  <style>
+  body {
+    font-family: 'Salesforce Sans',Arial,sans-serif;
+  }
+  h1 {
+    font-family: 'Salesforce Sans',Arial,sans-serif;
+    text-align: center;
+    font-size: 2em;
+    display: block;
+  }
+  p {
+    font-family: 'Salesforce Sans',Arial,sans-serif;
+    text-align: center;
+    font-size: 1.25em;  
+  }
+  .centered {    
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
+  .button {
+    -webkit-appearance: button;
+    cursor: pointer;
+    position: relative;
+    padding: 0;
+    background: 0 0;
+    background-color: #0070d2;
+    border: 1px solid #0070d2;
+    border-radius: .25rem .25rem .25rem .25rem 
+    color: #fff;
+    padding: 10px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: .75rem;
+    line-height: 1.875rem;
+    text-decoration: none;
+    font-family: 'Salesforce Sans',Arial,sans-serif;
+  }
+  </style>
+  <body>
+  <img class="centered" src="{!URLFOR($Resource.%%%NAMESPACE%%%CumulusStaticResources, '/Images/RGB_npsp-full-color.png')}" style="display:block;max-width:82%;max-height:70px;height:auto;" alt="NPSP Logo"/>
+  <h1 style="text-align:center;">Welcome to Salesforce and the Nonprofit Success Pack!</h1>
+  <p style="text-align:center;">You now have access to ALL the powerful features of Salesforce PLUS the ability to better manage donors with the Nonprofit Success Pack.  Click below for help getting started!</p>
+  <div style="text-align:center;">
+    <a href="javascript:sforce.one.navigateToURL('/apex/%%%NAMESPACE%%%NPSP_Resources');" target="_self">
+      <button type="button" class="button">Get Started Now!</button>
+    </a>
+  </div>
+  </body>
+</apex:page>
