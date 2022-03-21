@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Prompt xmlns="http://soap.sforce.com/2006/04/metadata">
+    <masterLabel>Contact Page Guidance</masterLabel>
+    <promptVersions>
+        <actionButtonLabel>Add/Remove Contacts</actionButtonLabel>
+        <actionButtonLink>https://sforce.co/3novyyX</actionButtonLink>
+        <body>&lt;p&gt;Your nonprofit is connected to constituents and organizations in many ways, and you’ll want to track them all in the Nonprofit Success Pack (NPSP).&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;People are the heart of NPSP (Contacts)&lt;/li&gt;&lt;li&gt;People live in households with one or more members (Household Accounts)&lt;/li&gt;&lt;li&gt;Organizations are businesses, schools, grantmakers, places of worship, and others (Organization Accounts)&lt;/li&gt;&lt;li&gt;People interact with organizations in many ways as they work, volunteer, study, and worship (Affiliations)&lt;/li&gt;&lt;li&gt;People are connected with other people (Relationships) &lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Learn how to create all of these records in Salesforce.&lt;/p&gt;</body>
+        <customApplication>Nonprofit_Success_Pack</customApplication>
+        <delayDays>1</delayDays>
+        <description>Prompt for new Admins to detail how to create a new Contact and Household Account</description>
+        <displayType>DockedComposer</displayType>
+        <header>NPSP How To Tips</header>
+        <isPublished>true</isPublished>
+        <masterLabel>Contact Page Guidance</masterLabel>
+        <publishedDate>2021-11-09</publishedDate>
+        <shouldDisplayActionButton>true</shouldDisplayActionButton>
+        <shouldIgnoreGlobalDelay>true</shouldIgnoreGlobalDelay>
+        <startDate>2020-10-28</startDate>
+        <targetPageKey1>Contact</targetPageKey1>
+        <targetPageKey2>list</targetPageKey2>
+        <targetPageType>standard__objectPage</targetPageType>
+        <timesToDisplay>5</timesToDisplay>
+        <title>Manage Constituents in NPSP</title>
+        <uiFormulaRule>
+            <criteria>
+                <leftValue>{!$User.Profile.Key}</leftValue>
+                <operator>EQUAL</operator>
+                <rightValue>Admin</rightValue>
+            </criteria>
+        </uiFormulaRule>
+        <userAccess>Everyone</userAccess>
+        <userProfileAccess>SpecificProfiles</userProfileAccess>
+        <versionNumber>1</versionNumber>
+        <videoLink>https://play.vidyard.com/k5bwLEaufZMGmaA1GgL27q</videoLink>
+    </promptVersions>
+</Prompt>

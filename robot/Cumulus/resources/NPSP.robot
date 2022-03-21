@@ -488,10 +488,8 @@ Enable RD2
     ${is_rd2_enabled} =       API Query Recurrring Donation Settings For RD2 Enablement
     ${ns} =                   Get Npsp Namespace Prefix
     Log                       ${ns}
-    ${return} =                Run Keyword if            "${is_rd2_enabled}"!="True" and "${ns}"!="npsp__"
+    ${return} =                Run Keyword if            "${is_rd2_enabled}"!="True"
     ...                        Run Flow                  enable_rd2
-    Run Keyword if            "${is_rd2_enabled}"!="True" and "${ns}"=="npsp__"
-    ...                        Run flow                  enable_rd2_managed
     Run Keyword if            "${return}"!="None"
     ...                       Log           ${return.stdout}
     Run Keyword if            "${return}"!="None"
