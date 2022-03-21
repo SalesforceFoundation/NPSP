@@ -102,20 +102,22 @@ public with sharing class DonationHistoryService {
         }
     }
 
+    /** 
+    * @description method to return Donation History list.
+    * @param paymentListForOpportunity List<npe01__OppPayment__c> for current opportunity
+    * @return String with payment method for current opportunity
+    */
     public String getRequiredPaymentMethodForOpportunities(List<npe01__OppPayment__c> paymentListForOpportunity){
         String paymentMethodToReturn = '';
-		if(paymentListForOpportunity.Size() > 1){
-            for(npe01__OppPayment__c p : paymentListForOpportunity){
-                if(p.npe01__Paid__c){
-                    paymentMethodToReturn= p.npe01__Payment_Method__c;
-                    break;
-                }
-           	}
-            if(paymentMethodToReturn==''){
-                paymentMethodToReturn =  paymentListForOpportunity.get(0).npe01__Payment_Method__c;
+		for (npe01__OppPayment__c p : paymentListForOpportunity) {
+            if (paymentMethodToReturn == '') {
+                paymentMethodToReturn = p.npe01__Payment_Method__c;
+                continue;
             }
-        }else{
-            paymentMethodToReturn =  paymentListForOpportunity.get(0).npe01__Payment_Method__c;
+            if(p.npe01__Paid__c){
+                paymentMethodToReturn = p.npe01__Payment_Method__c;
+                break;
+            }
         }
         return paymentMethodToReturn;
     }
@@ -135,7 +137,7 @@ public with sharing class DonationHistoryService {
             throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
         }
         return selector.getYearsWithDonationForContact(contactId);
-     }
+    }
 
     /** 
     * @author Salesforce.org

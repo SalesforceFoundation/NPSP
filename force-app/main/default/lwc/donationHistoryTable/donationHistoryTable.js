@@ -51,7 +51,6 @@ export default class DonationHistoryTable extends LightningElement {
     retrieveDonationHistory(){
         getDonationHistory({ contactId: this.contactId, offset: 0, filter : this.filter })
         .then((data) => {
-            console.log('data.totalNumberOfRecords: ',data.totalNumberOfRecords);
             if (data) {
                 this.totalNumberOfRecords = data.totalNumberOfRecords;
                 this.data = data.donations;
@@ -99,11 +98,8 @@ export default class DonationHistoryTable extends LightningElement {
      loadMoreDonationData(event) {
         event.target.isLoading = true;
         this.tableElement = event.target;
-        console.log('this.filter: ',this.filter);
         getDonationHistory({contactId: this.contactId, offset: this.data.length, filter: this.filter})
         .then(data => {
-            console.log('this.data.length: ',this.data.length);
-            console.log('this.totalNumberOfRecords: ',this.totalNumberOfRecords);
                 if (this.data.length >= this.totalNumberOfRecords) {
                     this.tableElement.isLoading = false;
                     this.infiniteScroll = false;
