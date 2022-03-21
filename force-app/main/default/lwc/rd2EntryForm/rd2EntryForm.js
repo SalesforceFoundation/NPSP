@@ -13,7 +13,7 @@ import {
 import { HTTP_CODES } from "c/geConstants";
 
 import { getObjectInfo } from "lightning/uiObjectInfoApi";
-import { getRecord, getFieldValue } from "lightning/uiRecordApi";
+import { getRecord, getFieldValue, getRecordNotifyChange } from "lightning/uiRecordApi";
 
 import RECURRING_DONATION_OBJECT from "@salesforce/schema/npe03__Recurring_Donation__c";
 
@@ -653,6 +653,7 @@ export default class rd2EntryForm extends LightningElement {
      */
     async processSubmit() {
         try {
+
             this.loadingText = this.customLabels.savingRDMessage;
             const saveResult = await this.rd2Service.save(this.rd2State);
 
@@ -661,6 +662,11 @@ export default class rd2EntryForm extends LightningElement {
                     type: ACTIONS.RECORD_SAVED,
                     payload: saveResult
                 });
+
+                if (this.isEdit) {
+                    getRecordNotifyChange([{recordId: this.rd2State.recordId}])
+                }
+
                 this.handleSuccess();
             } else {
                 this.handleSaveError(saveResult);
@@ -675,7 +681,7 @@ export default class rd2EntryForm extends LightningElement {
      * @description Clears the error notification
      */
     clearError() {
-        this.setError({});
+        this.error = {};
     }
 
     /***
@@ -712,6 +718,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     setError(error) {
+        this.template.querySelector(".error-container").scrollIntoView();
         this.error = error;
     }
 
@@ -860,7 +867,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     get isEdit() {
-        return !!this.rd2State.recordId;
+        return !!this.rd2State.initialViewState.recordId;
     }
 
     /***

@@ -20,13 +20,6 @@ export default class utilPageLevelMessage extends LightningElement {
     @api iconVariant;
     @api iconDescription;
     @api variant;
-    @api scrollIntoView;
-
-    connectedCallback() {
-        if (this.scrollIntoView === true) {
-            this.template.host.scrollIntoView(true);
-        }
-    }
 
     get titleText() {
         return this.title ? this.title : GeLabelService.CUSTOM_LABELS.geHeaderPageLevelError;
