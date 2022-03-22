@@ -256,13 +256,12 @@
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelAlloBatchNav"><a href="#" onclick="ShowPanel('idPanelAlloBatch');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRollupAlloBatch}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelMakeDefaultAllocationsNav"><a href="#" onclick="ShowPanel('idPanelMakeDefaultAllocations');return false;" class="slds-grow slds-m-left_large">{!$Label.alloBatchCreateDefault}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelCreatePaymentsNav"><a href="#" onclick="ShowPanel('idPanelCreatePayments');return false;" class="slds-grow slds-m-left_large">{!$Label.stgLabelCreateMissingPayments}</a></li>
-                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRefreshHouseholdNamesNav"><a href="#" onclick="ShowPanel('idPanelRefreshHouseholdNames');return false;" class="slds-grow slds-m-left_large">{!$Label.stgHHNameRefreshTitle}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRefreshHouseholdDataNav"><a href="#" onclick="ShowPanel('idPanelRefreshHouseholdData');return false;" class="slds-grow slds-m-left_large">{!$Label.stgHHDataRefreshTitle}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppNamingBatchNav"><a href="#" onclick="ShowPanel('idPanelOppNamingBatch');return false;" class="slds-grow slds-m-left_large">{!$Label.stgLabelOppNamingRefreshTitle}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelUpdatePrimaryContactNav"><a href="#" onclick="ShowPanel('idPanelUpdatePrimaryContact');return false;" class="slds-grow slds-m-left_large">{!$Label.stgLabelOppPrimaryContactTitle}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDBatchNav"><a href="#" onclick="ShowPanel('idPanelRDBatch');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRDBatch}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelLvlAssignBatchNav"><a href="#" onclick="ShowPanel('idPanelLvlAssignBatch');return false;" class="slds-grow slds-m-left_large">{!$Label.stgLabelLvlAssignBatchTitle}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelPrimaryContactRoleMergeNav"><a href="#" onclick="ShowPanel('idPanelPrimaryContactRoleMergeBatch');return false;" class="slds-grow slds-m-left_large">{!$Label.stgLabelPrimaryContactRoleMergeBatch}</a></li>
-                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelDeceasedNav"><a href="#" onclick="ShowPanel('idPanelDeceasedBatch');return false;" class="slds-grow slds-m-left_large">{!$Label.stgLabelDeceasedBatch}</a></li>
                             </ul>
                             <!-- System Tools -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelSystemNav">
@@ -427,7 +426,7 @@
                     <apex:include pageName="STG_PanelCreatePayments" />
                 </div>
 
-                <div class="panel noborder" id="idPanelRefreshHouseholdNames" style="display:none" >
+                <div class="panel noborder" id="idPanelRefreshHouseholdData" style="display:none" >
                     <apex:include pageName="STG_PanelRenameHouseholds" />
                 </div>
 
@@ -449,10 +448,6 @@
 
                 <div class="panel noborder" id="idPanelRDBatch" style="display:none" >
                     <apex:include pageName="STG_PanelRDBatch" />
-                </div>
-
-                <div class="panel noborder" id="idPanelDeceasedBatch" style="display:none" >
-                    <apex:include pageName="STG_PanelDeceasedBatch" />
                 </div>
 
                 <!-- System Tools -->

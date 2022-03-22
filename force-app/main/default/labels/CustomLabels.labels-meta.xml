@@ -12563,6 +12563,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Run Batch</value>
     </labels>
     <labels>
+        <fullName>stgBtnRunHHDeceasedBatch</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnRunHHDeceasedBatch</shortDescription>
+        <value>Run Household Deceased Batch</value>
+    </labels>
+    <labels>
         <fullName>stgBtnSave</fullName>
         <categories>Settings, UTIL_PageHeader</categories>
         <language>en_US</language>
@@ -12815,7 +12823,7 @@ Selecting Don&apos;t Auto Schedule Default NPSP Jobs tells NPSP not to check for
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHHNameRefreshTitle</shortDescription>
-        <value>Refresh Household Data</value>
+        <value>Refresh Household Names</value>
     </labels>
     <labels>
         <fullName>stgHelpAccountModel</fullName>
@@ -13219,6 +13227,14 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <protected>false</protected>
         <shortDescription>stgHelpHHAccountRTID</shortDescription>
         <value>The Account record type you want to use for new Accounts if you&apos;ve selected the Household Account model above. You can select the default Household Account record type, or your own record type. If you select --None--, then Salesforce will use the default Account record type for the user who&apos;s creating the new Contact (and associated Account).</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpHHData</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpHHData</shortDescription>
+        <value>Use these bulk data processes to refresh Household names and recalculate data for the All Household Members Deceased field.</value>
     </labels>
     <labels>
         <fullName>stgHelpHHExcludedRT</fullName>

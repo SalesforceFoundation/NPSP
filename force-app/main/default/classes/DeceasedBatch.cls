@@ -38,20 +38,21 @@ public class DeceasedBatch implements Database.Batchable<sObject>, Database.Stat
     @TestVisible
     Set<Id> highLowProcessedIds = new Set<Id>();
 
+    final String HH_ACCOUNT_TYPE = CAO_Constants.HH_ACCOUNT_TYPE;
+
     public Database.QueryLocator start(Database.BatchableContext info) {
-        final String HH_ACCOUNT_TYPE = CAO_Constants.HH_ACCOUNT_TYPE;
         return Database.getQueryLocator(
             'SELECT AccountId, Account.All_Members_Deceased__c ' +
                 'FROM Contact ' +
                 'WHERE npe01__Organization_Type__c = :HH_ACCOUNT_TYPE ' +
-                'AND Deceased__c = TRUE ' +
+                'AND (Deceased__c = TRUE OR Account.All_Members_Deceased__c = TRUE) ' +
                 'ORDER BY AccountId'
         );
     }
 
     public void execute(Database.BatchableContext BC, List<Contact> scope) {
         Map<Id, Boolean> allMembersDeceasedById = getAllMembersDeceasedById(scope);
-        List<Contact> contacts = getContacts(allMembersDeceasedById);
+        List<Contact> contacts = getContacts(allMembersDeceasedById.keySet());
         if (allMembersDeceasedById.isEmpty() || contacts.isEmpty()) {
             return;
         }
@@ -81,11 +82,11 @@ public class DeceasedBatch implements Database.Batchable<sObject>, Database.Stat
         return allMembersDeceasedById;
     }
 
-    private List<Contact> getContacts(Map<Id, Boolean> allMembersDeceasedById) {
+    private List<Contact> getContacts(Set<Id> accountIds) {
         List<Contact> contacts = [
             SELECT AccountId, Deceased__c
             FROM Contact
-            WHERE AccountId IN :allMembersDeceasedById.keySet()
+            WHERE AccountId IN :accountIds
             ORDER BY AccountId
         ];
         return contacts;
@@ -94,8 +95,8 @@ public class DeceasedBatch implements Database.Batchable<sObject>, Database.Stat
     @TestVisible
     private List<Account> getAllMembersDeceasedUpdates(List<Contact> contacts, Map<Id, Boolean> allMembersDeceasedById) {
         Id previousAccount;
-        Boolean currentAllMembersDeceasedSetting;
-        Boolean calculatedDeceasedSetting;
+        Boolean currentAllMembersDeceasedValue;
+        Boolean calculatedDeceasedValue;
         List<Account> deceasedUpdates = new List<Account>();
 
         for (Contact householdMember : contacts) {
@@ -104,21 +105,21 @@ public class DeceasedBatch implements Database.Batchable<sObject>, Database.Stat
             }
 
             if (previousAccount != householdMember.AccountId) {
-                if (currentAllMembersDeceasedSetting != calculatedDeceasedSetting) {
-                    deceasedUpdates.add(newUpdatedAccount(previousAccount, calculatedDeceasedSetting));
+                if (currentAllMembersDeceasedValue != calculatedDeceasedValue) {
+                    deceasedUpdates.add(newUpdatedAccount(previousAccount, calculatedDeceasedValue));
                 }
                 previousAccount = householdMember.AccountId;
-                currentAllMembersDeceasedSetting = allMembersDeceasedById.get(householdMember.AccountId);
-                calculatedDeceasedSetting = true;
+                currentAllMembersDeceasedValue = allMembersDeceasedById.get(householdMember.AccountId);
+                calculatedDeceasedValue = true;
             }
 
             if (householdMember.Deceased__c != true) {
-                calculatedDeceasedSetting = false;
+                calculatedDeceasedValue = false;
             }
         }
 
-        if (currentAllMembersDeceasedSetting != calculatedDeceasedSetting) {
-            deceasedUpdates.add(newUpdatedAccount(previousAccount, calculatedDeceasedSetting));
+        if (currentAllMembersDeceasedValue != calculatedDeceasedValue) {
+            deceasedUpdates.add(newUpdatedAccount(previousAccount, calculatedDeceasedValue));
         }
 
         return deceasedUpdates;
@@ -142,5 +143,25 @@ public class DeceasedBatch implements Database.Batchable<sObject>, Database.Stat
         highLowProcessedIds.add(contacts[contacts.size() - 1].AccountId);
     }
 
-    public void finish(Database.BatchableContext info) {}
+    public void finish(Database.BatchableContext info) {
+        List<Account> emptyDeceasedAccounts = getEmptyDeceasedHouseholdAccounts();
+        if (!emptyDeceasedAccounts.isEmpty()) {
+            for (Account deceasedAccount : emptyDeceasedAccounts) {
+                deceasedAccount.All_Members_Deceased__c = false;
+            }
+            TDTM_Config_API.disableAllTriggers();
+            Database.update(emptyDeceasedAccounts, false);
+        }
+    }
+
+    private List<Account> getEmptyDeceasedHouseholdAccounts() {
+        return [
+            SELECT Id, All_Members_Deceased__c
+            FROM Account
+            WHERE npe01__SYSTEM_AccountType__c = :HH_ACCOUNT_TYPE
+            AND Number_of_Household_Members__c = 0
+            AND All_Members_Deceased__c = TRUE
+            LIMIT 10000
+        ];
+    }
 }
