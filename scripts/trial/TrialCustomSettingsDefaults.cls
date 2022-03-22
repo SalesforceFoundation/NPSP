@@ -11,7 +11,7 @@ public static void updateCustomSettingsDefaults() {
 
     upsert settingsToUpdate;
 }
-public static void setContactsAndOrgDefaults() {
+private static void setContactsAndOrgDefaults() {
     npe01__Contacts_And_Orgs_Settings__c contactSettings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
     contactSettings.%%%NAMESPACE%%%Honoree_Opportunity_Contact_Role__c = 'Honoree';
     contactSettings.%%%NAMESPACE%%%Notification_Recipient_Opp_Contact_Role__c = 'Notification Recipient';
@@ -22,14 +22,14 @@ public static void setContactsAndOrgDefaults() {
     settingsToUpdate.add(contactSettings);
 }
 
-public static void setRelationshipDefaults() {
+private static void setRelationshipDefaults() {
     npe4__Relationship_Settings__c relationshipSettings = npe4__Relationship_Settings__c.getOrgDefaults();
     relationshipSettings.npe4__Gender_Field__c = 'Gender__c';
 
     settingsToUpdate.add(relationshipSettings);
 }
 
-public static void setRecurringDonationDefaults() {
+private static void setRecurringDonationDefaults() {
     npe03__Recurring_Donations_Settings__c recurringDonationsSettings =
         npe03__Recurring_Donations_Settings__c.getOrgDefaults();
 
@@ -37,11 +37,12 @@ public static void setRecurringDonationDefaults() {
             '{!npe03__Donor_Name__c} {!npe03__Amount__c} - Recurring';
     recurringDonationsSettings.%%%NAMESPACE%%%EnableAutomaticNaming__c = true;
     recurringDonationsSettings.npe03__Record_Type__c = getOppRecordType('Donation');
-
+    recurringDonationsSettings.%%%NAMESPACE%%%StatusAutomationLapsedValue__c = 'Lapsed';
+    recurringDonationsSettings.%%%NAMESPACE%%%StatusAutomationClosedValue__c = 'Closed';
     settingsToUpdate.add(recurringDonationsSettings);
 }
 
-public static void setErrorNotificationDefaults() {
+private static void setErrorNotificationDefaults() {
     %%%NAMESPACE%%%Error_Settings__c errorSettings = %%%NAMESPACE%%%Error_Settings__c.getOrgDefaults();
     errorSettings.%%%NAMESPACE%%%Respect_Duplicate_Rule_Settings__c = true;
 
@@ -51,7 +52,7 @@ public static void setErrorNotificationDefaults() {
 /**
  * @description Retrieve the specified record type, or the first active RT if that fails
  */
-public static String getOppRecordType(String rtDevName) {
+private static String getOppRecordType(String rtDevName) {
     Recordtypeinfo oppRt = Schema.SObjectType.Opportunity.getRecordTypeInfosByDeveloperName().get(rtDevName);
     if (oppRt == null) {
         oppRt = Schema.SObjectType.Opportunity.getRecordTypeInfosByDeveloperName().get('NPSP_Default');
