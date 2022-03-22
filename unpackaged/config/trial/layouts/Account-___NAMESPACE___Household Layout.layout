@@ -39,6 +39,10 @@
                 <behavior>Edit</behavior>
                 <field>%%%NAMESPACE%%%Number_of_Household_Members__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>%%%NAMESPACE%%%All_Members_Deceased__c</field>
+            </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
     </layoutSections>
@@ -80,6 +84,10 @@
         <editHeading>true</editHeading>
         <label>Donation Information</label>
         <layoutColumns>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>%%%NAMESPACE%%%Sustainer__c</field>
+            </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Level__c</field>
