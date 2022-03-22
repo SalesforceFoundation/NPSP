@@ -38,7 +38,7 @@ public static void setRecurringDonationDefaults() {
     recurringDonationsSettings.%%%NAMESPACE%%%EnableAutomaticNaming__c = true;
     recurringDonationsSettings.npe03__Record_Type__c = getOppRecordType('Donation');
     recurringDonationsSettings.%%%NAMESPACE%%%StatusAutomationLapsedValue__c = 'Lapsed';
-    recurringDonationsSettings.%%%NAMESPACE%%%SStatusAutomationClosedValue__c = 'Closed';
+    recurringDonationsSettings.%%%NAMESPACE%%%StatusAutomationClosedValue__c = 'Closed';
     settingsToUpdate.add(recurringDonationsSettings);
 }
 
