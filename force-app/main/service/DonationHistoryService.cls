@@ -109,7 +109,7 @@ public with sharing class DonationHistoryService {
     */
     public String getRequiredPaymentMethodForOpportunities(List<npe01__OppPayment__c> paymentListForOpportunity){
         String paymentMethodToReturn = '';
-		for (npe01__OppPayment__c p : paymentListForOpportunity) {
+        for (npe01__OppPayment__c p : paymentListForOpportunity) {
             if (paymentMethodToReturn == '') {
                 paymentMethodToReturn = p.npe01__Payment_Method__c;
                 continue;
