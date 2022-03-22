@@ -906,18 +906,18 @@ flows:
                 task: test_data_relationships
                 ignore_failure: true
             6:
+                task: deploy_trial_translations
+            7:
+                task: deploy_reports
+            8:
+                flow: enable_rd2
+            9:
+                flow: enable_gift_entry
+            10:
                 task: execute_anon
                 options:
                     path: scripts/trial/TrialCustomSettingsDefaults.cls
                     apex: updateCustomSettingsDefaults();
-            7:
-                task: deploy_trial_translations
-            8:
-                task: deploy_reports
-            9:
-                flow: enable_rd2
-            10:
-                flow: enable_gift_entry
             11:
                 task: update_admin_profile
 

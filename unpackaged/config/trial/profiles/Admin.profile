@@ -11,14 +11,14 @@
         <visible>false</visible>
     </applicationVisibilities>
     <layoutAssignments>
-        <layout>Account-%%%NAMESPACE%%%Household Layout</layout>
+        <layout>Account-Household Lightning Layout</layout>
         <recordType>Account.HH_Account</recordType>
     </layoutAssignments>
     <layoutAssignments>
         <layout>Account-%%%NAMESPACE%%%Organization Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>Account-%%%NAMESPACE%%%Organization Layout</layout>
+        <layout>Account-Organization Lightning Layout</layout>
         <recordType>Account.Organization</recordType>
     </layoutAssignments>
     <layoutAssignments>
