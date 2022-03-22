@@ -114,7 +114,7 @@ public with sharing class DonationHistoryService {
                 paymentMethodToReturn = p.npe01__Payment_Method__c;
                 continue;
             }
-            if(p.npe01__Paid__c){
+            if (p.npe01__Paid__c) {
                 paymentMethodToReturn = p.npe01__Payment_Method__c;
                 break;
             }
