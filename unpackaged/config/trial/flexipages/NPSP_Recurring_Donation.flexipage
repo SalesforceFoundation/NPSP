@@ -107,8 +107,8 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
-                <componentName>npsp:rdActiveSchedule</componentName>
-                <identifier>npsp_rdActiveSchedule</identifier>
+                <componentName>%%%NAMESPACE_OR_C%%%:rdActiveSchedule</componentName>
+                <identifier>%%%NAMESPACE%%%rdActiveSchedule</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>
@@ -117,8 +117,8 @@
                     <name>displayNum</name>
                     <value>12</value>
                 </componentInstanceProperties>
-                <componentName>npsp:rdScheduleVisualizer</componentName>
-                <identifier>npsp_rdScheduleVisualizer</identifier>
+                <componentName>%%%NAMESPACE_OR_C%%%:rdScheduleVisualizer</componentName>
+                <identifier>%%%NAMESPACE%%%rdScheduleVisualizer</identifier>
             </componentInstance>
         </itemInstances>
         <name>sidebar</name>
