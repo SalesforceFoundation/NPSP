@@ -901,7 +901,7 @@ private with sharing class RD2_RecurringDonations_TEST {
     }
 
     /**
-    * @description Verifies that Day of Month field will be clear out on update when RD is not monthly 
+    * @description Verifies that Day of Month field will be clear out on update when RD is not monthly
     */
     @isTest
     private static void shouldClearDayOfMonthWhenSpecifiedOnUpdateAndRDIsNotMonthly() {
@@ -909,22 +909,22 @@ private with sharing class RD2_RecurringDonations_TEST {
 
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
         insert rd;
-        
+
         rd = rdGateway.getRecord(rd.Id);
         System.assert(String.isNotBlank(rd.Day_of_Month__c), 'Monthly Rd should have Day of Month field populated.');
-    
+
         Test.startTest();
         rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH;
         update rd;
         Test.stopTest();
 
         rd = rdGateway.getRecord(rd.Id);
-        
+
         System.assertEquals(null, rd.Day_of_Month__c, 'Day of Month should be clear out when RD is not monthly.');
     }
 
     /**
-    * @description Verifies that Day of Month field will be clear out on insert when RD is not monthly 
+    * @description Verifies that Day of Month field will be clear out on insert when RD is not monthly
     */
     @isTest
     private static void shouldClearDayOfMonthWhenSpecifiedOnInsertAndRDIsNotMonthly() {
@@ -939,7 +939,7 @@ private with sharing class RD2_RecurringDonations_TEST {
         Test.stopTest();
 
         rd = rdGateway.getRecord(rd.Id);
-        
+
         System.assertEquals(null, rd.Day_of_Month__c, 'Day of Month should be clear out when RD is not monthly.');
     }
 
@@ -983,7 +983,7 @@ private with sharing class RD2_RecurringDonations_TEST {
     }
 
     /***
-    * @description Verifies RD "Day of Month" cannot be changed 
+    * @description Verifies RD "Day of Month" cannot be changed
     * when an active pause exists on the RD
     */
     @isTest
@@ -1022,7 +1022,7 @@ private with sharing class RD2_RecurringDonations_TEST {
             System.Label.RD2_PauseCannotExistOnScheduleChange,
             new String[]{ SObjectType.npe03__Recurring_Donation__c.fields.Day_of_Month__c.getLabel() }
         );
-        System.assert(actualException.getMessage().contains(expectedMessage), 
+        System.assert(actualException.getMessage().contains(expectedMessage),
             'An exception message should match. Expected: ' + expectedMessage + '| Actual: ' + actualException.getMessage());
 
         rd = rdGateway.getRecord(rd.Id);
@@ -1031,7 +1031,7 @@ private with sharing class RD2_RecurringDonations_TEST {
     }
 
     /***
-    * @description Verifies RD "Installment Frequency" and/or "Installment Period" cannot be changed 
+    * @description Verifies RD "Installment Frequency" and/or "Installment Period" cannot be changed
     * when an active pause exists on the RD
     */
     @isTest
@@ -1066,13 +1066,13 @@ private with sharing class RD2_RecurringDonations_TEST {
         System.assertNotEquals(null, actualException, 'An exception should be generated');
         String expectedMessage = String.format(
             System.Label.RD2_PauseCannotExistOnScheduleChange,
-            new String[]{ 
-                SObjectType.npe03__Recurring_Donation__c.fields.npe03__Installment_Period__c.getLabel() 
-                + ', ' + SObjectType.npe03__Recurring_Donation__c.fields.InstallmentFrequency__c.getLabel() 
-                + ', ' + SObjectType.npe03__Recurring_Donation__c.fields.Day_of_Month__c.getLabel() 
+            new String[]{
+                SObjectType.npe03__Recurring_Donation__c.fields.npe03__Installment_Period__c.getLabel()
+                + ', ' + SObjectType.npe03__Recurring_Donation__c.fields.InstallmentFrequency__c.getLabel()
+                + ', ' + SObjectType.npe03__Recurring_Donation__c.fields.Day_of_Month__c.getLabel()
             }
         );
-        System.assert(actualException.getMessage().contains(expectedMessage), 
+        System.assert(actualException.getMessage().contains(expectedMessage),
             'An exception message should match. Expected: ' + expectedMessage + '| Actual: ' + actualException.getMessage());
 
         rd = rdGateway.getRecord(rd.Id);
@@ -1116,6 +1116,28 @@ private with sharing class RD2_RecurringDonations_TEST {
         System.assertEquals(nextDonationDate, rd.npe03__Next_Payment_Date__c, 'Next Donation Date should be unchanged');
     }
 
+    /***
+    * @description Verifies that the instrumentation service is called when a new RD is inserted
+    */
+    @isTest
+    private static void shouldInstrumentInsertedRecurringDonation() {
+        SfdoInstrumentationMock_TEST.MockService mockService = SfdoInstrumentationMock_TEST.injectMockedInstrumentationService();
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
+        final Date nextDonationDate = Date.newInstance(2019, 10, 1);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        System.assertEquals(1, mockService.value, 'The instrumentation service should have indicated a single new RD was inserted');
+        System.assertEquals(sfdoInstrumentationEnum.Feature.EnhancedRecurringDonations, mockService.feature,
+            'The instrumentation service should have indicated Enhanced Recurring Donations');
+    }
+
     @IsTest
     private static void shouldUpdateSchedulesOnGoodBulkRDUpdate() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
@@ -1124,19 +1146,19 @@ private with sharing class RD2_RecurringDonations_TEST {
         npe03__Recurring_Donation__c badRd = getRecurringDonationMonthlyBuilder().build();
         npe03__Recurring_Donation__c goodRd = getRecurringDonationMonthlyBuilder().build();
         List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>{ badRd, goodRd };
-        
+
         insert recurringDonations;
         List<RecurringDonationSchedule__c> schedules = rdScheduleGateway.getRecords(goodRd);
-        
+
         System.assertEquals(goodRd.npe03__Amount__c, schedules[0].InstallmentAmount__c, 'RD should have the correct schedule setup');
-        
+
         badRd.npe03__Amount__c = 0;
         goodRd.npe03__Amount__c = goodRd.npe03__Amount__c + 10;
 
         Test.startTest();
         Database.update(recurringDonations, false);
         Test.stopTest();
-        
+
         schedules = rdScheduleGateway.getRecords(goodRd);
         for (RecurringDonationSchedule__c schedule : schedules) {
             if (schedule.Active__c) {
@@ -1152,7 +1174,7 @@ private with sharing class RD2_RecurringDonations_TEST {
         For (Opportunity opp : opps) {
             System.assertEquals(goodRd.npe03__Amount__c, opp.Amount, 'Opp Installment amount should be updated');
         }
-    }   
+    }
 
 
     // Helpers
