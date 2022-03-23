@@ -5045,7 +5045,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bdiSelectReturnToListView</shortDescription>
-        <value>Return to List View</value>
+        <value>Go Back</value>
     </labels>
     <labels>
         <fullName>bdiSelectTooManyDIRecords</fullName>
