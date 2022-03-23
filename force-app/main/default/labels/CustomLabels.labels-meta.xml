@@ -3857,7 +3857,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bdiAPISelectedError</shortDescription>
-        <value>Error encountered processing Data Import records:</value>
+        <value>We couldn't process the selected Data Import records because of the following errors:</value>
     </labels>
     <labels>
         <fullName>bdiAccountCustomIdError</fullName>
