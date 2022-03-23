@@ -13258,7 +13258,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHData</shortDescription>
-        <value>Use these bulk data processes to refresh Household names and recalculate data for the All Household Members Deceased field.</value>
+        <value>Use these bulk data processes to refresh Household names and recalculate data for the All Household Members Deceased field. After running one of these processes, refresh your browser to run the other one.</value>
     </labels>
     <labels>
         <fullName>stgHelpHHExcludedRT</fullName>
