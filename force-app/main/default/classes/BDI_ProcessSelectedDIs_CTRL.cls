@@ -37,16 +37,17 @@ public with sharing class BDI_ProcessSelectedDIs_CTRL {
 
     private String diIds = '';
     PageReference listView = new ApexPages.Action('{!List}').invoke();
-    private Integer maxNumOfDi = 100;
+    @TestVisible private Integer maxNumOfDi = Test.isRunningTest() ? 5 : 200;
     public Boolean error {get; set;}
+    private String retURL = null;
 
     /*********************************************************************************************************
     * @description Constructor that extracts the Data Import Ids from the URL and performs some checks on them
     * before reformatting the ids for the redirect.
     */
-    public BDI_ProcessSelectedDIs_CTRL(ApexPages.StandardSetController controller) {
+    public BDI_ProcessSelectedDIs_CTRL(ApexPages.StandardSetController setCtrl) {
 
-        DataImport__c[] diRecs = (List<DataImport__c>)controller.getSelected();
+        DataImport__c[] diRecs = (List<DataImport__c>)setCtrl.getSelected();
 
         // Redirect to the processing page only if there are more than 1 but less than max number of records
         // and none of the records are already 'Imported'
@@ -54,28 +55,14 @@ public with sharing class BDI_ProcessSelectedDIs_CTRL {
             
             Map<Id,DataImport__c> diMap = new Map<Id,DataImport__c>(diRecs);
 
-            for (DataImport__c di: [SELECT Id, Status__c FROM DataImport__c WHERE Id IN: diMap.keySet()]) {
-                diIds += di.Id + ',';
-
-                // If an already imported record is found then throw an error and prevent redirect.
-                if (di.Status__c == BDI_DataImport_API.bdiImported) {
-                    error = true;
-                    ApexPages.addmessage(new ApexPages.message(ApexPages.severity.Error, 
-                                            System.label.bdiSelectCantProcessImportedRecords));
-                    break;
-                } else {
-                    error = false;
-                } 
-            }
-                
-            diIds = diIds.removeEnd(',');
+            populateDataImportIds(diMap);
 
         // Throw an error if no records were selected
         } else if (diRecs == null || diRecs.size() == 0) { 
             error = true;
             ApexPages.addmessage(new ApexPages.message(ApexPages.severity.Error, 
                                     System.label.bdiSelectNoDIRecordsSelected));
-                                    
+
         // Throw an error if too many records were selected
         } else if (diRecs.size() > maxNumOfDi) {
             error = true;
@@ -94,12 +81,16 @@ public with sharing class BDI_ProcessSelectedDIs_CTRL {
         
         if (diIds.length() > 0 && !error) {
             PageReference diPage = Page.BDI_DataImport;
-
+            
+            if (listView != null) {
+                retURL = listView.getUrl();
+            }
+            
+            // Passing through the originating list view for return at the end of processing
+            diPage.getParameters().put('retURL',retURL);
+            
             // Put the selected Data Import Ids into the URL to pass to the DataImport page
             diPage.getParameters().put('diIds',diIds);
-
-            // Passing through the originating list view for return at the end of processing
-            diPage.getParameters().put('retURL',listView.getUrl());
 
             diPage.setRedirect(true);
             return diPage;
@@ -107,7 +98,43 @@ public with sharing class BDI_ProcessSelectedDIs_CTRL {
         return null;
     }
 
+    /*********************************************************************************************************
+    * @description Returns the user to the list view they last accessed.
+    * @return PageReference for the last list view they accessed.
+    */
     public PageReference returnToListView() {
         return listView;
+    }
+
+    /*********************************************************************************************************
+    * @description Confirms that the data import records are not already imported and adds the diIds to a 
+    * string for passing in the URL.
+    * @param diMap Map of Data Import Id to Data Import record for processing.
+    */
+    private void populateDataImportIds (Map<Id,DataImport__c> diMap) {
+            // Query the Data import records to see if any of them are imported.  The try/catch is to handle
+            // and display any field / object level security error.
+            try {
+                for (DataImport__c di: [SELECT Id, Status__c 
+                                        FROM DataImport__c WHERE Id IN: diMap.keySet()                        
+                                        WITH SECURITY_ENFORCED]) {
+                    diIds += di.Id + ',';
+
+                    // If an already imported record is found then throw an error and prevent redirect.
+                    if (di.Status__c == BDI_DataImport_API.bdiImported) {
+                        error = true;
+                        ApexPages.addmessage(new ApexPages.message(ApexPages.severity.Error, 
+                                                System.label.bdiSelectCantProcessImportedRecords));
+                        break;
+                    } else {
+                        error = false;
+                    } 
+                }
+            } catch (Exception e) {
+                error = true;
+                ApexPages.addmessage(new ApexPages.message(ApexPages.severity.Error, e.getMessage()));
+            }
+                
+            diIds = diIds.removeEnd(',');
     }
 }

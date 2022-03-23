@@ -6,5 +6,4 @@
                 value="{!$Label.bdiSelectReturnToListView}" title="{!$Label.bdiSelectReturnToListView}"/>
         </div>
     </apex:form>
-    
 </apex:page>
