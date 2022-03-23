@@ -159,7 +159,7 @@ public class DeceasedBatch implements Database.Batchable<sObject>, Database.Stat
             SELECT Id, All_Members_Deceased__c
             FROM Account
             WHERE npe01__SYSTEM_AccountType__c = :HH_ACCOUNT_TYPE
-            AND (Number_of_Household_Members__c = 0 OR Number_of_Household_Members__c = NULL)
+            AND Number_of_Household_Members__c = 0
             AND All_Members_Deceased__c = TRUE
             LIMIT 10000
         ];

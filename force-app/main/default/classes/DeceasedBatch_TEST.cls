@@ -210,10 +210,13 @@ private class DeceasedBatch_TEST {
         Account deceasedAccount = UTIL_UnitTestData_TEST.buildHouseholdAccount();
         insert deceasedAccount;
 
-        List<Account> allAccounts = [SELECT Id, All_Members_Deceased__c FROM Account];
+        List<Account> allAccounts = [SELECT Id, All_Members_Deceased__c, Number_of_Household_Members__c FROM Account];
         for (Account acc : allAccounts) {
             System.assertEquals(false, acc.All_Members_Deceased__c, 'All Members Deceased Should be false');
             acc.All_Members_Deceased__c = true;
+            if (acc.Number_of_Household_Members__c == null) {
+                acc.Number_of_Household_Members__c = 0;
+            }
         }
 
         TDTM_Config_API.disableAllTriggers();
