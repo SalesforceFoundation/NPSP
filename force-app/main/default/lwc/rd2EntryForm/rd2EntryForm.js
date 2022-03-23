@@ -301,7 +301,7 @@ export default class rd2EntryForm extends LightningElement {
     handleCampaignChange(event) {
         this.perform({
             type: ACTIONS.SET_CAMPAIGN_ID,
-            payload: event.detail,
+            payload: event.target.value,
         });
     }
 
