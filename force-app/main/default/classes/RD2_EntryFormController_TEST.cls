@@ -728,6 +728,7 @@ private with sharing class RD2_EntryFormController_TEST {
         };
         req.cardExpirationYear = '2025';
         req.cardExpirationMonth = '2';
+        req.recordId = fakeRdId;
 
         npe03__Recurring_Donation__c rd = req.toRecord();
 

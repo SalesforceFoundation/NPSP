@@ -102,6 +102,6 @@ public with sharing class RD2_SaveRequest {
     }
 
     public Set<String> getCustomFieldNames() {
-        return customFieldValues.keySet();
+        return customFieldValues == null ? new Set<String>{} : customFieldValues.keySet();
     }
 }
