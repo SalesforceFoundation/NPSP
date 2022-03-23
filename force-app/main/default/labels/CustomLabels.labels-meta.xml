@@ -5037,7 +5037,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bdiSelectNoDIRecordsSelected</shortDescription>
-        <value>No Data Import records were selected for processing.</value>
+        <value>Select one or more Data Import records.</value>
     </labels>
     <labels>
         <fullName>bdiSelectReturnToListView</fullName>
