@@ -76,10 +76,6 @@ export default class DonationHistoryTable extends LightningElement {
                     },
                     { label: commonAmount, fieldName: "amount", type: "currency", hideDefaultActions: true },
                 ];
-                if(this.tableElement) {
-                    this.tableElement.scrollTop = 0;
-                    this.tableElement.enableInfiniteLoading = true;
-                }
                 if (this.arePaymentsEnabled) {
                     this.columns.push({
                         label: this.paymentMethodLabel,
@@ -87,6 +83,10 @@ export default class DonationHistoryTable extends LightningElement {
                         type: "text",
                         hideDefaultActions: true
                     });
+                }
+                if(this.tableElement) {
+                    this.tableElement.scrollTop = 0;
+                    this.tableElement.enableInfiniteLoading = true;
                 }
             }
         });
@@ -106,7 +106,6 @@ export default class DonationHistoryTable extends LightningElement {
                     this.tableElement.isLoading = false;
                     this.infiniteScroll = false;
                     this.tableElement.enableInfiniteLoading = false;
-
                     return;
                 }
                 const currentData = this.data;
