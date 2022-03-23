@@ -5029,7 +5029,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bdiSelectCantProcessImportedRecords</shortDescription>
-        <value>Only Data Import records with a status other than &apos;Imported&apos; may be selected.</value>
+        <value>You can't import records that have already been imported. Remove records with the Imported status from your selection.</value>
     </labels>
     <labels>
         <fullName>bdiSelectNoDIRecordsSelected</fullName>
