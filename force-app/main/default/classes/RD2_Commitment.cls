@@ -44,7 +44,7 @@ public class RD2_Commitment {
     public RD2_Commitment(npe03__Recurring_Donation__c rd) {
       RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
         id = rd.CommitmentId__c;
-        status = rdRecord.getState();
+        status = PS_CommitmentRequest.elevateStatusByRD2State.get(rdRecord.getState());
         statusUpdateReason = rd.ClosedReason__c;
     }
 }
