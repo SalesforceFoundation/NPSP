@@ -103,20 +103,21 @@ public with sharing class DonationHistoryService {
     }
 
     /** 
-    * @description method to return Donation History list.
+    * @description method to return Payment Method associated to Donations
     * @param paymentListForOpportunity List<npe01__OppPayment__c> for current opportunity
-    * @return String with payment method for current opportunity
+    * @return String with payment method for current opportunity. This returns the first Paid Payment Method unless
+    * none are paid, in which case it returns the first Payment Method
     */
     public String getRequiredPaymentMethodForOpportunities(List<npe01__OppPayment__c> paymentListForOpportunity){
         String paymentMethodToReturn = '';
         for (npe01__OppPayment__c p : paymentListForOpportunity) {
-            if (paymentMethodToReturn == '') {
-                paymentMethodToReturn = p.npe01__Payment_Method__c;
-                continue;
-            }
             if (p.npe01__Paid__c) {
                 paymentMethodToReturn = p.npe01__Payment_Method__c;
                 break;
+            }
+            if (paymentMethodToReturn == '') {
+                paymentMethodToReturn = p.npe01__Payment_Method__c;
+                continue;
             }
         }
         return paymentMethodToReturn;
