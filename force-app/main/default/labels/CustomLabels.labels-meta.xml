@@ -5053,7 +5053,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bdiSelectTooManyDIRecords</shortDescription>
-        <value>Must process {0} or fewer Data Import records at a time.</value>
+        <value>Select up to {0} Data Import records.</value>
     </labels>
     <labels>
         <fullName>bdiSettingsSectionContactMatching</fullName>
