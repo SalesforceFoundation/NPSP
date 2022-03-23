@@ -1218,7 +1218,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         );
         System.assertEquals(1, requestBody.commitments.size(), '1 Commitment should be included in the payload');
         System.assertEquals('random-id', requestBody.commitments[0].id, 'The commitment Id should match the Recurring Donation Commitment Id');
-        System.assertEquals(RD2_Constants.STATUS_CLOSED, requestBody.commitments[0].status, 'The commitment status should be set to Closed');
+        System.assertEquals(PS_CommitmentRequest.STATUS_INACTIVE, requestBody.commitments[0].status, 'The commitment status should be set to INACTIVE');
     }
 
     @isTest
