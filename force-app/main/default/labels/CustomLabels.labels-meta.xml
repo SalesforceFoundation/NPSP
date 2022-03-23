@@ -3849,7 +3849,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bdiAPIBatchError</shortDescription>
-        <value>Error encountered in batch:</value>
+        <value>We couldn't process the Data Import records because of the following errors:</value>
     </labels>
     <labels>
         <fullName>bdiAPISelectedError</fullName>
