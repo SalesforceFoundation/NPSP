@@ -45,7 +45,6 @@ export default class DonationHistoryTable extends LightningElement {
         this._filter = value;
         this.retrieveDonationHistory();
         this.infiniteScroll = true;
-        this.tableElement ? this.tableElement.enableInfiniteLoading = true : null;
     }
 
     retrieveDonationHistory(){
@@ -56,7 +55,6 @@ export default class DonationHistoryTable extends LightningElement {
                 this.data = data.donations;
                 this.paymentMethodLabel = data.paymentMethodLabel;
                 this.arePaymentsEnabled = data.isPaymentsEnabled;
-
                 this.columns = [
                     {
                         label: commonDate,
@@ -78,6 +76,10 @@ export default class DonationHistoryTable extends LightningElement {
                     },
                     { label: commonAmount, fieldName: "amount", type: "currency", hideDefaultActions: true },
                 ];
+                if(this.tableElement) {
+                    this.tableElement.scrollTop = 0;
+                    this.tableElement.enableInfiniteLoading = true;
+                }
                 if (this.arePaymentsEnabled) {
                     this.columns.push({
                         label: this.paymentMethodLabel,
