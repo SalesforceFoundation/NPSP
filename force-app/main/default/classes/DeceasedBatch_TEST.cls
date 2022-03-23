@@ -203,6 +203,38 @@ private class DeceasedBatch_TEST {
         System.assertEquals(0, accountUpdates.size(), 'No Account updates should be identified');
     }
 
+    @IsTest
+    private static void shouldUpdateAccountsWhenDeceasedFlagIsSetOnHouseholdAccount() {
+        Contact unDeceasedContact = UTIL_UnitTestData_TEST.getContact();
+        insert unDeceasedContact;
+        Account deceasedAccount = UTIL_UnitTestData_TEST.buildHouseholdAccount();
+        insert deceasedAccount;
+
+        List<Account> allAccounts = [SELECT Id, All_Members_Deceased__c FROM Account];
+        for (Account acc : allAccounts) {
+            System.assertEquals(false, acc.All_Members_Deceased__c, 'All Members Deceased Should be false');
+            acc.All_Members_Deceased__c = true;
+        }
+
+        TDTM_Config_API.disableAllTriggers();
+        update allAccounts;
+
+        allAccounts = [SELECT Id, All_Members_Deceased__c FROM Account];
+        for (Account acc : allAccounts) {
+            System.assertEquals(true, acc.All_Members_Deceased__c, 'All Members Deceased Should be true');
+        }
+
+        Test.startTest();
+        DeceasedBatch testBatch = new DeceasedBatch();
+        Database.executeBatch(testBatch, 200);
+        Test.stopTest();
+
+        allAccounts = [SELECT Id, All_Members_Deceased__c, Number_of_Household_Members__c FROM Account];
+        for (Account acc : allAccounts) {
+            System.assertEquals(false, acc.All_Members_Deceased__c, 'All Members Deceased Should be false');
+        }
+    }
+
     ///// Helpers
 
     private static List<Contact> getContactsWithAccount(Integer contactsPerAccount) {
