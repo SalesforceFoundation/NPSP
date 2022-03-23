@@ -44,7 +44,6 @@ export default class DonationHistoryTable extends LightningElement {
         this.data = [];
         this._filter = value;
         this.retrieveDonationHistory();
-        this.infiniteScroll = true;
     }
 
     retrieveDonationHistory(){
@@ -87,6 +86,7 @@ export default class DonationHistoryTable extends LightningElement {
                 if(this.tableElement) {
                     this.tableElement.scrollTop = 0;
                     this.tableElement.enableInfiniteLoading = true;
+                    this.infiniteScroll = true;
                 }
             }
         });
