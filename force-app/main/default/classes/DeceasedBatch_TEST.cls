@@ -49,66 +49,6 @@ private class DeceasedBatch_TEST {
     }
 
     @IsTest
-    private static void shouldRemoveOneMemberFromAccountMap() {
-        List<Contact> contacts = getContactsWithAccount(3);
-        contacts.addAll(getContactsWithAccount(4));
-        contacts.addAll(getContactsWithAccount(1));
-
-        DeceasedBatch batch = new DeceasedBatch();
-        batch.highLowProcessedIds.add(contacts[0].AccountId);
-        Map<Id, Boolean> deceasedById = batch.getAllMembersDeceasedById(contacts);
-
-        System.assertEquals(2, deceasedById.size(), 'One entry should be removed from the Id => Boolean map');
-    }
-
-    @IsTest
-    private static void shouldRemoveTwoMembersFromAccountMap() {
-        List<Contact> contacts = getContactsWithAccount(3);
-        contacts.addAll(getContactsWithAccount(4));
-        contacts.addAll(getContactsWithAccount(1));
-
-        DeceasedBatch batch = new DeceasedBatch();
-        batch.highLowProcessedIds.add(contacts[0].AccountId);
-        batch.highLowProcessedIds.add(contacts[contacts.size() - 1].AccountId);
-        Map<Id, Boolean> deceasedById = batch.getAllMembersDeceasedById(contacts);
-
-        System.assertEquals(1, deceasedById.size(), 'Two entries should be removed from the Id => Boolean map');
-    }
-
-    @IsTest
-    private static void shouldRemoveTheOnlyAccountFromAccountMap() {
-        List<Contact> contacts = getContactsWithAccount(3);
-
-        DeceasedBatch batch = new DeceasedBatch();
-        batch.highLowProcessedIds.add(contacts[0].AccountId);
-        Map<Id, Boolean> deceasedById = batch.getAllMembersDeceasedById(contacts);
-
-        System.assertEquals(0, deceasedById.size(), 'The Id => Boolean map should be empty');
-    }
-
-    @IsTest
-    private static void shouldSaveHighAndLowAccountIdsProcessed() {
-        List<Contact> contacts = getContactsWithAccount(3);
-        contacts.addAll(getContactsWithAccount(4));
-        contacts.addAll(getContactsWithAccount(1));
-
-        DeceasedBatch batch = new DeceasedBatch();
-        batch.saveHighAndLowProcessedIds(contacts);
-
-        System.assertEquals(2, batch.highLowProcessedIds.size(), 'High and low processed Id numbers should be saved');
-    }
-
-    @IsTest
-    private static void shouldSaveOneAccountIdProcessed() {
-        List<Contact> contacts = getContactsWithAccount(3);
-
-        DeceasedBatch batch = new DeceasedBatch();
-        batch.saveHighAndLowProcessedIds(contacts);
-
-        System.assertEquals(1, batch.highLowProcessedIds.size(), 'One processed Id numbers should be saved');
-    }
-
-    @IsTest
     private static void shouldNotUpdateAllMembersDeceasedWhenAllMembersDeceased() {
         List<Contact> unDeceasedContacts = getContactsWithAccount(3);
         List<Contact> deceasedContacts = getContactsWithAccount(3);

@@ -33,10 +33,7 @@
 * @group Settings
 * @description Batch Class to recalculate the All Household Members Deceased flag on Household Accounts.
 */
-public class DeceasedBatch implements Database.Batchable<sObject>, Database.Stateful {
-
-    @TestVisible
-    Set<Id> highLowProcessedIds = new Set<Id>();
+public class DeceasedBatch implements Database.Batchable<sObject> {
 
     final String HH_ACCOUNT_TYPE = CAO_Constants.HH_ACCOUNT_TYPE;
 
@@ -59,8 +56,6 @@ public class DeceasedBatch implements Database.Batchable<sObject>, Database.Stat
 
         List<Account> allMembersDeceasedUpdates = getAllMembersDeceasedUpdates(contacts, allMembersDeceasedById);
         updateModifiedAccounts(allMembersDeceasedUpdates);
-
-        saveHighAndLowProcessedIds(contacts);
     }
 
     @TestVisible
@@ -71,14 +66,6 @@ public class DeceasedBatch implements Database.Batchable<sObject>, Database.Stat
                 allMembersDeceasedById.put(householdMember.AccountId, householdMember.Account.All_Members_Deceased__c);
             }
         }
-
-        if (highLowProcessedIds.contains(scope[0].AccountId)) {
-            allMembersDeceasedById.remove(scope[0].AccountId);
-        }
-        if (highLowProcessedIds.contains(scope[scope.size() - 1].AccountId)) {
-            allMembersDeceasedById.remove(scope[scope.size() - 1].AccountId);
-        }
-
         return allMembersDeceasedById;
     }
 
@@ -135,12 +122,6 @@ public class DeceasedBatch implements Database.Batchable<sObject>, Database.Stat
     private void updateModifiedAccounts(List<Account> allMembersDeceasedUpdates) {
         TDTM_Config_API.disableAllTriggers();
         Database.update(allMembersDeceasedUpdates, false);
-    }
-
-    @TestVisible
-    private void saveHighAndLowProcessedIds(List<Contact> contacts) {
-        highLowProcessedIds.add(contacts[0].AccountId);
-        highLowProcessedIds.add(contacts[contacts.size() - 1].AccountId);
     }
 
     public void finish(Database.BatchableContext info) {
