@@ -1568,18 +1568,6 @@
         <label>Nonprofit Success Pack (NPSP)</label>
     </customLabels>
     <customLabels>
-        <name>RP_ReleaseGitHub</name>
-        <label>Uitgegeven:</label>
-    </customLabels>
-    <customLabels>
-        <name>RP_ReleaseNotesLink</name>
-        <label>Lees de volledige notities bij de release &gt;</label>
-    </customLabels>
-    <customLabels>
-        <name>RP_Remote_Site_Settings_Deactivated</name>
-        <label>Om van alle voordelen van de nieuwe functionaliteit op de Introductiepagina te genieten, gaat u naar Set-up, zoekt u de Instellingen voor Externe Site en zorgt u dat de site SFDOEindpunten actief is. Is deze site niet actief, klikt u op Bewerken, vinkt u het selectievakje Actief aan en klikt u op Opslaan.</label>
-    </customLabels>
-    <customLabels>
         <name>RP_SalesforceOrgLinkLabel</name>
         <label>Wekelijkse Kantooruren Hub Community</label>
     </customLabels>

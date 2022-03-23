@@ -1506,18 +1506,6 @@
         <name>RP_ProductNameLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Resources Page - Release GitHub --></label>
-        <name>RP_ReleaseGitHub</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- Resources Page - Release Notes Link --></label>
-        <name>RP_ReleaseNotesLink</name>
-    </customLabels>
-    <customLabels>
-        <label><!-- RP Remote Site Settings Deactivated --></label>
-        <name>RP_Remote_Site_Settings_Deactivated</name>
-    </customLabels>
-    <customLabels>
         <label><!-- Resources Page - Salesforce Org Link --></label>
         <name>RP_SalesforceOrgLinkLabel</name>
     </customLabels>

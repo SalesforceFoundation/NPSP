@@ -1573,18 +1573,6 @@
         <label>Nonprofit Success Pack (NPSP)</label>
     </customLabels>
     <customLabels>
-        <name>RP_ReleaseGitHub</name>
-        <label>リリース:</label>
-    </customLabels>
-    <customLabels>
-        <name>RP_ReleaseNotesLink</name>
-        <label>リリースノート全文を読む &gt;</label>
-    </customLabels>
-    <customLabels>
-        <name>RP_Remote_Site_Settings_Deactivated</name>
-        <label>「はじめよう」ページの新しい機能を活用するには、[設定] に移動し、[リモートサイト] 設定を検索して、SFDOEndpoints サイトが有効であることを確認します。有効でない場合、[編集] をクリックして、[有効] ボックスをオンにし、[保存] をクリックします。</label>
-    </customLabels>
-    <customLabels>
         <name>RP_SalesforceOrgLinkLabel</name>
         <label>Hub コミュニティウィークリーオフィスアワー</label>
     </customLabels>
