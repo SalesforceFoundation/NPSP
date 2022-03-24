@@ -53,7 +53,7 @@ private class DeceasedBatch_TEST {
         List<Contact> unDeceasedContacts = getContactsWithAccount(3);
         List<Contact> deceasedContacts = getContactsWithAccount(3);
         deceasedContacts[0].Account.All_Members_Deceased__c = true;
-        setContactsDeceased(deceasedContacts, true, false);
+        matchContactsDeceasedToHouseholds(deceasedContacts);
 
         List<Contact> allContacts = unDeceasedContacts.clone();
         allContacts.addAll(deceasedContacts);
@@ -93,7 +93,7 @@ private class DeceasedBatch_TEST {
 
         List<Contact> allContacts = deceasedContacts1.clone();
         allContacts.addAll(deceasedContacts2);
-        setContactsDeceased(allContacts, false, false);
+        setAllContactsDeceased(allContacts);
 
         DeceasedBatch batch = new DeceasedBatch();
         Map<Id, Boolean> deceasedById = batch.getAllMembersDeceasedById(allContacts);
@@ -114,7 +114,7 @@ private class DeceasedBatch_TEST {
 
         List<Contact> allContacts = mixedContacts1.clone();
         allContacts.addAll(mixedContacts2);
-        setContactsDeceased(allContacts, false, true);
+        setSomeContactsDeceased(allContacts);
 
         DeceasedBatch batch = new DeceasedBatch();
         Map<Id, Boolean> deceasedById = batch.getAllMembersDeceasedById(allContacts);
@@ -133,7 +133,7 @@ private class DeceasedBatch_TEST {
 
         List<Contact> allContacts = mixedContacts1.clone();
         allContacts.addAll(mixedContacts2);
-        setContactsDeceased(allContacts, false, true);
+        setSomeContactsDeceased(allContacts);
 
         DeceasedBatch batch = new DeceasedBatch();
         Map<Id, Boolean> deceasedById = batch.getAllMembersDeceasedById(allContacts);
@@ -196,18 +196,25 @@ private class DeceasedBatch_TEST {
         return contacts;
     }
 
-    private static void setContactsDeceased(List<Contact> contacts, Boolean accountMatch, Boolean mixed) {
+    private static void setSomeContactsDeceased(List<Contact> contacts) {
         Integer contactCount = 0;
         for (Contact testContact : contacts) {
-            if (accountMatch) {
-                testContact.Deceased__c = testContact.Account.All_Members_Deceased__c;
-
-            } else if (mixed && Math.mod(contactCount++, 2) == 0) {
+            if (Math.mod(contactCount++, 2) == 0) {
                 testContact.Deceased__c = false;
-
-            } else {
-                testContact.Deceased__c = true;
             }
+        }
+    }
+
+    private static void setAllContactsDeceased(List<Contact> contacts) {
+        Integer contactCount = 0;
+        for (Contact testContact : contacts) {
+            testContact.Deceased__c = true;
+        }
+    }
+
+    private static void matchContactsDeceasedToHouseholds(List<Contact> contacts) {
+        for (Contact testContact : contacts) {
+            testContact.Deceased__c = testContact.Account.All_Members_Deceased__c;
         }
     }
 }
