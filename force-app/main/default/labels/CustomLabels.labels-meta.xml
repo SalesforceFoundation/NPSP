@@ -15582,12 +15582,4 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <shortDescription>Label to define aria-label on donation history datatable</shortDescription>
         <value>Donation History</value>
     </labels>
-    <labels>
-        <fullName>donationHistoryDonorLabel</fullName>
-        <categories>Donation</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Label to define donor column for donation history datatable</shortDescription>
-        <value>Donor</value>
-    </labels>
 </CustomLabels>
