@@ -57,6 +57,10 @@ class Rd2Service {
     async save(rd2State) {
         let result;
         try {
+            // TODO: Move this somewhere more appropriate
+            if (rd2State.recurringType === RECURRING_TYPE_OPEN) {
+                rd2State.plannedInstallments = null;
+            }
             const saveRequest = this.getSaveRequest(rd2State);
             result = await saveRecurringDonation({ saveRequest });
         } catch (ex) {

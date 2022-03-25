@@ -492,7 +492,7 @@ export default class rd2EntryForm extends LightningElement {
     evaluateElevateEditWidget() {
         if (this.rd2State.isElevateCustomer && this.rd2State.recordId) {
             // Since the widget requires interaction to Edit, this should start as true
-            this.hasUserDisabledElevateWidget = this.isCommitmentEdit;
+            this.hasUserDisabledElevateWidget = true;
 
             this.isElevateEditWidgetEnabled = this.rd2Service.isValidForElevate(this.rd2State);
 
