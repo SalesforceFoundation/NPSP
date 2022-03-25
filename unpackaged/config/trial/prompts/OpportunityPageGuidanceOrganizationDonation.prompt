@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Prompt xmlns="http://soap.sforce.com/2006/04/metadata">
+    <masterLabel>Opportunity Page Guidance - Organization Donation</masterLabel>
+    <promptVersions>
+        <actionButtonLabel>More About Donations</actionButtonLabel>
+        <actionButtonLink>https://sforce.co/3aa1nb0</actionButtonLink>
+        <body>&lt;p&gt;Navigate to the Account record, click &lt;b&gt;New Donation&lt;/b&gt;, and enter required (*) donation details. When you’re done, click &lt;b&gt;Save&lt;/b&gt;. &lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Congratulations! You just created a new donation.&lt;/p&gt;</body>
+        <customApplication>Nonprofit_Success_Pack</customApplication>
+        <delayDays>1</delayDays>
+        <description>Prompt for new admins to detail how to create a new single donation</description>
+        <displayType>DockedComposer</displayType>
+        <header>NPSP How-To Tips</header>
+        <isPublished>true</isPublished>
+        <masterLabel>Opportunity Page Guidance - Organization Donation</masterLabel>
+        <publishedDate>2021-03-31</publishedDate>
+        <shouldDisplayActionButton>true</shouldDisplayActionButton>
+        <shouldIgnoreGlobalDelay>true</shouldIgnoreGlobalDelay>
+        <startDate>2021-03-04</startDate>
+        <targetPageKey1>Opportunity</targetPageKey1>
+        <targetPageKey2>list</targetPageKey2>
+        <targetPageType>standard__objectPage</targetPageType>
+        <timesToDisplay>5</timesToDisplay>
+        <title>Create a New Organization Donation</title>
+        <userAccess>Everyone</userAccess>
+        <userProfileAccess>Everyone</userProfileAccess>
+        <versionNumber>1</versionNumber>
+        <videoLink>https://play.vidyard.com/JPrGk6jEUTQ6vQQ3wb4SJF</videoLink>
+    </promptVersions>
+</Prompt>

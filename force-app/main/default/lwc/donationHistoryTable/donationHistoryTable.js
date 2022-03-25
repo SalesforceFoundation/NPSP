@@ -2,7 +2,6 @@ import { api, LightningElement, wire, track } from 'lwc';
 import donationHistoryDatatableAriaLabel from '@salesforce/label/c.donationHistoryDatatableAriaLabel';
 import getDonationHistory from '@salesforce/apex/DonationHistoryController.getDonationHistory';
 import commonAmount from '@salesforce/label/c.commonAmount';
-import donationHistoryDonorLabel from '@salesforce/label/c.donationHistoryDonorLabel';
 import commonDate from "@salesforce/label/c.commonDate";
 
 export default class DonationHistoryTable extends LightningElement {
@@ -68,12 +67,6 @@ export default class DonationHistoryTable extends LightningElement {
                             day: "numeric",
                         },
                         cellAttributes: { alignment: "right" },
-                        hideDefaultActions: true
-                    },
-                    {
-                        label: donationHistoryDonorLabel,
-                        fieldName: "name",
-                        type: "text",
                         hideDefaultActions: true
                     },
                     { label: commonAmount, fieldName: "amount", type: "currency", hideDefaultActions: true },
