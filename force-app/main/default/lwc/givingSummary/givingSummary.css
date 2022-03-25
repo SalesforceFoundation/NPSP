@@ -5,3 +5,7 @@
 .lifetime .bolder .SMALL {
     border-bottom: 10px;
 }
+
+.mobile-font {
+    font-size: 14px !important;
+}
