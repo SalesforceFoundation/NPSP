@@ -61,8 +61,7 @@ public with sharing class DonationHistoryService {
     private Boolean hasAccessToDonationHistory() {
         return permissions.canRead(Opportunity.SObjectType, new Set<SObjectField>{
             Opportunity.Amount,
-            Opportunity.CloseDate,
-            Opportunity.Name
+            Opportunity.CloseDate
         }) && permissions.canRead(Contact.SObjectType, new Set<SObjectField>{
             Contact.Email,
             Contact.Name
@@ -100,7 +99,27 @@ public with sharing class DonationHistoryService {
         } else {
             throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
         }
-        
+    }
+
+    /** 
+    * @description method to return Payment Method associated to Donations
+    * @param paymentListForOpportunity List<npe01__OppPayment__c> for current opportunity
+    * @return String with payment method for current opportunity. This returns the first Paid Payment Method unless
+    * none are paid, in which case it returns the first Payment Method
+    */
+    public String getRequiredPaymentMethodForOpportunities(List<npe01__OppPayment__c> paymentListForOpportunity){
+        String paymentMethodToReturn = '';
+        for (npe01__OppPayment__c p : paymentListForOpportunity) {
+            if (p.npe01__Paid__c) {
+                paymentMethodToReturn = p.npe01__Payment_Method__c;
+                break;
+            }
+            if (paymentMethodToReturn == '') {
+                paymentMethodToReturn = p.npe01__Payment_Method__c;
+                continue;
+            }
+        }
+        return paymentMethodToReturn;
     }
 
     private boolean shouldApplyFilterByYear(String filter) {
@@ -118,7 +137,7 @@ public with sharing class DonationHistoryService {
             throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
         }
         return selector.getYearsWithDonationForContact(contactId);
-     }
+    }
 
     /** 
     * @author Salesforce.org
@@ -131,5 +150,5 @@ public with sharing class DonationHistoryService {
             return selector.getTotalNumberOfRecordsWithYear(contactId, Integer.valueOf(filter));
         }
         return selector.getTotalNumberOfRecords(contactId);
-    } 
+    }
 }
