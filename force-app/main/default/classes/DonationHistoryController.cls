@@ -130,11 +130,12 @@ public with sharing class DonationHistoryController {
     * @return List<DonationHistoryView>
     */
     private static List<DonationHistoryView> buildHistoryFromOpportunities(List<Opportunity> opportunities, Id contactId, Boolean includePaymentMethod) {
+        DonationHistoryService service = new DonationHistoryService();
         List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
         for (Opportunity opp : opportunities) {
             if(opp.npe01__OppPayment__r != null && opp.npe01__OppPayment__r.size() > 0){
                 String paymentMethod = includePaymentMethod
-                	? opp.npe01__OppPayment__r.get(0).npe01__Payment_Method__c
+                	? service.getRequiredPaymentMethodForOpportunities(opp.npe01__OppPayment__r)
                 	: EMPTY_PAYMENT_METHOD;
             	donationHistories.add(new DonationHistoryView(opp, paymentMethod));
             } else {
