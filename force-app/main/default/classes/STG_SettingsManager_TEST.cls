@@ -401,14 +401,14 @@ private with sharing class STG_SettingsManager_TEST {
         Test.setCurrentPage(Page.STG_PanelRenameHouseholds);
 
         STG_PanelRenameHouseholds_CTRL ctrl = new STG_PanelRenameHouseholds_CTRL();
-        System.assert(!ctrl.isRunningBatch, 'The batch should not run');
+        System.assert(!ctrl.isRunningRenameHouseholdsBatch, 'The batch should not run');
 
         Test.startTest();
-        PageReference pg = ctrl.runBatch();
+        PageReference pg = ctrl.runRenameHouseholdsBatch();
         Test.stopTest();
 
         System.assertEquals(null, pg, 'Returned PageReference should be null');
-        System.assert(!ctrl.isRunningBatch, 'The batch should not run');
+        System.assert(!ctrl.isRunningRenameHouseholdsBatch, 'The batch should not run');
         System.assertEquals(false, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c, 'Automatic Household Naming should be turned off');
 
         UTIL_UnitTestData_TEST.assertPageHasError('Invalid field');
@@ -430,14 +430,14 @@ private with sharing class STG_SettingsManager_TEST {
         Test.setCurrentPage(Page.STG_PanelRenameHouseholds);
 
         STG_PanelRenameHouseholds_CTRL ctrl = new STG_PanelRenameHouseholds_CTRL();
-        System.assert(!ctrl.isRunningBatch, 'The batch should not run');
+        System.assert(!ctrl.isRunningRenameHouseholdsBatch, 'The batch should not run');
 
         Test.startTest();
-        PageReference pg = ctrl.runBatch();
+        PageReference pg = ctrl.runRenameHouseholdsBatch();
         Test.stopTest();
 
         System.assertEquals(null, pg, 'Returned PageReference should be null');
-        System.assert(ctrl.isRunningBatch, 'The batch should run');
+        System.assert(ctrl.isRunningRenameHouseholdsBatch, 'The batch should run');
         System.assertEquals(true, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c, 'Automatic Household Naming should be turned on');
 
         System.assertEquals(0, ApexPages.getMessages().size(), 'The page should not contain any error: ' + ApexPages.getMessages());
@@ -457,14 +457,14 @@ private with sharing class STG_SettingsManager_TEST {
         Test.setCurrentPage(Page.STG_PanelRenameHouseholds);
 
         STG_PanelRenameHouseholds_CTRL ctrl = new STG_PanelRenameHouseholds_CTRL();
-        System.assert(!ctrl.isRunningBatch, 'The batch should not run');
+        System.assert(!ctrl.isRunningRenameHouseholdsBatch, 'The batch should not run');
 
         Test.startTest();
-        PageReference pg = ctrl.runBatch();
+        PageReference pg = ctrl.runRenameHouseholdsBatch();
         Test.stopTest();
 
         System.assertEquals(null, pg, 'Returned PageReference should be null');
-        System.assert(ctrl.isRunningBatch, 'The batch should run');
+        System.assert(ctrl.isRunningRenameHouseholdsBatch, 'The batch should run');
         System.assertEquals(true, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c, 'Automatic Household Naming should be turned on');
 
         System.assertEquals(0, ApexPages.getMessages().size(), 'The page should not contain any error: ' + ApexPages.getMessages());
