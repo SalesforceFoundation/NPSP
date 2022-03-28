@@ -9,9 +9,6 @@
       <template if:true={errorMessage}>
         <lightning-layout-item
         size="12"
-        small-device-size="12"
-        medium-device-size="12"
-        large-device-size="12"
         class={rowClasses}
       >
         <span class="slds-var-m-top_medium bolder">{labels.commonUnknownError}</span>
@@ -20,12 +17,9 @@
       <template if:false={errorMessage}>
         <lightning-layout-item
           size="4"
-          small-device-size="4"
-          medium-device-size="4"
-          large-device-size="4"
           class={rowClasses}
         >
-          <span>{labels.labelLifetime}</span>
+          <span>{labels.donationHistoryLabelLifetime}</span>
           <br />
           <span class="bolder">
             <lightning-formatted-number
@@ -34,17 +28,14 @@
               format-style="currency"
               currency-code="USD"
             >
-            </lightning-formatted-number> </span
-          >
+            </lightning-formatted-number> 
+          </span>
         </lightning-layout-item>
         <lightning-layout-item
           size="4"
-          small-device-size="4"
-          medium-device-size="4"
-          large-device-size="4"
           class={rowClasses}
         >
-          <span>{labels.labelThisYear}</span>
+          <span>{labels.donationHistoryLabelThisYear}</span>
           <br />
           <span class="bolder">
             <lightning-formatted-number
@@ -53,17 +44,14 @@
               currency-code="USD"
               class="thisYear"
             >
-            </lightning-formatted-number> </span
-          >
+            </lightning-formatted-number> 
+          </span>
         </lightning-layout-item>
         <lightning-layout-item
           size="4"
-          small-device-size="4"
-          medium-device-size="4"
-          large-device-size="4"
           class={lastElementClasses}
         >
-          <span>{labels.labelPreviousYear}</span>
+          <span>{labels.donationHistoryLabelPreviousYear}</span>
           <br />
           <span class="bolder">
             <lightning-formatted-number
@@ -71,8 +59,8 @@
               format-style="currency"
               currency-code="USD"
             >
-            </lightning-formatted-number> </span
-          >
+            </lightning-formatted-number> 
+          </span>
         </lightning-layout-item>
       </template>
     </lightning-layout>

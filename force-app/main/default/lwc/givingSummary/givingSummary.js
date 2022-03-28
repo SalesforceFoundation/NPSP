@@ -16,20 +16,16 @@ const FormFactorType = Object.freeze({
     Small: 'Small',
 });
 
-const MOBILE_CLASSES = 'slds-text-align_left slds-border_right columns-mobile slds-var-p-around_small';
-const DESKTOP_CLASSES = 'slds-text-align_left slds-border_right slds-text-heading_small slds-p-left_medium';
+const MOBILE_CLASSES = 'slds-text-align_left slds-border_right columns-mobile slds-var-p-around_small to-uppercase';
+const DESKTOP_CLASSES = 'slds-text-align_left slds-border_right slds-text-heading_small slds-p-left_medium to-uppercase';
 const FIELDS = [TOTAL_AMOUNT, AMOUNT_CURRENT_YEAR, AMOUNT_LAST_YEAR];
-
-const labelThisYear = donationHistoryLabelThisYear.toUpperCase();
-const labelLifetime = donationHistoryLabelLifetime.toUpperCase();
-const labelPreviousYear = donationHistoryLabelPreviousYear.toUpperCase();
 
 export default class GivingSummary extends LightningElement {
     labels = {
         donationHistoryGivingSummaryTitle,
-        labelLifetime,
-        labelThisYear,
-        labelPreviousYear,
+        donationHistoryLabelLifetime,
+        donationHistoryLabelThisYear,
+        donationHistoryLabelPreviousYear,
         commonUnknownError
     };
 
@@ -71,9 +67,9 @@ export default class GivingSummary extends LightningElement {
      */
     get lastElementClasses() {
         if (this.isMobile) {
-            return 'columns-mobile slds-var-p-around_small slds-text-align_left';
+            return 'columns-mobile slds-var-p-around_small slds-text-align_left to-uppercase';
         }
-        return 'slds-text-heading_small slds-text-align_left slds-p-left_medium slds-var-p-bottom_small';
+        return 'slds-text-heading_small slds-text-align_left slds-p-left_medium slds-var-p-bottom_small to-uppercase';
     }
 
     /**
