@@ -285,7 +285,17 @@ public inherited sharing class Contacts extends fflib_SObjects2 {
     }
 
     private Boolean needsHHDeceasedFlagUpdate(Contact contactRecord, Contact oldContact) {
+        if (!isContactInHouseholdAccount(contactRecord)) {
+            return false;
+        }
         return contactRecord.Deceased__c != oldContact.Deceased__c;
+    }
+
+    private Boolean isContactInHouseholdAccount(Contact contactRecord) {
+        if (contactRecord.npe01__Organization_Type__c != CAO_Constants.HH_ACCOUNT_TYPE) {
+            return false;
+        }
+        return true;
     }
 
     /*******************************************************************************************************
@@ -295,7 +305,7 @@ public inherited sharing class Contacts extends fflib_SObjects2 {
     * @return Boolean
     */
     private Boolean needsHHAccountRename(Contact contactRecord, Contact oldContact) {
-        if (contactRecord.npe01__Organization_Type__c != CAO_Constants.HH_ACCOUNT_TYPE) {
+        if (!isContactInHouseholdAccount(contactRecord)) {
             return false;
         }
 

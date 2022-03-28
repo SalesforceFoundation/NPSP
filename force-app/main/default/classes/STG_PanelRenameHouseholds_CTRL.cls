@@ -39,26 +39,28 @@ public with sharing class STG_PanelRenameHouseholds_CTRL extends STG_Panel {
     * @description The panel's constructor.
     */
     public STG_PanelRenameHouseholds_CTRL() {
-        isRunningBatch = false;
+        isRunningRenameHouseholdsBatch = false;
+        isRunningAllMembersDeceasedBatch = false;
     }
 
     /**
     * @description Returns the string Id of the refresh household names panel. 
     */
     public override string idPanel() {
-        return 'idPanelRefreshHouseholdNames';
+        return 'idPanelRefreshHouseholdData';
     }
 
     /**
     * @description Whether we are currently running the batch process 
     */
-    public boolean isRunningBatch { get; set; }
-    
+    public boolean isRunningRenameHouseholdsBatch { get; set; }
+    public boolean isRunningAllMembersDeceasedBatch { get; set; }
+
     /**
     * @description Action Method to run the Refresh Household Names batch process
     * @return PageReference The PageReference is null regardless if an error occurs or the batch runs successfully
     */
-    public PageReference runBatch() {
+    public PageReference runRenameHouseholdsBatch() {
         boolean isActivation = UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c == false;
 
         if (isActivation) {
@@ -70,8 +72,16 @@ public with sharing class STG_PanelRenameHouseholds_CTRL extends STG_Panel {
             super.saveSettings();
         }
 
-        isRunningBatch = true;
+        isRunningRenameHouseholdsBatch = true;
+        isRunningAllMembersDeceasedBatch = false;
         HouseholdNamingService.refreshAllHouseholdNaming(isActivation);
+        return null;
+    }
+
+    public PageReference runAllMembersDeceasedBatch() {
+        isRunningAllMembersDeceasedBatch = true;
+        isRunningRenameHouseholdsBatch = false;
+        Database.executeBatch(new DeceasedBatch(), 200);
         return null;
     }
 
