@@ -6,6 +6,10 @@
     border-bottom: 10px;
 }
 
-.mobile-font {
-    font-size: 14px !important;
+.bold-title{
+    font-weight: 700;
+}
+
+.columns-mobile{
+    font-size: 14px;
 }
