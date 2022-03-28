@@ -44,7 +44,7 @@ private class HouseholdDeceasedFlag_TEST {
         insert deceasedTestingContacts;
 
         Account testHousehold = UTIL_UnitTestData_TEST.buildHouseholdAccount();
-        testHousehold.UniqueId__c = 'Test Account';
+        testHousehold.Matching_Gift_Administrator_Name__c = 'Test Admin';
         insert testHousehold;
     }
 
@@ -298,7 +298,7 @@ private class HouseholdDeceasedFlag_TEST {
     ////////////
 
     private static Account getHouseholdWithNoMembers() {
-        return [SELECT Id FROM Account WHERE UniqueId__c = 'Test Account' LIMIT 1];
+        return [SELECT Id FROM Account WHERE Matching_Gift_Administrator_Name__c = 'Test Admin' LIMIT 1];
     }
 
     private static Account getAccount(Contact queryContact) {
