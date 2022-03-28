@@ -43,8 +43,6 @@ export default class DonationHistoryTable extends LightningElement {
         this.data = [];
         this._filter = value;
         this.retrieveDonationHistory();
-        this.infiniteScroll = true;
-        this.tableElement ? this.tableElement.enableInfiniteLoading = true : null;
     }
 
     retrieveDonationHistory(){
@@ -55,7 +53,6 @@ export default class DonationHistoryTable extends LightningElement {
                 this.data = data.donations;
                 this.paymentMethodLabel = data.paymentMethodLabel;
                 this.arePaymentsEnabled = data.isPaymentsEnabled;
-
                 this.columns = [
                     {
                         label: commonDate,
@@ -79,6 +76,11 @@ export default class DonationHistoryTable extends LightningElement {
                         hideDefaultActions: true
                     });
                 }
+                if(this.tableElement) {
+                    this.tableElement.scrollTop = 0;
+                    this.tableElement.enableInfiniteLoading = true;
+                    this.infiniteScroll = true;
+                }
             }
         });
     }
@@ -97,7 +99,6 @@ export default class DonationHistoryTable extends LightningElement {
                     this.tableElement.isLoading = false;
                     this.infiniteScroll = false;
                     this.tableElement.enableInfiniteLoading = false;
-
                     return;
                 }
                 const currentData = this.data;
