@@ -1,0 +1,9 @@
+<apex:page standardController="DataImport__c" extensions="BDI_ProcessSelectedDIs_CTRL" recordSetVar="dis" action="{!directToDataImportPage}">
+    <apex:pagemessages></apex:pagemessages>
+    <apex:form>
+        <div align="center">
+            <apex:commandButton disabled="{!NOT(error)}" action="{!returnToListView}" 
+                value="{!$Label.bdiSelectReturnToListView}" title="{!$Label.bdiSelectReturnToListView}"/>
+        </div>
+    </apex:form>
+</apex:page>
