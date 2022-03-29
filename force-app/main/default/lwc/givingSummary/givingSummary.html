@@ -2,7 +2,7 @@
   <lightning-card>
     <lightning-layout multiple-rows="true">
       <lightning-layout-item size="12">
-        <h2 class="slds-text-heading_small slds-var-p-left_medium slds-var-p-bottom_medium bold-title">
+        <h2 class={summaryTitleClass}>
           {labels.donationHistoryGivingSummaryTitle}
         </h2>
       </lightning-layout-item>
@@ -23,7 +23,7 @@
           <br />
           <span class="bolder">
             <lightning-formatted-number
-              class="lifetime"
+              class={usdValue}
               value={lifetimeSummary}
               format-style="currency"
               currency-code="USD"
@@ -42,7 +42,7 @@
               value={thisYear}
               format-style="currency"
               currency-code="USD"
-              class="thisYear"
+              class={usdValue}
             >
             </lightning-formatted-number> 
           </span>
@@ -57,6 +57,7 @@
             <lightning-formatted-number
               value={previousYear}
               format-style="currency"
+              class={usdValue}
               currency-code="USD"
             >
             </lightning-formatted-number> 

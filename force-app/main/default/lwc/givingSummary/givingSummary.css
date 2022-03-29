@@ -14,6 +14,10 @@
     font-size: 14px;
 }
 
+.usd-value-desktop{
+    font-size: 16px;
+}
+
 .to-uppercase{
     text-transform: uppercase;
 }

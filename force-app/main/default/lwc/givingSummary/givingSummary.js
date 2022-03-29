@@ -63,6 +63,16 @@ export default class GivingSummary extends LightningElement {
     }
 
     /**
+     * @description returns the classes of the giving summary title if it is mobile or desktop
+     */
+    get summaryTitleClass() {
+        if(this.isMobile){
+            return "slds-text-heading_small slds-var-p-left_medium slds-var-p-bottom_medium bold-title"
+        }
+        return "slds-text-heading_medium slds-var-p-left_medium slds-var-p-bottom_medium bold-title"
+    }
+
+    /**
      * @description returns the classes of the last row if it is mobile or desktop
      */
     get lastElementClasses() {
@@ -70,6 +80,16 @@ export default class GivingSummary extends LightningElement {
             return 'columns-mobile slds-var-p-left_small slds-var-p-right_small slds-text-align_left to-uppercase';
         }
         return 'slds-text-heading_small slds-text-align_left slds-p-left_medium slds-var-p-bottom_small to-uppercase';
+    }
+
+    /**
+     * @description returns the classes of the last row if it is mobile or desktop
+     */
+     get usdValue() {
+        if (this.isMobile) {
+            return 'columns-mobile';
+        }
+        return 'usd-value-desktop';
     }
 
     /**
