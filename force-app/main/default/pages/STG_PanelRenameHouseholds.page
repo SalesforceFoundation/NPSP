@@ -17,26 +17,67 @@
         }
     </script>
     <apex:form id="form" styleClass="slds-m-around_x-large">
-        <c:STG_PageHeader sectionLabel="{!$Label.stgNavBulkProcesses}" pageLabel="{!$Label.stgHHNameRefreshTitle}" />
+        <c:STG_PageHeader sectionLabel="{!$Label.stgNavBulkProcesses}" pageLabel="{!$Label.stgHHDataRefreshTitle}" />
         <apex:outputPanel rendered="{!NOT(hasAccess)}">
             <div id="stgPanelRenameHouseholdsIllustration" />
         </apex:outputPanel>
+        <c:UTIL_PageMessages />
+
         <apex:outputPanel rendered="{!hasAccess}">
+            <div class="slds-text-body_small slds-m-around_medium">
+                <c:UTIL_HtmlOutput html="{!$Label.stgHelpHHData}" />
+            </div>
+
+            <div class="slds-section">
+                <div class="slds-section-title_divider" >{!$Label.stgHHNameRefreshTitle}</div>
+            </div>
+
             <div class="slds-text-body_small slds-m-around_medium">
                 <c:UTIL_HtmlOutput html="{!$Label.stgHelpBtnHHNaming}" />
             </div>
-            <c:UTIL_PageMessages />
             <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
-                <apex:commandButton id="runHHAutoNameBatch" value="{!$Label.stgBtnHHAutoName}" status="statusLoad" action="{!runBatch}" disabled="{!isRunningBatch}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
+                <apex:commandButton id="runHHAutoNameBatch" value="{!$Label.stgBtnHHAutoName}" status="statusLoad" action="{!runRenameHouseholdsBatch}"
+                                    disabled="{!OR(isRunningRenameHouseholdsBatch, isRunningAllMembersDeceasedBatch)}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
             </div>
-            <apex:outputPanel rendered="{!isRunningBatch}">
-                <c:UTIL_JobProgressLightning id="jobProgress"
-                    eventTargetId="{!$Component.jobProgress}"
+            <apex:outputPanel rendered="{!isRunningRenameHouseholdsBatch}">
+                <c:UTIL_JobProgressLightning id="jobProgressRenameHouseholdsBatch"
+                    eventTargetId="{!$Component.jobProgressRenameHouseholdsBatch}"
                     strBatchComponentLabel="{!$Label.stgHHNameRefreshTitle}"
                     cNumberOfJobs="1"
                     startPolling="True"
                     stopPollingOnComplete="True"
                     pollingDelay="1000"/>
+
+                <!--  bRerenderOnComplete doesn't actually work, so we have to refresh our page ourselves -->
+                <apex:actionPoller rerender="panelStats" interval="5" />
+
+            </apex:outputPanel>
+
+            <div class="slds-section">
+                <div class="slds-section-title_divider" >{!$Label.stgLabelDeceasedBatch}</div>
+            </div>
+
+            <div class="slds-text-body_small slds-m-around_medium">
+                <c:UTIL_HtmlOutput html="{!$Label.stgHelpDeceasedBatch}" />
+            </div>
+
+            <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
+                <apex:commandButton id="runDeceasedBatch" value="{!$Label.stgBtnRunHHDeceasedBatch}" status="statusLoad" action="{!runAllMembersDeceasedBatch}"
+                                    disabled="{!OR(isRunningRenameHouseholdsBatch, isRunningAllMembersDeceasedBatch)}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
+            </div>
+            <apex:outputPanel rendered="{!isRunningAllMembersDeceasedBatch}">
+                <c:UTIL_JobProgressLightning id="jobProgressAllMembersDeceasedBatch"
+                                             eventTargetId="{!$Component.jobProgressAllMembersDeceasedBatch}"
+                                             strBatchComponentLabel="{!$Label.stgLabelDeceasedBatch}"
+                                             startPolling="True"
+                                             stopPollingOnComplete="True"
+                                             pollingDelay="1000"
+                                             cNumberOfJobs="1"
+                />
+
+                <!--  bRerenderOnComplete doesn't actually work, so we have to refresh our page ourselves -->
+                <apex:actionPoller rerender="panelStats" interval="5" />
+
             </apex:outputPanel>
         </apex:outputPanel>
     </apex:form>
