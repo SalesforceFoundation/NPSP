@@ -233,7 +233,7 @@ public with sharing class RD2_EntryFormController {
 
     /***
     * @description Retrieve RD2_Entry_Form_Custom_Fields Fieldset and eliminate any packaged and already displayed fields
-    * @return List<RD2_AppView
+    * @return List<InputFieldView> of custom fields.
     */
     @TestVisible
     private static List<InputFieldView> getCustomFieldSectionFields() {

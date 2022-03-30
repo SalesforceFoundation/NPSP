@@ -1791,7 +1791,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error when trying to change an Elevate RD to Recurring Type Fixed</shortDescription>
-        <value>An Elevate-connected Recurring Donation Cannot have a Recurring Type of Fixed.</value>
+        <value>An Elevate-connected Recurring Donation cannot have a Recurring Type of Fixed.</value>
     </labels>
     <labels>
         <fullName>RD2_ElevateRDDayOfMonthCannotChange</fullName>

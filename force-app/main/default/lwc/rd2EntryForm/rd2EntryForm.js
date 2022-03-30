@@ -70,7 +70,6 @@ import ACCOUNT_PRIMARY_CONTACT_LAST_NAME from "@salesforce/schema/Account.npe01_
 const ELEVATE_WIDGET_EVENT_NAME = "rd2ElevateCreditCardForm";
 
 export default class rd2EntryForm extends LightningElement {
-    
     customLabels = Object.freeze({
         cancelButtonLabel,
         closeButtonLabel,
@@ -197,12 +196,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     shouldResetPaymentMethodOnStateChange(event) {
-        return (
-            event.isDisabled &&
-            this.isEdit &&
-            this.isPaymentMethodChanged() &&
-            this.isCommitmentEdit
-        );
+        return event.isDisabled && this.isEdit && this.isPaymentMethodChanged() && this.isCommitmentEdit;
     }
 
     /***
@@ -314,7 +308,7 @@ export default class rd2EntryForm extends LightningElement {
     handleCustomFieldChange(event) {
         this.perform({
             type: ACTIONS.CUSTOM_FIELD_CHANGE,
-            payload: event.detail
+            payload: event.detail,
         });
     }
 
@@ -585,7 +579,7 @@ export default class rd2EntryForm extends LightningElement {
                     if (isSuccess) {
                         this.perform({
                             type: ACTIONS.COMMITMENT_RESPONSE,
-                            payload: responseBody
+                            payload: responseBody,
                         });
                         rd.withCommitmentResponseBody(responseBody);
                         this.processSubmit(rd.record);
@@ -633,25 +627,23 @@ export default class rd2EntryForm extends LightningElement {
      */
     async processSubmit() {
         try {
-
             this.loadingText = this.customLabels.savingRDMessage;
             const saveResult = await this.rd2Service.save(this.rd2State);
 
             if (saveResult.success === true) {
                 this.perform({
                     type: ACTIONS.RECORD_SAVED,
-                    payload: saveResult
+                    payload: saveResult,
                 });
 
                 if (this.isEdit) {
-                    getRecordNotifyChange([{recordId: this.rd2State.recordId}])
+                    getRecordNotifyChange([{ recordId: this.rd2State.recordId }]);
                 }
 
                 this.handleSuccess();
             } else {
                 this.handleSaveError(saveResult);
             }
-
         } catch (error) {
             this.handleSaveError(error);
         }
@@ -682,7 +674,7 @@ export default class rd2EntryForm extends LightningElement {
             }
             this.setError(constructedError);
         } catch (ex) {
-            console.error('Unhandled save error', ex);
+            console.error("Unhandled save error", ex);
         }
 
         this.enableSaveButton();
@@ -769,7 +761,7 @@ export default class rd2EntryForm extends LightningElement {
         });
 
         this.perform({
-            type: ACTIONS.RESET
+            type: ACTIONS.RESET,
         });
 
         if (!isNull(this.donorComponent)) {
