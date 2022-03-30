@@ -17,7 +17,7 @@ const FormFactorType = Object.freeze({
 });
 
 const MOBILE_CLASSES = 'slds-text-align_left slds-border_right columns-mobile slds-var-p-left_small to-uppercase';
-const DESKTOP_CLASSES = 'slds-text-align_left slds-border_right slds-text-heading_small slds-p-left_medium to-uppercase';
+const DESKTOP_CLASSES = 'slds-text-align_left slds-border_right columns-desktop slds-p-left_medium to-uppercase';
 const FIELDS = [TOTAL_AMOUNT, AMOUNT_CURRENT_YEAR, AMOUNT_LAST_YEAR];
 
 export default class GivingSummary extends LightningElement {
@@ -79,7 +79,7 @@ export default class GivingSummary extends LightningElement {
         if (this.isMobile) {
             return 'columns-mobile slds-var-p-left_small slds-var-p-right_small slds-text-align_left to-uppercase';
         }
-        return 'slds-text-heading_small slds-text-align_left slds-p-left_medium slds-var-p-bottom_small to-uppercase';
+        return 'columns-desktop slds-text-align_left slds-p-left_medium slds-var-p-bottom_small to-uppercase';
     }
 
     /**
