@@ -1397,6 +1397,41 @@ private with sharing class RD2_ValidationService_TEST {
             'There should be no error when updating Closed Elevate RD non-elevate related fields');
     }
 
+    @IsTest
+    private static void elevateRdCannotBeUpdatedToFixedLength() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+                .withIsIntegrationEnabled(true)
+                .withHasIntegrationPermissions(true);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+                PS_IntegrationServiceConfig.class,
+                configStub
+        );
+
+        npe03__Recurring_Donation__c oldRd = getRecurringDonationBuilder()
+                .withContact(getContact().Id)
+                .withRecurringTypeOpen()
+                .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
+                .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+                .build();
+
+        npe03__Recurring_Donation__c rd = oldRd.clone();
+        rd.RecurringType__c = RD2_Constants.RECURRING_TYPE_FIXED;
+
+        RD2_ValidationService validationService = new RD2_ValidationService(
+                new List<npe03__Recurring_Donation__c>{rd},
+                new List<npe03__Recurring_Donation__c>{oldRd}
+        );
+
+        Test.startTest();
+        List<ErrorRecord> errorRecords = validationService.validate();
+        Test.stopTest();
+
+        System.assertEquals(1, errorRecords.size(), 'There should be a single error.');
+        System.assertEquals(Label.RD2_ElevateRDCannotBeFixedLength, errorRecords[0].getFirstError(), 'Error message mismatch.');
+    }
+
     // Helper Methods
     /////////////////////
 

@@ -1,5 +1,6 @@
 import { nextState } from "../model.js";
-import { ACTIONS } from "c/rd2Service";
+import { ACTIONS, Rd2Service, RECURRING_TYPE_FIXED } from "c/rd2Service";
+import { SET_PLANNED_INSTALLMENTS, SET_RECURRING_TYPE } from "../actions";
 
 const initialView = require("../../../../../../tests/__mocks__/apex/data/getInitialView.json");
 
@@ -58,6 +59,43 @@ describe("rd2 model", () => {
         const [someField, otherField] = customFieldSets;
         expect(someField.value).toBe('SOME_FAKE_VAL');
         expect(otherField.value).toBe(null);
-    })
+    });
+
+    it("open recurring donation, on save, does not include planned installments", () => {
+        const rd2Service = new Rd2Service();
+        const NUMBER_OF_INSTALLMENTS = 12;
+
+        rd2State = nextState(rd2State, {
+            type: SET_PLANNED_INSTALLMENTS,
+            payload: NUMBER_OF_INSTALLMENTS
+        });
+
+        rd2State = nextState(rd2State, {
+            type: SET_RECURRING_TYPE,
+            payload: RECURRING_TYPE_OPEN
+        });
+
+        expect(rd2State.plannedInstallments).toBe(12);
+        const saveRequest = rd2Service.getSaveRequest(rd2State);
+        expect(saveRequest.plannedInstallments).toBe(null);
+    });
+
+    it("fixed recurring donation, on save, includes number of planned installments", () => {
+        const rd2Service = new Rd2Service();
+        const NUMBER_OF_INSTALLMENTS = 12;
+        rd2State = nextState(rd2State, {
+            type: SET_PLANNED_INSTALLMENTS,
+            payload: NUMBER_OF_INSTALLMENTS
+        });
+
+        rd2State = nextState(rd2State, {
+            type: SET_RECURRING_TYPE,
+            payload: RECURRING_TYPE_FIXED
+        });
+
+        expect(rd2State.plannedInstallments).toBe(NUMBER_OF_INSTALLMENTS);
+        const saveRequest = rd2Service.getSaveRequest(rd2State);
+        expect(saveRequest.plannedInstallments).toBe(NUMBER_OF_INSTALLMENTS);
+    });
 });
 

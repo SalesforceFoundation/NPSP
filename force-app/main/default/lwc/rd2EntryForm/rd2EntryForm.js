@@ -518,25 +518,6 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-     * @description Returns true if Schedule fields has updated
-     */
-    hasElevateFieldsChange(allFields) {
-        const amount = getFieldValue(this.record, FIELD_AMOUNT);
-        const frequency = getFieldValue(this.record, FIELD_INSTALLMENT_FREQUENCY);
-        const period = getFieldValue(this.record, FIELD_INSTALLMENT_PERIOD);
-        const campaignId = getFieldValue(this.record, FIELD_CAMPAIGN);
-
-        const hasFrequencyField = FIELD_INSTALLMENT_FREQUENCY.fieldApiName in allFields;
-        const amountChanged = amount !== Number(allFields[FIELD_AMOUNT.fieldApiName]);
-        const frequencyChanged =
-            hasFrequencyField && frequency !== Number(allFields[FIELD_INSTALLMENT_FREQUENCY.fieldApiName]);
-        const installmentPeriodChanged = period !== allFields[FIELD_INSTALLMENT_PERIOD.fieldApiName];
-        const campaignChanged = campaignId !== allFields[FIELD_CAMPAIGN.fieldApiName];
-
-        return amountChanged || frequencyChanged || installmentPeriodChanged || campaignChanged;
-    }
-
-    /***
      * @description Overrides the standard submit.
      * Collects and validates fields displayed on the form and any integrated LWC
      * and submits them for the record insert or update.

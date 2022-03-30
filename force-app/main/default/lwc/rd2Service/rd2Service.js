@@ -57,10 +57,6 @@ class Rd2Service {
     async save(rd2State) {
         let result;
         try {
-            // TODO: Move this somewhere more appropriate
-            if (rd2State.recurringType === RECURRING_TYPE_OPEN) {
-                rd2State.plannedInstallments = null;
-            }
             const saveRequest = this.getSaveRequest(rd2State);
             result = await saveRecurringDonation({ saveRequest });
         } catch (ex) {
@@ -132,6 +128,13 @@ class Rd2Service {
         }
     }
 
+    getPlannedInstallments(rd2State) {
+        if (this.isOpenLength(rd2State)) {
+            return null;
+        }
+        return rd2State.plannedInstallments;
+    }
+
     getCustomFieldValues({ customFieldSets }) {
         let fieldValues = {};
         for (const field of customFieldSets) {
@@ -155,7 +158,6 @@ class Rd2Service {
             recurringFrequency,
             startDate,
             dayOfMonth,
-            plannedInstallments,
             recurringType,
             paymentToken,
             campaignId,
@@ -167,6 +169,7 @@ class Rd2Service {
             paymentMethod,
         } = rd2State;
 
+        const plannedInstallments = this.getPlannedInstallments(rd2State);
         const customFieldValues = this.getCustomFieldValues(rd2State);
 
         return {
@@ -212,6 +215,10 @@ class Rd2Service {
             countrySupported &&
             statusSupported
         );
+    }
+
+    isOpenLength({ recurringType }) {
+        return recurringType === RECURRING_TYPE_OPEN;
     }
 
     isElevateCustomer({ isElevateCustomer }) {
