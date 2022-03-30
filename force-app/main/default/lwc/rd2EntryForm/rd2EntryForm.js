@@ -70,8 +70,7 @@ import ACCOUNT_PRIMARY_CONTACT_LAST_NAME from "@salesforce/schema/Account.npe01_
 const ELEVATE_WIDGET_EVENT_NAME = "rd2ElevateCreditCardForm";
 
 export default class rd2EntryForm extends LightningElement {
-    listenerEvent = "rd2EntryFormEvent";
-
+    
     customLabels = Object.freeze({
         cancelButtonLabel,
         closeButtonLabel,
