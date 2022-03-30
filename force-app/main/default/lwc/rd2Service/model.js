@@ -38,6 +38,8 @@ import {
     CONTACT_DONOR_TYPE,
 } from "./constants";
 
+import { isBlank } from "c/util";
+
 const DEFAULT_INITIAL_STATE = {
     initialViewState: {}, // snapshot of initial view state after first load
 
@@ -389,7 +391,8 @@ const setPaymentMethod = (state, paymentMethod) => {
     };
 };
 
-const setCampaignId = (state, campaignId) => {
+const setCampaignId = (state, payload) => {
+    const campaignId = isBlank(payload) ? null : payload;
     return {
         ...state,
         campaignId,

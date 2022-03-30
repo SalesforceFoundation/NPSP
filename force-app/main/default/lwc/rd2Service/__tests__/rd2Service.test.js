@@ -1,6 +1,6 @@
 import { nextState } from "../model.js";
 import { ACTIONS, Rd2Service, RECURRING_TYPE_FIXED } from "c/rd2Service";
-import { SET_PLANNED_INSTALLMENTS, SET_RECURRING_TYPE } from "../actions";
+import { SET_CAMPAIGN_ID, SET_PLANNED_INSTALLMENTS, SET_RECURRING_TYPE } from "../actions";
 
 const initialView = require("../../../../../../tests/__mocks__/apex/data/getInitialView.json");
 
@@ -96,6 +96,25 @@ describe("rd2 model", () => {
         expect(rd2State.plannedInstallments).toBe(NUMBER_OF_INSTALLMENTS);
         const saveRequest = rd2Service.getSaveRequest(rd2State);
         expect(saveRequest.plannedInstallments).toBe(NUMBER_OF_INSTALLMENTS);
+    });
+
+    it("when campaign id is set to an empty string, it is coerced to null in state", () => {
+        rd2State = nextState(rd2State, {
+            type: SET_CAMPAIGN_ID,
+            payload: ''
+        });
+
+        expect(rd2State.campaignId).toBe(null);
+    });
+
+    it("when campaign id is set to non-empty string, it is persisted in state", () => {
+        const SOME_FAKE_CAMPAIGN_ID = 'SOME_FAKE_CAMPAIGN_ID'
+        rd2State = nextState(rd2State, {
+            type: SET_CAMPAIGN_ID,
+            payload: SOME_FAKE_CAMPAIGN_ID
+        });
+
+        expect(rd2State.campaignId).toBe(SOME_FAKE_CAMPAIGN_ID);
     });
 });
 
