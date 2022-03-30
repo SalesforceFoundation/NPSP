@@ -3852,6 +3852,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Retiring Batch Data Entry</value>
     </labels>
     <labels>
+        <fullName>bdiAPIBatchError</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiAPIBatchError</shortDescription>
+        <value>We couldn't process the Data Import records because of the following errors:</value>
+    </labels>
+    <labels>
+        <fullName>bdiAPISelectedError</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiAPISelectedError</shortDescription>
+        <value>We couldn't process the selected Data Import records because of the following errors:</value>
+    </labels>
+    <labels>
         <fullName>bdiAccountCustomIdError</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -5014,6 +5030,38 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>bdiRunBtn</shortDescription>
         <value>Begin Data Import Process</value>
+    </labels>
+    <labels>
+        <fullName>bdiSelectCantProcessImportedRecords</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiSelectCantProcessImportedRecords</shortDescription>
+        <value>You can't import records that have already been imported. Remove records with the Imported status from your selection.</value>
+    </labels>
+    <labels>
+        <fullName>bdiSelectNoDIRecordsSelected</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiSelectNoDIRecordsSelected</shortDescription>
+        <value>Select one or more Data Import records.</value>
+    </labels>
+    <labels>
+        <fullName>bdiSelectReturnToListView</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiSelectReturnToListView</shortDescription>
+        <value>Go Back</value>
+    </labels>
+    <labels>
+        <fullName>bdiSelectTooManyDIRecords</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiSelectTooManyDIRecords</shortDescription>
+        <value>Select up to {0} Data Import records.</value>
     </labels>
     <labels>
         <fullName>bdiSettingsSectionContactMatching</fullName>

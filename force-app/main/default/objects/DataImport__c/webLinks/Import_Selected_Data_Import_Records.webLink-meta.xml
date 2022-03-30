@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Import_Selected_Data_Import_Records</fullName>
+    <availability>online</availability>
+    <description>Starts Batch Data Import for the selected Data Import records.</description>
+    <displayType>massActionButton</displayType>
+    <height>600</height>
+    <linkType>page</linkType>
+    <masterLabel>Import Selected Data Import Records</masterLabel>
+    <openType>sidebar</openType>
+    <page>BDI_ProcessSelectedDIs</page>
+    <protected>false</protected>
+    <requireRowSelection>true</requireRowSelection>
+</WebLink>
