@@ -3218,26 +3218,23 @@
     </labels>
     <labels>
         <fullName>RP_ReleaseGitHub</fullName>
-        <categories>deprecated</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>DEPRECATED - Resources Page - Release GitHub</shortDescription>
+        <shortDescription>Resources Page - Release GitHub</shortDescription>
         <value>Released:</value>
     </labels>
     <labels>
         <fullName>RP_ReleaseNotesLink</fullName>
-        <categories>deprecated</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>DEPRECATED - Resources Page - Release Notes Link</shortDescription>
+        <shortDescription>Resources Page - Release Notes Link</shortDescription>
         <value>Read full release notes &gt;</value>
     </labels>
     <labels>
         <fullName>RP_Remote_Site_Settings_Deactivated</fullName>
-        <categories>deprecated</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>DEPRECATED - RP Remote Site Settings Deactivated</shortDescription>
+        <shortDescription>RP Remote Site Settings Deactivated</shortDescription>
         <value>To take advantage of all the new functionality on the Getting Started page, go to Setup, search for Remote Site Settings, and ensure that the SFDOEndpoints site is active. If it isn&apos;t, click Edit, check the Active box, and click Save.</value>
     </labels>
     <labels>
