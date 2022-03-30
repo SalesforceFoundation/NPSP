@@ -2,11 +2,12 @@
 <WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Process_Data_Import</fullName>
     <availability>online</availability>
+    <description>Attempts to import all Data Import records that are not already in the &apos;Imported&apos; status.</description>
     <displayType>massActionButton</displayType>
     <encodingKey>UTF-8</encodingKey>
     <height>600</height>
     <linkType>url</linkType>
-    <masterLabel>Start Data Import</masterLabel>
+    <masterLabel>Import All Data Import Records</masterLabel>
     <openType>sidebar</openType>
     <protected>false</protected>
     <requireRowSelection>false</requireRowSelection>
