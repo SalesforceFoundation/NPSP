@@ -1,5 +1,5 @@
 import { LightningElement } from 'lwc';
-import { isNull } from 'c/util';
+import { isNull} from 'c/util';
 import getAutomationSettings from '@salesforce/apex/RD2_StatusAutomationSettings_CTRL.getAutomationSettings';
 import saveStatusAutomationSettings from '@salesforce/apex/RD2_StatusAutomationSettings_CTRL.saveStatusAutomationSettings';
 
@@ -28,6 +28,8 @@ const STATES = {
     RD2_DISABLED: 'RD2_DISABLED'
 };
 
+
+
 export default class Rd2StatusAutomationSettings extends LightningElement {
     labels = {
         statusAutomationIntro,
@@ -52,6 +54,7 @@ export default class Rd2StatusAutomationSettings extends LightningElement {
     errorMessage;
 
     isEdit = false;
+    isSaveDisabled = false;
 
     automationSettings;
     numberOfDaysForLapsed;
@@ -66,6 +69,7 @@ export default class Rd2StatusAutomationSettings extends LightningElement {
 
     maximumDaysForLapsed;
     minimumDaysForClosed;
+    maximumDaysForClosed = 2147483647;
     minimumDaysForClosedErrorMessage = '';
 
     inputClosedStatus;
@@ -119,7 +123,9 @@ export default class Rd2StatusAutomationSettings extends LightningElement {
 
     handleCancel() {
         this.resetSettingsInput();
+        this.errorMessage = null;
         this.isEdit = false;
+        this.displayState = STATES.READY;
     }
 
     handleSave() {
@@ -134,12 +140,15 @@ export default class Rd2StatusAutomationSettings extends LightningElement {
             ).then ((automationSettings) => {
                 this.assignSettings(automationSettings);
                 this.isEdit = false;
+                this.displayState = STATES.READY;
             })
             .catch ((error) => {
                 this.errorMessage = error.body.message;
+                this.displayState = STATES.READY;
             })
         } catch (error) {
-            this.errorMessge = error.body.message;
+            this.errorMessage = error.body.message;
+            this.displayState = STATES.READY;
         }
     }
 
@@ -158,8 +167,8 @@ export default class Rd2StatusAutomationSettings extends LightningElement {
     validateNumberOfDays() {
         let that = this;
         setTimeout(() => {
-            that.lapsedDaysInputField().reportValidity(); 
-            that.closedDaysInputField().reportValidity();
+            that.isSaveDisabled = !(that.lapsedDaysInputField().reportValidity()
+                && that.closedDaysInputField().reportValidity());
         }, 0);
     }
 

@@ -27,10 +27,6 @@
         <enableCSRFOnGet>true</enableCSRFOnGet>
         <enableCSRFOnPost>true</enableCSRFOnPost>
         <enableCacheAndAutocomplete>true</enableCacheAndAutocomplete>
-        <enableClickjackNonsetupSFDC>true</enableClickjackNonsetupSFDC>
-        <enableClickjackNonsetupUser>true</enableClickjackNonsetupUser>
-        <enableClickjackNonsetupUserHeaderless>true</enableClickjackNonsetupUserHeaderless>
-        <enableClickjackSetup>true</enableClickjackSetup>
         <enableContentSniffingProtection>true</enableContentSniffingProtection>
         <enableLightningLogin>true</enableLightningLogin>
         <enableLightningLoginOnlyWithUserPerm>false</enableLightningLoginOnlyWithUserPerm>
