@@ -3217,6 +3217,30 @@
         <value>Nonprofit Success Pack (NPSP)</value>
     </labels>
     <labels>
+        <fullName>RP_ReleaseGitHub</fullName>
+        <categories>deprecated</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DEPRECATED - Resources Page - Release GitHub</shortDescription>
+        <value>Released:</value>
+    </labels>
+    <labels>
+        <fullName>RP_ReleaseNotesLink</fullName>
+        <categories>deprecated</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DEPRECATED - Resources Page - Release Notes Link</shortDescription>
+        <value>Read full release notes &gt;</value>
+    </labels>
+    <labels>
+        <fullName>RP_Remote_Site_Settings_Deactivated</fullName>
+        <categories>deprecated</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>DEPRECATED - RP Remote Site Settings Deactivated</shortDescription>
+        <value>To take advantage of all the new functionality on the Getting Started page, go to Setup, search for Remote Site Settings, and ensure that the SFDOEndpoints site is active. If it isn&apos;t, click Edit, check the Active box, and click Save.</value>
+    </labels>
+    <labels>
         <fullName>RP_SalesforceOrgLinkLabel</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -12600,14 +12624,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Run Batch</value>
     </labels>
     <labels>
-        <fullName>stgBtnRunHHDeceasedBatch</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgBtnRunHHDeceasedBatch</shortDescription>
-        <value>Run Household Deceased Batch</value>
-    </labels>
-    <labels>
         <fullName>stgBtnSave</fullName>
         <categories>Settings, UTIL_PageHeader</categories>
         <language>en_US</language>
@@ -12853,14 +12869,6 @@ Selecting Don&apos;t Auto Schedule Default NPSP Jobs tells NPSP not to check for
         <protected>true</protected>
         <shortDescription>stgErrorMissingDefaultGauRecord</shortDescription>
         <value>The previously configured Default General Accounting Unit no longer exists and has been removed. To re-enable Default Allocations, open the GAU Allocations page in NPSP Settings.</value>
-    </labels>
-    <labels>
-        <fullName>stgHHDataRefreshTitle</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgHHDataRefreshTitle</shortDescription>
-        <value>Refresh Household Data</value>
     </labels>
     <labels>
         <fullName>stgHHNameRefreshTitle</fullName>
@@ -13274,14 +13282,6 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <value>The Account record type you want to use for new Accounts if you&apos;ve selected the Household Account model above. You can select the default Household Account record type, or your own record type. If you select --None--, then Salesforce will use the default Account record type for the user who&apos;s creating the new Contact (and associated Account).</value>
     </labels>
     <labels>
-        <fullName>stgHelpHHData</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgHelpHHData</shortDescription>
-        <value>Use these bulk data processes to refresh Household names and recalculate data for the All Household Members Deceased field. After running one of these processes, refresh your browser to run the other one.</value>
-    </labels>
-    <labels>
         <fullName>stgHelpHHExcludedRT</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -13658,14 +13658,6 @@ This change updates Opportunity Contact Role records. Before starting this proce
 ● Visual Workflows&lt;br/&gt;
 ● Custom Triggers&lt;br/&gt;&lt;br/&gt;
 Once the process is 100% complete, you can safely leave or refresh this page.</value>
-    </labels>
-    <labels>
-        <fullName>stgHelpDeceasedBatch</fullName>
-        <categories>NPSP Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Content of the &quot;Recalculate Deceased Household Accounts&quot; page</shortDescription>
-        <value>This utility recalculates the value in the All Household Members Deceased field on Household Accounts. Run this utility to ensure that the value correctly reflects the status of the Deceased field on related Contacts. This process may take some time, but you can safely close this page and the process will continue in the background.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDAddCampaign</fullName>
@@ -14676,14 +14668,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Remove Duplicate Primary OCRs</value>
     </labels>
     <labels>
-        <fullName>stgLabelDeceasedBatch</fullName>
-        <categories>NPSP Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Menu title for the Batch job to recalculate All Members Deceased</shortDescription>
-        <value>Recalculate Deceased Household Accounts</value>
-    </labels>
-    <labels>
         <fullName>stgLabelRDFieldMap</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -15554,5 +15538,13 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>true</protected>
         <shortDescription>Label to define aria-label on donation history datatable</shortDescription>
         <value>Donation History</value>
+    </labels>
+    <labels>
+        <fullName>donationHistoryDonorLabel</fullName>
+        <categories>Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to define donor column for donation history datatable</shortDescription>
+        <value>Donor</value>
     </labels>
 </CustomLabels>

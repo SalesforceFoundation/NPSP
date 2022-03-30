@@ -1568,6 +1568,18 @@
         <label>Nonprofit Success Pack (NPSP)</label>
     </customLabels>
     <customLabels>
+        <name>RP_ReleaseGitHub</name>
+        <label>Fecha de lanzamiento:</label>
+    </customLabels>
+    <customLabels>
+        <name>RP_ReleaseNotesLink</name>
+        <label>Leer las notas de la versión completas &gt;</label>
+    </customLabels>
+    <customLabels>
+        <name>RP_Remote_Site_Settings_Deactivated</name>
+        <label>Para aprovechar todas las nuevas funciones de la página Primeros pasos, vaya a Configuración, busque Configuración del sitio remoto y asegúrese de que el sitio SFDOEndpoints está activo. En caso contrario, haga clic en Modificar, marque la casilla Activo y haga clic en Guardar.</label>
+    </customLabels>
+    <customLabels>
         <name>RP_SalesforceOrgLinkLabel</name>
         <label>Horario de oficina semanal de Hub Community</label>
     </customLabels>
