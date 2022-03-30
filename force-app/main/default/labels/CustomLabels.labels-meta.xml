@@ -6638,8 +6638,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>engagementPlanTwoLookups</shortDescription>
         <value>You can enter a value for only one of the following fields: Account, Contact, Campaign, Case, Opportunity, or Recurring Donation.</value>
     </labels>
-    <!-- err Prefix designates Labels used in the ERR_ classes.  -->
-    <labels>
+    <!-- err Prefix designates Labels used in the ERR_ classes.  --><labels>
         <fullName>errErrorNoContext</fullName>
         <categories>Error</categories>
         <language>en_US</language>
@@ -6799,8 +6798,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text: Trash can button to remove field from batch header</shortDescription>
-        <!-- {0} is a string. Name of a DataImportBatch__c field e.g. npsp__Batch_Description__c -->
-        <value>Remove the {0} field from the batch header.</value>
+        <!-- {0} is a string. Name of a DataImportBatch__c field e.g. npsp__Batch_Description__c --><value>Remove the {0} field from the batch header.</value>
     </labels>
     <labels>
         <fullName>geAssistiveFieldDown</fullName>
@@ -6808,8 +6806,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text: Arrow button to move field down</shortDescription>
-        <!-- {0} is a string. Name of a form field. -->
-        <value>Move the {0} field down.</value>
+        <!-- {0} is a string. Name of a form field. --><value>Move the {0} field down.</value>
     </labels>
     <labels>
         <fullName>geAssistiveRequireField</fullName>
@@ -6817,8 +6814,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text: explains the function of the required checkbox</shortDescription>
-        <!-- {0} is the customer defined name of the field -->
-        <value>Require {0}.</value>
+        <!-- {0} is the customer defined name of the field --><value>Require {0}.</value>
     </labels>
     <labels>
         <fullName>geAssistiveFieldUp</fullName>
@@ -6826,8 +6822,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text: Arrow button to move field up</shortDescription>
-        <!-- {0} is a string. Name of a form field. -->
-        <value>Move the {0} field up.</value>
+        <!-- {0} is a string. Name of a form field. --><value>Move the {0} field up.</value>
     </labels>
     <labels>
         <fullName>geAssistiveFormFieldsCollapseAll</fullName>
@@ -6851,8 +6846,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text: Trash can button to remove field from template</shortDescription>
-        <!-- {0} is a string. Name of a form field e.g. Account 1: Name -->
-        <value>Remove the {0} field from the template.</value>
+        <!-- {0} is a string. Name of a form field e.g. Account 1: Name --><value>Remove the {0} field from the template.</value>
     </labels>
     <labels>
         <fullName>geAssistiveFormFieldsSectionEdit</fullName>
@@ -6860,8 +6854,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Gift Entry Template Builder Form Fields section edit button alt text</shortDescription>
-        <!-- {0} is a string. Name of a form section e.g. Gift Entry Form -->
-        <value>Edit the {0} section settings.</value>
+        <!-- {0} is a string. Name of a form section e.g. Gift Entry Form --><value>Edit the {0} section settings.</value>
     </labels>
     <labels>
         <fullName>geAssistiveModalCancelAndDiscard</fullName>
@@ -6884,8 +6877,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text: Arrow button to move section down</shortDescription>
-        <!-- {0} is a string. Name of a form section e.g. Gift Entry Form -->
-        <value>Move the {0} section down.</value>
+        <!-- {0} is a string. Name of a form section e.g. Gift Entry Form --><value>Move the {0} section down.</value>
     </labels>
     <labels>
         <fullName>geAssistiveSectionUp</fullName>
@@ -6893,8 +6885,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text: Arrow button to move section up</shortDescription>
-        <!-- {0} is a string. Name of a form section e.g. Gift Entry Form -->
-        <value>Move the {0} section up.</value>
+        <!-- {0} is a string. Name of a form section e.g. Gift Entry Form --><value>Move the {0} section up.</value>
     </labels>
     <labels>
         <fullName>geAssistiveShowMenu</fullName>
@@ -6910,8 +6901,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text: indicates a form field has been set as required</shortDescription>
-        <!-- {0} is the customer defined name of the field -->
-        <value>{0} is marked as required.</value>
+        <!-- {0} is the customer defined name of the field --><value>{0} is marked as required.</value>
     </labels>
     <labels>
         <fullName>geAssistiveDescriptionFieldOptional</fullName>
@@ -6919,8 +6909,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text: indicates a form field is optional</shortDescription>
-        <!-- {0} is the customer defined name of the field -->
-        <value>{0} is marked as optional.</value>
+        <!-- {0} is the customer defined name of the field --><value>{0} is marked as optional.</value>
     </labels>
     <labels>
         <fullName>geAssistiveSpinner</fullName>
@@ -7014,9 +7003,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Description for Batch Table Columns, part 2</shortDescription>
-        <!-- "Donor Name" and "Donation Name" texts in this label have related custom labels. -->
-        <!-- Related custom labels are geDonorColumnLabel and geDonationColumnLabel -->
-        <value>
+        <!-- "Donor Name" and "Donation Name" texts in this label have related custom labels. --><!-- Related custom labels are geDonorColumnLabel and geDonationColumnLabel --><value>
         We recommend including the following fields:
         &lt;/br&gt;
         &lt;ul&gt;
@@ -7064,9 +7051,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Warning body of required field added to Batch Header</shortDescription>
-        <!-- {0} is comma separated list of field api names from the Data Import Batch object -->
-        <!-- e.g. npsp__GiftBatch__c, npsp__Batch_Description__c -->
-        <value>These required fields were automatically added to the Batch Header:</value>
+        <!-- {0} is comma separated list of field api names from the Data Import Batch object --><!-- e.g. npsp__GiftBatch__c, npsp__Batch_Description__c --><value>These required fields were automatically added to the Batch Header:</value>
     </labels>
     <labels>
         <fullName>geBodyBatchDefaultValues</fullName>
@@ -8810,11 +8795,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Page-level error for gift entered without required donor info, 2 fields present</shortDescription>
-        <!-- {0} = the picklist value the user chooses (Contact1 or Account1) -->
-        <!-- {1} = user label for the Donation Donor field -->
-        <!-- {2} = user label for Contact1: Contact1 Imported or Account1: Account1 Imported field -->
-        <!-- {3} = user label for Contact1: Contact1 Last Name or Account1: Account1 Name field  -->
-        <value>When you select {0} for {1}, you must enter information in at least one of the following fields: {2} or {3}</value>
+        <!-- {0} = the picklist value the user chooses (Contact1 or Account1) --><!-- {1} = user label for the Donation Donor field --><!-- {2} = user label for Contact1: Contact1 Imported or Account1: Account1 Imported field --><!-- {3} = user label for Contact1: Contact1 Last Name or Account1: Account1 Name field  --><value>When you select {0} for {1}, you must enter information in at least one of the following fields: {2} or {3}</value>
     </labels>
     <labels>
         <fullName>geErrorDonorTypeValidationSingle</fullName>
@@ -8822,10 +8803,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Page-level error for gift entered without required donor info, 1 field present</shortDescription>
-        <!-- {0} = the picklist value the user chooses (Contact1 or Account1) -->
-        <!-- {1} = user label for the Donation Donor field -->
-        <!-- {2} = user label for Contact1: Contact1 Imported, Account1: Account1 Imported, Contact1: Contact1 Last Name, or Account1: Account1 Name field -->
-        <value>When you select {0} for {1}, you must enter information in {2}</value>
+        <!-- {0} = the picklist value the user chooses (Contact1 or Account1) --><!-- {1} = user label for the Donation Donor field --><!-- {2} = user label for Contact1: Contact1 Imported, Account1: Account1 Imported, Contact1: Contact1 Last Name, or Account1: Account1 Name field --><value>When you select {0} for {1}, you must enter information in {2}</value>
     </labels>
     <labels>
         <fullName>geErrorDonorTypeInvalid</fullName>
@@ -8833,9 +8811,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Page-level error for when Donation Donor doesn&apos;t match fields on the form</shortDescription>
-        <!-- {0} = the picklist value the user chooses (Contact1 or Account1) -->
-        <!-- {1} = user label for the Donation Donor field -->
-        <value>You&apos;ve selected {0} for {1}, but the required {0} fields aren&apos;t available on your form. Please check with your administrator.</value>
+        <!-- {0} = the picklist value the user chooses (Contact1 or Account1) --><!-- {1} = user label for the Donation Donor field --><value>You&apos;ve selected {0} for {1}, but the required {0} fields aren&apos;t available on your form. Please check with your administrator.</value>
     </labels>
     <labels>
         <fullName>geErrorFieldPermission</fullName>
@@ -8915,8 +8891,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Page-level error for insufficient field access with fields listed</shortDescription>
-        <!-- {0} is a list. Name of fields e.g. npsp__Amount__c, npsp__Description__c -->
-        <value>To save changes to this template you must have permission to edit all of the fields in the form. Please remove the following fields: {0}</value>
+        <!-- {0} is a list. Name of fields e.g. npsp__Amount__c, npsp__Description__c --><value>To save changes to this template you must have permission to edit all of the fields in the form. Please remove the following fields: {0}</value>
     </labels>
     <labels>
         <fullName>geErrorPageLevelFieldPermission2</fullName>
@@ -8932,8 +8907,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Page-level error message for required field missing on template</shortDescription>
-        <!-- Label should be followed by a list of fields e.g. npsp__Amount__c, npsp__Description__c -->
-        <value>You must include all required fields in your template. Review the source fields (NPSP Data Import object) for the following fields:</value>
+        <!-- Label should be followed by a list of fields e.g. npsp__Amount__c, npsp__Description__c --><value>You must include all required fields in your template. Review the source fields (NPSP Data Import object) for the following fields:</value>
     </labels>
     <labels>
         <fullName>geErrorPageLevelMissingRequiredGroupFields</fullName>
@@ -8965,8 +8939,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Failure msg description for system error &amp; uncertain if payment processed - Pt 1</shortDescription>
-        <!-- {0} = Donation Amount {1} = Donor Name {2} = custom label commonPaymentServices i.e. Payment Services -->
-        <value>A system error occurred for the {0} donation by {1}. Your admin should review transactions in {2} and determine if the payment was processed.</value>
+        <!-- {0} = Donation Amount {1} = Donor Name {2} = custom label commonPaymentServices i.e. Payment Services --><value>A system error occurred for the {0} donation by {1}. Your admin should review transactions in {2} and determine if the payment was processed.</value>
     </labels>
     <labels>
         <fullName>geErrorUncertainCardChargePart2</fullName>
@@ -8982,8 +8955,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Failure msg description for system error &amp; uncertain if payment processed - Pt 3</shortDescription>
-        <!-- {0} = custom label commonPaymentServices i.e. Payment Services -->
-        <value>If the payment was processed, note the Payment ID in {0}, and search for records with that ID in Salesforce. Update the gift and donor records as needed.</value>
+        <!-- {0} = custom label commonPaymentServices i.e. Payment Services --><value>If the payment was processed, note the Payment ID in {0}, and search for records with that ID in Salesforce. Update the gift and donor records as needed.</value>
     </labels>
     <labels>
         <fullName>geErrorUncertainCardChargePart4</fullName>
@@ -8991,8 +8963,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Failure msg description for system error &amp; uncertain if payment processed - Pt 4</shortDescription>
-        <!-- {0} = custom label commonPaymentServices i.e. Payment Services -->
-        <value>For more information, please see {0} troubleshooting documentation.</value>
+        <!-- {0} = custom label commonPaymentServices i.e. Payment Services --><value>For more information, please see {0} troubleshooting documentation.</value>
     </labels>
     <labels>
         <fullName>commonGauAllocations</fullName>
@@ -9168,8 +9139,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Donor Information</shortDescription>
-        <!-- {0} = Account or Contact record Name -->
-        <value>Gift by {0}</value>
+        <!-- {0} = Account or Contact record Name --><value>Gift by {0}</value>
     </labels>
     <labels>
         <fullName>geHeaderMatchingReviewDonations</fullName>
@@ -9177,8 +9147,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Header for modal to review matching Opportunities and Payments</shortDescription>
-        <!-- {0} = an Account or Contact record Name -->
-        <value>Review Donations for {0}</value>
+        <!-- {0} = an Account or Contact record Name --><value>Review Donations for {0}</value>
     </labels>
     <labels>
         <fullName>geHeaderMatchingOpportunity</fullName>
@@ -9186,8 +9155,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label with key Opportunity information</shortDescription>
-        <!-- {0} = Opportunity Amount {1} = Opportunity Close Date {2} = Opportunity Stage -->
-        <value>{0} on {1} ({2})</value>
+        <!-- {0} = Opportunity Amount {1} = Opportunity Close Date {2} = Opportunity Stage --><value>{0} on {1} ({2})</value>
     </labels>
     <labels>
         <fullName>geHeaderMatchingPayment</fullName>
@@ -9195,8 +9163,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label with key Payment information</shortDescription>
-        <!-- {0} = Payment Amount {1} = Payment Scheduled Date -->
-        <value>{0} on {1}</value>
+        <!-- {0} = Payment Amount {1} = Payment Scheduled Date --><value>{0} on {1}</value>
     </labels>
     <labels>
         <fullName>geHeaderNewSection</fullName>
@@ -9316,10 +9283,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Form Fields individual field help text</shortDescription>
-        <!-- {0} is a string. Name of an Object Mapping Group e.g. Account 1, Contact 2 -->
-        <!-- {1} is a string. Name of a standard or custom object field e.g. Name, Amount -->
-        <!-- {2} is a string. Name of a standard or custom object e.g. Account, Contact -->
-        <value>This field uses the {0} Object Group to target the {1} field on the {2} object.</value>
+        <!-- {0} is a string. Name of an Object Mapping Group e.g. Account 1, Contact 2 --><!-- {1} is a string. Name of a standard or custom object field e.g. Name, Amount --><!-- {2} is a string. Name of a standard or custom object e.g. Account, Contact --><value>This field uses the {0} Object Group to target the {1} field on the {2} object.</value>
     </labels>
     <labels>
         <fullName>geHelpTextFormFieldsFieldLabelLabel</fullName>
@@ -9623,8 +9587,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Text to display what the table is currently sorted by</shortDescription>
-        <!-- &#8226; is the character entity reference for a center dot -->
-        <value>• Sorted By {0}</value>
+        <!-- &#8226; is the character entity reference for a center dot --><value>• Sorted By {0}</value>
     </labels>
     <labels>
         <fullName>geTextListViewUpdatedAgo</fullName>
@@ -9632,8 +9595,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Displays how long ago the last record in the current list view was updated</shortDescription>
-        <!-- &#8226; is the character entity reference for a center dot -->
-        <value>• Updated {0}</value>
+        <!-- &#8226; is the character entity reference for a center dot --><value>• Updated {0}</value>
     </labels>
     <labels>
         <fullName>geTextNavigateToOpportunity</fullName>
@@ -9705,8 +9667,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Template successfully created</shortDescription>
-        <!-- {0} is a string. Name of the template that was created. -->
-        <value>The &quot;{0}&quot; template was created.</value>
+        <!-- {0} is a string. Name of the template that was created. --><value>The &quot;{0}&quot; template was created.</value>
     </labels>
     <labels>
         <fullName>geToastTemplateDeleteError</fullName>
@@ -9722,8 +9683,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Template successfully deleted</shortDescription>
-        <!-- {0} is a string. Name of the template that was created. -->
-        <value>The &quot;{0}&quot; template was deleted.</value>
+        <!-- {0} is a string. Name of the template that was created. --><value>The &quot;{0}&quot; template was deleted.</value>
     </labels>
     <labels>
         <fullName>geToastTemplateTabsError</fullName>
@@ -9731,8 +9691,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error when trying to save a template with errors</shortDescription>
-        <!-- {0} is a list of strings. Names of the tabs with errors. -->
-        <value>Please review the following: {0}</value>
+        <!-- {0} is a list of strings. Names of the tabs with errors. --><value>Please review the following: {0}</value>
     </labels>
     <labels>
         <fullName>geToastTemplateUpdateSuccess</fullName>
@@ -9740,8 +9699,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Template successfully updated</shortDescription>
-        <!-- {0} is a string. Name of the template that was created. -->
-        <value>The &quot;{0}&quot; template was updated.</value>
+        <!-- {0} is a string. Name of the template that was created. --><value>The &quot;{0}&quot; template was updated.</value>
     </labels>
     <labels>
         <fullName>geUtilJWTTestInvalidKey</fullName>
