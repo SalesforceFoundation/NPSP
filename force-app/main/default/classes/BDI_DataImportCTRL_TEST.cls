@@ -56,7 +56,6 @@ private with sharing class BDI_DataImportCTRL_TEST {
         // instantiate the controller
         BDI_DataImport_CTRL ctrl = new BDI_DataImport_CTRL();
         ctrl.preload();
-
         System.assertEquals(false, ctrl.isBatchJobCompleted);
         System.assertEquals(2, ctrl.crecToProcess);
         System.assertEquals(null, ctrl.crecProcessed);
@@ -65,7 +64,6 @@ private with sharing class BDI_DataImportCTRL_TEST {
 
         ctrl.importData();
         Test.stopTest();
-
         System.assertEquals(true, ctrl.isBatchJobCompleted);
         System.assertEquals(100, ctrl.percentComplete);
         System.assertEquals(null, ctrl.strTimeSpent);
@@ -163,6 +161,172 @@ private with sharing class BDI_DataImportCTRL_TEST {
     }
 
     /*********************************************************************************************************
+    * @description Tests that controller will properly run dry run for only the selected DI records
+    */
+    static testMethod void testSelectedDIDryRun() {
+
+        // Set the contact matching rule so that matching during dry run should happen
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dis.Contact_Matching_Rule__c = 'Firstname,Lastname,Email';
+        UTIL_CustomSettingsFacade.setDataImportSettings(dis);
+
+        // This contact will cause the Data Import record to match on it
+        Contact testContA = new Contact(FirstName = 'Susie',
+                                         LastName = 'TestGroupA01',
+                                        npe01__HomeEmail__c = 'testgroupAcontact01Personal@fakedata.com',
+                                        Email = 'testgroupAcontact01Personal@fakedata.com');
+        insert testContA;
+
+        // This DI will the be passed into the controller and processed
+        DataImport__c testDataImportA = new DataImport__c(
+                                        Contact1_Firstname__c = 'Susie',
+                                        Contact1_Home_Phone__c = '555-321-0001',
+                                        Contact1_Lastname__c = 'TestGroupA01',
+                                        Contact1_Other_Phone__c = '555-456-0001',
+                                        Contact1_Personal_Email__c = 'testgroupAcontact01Personal@fakedata.com',
+                                        Contact1_Preferred_Email__c = 'testgroupAcontact01Preferred@fakedata.com',
+                                        Contact1_Preferred_Phone__c = '555-567-0001',
+                                        Donation_Donor__c = 'Contact1',
+                                        Donation_Amount__c = 100,
+                                        Donation_Date__c = System.Date.Today(),
+                                        Home_City__c = 'Fakeville',
+                                        Home_Country__c = 'United States',
+                                        Home_State_Province__c = 'California',
+                                        Home_Street__c = '100 Fake Blvd',
+                                        Home_Zip_Postal_Code__c = '94105',
+                                        Household_Phone__c = '555-789-0001',
+                                        Payment_Check_Reference_Number__c = '453',
+                                        Payment_Method__c = 'Check');
+
+        // This Test DI will be inserted but should not be processed
+        DataImport__c testDataImportB = new DataImport__c(
+                                        Contact1_Firstname__c = 'Joe',
+                                        Contact1_Home_Phone__c = '555-321-0001',
+                                        Contact1_Lastname__c = 'TestGroupB01',
+                                        Contact1_Other_Phone__c = '555-456-0001',
+                                        Contact1_Personal_Email__c = 'testgroupBcontact01Personal@fakedata.com',
+                                        Contact1_Preferred_Email__c = 'testgroupBcontact01Preferred@fakedata.com',
+                                        Contact1_Preferred_Phone__c = '555-567-0001',
+                                        Donation_Campaign_Name__c = 'Test Campaign 2',
+                                        Donation_Amount__c = 150,
+                                        Home_City__c = 'Fakeville',
+                                        Home_Country__c = 'United States',
+                                        Home_State_Province__c = 'California',
+                                        Home_Street__c = '500 Fake Blvd',
+                                        Home_Zip_Postal_Code__c = '94105',
+                                        Household_Phone__c = '555-789-0001',
+                                        Payment_Check_Reference_Number__c = '453',
+                                        Payment_Method__c = 'Check');
+
+        // This DI will the be passed into the controller and processed
+        DataImport__c testDataImportC = new DataImport__c(
+                                        Contact1_Firstname__c = 'Tom',
+                                        Contact1_Home_Phone__c = '555-321-0003',
+                                        Contact1_Lastname__c = 'TestGroupC01',
+                                        Contact1_Other_Phone__c = '555-456-0003',
+                                        Contact1_Personal_Email__c = 'testgroupCcontact01Personal@fakedata.com',
+                                        Contact1_Preferred_Email__c = 'testgroupCcontact01Preferred@fakedata.com',
+                                        Contact1_Preferred_Phone__c = '555-567-0003',
+                                        Donation_Donor__c = 'Contact1',
+                                        Donation_Amount__c = 100,
+                                        Donation_Date__c = System.Date.Today(),
+                                        Home_City__c = 'Fakeville',
+                                        Home_Country__c = 'United States',
+                                        Home_State_Province__c = 'California',
+                                        Home_Street__c = '103 Fake Blvd',
+                                        Home_Zip_Postal_Code__c = '94105',
+                                        Household_Phone__c = '555-789-0001',
+                                        Payment_Check_Reference_Number__c = '453',
+                                        Payment_Method__c = 'Check');
+
+        insert new DataImport__c[]{testDataImportA,testDataImportB, testDataImportC};
+
+        PageReference pageRef = Page.BDI_DataImport;
+        pageRef.getParameters().put('diIds', testDataImportA.Id + ',' + testDataImportC.Id);
+        Test.setCurrentPage(pageRef);
+        BDI_DataImport_CTRL ctrl = new BDI_DataImport_CTRL();
+
+        Test.startTest();
+        // Verify that the data import is loaded from parameters properly and doesn't contain
+        // the excluded DI
+        System.assertNotEquals(null, ctrl.dataImportIds);
+        System.assertEquals(true, ctrl.dataImportIds.contains(testDataImportA.Id));
+        System.assertEquals(false, ctrl.dataImportIds.contains(testDataImportB.Id));
+        System.assertEquals(true, ctrl.dataImportIds.contains(testDataImportC.Id));
+
+        // Run import data to validate that it is correctly created.
+        ctrl.startDryRun();
+        Test.stopTest();
+
+        DataImport__c testDIResultA;
+        DataImport__c testDIResultB;
+        DataImport__c testDIResultC;
+
+
+        for (DataImport__c di : [SELECT Id,
+                                        Status__c,
+                                        FailureInformation__c,
+                                        Contact1_Lastname__c,
+                                        Account1_Name__c,
+                                        Account1ImportStatus__c,
+                                        Account1Imported__c, 
+                                        Account2ImportStatus__c,
+                                        Account2Imported__c,
+                                        Contact1ImportStatus__c,
+                                        Contact1Imported__c,
+                                        Contact2ImportStatus__c,
+                                        Contact2Imported__c,
+                                        DonationCampaignImportStatus__c,
+                                        DonationCampaignImported__c,
+                                        DonationImportStatus__c,
+                                        DonationImported__c,
+                                        Donation_Donor__c,
+                                        HomeAddressImportStatus__c,
+                                        HomeAddressImported__c,
+                                        HouseholdAccountImported__c,
+                                        PaymentImportStatus__c,
+                                        PaymentImported__c
+                                    FROM DataImport__c]) {
+            if (di.Contact1_Lastname__c == 'TestGroupA01') {
+                testDIResultA = di;
+            } else if (di.Contact1_Lastname__c == 'TestGroupB01') {
+                testDIResultB = di;
+            } else if (di.Contact1_Lastname__c == 'TestGroupC01') {
+                testDIResultC = di;
+            }
+        }
+
+        // Data Import record A should have had dry run processing completed and the contact
+        // should have matched
+        System.assertEquals(null,testDIResultA.FailureInformation__c);
+        System.assertEquals(BDI_DataImport_API.bdiDryRunValidated,testDIResultA.Status__c);
+        System.assertNotEquals(null,testDIResultA.Contact1Imported__c);
+        System.assertEquals(System.label.bdiDryRunMatched,testDIResultA.Contact1ImportStatus__c);
+        System.assertEquals(null,testDIResultA.DonationImported__c);
+        System.assertEquals(null,testDIResultA.DonationImportStatus__c);
+
+
+        // Data Import record B should not have been processed since it wasn't passed into the controller
+        System.assertEquals(null,testDIResultB.FailureInformation__c);
+        System.assertEquals(null,testDIResultB.Status__c);
+        System.assertEquals(null,testDIResultB.Contact1Imported__c);
+        System.assertEquals(null,testDIResultB.DonationImported__c);
+        System.assertEquals(null,testDIResultB.HouseholdAccountImported__c);
+        System.assertEquals(null,testDIResultB.HomeAddressImported__c);
+        System.assertEquals(null,testDIResultB.PaymentImported__c);
+
+
+        // Data Import record C should have had dry run processing completed but should not have matched
+        System.assertEquals(null,testDIResultC.FailureInformation__c);
+        System.assertEquals(BDI_DataImport_API.bdiDryRunValidated,testDIResultC.Status__c);
+        System.assertEquals(null,testDIResultC.Contact1Imported__c);
+        System.assertEquals(System.label.bdiDryRunNoMatch,testDIResultC.Contact1ImportStatus__c);
+        System.assertEquals(null,testDIResultC.DonationImported__c);
+        System.assertEquals(null,testDIResultC.DonationImportStatus__c);
+    }
+    
+
+    /*********************************************************************************************************
     * @description operation:
     *    test validation rules for settings on visualforce page
     * verify:
@@ -219,6 +383,161 @@ private with sharing class BDI_DataImportCTRL_TEST {
         System.assertEquals(diBatch.Id, ctrl.diBatch.Id);
         System.assertEquals(diBatch.Name, ctrl.diBatch.Name);
         Test.stopTest();
+    }
+
+    /*********************************************************************************************************
+    * @description Tests that controller will properly load and process selected DI records.
+    */    
+    static testMethod void testSelectedDIButton() {
+
+        // This DI will the be passed into the controller and processed
+        DataImport__c testDataImportA = new DataImport__c(
+                                        Contact1_Firstname__c = 'Susie',
+                                        Contact1_Home_Phone__c = '555-321-0001',
+                                        Contact1_Lastname__c = 'TestGroupA01',
+                                        Contact1_Other_Phone__c = '555-456-0001',
+                                        Contact1_Personal_Email__c = 'testgroupAcontact01Personal@fakedata.com',
+                                        Contact1_Preferred_Email__c = 'testgroupAcontact01Preferred@fakedata.com',
+                                        Contact1_Preferred_Phone__c = '555-567-0001',
+                                        Donation_Donor__c = 'Contact1',
+                                        Donation_Amount__c = 100,
+                                        Donation_Date__c = System.Date.Today(),
+                                        Home_City__c = 'Fakeville',
+                                        Home_Country__c = 'United States',
+                                        Home_State_Province__c = 'California',
+                                        Home_Street__c = '100 Fake Blvd',
+                                        Home_Zip_Postal_Code__c = '94105',
+                                        Household_Phone__c = '555-789-0001',
+                                        Payment_Check_Reference_Number__c = '453',
+                                        Payment_Method__c = 'Check');
+
+        // This Test DI will be inserted but should not be processed
+        DataImport__c testDataImportB = new DataImport__c(
+                                        Contact1_Firstname__c = 'Joe',
+                                        Contact1_Home_Phone__c = '555-321-0001',
+                                        Contact1_Lastname__c = 'TestGroupB01',
+                                        Contact1_Other_Phone__c = '555-456-0001',
+                                        Contact1_Personal_Email__c = 'testgroupBcontact01Personal@fakedata.com',
+                                        Contact1_Preferred_Email__c = 'testgroupBcontact01Preferred@fakedata.com',
+                                        Contact1_Preferred_Phone__c = '555-567-0001',
+                                        Donation_Campaign_Name__c = 'Test Campaign 2',
+                                        Donation_Donor__c = null, //leaving this null to test defaulting of contact1
+                                        Donation_Amount__c = 150,
+                                        Home_City__c = 'Fakeville',
+                                        Home_Country__c = 'United States',
+                                        Home_State_Province__c = 'California',
+                                        Home_Street__c = '500 Fake Blvd',
+                                        Home_Zip_Postal_Code__c = '94105',
+                                        Household_Phone__c = '555-789-0001',
+                                        Payment_Check_Reference_Number__c = '453',
+                                        Payment_Method__c = 'Check');
+
+        // This DI will the be passed into the controller and processed
+        DataImport__c testDataImportC = new DataImport__c(
+                                        Contact1_Firstname__c = 'Tom',
+                                        Contact1_Home_Phone__c = '555-321-0003',
+                                        Contact1_Lastname__c = 'TestGroupC01',
+                                        Contact1_Other_Phone__c = '555-456-0003',
+                                        Contact1_Personal_Email__c = 'testgroupCcontact01Personal@fakedata.com',
+                                        Contact1_Preferred_Email__c = 'testgroupCcontact01Preferred@fakedata.com',
+                                        Contact1_Preferred_Phone__c = '555-567-0003',
+                                        Donation_Donor__c = 'Contact1',
+                                        Donation_Amount__c = 100,
+                                        Donation_Date__c = System.Date.Today(),
+                                        Home_City__c = 'Fakeville',
+                                        Home_Country__c = 'United States',
+                                        Home_State_Province__c = 'California',
+                                        Home_Street__c = '103 Fake Blvd',
+                                        Home_Zip_Postal_Code__c = '94105',
+                                        Household_Phone__c = '555-789-0001',
+                                        Payment_Check_Reference_Number__c = '453',
+                                        Payment_Method__c = 'Check');
+
+        insert new DataImport__c[]{testDataImportA,testDataImportB, testDataImportC};
+
+        PageReference pageRef = Page.BDI_DataImport;
+        pageRef.getParameters().put('diIds', testDataImportA.Id + ',' + testDataImportC.Id);
+        Test.setCurrentPage(pageRef);
+        BDI_DataImport_CTRL ctrl = new BDI_DataImport_CTRL();
+
+        Test.startTest();
+        // Verify that the data import is loaded from parameters properly
+        System.assertNotEquals(null, ctrl.dataImportIds);
+        List<Id> diIds = new List<Id>(ctrl.dataImportIds);
+        System.assertEquals(testDataImportA.Id, diIds[0]);
+
+        // Run import data to validate that it is correctly created.
+        ctrl.importData();
+        Test.stopTest();
+
+        DataImport__c testDIResultA;
+        DataImport__c testDIResultB;
+        DataImport__c testDIResultC;
+
+        for (DataImport__c di : [SELECT Id,
+                                        Status__c,
+                                        FailureInformation__c,
+                                        Contact1_Lastname__c,
+                                        Account1_Name__c,
+                                        Account1ImportStatus__c,
+                                        Account1Imported__c, 
+                                        Account2ImportStatus__c,
+                                        Account2Imported__c,
+                                        Contact1ImportStatus__c,
+                                        Contact1Imported__c,
+                                        Contact2ImportStatus__c,
+                                        Contact2Imported__c,
+                                        DonationCampaignImportStatus__c,
+                                        DonationCampaignImported__c,
+                                        DonationImportStatus__c,
+                                        DonationImported__c,
+                                        Donation_Donor__c,
+                                        HomeAddressImportStatus__c,
+                                        HomeAddressImported__c,
+                                        HouseholdAccountImported__c,
+                                        PaymentImportStatus__c,
+                                        PaymentImported__c
+                                    FROM DataImport__c]) {
+            if (di.Contact1_Lastname__c == 'TestGroupA01') {
+                testDIResultA = di;
+            } else if (di.Contact1_Lastname__c == 'TestGroupB01') {
+                testDIResultB = di;
+            } else if (di.Contact1_Lastname__c == 'TestGroupC01') {
+                testDIResultC = di;
+            }
+        }
+
+        // Data Import record A should have been processed successfully
+        System.assertEquals(null,testDIResultA.FailureInformation__c);
+        System.assertEquals(BDI_DataImport_API.bdiImported,testDIResultA.Status__c);
+        System.assertNotEquals(null,testDIResultA.Contact1Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDIResultA.Contact1ImportStatus__c);
+        System.assertNotEquals(null,testDIResultA.DonationImported__c);
+        System.assertEquals(System.label.bdiCreated,testDIResultA.DonationImportStatus__c);
+        System.assertNotEquals(null,testDIResultA.HouseholdAccountImported__c);
+        System.assertNotEquals(null,testDIResultA.HomeAddressImported__c);
+        System.assertNotEquals(null,testDIResultA.PaymentImported__c);
+
+
+        // Data Import record B should not have been processed since it wasn't passed into the controller
+        System.assertEquals(null,testDIResultB.FailureInformation__c);
+        System.assertEquals(null,testDIResultB.Status__c);
+        System.assertEquals(null,testDIResultB.Contact1Imported__c);
+        System.assertEquals(null,testDIResultB.DonationImported__c);
+        System.assertEquals(null,testDIResultB.HouseholdAccountImported__c);
+        System.assertEquals(null,testDIResultB.HomeAddressImported__c);
+        System.assertEquals(null,testDIResultB.PaymentImported__c);
+
+        // Data Import record C should have been processed successfully
+        System.assertEquals(null,testDIResultC.FailureInformation__c);
+        System.assertEquals(BDI_DataImport_API.bdiImported,testDIResultC.Status__c);
+        System.assertNotEquals(null,testDIResultC.Contact1Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDIResultC.Contact1ImportStatus__c);
+        System.assertNotEquals(null,testDIResultC.DonationImported__c);
+        System.assertEquals(System.label.bdiCreated,testDIResultC.DonationImportStatus__c);
+        System.assertNotEquals(null,testDIResultC.HouseholdAccountImported__c);
+        System.assertNotEquals(null,testDIResultC.HomeAddressImported__c);
+        System.assertNotEquals(null,testDIResultC.PaymentImported__c);
     }
 
     /*********************************************************************************************************
