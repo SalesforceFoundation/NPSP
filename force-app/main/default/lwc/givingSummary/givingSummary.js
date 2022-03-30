@@ -69,7 +69,7 @@ export default class GivingSummary extends LightningElement {
         if(this.isMobile){
             return "slds-text-heading_small slds-var-p-left_small slds-var-p-bottom_medium bold-title"
         }
-        return "slds-text-heading_small slds-var-p-left_small slds-var-p-bottom_medium bold-title"
+        return "slds-text-heading_medium slds-var-p-left_small slds-var-p-bottom_medium bold-title"
     }
 
     /**
