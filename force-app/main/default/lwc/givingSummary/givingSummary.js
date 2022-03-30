@@ -16,8 +16,8 @@ const FormFactorType = Object.freeze({
     Small: 'Small',
 });
 
-const MOBILE_CLASSES = 'slds-text-align_left slds-border_right columns-mobile slds-var-p-left_small to-uppercase';
-const DESKTOP_CLASSES = 'slds-text-align_left slds-border_right columns-desktop slds-p-left_small to-uppercase';
+const MOBILE_CLASSES = 'slds-text-align_left slds-border_right columns-mobile slds-var-p-left_small slds-var-p-right_small to-uppercase';
+const DESKTOP_CLASSES = 'slds-text-align_left slds-border_right columns-desktop slds-var-p-left_small slds-var-p-right_small to-uppercase';
 const FIELDS = [TOTAL_AMOUNT, AMOUNT_CURRENT_YEAR, AMOUNT_LAST_YEAR];
 
 export default class GivingSummary extends LightningElement {
