@@ -740,13 +740,7 @@ private with sharing class RD2_ValidationService_TEST {
     private static void shouldBlockElevateRdUpdateWhenNonElevateUserUpdatesTheRD() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
-            .withIsIntegrationEnabled(true)
-            .withHasIntegrationPermissions(false);
-        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
-            PS_IntegrationServiceConfig.class,
-            configStub
-        );
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withContact(getContact().Id)
@@ -778,13 +772,7 @@ private with sharing class RD2_ValidationService_TEST {
     private static void shouldUpdateElevateRdWhenElevateUserUpdatesTheRD() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
-            .withIsIntegrationEnabled(true)
-            .withHasIntegrationPermissions(true);
-        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
-            PS_IntegrationServiceConfig.class,
-            configStub
-        );
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withContact(getContact().Id)
@@ -815,13 +803,7 @@ private with sharing class RD2_ValidationService_TEST {
     private static void shouldNotAllowElevateRDUpdateWhenDayOfMonthChanges() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
-            .withIsIntegrationEnabled(true)
-            .withHasIntegrationPermissions(true);
-        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
-            PS_IntegrationServiceConfig.class,
-            configStub
-        );
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
 
         npe03__Recurring_Donation__c oldRd = getRecurringDonationBuilder()
             .withContact(getContact().Id)
@@ -852,13 +834,7 @@ private with sharing class RD2_ValidationService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
 
-        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
-            .withIsIntegrationEnabled(true)
-            .withHasIntegrationPermissions(true);
-        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
-            PS_IntegrationServiceConfig.class,
-            configStub
-        );
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withContact(getContact().Id)
@@ -886,13 +862,7 @@ private with sharing class RD2_ValidationService_TEST {
     private static void shouldNotAllowElevateRDUpdateWhenEffectiveDateIsInTheFuture() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
-            .withIsIntegrationEnabled(true)
-            .withHasIntegrationPermissions(true);
-        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
-            PS_IntegrationServiceConfig.class,
-            configStub
-        );
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
 
         Date today = START_DATE;
         RD2_ScheduleService.currentDate = today;
@@ -959,13 +929,7 @@ private with sharing class RD2_ValidationService_TEST {
     private static void shouldNotAllowElevateRDUpdateCampaignToNull() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
-            .withIsIntegrationEnabled(true)
-            .withHasIntegrationPermissions(true);
-        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
-            PS_IntegrationServiceConfig.class,
-            configStub
-        );
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
 
         Date today = START_DATE;
         RD2_ScheduleService.currentDate = today;
@@ -1218,13 +1182,7 @@ private with sharing class RD2_ValidationService_TEST {
     private static void shouldFailElevateRDUpdateWhenEndDateIsInTheFuture() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
-            .withIsIntegrationEnabled(true)
-            .withHasIntegrationPermissions(false);
-        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
-            PS_IntegrationServiceConfig.class,
-            configStub
-        );
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
 
         Date today = START_DATE;
         RD2_ScheduleService.currentDate = today;
@@ -1263,13 +1221,7 @@ private with sharing class RD2_ValidationService_TEST {
                         .build()
         };
 
-        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
-            .withIsIntegrationEnabled(true)
-            .withHasIntegrationPermissions(false);
-        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
-            PS_IntegrationServiceConfig.class,
-            configStub
-        );
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
 
         RD2_ValidationService validationService = new RD2_ValidationService(recurringDonations);
 
@@ -1289,13 +1241,7 @@ private with sharing class RD2_ValidationService_TEST {
 
     @isTest
     private static void shouldFailElevateUpdateWhenPaymentMethodUpdateIsInvalid() {
-        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
-            .withIsIntegrationEnabled(true)
-            .withHasIntegrationPermissions(false);
-        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
-            PS_IntegrationServiceConfig.class,
-            configStub
-        );
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
 
         TEST_RecurringDonationBuilder builder = getRecurringDonationBuilder();
         List<npe03__Recurring_Donation__c> oldRecurringDonations = new List<npe03__Recurring_Donation__c>{
@@ -1331,13 +1277,7 @@ private with sharing class RD2_ValidationService_TEST {
     private static void shouldNotAllowClosedElevateRDUpdateWhenElevateRelatedFieldIsChanged() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
-            .withIsIntegrationEnabled(true)
-            .withHasIntegrationPermissions(true);
-        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
-            PS_IntegrationServiceConfig.class,
-            configStub
-        );
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
 
         npe03__Recurring_Donation__c oldRd = getRecurringDonationBuilder()
             .withContact(getContact().Id)
@@ -1366,13 +1306,7 @@ private with sharing class RD2_ValidationService_TEST {
     private static void shouldAllowClosedElevateRDUpdateWhenNotElevateRelatedFieldIsChanged() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
-            .withIsIntegrationEnabled(true)
-            .withHasIntegrationPermissions(true);
-        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
-            PS_IntegrationServiceConfig.class,
-            configStub
-        );
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
 
         npe03__Recurring_Donation__c oldRd = getRecurringDonationBuilder()
             .withContact(getContact().Id)
