@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2019 Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,18 +13,18 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -129,7 +129,7 @@ public with sharing class BDI_DataImport_TEST {
         List<DataImport__c> dis = new List<DataImport__c> {di1, di2, di3};
         insert dis;
 
-        bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c 
+        bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c
                 WHERE Id = :bdi.Id];
 
         System.assertEquals(BDI_DataImport_API.BATCH_STATUS_OPEN, bdi.Batch_Status__c,
@@ -144,7 +144,7 @@ public with sharing class BDI_DataImport_TEST {
         update dis;
         Test.stopTest();
 
-        bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c 
+        bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c
                 WHERE Id = :bdi.Id];
 
         System.assertEquals(BDI_DataImport_API.BATCH_STATUS_OPEN, bdi.Batch_Status__c,
@@ -175,13 +175,13 @@ public with sharing class BDI_DataImport_TEST {
         update di2;
         Test.stopTest();
 
-        bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c 
+        bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c
                 WHERE Id = :bdi.Id];
 
         System.assertEquals(BDI_DataImport_API.BATCH_STATUS_FAILED, bdi.Batch_Status__c,
                             'The batch status should be Failed when at least one ' +
                             'data import record has failed.');
-        
+
     }
 
     /*
@@ -209,19 +209,19 @@ public with sharing class BDI_DataImport_TEST {
         update dis;
         Test.stopTest();
 
-        bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c 
+        bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c
                 WHERE Id = :bdi.Id];
 
         System.assertEquals(BDI_DataImport_API.BATCH_STATUS_COMPLETED, bdi.Batch_Status__c,
                             'The batch status should be Completed when all ' +
                             'data import records have been imported.');
-        
+
         // set one di to Open
         di3.Status__c = BDI_DataImport_API.bdiDryRunValidated;
         update di3;
 
         // check the batch is no longer in the completed stage
-        bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c 
+        bdi = [SELECT Id, Batch_Status__c FROM DataImportBatch__c
                 WHERE Id = :bdi.Id];
 
         System.assertNotEquals(BDI_DataImport_API.BATCH_STATUS_COMPLETED, bdi.Batch_Status__c,
@@ -231,52 +231,52 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     * @description operation
-    *     import matching contacts within the same di record 
+    *     import matching contacts within the same di record
     * verify:
     *     only one contact created
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void OneDIDuplicateNewContacts() {
         List<DataImport__c> dataImports = new List<DataImport__c>();
         dataImports.add(newDI('c1', 'C1', 'c1', 'C1'));
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
         // verify expected results
         List<Contact> listCon = getContacts();
         System.assertEquals(1, listCon.size());
         System.assertEquals('c1 C1', listCon[0].Name);
-        
+
         dataImports = getDataImports();
         System.assertEquals(1, dataImports.size());
         System.assertEquals(dataImports[0].Contact1Imported__c, listCon[0].Id);
         System.assertEquals(dataImports[0].Contact2Imported__c, listCon[0].Id);
         System.assertNotEquals(null, dataImports[0].HouseholdAccountImported__c);
         System.assertEquals(label.bdiCreated, dataImports[0].Contact1ImportStatus__c);
-        System.assertEquals(label.bdiMatched, dataImports[0].Contact2ImportStatus__c);        
+        System.assertEquals(label.bdiMatched, dataImports[0].Contact2ImportStatus__c);
     }
-    
+
     /*********************************************************************************************************
     * @description operation
-    *        import different contacts within the same di record  
-    * verify: 
+    *        import different contacts within the same di record
+    * verify:
     *        two contacts created
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void OneDITwoNewContacts() {
         List<DataImport__c> dataImports = new List<DataImport__c>();
         dataImports.add(newDI('c1', 'C1', 'c2', 'C2'));
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
         // verify expected results
         List<Contact> listCon = getContacts();
         System.assertEquals(2, listCon.size());
@@ -286,9 +286,9 @@ public with sharing class BDI_DataImport_TEST {
         System.assertEquals(1, dataImports.size());
         System.assertEquals(dataImports[0].Contact1Imported__c, listCon[0].Id);
         System.assertEquals(dataImports[0].Contact2Imported__c, listCon[1].Id);
-        System.assertNotEquals(null, dataImports[0].HouseholdAccountImported__c);        
+        System.assertNotEquals(null, dataImports[0].HouseholdAccountImported__c);
         System.assertEquals(label.bdiCreated, dataImports[0].Contact1ImportStatus__c);
-        System.assertEquals(label.bdiCreated, dataImports[0].Contact2ImportStatus__c);        
+        System.assertEquals(label.bdiCreated, dataImports[0].Contact2ImportStatus__c);
     }
 
     /*********************************************************************************************************
@@ -336,22 +336,22 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     * @description operation
-    *        import matching contacts within multiple di records in the same batch  
-    * verify: 
+    *        import matching contacts within multiple di records in the same batch
+    * verify:
     *        only one contact created
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void TwoDIDuplicateNewContacts() {
         List<DataImport__c> dataImports = new List<DataImport__c>();
         dataImports.add(newDI('c1', 'C1'));
         dataImports.add(newDI('c1', 'C1'));
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
         // verify expected results
         List<Contact> listCon = getContacts();
         System.assertEquals(1, listCon.size());
@@ -364,27 +364,27 @@ public with sharing class BDI_DataImport_TEST {
         System.assertNotEquals(null, dataImports[0].HouseholdAccountImported__c);
         System.assertNotEquals(null, dataImports[1].HouseholdAccountImported__c);
         System.assertEquals(label.bdiCreated, dataImports[0].Contact1ImportStatus__c);
-        System.assertEquals(label.bdiMatched, dataImports[1].Contact1ImportStatus__c);        
+        System.assertEquals(label.bdiMatched, dataImports[1].Contact1ImportStatus__c);
     }
-    
+
     /*********************************************************************************************************
     * @description operation
-    *        import different contacts within multiple di records in the same batch 
-    * verify: 
+    *        import different contacts within multiple di records in the same batch
+    * verify:
     *        two contacts created
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void TwoDITwoNewContacts() {
         List<DataImport__c> dataImports = new List<DataImport__c>();
         dataImports.add(newDI('c1', 'C1'));
         dataImports.add(newDI('c2', 'C2'));
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
         // verify expected results
         List<Contact> listCon = getContacts();
         System.assertEquals(2, listCon.size());
@@ -397,34 +397,34 @@ public with sharing class BDI_DataImport_TEST {
         System.assertNotEquals(null, dataImports[0].HouseholdAccountImported__c);
         System.assertNotEquals(null, dataImports[1].HouseholdAccountImported__c);
         System.assertEquals(label.bdiCreated, dataImports[0].Contact1ImportStatus__c);
-        System.assertEquals(label.bdiCreated, dataImports[1].Contact1ImportStatus__c);        
+        System.assertEquals(label.bdiCreated, dataImports[1].Contact1ImportStatus__c);
     }
 
     /*********************************************************************************************************
     * @description operation
-    *        import matching contacts within multiple di records in the same batch  
-    * verify: 
+    *        import matching contacts within multiple di records in the same batch
+    * verify:
     *        only two contacts created
     *        only 1 household account created
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void TwoDIDuplicateNewContactsDifferentOrder() {
         List<DataImport__c> dataImports = new List<DataImport__c>();
         dataImports.add(newDI('c1', 'C1', 'c2', 'C2'));
         dataImports.add(newDI('c2', 'C2'));
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
         // verify expected results
         List<Contact> listCon = getContacts();
         System.assertEquals(2, listCon.size());
         System.assertEquals('c1 C1', listCon[0].Name);
         System.assertEquals('c2 C2', listCon[1].Name);
-        
+
         // verify only one household account
         List<Account> listAcc = getAccounts();
         // because c2 is first created as a contact1, it will get a hh account, that will
@@ -440,16 +440,16 @@ public with sharing class BDI_DataImport_TEST {
         System.assertNotEquals(null, dataImports[0].HouseholdAccountImported__c);
         System.assertNotEquals(null, dataImports[1].HouseholdAccountImported__c);
         System.assertEquals(label.bdiCreated, dataImports[0].Contact1ImportStatus__c);
-        System.assertEquals(label.bdiCreated, dataImports[1].Contact1ImportStatus__c);        
-        System.assertEquals(label.bdiMatched, dataImports[0].Contact2ImportStatus__c);        
+        System.assertEquals(label.bdiCreated, dataImports[1].Contact1ImportStatus__c);
+        System.assertEquals(label.bdiMatched, dataImports[0].Contact2ImportStatus__c);
     }
 
     /*********************************************************************************************************
     * @description operation
-    *        import existing contacts within the same di record  
-    * verify: 
+    *        import existing contacts within the same di record
+    * verify:
     *        two contacts matched
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void OneDITwoExistingContacts() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
@@ -461,40 +461,40 @@ public with sharing class BDI_DataImport_TEST {
         insert listConExisting;
 
         UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
-        
+
         List<DataImport__c> dataImports = new List<DataImport__c>();
         dataImports.add(newDI('c1', 'C1', 'c2', 'C2'));
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
         // verify expected results
         List<Contact> listCon = getContacts();
         System.assertEquals(2, listCon.size());
         System.assertNotEquals(listCon[1].Name, listCon[0].Name);
-        
+
         dataImports = getDataImports();
         System.assertEquals(1, dataImports.size());
         System.assertEquals(dataImports[0].Contact1Imported__c, listCon[0].Id);
         System.assertEquals(dataImports[0].Contact2Imported__c, listCon[1].Id);
         System.assertNotEquals(null, dataImports[0].HouseholdAccountImported__c);
         System.assertEquals(label.bdiMatched, dataImports[0].Contact1ImportStatus__c);
-        System.assertEquals(label.bdiMatched, dataImports[0].Contact2ImportStatus__c);        
+        System.assertEquals(label.bdiMatched, dataImports[0].Contact2ImportStatus__c);
     }
 
     /*********************************************************************************************************
     * @description operation
-    *        import existing contacts that match a 1x1 contact 
-    * verify: 
+    *        import existing contacts that match a 1x1 contact
+    * verify:
     *        error given, di not processed.
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void OneDIExistingContacts1x1() {
         // existing 1x1 contact
-        UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, 1, 1, 0);   
+        UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, 1, 1, 0);
         List<Contact> listConExisting = getContacts();
 
         Contact matched00Contact = listConExisting[0];
@@ -512,13 +512,13 @@ public with sharing class BDI_DataImport_TEST {
         dataImports.add(newDI(matched00Contact.FirstName, matched00Contact.LastName, 'c2', 'C2', new Address__c(MailingCity__c='Seattle')));
         dataImports[0].Contact1_Personal_Email__c = 'foo@bar.com';
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
         Boolean usingAdv = ADV_PackageInfo_SVC.useAdv();
         // verify expected results
         List<Contact> listCon = getContacts();
@@ -534,28 +534,28 @@ public with sharing class BDI_DataImport_TEST {
         String importError = usingAdv ? label.bdiErrorOneToOneMultiContact : label.bdiErrorNonHHAccountContact;
         System.assertEquals(importError, dataImports[0].Contact1ImportStatus__c);
         System.assertEquals(null, dataImports[0].Contact2ImportStatus__c);
-        List<Address__c> listAddr = getAddresses();   
+        List<Address__c> listAddr = getAddresses();
         System.assertEquals(0, listAddr.size());
     }
 
     /*********************************************************************************************************
     * @description operation
-    *        import different accounts within the same di record  
-    * verify: 
+    *        import different accounts within the same di record
+    * verify:
     *        two accounts created
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void OneDITwoNewAccounts() {
-            
+
         List<DataImport__c> dataImports = new List<DataImport__c>();
         dataImports.add(new DataImport__c(Account1_Name__c='A1', Account2_Name__c='A2'));
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
         // verify expected results
         List<Account> listAcc = getAccounts();
         System.assertEquals(2, listAcc.size());
@@ -566,26 +566,26 @@ public with sharing class BDI_DataImport_TEST {
         System.assertEquals(dataImports[0].Account1Imported__c, listAcc[0].Id);
         System.assertEquals(dataImports[0].Account2Imported__c, listAcc[1].Id);
         System.assertEquals(label.bdiCreated, dataImports[0].Account1ImportStatus__c);
-        System.assertEquals(label.bdiCreated, dataImports[0].Account2ImportStatus__c);        
+        System.assertEquals(label.bdiCreated, dataImports[0].Account2ImportStatus__c);
     }
 
     /*********************************************************************************************************
     * @description operation
-    *        import matching accounts within the same di record  
-    * verify: 
+    *        import matching accounts within the same di record
+    * verify:
     *        one accounts created
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void OneDITwoSameAccounts() {
         List<DataImport__c> dataImports = new List<DataImport__c>();
         dataImports.add(new DataImport__c(Account1_Name__c='A1', Account2_Name__c='A1'));
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
         // verify expected results
         List<Account> listAcc = getAccounts();
         System.assertEquals(1, listAcc.size());
@@ -595,27 +595,27 @@ public with sharing class BDI_DataImport_TEST {
         System.assertEquals(dataImports[0].Account1Imported__c, listAcc[0].Id);
         System.assertEquals(dataImports[0].Account2Imported__c, listAcc[0].Id);
         System.assertEquals(label.bdiCreated, dataImports[0].Account1ImportStatus__c);
-        System.assertEquals(label.bdiMatched, dataImports[0].Account2ImportStatus__c);        
+        System.assertEquals(label.bdiMatched, dataImports[0].Account2ImportStatus__c);
     }
 
     /*********************************************************************************************************
     * @description operation
-    *        import matching accounts in different di records  
-    * verify: 
+    *        import matching accounts in different di records
+    * verify:
     *        one account created
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void TwoDISameAccounts() {
         List<DataImport__c> dataImports = new List<DataImport__c>();
         dataImports.add(new DataImport__c(Account1_Name__c='A1'));
         dataImports.add(new DataImport__c(Account1_Name__c='A1'));
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
         // verify expected results
         List<Account> listAcc = getAccounts();
         System.assertEquals(1, listAcc.size());
@@ -630,8 +630,8 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     * @description operation
-    *        import existing accounts  
-    * verify: 
+    *        import existing accounts
+    * verify:
     *        no accounts created, just matched
     **********************************************************************************************************/
     static testMethod void TwoDIExistingAccounts() {
@@ -646,13 +646,13 @@ public with sharing class BDI_DataImport_TEST {
         dataImports.add(new DataImport__c(Account1_Name__c='A1', Account1_City__c='Seattle'));
         dataImports.add(new DataImport__c(Account1_Name__c='A2'));
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
         // verify expected results
         listAcc = getAccounts();
         System.assertEquals(2, listAcc.size());
@@ -667,8 +667,8 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     * @description operation
-    *        import existing accounts, matched by Salesforce Id  
-    * verify: 
+    *        import existing accounts, matched by Salesforce Id
+    * verify:
     *        no accounts created, just matched
     **********************************************************************************************************/
     static testMethod void TwoDIExistingAccountsSalesforceId() {
@@ -683,18 +683,18 @@ public with sharing class BDI_DataImport_TEST {
         UTIL_UnitTestData_TEST.setFixedSearchResults(listAcc);
 
         List<DataImport__c> dataImports = new List<DataImport__c>();
-        dataImports.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', 
+        dataImports.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1',
             Account1Imported__c=listAcc[0].Id));
-        dataImports.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C2', Contact2_Firstname__c='c2', 
+        dataImports.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C2', Contact2_Firstname__c='c2',
             Account1Imported__c=listAcc[0].Id, Account2Imported__c=listAcc[1].Id));
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
         // verify expected results
         listAcc = getOrganizations();
         System.assertEquals(2, listAcc.size());
@@ -705,14 +705,14 @@ public with sharing class BDI_DataImport_TEST {
         System.assertEquals(dataImports[1].Account1Imported__c, listAcc[0].Id);
         System.assertEquals(dataImports[1].Account2Imported__c, listAcc[1].Id);
         System.assertEquals(label.bdiMatched, dataImports[0].Account1ImportStatus__c);
-        System.assertEquals(label.bdiMatched, dataImports[1].Account1ImportStatus__c);        
-        System.assertEquals(label.bdiMatched, dataImports[1].Account2ImportStatus__c);        
+        System.assertEquals(label.bdiMatched, dataImports[1].Account1ImportStatus__c);
+        System.assertEquals(label.bdiMatched, dataImports[1].Account2ImportStatus__c);
     }
 
     /*********************************************************************************************************
     operation:
-    *        import contacts with Preferred Email set 
-    * verify: 
+    *        import contacts with Preferred Email set
+    * verify:
     *        ensure the appropriate contact email field gets copied into the standard email field.
     **********************************************************************************************************/
     /** can't use this test because it relies on our workflow rules being active, which we can't enforce.
@@ -728,13 +728,13 @@ public with sharing class BDI_DataImport_TEST {
         dataImports[2].Contact1_Preferred_Email__c = 'Alternate';
         dataImports[2].Contact1_Personal_Email__c = 'c3@alt.com';
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
         // verify expected results
         List<Contact> listCon = getContacts();
         System.assertEquals(3, listCon.size());
@@ -743,18 +743,18 @@ public with sharing class BDI_DataImport_TEST {
         System.assertEquals('c2 C2', listCon[1].Name);
         System.assertEquals('c2@work.com', listCon[1].Email);
         System.assertEquals('c3 C3', listCon[2].Name);
-        System.assertEquals('c3@alt.com', listCon[2].Email);        
+        System.assertEquals('c3@alt.com', listCon[2].Email);
     }
     ***************/
 
     /*********************************************************************************************************
     * @description operation
-    *        import contacts with accounts 
-    * verify: 
+    *        import contacts with accounts
+    * verify:
     *        contacts created
     *        accounts created
     *        affiliations created between contacts and accounts
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void TwoDIAffiliations() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
@@ -765,17 +765,17 @@ public with sharing class BDI_DataImport_TEST {
         dataImports[0].Account1_Name__c = 'A1';
         dataImports[1].Account2_Name__c = 'A2';
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
         // verify expected results
         Map<Id, Contact> contactById = new Map<Id, Contact>(getContacts());
         System.assertEquals(4, contactById.size());
-        
+
         dataImports = getDataImports();
 
         for (DataImport__c di : dataImports) {
@@ -786,14 +786,14 @@ public with sharing class BDI_DataImport_TEST {
             System.assertNotEquals(null, contactById.get(di.Contact1Imported__c).AccountId);
             System.assertNotEquals(null, contactById.get(di.Contact2Imported__c).AccountId);
         }
-        
+
         List<Account> listAcc = getOrganizations();
         System.assertEquals(2, listAcc.size());
         System.assertEquals(contactById.get(dataImports[0].Contact1Imported__c).Primary_Affiliation__c, listAcc[0].Id);
         System.assertEquals(contactById.get(dataImports[0].Contact2Imported__c).Primary_Affiliation__c, null);
         System.assertEquals(contactById.get(dataImports[1].Contact1Imported__c).Primary_Affiliation__c, null);
         System.assertEquals(contactById.get(dataImports[1].Contact2Imported__c).Primary_Affiliation__c, listAcc[1].Id);
-        
+
         list<npe5__Affiliation__c> listAffl = getAffiliations();
         System.assertEquals(2, listAffl.size());
         System.assertEquals(dataImports[0].Contact1Imported__c, listAffl[0].npe5__Contact__c);
@@ -803,12 +803,12 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     * @description operation
-    *        import contacts with home addresses  
-    * verify: 
+    *        import contacts with home addresses
+    * verify:
     *        address objects created
     *        contacts' mailing address set
     *        hh accounts' billing address set
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void TwoDIHomeAddresses() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
@@ -817,13 +817,13 @@ public with sharing class BDI_DataImport_TEST {
         dataImports.add(newDI('c1', 'C1', 'c2', 'C2', new Address__c(MailingCity__c='Seattle')));
         dataImports.add(newDI('c3', 'C3', 'c4', 'C4', new Address__c(MailingCity__c='Portland')));
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
         // verify expected results
         Map<Id, Contact> contactById = new Map<Id, Contact>(getContacts());
         System.assertEquals(4, contactById.size());
@@ -840,8 +840,8 @@ public with sharing class BDI_DataImport_TEST {
             System.assertNotEquals(null, contactById.get(di.Contact1Imported__c).AccountId);
             System.assertNotEquals(null, contactById.get(di.Contact2Imported__c).AccountId);
         }
-        
-        List<Address__c> listAddr = getAddresses(); 
+
+        List<Address__c> listAddr = getAddresses();
         System.assertEquals(2, listAddr.size());
         System.assertEquals(dataImports[0].Home_City__c, listAddr[0].MailingCity__c);
         System.assertEquals(dataImports[0].HomeAddressImported__c, listAddr[0].Id);
@@ -903,8 +903,8 @@ public with sharing class BDI_DataImport_TEST {
             System.assertNotEquals(null, contactById.get(di.Contact1Imported__c).AccountId);
             System.assertNotEquals(null, contactById.get(di.Contact2Imported__c).AccountId);
         }
-        
-        List<Address__c> listAddr = getAddresses(); 
+
+        List<Address__c> listAddr = getAddresses();
         System.assertEquals(4, listAddr.size());
         System.assertEquals(dataImports[0].Home_City__c, listAddr[2].MailingCity__c);
         System.assertEquals(dataImports[0].HomeAddressImported__c, listAddr[2].Id);
@@ -922,12 +922,12 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     * @description operation
-    *        import duplicate contacts with duplicate home addresses  
-    * verify: 
+    *        import duplicate contacts with duplicate home addresses
+    * verify:
     *        no duplicate address objects created
     *        contacts' mailing address set
     *        hh accounts' billing address set
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void ManyDISameHomeAddresses() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
@@ -940,7 +940,7 @@ public with sharing class BDI_DataImport_TEST {
         dataImports.add(newDI('c2', 'C2'));
 
         // add same address to all
-        for (DataImport__c di : dataImports) {        
+        for (DataImport__c di : dataImports) {
             di.Home_Street__c = '123 45th St NE';
             di.Home_City__c = 'Seattle';
             di.Home_State_Province__c = 'Washington';
@@ -948,35 +948,35 @@ public with sharing class BDI_DataImport_TEST {
             di.Home_Country__c = 'United States';
         }
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
         // verify expected results
         List<Contact> listCon = getContacts();
         System.assertEquals(2, listCon.size());
         dataImports = getDataImports();
         System.assertEquals(5, dataImports.size());
 
-        for (Contact con : listCon) {        
+        for (Contact con : listCon) {
             System.assertEquals(dataImports[0].Home_Street__c, con.MailingStreet);
             System.assertEquals(dataImports[0].Home_City__c, con.MailingCity);
             System.assertEquals(dataImports[0].Home_State_Province__c, con.MailingState);
             System.assertEquals(dataImports[0].Home_Zip_Postal_Code__c, con.MailingPostalCode);
             System.assertEquals(dataImports[0].Home_Country__c, con.MailingCountry);
         }
-        
-        List<Address__c> listAddr = getAddresses(); 
+
+        List<Address__c> listAddr = getAddresses();
         System.assertEquals(1, listAddr.size());
         System.assertEquals(dataImports[0].Home_Street__c, listAddr[0].MailingStreet__c);
         System.assertEquals(dataImports[0].Home_City__c, listAddr[0].MailingCity__c);
         System.assertEquals(dataImports[0].Home_State_Province__c, listAddr[0].MailingState__c);
         System.assertEquals(dataImports[0].Home_Zip_Postal_Code__c, listAddr[0].MailingPostalCode__c);
         System.assertEquals(dataImports[0].Home_Country__c, listAddr[0].MailingCountry__c);
-        
+
         List<Account> listAcc = getAccounts();
         // because c2 is first created as a contact1, it will get a hh account, that will
         // later get orphaned when we move c2 to c1's hh account.
@@ -985,16 +985,16 @@ public with sharing class BDI_DataImport_TEST {
         System.assertEquals(dataImports[0].Home_City__c, listAcc[0].BillingCity);
         System.assertEquals(dataImports[0].Home_State_Province__c, listAcc[0].BillingState);
         System.assertEquals(dataImports[0].Home_Zip_Postal_Code__c, listAcc[0].BillingPostalCode);
-        System.assertEquals(dataImports[0].Home_Country__c, listAcc[0].BillingCountry);                
+        System.assertEquals(dataImports[0].Home_Country__c, listAcc[0].BillingCountry);
 
         integer cCreated = 0;
         integer cMatched = 0;
         for (DataImport__c di : dataImports) {
             System.assertEquals(di.HomeAddressImported__c, listAddr[0].Id);
             if (di.HomeAddressImportStatus__c == label.bdiCreated)
-                cCreated++; 
+                cCreated++;
             else if (di.HomeAddressImportStatus__c == label.bdiMatched)
-                cMatched++; 
+                cMatched++;
         }
         // we didn't have an easy way to track the specific DI record that caused the addr to be created vs matched
         // in these duplicate (but new) scenarios, so we will live with marking them all as created.
@@ -1004,12 +1004,12 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     * @description operation
-    *        import contacts with home addresses, while address management is disabled 
-    * verify: 
+    *        import contacts with home addresses, while address management is disabled
+    * verify:
     *        address objects NOT created
     *    contacts' mailing address set
     *    hh accounts' billing address set
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void TwoDIHomeAddressesAddrMgmtOff() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
@@ -1024,13 +1024,13 @@ public with sharing class BDI_DataImport_TEST {
         dataImports.add(newDI('c1', 'C1', 'c2', 'C2', new Address__c(MailingCity__c='Seattle')));
         dataImports.add(newDI('c3', 'C3', 'c4', 'C4', new Address__c(MailingCity__c='Portland')));
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
         // verify expected results
         Map<Id, Contact> contactById = new Map<Id, Contact>(getContacts());
         System.assertEquals(4, contactById.size());
@@ -1048,22 +1048,22 @@ public with sharing class BDI_DataImport_TEST {
             System.assertNotEquals(null, contactById.get(di.Contact2Imported__c).AccountId);
         }
 
-        List<Address__c> listAddr = getAddresses(); 
+        List<Address__c> listAddr = getAddresses();
         System.assertEquals(0, listAddr.size());
-        
+
         List<Account> listAcc = getAccounts();
         System.assertEquals(2, listAcc.size());
         System.assertEquals('Seattle', listAcc[0].BillingCity);
-        System.assertEquals('Portland', listAcc[1].BillingCity);                
+        System.assertEquals('Portland', listAcc[1].BillingCity);
     }
 
     /*********************************************************************************************************
     * @description operation
-    *        import existing contacts with the same home address 
-    * verify: 
+    *        import existing contacts with the same home address
+    * verify:
     *        contacts matched
     *        address matched
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void TwoDIMixedAddresses() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
@@ -1075,30 +1075,30 @@ public with sharing class BDI_DataImport_TEST {
         insert listConExisting;
 
         UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
-        
+
         List<DataImport__c> dataImports = new List<DataImport__c>();
         dataImports.add(newDI('c1', 'C1'));
         dataImports.add(newDI('c2', 'C2'));
         dataImports[0].Home_City__c = 'Seattle';
         dataImports[1].Home_City__c = 'Bellevue';
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
         // verify expected results
         List<Contact> listCon = getContacts();
         System.assertEquals(2, listCon.size());
-        
-        List<Address__c> listAddr = getAddresses(); 
+
+        List<Address__c> listAddr = getAddresses();
         System.assertEquals(3, listAddr.size());
         System.assertEquals('Seattle', listAddr[0].MailingCity__c);
         System.assertEquals('Portland', listAddr[1].MailingCity__c);
         System.assertEquals('Bellevue', listAddr[2].MailingCity__c);
-        
+
         dataImports = getDataImports();
         System.assertEquals(2, dataImports.size());
         System.assertEquals(dataImports[0].Contact1Imported__c, listCon[0].Id);
@@ -1107,21 +1107,21 @@ public with sharing class BDI_DataImport_TEST {
         System.assertNotEquals(null, dataImports[1].HouseholdAccountImported__c);
         System.assertEquals(label.bdiMatched, dataImports[0].Contact1ImportStatus__c);
         System.assertEquals(label.bdiMatched, dataImports[1].Contact1ImportStatus__c);
-        System.assertEquals(listAddr[0].Id, dataImports[0].HomeAddressImported__c);   
-        System.assertEquals(listAddr[2].Id, dataImports[1].HomeAddressImported__c);   
+        System.assertEquals(listAddr[0].Id, dataImports[0].HomeAddressImported__c);
+        System.assertEquals(listAddr[2].Id, dataImports[1].HomeAddressImported__c);
         System.assertEquals(label.bdiMatched, dataImports[0].HomeAddressImportStatus__c);
-        System.assertEquals(label.bdiCreated, dataImports[1].HomeAddressImportStatus__c);            
+        System.assertEquals(label.bdiCreated, dataImports[1].HomeAddressImportStatus__c);
     }
-    
+
     /*********************************************************************************************************
     * @description operation
-    *        import existing contacts with the same home address, with Address Management off 
-    * verify: 
+    *        import existing contacts with the same home address, with Address Management off
+    * verify:
     *        contacts matched
     *       no addresses created
     *       account addresses updated
     *       contact addresses updated
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void TwoDIMixedAddressesAddrMgmtOff() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
@@ -1139,45 +1139,45 @@ public with sharing class BDI_DataImport_TEST {
         insert listConExisting;
 
         UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
-        
+
         List<DataImport__c> dataImports = new List<DataImport__c>();
         dataImports.add(newDI('c1', 'C1'));
         dataImports.add(newDI('c2', 'C2'));
         dataImports[0].Home_City__c = 'Bellevue';
         dataImports[1].Home_City__c = 'Bellevue';
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
         // verify expected results
         List<Contact> listCon = getContacts();
         System.assertEquals(2, listCon.size());
         System.assertEquals('Bellevue', listCon[0].MailingCity);
         System.assertEquals('Bellevue', listCon[1].MailingCity);
-        
+
         List<Address__c> listAddr = getAddresses();
-        System.assertEquals(0, listAddr.size()); 
-        
+        System.assertEquals(0, listAddr.size());
+
         List<Account> listAcc = getAccounts();
         System.assertEquals(2, listAcc.size());
         System.assertEquals('Bellevue', listAcc[0].BillingCity);
-        System.assertEquals('Bellevue', listAcc[1].BillingCity);                
+        System.assertEquals('Bellevue', listAcc[1].BillingCity);
     }
-    
+
     /*********************************************************************************************************
     * @description operation
-    *        import contacts with donation & payment information  
-    * verify: 
+    *        import contacts with donation & payment information
+    * verify:
     *        opportunity objects created
     *       payment objects created
     *       ocr's created
     *       contacts' rollups updated
     *       hh account's rollups updated
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void TwoDIWithDonations() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
@@ -1190,15 +1190,15 @@ public with sharing class BDI_DataImport_TEST {
         dataImports[0].Payment_Check_Reference_Number__c = 'abc';
         dataImports[1].Payment_Check_Reference_Number__c = '1234';
         dataImports[0].Payment_Method__c = 'Check';
-        dataImports[1].Payment_Method__c = 'Visa';       
+        dataImports[1].Payment_Method__c = 'Visa';
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
         // verify expected results
         Map<Id, Contact> contactById = new Map<Id, Contact>(getContacts());
         System.assertEquals(4, contactById.size());
@@ -1217,19 +1217,19 @@ public with sharing class BDI_DataImport_TEST {
         }
 
         // we no longer run rollups, unless the setting is specified
-        
+
         List<Account> listAcc = getAccounts();
         System.assertEquals(2, listAcc.size());
         System.assertEquals(0, listAcc[0].npo02__TotalOppAmount__c);
         System.assertEquals(0, listAcc[1].npo02__TotalOppAmount__c);
-        
+
         List<Opportunity> listOpp = getOpps();
         System.assertEquals(2, listOpp.size());
         System.assertEquals(100, listOpp[0].Amount);
         System.assertEquals(200, listOpp[1].Amount);
         System.assertEquals(listAcc[0].Id, listOpp[0].AccountId);
         System.assertEquals(listAcc[1].Id, listOpp[1].AccountId);
-                
+
         List<npe01__OppPayment__c> listPmt = getPayments();
         System.assertEquals(2, listPmt.size());
         System.assertEquals(100, listPmt[0].npe01__Payment_Amount__c);
@@ -1247,21 +1247,21 @@ public with sharing class BDI_DataImport_TEST {
 
         dataImports = getDataImports();
         System.assertEquals(2, dataImports.size());
-        System.assertEquals(dataImports[0].DonationImported__c, listOpp[0].Id); 
+        System.assertEquals(dataImports[0].DonationImported__c, listOpp[0].Id);
         System.assertEquals(dataImports[1].DonationImported__c, listOpp[1].Id);
         System.assertEquals(label.bdiCreated, dataImports[0].DonationImportStatus__c);
-        System.assertEquals(label.bdiCreated, dataImports[1].DonationImportStatus__c);        
+        System.assertEquals(label.bdiCreated, dataImports[1].DonationImportStatus__c);
     }
 
     /*********************************************************************************************************
     * @description operation
-    *        import accounts with donation & payment information  
-    * verify: 
+    *        import accounts with donation & payment information
+    * verify:
     *       opportunity objects created
     *       payment objects created
     *       ocr's created
     *       account's rollups updated
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void TwoDIWithAccountDonations() {
         List<DataImport__c> dataImports = new List<DataImport__c>();
         dataImports.add(new DataImport__c(Account1_Name__c='A1'));
@@ -1273,29 +1273,29 @@ public with sharing class BDI_DataImport_TEST {
         dataImports[0].Payment_Check_Reference_Number__c = 'abc';
         dataImports[1].Payment_Check_Reference_Number__c = '1234';
         dataImports[0].Payment_Method__c = 'Check';
-        dataImports[1].Payment_Method__c = 'Visa';       
+        dataImports[1].Payment_Method__c = 'Visa';
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
-        // verify expected results        
+
+        // verify expected results
         List<Account> listAcc = getAccounts();
         System.assertEquals(2, listAcc.size());
         // we no longer run rollups, unless the setting is specified
         System.assertEquals(0, listAcc[0].npo02__TotalOppAmount__c);
         System.assertEquals(0, listAcc[1].npo02__TotalOppAmount__c);
-        
+
         List<Opportunity> listOpp = getOpps();
         System.assertEquals(2, listOpp.size());
         System.assertEquals(100, listOpp[0].Amount);
         System.assertEquals(200, listOpp[1].Amount);
         System.assertEquals(listAcc[0].Id, listOpp[0].AccountId);
         System.assertEquals(listAcc[1].Id, listOpp[1].AccountId);
-                
+
         list<npe01__OppPayment__c> listPmt = getPayments();
         System.assertEquals(2, listPmt.size());
         System.assertEquals(100, listPmt[0].npe01__Payment_Amount__c);
@@ -1310,19 +1310,19 @@ public with sharing class BDI_DataImport_TEST {
 
         dataImports = getDataImports();
         System.assertEquals(2, dataImports.size());
-        System.assertEquals(dataImports[0].DonationImported__c, listOpp[0].Id); 
+        System.assertEquals(dataImports[0].DonationImported__c, listOpp[0].Id);
         System.assertEquals(dataImports[1].DonationImported__c, listOpp[1].Id);
         System.assertEquals(label.bdiCreated, dataImports[0].DonationImportStatus__c);
-        System.assertEquals(label.bdiCreated, dataImports[1].DonationImportStatus__c);        
+        System.assertEquals(label.bdiCreated, dataImports[1].DonationImportStatus__c);
     }
 
     /*********************************************************************************************************
     * @description operation
-    *        import contacts with donation & campaign information  
-    * verify: 
+    *        import contacts with donation & campaign information
+    * verify:
     *        opportunity objects created
     *    opportunities added to campaigns
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void TwoDIWithDonationsAndCampaigns() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
@@ -1330,30 +1330,30 @@ public with sharing class BDI_DataImport_TEST {
         List<Campaign> campaigns = new List<Campaign>();
         campaigns.add(new Campaign(Name='CmpExisting'));
         insert campaigns;
-            
+
         List<DataImport__c> dataImports = new List<DataImport__c>();
         dataImports.add(newDI('c1', 'C1', 100));
         dataImports.add(newDI('c2', 'C2', 200));
         dataImports[0].Donation_Campaign_Name__c = 'CmpExisting';
         dataImports[1].Donation_Campaign_Name__c = 'CmpNew';
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
         // verify expected results
         List<Contact> contacts = getContacts();
         System.assertEquals(2, contacts.size());
-        
+
         List<Account> accounts = getAccounts();
         System.assertEquals(2, accounts.size());
         // we no longer run rollups, unless the setting is specified
         System.assertEquals(0, accounts[0].npo02__TotalOppAmount__c);
         System.assertEquals(0, accounts[1].npo02__TotalOppAmount__c);
-        
+
         List<Opportunity> opps = getOpps();
         System.assertEquals(2, opps.size());
         System.assertEquals(100, opps[0].Amount);
@@ -1365,7 +1365,7 @@ public with sharing class BDI_DataImport_TEST {
         System.assertEquals(2, campaigns.size());
         System.assertEquals(opps[0].CampaignId, campaigns[0].Id);
         System.assertEquals(opps[1].CampaignId, campaigns[1].Id);
-        
+
         dataImports = getDataImports();
         System.assertEquals(2, dataImports.size());
 
@@ -1467,7 +1467,7 @@ public with sharing class BDI_DataImport_TEST {
 
         //run batch data import
         Test.StartTest();
-        BDI_DataImportService dataImportService = 
+        BDI_DataImportService dataImportService =
             new BDI_DataImportService(true, BDI_MappingServiceHelpText.getInstance());
 
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
@@ -1576,7 +1576,7 @@ public with sharing class BDI_DataImport_TEST {
 
         //run batch data import
         Test.StartTest();
-        BDI_DataImportService dataImportService = 
+        BDI_DataImportService dataImportService =
             new BDI_DataImportService(true, BDI_MappingServiceHelpText.getInstance());
 
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
@@ -1624,12 +1624,12 @@ public with sharing class BDI_DataImport_TEST {
         Test.StartTest();
 
         // create import service for dry run
-        BDI_DataImportService dataImportService = 
+        BDI_DataImportService dataImportService =
             new BDI_DataImportService(true, BDI_MappingServiceHelpText.getInstance());
 
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
         ID ApexJobId = Database.executeBatch(bdi, 10);
-        
+
         // create import service without dry run
         dataImportService = new BDI_DataImportService(false, BDI_MappingServiceHelpText.getInstance());
         bdi = new BDI_DataImport_BATCH(dataImportService);
@@ -1643,29 +1643,29 @@ public with sharing class BDI_DataImport_TEST {
         dataImportsByCampaignId.put(dataImports[0].DonationCampaignImported__c, dataImports[0]);
         dataImportsByCampaignId.put(dataImports[1].DonationCampaignImported__c, dataImports[1]);
 
-        System.assert(dataImportsByCampaignId.containsKey(campaigns[0].Id), 
+        System.assert(dataImportsByCampaignId.containsKey(campaigns[0].Id),
             'A data import should have matched '+campaigns[0].Name);
-        System.assert(dataImportsByCampaignId.containsKey(campaigns[1].Id), 
+        System.assert(dataImportsByCampaignId.containsKey(campaigns[1].Id),
             'A data import should have matched '+campaigns[1].Name);
 
-        System.assertEquals(System.Label.bdiMatchedId, 
+        System.assertEquals(System.Label.bdiMatchedId,
             dataImportsByCampaignId.get(campaigns[0].Id).DonationCampaignImportStatus__c);
-        System.assertEquals(System.Label.bdiMatched, 
+        System.assertEquals(System.Label.bdiMatched,
             dataImportsByCampaignId.get(campaigns[1].Id).DonationCampaignImportStatus__c);
     }
 
     /*********************************************************************************************************
     * @description operation
-    *        import contacts with campaign information (no donation)  
-    * verify: 
+    *        import contacts with campaign information (no donation)
+    * verify:
     *        opportunity objects created
     *    opportunities added to campaigns
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void TwoDIWithCampaignMembers() {
         List<Campaign> listC = new List<Campaign>();
         listC.add(new Campaign(Name='CmpExisting'));
         insert listC;
-            
+
         List<DataImport__c> dataImports = new List<DataImport__c>();
         dataImports.add(newDI('c1', 'C1'));
         dataImports.add(newDI('c2', 'C2'));
@@ -1674,7 +1674,7 @@ public with sharing class BDI_DataImport_TEST {
         dataImports[1].Donation_Campaign_Name__c = 'CmpNew';
         dataImports[1].Campaign_Member_Status__c = 'zMyStatus';
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
@@ -1684,28 +1684,28 @@ public with sharing class BDI_DataImport_TEST {
         // verify expected results
         List<Contact> listCon = getContacts();
         System.assertEquals(2, listCon.size());
-        
+
         List<Account> listAcc = getAccounts();
         System.assertEquals(2, listAcc.size());
-                        
+
         List<Campaign> listCmp = getCampaigns();
         System.assertEquals(2, listCmp.size());
-        
+
         list<CampaignMember> listCM = getCampaignMembers();
         System.assertEquals(2, listCM.size());
         System.assertEquals(listCon[0].Id, listCM[0].ContactId);
         System.assertNotEquals('zMyStatus', listCM[0].Status);
         System.assertEquals(listCon[1].Id, listCM[1].ContactId);
         System.assertEquals('zMyStatus', listCM[1].Status);
-        
+
     }
 
     /*********************************************************************************************************
     * @description operation
-    *        import accounts with invalid donation information  
-    * verify: 
+    *        import accounts with invalid donation information
+    * verify:
     *        opportunity objects created only for valid di
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void TwoDIWithDonationErrors() {
         List<DataImport__c> dataImports = new List<DataImport__c>();
         dataImports.add(new DataImport__c(Account1_Name__c='A1'));
@@ -1715,28 +1715,28 @@ public with sharing class BDI_DataImport_TEST {
         dataImports[0].Donation_Amount__c = 100;
         dataImports[1].Donation_Amount__c = 200;
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
-        // verify expected results        
+
+        // verify expected results
         List<Account> listAcc = getAccounts();
         System.assertEquals(2, listAcc.size());
         // we no longer run rollups, unless the setting is specified
         System.assertEquals(0, listAcc[0].npo02__TotalOppAmount__c);
         System.assertEquals(0, listAcc[1].npo02__TotalOppAmount__c);
-        
+
         List<Opportunity> listOpp = getOpps();
         System.assertEquals(1, listOpp.size());
         System.assertEquals(100, listOpp[0].Amount);
         System.assertEquals(listAcc[0].Id, listOpp[0].AccountId);
-                
+
         dataImports = getDataImports();
         System.assertEquals(2, dataImports.size());
-        System.assertEquals(dataImports[0].DonationImported__c, listOpp[0].Id); 
+        System.assertEquals(dataImports[0].DonationImported__c, listOpp[0].Id);
         System.assertEquals(dataImports[1].DonationImported__c, null);
         System.assertEquals(label.bdiCreated, dataImports[0].DonationImportStatus__c);
         System.assertEquals(label.bdiErrorInvalidDonor, dataImports[1].DonationImportStatus__c);
@@ -1746,29 +1746,29 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     * @description operation
-    *        import different contacts within multiple di records in the same batch setting Household fields 
-    * verify: 
+    *        import different contacts within multiple di records in the same batch setting Household fields
+    * verify:
     *        two contacts created
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void TwoDITwoNewContactsHouseholdFields() {
         List<DataImport__c> dataImports = new List<DataImport__c>();
         dataImports.add(new DataImport__c(Contact1_Lastname__c = 'c1', Household_Phone__c = '425-111-2222'));
         dataImports.add(new DataImport__c(Contact1_Lastname__c = 'c2', Household_Phone__c = '425-111-2222'));
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
         // verify expected results
         List<Contact> listCon = getContacts();
         System.assertEquals(2, listCon.size());
         System.assertNotEquals(listCon[1].Name, listCon[0].Name);
         System.assertEquals(dataImports[0].Household_Phone__c, listCon[0].Account.Phone);
         System.assertEquals(dataImports[1].Household_Phone__c, listCon[1].Account.Phone);
-        
+
         dataImports = getDataImports();
         System.assertEquals(2, dataImports.size());
         System.assertEquals(dataImports[0].Contact1Imported__c, listCon[0].Id);
@@ -1776,15 +1776,15 @@ public with sharing class BDI_DataImport_TEST {
         System.assertNotEquals(null, dataImports[0].HouseholdAccountImported__c);
         System.assertNotEquals(null, dataImports[1].HouseholdAccountImported__c);
         System.assertEquals(label.bdiCreated, dataImports[0].Contact1ImportStatus__c);
-        System.assertEquals(label.bdiCreated, dataImports[1].Contact1ImportStatus__c);        
+        System.assertEquals(label.bdiCreated, dataImports[1].Contact1ImportStatus__c);
     }
 
     /*********************************************************************************************************
     * @description operation
-    *        import new contacts into existing household accounts  
-    * verify: 
+    *        import new contacts into existing household accounts
+    * verify:
     *        provided household account used
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void TwoDINewContactsExistingsHousehold() {
         // existing contacts
         List<Contact> listConExisting = new List<Contact>();
@@ -1793,24 +1793,24 @@ public with sharing class BDI_DataImport_TEST {
         insert listConExisting;
 
         UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
-        
+
         // get their households
         listConExisting = getContacts();
         System.assertEquals(2, listConExisting.size());
-        
+
         List<DataImport__c> dataImports = new List<DataImport__c>();
         dataImports.add(new DataImport__c(Contact1_Firstname__c='a1', Contact1_Lastname__c='C1',
             HouseholdAccountImported__c=listConExisting[0].AccountId));
         dataImports.add(new DataImport__c(Contact1_Firstname__c='a2', Contact1_Lastname__c='C2', Contact2_Firstname__c='b2',
             HouseholdAccountImported__c=listConExisting[1].AccountId));
         insert dataImports;
-          
+
         //run batch data import
         Test.StartTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
         // verify expected results
         List<Contact> listCon = getContacts();
         System.assertEquals(5, listCon.size());
@@ -1819,7 +1819,7 @@ public with sharing class BDI_DataImport_TEST {
         System.assertEquals(listConExisting[0].AccountId, listCon[2].AccountId);
         System.assertEquals(listConExisting[1].AccountId, listCon[3].AccountId);
         System.assertEquals(listConExisting[1].AccountId, listCon[4].AccountId);
-        
+
         List<Account> listAcc = getAccounts();
         System.assertEquals(2, listAcc.size());
     }
@@ -1928,8 +1928,57 @@ public with sharing class BDI_DataImport_TEST {
     }
 
     /*********************************************************************************************************
+     * @description When the Data Import Service has been mocked to simulate coming in through the UI, verify
+     * that the instrumentation service logs the two records.
+     *        two contacts created
+     **********************************************************************************************************/
+    @IsTest
+    private static void shouldInstrumentNewDonationsWhenThroughUserInterface() {
+        BDI_DataImportService.isFromGiftEntryUI = true;     // simulate the service coming through the UI
+        SfdoInstrumentationMock_TEST.MockService mockService = SfdoInstrumentationMock_TEST.injectMockedInstrumentationService();
+
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        dataImports.add(newDI('c1', 'C1', 100));
+        dataImports.add(newDI('c2', 'C2', 100));
+        dataImports.add(newDI('c2', 'C2')); // this third entry is not a gift, but just a Contact
+        insert dataImports;
+
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        System.assertEquals(2, mockService.value, 'The instrumentation service should have indicated two new Gifts were inserted');
+        System.assertEquals(sfdoInstrumentationEnum.Feature.GiftEntry, mockService.feature,
+            'The instrumentation service should have indicated GiftEntry');
+    }
+
+    /*********************************************************************************************************
+    * @description When the Data Import Service has been mocked to simulate coming in through the UI, verify
+    * that the instrumentation service logs the two records.
+    *        two contacts created
+    **********************************************************************************************************/
+    @IsTest
+    private static void shouldNotInstrumentNewDonationsWhenNotThroughUserInterface() {
+        SfdoInstrumentationMock_TEST.MockService mockService = SfdoInstrumentationMock_TEST.injectMockedInstrumentationService();
+
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        dataImports.add(newDI('c1', 'C1', 100));
+        insert dataImports;
+
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        System.assertEquals(null, mockService.value, 'The instrumentation service should have indicated two new Gifts were inserted');
+    }
+
+    /*********************************************************************************************************
     * @description operation:
-    *    Retrieves data import records in the order they were created during the test. 
+    *    Retrieves data import records in the order they were created during the test.
     * @return List<DataImport__c> All data import records in creation order
     **********************************************************************************************************/
     private static List<DataImport__c> getDataImports() {
@@ -1948,7 +1997,7 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     * @description operation:
-    *    Retrieves account records in the order they were created during the test. 
+    *    Retrieves account records in the order they were created during the test.
     * @return List<Account> All account records in creation order
     **********************************************************************************************************/
     private static List<Account> getAccounts() {
@@ -1961,7 +2010,7 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     * @description operation:
-    *    Retrieves account records in the order they were created during the test. 
+    *    Retrieves account records in the order they were created during the test.
     * @return List<Account> All account records, where type is not a Household, in creation order
     **********************************************************************************************************/
     private static List<Account> getOrganizations() {
@@ -1975,7 +2024,7 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     * @description operation:
-    *    Retrieves contact records in the order they were created during the test. 
+    *    Retrieves contact records in the order they were created during the test.
     * @return List<Contact> All contacts records in creation order
     **********************************************************************************************************/
     private static List<Contact> getContacts() {
@@ -1991,7 +2040,7 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     * @description operation:
-    *    Retrieves address records in the order they were created during the test. 
+    *    Retrieves address records in the order they were created during the test.
     * @return List<Address__c> All address records in creation order
     **********************************************************************************************************/
     private static List<Address__c> getAddresses() {
@@ -2004,7 +2053,7 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     * @description operation:
-    *    Retrieves affiliation records in the order they were created during the test. 
+    *    Retrieves affiliation records in the order they were created during the test.
     * @return List<npe5__Affiliation__c> All affiliation records in creation order
     **********************************************************************************************************/
     private static List<npe5__Affiliation__c> getAffiliations() {
@@ -2013,7 +2062,7 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     * @description operation:
-    *    Retrieves opportunity records in the order they were created during the test. 
+    *    Retrieves opportunity records in the order they were created during the test.
     * @return List<Opportunity> All opportunity records in creation order
     **********************************************************************************************************/
     private static List<Opportunity> getOpps() {
@@ -2022,7 +2071,7 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     * @description operation:
-    *    Retrieves opportunity contact role records in the order they were created during the test. 
+    *    Retrieves opportunity contact role records in the order they were created during the test.
     * @return List<OpportunityContactRole> All opportunity contact role records in creation order
     **********************************************************************************************************/
     private static List<OpportunityContactRole> getOCRs() {
@@ -2031,7 +2080,7 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     * @description operation:
-    *    Retrieves payment records in the order they were created during the test. 
+    *    Retrieves payment records in the order they were created during the test.
     * @return List<npe01__OppPayment__c> All payment records in creation order
     **********************************************************************************************************/
     private static List<npe01__OppPayment__c> getPayments() {
@@ -2044,7 +2093,7 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     * @description operation:
-    *    Retrieves campaign records in the order they were created during the test. 
+    *    Retrieves campaign records in the order they were created during the test.
     * @return List<Campaign> All campaign records
     **********************************************************************************************************/
     private static List<Campaign> getCampaigns() {
@@ -2053,7 +2102,7 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     * @description operation:
-    *    Retrieves campaign member records in the order they were created during the test. 
+    *    Retrieves campaign member records in the order they were created during the test.
     * @return List<CampaignMember> All campaign member records
     **********************************************************************************************************/
     private static List<CampaignMember> getCampaignMembers() {
