@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2016, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -15,16 +15,16 @@
       from this software without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -98,7 +98,7 @@ private with sharing class EP_EngagementPlans_TEST {
 
         System.assertEquals(epTask.Name, results[0].Subject, 'Subject field should be set based on EP Task Name.');
         System.assertEquals(epTask.Comments__c, results[0].Description, 'Comment field should be copied correctly.');
-        
+
         System.assertEquals(System.Today().addDays(3), results[0].ActivityDate, 'Activity Date should be three days from today.');
         System.assert(results[0].IsReminderSet, 'Reminder should be set.');
         System.assertEquals(System.Today().addDays(3), results[0].ReminderDateTime.Date(), 'Reminder should be set three days from today.');
@@ -114,13 +114,13 @@ private with sharing class EP_EngagementPlans_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Creates an EP Task with a delay of the number of days until the weekend, as part of a 
+    * @description Creates an EP Task with a delay of the number of days until the weekend, as part of a
     * template set to delay until Monday. Verifies that the activity date is set on Monday.
     */
     static testMethod void testSkipWeekendsMonday() {
 
         Integer daysUntilWeekend = getDaysUntilWeekend(System.today());
-        
+
         Contact con = new Contact(LastName = 'foo');
         insert con;
 
@@ -160,15 +160,15 @@ private with sharing class EP_EngagementPlans_TEST {
 
         System.assertEquals(epTask.Name, results[0].Subject, 'Subject field should be set based on EP Task Name.');
         System.assertEquals(epTask.Comments__c, results[0].Description, 'The comment should be copied correctly to the Task Description.');
-        
+
         System.assert(
-            results[0].ActivityDate > System.today().addDays(daysUntilWeekend), 
+            results[0].ActivityDate > System.today().addDays(daysUntilWeekend),
             'Activity Date ('+results[0].ActivityDate+') should be set after the weekend. ' + System.today().addDays(daysUntilWeekend)
         );
         System.assert(results[0].IsReminderSet, 'Reminder should be set.');
         System.assert(results[0].ReminderDateTime.Date() > System.now().addDays(daysUntilWeekend), 'Reminder should be set after the weekend.');
         System.assertEquals(results[0].ReminderDateTime.Date(), results[0].ActivityDate, 'Reminder date and activity date should be on the same day.');
-        
+
         //verify minutes
         Time reminderTimeMidnight = Time.newInstance(0,0,0,0);
         DateTime reminderDateTimeMidnight = DateTime.newInstance(results[0].ActivityDate, reminderTimeMidnight);
@@ -178,13 +178,13 @@ private with sharing class EP_EngagementPlans_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Creates an EP Task with a delay of the number of days until the weekend, as part of a 
+    * @description Creates an EP Task with a delay of the number of days until the weekend, as part of a
     * template set to advance the date to Friday. Verifies that the activity date is set on Friday.
     */
     static testMethod void testSkipWeekendsFriday() {
 
         Integer daysUntilWeekend = getDaysUntilWeekend(System.today());
-        
+
         Contact con = new Contact(LastName = 'foo');
         insert con;
 
@@ -223,15 +223,15 @@ private with sharing class EP_EngagementPlans_TEST {
 
         System.assertEquals(epTask.Name, results[0].Subject, 'Subject field should be set based on EP Task Name.');
         System.assertEquals(epTask.Comments__c, results[0].Description, 'The comment should be copied correctly to the Task Description.');
-        
+
         System.assert(
-            results[0].ActivityDate < System.today().addDays(daysUntilWeekend), 
+            results[0].ActivityDate < System.today().addDays(daysUntilWeekend),
             'Activity Date ('+results[0].ActivityDate+') should be set before the weekend. ' + System.today().addDays(daysUntilWeekend)
         );
         System.assert(results[0].IsReminderSet, 'Reminder should be set.');
         System.assert(results[0].ReminderDateTime.Date() < System.now().addDays(daysUntilWeekend), 'Reminder should be set after the weekend.');
         System.assertEquals(results[0].ReminderDateTime.Date(), results[0].ActivityDate, 'Reminder date and activity date should be on the same day.');
-        
+
         //verify minutes
         Time reminderTimeMidnight = Time.newInstance(0,0,0,0);
         DateTime reminderDateTimeMidnight = DateTime.newInstance(results[0].ActivityDate, reminderTimeMidnight);
@@ -250,7 +250,7 @@ private with sharing class EP_EngagementPlans_TEST {
 
         Integer daysUntilWeekend = getDaysUntilWeekend(System.today());
         Id otherUserId = getOtherUserId();
-        
+
         Account acc = new Account(Name = 'foo', OwnerId = otherUserId);
         insert acc;
 
@@ -306,7 +306,7 @@ private with sharing class EP_EngagementPlans_TEST {
         Test.stopTest();
 
         System.assertNotEquals(null, caughtException, 'An exception should be caught.');
-        System.assert(caughtException.getMessage().contains(Label.engagementPlanNoLookups), 
+        System.assert(caughtException.getMessage().contains(Label.engagementPlanNoLookups),
             'The exception should have the correct message. Actual message: ' + caughtException.getMessage());
     }
 
@@ -372,7 +372,7 @@ private with sharing class EP_EngagementPlans_TEST {
         System.assertNotEquals(null, caughtException, 'An exception should be caught.');
         System.assert(caughtException.getMessage().contains(Label.engagementPlanCantEdit));
     }
-    
+
     /*********************************************************************************************************
     * @description tests the helper method that finds a path to ownerId.
     */
@@ -381,8 +381,51 @@ private with sharing class EP_EngagementPlans_TEST {
         System.assertEquals(new List<String>{UTIL_Namespace.StrTokenNSPrefix('Household_Account__r'),'OwnerId'},EP_EngagementPlans_UTIL.getOwnerIdPath(Address__c.SObjectType));
     }
 
+    /***
+    * @description Verifies that the instrumentation service is called when a new EP is inserted
+    */
+    @isTest
+    private static void shouldInstrumentInsertedEngagementPlan() {
+        SfdoInstrumentationMock_TEST.MockService mockService = SfdoInstrumentationMock_TEST.injectMockedInstrumentationService();
+
+        Contact con = new Contact(LastName = 'foo');
+        insert con;
+
+        Engagement_Plan_Template__c template = new Engagement_Plan_Template__c(
+            Name = 'TemplateSkipWeekends',
+            Skip_Weekends__c = true,
+            Reschedule_To__c = EP_EngagementPlans_UTIL.SKIP_DAY_MONDAY,
+            Default_Assignee__c = EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_USER_CREATING
+        );
+        insert template;
+
+        Engagement_Plan_Task__c epTask = new Engagement_Plan_Task__c(
+            Name = 'Call',
+            Engagement_Plan_Template__c = template.id,
+            Comments__c = 'This comment should be copied correctly to the Task.',
+            Reminder__c = true,
+            Reminder_Time__c = '660',
+            Type__c = 'Call',
+            Priority__c = 'Medium'
+        );
+        insert epTask;
+
+        Engagement_Plan__c plan = new Engagement_Plan__c(
+            Contact__c = con.id,
+            Engagement_Plan_Template__c = template.id
+        );
+
+        Test.startTest();
+        insert plan;
+        Test.stopTest();
+
+        System.assertEquals(1, mockService.value, 'The instrumentation service should have indicated a single new EngagementPlan was inserted');
+        System.assertEquals(sfdoInstrumentationEnum.Feature.EngagementPlans, mockService.feature,
+            'The instrumentation service should have indicated EnagementPlans');
+    }
+
     /*********************************************************************************************************
-    * @description Returns the user id of an active user other than the current one if one exists, 
+    * @description Returns the user id of an active user other than the current one if one exists,
     * otherwise returns the current user id.
     */
     private static Id getOtherUserId() {
