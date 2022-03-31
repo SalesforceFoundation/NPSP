@@ -38,7 +38,7 @@ import {
     CONTACT_DONOR_TYPE,
 } from "./constants";
 
-import { isBlank } from "c/util";
+import { isBlank, nullIfBlank } from "c/util";
 
 const DEFAULT_INITIAL_STATE = {
     initialViewState: {}, // snapshot of initial view state after first load
@@ -203,7 +203,7 @@ const handleRecordSaved = (state, payload) => {
 };
 
 const setAccountId = (state, payload) => {
-    const accountId = isBlank(payload) ? null : payload;
+    const accountId = nullIfBlank(payload);
     return {
         ...state,
         accountId,
@@ -229,7 +229,7 @@ const setCustomField = (state, { fieldName, value }) => {
 };
 
 const setContactId = (state, payload) => {
-    const contactId = isBlank(payload) ? null : payload;
+    const contactId = nullIfBlank(payload);
     return {
         ...state,
         contactId,
@@ -394,7 +394,7 @@ const setPaymentMethod = (state, paymentMethod) => {
 };
 
 const setCampaignId = (state, payload) => {
-    const campaignId = isBlank(payload) ? null : payload;
+    const campaignId = nullIfBlank(payload);
     return {
         ...state,
         campaignId,

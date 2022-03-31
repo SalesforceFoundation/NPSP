@@ -1,5 +1,5 @@
 import { nextState } from "../model.js";
-import { ACTIONS, Rd2Service, RECURRING_TYPE_FIXED } from "c/rd2Service";
+import { ACTIONS, Rd2Service, RECURRING_TYPE_FIXED, RECURRING_TYPE_OPEN } from "c/rd2Service";
 import { SET_CAMPAIGN_ID, SET_PLANNED_INSTALLMENTS, SET_RECURRING_TYPE } from "../actions";
 
 const initialView = require("../../../../../../tests/__mocks__/apex/data/getInitialView.json");

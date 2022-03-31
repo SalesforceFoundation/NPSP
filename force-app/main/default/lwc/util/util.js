@@ -17,8 +17,13 @@ const isEmpty = (obj) => {
     return Object.keys(obj).length === 0;
 }
 
+const nullIfBlank = (value) => {
+    return isBlank(value) ? null : value;
+}
+
 export {
     isNull,
     isBlank,
-    isEmpty
+    isEmpty,
+    nullIfBlank
 };
