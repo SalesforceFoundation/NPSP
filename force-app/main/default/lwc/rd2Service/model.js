@@ -227,7 +227,8 @@ const setCustomField = (state, { fieldName, value }) => {
     };
 };
 
-const setContactId = (state, contactId) => {
+const setContactId = (state, payload) => {
+    const contactId = isBlank(payload) ? null : payload;
     return {
         ...state,
         contactId,
