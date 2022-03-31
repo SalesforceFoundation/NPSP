@@ -46,7 +46,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
     * @description Creates data required for unit tests
     */
     @TestSetup
-    private static void setUp() {        
+    private static void setUp() {
         Account acc = buildAccount();
         insert acc;
 
@@ -86,7 +86,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
     @isTest
     private static void closeOpenEndedRecurringDonationMarkOppsClosedLost() {
         RD_RecurringDonations_TEST.createRdSettingsWithYearForecast();
-        
+
         npe03__Recurring_Donation__c rd = RD_RecurringDonations_TEST.buildRecurringDonationWeeklyInstallment(getContact().Id);
         rd.npe03__Open_Ended_Status__c = RD_Constants.OPEN_ENDED_STATUS_OPEN;
         rd.npe03__Next_Payment_Date__c = TODAY.toStartOfMonth();
@@ -526,17 +526,17 @@ private with sharing class RD_RecurringDonations_TEST2 {
         rdbatch.isConcurrentBatch = true;
         Database.executeBatch(rdbatch);
         Test.stopTest();
-        
+
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(1, errors.size(), 'One error should be created: ' + errors);
-        
+
         String expectedMessage = String.format(
             System.Label.commonConcurrentBatchError,
             new String[]{ RD_RecurringDonations_BATCH.class.getName() }
         );
         System.assertEquals(expectedMessage, errors[0].Full_Message__c, 'Error message should match');
     }
-    
+
     /***
      * @description Verifies Recurring Donations are returned when enhanced Recurring Donations are not enabled
      */
@@ -1409,6 +1409,32 @@ private with sharing class RD_RecurringDonations_TEST2 {
 
         rd = rdGateway.getRecord(rd.Id);
         System.assertEquals(null, rd.npe03__Next_Payment_Date__c, 'Next Payment Date should be null');
+    }
+
+    /***
+     * @description Verifies that the instrumentation service is called when a new RD is inserted
+     */
+    @isTest
+    private static void shouldInstrumentInsertedRecurringDonation() {
+        SfdoInstrumentationMock_TEST.MockService mockService = SfdoInstrumentationMock_TEST.injectMockedInstrumentationService();
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+            .withContact(getContact().Id)
+            .withAmount(100)
+            .withOpenEndedStatusOpen()
+            .withDateEstablished(Date.newInstance(2000, 9, 19))
+            .withNextPaymentDate(Date.newInstance(2000, 9, 21))
+            .withInstallmentPeriodMonthly()
+            .withDayOfMonth('1')
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        System.assertEquals(1, mockService.value, 'The instrumentation service should have indicated a single new RD was inserted');
+        System.assertEquals(sfdoInstrumentationEnum.Feature.LegacyRecurringDonations, mockService.feature,
+            'The instrumentation service should have indicated Enhanced Recurring Donations');
     }
 
     // Helpers

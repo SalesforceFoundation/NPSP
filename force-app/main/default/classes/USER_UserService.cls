@@ -256,7 +256,7 @@ public with sharing class USER_UserService {
         return ref;
     }
 
-    /** 
+    /**
     * @author Salesforce.org
     * @date 2021
     * @description method to return contact related to current user.
@@ -270,7 +270,7 @@ public with sharing class USER_UserService {
                                 LIMIT 1];
         return userQueried.ContactId;
     }
-    
+
     /*********************************************************************************************************
     * @description Returns true if the User is currently running the Lightning Experience UI
     * @return True or False
@@ -293,5 +293,17 @@ public with sharing class USER_UserService {
     **********************************************************************************************************/
     public static String getLightningBaseURL(String targetId) {
         return '/one/one.app#/sObject/' + targetId + '/view';
+    }
+
+    /*******************************************************************************************************
+    * @description Determines if the origin of a process is from any form of User Interface (Aura/Visualforce/QuickAction)
+    * @return True if from a UI
+    **********************************************************************************************************/
+    public static Boolean isExecutionSourceFromUserInterface() {
+        Request reqInfo = Request.getCurrent();
+        String currentRequestId = reqInfo.getRequestId();
+        Quiddity currentType = reqInfo.getQuiddity();
+
+        return (currentType == System.Quiddity.AURA || currentType == System.Quiddity.VF || currentType == System.Quiddity.QUICK_ACTION);
     }
 }
