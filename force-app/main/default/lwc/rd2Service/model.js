@@ -202,7 +202,8 @@ const handleRecordSaved = (state, payload) => {
     };
 };
 
-const setAccountId = (state, accountId) => {
+const setAccountId = (state, payload) => {
+    const accountId = isBlank(payload) ? null : payload;
     return {
         ...state,
         accountId,
