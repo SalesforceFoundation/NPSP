@@ -90,8 +90,8 @@ public with sharing class Gift {
     }
 
     public Boolean requiresReauthorizationBeforeChange() {
-        if (dataImport.Payment_Status__c != ElevateTransactionStatus.AUTHORIZED.name()) { 
-            return false; 
+        if (dataImport.Payment_Status__c != ElevateTransactionStatus.AUTHORIZED.name()) {
+            return false;
         }
 
         return this.hasPaymentFieldsChanged();
@@ -134,6 +134,10 @@ public with sharing class Gift {
             dataImportSettings,
             new List<DataImport__c> { this.dataImport },
             false);
+
+        if (this.dataImport.FailureInformation__c == null) {
+            BDI_DataImportService.instrumentGiftEntry(1);
+        }
     }
 
     public void assignSoftCredits(SoftCredits incomingSoftCredits) {

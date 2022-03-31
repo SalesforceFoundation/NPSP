@@ -251,6 +251,30 @@ private class Gift_Test {
         System.assertEquals(BDI_DataImport_API.bdiImported, gift.status());
     }
 
+    @isTest
+    static void shouldInstrumentNewSingleGiftProcessedThroughBDIService() {
+        BDI_DataImportService.isFromGiftEntryUI = true;     // simulate the service coming through the UI
+        SfdoInstrumentationMock_TEST.MockService mockService = SfdoInstrumentationMock_TEST.injectMockedInstrumentationService();
+
+        DataImport__c dataImport = new DataImport__c(
+            Account1_Name__c = 'testAcct',
+            Donation_Donor__c = 'Account1',
+            Donation_Amount__c = 100,
+            Donation_Date__c = Date.today()
+        );
+        insert dataImport;
+        Gift gift = new Gift(dataImport);
+        System.assertEquals(null, gift.status());
+
+        gift.dryRunThroughBDI();
+        System.assertEquals(null, mockService.value, 'The instrumentation service should have not been called during DryRun mode');
+
+        gift.processThroughBDI();
+        System.assertEquals(1, mockService.value, 'The instrumentation service should have indicated one new Gift was inserted');
+        System.assertEquals(sfdoInstrumentationEnum.Feature.GiftEntry, mockService.feature,
+            'The instrumentation service should have indicated GiftEntry');
+    }
+
     private class GiftSelectorMock implements StubProvider {
 
         private Decimal newDonationAmount;
