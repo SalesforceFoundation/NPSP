@@ -1786,6 +1786,14 @@
         <value>You can&apos;t edit the Status for an Elevate connected Recurring Donation when Status is Closed.</value>
     </labels>
     <labels>
+        <fullName>RD2_ElevateRDCannotBeFixedLength</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when trying to change an Elevate RD to Recurring Type Fixed</shortDescription>
+        <value>An Elevate-connected Recurring Donation cannot have a Recurring Type of Fixed.</value>
+    </labels>
+    <labels>
         <fullName>RD2_ElevateRDDayOfMonthCannotChange</fullName>
         <categories>Recurring-Donations</categories>
         <language>en_US</language>

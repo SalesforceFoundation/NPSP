@@ -1,7 +1,7 @@
 export const CUSTOM_FIELD_CHANGE = "custom_field_change";
 export const COMMITMENT_RESPONSE = "commitment_response";
 export const RECORD_SAVED = "record_saved";
-export const RECORD_SAVE_FAILED = "record_save_failed";
+export const RESET = "reset";
 export const SET_CONTACT_ID = "set_contact_id";
 export const SET_ACCOUNT_ID = "set_account_id";
 export const SET_CONTACT_DETAILS = "set_contact_details";

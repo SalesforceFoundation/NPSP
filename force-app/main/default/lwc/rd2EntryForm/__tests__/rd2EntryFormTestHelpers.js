@@ -11,9 +11,7 @@ import accountPartialDescribe from "./data/accountPartialDescribe.json";
 import installmentPeriodPicklistValues from "./data/installmentPeriodPicklistValues.json";
 import dayOfMonthPicklistValues from "./data/dayOfMonthPicklistValues.json";
 
-export const mockRecordEditFormSubmit = jest.fn();
-
-export const setupWireMocksForElevate = async () => {
+export const setupWireMocks = async () => {
     getObjectInfo.emit(recurringDonationObjectInfo, (config) => {
         return config.objectApiName === RECURRING_DONATION_OBJECT.objectApiName;
     });
@@ -68,11 +66,6 @@ export class RD2FormController {
 
     constructor(element) {
         this.element = element;
-    }
-
-    setupSubmitMock() {
-        const element = this.element.shadowRoot.querySelector('[data-id="outerRecordEditForm"]');
-        element.submit = mockRecordEditFormSubmit;
     }
 
     setDefaultDateValues() {
@@ -133,6 +126,11 @@ export class RD2FormController {
 
     paymentMethod() {
         const field = this.element.shadowRoot.querySelector('lightning-input-field[data-id="paymentMethod"]');
+        return new RD2FormField(field);
+    }
+
+    recordName() {
+        const field = this.element.shadowRoot.querySelector('lightning-input-field[data-id="recordName"]');
         return new RD2FormField(field);
     }
 
@@ -231,5 +229,13 @@ export class RD2FormController {
 
     changeTypePicklist() {
         return this.element.shadowRoot.querySelector('lightning-input-field[data-id="changeType"]');
+    }
+
+    errorPageLevelMessage() {
+        return this.element.shadowRoot.querySelector("c-util-page-level-message[data-id='error']");
+    }
+
+    errorFormattedText() {
+        return this.element.shadowRoot.querySelector("c-util-page-level-message[data-id='error'] p lightning-formatted-text");
     }
 }

@@ -76,10 +76,10 @@ private with sharing class RD2_EntryFormController_TEST {
     */
     @IsTest
     private static void shouldReturnSettings() {
-        Id accountId =  UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
+        Id accountId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
 
         Test.startTest();
-        RD2_EntryFormController.RD2AppView initialView = RD2_EntryFormController.getInitialView(accountId, null);
+        RD2_AppView initialView = RD2_EntryFormController.getInitialView(accountId, null);
         Test.stopTest();
 
         System.assertEquals(RD2_NamingService.isAutomaticNamingEnabled, initialView.isAutoNamingEnabled,
@@ -98,13 +98,39 @@ private with sharing class RD2_EntryFormController_TEST {
     * in order to display the Elevate credit card widget if so.
     */
     @IsTest
+    private static void newRecordShouldDefaultStartDate() {
+        Test.startTest();
+        RD2_AppView initialView = RD2_EntryFormController.getInitialView(null, null);
+        Test.stopTest();
+
+        System.assertEquals(initialView.record.dateEstablished, Date.today(), 'Date established should default to today.');
+    }
+
+    /***
+    * @description Verifies whether the org is the Elevate customer
+    * in order to display the Elevate credit card widget if so.
+    */
+    @IsTest
+    private static void newRecordShouldDefaultDateEstablished() {
+        Test.startTest();
+        RD2_AppView initialView = RD2_EntryFormController.getInitialView(null, null);
+        Test.stopTest();
+
+        System.assertEquals(initialView.record.startDate, Date.today(), 'Start date should default to today.');
+    }
+
+    /***
+    * @description Verifies whether the org is the Elevate customer
+    * in order to display the Elevate credit card widget if so.
+    */
+    @IsTest
     private static void shouldDisplayElevateWidgetWhenElevateEnabledIsTrue() {
-        Id accountId =  UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
+        Id accountId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
 
         RD2_ElevateIntegrationService_TEST.enableElevateUserPermissions();
 
         Test.startTest();
-        RD2_EntryFormController.RD2AppView initialView =  RD2_EntryFormController.getInitialView(accountId, null);
+        RD2_AppView initialView = RD2_EntryFormController.getInitialView(accountId, null);
         Test.stopTest();
 
         System.assertEquals(true, initialView.isElevateCustomer,
@@ -131,7 +157,7 @@ private with sharing class RD2_EntryFormController_TEST {
         insert rd;
 
         Test.startTest();
-        RD2_EntryFormController.RD2AppView view = RD2_EntryFormController.getInitialView(a.Id, rd.Id);
+        RD2_AppView view = RD2_EntryFormController.getInitialView(a.Id, rd.Id);
         String donorType = view.record.donorType;
         String period = view.record.recurringPeriod;
         Test.stopTest();
@@ -153,7 +179,7 @@ private with sharing class RD2_EntryFormController_TEST {
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
         Test.startTest();
-        RD2_EntryFormController.RD2AppView view = RD2_EntryFormController.getInitialView(null, rd.Id);
+        RD2_AppView view = RD2_EntryFormController.getInitialView(null, rd.Id);
         String donorType = view.record.donorType;
         String period = view.record.recurringPeriod;
         Integer frequency = view.record.recurringFrequency;
@@ -207,12 +233,12 @@ private with sharing class RD2_EntryFormController_TEST {
     @IsTest
     private static void shouldReturnRD2CustomFieldsWithoutNPSPNameSpaceAndExcludedFields() {
         Test.startTest();
-        List<RD2_EntryFormController.CustomField> customFields = RD2_EntryFormController.getCustomFieldSectionFields();
+        List<InputFieldView> customFields = RD2_EntryFormController.getCustomFieldSectionFields();
         Test.stopTest();
 
         Set<String> excludedCustomFields = RD2_Settings.getExcludedCustomFields();
 
-        for (RD2_EntryFormController.CustomField field : customFields) {
+        for (InputFieldView field : customFields) {
             System.assert(!excludedCustomFields.contains(field.apiName),
                 'Excluded fields should not be return:' + field.apiName);
             System.assert(!field.apiName.startsWith('npsp__'),
@@ -649,7 +675,7 @@ private with sharing class RD2_EntryFormController_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         Contact donorContact = getContact();
 
-        RD2_EntryFormController.RD2SaveRequest req = new RD2_EntryFormController.RD2SaveRequest();
+        RD2_SaveRequest req = new RD2_SaveRequest();
 
         req.dayOfMonth = '15';
         req.startDate = Date.newInstance(2022, 1, 15);
@@ -662,10 +688,56 @@ private with sharing class RD2_EntryFormController_TEST {
         req.recurringPeriod = 'Monthly';
         req.paymentMethod = 'Credit Card';
 
-        RD2_EntryFormController.RD2SaveResult result = RD2_EntryFormController.saveRecurringDonation(req);
+        SaveResultView result = RD2_EntryFormController.saveRecurringDonation(req);
 
         System.assert(result.success, 'RD not inserted successfully');
         System.assertNotEquals(result.recordId, null, 'Save result should have an Id');
+    }
+
+    @IsTest
+    private static void saveRequestMapsFieldsToRecurringDonation() {
+        RD2_SaveRequest req = new RD2_SaveRequest();
+
+        Id fakeCampaignId = UTIL_UnitTestData_TEST.mockId(Campaign.SObjectType);
+        Id fakeContactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
+        Id fakeRdId = UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.SObjectType);
+
+        Date fakeDate =  Date.newInstance(2022, 1, 15);
+        Date fakeDate2 =  Date.newInstance(2022, 1, 14);
+        req.dayOfMonth = '15';
+        req.recurringStatus = 'Active';
+        req.startDate = fakeDate;
+        req.dateEstablished = fakeDate2;
+        req.recurringFrequency = 1;
+        req.contactId = fakeContactId;
+        req.recurringStatus = 'Active';
+        req.donationValue = 5;
+        req.recurringType = 'Open';
+        req.recurringPeriod = 'Monthly';
+        req.paymentMethod = 'Credit Card';
+        req.campaignId = fakeCampaignId;
+        req.customFieldValues = new Map<String, Object>{
+                // utilizing this field as a fake custom field
+                'CommitmentId__c' => '123-456-789'
+        };
+        req.cardExpirationYear = '2025';
+        req.cardExpirationMonth = '2';
+        req.recordId = fakeRdId;
+
+        npe03__Recurring_Donation__c rd = req.toRecord();
+
+        System.assertEquals('15', rd.Day_of_Month__c);
+        System.assertEquals(fakeDate, rd.StartDate__c);
+        System.assertEquals(fakeDate2, rd.npe03__Date_Established__c);
+        System.assertEquals(1, rd.InstallmentFrequency__c);
+        System.assertEquals('123-456-789', rd.CommitmentId__c);
+        System.assertEquals(fakeCampaignId, rd.npe03__Recurring_Donation_Campaign__c);
+        System.assertEquals('Credit Card', rd.PaymentMethod__c);
+        System.assertEquals(5, rd.npe03__Amount__c);
+        System.assertEquals('2025', rd.CardExpirationYear__c);
+        System.assertEquals('2', rd.CardExpirationMonth__c);
+        System.assertEquals('Active', rd.Status__c);
+        System.assertEquals(fakeRdId, rd.Id);
     }
 
 
@@ -674,7 +746,7 @@ private with sharing class RD2_EntryFormController_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         Contact donorContact = getContact();
 
-        RD2_EntryFormController.RD2SaveRequest req = new RD2_EntryFormController.RD2SaveRequest();
+        RD2_SaveRequest req = new RD2_SaveRequest();
 
         req.dayOfMonth = '15';
         req.startDate = Date.newInstance(2022, 1, 15);
@@ -687,7 +759,7 @@ private with sharing class RD2_EntryFormController_TEST {
         req.recurringPeriod = 'Monthly';
         req.paymentMethod = 'Credit Card';
 
-        RD2_EntryFormController.RD2SaveResult result = RD2_EntryFormController.saveRecurringDonation(req);
+        SaveResultView result = RD2_EntryFormController.saveRecurringDonation(req);
 
         System.assertEquals(false, result.success, 'Expected RD2SaveResult success to be false');
         System.assertEquals(null, result.recordId, 'Expected empty record Id');

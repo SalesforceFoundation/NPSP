@@ -1,4 +1,6 @@
 import {
+    RECORD_SAVED,
+    RESET,
     SET_CONTACT_ID,
     SET_ACCOUNT_ID,
     SET_CAMPAIGN_ID,
@@ -11,6 +13,7 @@ import {
     SET_DATE_ESTABLISHED,
     SET_ERROR,
     SET_PERIOD_TYPE,
+    SET_RECORD_NAME,
     SET_RECURRING_TYPE,
     SET_RECURRING_PERIOD,
     SET_RECURRING_FREQUENCY,
@@ -20,7 +23,9 @@ import {
     SET_PAYMENT_METHOD,
     SET_PLANNED_INSTALLMENTS,
     INITIAL_VIEW_LOAD,
-    CUSTOM_FIELD_CHANGE, SET_PAYMENT_TOKEN, COMMITMENT_RESPONSE
+    CUSTOM_FIELD_CHANGE,
+    SET_PAYMENT_TOKEN,
+    COMMITMENT_RESPONSE,
 } from "./actions";
 
 import {
@@ -32,6 +37,8 @@ import {
     CHANGE_TYPE_DOWNGRADE,
     CONTACT_DONOR_TYPE,
 } from "./constants";
+
+import { isBlank, nullIfBlank } from "c/util";
 
 const DEFAULT_INITIAL_STATE = {
     initialViewState: {}, // snapshot of initial view state after first load
@@ -152,7 +159,7 @@ const getCardFields = (cardData) => {
         cardLastFour: last4,
         cardExpirationMonth: expirationMonth,
         cardExpirationYear: expirationYear,
-        achLastFour: null
+        achLastFour: null,
     };
 };
 
@@ -162,9 +169,9 @@ const getAchFields = (achData) => {
         cardLastFour: null,
         cardExpirationMonth: null,
         cardExpirationYear: null,
-        achLastFour: last4
+        achLastFour: last4,
     };
-}
+};
 
 const handleCommitmentResponse = (state, payload) => {
     const { cardData, achData } = payload;
@@ -186,7 +193,17 @@ const handleCommitmentResponse = (state, payload) => {
     };
 };
 
-const setAccountId = (state, accountId) => {
+const handleRecordSaved = (state, payload) => {
+    const { recordId, recordName } = payload;
+    return {
+        ...state,
+        recordId,
+        recordName,
+    };
+};
+
+const setAccountId = (state, payload) => {
+    const accountId = nullIfBlank(payload);
     return {
         ...state,
         accountId,
@@ -195,17 +212,24 @@ const setAccountId = (state, accountId) => {
 
 const setCustomField = (state, { fieldName, value }) => {
     const { customFieldSets } = state;
-
+    const updatedFieldSets = customFieldSets.map((field) => {
+        if (field.apiName === fieldName) {
+            return {
+                ...field,
+                value,
+            };
+        } else {
+            return field;
+        }
+    });
     return {
         ...state,
-        customFieldsSet: {
-            ...customFieldSets,
-            [fieldName]: value,
-        },
+        customFieldSets: updatedFieldSets,
     };
 };
 
-const setContactId = (state, contactId) => {
+const setContactId = (state, payload) => {
+    const contactId = nullIfBlank(payload);
     return {
         ...state,
         contactId,
@@ -274,7 +298,7 @@ const setPeriodType = (state, periodType) => {
 const setPaymentToken = (state, paymentToken) => {
     return {
         ...state,
-        paymentToken
+        paymentToken,
     };
 };
 
@@ -286,6 +310,13 @@ const setPlannedInstallments = (state, plannedInstallments) => {
     return {
         ...newState,
         changeType: getChangeType(newState),
+    };
+};
+
+const setRecordName = (state, recordName) => {
+    return {
+        ...state,
+        recordName,
     };
 };
 
@@ -324,14 +355,14 @@ const setRecurringType = (state, recurringType) => {
 };
 
 const setStatus = (state, recurringStatus) => {
-   return {
+    return {
         ...state,
         recurringStatus,
     };
 };
 
 const setStatusReason = (state, statusReason) => {
-   return {
+    return {
         ...state,
         statusReason,
     };
@@ -362,7 +393,8 @@ const setPaymentMethod = (state, paymentMethod) => {
     };
 };
 
-const setCampaignId = (state, campaignId) => {
+const setCampaignId = (state, payload) => {
+    const campaignId = nullIfBlank(payload);
     return {
         ...state,
         campaignId,
@@ -390,12 +422,20 @@ const loadInitialView = (state, payload) => {
     };
 };
 
+const resetToInitial = () => {
+    return DEFAULT_INITIAL_STATE;
+};
+
 export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
     switch (action.type) {
         case CUSTOM_FIELD_CHANGE:
             return setCustomField(state, action.payload);
         case COMMITMENT_RESPONSE:
             return handleCommitmentResponse(state, action.payload);
+        case RECORD_SAVED:
+            return handleRecordSaved(state, action.payload);
+        case RESET:
+            return resetToInitial();
         case SET_CONTACT_ID:
             return setContactId(state, action.payload);
         case SET_ACCOUNT_ID:
@@ -420,6 +460,8 @@ export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
             return setPaymentToken(state, action.payload);
         case SET_PLANNED_INSTALLMENTS:
             return setPlannedInstallments(state, action.payload);
+        case SET_RECORD_NAME:
+            return setRecordName(state, action.payload);
         case SET_RECURRING_PERIOD:
             return setRecurringPeriod(state, action.payload);
         case SET_RECURRING_FREQUENCY:
