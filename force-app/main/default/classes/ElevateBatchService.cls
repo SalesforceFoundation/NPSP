@@ -77,6 +77,7 @@ public virtual with sharing class ElevateBatchService {
         return new PS_Request.Builder()
                 .withMethod(UTIL_Http.Method.POST)
                 .withElevateBatchId(elevateBatchId)
+                .withRecommendedTimeout()
                 .withEndpoint(PS_Request.ElevateEndpoint.ADD_TO_ELEVATE_BATCH)
                 .withBody(JSON.serialize(tokenizedGift))
                 .build();
@@ -87,6 +88,7 @@ public virtual with sharing class ElevateBatchService {
                 .withMethod(UTIL_Http.Method.POST)
                 .withElevateBatchId(elevateBatchId)
                 .withElevatePaymentId(elevatePaymentId)
+                .withRecommendedTimeout()
                 .withEndpoint(PS_Request.ElevateEndpoint.REMOVE_FROM_ELEVATE_BATCH)
                 .build();
     }
@@ -138,6 +140,7 @@ public virtual with sharing class ElevateBatchService {
         return new PS_Request.Builder()
                 .withMethod(UTIL_Http.Method.POST)
                 .withEndpoint(PS_Request.ElevateEndpoint.CREATE_ELEVATE_BATCH)
+                .withRecommendedTimeout()
                 .withBody(createRequestBody())
                 .build();
     }
@@ -146,6 +149,7 @@ public virtual with sharing class ElevateBatchService {
         return new PS_Request.Builder()
                 .withMethod(UTIL_Http.Method.POST)
                 .withElevateBatchId(elevateBatchId)
+                .withRecommendedTimeout()
                 .withEndpoint(PS_Request.ElevateEndpoint.CHARGE_ELEVATE_BATCH)
                 .build();
     }
