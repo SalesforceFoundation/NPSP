@@ -22,6 +22,7 @@ import {
     ACCOUNT_HOLDER_TYPES,
     TOKENIZE_CREDIT_CARD_EVENT_ACTION,
     TOKENIZE_ACH_EVENT_ACTION,
+    DEFAULT_NAME_ON_CARD
 } from "c/geConstants";
 
 import { Rd2Service, CONTACT_DONOR_TYPE, ACCOUNT_DONOR_TYPE } from "c/rd2Service";
@@ -275,8 +276,9 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     getCardParams() {
+        const cardholderName = this.cardholderName || DEFAULT_NAME_ON_CARD;
         return {
-            nameOnCard: this.cardholderName
+            nameOnCard: cardholderName
         };
     }
 
