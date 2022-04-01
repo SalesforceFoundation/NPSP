@@ -151,7 +151,7 @@ private with sharing class fflib_SObjectSelectorTest
 	{
 		Testfflib_SObjectSelector selector = new Testfflib_SObjectSelector();
 		String soql = selector.newQueryFactory().toSOQL();
-		Pattern p = Pattern.compile('SELECT (.*) FROM Account ORDER BY Name DESC NULLS FIRST , AnnualRevenue ASC NULLS LAST ');
+		Pattern p = Pattern.compile(expectedQueryString);
 		Matcher m = p.matcher(soql);
 		System.assert(m.matches(), 'Generated SOQL does not match expected pattern. Here is the generated SOQL: ' + soql);
 		System.assertEquals(1, m.groupCount(), 'Unexpected number of groups captured.');
@@ -208,7 +208,7 @@ private with sharing class fflib_SObjectSelectorTest
 		String soql = qf.toSOQL();
 
 		//Then
-		Pattern soqlPattern = Pattern.compile('SELECT (.*) FROM Account ORDER BY Name DESC NULLS FIRST , AnnualRevenue ASC NULLS LAST ');
+		Pattern soqlPattern = Pattern.compile(expectedQueryString);
 		Matcher soqlMatcher = soqlPattern.matcher(soql);
 		soqlMatcher.matches();
 
@@ -235,7 +235,7 @@ private with sharing class fflib_SObjectSelectorTest
 		String soql = qf.toSOQL();
 
 		// Assert that the
-		Pattern soqlPattern = Pattern.compile('SELECT (.*) FROM Account ORDER BY Name DESC NULLS FIRST , AnnualRevenue ASC NULLS LAST ');
+		Pattern soqlPattern = Pattern.compile(expectedQueryString);
 		Matcher soqlMatcher = soqlPattern.matcher(soql);
 		system.assert(soqlMatcher.matches(), 'The SOQL should have that expected.');
 	}
@@ -277,7 +277,11 @@ private with sharing class fflib_SObjectSelectorTest
 		
 		public override String getOrderBy()
 		{
-			return 'Name DESC, AnnualRevenue ASC NULLS LAST';
+			String sortVal = 'AnnualRevenue ASC NULLS LAST';
+			if (isAccountNameSortable) {
+				sortVal = 'Name DESC, ' + sortVal;
+			}
+			return sortVal;
 		}
 	}
 	
@@ -289,7 +293,7 @@ private with sharing class fflib_SObjectSelectorTest
 		// Can only proceed with test if we have a suitable profile - Chatter External license has no access to Opportunity
 		List<Profile> testProfiles = [Select Id From Profile where UserLicense.Name='Chatter External' limit 1];
 		if(testProfiles.size()!=1)
-			return null; 		
+			return null;
 
 		// Can only proceed with test if we can successfully insert a test user 
 		String testUsername = System.now().format('yyyyMMddhhmmss') + '@testorg.com';
@@ -301,4 +305,26 @@ private with sharing class fflib_SObjectSelectorTest
 		}		
 		return testUser;
 	}	
+
+	public static Boolean isAccountNameSortable {
+		get {
+			if (isAccountNameSortable == null) {
+				isAccountNameSortable = Account.Name.getDescribe().isSortable();
+			}
+			return isAccountNameSortable;
+		} private set;
+	}
+
+	public static String expectedQueryString {
+		get {
+			if (expectedQueryString == null) {
+				expectedQueryString = 'SELECT (.*) FROM Account ORDER BY';
+				if (isAccountNameSortable) {
+					expectedQueryString += ' Name DESC NULLS FIRST ,';
+				}
+				expectedQueryString += ' AnnualRevenue ASC NULLS LAST ';		
+			}
+			return expectedQueryString;
+		} private set; 
+	}
 }
