@@ -4,6 +4,7 @@ module.exports = {
     moduleNameMapper: {
         "^c/psElevateTokenHandler$": "<rootDir>/tests/__mocks__/psElevateTokenHandler",
         "^lightning/navigation$": "<rootDir>/tests/__mocks__/lightning/navigation",
+        "^lightning/uiRecordApi": "<rootDir>/tests/__mocks__/lightning/uiRecordApi",
         "^@salesforce/apex/GE_GiftEntryController.getOpenDonations": "<rootDir>/tests/__mocks__/apex/GE_GiftEntryController.getOpenDonations",
         "^@salesforce/apex/GE_GiftEntryController.retrieveDefaultSGERenderWrapper": "<rootDir>/tests/__mocks__/apex/GE_GiftEntryController.retrieveDefaultSGERenderWrapper",
         "^@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest": "<rootDir>/tests/__mocks__/apex/GE_GiftEntryController.sendPurchaseRequest",

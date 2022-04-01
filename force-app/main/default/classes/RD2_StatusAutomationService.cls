@@ -151,7 +151,6 @@ public with sharing class RD2_StatusAutomationService {
             || rdRecord.isClosed() 
             || rdRecord.isPaused()
             || !rdRecord.hasSchedule()
-            || rdRecord.isElevateRecord()
             || (processMode == StatusAutomationMode.EVALUATE_CLOSED && !rd2Settings.isStatusAutomationForClosedEnabled())
             || (processMode == StatusAutomationMode.EVALUATE_LAPSED && !rd2Settings.isStatusAutomationForLapsedEnabled())
         ) {

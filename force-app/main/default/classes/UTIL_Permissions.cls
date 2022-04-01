@@ -448,6 +448,16 @@ public with sharing class UTIL_Permissions {
         return true;
     }
 
+
+    public Boolean canUpdate(Schema.SObjectType sObjectType, Set<String> fieldNames) {
+        for (String fieldName: fieldNames) {
+            if (!canUpdate(String.valueOf(sObjectType), fieldName, false)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public class InsufficientPermissionException extends Exception {}
 
 }

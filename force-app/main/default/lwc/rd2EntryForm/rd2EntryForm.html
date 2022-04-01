@@ -25,8 +25,9 @@
                 </h2>
             </header>
 
-            <lightning-record-edit-form record-id={recordId} object-api-name="npe03__Recurring_Donation__c"
-                onsubmit={handleSubmit} onerror={handleSaveError} onsuccess={handleSuccess} data-id="outerRecordEditForm">
+            <lightning-record-edit-form record-id={recordId}
+                                        object-api-name="npe03__Recurring_Donation__c"
+                                        data-id="outerRecordEditForm">
                 <div class="slds-modal__content slds-p-top_none slds-p-horizontal_medium slds-p-bottom_medium" id="modal-content-id-1">
                     <template if:true={isLoading}>
                         <div class="slds-grid slds-grid_align-center">
@@ -41,11 +42,14 @@
                     <div class="error-container">
                         <template if:true={error.detail}>
                             <c-util-page-level-message title={error.header}
-                                variant="error"
-                                icon-name="utility:error" icon-size="x-small" icon-variant="inverse" data-id="error"
-                                data-qa-locator="error">
-
-                                <p slot="body" class="slds-p-horizontal_medium slds-p-vertical_xx-small slds-text-color_error">
+                                                       variant="error"
+                                                       icon-name="utility:error"
+                                                       icon-size="x-small"
+                                                       icon-variant="inverse"
+                                                       data-id="error"
+                                                       data-qa-locator="error">
+                                <p slot="body"
+                                   class="slds-p-horizontal_medium slds-p-vertical_xx-small slds-text-color_error">
                                     <lightning-formatted-text value={error.detail}></lightning-formatted-text>
                                 </p>
                             </c-util-page-level-message>
@@ -203,6 +207,7 @@
                                                                    field-name={fields.name.apiName}
                                                                    onchange={handleNameChange}
                                                                    value={rd2State.recordName}
+                                                                   data-id="recordName"
                                                                    required>
                                             </lightning-input-field>
                                         </lightning-layout-item>
