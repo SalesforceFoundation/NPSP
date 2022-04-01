@@ -553,6 +553,8 @@ public with sharing class RD2_PauseForm_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ScheduleService.currentDate = START_DATE;
 
+        Test.startTest();
+
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
         //skip second and third installments
@@ -576,7 +578,6 @@ public with sharing class RD2_PauseForm_TEST {
         System.assertEquals(2, opps.size(), 'Number of expected Opps should match: ' + opps);
 
         //deselect the third installment and keep the second as paused
-        Test.startTest();
         savePauseOnTheForm(rd.Id, pauseStartDate, pauseStartDate);
         Test.stopTest();
 
@@ -602,6 +603,8 @@ public with sharing class RD2_PauseForm_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ScheduleService.currentDate = START_DATE;
 
+        Test.startTest();
+
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
         //skip second and third installments
@@ -625,7 +628,6 @@ public with sharing class RD2_PauseForm_TEST {
         System.assertEquals(2, opps.size(), 'Number of expected Opps should match: ' + opps);
 
         //deactivate the current pause
-        Test.startTest();
         pauseStartDate = null;
         pauseEndDate = null;
         savePauseOnTheForm(rd.Id, pauseStartDate, pauseStartDate);

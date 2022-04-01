@@ -143,7 +143,8 @@ private with sharing class PS_Request_TEST {
                 roles = PS_Request.ROLE_PAYMENT_PURCHASE;
 
             } else if (endpoint == PS_Request.ElevateEndpoint.COMMITMENT
-                || endpoint == PS_Request.ElevateEndpoint.COMMITMENT_CANCEL) {
+                || endpoint == PS_Request.ElevateEndpoint.COMMITMENT_CANCEL
+                || endpoint == PS_Request.ElevateEndpoint.COMMITMENT_UPDATE_BULK) {
 
                 roles = PS_Request.ROLE_PAYMENT_COMMITMENTS;
             } else if (endpoint == PS_Request.ElevateEndpoint.ADD_TO_ELEVATE_BATCH

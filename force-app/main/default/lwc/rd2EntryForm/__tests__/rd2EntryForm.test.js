@@ -1,7 +1,7 @@
 import { createElement } from "lwc";
 import Rd2EntryForm from "c/rd2EntryForm";
-import { RD2FormController, setupWireMocksForElevate, mockRecordEditFormSubmit } from "./rd2EntryFormTestHelpers";
-import { getRecord } from "lightning/uiRecordApi";
+import { RD2FormController, setupWireMocks } from "./rd2EntryFormTestHelpers";
+import { getRecord, getRecordNotifyChange } from "lightning/uiRecordApi";
 import { mockGetIframeReply } from "c/psElevateTokenHandler";
 
 import getInitialView from "@salesforce/apex/RD2_EntryFormController.getInitialView";
@@ -9,6 +9,7 @@ import handleCommitment from "@salesforce/apex/RD2_EntryFormController.handleCom
 import saveRecurringDonation from "@salesforce/apex/RD2_EntryFormController.saveRecurringDonation";
 
 import RD2_EntryFormMissingPermissions from "@salesforce/label/c.RD2_EntryFormMissingPermissions";
+import commonUnknownError from "@salesforce/label/c.commonUnknownError";
 import RD2_EntryFormHeader from "@salesforce/label/c.RD2_EntryFormHeader";
 import commonEdit from "@salesforce/label/c.commonEdit";
 
@@ -25,9 +26,12 @@ const rd2WithACHCommitmentInitialView = require("./data/rd2WithACHCommitmentInit
 const rd2WithoutCommitmentInitialView = require("./data/rd2WithoutCommitmentInitialView.json");
 
 jest.mock("@salesforce/apex/RD2_EntryFormController.getInitialView", () => ({ default: jest.fn() }), { virtual: true });
-jest.mock("@salesforce/apex/RD2_EntryFormController.saveRecurringDonation", () => ({ default: jest.fn() }), { virtual: true });
+jest.mock("@salesforce/apex/RD2_EntryFormController.saveRecurringDonation", () => ({ default: jest.fn() }), {
+    virtual: true,
+});
 
 const mockScrollIntoView = jest.fn();
+const mockHandleCloseModal = jest.fn();
 
 const FAKE_ACH_RD2_ID = "a0963000008pebAAAQ";
 const FAKE_CARD_RD2_ID = "a0963000008oxZnAAI";
@@ -102,7 +106,7 @@ describe("c-rd2-entry-form", () => {
 
             await flushPromises();
 
-            await setupWireMocksForElevate();
+            await setupWireMocks();
             controller.setDefaultDateValues();
 
             controller.paymentMethod().changeValue("Credit Card");
@@ -119,7 +123,7 @@ describe("c-rd2-entry-form", () => {
             const controller = new RD2FormController(element);
             await flushPromises();
 
-            await setupWireMocksForElevate();
+            await setupWireMocks();
             controller.setDefaultDateValues();
 
             controller.paymentMethod().changeValue("ACH");
@@ -137,7 +141,7 @@ describe("c-rd2-entry-form", () => {
             const controller = new RD2FormController(element);
             await flushPromises();
 
-            await setupWireMocksForElevate();
+            await setupWireMocks();
 
             controller.setDefaultDateValues();
             controller.paymentMethod().changeValue("ACH");
@@ -157,7 +161,7 @@ describe("c-rd2-entry-form", () => {
             expect(elevateWidget).toBeFalsy();
         });
 
-        it('displays label for new recurring donations in header', () => {
+        it("displays label for new recurring donations in header", () => {
             const element = createRd2EntryForm();
             const controller = new RD2FormController(element);
             const header = controller.header();
@@ -183,10 +187,69 @@ describe("c-rd2-entry-form", () => {
             await flushPromises();
 
             expect(controller.customFieldsSection()).toBeTruthy();
-            expect(controller.customFields()).toHaveLength(1);
+            const customFields = controller.customFields();
+            expect(customFields).toHaveLength(1);
+            expect(customFields[0].fieldName).toBe("Custom1__c");
+            expect(customFields[0].required).toBe(false);
         });
 
-        it('when multicurrency enabled, displays currency field', async () => {
+        it("when auto naming enabled, allows user to update name field", async () => {
+            getInitialView.mockResolvedValue({
+                ...initialViewResponse,
+                isAutoNamingEnabled: false,
+            });
+
+            saveRecurringDonation.mockResolvedValue({
+                success: true,
+                recordId: FAKE_ACH_RD2_ID,
+                recordName: "Some Test Name",
+            });
+
+            const element = createRd2EntryForm();
+            const controller = new RD2FormController(element);
+            await flushPromises();
+            await setupWireMocks();
+
+            const nameField = controller.recordName();
+            expect(nameField).toBeTruthy();
+            nameField.changeValue("Some Test Name");
+            controller.contactLookup().changeValue("001fakeContactId");
+            controller.amount().changeValue(1.0);
+            controller.paymentMethod().changeValue("Check");
+
+            controller.saveButton().click();
+
+            expect(saveRecurringDonation).toHaveBeenCalledWith({
+                saveRequest: {
+                    achLastFour: null,
+                    cardExpirationMonth: null,
+                    cardExpirationYear: null,
+                    cardLastFour: null,
+                    campaignId: null,
+                    commitmentId: null,
+                    currencyIsoCode: null,
+                    dayOfMonth: "15",
+                    paymentMethod: "Check",
+                    paymentToken: null,
+                    recordId: null,
+                    recordName: "Some Test Name",
+                    recurringFrequency: 1,
+                    recurringType: "Open",
+                    recurringStatus: null,
+                    startDate: "2021-02-03",
+                    donationValue: 1,
+                    contactId: "001fakeContactId",
+                    accountId: null,
+                    dateEstablished: "2021-02-03",
+                    recurringPeriod: "Monthly",
+                    plannedInstallments: null,
+                    statusReason: null,
+                    customFieldValues: {},
+                },
+            });
+        });
+
+        it("when multicurrency enabled, displays currency field", async () => {
             getInitialView.mockResolvedValue({
                 ...initialViewResponse,
                 isElevateCustomer: true,
@@ -196,12 +259,50 @@ describe("c-rd2-entry-form", () => {
             const element = createRd2EntryForm();
             await flushPromises();
 
-            await setupWireMocksForElevate();
+            await setupWireMocks();
 
             const controller = new RD2FormController(element);
 
             const currencyIsoCodeField = controller.currencyIsoCode();
             expect(currencyIsoCodeField.element).toBeTruthy();
+        });
+
+        it("when single validation rule triggers on save, displays error on screen", async () => {
+            getInitialView.mockResolvedValue({
+                ...initialViewResponse,
+                isElevateCustomer: true,
+            });
+
+            const element = createRd2EntryForm();
+            await flushPromises();
+
+            await setupWireMocks();
+            const controller = new RD2FormController(element);
+
+            saveRecurringDonation.mockResolvedValue({
+                success: false,
+                errors: [
+                    {
+                        message: "Invalid endpoint.",
+                        fields: [],
+                    },
+                ],
+            });
+
+            controller.contactLookup().changeValue("001fakeContactId");
+            controller.amount().changeValue(1.0);
+            controller.paymentMethod().changeValue("Check");
+
+            controller.saveButton().click();
+
+            await flushPromises();
+
+            expect(saveRecurringDonation).toHaveBeenCalled();
+            const errorPageLevelMessage = controller.errorPageLevelMessage();
+            expect(errorPageLevelMessage).toBeTruthy();
+            expect(errorPageLevelMessage.title).toBe(commonUnknownError);
+            const errorFormattedText = controller.errorFormattedText();
+            expect(errorFormattedText.value).toBe("Invalid endpoint.");
         });
     });
 
@@ -218,10 +319,15 @@ describe("c-rd2-entry-form", () => {
 
             await flushPromises();
 
-            await setupWireMocksForElevate();
+            await setupWireMocks();
 
             controller.setDefaultDateValues();
-            controller.setupSubmitMock();
+            saveRecurringDonation.mockResolvedValue({
+                success: true,
+                recordId: FAKE_ACH_RD2_ID,
+                recordName: "Test Record Name",
+            });
+
             controller.contactLookup().changeValue("001fakeContactId");
             await flushPromises();
 
@@ -256,50 +362,38 @@ describe("c-rd2-entry-form", () => {
                 InstallmentFrequency__c: 1,
             };
             validateCommitmentMessage(EXPECTED_RECORD);
-            // TODO: When submit is swapped out, use this expect block instead.
-            // expect(saveRecurringDonation).toHaveBeenCalled();
-            // expect(saveRecurringDonation).toHaveBeenCalledWith({
-            //     achLastFour: "5432",
-            //     cardExpirationMonth: null,
-            //     cardExpirationYear: null,
-            //     cardLastFour: null,
-            //     commitmentId: "ffd252d6-7ffc-46a0-994f-00f7582263d2",
-            //     currencyIsoCode: null,
-            //     dayOfMonth: "6",
-            //     paymentMethod: "ACH",
-            //     paymentToken: "a_dummy_token",
-            //     recordId: null,
-            //     recordName: "",
-            //     recurringFrequency: 1,
-            //     recurringType: "Open",
-            //     recurringStatus: null,
-            //     startDate: "2021-02-03",
-            //     donationValue: 1,
-            //     contactId: "001fakeContactId",
-            //     accountId: null,
-            //     dateEstablished: "2021-02-03",
-            //     recurringPeriod: "Monthly",
-            //     plannedInstallments: null,
-            // });
-            expect(mockRecordEditFormSubmit).toHaveBeenCalled();
-            expect(mockRecordEditFormSubmit).toHaveBeenCalledWith({
-                ACH_Last_4__c: "5432",
-                CardExpirationMonth__c: null,
-                CardExpirationYear__c: null,
-                CardLast4__c: null,
-                CommitmentId__c: "ffd252d6-7ffc-46a0-994f-00f7582263d2",
-                Day_of_Month__c: "6",
-                InstallmentFrequency__c: 1,
-                PaymentMethod__c: "ACH",
-                RecurringType__c: "Open",
-                StartDate__c: "2021-02-03",
-                npe03__Amount__c: 1,
-                npe03__Contact__c: "001fakeContactId",
-                npe03__Date_Established__c: "2021-02-03",
-                npe03__Installment_Period__c: "Monthly",
-                npe03__Installments__c: null,
-                npe03__Recurring_Donation_Campaign__c: null
-            });
+            expect(saveRecurringDonation).toHaveBeenCalled();
+            const saveRequest = {
+                achLastFour: "5432",
+                cardExpirationMonth: null,
+                cardExpirationYear: null,
+                cardLastFour: null,
+                campaignId: null,
+                commitmentId: "ffd252d6-7ffc-46a0-994f-00f7582263d2",
+                currencyIsoCode: null,
+                dayOfMonth: "6",
+                paymentMethod: "ACH",
+                paymentToken: "a_dummy_token",
+                recordId: null,
+                recordName: "",
+                recurringFrequency: 1,
+                recurringType: "Open",
+                recurringStatus: null,
+                startDate: "2021-02-03",
+                donationValue: 1,
+                contactId: "001fakeContactId",
+                accountId: null,
+                dateEstablished: "2021-02-03",
+                recurringPeriod: "Monthly",
+                plannedInstallments: null,
+                statusReason: null,
+                customFieldValues: {},
+            };
+            expect(saveRecurringDonation).toHaveBeenCalledWith({ saveRequest });
+
+            expect(mockHandleCloseModal).toHaveBeenCalledTimes(1);
+            const { detail } = mockHandleCloseModal.mock.calls[0][0];
+            expect(detail).toMatchObject({ recordId: FAKE_ACH_RD2_ID });
         });
 
         it("organization donor, account name is used when tokenizing an ACH payment", async () => {
@@ -308,7 +402,7 @@ describe("c-rd2-entry-form", () => {
 
             await flushPromises();
 
-            await setupWireMocksForElevate();
+            await setupWireMocks();
 
             controller.setDefaultDateValues();
             controller.dayOfMonth().setValue("6");
@@ -358,7 +452,7 @@ describe("c-rd2-entry-form", () => {
             setupIframeReply();
         });
 
-        it('displays label with record name in header', async () => {
+        it("displays label with record name in header", async () => {
             getInitialView.mockResolvedValue(rd2WithCardCommitmentInitialView);
             const element = createRd2EditForm(FAKE_CARD_RD2_ID);
             const controller = new RD2FormController(element);
@@ -371,27 +465,27 @@ describe("c-rd2-entry-form", () => {
             expect(header.textContent).toBe(`${commonEdit} ${recordName}`);
         });
 
-        it('when multicurrency enabled, populates multicurrency field', async () => {
+        it("when multicurrency enabled, populates multicurrency field", async () => {
             const { record } = rd2WithCardCommitmentInitialView;
             getInitialView.mockResolvedValue({
                 ...rd2WithCardCommitmentInitialView,
                 isMultiCurrencyEnabled: true,
                 record: {
                     ...record,
-                    currencyIsoCode: 'USD'
-                }
+                    currencyIsoCode: "USD",
+                },
             });
 
             const element = createRd2EntryForm();
             await flushPromises();
 
-            await setupWireMocksForElevate();
+            await setupWireMocks();
 
             const controller = new RD2FormController(element);
 
             const currencyIsoCodeField = controller.currencyIsoCode();
             expect(currencyIsoCodeField.element).toBeTruthy();
-            expect(currencyIsoCodeField.getValue()).toBe('USD');
+            expect(currencyIsoCodeField.getValue()).toBe("USD");
         });
 
         it("rd2 record with card payment, when editing, displays card information", async () => {
@@ -399,7 +493,7 @@ describe("c-rd2-entry-form", () => {
             const element = createRd2EditForm(FAKE_CARD_RD2_ID);
             const controller = new RD2FormController(element);
 
-            await setupWireMocksForElevate();
+            await setupWireMocks();
 
             getRecord.emit(rd2WithCardCommitment, (config) => {
                 return config.recordId === FAKE_CARD_RD2_ID;
@@ -419,13 +513,12 @@ describe("c-rd2-entry-form", () => {
             const element = createRd2EditForm(FAKE_ACH_RD2_ID);
             const controller = new RD2FormController(element);
             await flushPromises();
-            await setupWireMocksForElevate();
+            await setupWireMocks();
 
             getRecord.emit(rd2WithACHCommitment, (config) => {
                 return config.recordId === FAKE_ACH_RD2_ID;
             });
             await flushPromises();
-
 
             const elevateWidget = controller.elevateWidget();
             expect(elevateWidget).toBeTruthy();
@@ -441,7 +534,7 @@ describe("c-rd2-entry-form", () => {
             const element = createRd2EditForm(FAKE_CARD_RD2_ID);
             const controller = new RD2FormController(element);
             await flushPromises();
-            await setupWireMocksForElevate();
+            await setupWireMocks();
 
             getRecord.emit(rd2WithoutCommitmentCard, (config) => {
                 return config.recordId === FAKE_CARD_RD2_ID;
@@ -467,7 +560,7 @@ describe("c-rd2-entry-form", () => {
                 "PaymentMethod__c",
                 "Check"
             );
-            await setupWireMocksForElevate();
+            await setupWireMocks();
 
             getRecord.emit(rd2WithoutCommitmentCheck, (config) => {
                 return config.recordId === FAKE_CARD_RD2_ID;
@@ -478,7 +571,6 @@ describe("c-rd2-entry-form", () => {
             getRecord.emit(contactGetRecord, (config) => {
                 return config.recordId === "001fakeContactId";
             });
-
 
             expect(controller.elevateWidget()).toBeNull();
 
@@ -497,7 +589,7 @@ describe("c-rd2-entry-form", () => {
             const element = createRd2EditForm(FAKE_CARD_RD2_ID);
             const controller = new RD2FormController(element);
             await flushPromises();
-            await setupWireMocksForElevate();
+            await setupWireMocks();
 
             getRecord.emit(rd2WithoutCommitmentCard, (config) => {
                 return config.recordId === FAKE_CARD_RD2_ID;
@@ -560,7 +652,7 @@ describe("c-rd2-entry-form", () => {
                 "CommitmentId__c",
                 "fake-commitment-uuid"
             );
-            await setupWireMocksForElevate();
+            await setupWireMocks();
 
             getRecord.emit(rd2WithCommitmentCard, (config) => {
                 return config.recordId === FAKE_CARD_RD2_ID;
@@ -573,7 +665,6 @@ describe("c-rd2-entry-form", () => {
             });
 
             controller.setDefaultDateValues();
-            controller.setupSubmitMock();
             await flushPromises();
 
             expect(controller.elevateWidget()).toBeTruthy();
@@ -589,29 +680,38 @@ describe("c-rd2-entry-form", () => {
             controller.saveButton().click();
             await flushPromises();
 
-            expect(mockRecordEditFormSubmit).toHaveBeenCalled();
-            expect(mockRecordEditFormSubmit).toHaveBeenCalledWith({
-                ACH_Last_4__c: "5432",
-                CardExpirationMonth__c: null,
-                CardExpirationYear__c: null,
-                CardLast4__c: null,
-                ChangeType__c: "",
-                ClosedReason__c: null,
-                CommitmentId__c: "ffd252d6-7ffc-46a0-994f-00f7582263d2",
-                Day_of_Month__c: "6",
-                Id: "a0963000008oxZnAAI",
-                InstallmentFrequency__c: 1,
-                PaymentMethod__c: "ACH",
-                RecurringType__c: "Open",
-                StartDate__c: "2021-02-03",
-                Status__c: "Active",
-                npe03__Amount__c: 0.5,
-                npe03__Contact__c: "001fakeContactId",
-                npe03__Date_Established__c: "2021-02-03",
-                npe03__Installment_Period__c: "Monthly",
-                npe03__Installments__c: null,
-                npe03__Recurring_Donation_Campaign__c: null
-            });
+            expect(saveRecurringDonation).toHaveBeenCalled();
+            const saveRequest = {
+                achLastFour: "5432",
+                cardExpirationMonth: null,
+                cardExpirationYear: null,
+                cardLastFour: null,
+                campaignId: null,
+                commitmentId: "ffd252d6-7ffc-46a0-994f-00f7582263d2",
+                currencyIsoCode: null,
+                dayOfMonth: "6",
+                paymentMethod: "ACH",
+                paymentToken: "a_dummy_token",
+                recordId: "a0963000008oxZnAAI",
+                recordName: "Some Guy - $0.50 Recurring",
+                recurringFrequency: 1,
+                recurringType: "Open",
+                recurringStatus: "Active",
+                startDate: "2021-02-03",
+                donationValue: 0.5,
+                contactId: "001fakeContactId",
+                accountId: "001fakeAccountId",
+                dateEstablished: "2021-02-03",
+                recurringPeriod: "Monthly",
+                plannedInstallments: null,
+                statusReason: null,
+                customFieldValues: {},
+            };
+            expect(saveRecurringDonation).toHaveBeenCalledWith({ saveRequest });
+
+            expect(mockHandleCloseModal).toHaveBeenCalledTimes(1);
+            const { detail } = mockHandleCloseModal.mock.calls[0][0];
+            expect(detail).toMatchObject({ recordId: FAKE_ACH_RD2_ID });
         });
 
         it("clears ACH fields when payment method changed to Card", async () => {
@@ -620,11 +720,17 @@ describe("c-rd2-entry-form", () => {
                 isChangeLogEnabled: true,
             });
 
+            saveRecurringDonation.mockResolvedValue({
+                success: true,
+                recordId: FAKE_ACH_RD2_ID,
+                recordName: "Test Record Name",
+            });
+
             setupCommitmentResponse(handleCommitmentResponseBody);
             const element = createRd2EditForm(FAKE_ACH_RD2_ID);
             const controller = new RD2FormController(element);
             await flushPromises();
-            await setupWireMocksForElevate();
+            await setupWireMocks();
 
             getRecord.emit(rd2WithACHCommitment, (config) => {
                 return config.recordId === FAKE_ACH_RD2_ID;
@@ -637,7 +743,6 @@ describe("c-rd2-entry-form", () => {
             });
 
             controller.setDefaultDateValues();
-            controller.setupSubmitMock();
             await flushPromises();
 
             expect(controller.elevateWidget()).toBeTruthy();
@@ -652,29 +757,65 @@ describe("c-rd2-entry-form", () => {
             controller.saveButton().click();
             await flushPromises();
 
-            expect(mockRecordEditFormSubmit).toHaveBeenCalled();
-            expect(mockRecordEditFormSubmit).toHaveBeenCalledWith({
-                ACH_Last_4__c: null,
-                CardExpirationMonth__c: "05",
-                CardExpirationYear__c: "2023",
-                CardLast4__c: "1111",
-                ChangeType__c: "",
-                ClosedReason__c: null,
-                CommitmentId__c: "ffd252d6-7ffc-46a0-994f-00f7582263d2",
-                Day_of_Month__c: "6",
-                Id: "a0963000008pebAAAQ",
-                InstallmentFrequency__c: 1,
-                PaymentMethod__c: "Credit Card",
-                RecurringType__c: "Open",
-                StartDate__c: "2021-02-03",
-                Status__c: "Active",
-                npe03__Amount__c: 0.5,
-                npe03__Contact__c: "001fakeContactId",
-                npe03__Date_Established__c: "2021-02-03",
-                npe03__Installment_Period__c: "Monthly",
-                npe03__Installments__c: null,
-                npe03__Recurring_Donation_Campaign__c: null,
+            expect(saveRecurringDonation).toHaveBeenCalled();
+            const saveRequest = {
+                achLastFour: null,
+                accountId: "00163000010jyT6AAI",
+                cardExpirationMonth: "05",
+                cardExpirationYear: "2023",
+                cardLastFour: "1111",
+                campaignId: null,
+                commitmentId: "ffd252d6-7ffc-46a0-994f-00f7582263d2",
+                currencyIsoCode: null,
+                customFieldValues: {},
+                dayOfMonth: "6",
+                paymentMethod: "Credit Card",
+                paymentToken: "a_dummy_token",
+                recordId: "a0963000008pebAAAQ",
+                recordName: "",
+                recurringFrequency: 1,
+                recurringType: "Open",
+                recurringStatus: "Active",
+                startDate: "2021-02-03",
+                donationValue: 0.5,
+                contactId: "001fakeContactId",
+                dateEstablished: "2021-02-03",
+                recurringPeriod: "Monthly",
+                plannedInstallments: null,
+                statusReason: null,
+            };
+            expect(saveRecurringDonation).toHaveBeenCalledWith({ saveRequest });
+
+            expect(mockHandleCloseModal).toHaveBeenCalledTimes(1);
+            const { detail } = mockHandleCloseModal.mock.calls[0][0];
+            expect(detail).toMatchObject({ recordId: FAKE_ACH_RD2_ID });
+            expect(getRecordNotifyChange).toHaveBeenCalledWith([{ recordId: FAKE_ACH_RD2_ID }]);
+        });
+
+        it("on update of record, informs LDS the record has been updated", async () => {
+            getInitialView.mockResolvedValue(rd2WithoutCommitmentInitialView);
+
+            const element = createRd2EntryForm();
+            await flushPromises();
+
+            await setupWireMocks();
+            const controller = new RD2FormController(element);
+
+            saveRecurringDonation.mockResolvedValue({
+                success: true,
+                recordId: FAKE_ACH_RD2_ID,
+                recordName: "Test Record Name",
             });
+
+            controller.contactLookup().changeValue("001fakeContactId");
+            controller.amount().changeValue(1.0);
+            controller.paymentMethod().changeValue("Check");
+
+            controller.saveButton().click();
+
+            await flushPromises();
+
+            expect(getRecordNotifyChange).toHaveBeenCalledWith([{ recordId: FAKE_ACH_RD2_ID }]);
         });
     });
 
@@ -691,7 +832,7 @@ describe("c-rd2-entry-form", () => {
             controller = new RD2FormController(element);
             await flushPromises();
 
-            await setupWireMocksForElevate();
+            await setupWireMocks();
 
             getRecord.emit(rd2WithoutCommitmentCard, (config) => {
                 return config.recordId === FAKE_CARD_RD2_ID;
@@ -701,7 +842,6 @@ describe("c-rd2-entry-form", () => {
             getRecord.emit(contactGetRecord, (config) => {
                 return config.recordId === "001fakeContactId";
             });
-
 
             await flushPromises();
         });
@@ -765,7 +905,7 @@ describe("c-rd2-entry-form", () => {
             element = createRd2EditForm(FAKE_CARD_RD2_ID);
             controller = new RD2FormController(element);
             await flushPromises();
-            await setupWireMocksForElevate();
+            await setupWireMocks();
 
             const fields = {
                 ...rd2WithoutCommitmentCard.fields,
@@ -805,12 +945,14 @@ describe("c-rd2-entry-form", () => {
 
 const createRd2EntryForm = () => {
     const element = createElement("c-rd2-entry-form", { is: Rd2EntryForm });
+    element.addEventListener("closemodal", mockHandleCloseModal);
     document.body.appendChild(element);
     return element;
 };
 
 const createRd2EditForm = (recordId) => {
     const element = createElement("c-rd2-entry-form", { is: Rd2EntryForm });
+    element.addEventListener("closemodal", mockHandleCloseModal);
     element.recordId = recordId;
     document.body.appendChild(element);
     return element;
