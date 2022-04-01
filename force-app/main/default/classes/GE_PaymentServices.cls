@@ -199,6 +199,7 @@ public with sharing class GE_PaymentServices {
         return new PS_Request.Builder()
             .withMethod(UTIL_Http.Method.POST)
             .withEndpoint(PS_Request.ElevateEndpoint.PURCHASE)
+            .withRecommendedTimeout()
             .withBody(jsonRequestBody)
             .build();
     }
