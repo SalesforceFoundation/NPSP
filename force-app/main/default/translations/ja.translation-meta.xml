@@ -714,6 +714,22 @@
         <label>連動 ToDo を追加</label>
     </customLabels>
     <customLabels>
+        <name>donationHistoryGivingSummaryTitle</name>
+        <label>支援サマリー</label>
+    </customLabels>
+    <customLabels>
+        <name>donationHistoryLabelLifetime</name>
+        <label>生涯</label>
+    </customLabels>
+    <customLabels>
+        <name>donationHistoryLabelPreviousYear</name>
+        <label>前年</label>
+    </customLabels>
+    <customLabels>
+        <name>donationHistoryLabelThisYear</name>
+        <label>今年</label>
+    </customLabels>
+    <customLabels>
         <name>EPAddTask</name>
         <label>ToDo を追加</label>
     </customLabels>
@@ -747,7 +763,11 @@
     </customLabels>
     <customLabels>
         <name>ErrorEmailMessage</name>
-        <label>Salesforce でこれらの NPSP エラーが発生しました。一般的なエラーについての詳細は、Power of Us Hub の「Troubleshoot the Nonprofit Success Pack (Nonprofit Success Pack のトラブルシューティング)」を参照してください。エラーの解決方法がわからない場合は、Nonprofit Success Pack グループ (https://powerofus.force.com/HUB_NPSP_Group) にメッセージを投稿してください</label>
+        <label>Salesforce でこれらの NPSP エラーが発生しました。エラーの解決方法がわからない場合は、Nonprofit Success Pack グループ (https://powerofus.force.com/HUB_NPSP_Group) にメッセージを投稿してください</label>
+    </customLabels>
+    <customLabels>
+        <name>FieldSetRelatedFieldError</name>
+        <label>{0} 関連項目は {1} 項目セットでサポートされていません。項目を直接含めることができるのは {2} オブジェクトのみです。</label>
     </customLabels>
     <customLabels>
         <name>HiddenForSecurity</name>
@@ -755,7 +775,7 @@
     </customLabels>
     <customLabels>
         <name>InactiveScheduledJobsOwnerErrMsg</name>
-        <label>無効なユーザが所有するスケジュール済みジョブが存在します。スケジュール済みジョブを確認して、それぞれの所有者が有効なユーザであることを確認します。詳細は、Power of Us Hub の「Edit or Reschedule NPSP Scheduled Jobs (NPSP スケジュール済みジョブの編集または再スケジュール)」を参照してください: https://powerofus.force.com/articles/Resource/NPSP-Edit-or-Reschedule-NPSP-Scheduled-Jobs</label>
+        <label>無効なユーザが所有するスケジュール済みジョブが存在します。スケジュール済みジョブで、それぞれの所有者が有効なユーザであることを確認します。詳細は、「NPSP スケジュール済みジョブの編集または再スケジュール」(https://powerofus.force.com/NPSP_Scheduled_Jobs) を参照してください。</label>
     </customLabels>
     <customLabels>
         <name>NameRequired</name>
@@ -1093,7 +1113,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EnablementPrepTasks</name>
-        <label>&lt;ul&gt;&lt;li&gt;継続支援、支援、支払オブジェクトのワークフロー、プロセス、入力規則、トリガを無効にする。&lt;/li&gt;
+        <label>&lt;ul&gt;&lt;li&gt;継続支援、商談、支払オブジェクトのワークフロー、プロセス、入力規則、トリガを無効にする。&lt;/li&gt;
 &lt;li&gt;データベース (すべての継続支援とそれらの関連レコードを含む) をバックアップする。&lt;/li&gt;
 &lt;li&gt;拡張継続支援の&lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;ドキュメント&lt;/a&gt;を参照する。&lt;/li&gt;&lt;/ul&gt;</label>
     </customLabels>
@@ -1195,7 +1215,7 @@
         <name>RD2_EntryFormSaveCommitmentFailedMessage</name>
         <label>Elevate に継続支払が作成されました。 Elevate 継続 ID: {0}.
         
-       ただし、次のようなエラーが発生したため、対応する継続支援は NPSP に作成されませんでした:
+        ただし、次のようなエラーが発生したため、対応する継続支援は NPSP に作成されませんでした:
         ● {1}
         
         このフォームを開いたままエラーを修正し、継続支援を再度保存することができます。または、キャンセルしてシステム管理者にお問い合わせください。</label>
@@ -1397,6 +1417,62 @@
         <label>今後の割賦</label>
     </customLabels>
     <customLabels>
+        <name>RD2_StatusAutomationConfigurationSection</name>
+        <label>状況の自動化設定</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationClosedDefinition</name>
+        <label>指定した日数を経過後に、期待していた支援を受領していない場合は、NPSP の [継続支援状況] が [完了状況値] に更新されます。この値は、[失効までの日数] より長くなければなりません。完了した継続支援については割賦商談が作成されません。</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationDaysForClosed</name>
+        <label>完了までの日数</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationDaysForLapsed</name>
+        <label>失効までの日数</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationIntro</name>
+        <label>この 2 つの設定は、支援者から継続支援の支払がなかった場合に、継続支援の状況を自動的に変更します。&lt;br/&gt;&lt;br/&gt;たとえば、毎月の継続支援が 1 月 1 日に開始され、[失効までの日数] が 10 日に設定されている場合、予定日までに支払がなければ、継続支援が 2 月 12 日に失効します。[完了までの日数] が 20 日に設定されている場合は、継続支援が 2 月 22 日に完了します。&lt;br/&gt;&lt;br/&gt;[失効までの日数] と [完了までの日数] は、継続支援の支払予定日の翌日 (この例では 2 月 2 日) からカウントされます。&lt;br/&gt;&lt;br/&gt;Elevate の継続支援はこの自動化の対象外です。</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationInvalidClosedStatus</name>
+        <label>[状況の自動化の完了状況] が [完了状態] に対応付けられている必要があります。</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationInvalidLapsedStatus</name>
+        <label>状況の自動化の [失効] 状況が [失効] 状態に対応付けられている必要があります。</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationInvalidNumberOfDays</name>
+        <label>[完了までの日数] が [失効までの日数] より長くなければなりません。</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationInvalidNumberOfDaysForClosed</name>
+        <label>[失効までの日数] より長くなければなりません。</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationInvalidNumberOfDaysForLapsed</name>
+        <label>[完了までの日数] より短くなければなりません。</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationNegativeNumberOfDays</name>
+        <label>[完了までの日数] と [失効までの日数] を負の数にすることはできません。</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationLapsedDefinition</name>
+        <label>指定した日数を経過後に、期待していた支援を受領していない場合は、NPSP の [継続支援状況] が [失効状況値] に更新されます。失効した継続支援については引き続きスケジュールで定義されたとおりに割賦商談が作成されます。</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationSetClosedStatus</name>
+        <label>完了状況値</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationSetLapsedStatus</name>
+        <label>失効状況値</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_StatusMappingColumnState</name>
         <label>状態</label>
     </customLabels>
@@ -1541,6 +1617,14 @@
         <label>取引先責任者レコードを表示</label>
     </customLabels>
     <customLabels>
+        <name>REL_ViewerGraphical</name>
+        <label>グラフィカルビュー</label>
+    </customLabels>
+    <customLabels>
+        <name>REL_ViewerTabular</name>
+        <label>表形式ビュー</label>
+    </customLabels>
+    <customLabels>
         <name>RP_CustomerJourneyLinkLabel</name>
         <label>Salesforce.org Web セミナーとイベント</label>
     </customLabels>
@@ -1614,7 +1698,7 @@
     </customLabels>
     <customLabels>
         <name>RP_UsHubLinkLabel</name>
-        <label>Power of Us Hub</label>
+        <label>Trailblazer Community</label>
     </customLabels>
     <customLabels>
         <name>RP_UsSubtitle</name>
@@ -1730,7 +1814,7 @@
     </customLabels>
     <customLabels>
         <name>alloBatchDefaultInfo</name>
-        <label>このボタンをクリックすると、割り当ての積み上げ集計設定で除外されている支援を除くすべての既存の支援のデフォルトの割り当てを作成するバッチ処理が開始されます。このツールを実行するには、デフォルトの割り当てが有効になっていて、デフォルトの一般会計単位が選択されている必要があります。デフォルトの割り当てを有効にすると、すべての新規支援にデフォルトの割り当てが設定されるため、このツールはデフォルトの割り当てを有効にした後に一度だけ実行する必要があります。</label>
+        <label>このボタンをクリックすると、割り当ての積み上げ集計設定で除外されている商談を除くすべての既存の商談のデフォルトの割り当てを作成するバッチ処理が開始されます。このツールを実行するには、デフォルトの割り当てが有効になっていて、デフォルトの一般会計単位が選択されている必要があります。デフォルトの割り当てを有効にすると、すべての新規商談にデフォルトの割り当てが設定されるため、このツールはデフォルトの割り当てを有効にした後に一度だけ実行する必要があります。</label>
     </customLabels>
     <customLabels>
         <name>alloBtnCancel</name>
@@ -1882,11 +1966,11 @@
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>2020 年 10 月 1 日以降、バッチデータエントリはサポートされなくなりました。ほとんどの機能は NPSP の新機能に置き換えられました。進行中のバッチがある場合、それらのレコードには引き続きアクセスできますが、バッチデータエントリを使用して処理することはできません。進行中のバッチにアクセスする必要がある場合は、サポートにお問い合わせください。&lt;br/&gt;バッチデータエントリの代わりとして、支援エントリを検討することをお勧めします。支援エントリについての詳細は、Power of Us Hub の &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
+        <label>2020 年 10 月 1 日以降、バッチデータエントリはサポートされなくなりました。ほとんどの機能は NPSP の新機能に置き換えられました。進行中のバッチがある場合、それらのレコードには引き続きアクセスできますが、バッチデータエントリを使用して処理することはできません。進行中のバッチにアクセスする必要がある場合は、サポートにお問い合わせください。&lt;br/&gt;バッチデータエントリの代わりとして、支援エントリを検討することをお勧めします。支援エントリについての詳細は、&lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
-        <label>2020 年 10 月 1 日にバッチデータエントリは廃止になり、NPSP では機能しなくなります。その時点で進行中のバッチがあった場合、レコードには引き続きアクセスできますが、バッチデータエントリを使用して処理することはできません。スムーズに移行できるように、10 月 1 日に先立って支援エントリを有効化して使用するようにしてください。支援エントリについての詳細は、Power of Us Hub の &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
+        <label>2020 年 10 月 1 日にバッチデータエントリは廃止になり、NPSP では機能しなくなります。その時点で進行中のバッチがあった場合、レコードには引き続きアクセスできますが、バッチデータエントリを使用して処理することはできません。スムーズに移行できるように、10 月 1 日に先立って支援エントリを有効化して使用するようにしてください。支援エントリについての詳細は、&lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
@@ -2398,10 +2482,10 @@
     </customLabels>
     <customLabels>
         <name>bdiOMUIPageDescriptionPt3</name>
-        <label>例として一般会計単位の割り当て 1 と一般会計単位の割り当て 2 の 2 つのオブジェクトグループを見ていきましょう。これらのオブジェクトグループは支援オブジェクトに直接リンクしています。
-            2 つの一般会計単位の割り当てを 1 つの支援に割り当てるには、インポートファイルの支援列に支援情報を入力し、最初の一般会計単位を一般会計単位の割り当て 1 列に、
+        <label>例として一般会計単位の割り当て 1 と一般会計単位の割り当て 2  の 2 つのオブジェクトグループを見ていきましょう。これらのオブジェクトグループは商談オブジェクトに直接リンクしています。
+            2 つの一般会計単位の割り当てを 1 つの商談に割り当てるには、インポートファイルの商談列に商談情報を入力し、最初の一般会計単位を一般会計単位の割り当て 1 列に、
             2 番目の一般会計単位を一般会計単位の割り当て 2 列に含めます。一般会計単位の割り当て 1 と一般会計単位の割り当て 2 のオブジェクトの対応付けにより、
-            インポートするときに 2 つの一般会計単位の割り当てが両方とも支援に割り当てられます。</label>
+            インポートするときに 2 つの一般会計単位の割り当てが両方とも商談に割り当てられます。</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIObjectGroupsTitle</name>
@@ -2767,7 +2851,7 @@
             進行中のバッチがある場合、それらのレコードには引き続きアクセスできますが、バッチ支援エントリを使用して処理することはできません。
             進行中のバッチにアクセスする必要がある場合は、サポートにお問い合わせください。
             バッチ支援エントリの代わりとして、支援エントリを検討することをお勧めします。
-            支援エントリについての詳細は、Power of Us Hub の &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
+            支援エントリについての詳細は、&lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -2899,6 +2983,10 @@
     <customLabels>
         <name>batchNumberSettingsHeader</name>
         <label>バッチ番号設定</label>
+    </customLabels>
+    <customLabels>
+        <name>commonAccessErrorMessage</name>
+        <label>このアクションの実行に必要な権限がありません。詳細は、システム管理者にお問い合わせください。</label>
     </customLabels>
     <customLabels>
         <name>commonActivate</name>
@@ -3041,6 +3129,10 @@
         <label>次の必須項目を入力する必要があります: {0}</label>
     </customLabels>
     <customLabels>
+        <name>commonNoneSpecified</name>
+        <label>未指定</label>
+    </customLabels>
+    <customLabels>
         <name>commonNewGift</name>
         <label>新規支援</label>
     </customLabels>
@@ -3137,6 +3229,10 @@
         <label>更新</label>
     </customLabels>
     <customLabels>
+        <name>commonDate</name>
+        <label>日付</label>
+    </customLabels>
+    <customLabels>
         <name>commonViewAll</name>
         <label>すべて表示</label>
     </customLabels>
@@ -3225,6 +3321,14 @@
         <label>フェーズ完了</label>
     </customLabels>
     <customLabels>
+        <name>conMergeStageCurrent</name>
+        <label>現在のフェーズ</label>
+    </customLabels>
+    <customLabels>
+        <name>conMergeStageNotStarted</name>
+        <label>開始されていないフェーズ</label>
+    </customLabels>
+    <customLabels>
         <name>conMergeWinnerAsstText</name>
         <label>この列をマスターレコードとして選択</label>
     </customLabels>
@@ -3258,7 +3362,7 @@
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>一致ルールを使用して、見つかったすべての重複する取引先責任者を表示します。&lt;a href=&quot; https://powerofus.force.com/s/article/NPSP-Merging-Contacts&quot;&gt;&lt;b&gt; 詳細はこちら &lt;/b&gt;&lt;/a&gt;</label>
+        <label>一致ルールを使用して、見つかったすべての重複する取引先責任者を表示します。&lt;a href=&apos;https://powerofus.force.com/IP_Contacts&apos; target=&apos;_blank&apos;&gt;&lt;b&gt; 詳細はこちら &lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>
@@ -3335,6 +3439,26 @@
     <customLabels>
         <name>geAddSoftCredit</name>
         <label>ソフトクレジットを追加</label>
+    </customLabels>
+    <customLabels>
+        <name>geA11ySection</name>
+        <label>セクション</label>
+    </customLabels>
+    <customLabels>
+        <name>geA11yTemplateBuilderAddNamedSection</name>
+        <label>{0} が {1} セクションに追加されました。</label>
+    </customLabels>
+    <customLabels>
+        <name>geA11yTemplateBuilderAddUnnamedSection</name>
+        <label>{0} が {1} {2} に追加されました。</label>
+    </customLabels>
+    <customLabels>
+        <name>geA11yTemplateBuilderRemoveNamedSection</name>
+        <label>{0} が {1} セクションから削除されました。</label>
+    </customLabels>
+    <customLabels>
+        <name>geA11yTemplateBuilderRemoveUnnamedSection</name>
+        <label>{0} が {1} {2} から削除されました。</label>
     </customLabels>
     <customLabels>
         <name>geAssistiveActiveSection</name>
@@ -3414,19 +3538,23 @@
     </customLabels>
     <customLabels>
         <name>geBatchGiftsCount</name>
-        <label>ギフト数</label>
+        <label>支援数</label>
     </customLabels>
     <customLabels>
         <name>geBatchGiftsExpectedCountOrTotalMessage</name>
-        <label>予想がギフト数またはギフト金額に一致しません。このバッチを処理するには、これらの値が一致する必要があります。</label>
+        <label>予想が支援数または支援金額に一致しません。このバッチを処理するには、これらの値が一致する必要があります。</label>
     </customLabels>
     <customLabels>
         <name>geBatchGiftsExpectedTotalsMessage</name>
-        <label>このバッチを処理するには、予想と合計のギフト数およびギフト金額が一致する必要があります。</label>
+        <label>このバッチを処理するには、予想と合計の支援数および支援金額が一致する必要があります。</label>
     </customLabels>
     <customLabels>
         <name>geBatchGiftsTotal</name>
         <label>合計バッチ金額</label>
+    </customLabels>
+    <customLabels>
+        <name>geBatchProcessingIncomplete</name>
+        <label>インポートプロセスが完了前に停止しました。システム管理者にお問い合わせください。</label>
     </customLabels>
     <customLabels>
         <name>geBatchProcessingSuccess</name>
@@ -3438,7 +3566,7 @@
     </customLabels>
     <customLabels>
         <name>geBodyBatchTableColumnsPart1</name>
-        <label>バッチテーブルが支援エントリフォームの下に表示され、バッチに含まれるギフトの一覧が表示されます。</label>
+        <label>バッチテーブルが支援エントリフォームの下に表示され、バッチに含まれる支援の一覧が表示されます。</label>
     </customLabels>
     <customLabels>
         <name>geBodyBatchTableColumnsPart2</name>
@@ -3456,7 +3584,7 @@
     </customLabels>
     <customLabels>
         <name>geBatchGiftsHeader</name>
-        <label>{0} で入力されたギフト数</label>
+        <label>{0} で入力された支援数</label>
     </customLabels>
     <customLabels>
         <name>geBodyBatchHeaderLeftCol</name>
@@ -3681,23 +3809,23 @@
     </customLabels>
     <customLabels>
         <name>geElevateDeleteErrorLog</name>
-        <label>ギフトは {0} から削除されますが、支援エントリでギフトを削除することはできません。ID が {1} の支援の NPSP データインポートレコードを NPSP データインポートバッチの ID が {2} のバッチから削除してください。</label>
+        <label>支援は {0} から削除されますが、支援エントリで支援を削除することはできません。ID が {1} の支援の NPSP データインポートレコードを NPSP データインポートバッチの ID が {2} のバッチから削除してください。</label>
     </customLabels>
     <customLabels>
         <name>geElevateUpdateErrorLog</name>
-        <label>ギフトは {0} で更新されますが、支援エントリで支援を更新することはできません。ID が {1} のギフトの NPSP データインポートレコードを NPSP データインポートバッチの ID が {2} のバッチから更新してください。</label>
+        <label>支援は {0} で更新されますが、支援エントリで支援を更新することはできません。ID が {1} の支援の NPSP データインポートレコードを NPSP データインポートバッチの ID が {2} のバッチから更新してください。</label>
     </customLabels>
     <customLabels>
         <name>geErrorElevateDelete</name>
-        <label>{0} でギフトを削除できません。このギフトの支払はまだ課金される可能性があるため、このバッチを処理しないことをお勧めします。更新してもう一度削除してみてください。</label>
+        <label>{0} で支援を削除できません。この支援の支払はまだ課金される可能性があるため、このバッチを処理しないことをお勧めします。更新してもう一度削除してみてください。</label>
     </customLabels>
     <customLabels>
         <name>geErrorElevateUpdate</name>
-        <label>{0} でギフトを更新できません。更新してもう一度ギフトを更新してみてください。</label>
+        <label>{0} で支援を更新できません。更新してもう一度支援を更新してみてください。</label>
     </customLabels>
     <customLabels>
         <name>geErrorRecordFailAfterElevateDelete</name>
-        <label>ギフトは {0} から削除されますが、支援エントリではギフトを削除することはできません。Salesforce システム管理者にお問い合わせください。</label>
+        <label>支援は {0} から削除されますが、支援エントリでは支援を削除することはできません。Salesforce システム管理者にお問い合わせください。</label>
     </customLabels>
     <customLabels>
         <name>geDonorColumnLabel</name>
@@ -3794,6 +3922,10 @@
     <customLabels>
         <name>gsChecklistItemGoFurtherLinkLabel</name>
         <label>Trailhead で NPSP の理解を深める</label>
+    </customLabels>
+    <customLabels>
+        <name>donationHistoryFilterSelectAYear</name>
+        <label>年を選択してください</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemGoFurtherTitle</name>
@@ -4249,7 +4381,7 @@
     </customLabels>
     <customLabels>
         <name>gseuChecklistItemCollectGiftsTitle</name>
-        <label>継続支援で継続的なギフトを収集</label>
+        <label>継続支援で継続的な支援を収集</label>
     </customLabels>
     <customLabels>
         <name>gseuChecklistItemDonationIndividualDesc</name>
@@ -4380,6 +4512,10 @@
         <label>この機能を使用するには、高度な対応付けと支援エントリの両方が必要です。[NPSP 設定] でこれらを有効にしてください。</label>
     </customLabels>
     <customLabels>
+        <name>geServiceLevelErrorAdvancedMapping</name>
+        <label>支援エントリを有効にする前に高度な対応付けを有効にする必要があります。</label>
+    </customLabels>
+    <customLabels>
         <name>geErrorPageLevelAdvancedMappingHeader</name>
         <label>高度な対応付けと支援エントリを有効にしてください</label>
     </customLabels>
@@ -4413,15 +4549,15 @@
     </customLabels>
     <customLabels>
         <name>geErrorUncertainCardChargePart2</name>
-        <label>支払が処理されていない場合、支援エントリでギフトと支払情報を再入力してください。</label>
+        <label>支払が処理されていない場合、支援エントリで支援と支払情報を再入力してください。</label>
     </customLabels>
     <customLabels>
         <name>geErrorUncertainCardChargePart3</name>
-        <label>支払が処理されている場合、{0} 内の支払 ID をメモし、Salesforce でその ID を使用してレコードを検索して、必要に応じてギフトと支援者のレコードを更新してください。</label>
+        <label>支払が処理されている場合、{0} 内の支払 ID をメモし、Salesforce でその ID を使用してレコードを検索して、必要に応じて支援と支援者のレコードを更新してください。</label>
     </customLabels>
     <customLabels>
         <name>geErrorUncertainCardChargePart4</name>
-        <label>詳細は、Power of Us Hub で {0} トラブルシューティングドキュメントを参照してください。</label>
+        <label>詳細は、{0} トラブルシューティングドキュメントを参照してください。</label>
     </customLabels>
     <customLabels>
         <name>commonGauAllocations</name>
@@ -4593,7 +4729,7 @@
     </customLabels>
     <customLabels>
         <name>geHelpTextPaymentServices</name>
-        <label>注意: この項目バンドルは 1 つのギフトでのみ使用可能であり、ギフトのバッチの入力時には表示されません。</label>
+        <label>注意: この項目バンドルは 1 つの支援でのみ使用可能であり、支援のバッチの入力時には表示されません。</label>
     </customLabels>
     <customLabels>
         <name>geTextFieldBundlePaymentMethod</name>
@@ -4648,7 +4784,7 @@
     </customLabels>
     <customLabels>
         <name>gePaymentServicesUnavailableBody</name>
-        <label>{0} から切断されました。このバッチには課金されていない承認済みのギフトが含まれます。承認済みのギフトを課金するには、{0} に再接続してください。または、支払情報を削除してください。</label>
+        <label>{0} から切断されました。このバッチには課金されていない承認済みの支援が含まれます。承認済みの支援を課金するには、{0} に再接続してください。または、支払情報を削除してください。</label>
     </customLabels>
     <customLabels>
         <name>gePaymentServicesUnavailableFailureMessage</name>
@@ -4855,6 +4991,10 @@
         <label>Trailhead を試す</label>
     </customLabels>
     <customLabels>
+        <name>gseuTrailheadLogoText</name>
+        <label>Trailhead のロゴ</label>
+    </customLabels>
+    <customLabels>
         <name>gseuTrailheadText</name>
         <label>Nonprofit Cloud と Salesforce のさらなる詳細について学習してください。</label>
     </customLabels>
@@ -4865,6 +5005,10 @@
     <customLabels>
         <name>gsLearnMore</name>
         <label>詳細</label>
+    </customLabels>
+    <customLabels>
+        <name>opensInNewLink</name>
+        <label>(新規ウィンドウで開く)</label>
     </customLabels>
     <customLabels>
         <name>gsNoApplicationSubmitted</name>
@@ -5376,7 +5520,7 @@
     </customLabels>
     <customLabels>
         <name>healthSolutionNothingScheduled</name>
-        <label>{0} というジョブ名で毎日実行するようにクラス UTIL_MasterSchedulable をスケジュールする必要があります。</label>
+        <label>デフォルトの NPSP ジョブを再スケジュールするには、[NPSP 設定] | [一括データ処理] | [プロセススケジューラ] に移動します。[編集] をクリックします。[デフォルトの NPSP ジョブを自動スケジュールしない] が選択されていないことを確認します。[保存] をクリックします。詳細は、「NPSP ジョブの編集または再スケジュール」(https://powerofus.force.com/NPSP_Scheduled_Jobs) を参照してください。</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionOCRDupPrimary</name>
@@ -5412,7 +5556,7 @@
     </customLabels>
     <customLabels>
         <name>healthSolutionTriggerHandlerMismatch</name>
-        <label>トリガハンドラがデフォルトの NPSP 設定とマッチングしない場合、NPSP の機能が無効または変更されている可能性があります。変更は、NPSP トリガハンドラや、システムの動作に対する変更の影響について知識のあるユーザのみが行う必要があります。</label>
+        <label>トリガを変更すると NPSP のコア機能に予期しない影響が生じる可能性があるため、本番にリリースする前に綿密にテストする必要があります。トリガへの変更が意図的でない場合は、トリガハンドラをリセットしてデフォルト設定に一致させます。詳細は、「トリガハンドラの管理」(https://powerofus.force.com/NPSP_Manage_Trigger_Handlers) を参照してください。</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionUnsupportedPicklistValue</name>
@@ -5533,6 +5677,10 @@
     <customLabels>
         <name>lblDeprecated</name>
         <label>このコンポーネントは廃止されました。</label>
+    </customLabels>
+    <customLabels>
+        <name>lblEmpty</name>
+        <label>空</label>
     </customLabels>
     <customLabels>
         <name>lblExtendedStatus</name>
@@ -5764,11 +5912,11 @@
     </customLabels>
     <customLabels>
         <name>mtchFindMatchedGiftsSectionHeader</name>
-        <label>マッチングされたギフトの検索</label>
+        <label>マッチングされた支援の検索</label>
     </customLabels>
     <customLabels>
         <name>mtchFindMoreGifts</name>
-        <label>他のギフトを検索</label>
+        <label>他の支援を検索</label>
     </customLabels>
     <customLabels>
         <name>mtchFindMoreGiftsInfo</name>
@@ -5788,7 +5936,7 @@
     </customLabels>
     <customLabels>
         <name>mtchTotalMatchingGift</name>
-        <label>マッチングギフトの総額</label>
+        <label>マッチング支援の総額</label>
     </customLabels>
     <customLabels>
         <name>mtchTotalSelected</name>
@@ -6251,6 +6399,10 @@
         <label>バッチを実行</label>
     </customLabels>
     <customLabels>
+        <name>stgBtnRunHHDeceasedBatch</name>
+        <label>世帯の死亡バッチを実行</label>
+    </customLabels>
+    <customLabels>
         <name>stgBtnSave</name>
         <label>保存</label>
     </customLabels>
@@ -6282,11 +6434,11 @@
         <name>stgCRLPInfoOnUDRBody</name>
         <label>カスタマイズ可能な積み上げ集計は、ユーザ定義積み上げ集計の機能に加えて、次を可能にします。&lt;br/&gt;
             &lt;br/&gt;
-            ● 支援に加えて支払を積み上げ集計する&lt;br/&gt;
+            ● 商談に加えて支払を積み上げ集計する&lt;br/&gt;
             ● 絞り込みにより、手軽に特定のレコードやデータを除外する&lt;br/&gt;
             ● 2 年以上前のデータを積み上げ集計する&lt;br/&gt;
             &lt;br/&gt;
-            [NPSP 設定] | [支援] | [カスタマイズ可能な積み上げ集計] に移動して、[カスタマイズ可能な積み上げ集計] を有効にすれば、使用できます!</label>
+            [NPSP 設定] | [商談] | [カスタマイズ可能な積み上げ集計] に移動して、[カスタマイズ可能な積み上げ集計] を有効にすれば、使用できます!</label>
     </customLabels>
     <customLabels>
         <name>stgCRLPInfoOnUDRHeading</name>
@@ -6382,6 +6534,10 @@
         <label>以前に設定したデフォルト一般会計単位は存在しなくなり、削除されています。デフォルトの割り当てを再度有効にするには、[NPSP 設定] で [一般会計単位の割り当て] ページを開いてください。</label>
     </customLabels>
     <customLabels>
+        <name>stgHHDataRefreshTitle</name>
+        <label>世帯データを更新</label>
+    </customLabels>
+    <customLabels>
         <name>stgHHNameRefreshTitle</name>
         <label>世帯名を更新</label>
     </customLabels>
@@ -6430,11 +6586,11 @@
     </customLabels>
     <customLabels>
         <name>stgHelpAllocationLevel</name>
-        <label>割り当てとは、指定された一般会計単位 (GAU) に移動する支援の特定の金額です。この設定は、資金が支援の金額または支払の金額のいずれに基づいて割り当てられるかを決定します。&lt;br/&gt;&lt;br/&gt;
+        <label>割り当てとは、指定された一般会計単位 (GAU) に移動する商談の特定の金額です。この設定は、資金が商談の金額または支払の金額のいずれに基づいて割り当てられるかを決定します。&lt;br/&gt;&lt;br/&gt;
 
-&lt;b&gt;警告:&lt;/b&gt; 支払割り当ての使用を選択すると、団体での支援の割り当ての動作が変わります。これらの変更点やその他の要件を理解してから、有効にしてください。&lt;br/&gt;&lt;br/&gt;
+&lt;b&gt;警告:&lt;/b&gt; 支払割り当ての使用を選択すると、団体での商談の割り当ての動作が変わります。これらの変更点やその他の要件を理解してから、有効にしてください。&lt;br/&gt;&lt;br/&gt;
 
-支払割り当てを有効にして使用し始めた後、無効にした場合、それまで支払割り当てで割り当てられていた情報を反映するように、データを手動で調整して、支援割り当てレコードを更新する必要があります。支払割り当てのドキュメントを参照して、潜在的な影響を確認してください。&lt;br/&gt;&lt;br/&gt;
+支払割り当てを有効にして使用し始めた後、無効にした場合、それまで支払割り当てで割り当てられていた情報を反映するように、データを手動で調整して、商談割り当てレコードを更新する必要があります。支払割り当てのドキュメントを参照して、潜在的な影響を確認してください。&lt;br/&gt;&lt;br/&gt;
 
 支払割り当てを有効にする場合、既存の積み上げ集計はそのまま残ります。積み上げ集計が変更されたり、新しいカスタム積み上げ集計が作成されたりすることはありません。必要に応じて、支払だけに基づく新しい積み上げ集計を作成できます。</label>
     </customLabels>
@@ -6468,7 +6624,7 @@
     </customLabels>
     <customLabels>
         <name>stgHelpBatchAlloRollup</name>
-        <label>[バッチを実行] をクリックし、完了したすべての支援の総額を支援に設定された割り当てを使用して積み上げ集計します。結果は、一般会計単位レコードに保存されます。
+        <label>[バッチを実行] をクリックし、完了したすべての商談の総額を商談に設定された割り当てを使用して積み上げ集計します。結果は、一般会計単位レコードに保存されます。
 このページはいつでも閉じることができます。このページを閉じても処理はバックグラウンドで実行されます。</label>
     </customLabels>
     <customLabels>
@@ -6477,11 +6633,11 @@
     </customLabels>
     <customLabels>
         <name>stgHelpBatchOppRollup</name>
-        <label>このページを使用して、完了したすべての支援の総額を積み上げ集計します。結果は取引先責任者、世帯、および取引先レコードに保存されます。処理に時間がかかる場合があります。このページを閉じても処理はバックグラウンドで実行されます。</label>
+        <label>このページを使用して、完了したすべての商談の総額を積み上げ集計します。結果は取引先責任者、世帯、および取引先レコードに保存されます。処理に時間がかかる場合があります。このページを閉じても処理はバックグラウンドで実行されます。</label>
     </customLabels>
     <customLabels>
         <name>stgHelpBtnHHNaming</name>
-        <label>&lt;b&gt;警告:&lt;/b&gt; このボタンをクリックすると、自動世帯命名が有効化され、選択した形式に従って既存の世帯名、公式の挨拶文、および非公式の挨拶文に新しい名前が入力されます。Salesforce 団体の各世帯取引先 (世帯オブジェクト) の名前が変更されます (自動命名が有効になっていない世帯は除く)。&lt;br/&gt;&lt;br/&gt;
+        <label>&lt;b&gt;警告:&lt;/b&gt; このボタンをクリックすると、自動世帯命名が有効化され、選択した形式に従って既存の世帯名、公式の挨拶文、および非公式の挨拶文に新しい名前が入力されます。Salesforce 組織の各世帯取引先 (世帯オブジェクト) の名前が変更されます (自動命名が有効になっていない世帯は除く)。&lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;この処理は元に戻すことができません。&lt;/b&gt;自動世帯命名はいつでも無効化できますが、新しく入力された名前はすべてそのまま残ります。 &lt;br/&gt;&lt;br/&gt;
 
@@ -6504,14 +6660,12 @@
 &lt;b&gt;この処理は元に戻すことができません。&lt;/b&gt;
 商談に影響する場合、この処理を開始する前に次の項目を無効にしておくことをお勧めします: 
 &lt;br/&gt;
-&lt;ul&gt;
-&lt;li&gt;カスタム入力規則&lt;/li&gt;
-&lt;li&gt;ワークフロールール&lt;/li&gt;
-&lt;li&gt;プロセスビルダー&lt;/li&gt;
-&lt;li&gt;Visual Workflow&lt;/li&gt;
-&lt;li&gt;カスタムトリガ&lt;/li&gt;
-&lt;/ul&gt;
 &lt;br/&gt;
+● カスタム入力規則&lt;br/&gt;
+● ワークフロールール&lt;br/&gt;
+● プロセスビルダー&lt;br/&gt;
+● Visual Workflow&lt;br/&gt;
+● カスタムトリガ&lt;br/&gt;&lt;br/&gt;
 処理が 100% 完了したら、このページから移動したり、このページを更新しても問題ありません。</label>
     </customLabels>
     <customLabels>
@@ -6528,24 +6682,25 @@
     </customLabels>
     <customLabels>
         <name>stgHelpCreateMissingPayments</name>
-        <label>&lt;b&gt;警告:&lt;/b&gt; このボタンをクリックすると、支払のバッチ作成が有効化されます。次のような支払のない各支援で支払が作成されます:  
-&lt;ul&gt; 
-&lt;li&gt;金額がゼロより大きい&lt;/li&gt; 
-&lt;li&gt;[支払を自動的に作成しない] とマークされていない&lt;/li&gt; 
-&lt;li&gt;上記の設定で除外されていない&lt;/li&gt; 
-&lt;/ul&gt; 
+        <label>&lt;b&gt;警告:&lt;/b&gt; このボタンをクリックすると、支払のバッチ作成が有効化されます。次のような支払のない各商談で支払が作成されます:
+&lt;br/&gt;
+&lt;br/&gt;
+● 金額がゼロより大きい&lt;br/&gt;
+● [支払を自動的に作成しない] とマークされていない&lt;br/&gt;
+● 上記の設定で除外されていない&lt;br/&gt;
+&lt;br/&gt;
 
-&lt;b&gt;この処理は元に戻すことができません。&lt;/b&gt; 
-支払に影響する場合、この処理を開始する前に次の項目を無効にしておくことをお勧めします:  
-&lt;br/&gt; 
-&lt;ul&gt; 
-&lt;li&gt;カスタム入力規則&lt;/li&gt; 
-&lt;li&gt;ワークフロールール&lt;/li&gt; 
-&lt;li&gt;プロセスビルダー&lt;/li&gt; 
-&lt;li&gt;Visual Workflow&lt;/li&gt; 
-&lt;li&gt;カスタムトリガ&lt;/li&gt; 
-&lt;/ul&gt; 
-&lt;br/&gt; 
+&lt;b&gt;この処理は元に戻すことができません。&lt;/b&gt;
+支払に影響する場合、この処理を開始する前に次の項目を無効にしておくことをお勧めします:
+&lt;br/&gt;
+&lt;br/&gt;
+● カスタム入力規則&lt;br/&gt;
+● ワークフロールール&lt;br/&gt;
+● プロセスビルダー&lt;br/&gt;
+● Visual Workflow&lt;br/&gt;
+● カスタムトリガ&lt;br/&gt;
+
+&lt;br/&gt;
 処理が 100% 完了したら、このページから移動したり、このページを更新しても問題ありません。</label>
     </customLabels>
     <customLabels>
@@ -6613,6 +6768,10 @@
         <label>世帯取引先で使用される取引先レコードタイプ。何も選択しない場合、取引先にはユーザのデフォルト取引先レコードタイプが設定されます。</label>
     </customLabels>
     <customLabels>
+        <name>stgHelpHHData</name>
+        <label>これらの一括データ処理を使用して世帯名を更新し、[すべての世帯メンバーが死亡] 項目のデータを再計算します。このいずれかの処理を実行したら、ブラウザを更新して別の処理を実行します。</label>
+    </customLabels>
+    <customLabels>
         <name>stgHelpHHExcludedRT</name>
         <label>世帯オブジェクトの作成から除外される取引先責任者レコードタイプを指定します。(1 対 1 または個人の取引先モデルにのみ適用されます)</label>
     </customLabels>
@@ -6630,7 +6789,7 @@
     </customLabels>
     <customLabels>
         <name>stgHelpHHOCROn</name>
-        <label>主取引先責任者の世帯メンバーの取引先責任者の役割を自動作成する場合はオンにします。</label>
+        <label>商談の主取引先責任者の世帯メンバーの取引先責任者の役割を自動作成する場合はオンにします。</label>
     </customLabels>
     <customLabels>
         <name>stgHelpHHObjectOverview</name>
@@ -6701,8 +6860,7 @@
     </customLabels>
     <customLabels>
         <name>stgHelpNewRDFieldMap</name>
-        <label>まず、対応付ける継続支援項目を選択します。次に、対応付け先の支援項目を選択します。選択した継続支援項目が継続支援のすべての子支援に表示されます。
-
+        <label>まず、対応付ける継続支援項目を選択します。次に、対応付け先の商談項目を選択します。選択した継続支援項目が継続支援のすべての子商談に表示されます。
 重要: これらの両方の項目は同じデータ型である必要があります。</label>
     </customLabels>
     <customLabels>
@@ -6715,7 +6873,7 @@
     </customLabels>
     <customLabels>
         <name>stgHelpOCR</name>
-        <label>ソフトクレジット、取引先責任者の役割、およびマッチングギフトはいくつかの重要な点で相互に関連します。これらの概念および相互関係をよく理解していない場合は、この設定を調整する前に &lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;NPSP ドキュメント&lt;/a&gt;全体を読む必要があります。</label>
+        <label>ソフトクレジット、取引先責任者の役割、およびマッチング支援はいくつかの重要な点で相互に関連します。これらの概念および相互関係をよく理解していない場合は、この設定を調整する前に &lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;NPSP ドキュメント&lt;/a&gt;全体を読む必要があります。</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCRDefaultRole</name>
@@ -6787,41 +6945,41 @@
     </customLabels>
     <customLabels>
         <name>stgHelpPowerOfUsHub</name>
-        <label>質問を受けましたか? ハブに答えがあります! NPSP に関する質問には、&lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;「Nonprofit Success Pack」&lt;/a&gt;グループをお試しください。Salesforce の管理と設定に関する質問には、&lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;「System Administrators (システム管理者)」&lt;/a&gt;グループをお試しください。&lt;br/&gt;&lt;br/&gt;最新の NPSP リリースノートについては、&lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;「NPSP Release Announcements (NPSP リリースのお知らせ)」&lt;/a&gt;グループで確認できます。</label>
+        <label>質問を受けましたか? NPSP に関する質問には、&lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;「Nonprofit Success Pack」&lt;/a&gt;グループをお試しください。Salesforce の管理と設定に関する質問には、&lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;「System Administrators」&lt;/a&gt;グループをお試しください。&lt;br/&gt;&lt;br/&gt;最新の NPSP リリースノートについては、&lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;「NPSP Release Announcements」&lt;/a&gt;グループで確認できます。</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPrimaryContactBatch</name>
-        <label>&lt;b&gt;警告:&lt;/b&gt; このボタンをクリックすると、支援のバッチ更新が有効化され、主取引先責任者項目が更新されます。主取引先責任者項目の値が、[主] とマークされている支援取引先責任者の役割レコードと同じでない支援レコードが更新されます。&lt;br/&gt;&lt;br/&gt;
+        <label>&lt;b&gt;警告:&lt;/b&gt; このボタンをクリックすると、商談のバッチ更新が有効化され、主取引先責任者項目が更新されます。主取引先責任者項目の値が、[主] とマークされている商談取引先責任者の役割レコードと同じでない商談レコードが更新されます。&lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;この処理は元に戻すことができません。&lt;/b&gt;
-この変更により、支援レコードが更新されます。商談に影響する場合、この処理を開始する前に次の項目を無効にしておくことをお勧めします: 
+この変更により、商談レコードが更新されます。商談に影響する場合、この処理を開始する前に次の項目を無効にしておくことをお勧めします: 
 &lt;br/&gt;
-&lt;ul&gt;
-&lt;li&gt;カスタム入力規則&lt;/li&gt;
-&lt;li&gt;ワークフロールール&lt;/li&gt;
-&lt;li&gt;プロセスビルダー&lt;/li&gt;
-&lt;li&gt;Visual Workflow&lt;/li&gt;
-&lt;li&gt;カスタムトリガ&lt;/li&gt;
-&lt;/ul&gt;
 &lt;br/&gt;
+● カスタム入力規則&lt;br/&gt;
+● ワークフロールール&lt;br/&gt;
+● プロセスビルダー&lt;br/&gt;
+● Visual Workflow&lt;br/&gt;
+● カスタムトリガ&lt;br/&gt;&lt;br/&gt;
 処理が 100% 完了したら、このページから移動したり、このページを更新しても問題ありません。</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPrimaryContactRoleMergeBatch</name>
-        <label>&lt;b&gt;警告:&lt;/b&gt; このボタンをクリックすると、取引先の重複する主支援取引先責任者の役割を完全に削除するバッチが有効になります。これらのレコードはごみ箱から修復できないため、前もって予測される変更点をしっかり確認してください。&lt;br/&gt;&lt;br/&gt;
+        <label>&lt;b&gt;警告:&lt;/b&gt; このボタンをクリックすると、取引先の重複する主商談取引先責任者の役割を完全に削除するバッチが有効になります。これらのレコードはごみ箱から修復できないため、前もって予測される変更点をしっかり確認してください。&lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;この処理は元に戻すことができません。&lt;/b&gt;
-この変更により、支援取引先責任者の役割レコードが更新されます。この処理を開始する前にデータをバックアップしてください。また、次の項目が支援に影響する場合は、無効にしておくことをお勧めします。
+この変更により、商談取引先責任者の役割レコードが更新されます。この処理を開始する前にデータをバックアップしてください。また、次の項目が商談に影響する場合は、無効にしておくことをお勧めします。
 &lt;br/&gt;
-&lt;ul&gt;
-&lt;li&gt;カスタム入力規則&lt;/li&gt;
-&lt;li&gt;ワークフロールール&lt;/li&gt;
-&lt;li&gt;プロセスビルダー&lt;/li&gt;
-&lt;li&gt;Visual Workflow&lt;/li&gt;
-&lt;li&gt;カスタムトリガ&lt;/li&gt;
-&lt;/ul&gt;
 &lt;br/&gt;
+● カスタム入力規則&lt;br/&gt;
+● ワークフロールール&lt;br/&gt;
+● プロセスビルダー&lt;br/&gt;
+● Visual Workflow&lt;br/&gt;
+● カスタムトリガ&lt;br/&gt;&lt;br/&gt;
 処理が 100% 完了した後は、このページから移動したり、このページを更新したりしても問題ありません。</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpDeceasedBatch</name>
+        <label>このユーティリティは、世帯取引先の [すべての世帯メンバーが死亡] 項目の値を再計算します。このユーティリティを実行して、値が関連する取引先責任者の [死亡] 項目の状況を正しく反映していることを確認します。この処理に時間のかかることがありますが、このページを閉じてもバックグラウンドで処理が継続されます。</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRDAddCampaign</name>
@@ -6829,10 +6987,10 @@
     </customLabels>
     <customLabels>
         <name>stgHelpRDBatch</name>
-        <label>このユーティリティは、すべての無期限の継続支援のバッチ処理を実行し、支援の売上予測月数に基づきます。
+        <label>このユーティリティは、すべての無期限の継続支援のバッチ処理を実行し、商談の売上予測月数に基づきます。
 &lt;br/&gt;
 &lt;br/&gt; 
-● 新規支援を作成する&lt;br/&gt;
+● 新規商談を作成する&lt;br/&gt;
 ● 回数と既払額を更新する&lt;br/&gt;
 &lt;br/&gt;
 処理に時間がかかる場合がありますが、このページを閉じることができます。処理は引き続きバックグラウンドで実行されます。</label>
@@ -7333,6 +7491,10 @@
         <label>重複主 OCR の削除</label>
     </customLabels>
     <customLabels>
+        <name>stgLabelDeceasedBatch</name>
+        <label>死亡した世帯取引先の再計算</label>
+    </customLabels>
+    <customLabels>
         <name>stgLabelRDFieldMap</name>
         <label>カスタム項目の対応付け</label>
     </customLabels>
@@ -7537,6 +7699,10 @@
         <label>状況と状態間の対応付け</label>
     </customLabels>
     <customLabels>
+        <name>stgNavRD2StatusAutomation</name>
+        <label>状況の自動化</label>
+    </customLabels>
+    <customLabels>
         <name>stgNavRDBatch</name>
         <label>継続支援のバッチ</label>
     </customLabels>
@@ -7602,7 +7768,7 @@
     </customLabels>
     <customLabels>
         <name>stgPowerOfUsHub</name>
-        <label>Power of Us Hub</label>
+        <label>Trailblazer Community</label>
     </customLabels>
     <customLabels>
         <name>stgRDNamingDescription</name>
@@ -7690,7 +7856,7 @@
     </customLabels>
     <customLabels>
         <name>gsResourcesItemHubLabel</name>
-        <label>Power of Us Hub</label>
+        <label>Trailblazer Community</label>
     </customLabels>
     <customLabels>
         <name>gsResourcesItemHubLinkLabel</name>
@@ -7726,7 +7892,7 @@
     </customLabels>
     <customLabels>
         <name>gseuResourcesItemQuestionsAnsweredLinkLabel</name>
-        <label>Power of Us Hub</label>
+        <label>Trailblazer Community</label>
     </customLabels>
     <customLabels>
         <name>gseuResourcesItemAboutNPSPLabel</name>
@@ -7759,6 +7925,10 @@
     <customLabels>
         <name>gseuResourcesItemCommunityGroupLinkLabel</name>
         <label>Trailhead コミュニティ</label>
+    </customLabels>
+    <customLabels>
+        <name>donationHistoryDatatableAriaLabel</name>
+        <label>支援履歴</label>
     </customLabels>
     <reportTypes>
         <name>Contacts_Only</name>
@@ -7809,6 +7979,10 @@
         <label>新規キャンペーン</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.Pause</name>
+        <label>一時停止</label>
+    </quickActions>
+    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>新規アフィリエーション</label>
     </quickActions>
@@ -7821,8 +7995,28 @@
         <label>新規継続支援</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
+        <label>新規商談</label>
+    </quickActions>
+    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>新規継続支援</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Quick_Update</name>
+        <label>クイック更新</label>
+    </quickActions>
+    <quickActions>
+        <name>npo02__Household__c.Update_Household</name>
+        <label>世帯を更新</label>
+    </quickActions>
+    <quickActions>
+        <name>Address__c.Update_Address</name>
+        <label>住所を更新</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
+        <label>継続支援を完了</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -7843,6 +8037,10 @@
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>新規リレーション</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Quick_Update</name>
+        <label>クイック更新</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>

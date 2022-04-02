@@ -709,6 +709,22 @@
         <label>Agregar tarea dependiente</label>
     </customLabels>
     <customLabels>
+        <name>donationHistoryGivingSummaryTitle</name>
+        <label>Resumen de aportación</label>
+    </customLabels>
+    <customLabels>
+        <name>donationHistoryLabelLifetime</name>
+        <label>Vitalicio</label>
+    </customLabels>
+    <customLabels>
+        <name>donationHistoryLabelPreviousYear</name>
+        <label>Año anterior</label>
+    </customLabels>
+    <customLabels>
+        <name>donationHistoryLabelThisYear</name>
+        <label>Este año</label>
+    </customLabels>
+    <customLabels>
         <name>EPAddTask</name>
         <label>Agregar tarea</label>
     </customLabels>
@@ -742,7 +758,11 @@
     </customLabels>
     <customLabels>
         <name>ErrorEmailMessage</name>
-        <label>Salesforce encontró estos errores de NPSP. Para conocer más detalles sobre errores comunes, consulte &quot;Solucionar problemas del Nonprofit Success Pack&quot; en Power of Us Hub. Si no está seguro de cómo resolver los errores, publique un mensaje en el grupo Nonprofit Success Pack: https://powerofus.force.com/HUB_NPSP_Group</label>
+        <label>Salesforce encontró estos errores de NPSP. Si no está seguro de cómo resolver los errores, publique un mensaje en el grupo Nonprofit Success Pack: https://powerofus.force.com/HUB_NPSP_Group</label>
+    </customLabels>
+    <customLabels>
+        <name>FieldSetRelatedFieldError</name>
+        <label>No se admite el campo relacionado {0} en el conjunto de campos {1}. Solo puede incluir campos directamente en el objeto {2}.</label>
     </customLabels>
     <customLabels>
         <name>HiddenForSecurity</name>
@@ -750,7 +770,7 @@
     </customLabels>
     <customLabels>
         <name>InactiveScheduledJobsOwnerErrMsg</name>
-        <label>Hay trabajos programados en propiedad de un usuario inactivo, revise sus trabajos programados y asegúrese de que el propietarios de cada uno sea un usuario activo. Vea Modificar o volver a programar trabajos programados de NPSP en Power of Us Hub para obtener más información: https://powerofus.force.com/articles/Resource/NPSP-Edit-or-Reschedule-NPSP-Scheduled-Jobs</label>
+        <label>Hay trabajos programados en propiedad de un usuario inactivo, revise sus trabajos programados y asegúrese de que el propietarios de cada uno sea un usuario activo. Vea Modificar o volver a programar trabajos programados de NPSP para obtener más información: https://powerofus.force.com/NPSP_Scheduled_Jobs</label>
     </customLabels>
     <customLabels>
         <name>NameRequired</name>
@@ -1392,6 +1412,62 @@
         <label>Cuotas próximas</label>
     </customLabels>
     <customLabels>
+        <name>RD2_StatusAutomationConfigurationSection</name>
+        <label>Configuración de automatización de estado</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationClosedDefinition</name>
+        <label>Después del número de días especificado, NPSP actualiza el Estado de Donación recurrente al Valor de estado Cerrado si las donaciones no se están recibiendo como se esperaba. Este valor debe ser superior a Número de días para Transcurrido. NPSP no crea oportunidades de cuotas para Donaciones recurrentes cerradas.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationDaysForClosed</name>
+        <label>Número de días para Cerrado</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationDaysForLapsed</name>
+        <label>Número de días para Transcurrido</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationIntro</name>
+        <label>Estos parámetros automatizan el cambio de Estado de Donación recurrente cuando los donantes fallan en los pagos de cuotas.&lt;br/&gt;&lt;br/&gt;Por ejemplo, si una donación recurrente mensual empezaba el 1 de enero y Número de días para Transcurrido está establecido en 10 días, la donación recurrente se convierte en Transcurrido el 12 de febrero si no se recibió ningún pago de cuota. Si Número de días para Cerrado está establecido en 20 días, la donación recurrente se convierte en Cerrado el 22 de febrero.&lt;br/&gt;&lt;br/&gt;Salesforce empieza a contar el Número de días para Transcurrido y Número de días para Cerrado el día después de la fecha esperada de la cuota (el 2 de febrero en nuestro ejemplo).&lt;br/&gt;&lt;br/&gt;Las donaciones recurrentes de Elevate no se incluyen en esta automatización.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationInvalidClosedStatus</name>
+        <label>El Estado Cerrado de automatización de estado debe asignarse al estado Cerrado</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationInvalidLapsedStatus</name>
+        <label>El Estado Transcurrido de automatización de estado debe asignarse al estado Transcurrido</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationInvalidNumberOfDays</name>
+        <label>Número de días para Cerrado debe ser superior al Número de días para Transcurrido.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationInvalidNumberOfDaysForClosed</name>
+        <label>Debe ser superior al Número de días para Transcurrido</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationInvalidNumberOfDaysForLapsed</name>
+        <label>Debe ser inferior al Número de días para Cerrado</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationNegativeNumberOfDays</name>
+        <label>Número de días para Cerrado y Número de días para Transcurrido no pueden ser negativos.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationLapsedDefinition</name>
+        <label>Después del número de días especificado, NPSP actualiza el Estado de Donación recurrente si las donaciones no se están recibiendo como se esperaba. NPSP sigue creando oportunidades de cuotas para las donaciones recurrentes transcurridas según define la programación.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationSetClosedStatus</name>
+        <label>Valor de estado Cerrado</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationSetLapsedStatus</name>
+        <label>Valor de estado Transcurrido</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_StatusMappingColumnState</name>
         <label>Situación</label>
     </customLabels>
@@ -1536,6 +1612,14 @@
         <label>Ver registro del contacto</label>
     </customLabels>
     <customLabels>
+        <name>REL_ViewerGraphical</name>
+        <label>Vista gráfica</label>
+    </customLabels>
+    <customLabels>
+        <name>REL_ViewerTabular</name>
+        <label>Vista en tabla</label>
+    </customLabels>
+    <customLabels>
         <name>RP_CustomerJourneyLinkLabel</name>
         <label>Seminarios web y eventos de Salesforce.org</label>
     </customLabels>
@@ -1609,7 +1693,7 @@
     </customLabels>
     <customLabels>
         <name>RP_UsHubLinkLabel</name>
-        <label>Power of Us HUB</label>
+        <label>Trailblazer Community</label>
     </customLabels>
     <customLabels>
         <name>RP_UsSubtitle</name>
@@ -1883,11 +1967,11 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>Desde el 1 de octubre de 2020, Entrada de datos en lote ya no se admite. La mayoría de las funciones han sido sustituidas por nuevas funciones en NPSP. Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de datos en lote. Póngase en contacto con el servicio de asistencia si necesita acceder a lotes en curso&lt;br/&gt;. Puede explorar Entrada de regalos como una alternativa a Entrada de datos en lote en la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentación de NPSP&lt;/a&gt; en Power of Us Hub.</label>
+        <label>Desde el 1 de octubre de 2020, Entrada de datos en lote ya no se admite. La mayoría de las funciones han sido sustituidas por nuevas funciones en NPSP. Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de datos en lote. Póngase en contacto con el servicio de asistencia si necesita acceder a lotes en curso&lt;br/&gt;. Puede explorar Entrada de regalos como una alternativa a Entrada de datos en lote en la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentación de NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
-        <label>El 1 de octubre de 2020, Entrada de datos en lote quedará retirada y dejará de funcionar en NPSP. Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de datos en lote. Para garantizar una transición sin problemas, active y utilice Entrada de regalos antes del 1 de octubre. Conozca más detalles sobre Entrada de regalos en la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentación de NPSP&lt;/a&gt; en Power of Us Hub.</label>
+        <label>El 1 de octubre de 2020, Entrada de datos en lote quedará retirada y dejará de funcionar en NPSP. Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de datos en lote. Para garantizar una transición sin problemas, active y utilice Entrada de regalos antes del 1 de octubre. Conozca más detalles sobre Entrada de regalos en la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentación de NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
@@ -2764,7 +2848,7 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <label>A fecha del 13 de julio de 2021, Entrada de regalos en lote dejará de admitirse y queda sustituida por Entrada de regalos.
 Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de regalos en lote.
 Póngase en contacto con el servicio de asistencia si necesita acceder a lotes en curso.
-Puede explorar Entrada de regalos como una alternativa a Entrada de regalos en lote en la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentación de NPSP&lt;/a&gt; en Power of Us Hub.</label>
+Puede explorar Entrada de regalos como una alternativa a Entrada de regalos en lote en la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentación de NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -2896,6 +2980,10 @@ Puede explorar Entrada de regalos como una alternativa a Entrada de regalos en l
     <customLabels>
         <name>batchNumberSettingsHeader</name>
         <label>Configuración de número de lote</label>
+    </customLabels>
+    <customLabels>
+        <name>commonAccessErrorMessage</name>
+        <label>No tiene los permisos necesarios para realizar esta acción. Póngase en contacto con su administrador para obtener ayuda.</label>
     </customLabels>
     <customLabels>
         <name>commonActivate</name>
@@ -3038,6 +3126,10 @@ Puede explorar Entrada de regalos como una alternativa a Entrada de regalos en l
         <label>Deben cumplimentarse estos campos obligatorios: {0}</label>
     </customLabels>
     <customLabels>
+        <name>commonNoneSpecified</name>
+        <label>Ninguno especificado</label>
+    </customLabels>
+    <customLabels>
         <name>commonNewGift</name>
         <label>Nuevo regalo</label>
     </customLabels>
@@ -3134,6 +3226,10 @@ Puede explorar Entrada de regalos como una alternativa a Entrada de regalos en l
         <label>Actualizar</label>
     </customLabels>
     <customLabels>
+        <name>commonDate</name>
+        <label>Fecha</label>
+    </customLabels>
+    <customLabels>
         <name>commonViewAll</name>
         <label>Ver todo</label>
     </customLabels>
@@ -3222,6 +3318,14 @@ Puede explorar Entrada de regalos como una alternativa a Entrada de regalos en l
         <label>Etapa completa</label>
     </customLabels>
     <customLabels>
+        <name>conMergeStageCurrent</name>
+        <label>Etapa actual</label>
+    </customLabels>
+    <customLabels>
+        <name>conMergeStageNotStarted</name>
+        <label>Etapa no iniciada</label>
+    </customLabels>
+    <customLabels>
         <name>conMergeWinnerAsstText</name>
         <label>Seleccione esta columna como el registro principal</label>
     </customLabels>
@@ -3255,7 +3359,7 @@ Puede explorar Entrada de regalos como una alternativa a Entrada de regalos en l
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>Vea todos los contactos duplicados encontrados empleando reglas de coincidencia. &lt;a href=&quot; https://powerofus.force.com/s/article/NPSP-Merging-Contacts&quot;&gt;&lt;b&gt; Más información &lt;/b&gt;&lt;/a&gt;</label>
+        <label>Vea todos los contactos duplicados encontrados empleando reglas de coincidencia. &lt;a href=&apos;https://powerofus.force.com/IP_Contacts&apos; target=&apos;_blank&apos;&gt;&lt;b&gt;Más información &lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>
@@ -3332,6 +3436,26 @@ Puede explorar Entrada de regalos como una alternativa a Entrada de regalos en l
     <customLabels>
         <name>geAddSoftCredit</name>
         <label>Agregar crédito blando</label>
+    </customLabels>
+    <customLabels>
+        <name>geA11ySection</name>
+        <label>sección</label>
+    </customLabels>
+    <customLabels>
+        <name>geA11yTemplateBuilderAddNamedSection</name>
+        <label>{0} agregado a la sección {1}.</label>
+    </customLabels>
+    <customLabels>
+        <name>geA11yTemplateBuilderAddUnnamedSection</name>
+        <label>{0} agregado a {1} {2}.</label>
+    </customLabels>
+    <customLabels>
+        <name>geA11yTemplateBuilderRemoveNamedSection</name>
+        <label>{0} eliminado de la sección {1}.</label>
+    </customLabels>
+    <customLabels>
+        <name>geA11yTemplateBuilderRemoveUnnamedSection</name>
+        <label>{0} eliminado de {1} {2}.</label>
     </customLabels>
     <customLabels>
         <name>geAssistiveActiveSection</name>
@@ -3424,6 +3548,10 @@ Puede explorar Entrada de regalos como una alternativa a Entrada de regalos en l
     <customLabels>
         <name>geBatchGiftsTotal</name>
         <label>Importe de lote total</label>
+    </customLabels>
+    <customLabels>
+        <name>geBatchProcessingIncomplete</name>
+        <label>El proceso de importación se detuvo antes de que pudiera completarse. Póngase en contacto con su administrador del sistema para obtener asistencia.</label>
     </customLabels>
     <customLabels>
         <name>geBatchProcessingSuccess</name>
@@ -3791,6 +3919,10 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     <customLabels>
         <name>gsChecklistItemGoFurtherLinkLabel</name>
         <label>Descubrir más sobre NPSP en Trailhead</label>
+    </customLabels>
+    <customLabels>
+        <name>donationHistoryFilterSelectAYear</name>
+        <label>Seleccionar un año</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemGoFurtherTitle</name>
@@ -4377,6 +4509,10 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <label>Esta función requiere Asignación avanzada y Entrada de regalos. Actívelas en Configuración de NPSP.</label>
     </customLabels>
     <customLabels>
+        <name>geServiceLevelErrorAdvancedMapping</name>
+        <label>Debe activar Asignación avanzada antes de poder activar Entrada de regalos.</label>
+    </customLabels>
+    <customLabels>
         <name>geErrorPageLevelAdvancedMappingHeader</name>
         <label>Activar Asignación avanzada y Entrada de regalos</label>
     </customLabels>
@@ -4418,7 +4554,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     </customLabels>
     <customLabels>
         <name>geErrorUncertainCardChargePart4</name>
-        <label>Para obtener más información, consulte la documentación de solución de problemas de {0} en Power of Us Hub.</label>
+        <label>Para obtener más información, consulte la documentación de solución de problemas de {0}.</label>
     </customLabels>
     <customLabels>
         <name>commonGauAllocations</name>
@@ -4852,6 +4988,10 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <label>Explorar Trailhead</label>
     </customLabels>
     <customLabels>
+        <name>gseuTrailheadLogoText</name>
+        <label>Logotipo de Trailhead</label>
+    </customLabels>
+    <customLabels>
         <name>gseuTrailheadText</name>
         <label>Aprenda más incluso sobre Nonprofit Cloud y Salesforce.</label>
     </customLabels>
@@ -4862,6 +5002,10 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     <customLabels>
         <name>gsLearnMore</name>
         <label>Más información</label>
+    </customLabels>
+    <customLabels>
+        <name>opensInNewLink</name>
+        <label>(se abre en una nueva ventana)</label>
     </customLabels>
     <customLabels>
         <name>gsNoApplicationSubmitted</name>
@@ -5373,7 +5517,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     </customLabels>
     <customLabels>
         <name>healthSolutionNothingScheduled</name>
-        <label>Para volver a programar los trabajos predeterminados de NPSP, vaya a Configuración de NPSP | Procesos en lote | Programador de procesos. Haga clic en Modificar. Asegúrese de que No habilitar la programación automática de trabajo de NPSP predeterminado. Haga clic en Guardar. Vea Modificar o volver a programar trabajos de NPSP en Power of Us Hub para obtener más información: https://powerofus.force.com/articles/Resource/NPSP-Edit-or-Reschedule-NPSP-Scheduled-Jobs</label>
+        <label>Para volver a programar los trabajos predeterminados de NPSP, vaya a Configuración de NPSP | Procesos en lote | Programador de procesos. Haga clic en Modificar. Asegúrese de que No habilitar la programación automática de trabajo de NPSP predeterminado. Haga clic en Guardar. Vea Modificar o volver a programar trabajos de NPSP para obtener más información: https://powerofus.force.com/NPSP_Scheduled_Jobs</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionOCRDupPrimary</name>
@@ -5409,7 +5553,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     </customLabels>
     <customLabels>
         <name>healthSolutionTriggerHandlerMismatch</name>
-        <label>Los cambios en controladores de desencadenadores pueden afectar a funciones básicas de NPSP de forma inesperada, y deben probarse concienzudamente antes de la implementación en producción. Si estos cambios no fueron intencionados, debe restablecer sus controladores de desencadenadores para que coincidan con la configuración predeterminada de NPSP. Consulte el artículo sobre la gestión de controladores de desencadenadores en Power Of Us Hub para obtener más información: https://powerofus.force.com/articles/Resource/NPSP-Manage-Trigger-Handlers</label>
+        <label>Los cambios en controladores de desencadenadores pueden afectar a funciones básicas de NPSP de forma inesperada, y deben probarse concienzudamente antes de la implementación en producción. Si estos cambios no fueron intencionados, debe restablecer sus controladores de desencadenadores para que coincidan con la configuración predeterminada de NPSP. Consulte el artículo sobre la gestión de controladores de desencadenadores para obtener más información: https://powerofus.force.com/NPSP_Manage_Trigger_Handlers</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionUnsupportedPicklistValue</name>
@@ -5530,6 +5674,10 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     <customLabels>
         <name>lblDeprecated</name>
         <label>Este componente se ha desusado.</label>
+    </customLabels>
+    <customLabels>
+        <name>lblEmpty</name>
+        <label>vacío</label>
     </customLabels>
     <customLabels>
         <name>lblExtendedStatus</name>
@@ -6248,6 +6396,10 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <label>Ejecutar lote</label>
     </customLabels>
     <customLabels>
+        <name>stgBtnRunHHDeceasedBatch</name>
+        <label>Ejecutar lote de fallecidos de hogar</label>
+    </customLabels>
+    <customLabels>
         <name>stgBtnSave</name>
         <label>Guardar</label>
     </customLabels>
@@ -6377,6 +6529,10 @@ La selección de No programar automáticamente trabajos de NPSP predeterminados 
     <customLabels>
         <name>stgErrorMissingDefaultGauRecord</name>
         <label>La Unidad de contabilidad general predeterminada configurada anteriormente ya no existe y se ha eliminado. Para volver a activar Asignaciones predeterminadas, abra la página Asignaciones de CCG en Configuración de NPSP.</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHHDataRefreshTitle</name>
+        <label>Actualizar datos de hogares</label>
     </customLabels>
     <customLabels>
         <name>stgHHNameRefreshTitle</name>
@@ -6606,6 +6762,10 @@ Una vez el proceso esté completo al 100% podrá salir o actualizar esta página
         <label>El tipo de registro de cuenta que desea utilizar para nuevas cuentas si ha seleccionado el modelo de cuenta Hogar anteriormente. Puede seleccionar el tipo de registro de cuenta Hogar predeterminado, o su propio tipo de registro. Si selecciona --Ninguno--, Salesforce utilizará el tipo de registro Cuenta predeterminado para el usuario que está creando el nuevo contacto (y cuenta asociada).</label>
     </customLabels>
     <customLabels>
+        <name>stgHelpHHData</name>
+        <label>Utilice estos procesos de datos en lote para actualizar los nombres de hogares y volver a calcular los datos para el campo Todos los miembros de hogar fallecidos. Después de ejecutar uno de estos procesos, actualice su navegador para ejecutar el otro.</label>
+    </customLabels>
+    <customLabels>
         <name>stgHelpHHExcludedRT</name>
         <label>Especifica los tipos de registro de Contactos que Salesforce excluirá de la creación del objeto Hogar. (Se aplica únicamente a los modelos de cuenta Uno a uno o Individuo.)</label>
     </customLabels>
@@ -6775,7 +6935,7 @@ IMPORTANTE: Ambos campos deben ser del mismo tipo de datos.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPowerOfUsHub</name>
-        <label>¿Tiene preguntas? ¡El Hub tiene respuestas! Pruebe el grupo &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; para formular preguntas sobre NPSP y el grupo &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; para formular preguntas sobre la administración y configuración de Salesforce.&lt;br/&gt;&lt;br/&gt;Manténgase al día con las notas de la versión de NPSP más recientes en el grupo &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt;.</label>
+        <label>¿Tiene preguntas? Pruebe el grupo &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; para formular preguntas sobre NPSP y el grupo &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; para formular preguntas sobre la administración y configuración de Salesforce.&lt;br/&gt;&lt;br/&gt;Manténgase al día con las notas de la versión de NPSP más recientes en el grupo &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPrimaryContactBatch</name>
@@ -6806,6 +6966,10 @@ Antes de iniciar este proceso, recomendamos realizar una copia de seguridad de s
 ● Visual Workflow&lt;br/&gt; 
 ● Desencadenadores personalizados&lt;br/&gt; 
 Una vez el proceso esté completo al 100% podrá salir o actualizar esta página con seguridad.</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpDeceasedBatch</name>
+        <label>Esta utilidad vuelve a calcular el valor del campo Todos los miembros de hogar fallecidos en Cuentas de hogar. Ejecute esta utilidad para garantizar que el valor refleja correctamente el estado del campo Fallecido en los contactos relacionados. Este proceso puede tardar un tiempo, pero puede cerrar esta página con seguridad y el proceso seguirá ejecutándose en segundo plano.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRDAddCampaign</name>
@@ -7317,6 +7481,10 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <label>Eliminar TdR principales duplicados</label>
     </customLabels>
     <customLabels>
+        <name>stgLabelDeceasedBatch</name>
+        <label>Volver a calcular cuentas de hogares con fallecidos</label>
+    </customLabels>
+    <customLabels>
         <name>stgLabelRDFieldMap</name>
         <label>Asignación de campos personalizados</label>
     </customLabels>
@@ -7521,6 +7689,10 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <label>Asignación de Estado a Situación</label>
     </customLabels>
     <customLabels>
+        <name>stgNavRD2StatusAutomation</name>
+        <label>Automatización de estado</label>
+    </customLabels>
+    <customLabels>
         <name>stgNavRDBatch</name>
         <label>Lote de las Donaciones Recurrentes</label>
     </customLabels>
@@ -7586,7 +7758,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
     </customLabels>
     <customLabels>
         <name>stgPowerOfUsHub</name>
-        <label>Power of Us Hub</label>
+        <label>Trailblazer Community</label>
     </customLabels>
     <customLabels>
         <name>stgRDNamingDescription</name>
@@ -7674,7 +7846,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
     </customLabels>
     <customLabels>
         <name>gsResourcesItemHubLabel</name>
-        <label>Power of Us Hub</label>
+        <label>Trailblazer Community</label>
     </customLabels>
     <customLabels>
         <name>gsResourcesItemHubLinkLabel</name>
@@ -7710,7 +7882,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
     </customLabels>
     <customLabels>
         <name>gseuResourcesItemQuestionsAnsweredLinkLabel</name>
-        <label>Power of Us Hub</label>
+        <label>Trailblazer Community</label>
     </customLabels>
     <customLabels>
         <name>gseuResourcesItemAboutNPSPLabel</name>
@@ -7743,6 +7915,10 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
     <customLabels>
         <name>gseuResourcesItemCommunityGroupLinkLabel</name>
         <label>Comunidad de Trailhead</label>
+    </customLabels>
+    <customLabels>
+        <name>donationHistoryDatatableAriaLabel</name>
+        <label>Historial de donaciones</label>
     </customLabels>
     <reportTypes>
         <name>Contacts_Only</name>
@@ -7793,6 +7969,10 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <label>Nueva campaña</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.Pause</name>
+        <label>Pausa</label>
+    </quickActions>
+    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>Nueva afiliación</label>
     </quickActions>
@@ -7805,8 +7985,28 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <label>Nueva donación recurrente</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
+        <label>Nueva oportunidad</label>
+    </quickActions>
+    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>Nueva donación recurrente</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Quick_Update</name>
+        <label>Actualización rápida</label>
+    </quickActions>
+    <quickActions>
+        <name>npo02__Household__c.Update_Household</name>
+        <label>Actualizar hogar</label>
+    </quickActions>
+    <quickActions>
+        <name>Address__c.Update_Address</name>
+        <label>Actualizar dirección</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
+        <label>Cerrar donación recurrente</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -7827,6 +8027,10 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>Nueva relación</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Quick_Update</name>
+        <label>Actualización rápida</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>

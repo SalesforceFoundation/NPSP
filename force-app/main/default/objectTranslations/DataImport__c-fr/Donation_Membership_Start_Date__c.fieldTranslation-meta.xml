@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Donation_Membership_Start_Date__c</name>
+    <help>Opportunité.npe01__Date_Début_Adhésion__c</help>
     <label>Date de début d’adhésion du don</label>
 </CustomFieldTranslation>

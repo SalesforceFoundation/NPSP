@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label>Entrée BDE FS</label>
+        <name>BDE_Entry_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label>Liste BDE FS</label>
+        <name>BDE_List_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label>Gérer le foyer personnalisé</label>
+        <name>Manage_Household_Custom</name>
+    </fieldSets>
     <webLinks>
         <name>Manage_Household</name>
         <label>Gérer un foyer</label>

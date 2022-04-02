@@ -5,4 +5,9 @@
         <plural>false</plural>
         <value>Fields to Exclude from Sync</value>
     </caseValues>
+    <startsWith>Consonant</startsWith>
+    <caseValues>
+        <plural>false</plural>
+        <value>Fields to Exclude from Sync</value>
+    </caseValues>
 </CustomObjectTranslation>

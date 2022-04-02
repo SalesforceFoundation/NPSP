@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Account1_State_Province__c</name>
+    <help>État de facturation du Compte1</help>
     <label>Région/Province du Compte1</label>
 </CustomFieldTranslation>

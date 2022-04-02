@@ -709,6 +709,22 @@
         <label>Ajouter une tâche dépendante</label>
     </customLabels>
     <customLabels>
+        <name>donationHistoryGivingSummaryTitle</name>
+        <label>Donner un résumé</label>
+    </customLabels>
+    <customLabels>
+        <name>donationHistoryLabelLifetime</name>
+        <label>Durée de vie</label>
+    </customLabels>
+    <customLabels>
+        <name>donationHistoryLabelPreviousYear</name>
+        <label>Année précédente</label>
+    </customLabels>
+    <customLabels>
+        <name>donationHistoryLabelThisYear</name>
+        <label>Cette année</label>
+    </customLabels>
+    <customLabels>
         <name>EPAddTask</name>
         <label>Ajouter une tâche</label>
     </customLabels>
@@ -742,7 +758,11 @@
     </customLabels>
     <customLabels>
         <name>ErrorEmailMessage</name>
-        <label>Salesforce a rencontré ces erreurs NPSP. Pour en savoir plus sur les erreurs courantes, consultez « Troubleshoot the Nonprofit Success Pack » dans le hub Power of Us. Si vous ne savez pas comment résoudre les erreurs, publiez un message dans le groupe Nonprofit Success Pack : https://powerofus.force.com/HUB_NPSP_Group</label>
+        <label>Salesforce a rencontré ces erreurs NPSP. Si vous ne savez pas comment corriger les erreurs, publiez un message dans le groupe Nonprofit Success Pack : https://powerofus.force.com/HUB_NPSP_Group</label>
+    </customLabels>
+    <customLabels>
+        <name>FieldSetRelatedFieldError</name>
+        <label>Champ associé {0} non pris en charge dans l’ensemble de champs {1}. Vous pouvez uniquement inclure des champs directement sur l’objet {2}.</label>
     </customLabels>
     <customLabels>
         <name>HiddenForSecurity</name>
@@ -750,7 +770,7 @@
     </customLabels>
     <customLabels>
         <name>InactiveScheduledJobsOwnerErrMsg</name>
-        <label>Il existe des tâches planifiées appartenant à un utilisateur inactif. Examinez vos tâches planifiées et assurez-vous que le propriétaire de chaque tâche est un utilisateur actif. Pour plus d&apos;informations, accédez à Modifier ou reprogrammer les tâches planifiées dans le hub Power of Us : https://powerofus.force.com/articles/Resource/NPSP-Edit-or-Reschedule-NPSP-Scheduled-Jobs</label>
+        <label>Il existe des tâches planifiées appartenant à un utilisateur inactif. Examinez vos tâches planifiées et assurez-vous que le propriétaire de chaque tâche est un utilisateur actif. Pour plus d’informations, accédez à Modifier ou reprogrammer les tâches planifiées NPSP : https://powerofus.force.com/NPSP_Scheduled_Jobs</label>
     </customLabels>
     <customLabels>
         <name>NameRequired</name>
@@ -1392,6 +1412,62 @@
         <label>Prochains versements</label>
     </customLabels>
     <customLabels>
+        <name>RD2_StatusAutomationConfigurationSection</name>
+        <label>Paramètres d’automatisation du statut</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationClosedDefinition</name>
+        <label>Une fois le nombre de jours indiqués écoulés, NPSP met à jour le statut de don récurrent vers la valeur de statut Fermé si les dons ne sont pas reçus comme prévu. Cette valeur doit être supérieure au nombre de jours correspondant à la valeur Écoulé. NPSP ne crée pas d’opportunités de versement pour les dons récurrents fermés.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationDaysForClosed</name>
+        <label>Nombre de jours - Fermé</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationDaysForLapsed</name>
+        <label>Nombre de jours - Écoulé</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationIntro</name>
+        <label>Ces paramètres automatisent la modification du statut de don récurrent lorsque les donateurs manquent des versements.&lt;br/&gt;&lt;br/&gt; Prenons l’exemple d’un don mensuel récurrent ayant commencé le 1er février dont le nombre de jours correspondant à la valeur Écoulé est défini sur 10. Le don récurrent devient écoulé le 12 février si aucun versement n’est reçu d’ici là. Si le nombre de jours correspondant à la valeur Fermé est défini sur 20, le don récurrent devient fermé le 22 février.&lt;br/&gt;&lt;br/&gt; Salesforce commence à comptabiliser le nombre de jours correspondant aux valeurs Écoulé et Fermé le lendemain de la date de versement prévue (le 2 février dans notre exemple).&lt;br/&gt;&lt;br/&gt; Les dons récurrents Elevate ne sont pas inclus dans cette automatisation.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationInvalidClosedStatus</name>
+        <label>Le statut Fermé de l’automatisation de statut doit correspondre à l’état Fermé</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationInvalidLapsedStatus</name>
+        <label>Le statut Écoulé de l’automatisation de statut doit correspondre à l’état Écoulé</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationInvalidNumberOfDays</name>
+        <label>Le nombre de jours correspondant à la valeur Fermé doit être supérieur au nombre de jours correspondant à la valeur Écoulé.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationInvalidNumberOfDaysForClosed</name>
+        <label>Doit être supérieur au nombre de jours correspondant à la valeur Écoulé</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationInvalidNumberOfDaysForLapsed</name>
+        <label>Doit être inférieur au nombre de jours correspondant à la valeur Fermé</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationNegativeNumberOfDays</name>
+        <label>Le nombre de jours correspondant à la valeur Écoulé et le nombre de jours correspondant à la valeur Fermé ne peuvent pas être négatifs.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationLapsedDefinition</name>
+        <label>Une fois le nombre de jours indiqués écoulés, NPSP met à jour le statut de don récurrent vers la valeur de statut Écoulé si les dons ne sont pas reçus comme prévu. NPSP continue de créer des opportunités de versement pour les dons récurrents écoulés tels que définis dans le calendrier.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationSetClosedStatus</name>
+        <label>Valeur de statut Fermé</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationSetLapsedStatus</name>
+        <label>Valeur du statut Écoulé</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_StatusMappingColumnState</name>
         <label>État</label>
     </customLabels>
@@ -1536,6 +1612,14 @@
         <label>Afficher l’enregistrement de contact</label>
     </customLabels>
     <customLabels>
+        <name>REL_ViewerGraphical</name>
+        <label>Vue graphique</label>
+    </customLabels>
+    <customLabels>
+        <name>REL_ViewerTabular</name>
+        <label>Vue tabulaire</label>
+    </customLabels>
+    <customLabels>
         <name>RP_CustomerJourneyLinkLabel</name>
         <label>Webinaires et événements Salesforce.org</label>
     </customLabels>
@@ -1609,7 +1693,7 @@
     </customLabels>
     <customLabels>
         <name>RP_UsHubLinkLabel</name>
-        <label>Hub Power of Us</label>
+        <label>Trailblazer Community</label>
     </customLabels>
     <customLabels>
         <name>RP_UsSubtitle</name>
@@ -1883,11 +1967,11 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>Depuis le 1er octobre 2020, la Saisie de données par lots n&apos;est plus prise en charge. La plupart des capacités ont été remplacées par de nouvelles fonctionnalités dans NPSP. Si vous avez des lots en cours, vous pouvez accéder aux enregistrements, mais vous ne pouvez pas les traiter en utilisant la Saisie de données par lots. Pour accéder à des lots en cours, contactez le Support. &lt;br/&gt; Vous pouvez explorer la Saisie de dons comme alternative à la Saisie de données par lots. Pour plus d&apos;informations sur la Saisie de dons, consultez la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentation NPSP&lt;/a&gt; sur la plate-forme Power of Us.</label>
+        <label>Depuis le 1er octobre 2020, la saisie de données par lots n’est plus prise en charge. La plupart des capacités ont été remplacées par de nouvelles fonctionnalités dans NPSP. Si vous avez des lots en cours, vous pouvez accéder aux enregistrements, mais vous ne pouvez pas les traiter en utilisant la saisie de données par lots. Pour accéder à des lots en cours, contactez le support. &lt;br/&gt; Découvrez la saisie de dons comme alternative à la saisie de données par lots. Pour plus d’informations sur la saisie de dons, consultez la &lt;a href=’https://powerofus.force.com/NPSP_Documentation’ target=’_blank’&gt;documentation NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
-        <label>La Saisie de données par lots sera retirée 1er octobre 2020 et ne fonctionnera plus dans NPSP. Si vous avez des lots en cours à cette date, vous pourrez accéder à ces enregistrements, mais vous ne pourrez pas les traiter en utilisant la Saisie de données par lots. Pour garantir une transition transparente, activez et utilisez la Saisie de dons avant le 1er octobre. Pour plus d&apos;informations sur la Saisie de dons, consultez la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentation NPSP&lt;/a&gt; sur la plate-forme Power of Us.</label>
+        <label>La saisie de données par lots ne sera plus prise en charge à partir du 1er octobre 2020 et ne fonctionnera plus dans NPSP. Si vous avez des lots en cours à cette date, vous pourrez accéder à ces enregistrements, mais vous ne pourrez pas les traiter en utilisant la saisie de données par lots. Pour garantir une transition transparente, activez et utilisez la saisie de dons avant le 1er octobre. Pour plus d’informations sur la saisie de dons, consultez la &lt;a href=’https://powerofus.force.com/NPSP_Documentation’ target=’_blank’&gt;documentation NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
@@ -2764,11 +2848,11 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bgeNotSupportedBody</name>
-        <label>À compter du 13 juillet 2021, la saisie de dons par lots n’est plus prise en charge et a été remplacée par la saisie de dons.
+        <label>À compter du 13 juillet 2021, la saisie de dons par lots n’est plus prise en charge et est remplacée par la saisie de dons.
             Si vous avez des lots en cours, vous pouvez toujours accéder aux enregistrements, mais vous ne pouvez pas les traiter en utilisant la saisie de dons par lots.
             Pour accéder à des lots en cours, contactez le support.
-            Vous pouvez explorer la saisie de dons comme alternative à la saisie de dons par lots.
-            Pour plus d’informations sur la saisie de dons, consultez la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;documentation NPSP&lt;/a&gt; sur la plate-forme Power of Us.</label>
+            Vous pouvez découvrir la saisie de dons en tant qu’alternative à la saisie de dons par lots.
+            Pour plus d’informations sur la saisie de dons, consultez la &lt;a href=’https://powerofus.force.com/NPSP_Documentation’ target=’_blank’&gt;documentation NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -2904,6 +2988,10 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     <customLabels>
         <name>batchNumberSettingsHeader</name>
         <label>Paramètres de Numéro du lot</label>
+    </customLabels>
+    <customLabels>
+        <name>commonAccessErrorMessage</name>
+        <label>Vous ne disposez pas des autorisations requises pour réaliser cette action. Contactez votre administrateur système pour obtenir de l’aide.</label>
     </customLabels>
     <customLabels>
         <name>commonActivate</name>
@@ -3046,6 +3134,10 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <label>Les champs obligatoires suivants doivent être remplis : {0}</label>
     </customLabels>
     <customLabels>
+        <name>commonNoneSpecified</name>
+        <label>Aucune valeur indiquée</label>
+    </customLabels>
+    <customLabels>
         <name>commonNewGift</name>
         <label>Nouveau don</label>
     </customLabels>
@@ -3142,6 +3234,10 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <label>Mettre à jour</label>
     </customLabels>
     <customLabels>
+        <name>commonDate</name>
+        <label>Date</label>
+    </customLabels>
+    <customLabels>
         <name>commonViewAll</name>
         <label>Afficher tout</label>
     </customLabels>
@@ -3230,6 +3326,14 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <label>Étape terminée</label>
     </customLabels>
     <customLabels>
+        <name>conMergeStageCurrent</name>
+        <label>Étape en cours</label>
+    </customLabels>
+    <customLabels>
+        <name>conMergeStageNotStarted</name>
+        <label>Étape non démarrée</label>
+    </customLabels>
+    <customLabels>
         <name>conMergeWinnerAsstText</name>
         <label>Choisir cette colonne comme enregistrement principal</label>
     </customLabels>
@@ -3263,7 +3367,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>Voir tous les Contacts en double trouvés à l’aide de règles de correspondance. &lt;a href=&quot; https://powerofus.force.com/s/article/NPSP-Merging-Contacts&quot;&gt;&lt;b&gt; En savoir plus &lt;/b&gt;&lt;/a&gt;</label>
+        <label>Voir tous les contacts en double trouvés à l’aide de règles de correspondance. &lt;a href=’https://powerofus.force.com/IP_Contacts’ target=’_blank’&gt;&lt;b&gt; En savoir plus&lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>
@@ -3340,6 +3444,26 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     <customLabels>
         <name>geAddSoftCredit</name>
         <label>Ajouter un crédit indirect</label>
+    </customLabels>
+    <customLabels>
+        <name>geA11ySection</name>
+        <label>section</label>
+    </customLabels>
+    <customLabels>
+        <name>geA11yTemplateBuilderAddNamedSection</name>
+        <label>{0} ajouté à la section {1}.</label>
+    </customLabels>
+    <customLabels>
+        <name>geA11yTemplateBuilderAddUnnamedSection</name>
+        <label>{0} ajouté à {1} {2}.</label>
+    </customLabels>
+    <customLabels>
+        <name>geA11yTemplateBuilderRemoveNamedSection</name>
+        <label>{0} supprimé de la section {1}.</label>
+    </customLabels>
+    <customLabels>
+        <name>geA11yTemplateBuilderRemoveUnnamedSection</name>
+        <label>{0} supprimé de {1} {2}.</label>
     </customLabels>
     <customLabels>
         <name>geAssistiveActiveSection</name>
@@ -3432,6 +3556,10 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     <customLabels>
         <name>geBatchGiftsTotal</name>
         <label>Montant total du lot</label>
+    </customLabels>
+    <customLabels>
+        <name>geBatchProcessingIncomplete</name>
+        <label>Le processus d’importation s’est arrêté avant d’avoir pu se terminer. Contactez votre administrateur système pour obtenir de l’aide.</label>
     </customLabels>
     <customLabels>
         <name>geBatchProcessingSuccess</name>
@@ -3799,6 +3927,10 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     <customLabels>
         <name>gsChecklistItemGoFurtherLinkLabel</name>
         <label>Découvrez NPSP avec Trailhead</label>
+    </customLabels>
+    <customLabels>
+        <name>donationHistoryFilterSelectAYear</name>
+        <label>Sélectionner une année</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemGoFurtherTitle</name>
@@ -4385,6 +4517,10 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <label>Cette fonctionnalité nécessite le Mappage avancé et la Saisie de dons. Activez-les dans les Paramètres de NPSP.</label>
     </customLabels>
     <customLabels>
+        <name>geServiceLevelErrorAdvancedMapping</name>
+        <label>Vous devez activer le mappage avancé pour pouvoir activer la saisie de dons.</label>
+    </customLabels>
+    <customLabels>
         <name>geErrorPageLevelAdvancedMappingHeader</name>
         <label>Activer le Mappage avancé et la Saisie de dons</label>
     </customLabels>
@@ -4426,7 +4562,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>geErrorUncertainCardChargePart4</name>
-        <label>Pour plus d&apos;informations, consultez la documentation relative à la résolution de problèmes {0} dans le hub Power of Us.</label>
+        <label>Pour plus d’informations, consultez la documentation de dépannage : {0}.</label>
     </customLabels>
     <customLabels>
         <name>commonGauAllocations</name>
@@ -4860,6 +4996,10 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <label>Explorer Trailhead</label>
     </customLabels>
     <customLabels>
+        <name>gseuTrailheadLogoText</name>
+        <label>Logo de Trailhead</label>
+    </customLabels>
+    <customLabels>
         <name>gseuTrailheadText</name>
         <label>Découvrez plus d’informations sur Nonprofit Cloud et Salesforce.</label>
     </customLabels>
@@ -4870,6 +5010,10 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     <customLabels>
         <name>gsLearnMore</name>
         <label>En savoir plus</label>
+    </customLabels>
+    <customLabels>
+        <name>opensInNewLink</name>
+        <label>(s’ouvre dans une nouvelle fenêtre)</label>
     </customLabels>
     <customLabels>
         <name>gsNoApplicationSubmitted</name>
@@ -5381,7 +5525,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>healthSolutionNothingScheduled</name>
-        <label>Pour replanifier les travaux NPSP par défaut, accédez à Paramètres NPSP | Processus de données en masse | Planificateur de processus. Cliquez sur Modifier. Assurez-vous que l&apos;option Ne pas activer la tâche NPSP par défaut de planification automatique n&apos;est pas sélectionnée. Cliquez sur Enregistrer. Pour plus d&apos;informations, consultez Modifier ou reprogrammer des tâches NPSP dans le hub Power of Us : https://powerofus.force.com/articles/Resource/NPSP-Edit-or-Reschedule-NPSP-Scheduled-Jobs</label>
+        <label>Pour replanifier les tâches NPSP par défaut, accédez à Paramètres NPSP | Processus de données en masse | Planificateur de processus. Cliquez sur Modifier. Assurez-vous que l’option Ne pas activer la tâche NPSP par défaut de planification automatique n’est pas sélectionnée. Cliquez sur Enregistrer. Pour plus d’informations, consultez Modifier ou reprogrammer des tâches NPSP : https://powerofus.force.com/NPSP_Scheduled_Jobs</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionOCRDupPrimary</name>
@@ -5417,7 +5561,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>healthSolutionTriggerHandlerMismatch</name>
-        <label>Les modifications apportées aux déclencheurs peuvent affecter les fonctionnalités de base NPSP de manière inattendue et doivent être minutieusement testées avant le déploiement en production. Si ces modifications ne sont pas intentionnelles, vous devez réinitialiser vos gestionnaires de déclencheurs pour qu&apos;ils correspondent à la configuration NPSP par défaut. Pour plus d&apos;informations, consultez l&apos;article sur la gestion des gestionnaires de déclencheurs dans le hub Power Of Us : https://powerofus.force.com/articles/Resource/NPSP-Manage-Trigger-Handlers</label>
+        <label>Les modifications apportées aux déclencheurs peuvent affecter les fonctionnalités de base NPSP de manière inattendue et doivent être minutieusement testées avant le déploiement en production. Si ces modifications ne sont pas intentionnelles, vous devez réinitialiser vos gestionnaires de déclencheurs pour qu’ils correspondent à la configuration NPSP par défaut. Pour plus d’informations, consultez l’article sur la gestion des gestionnaires de déclencheurs : https://powerofus.force.com/NPSP_Manage_Trigger_Handlers</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionUnsupportedPicklistValue</name>
@@ -5538,6 +5682,10 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     <customLabels>
         <name>lblDeprecated</name>
         <label>Ce composant a été déprécié.</label>
+    </customLabels>
+    <customLabels>
+        <name>lblEmpty</name>
+        <label>vide</label>
     </customLabels>
     <customLabels>
         <name>lblExtendedStatus</name>
@@ -6256,6 +6404,10 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <label>Exécution de lot</label>
     </customLabels>
     <customLabels>
+        <name>stgBtnRunHHDeceasedBatch</name>
+        <label>Exécuter le lot du foyer décédé</label>
+    </customLabels>
+    <customLabels>
         <name>stgBtnSave</name>
         <label>Enregistrer</label>
     </customLabels>
@@ -6385,6 +6537,10 @@ Si vous sélectionnez Ne pas planifier automatiquement les tâches NPSP par déf
     <customLabels>
         <name>stgErrorMissingDefaultGauRecord</name>
         <label>L&apos;Unité comptable générale par défaut précédemment configurée n&apos;existe plus et a été retirée. Pour réactiver les Allocations par défaut, ouvrez la page Allocations UCG dans les Paramètres de NPSP.</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHHDataRefreshTitle</name>
+        <label>Rafraîchir les données de foyer</label>
     </customLabels>
     <customLabels>
         <name>stgHHNameRefreshTitle</name>
@@ -6618,6 +6774,10 @@ Attendez que le processus soit terminé à 100 % pour quitter ou rafraîchir ce
         <label>Le type d’enregistrement de compte que vous voulez utiliser pour les nouveaux comptes si vous avez sélectionné le modèle de compte de foyer ci-dessus. Vous pouvez sélectionner le type d’enregistrement de compte de foyer par défaut, ou votre propre type d’enregistrement. Si vous sélectionnez --Aucun--, Salesforce utilisera le type d’enregistrement de compte par défaut pour l’utilisateur qui crée le nouveau contact (et le compte associé).</label>
     </customLabels>
     <customLabels>
+        <name>stgHelpHHData</name>
+        <label>Utilisez ces processus de données en masse pour actualiser les noms de foyer et recalculer les données correspondant au champ Tous les membres du foyer sont décédés. Après avoir exécuté l’un de ces processus, actualisez votre navigateur pour exécuter l’autre.</label>
+    </customLabels>
+    <customLabels>
         <name>stgHelpHHExcludedRT</name>
         <label>Indique quels types d’enregistrement de contact seront exclus par Salesforce de la création d’objet de foyer. (Uniquement applicable aux modèles de compte un-à-un ou individuel).</label>
     </customLabels>
@@ -6787,7 +6947,7 @@ IMPORTANT : ces deux champs doivent avoir le même type de données.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPowerOfUsHub</name>
-        <label>Vous avez des questions ? Le hub a les réponses ! Essayez le groupe &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;NPSP&lt;/a&gt; pour des questions sur NPSP et le groupe &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;Administrateurs système&lt;/a&gt; pour des questions sur l’administration et la configuration de Salesforce.&lt;br/&gt;&lt;br/&gt;Et pour rester informé sur les dernières notes de version de NPSP, le groupe &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;Notes de publication NPSP&lt;/a&gt;.</label>
+        <label>Vous avez des questions ? Essayez le groupe &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; pour des questions sur NPSP et le groupe &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;Administrateurs système&lt;/a&gt; pour des questions sur l’administration et la configuration de Salesforce.&lt;br/&gt;&lt;br/&gt;Et pour vous tenir au courant des dernières notes de version de NPSP, consultez le groupe &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;Notes de publication NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPrimaryContactBatch</name>
@@ -6818,6 +6978,10 @@ Ceci met à jour les enregistrements de rôle de contact d’opportunité. Nous 
 ● Workflow visuel&lt;br/&gt;
 ● Déclencheurs personnalisés&lt;br/&gt;&lt;br/&gt;
 Attendez que le processus soit terminé à 100 % pour quitter ou rafraîchir cette page.</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpDeceasedBatch</name>
+        <label>Cet utilitaire recalcule la valeur du champ Tous les membres du foyer sont décédés sur les comptes du foyer. Exécutez cet utilitaire pour vous assurer que la valeur reflète correctement le statut du champ Décédé sur les contacts associés. Ce processus peut prendre un certain temps, mais vous pouvez fermer cette page en toute sécurité afin de le poursuivre en arrière-plan.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRDAddCampaign</name>
@@ -7329,6 +7493,10 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
         <label>Supprimer les OCR principaux en double</label>
     </customLabels>
     <customLabels>
+        <name>stgLabelDeceasedBatch</name>
+        <label>Recalculer les comptes des foyers décédés</label>
+    </customLabels>
+    <customLabels>
         <name>stgLabelRDFieldMap</name>
         <label>Mappages de champ personnalisé</label>
     </customLabels>
@@ -7533,6 +7701,10 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
         <label>Mappage de Statut à État</label>
     </customLabels>
     <customLabels>
+        <name>stgNavRD2StatusAutomation</name>
+        <label>Automatisation du statut</label>
+    </customLabels>
+    <customLabels>
         <name>stgNavRDBatch</name>
         <label>Dons réguliers par lots</label>
     </customLabels>
@@ -7598,7 +7770,7 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
     </customLabels>
     <customLabels>
         <name>stgPowerOfUsHub</name>
-        <label>Hub Power of Us</label>
+        <label>Trailblazer Community</label>
     </customLabels>
     <customLabels>
         <name>stgRDNamingDescription</name>
@@ -7686,7 +7858,7 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
     </customLabels>
     <customLabels>
         <name>gsResourcesItemHubLabel</name>
-        <label>Hub Power of Us</label>
+        <label>Trailblazer Community</label>
     </customLabels>
     <customLabels>
         <name>gsResourcesItemHubLinkLabel</name>
@@ -7722,7 +7894,7 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
     </customLabels>
     <customLabels>
         <name>gseuResourcesItemQuestionsAnsweredLinkLabel</name>
-        <label>Hub Power of Us</label>
+        <label>Trailblazer Community</label>
     </customLabels>
     <customLabels>
         <name>gseuResourcesItemAboutNPSPLabel</name>
@@ -7755,6 +7927,10 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
     <customLabels>
         <name>gseuResourcesItemCommunityGroupLinkLabel</name>
         <label>Communauté Trailhead</label>
+    </customLabels>
+    <customLabels>
+        <name>donationHistoryDatatableAriaLabel</name>
+        <label>Historique des dons</label>
     </customLabels>
     <reportTypes>
         <name>Contacts_Only</name>
@@ -7805,6 +7981,10 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
         <label>Nouvelle campagne</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.Pause</name>
+        <label>Interruption</label>
+    </quickActions>
+    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>Nouvelle affiliation</label>
     </quickActions>
@@ -7817,8 +7997,28 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
         <label>Nouveau don régulier</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
+        <label>Nouvelle opportunité</label>
+    </quickActions>
+    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>Nouveau don régulier</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Quick_Update</name>
+        <label>Mise à jour rapide</label>
+    </quickActions>
+    <quickActions>
+        <name>npo02__Household__c.Update_Household</name>
+        <label>Mettre à jour un foyer</label>
+    </quickActions>
+    <quickActions>
+        <name>Address__c.Update_Address</name>
+        <label>Mettre à jour une adresse</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
+        <label>Fermer le don récurrent</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -7839,6 +8039,10 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>Nouvelle relation</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Quick_Update</name>
+        <label>Mise à jour rapide</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>

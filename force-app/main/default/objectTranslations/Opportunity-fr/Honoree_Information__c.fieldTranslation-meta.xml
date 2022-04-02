@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Honoree_Information__c</name>
+    <help>Informations de contact, telles que l’adresse e-mail, l’adresse ou le numéro de téléphone que le donateur a fournis pour l’hommage au représentant honoraire.</help>
+    <label>Infos sur le représentant honoraire</label>
+</CustomFieldTranslation>

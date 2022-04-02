@@ -709,6 +709,22 @@
         <label>Add Dependent Task</label>
     </customLabels>
     <customLabels>
+        <name>donationHistoryGivingSummaryTitle</name>
+        <label>Giving Summary</label>
+    </customLabels>
+    <customLabels>
+        <name>donationHistoryLabelLifetime</name>
+        <label>Lifetime</label>
+    </customLabels>
+    <customLabels>
+        <name>donationHistoryLabelPreviousYear</name>
+        <label>Previous Year</label>
+    </customLabels>
+    <customLabels>
+        <name>donationHistoryLabelThisYear</name>
+        <label>This Year</label>
+    </customLabels>
+    <customLabels>
         <name>EPAddTask</name>
         <label>Add Task</label>
     </customLabels>
@@ -742,7 +758,11 @@
     </customLabels>
     <customLabels>
         <name>ErrorEmailMessage</name>
-        <label>Salesforce encountered these NPSP errors. To learn more about common errors, see &quot;Troubleshoot the Nonprofit Success Pack&quot; on the Power of Us Hub. If you&apos;re unsure how to resolve the errors, post a message in the Nonprofit Success Pack group: https://powerofus.force.com/HUB_NPSP_Group</label>
+        <label>Salesforce encountered these NPSP errors. If you&apos;re unsure how to resolve the errors, post a message in the Nonprofit Success Pack group: https://powerofus.force.com/HUB_NPSP_Group</label>
+    </customLabels>
+    <customLabels>
+        <name>FieldSetRelatedFieldError</name>
+        <label>Related field {0} not supported in field set {1}. You can only include fields directly on object {2}.</label>
     </customLabels>
     <customLabels>
         <name>HiddenForSecurity</name>
@@ -750,7 +770,7 @@
     </customLabels>
     <customLabels>
         <name>InactiveScheduledJobsOwnerErrMsg</name>
-        <label>There are Scheduled Jobs owned by an inactive User. Review your Scheduled Jobs and ensure the owner of each one is an active User. See Edit or Reschedule NPSP Scheduled Jobs in the Power of Us Hub for more information: https://powerofus.force.com/articles/Resource/NPSP-Edit-or-Reschedule-NPSP-Scheduled-Jobs</label>
+        <label>There are Scheduled Jobs owned by an inactive User. Review your Scheduled Jobs and ensure the owner of each one is an active User. See Edit or Reschedule NPSP Scheduled Jobs for more information: https://powerofus.force.com/NPSP_Scheduled_Jobs</label>
     </customLabels>
     <customLabels>
         <name>NameRequired</name>
@@ -1392,6 +1412,62 @@
         <label>Upcoming Installments</label>
     </customLabels>
     <customLabels>
+        <name>RD2_StatusAutomationConfigurationSection</name>
+        <label>Status Automation Settings</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationClosedDefinition</name>
+        <label>After the specified number of days, NPSP updates the Recurring Donation Status to the Closed Status Value if donations aren&apos;t being received as expected. This value must be higher than the Number of Days for Lapsed. NPSP does not create instalment Opportunities for Closed Recurring Donations.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationDaysForClosed</name>
+        <label>Number of Days for Closed</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationDaysForLapsed</name>
+        <label>Number of Days for Lapsed</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationIntro</name>
+        <label>These settings automate changing the Recurring Donation Status when donors miss instalment payments.&lt;br/&gt;&lt;br/&gt;For example, given a monthly Recurring Donation started on January 1st, and Number of Days for Lapsed is set to 10 days, the Recurring Donation becomes Lapsed on February 12th if no instalment payment is received. If Number of Days for Closed is set to 20 days, the Recurring Donation becomes Closed on February 22nd.&lt;br/&gt;&lt;br/&gt;Salesforce begins counting Number of Days for Lapsed and Number of Days for Closed on the day after the expected instalment date (February 2nd in our example).&lt;br/&gt;&lt;br/&gt;Elevate Recurring Donations are not included in this automation.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationInvalidClosedStatus</name>
+        <label>The Status Automation Closed Status should map to Closed State</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationInvalidLapsedStatus</name>
+        <label>The Status Automation Lapsed Status should map to Lapsed State</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationInvalidNumberOfDays</name>
+        <label>Number of Days for Closed must be higher than the Number of Days for Lapsed.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationInvalidNumberOfDaysForClosed</name>
+        <label>Must be greater than Number of Days for Lapsed</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationInvalidNumberOfDaysForLapsed</name>
+        <label>Must be less than Number of Days for Closed</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationNegativeNumberOfDays</name>
+        <label>Number of Days for Lapsed and Number of Days for Closed cannot be negative.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationLapsedDefinition</name>
+        <label>After the specified number of days, NPSP updates the Recurring Donation Status to the Lapsed Status Value if donations aren&apos;t being received as expected. NPSP continues to create instalment Opportunities for Lapsed Recurring Donations as defined by the schedule.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationSetClosedStatus</name>
+        <label>Closed Status Value</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_StatusAutomationSetLapsedStatus</name>
+        <label>Lapsed Status Value</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_StatusMappingColumnState</name>
         <label>State</label>
     </customLabels>
@@ -1536,6 +1612,14 @@
         <label>View Contact Record</label>
     </customLabels>
     <customLabels>
+        <name>REL_ViewerGraphical</name>
+        <label>Graphical View</label>
+    </customLabels>
+    <customLabels>
+        <name>REL_ViewerTabular</name>
+        <label>Tabular View</label>
+    </customLabels>
+    <customLabels>
         <name>RP_CustomerJourneyLinkLabel</name>
         <label>Salesforce.org Webinars and Events</label>
     </customLabels>
@@ -1609,7 +1693,7 @@
     </customLabels>
     <customLabels>
         <name>RP_UsHubLinkLabel</name>
-        <label>Power of Us HUB</label>
+        <label>Trailblazer Community</label>
     </customLabels>
     <customLabels>
         <name>RP_UsSubtitle</name>
@@ -1883,11 +1967,11 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>As of October 1, 2020, Batch Data Entry is no longer supported. Most capabilities have been replaced with newer features in NPSP. If you have any in-progress batches, you can still access those records, but you can&apos;t process them using Batch Data Entry. Contact support if you need to access in-progress batches. &lt;br/&gt; You may want to explore Gift Entry as an alternative to Batch Data Entry. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt; on the Power of Us Hub.</label>
+        <label>As of October 1, 2020, Batch Data Entry is no longer supported. Most capabilities have been replaced with newer features in NPSP. If you have any in-progress batches, you can still access those records, but you can&apos;t process them using Batch Data Entry. Contact support if you need to access in-progress batches. &lt;br/&gt; You may want to explore Gift Entry as an alternative to Batch Data Entry. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
-        <label>On October 1, 2020, Batch Data Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Data Entry. To ensure a smooth transition, enable and use Gift Entry in advance of October 1st. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt; on the Power of Us Hub.</label>
+        <label>On October 1, 2020, Batch Data Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Data Entry. To ensure a smooth transition, enable and use Gift Entry in advance of October 1st. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
@@ -2768,7 +2852,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
             If you have any in-progress batches, you can still access those records, but you can&apos;t process them using Batch Gift Entry.
             Contact support if you need to access in-progress batches.
             You may want to explore Gift Entry as an alternative to Batch Gift Entry.
-            Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt; on the Power of Us Hub.</label>
+            Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -2903,6 +2987,10 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     <customLabels>
         <name>batchNumberSettingsHeader</name>
         <label>Batch Number Settings</label>
+    </customLabels>
+    <customLabels>
+        <name>commonAccessErrorMessage</name>
+        <label>You don&apos;t have the required permissions to perform this action. Contact your system administrator for assistance.</label>
     </customLabels>
     <customLabels>
         <name>commonActivate</name>
@@ -3045,6 +3133,10 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
         <label>These required fields must be completed: {0}</label>
     </customLabels>
     <customLabels>
+        <name>commonNoneSpecified</name>
+        <label>None specified</label>
+    </customLabels>
+    <customLabels>
         <name>commonNewGift</name>
         <label>New Gift</label>
     </customLabels>
@@ -3141,6 +3233,10 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
         <label>Update</label>
     </customLabels>
     <customLabels>
+        <name>commonDate</name>
+        <label>Date</label>
+    </customLabels>
+    <customLabels>
         <name>commonViewAll</name>
         <label>View All</label>
     </customLabels>
@@ -3229,6 +3325,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
         <label>Stage Complete</label>
     </customLabels>
     <customLabels>
+        <name>conMergeStageCurrent</name>
+        <label>Current Stage</label>
+    </customLabels>
+    <customLabels>
+        <name>conMergeStageNotStarted</name>
+        <label>Stage Not Started</label>
+    </customLabels>
+    <customLabels>
         <name>conMergeWinnerAsstText</name>
         <label>Choose this column as the master record</label>
     </customLabels>
@@ -3262,7 +3366,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>See all duplicate Contacts found using matching rules. &lt;a href=&quot; https://powerofus.force.com/s/article/NPSP-Merging-Contacts&quot;&gt;&lt;b&gt; Tell Me More &lt;/b&gt;&lt;/a&gt;</label>
+        <label>See all duplicate Contacts found using matching rules. &lt;a href=&apos;https://powerofus.force.com/IP_Contacts&apos; target=&apos;_blank&apos;&gt;&lt;b&gt; Tell Me More &lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>
@@ -3339,6 +3443,26 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     <customLabels>
         <name>geAddSoftCredit</name>
         <label>Add Soft Credit</label>
+    </customLabels>
+    <customLabels>
+        <name>geA11ySection</name>
+        <label>section</label>
+    </customLabels>
+    <customLabels>
+        <name>geA11yTemplateBuilderAddNamedSection</name>
+        <label>{0} added to the {1} section.</label>
+    </customLabels>
+    <customLabels>
+        <name>geA11yTemplateBuilderAddUnnamedSection</name>
+        <label>{0} added to {1} {2}.</label>
+    </customLabels>
+    <customLabels>
+        <name>geA11yTemplateBuilderRemoveNamedSection</name>
+        <label>{0} removed from the {1} section.</label>
+    </customLabels>
+    <customLabels>
+        <name>geA11yTemplateBuilderRemoveUnnamedSection</name>
+        <label>{0} removed from {1} {2}.</label>
     </customLabels>
     <customLabels>
         <name>geAssistiveActiveSection</name>
@@ -3431,6 +3555,10 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     <customLabels>
         <name>geBatchGiftsTotal</name>
         <label>Total Batch Amount</label>
+    </customLabels>
+    <customLabels>
+        <name>geBatchProcessingIncomplete</name>
+        <label>Import process stopped before it could complete. Contact your system administrator for assistance.</label>
     </customLabels>
     <customLabels>
         <name>geBatchProcessingSuccess</name>
@@ -3798,6 +3926,10 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     <customLabels>
         <name>gsChecklistItemGoFurtherLinkLabel</name>
         <label>Discover more about NPSP in Trailhead</label>
+    </customLabels>
+    <customLabels>
+        <name>donationHistoryFilterSelectAYear</name>
+        <label>Select a year</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemGoFurtherTitle</name>
@@ -4384,6 +4516,10 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <label>This feature requires both Advanced Mapping and Gift Entry. Please enable them in NPSP Settings.</label>
     </customLabels>
     <customLabels>
+        <name>geServiceLevelErrorAdvancedMapping</name>
+        <label>You must enable Advanced Mapping before you can enable Gift Entry.</label>
+    </customLabels>
+    <customLabels>
         <name>geErrorPageLevelAdvancedMappingHeader</name>
         <label>Enable Advanced Mapping and Gift Entry</label>
     </customLabels>
@@ -4425,7 +4561,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>geErrorUncertainCardChargePart4</name>
-        <label>For more information, please see {0} troubleshooting documentation on the Power of Us Hub.</label>
+        <label>For more information, please see {0} troubleshooting documentation.</label>
     </customLabels>
     <customLabels>
         <name>commonGauAllocations</name>
@@ -4859,6 +4995,10 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <label>Explore Trailhead</label>
     </customLabels>
     <customLabels>
+        <name>gseuTrailheadLogoText</name>
+        <label>Trailhead Logo</label>
+    </customLabels>
+    <customLabels>
         <name>gseuTrailheadText</name>
         <label>Learn even more about Nonprofit Cloud and Salesforce.</label>
     </customLabels>
@@ -4869,6 +5009,10 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     <customLabels>
         <name>gsLearnMore</name>
         <label>Learn More</label>
+    </customLabels>
+    <customLabels>
+        <name>opensInNewLink</name>
+        <label>(opens in a new window)</label>
     </customLabels>
     <customLabels>
         <name>gsNoApplicationSubmitted</name>
@@ -5380,7 +5524,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>healthSolutionNothingScheduled</name>
-        <label>To reschedule the default NPSP jobs, go to NPSP Settings | Bulk Data Processes | Process Scheduler. Click Edit. Make sure Don&apos;t Enable Auto Schedule Default NPSP Job is not selected. Click Save. See Edit or Reschedule NPSP Jobs in the Power of Us Hub for more information: https://powerofus.force.com/articles/Resource/NPSP-Edit-or-Reschedule-NPSP-Scheduled-Jobs</label>
+        <label>To reschedule the default NPSP jobs, go to NPSP Settings | Bulk Data Processes | Process Scheduler. Click Edit. Make sure Don&apos;t Enable Auto Schedule Default NPSP Job is not selected. Click Save. See Edit or Reschedule NPSP Jobs for more information: https://powerofus.force.com/NPSP_Scheduled_Jobs</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionOCRDupPrimary</name>
@@ -5416,7 +5560,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>healthSolutionTriggerHandlerMismatch</name>
-        <label>Changes to triggers can affect core NPSP functionality in unexpected ways, and should be thoroughly tested before deployment to production. If these changes were unintentional, you should reset your Trigger Handlers to match the default NPSP configuration. See the Manage Trigger Handlers article in the Power Of Us Hub for more information: https://powerofus.force.com/articles/Resource/NPSP-Manage-Trigger-Handlers</label>
+        <label>Changes to triggers can affect core NPSP functionality in unexpected ways, and should be thoroughly tested before deployment to production. If these changes were unintentional, you should reset your Trigger Handlers to match the default NPSP configuration. See Manage Trigger Handlers for more information: https://powerofus.force.com/NPSP_Manage_Trigger_Handlers</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionUnsupportedPicklistValue</name>
@@ -5537,6 +5681,10 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     <customLabels>
         <name>lblDeprecated</name>
         <label>This component has been deprecated.</label>
+    </customLabels>
+    <customLabels>
+        <name>lblEmpty</name>
+        <label>empty</label>
     </customLabels>
     <customLabels>
         <name>lblExtendedStatus</name>
@@ -6255,6 +6403,10 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <label>Run Batch</label>
     </customLabels>
     <customLabels>
+        <name>stgBtnRunHHDeceasedBatch</name>
+        <label>Run Household Deceased Batch</label>
+    </customLabels>
+    <customLabels>
         <name>stgBtnSave</name>
         <label>Save</label>
     </customLabels>
@@ -6384,6 +6536,10 @@ Selecting Don&apos;t Auto Schedule Default NPSP Jobs tells NPSP not to check for
     <customLabels>
         <name>stgErrorMissingDefaultGauRecord</name>
         <label>The previously configured Default General Accounting Unit no longer exists and has been removed. To re-enable Default Allocations, open the GAU Allocations page in NPSP Settings.</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHHDataRefreshTitle</name>
+        <label>Refresh Household Data</label>
     </customLabels>
     <customLabels>
         <name>stgHHNameRefreshTitle</name>
@@ -6617,6 +6773,10 @@ Once the process is 100% complete, you can safely leave or refresh this page.</l
         <label>The Account record type you want to use for new Accounts if you&apos;ve selected the Household Account model above. You can select the default Household Account record type, or your own record type. If you select --None--, then Salesforce will use the default Account record type for the user who&apos;s creating the new Contact (and associated Account).</label>
     </customLabels>
     <customLabels>
+        <name>stgHelpHHData</name>
+        <label>Use these bulk data processes to refresh Household names and recalculate data for the All Household Members Deceased field. After running one of these processes, refresh your browser to run the other one.</label>
+    </customLabels>
+    <customLabels>
         <name>stgHelpHHExcludedRT</name>
         <label>Specifies which Contact record types Salesforce will exclude from Household object creation. (Applies to One-to-One or Individual Account Models only.)</label>
     </customLabels>
@@ -6786,7 +6946,7 @@ IMPORTANT: Both of these fields must have the same data type.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPowerOfUsHub</name>
-        <label>Got questions? The Hub has answers! Try the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; group for questions about NPSP and the &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; group for questions about Salesforce administration and cofiguration.&lt;br/&gt;&lt;br/&gt;Keep up with the latest NPSP release notes in the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt; group.</label>
+        <label>Got questions? Try the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; group for questions about NPSP and the &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; group for questions about Salesforce administration and configuration.&lt;br/&gt;&lt;br/&gt;Keep up with the latest NPSP release notes in the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt; group.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPrimaryContactBatch</name>
@@ -6817,6 +6977,10 @@ This change updates Opportunity Contact Role records. Before starting this proce
 ● Visual Workflows&lt;br/&gt;
 ● Custom Triggers&lt;br/&gt;&lt;br/&gt;
 Once the process is 100% complete, you can safely leave or refresh this page.</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpDeceasedBatch</name>
+        <label>This utility recalculates the value in the All Household Members Deceased field on Household Accounts. Run this utility to ensure that the value correctly reflects the status of the Deceased field on related Contacts. This process may take some time, but you can safely close this page and the process will continue in the background.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRDAddCampaign</name>
@@ -7328,6 +7492,10 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <label>Remove Duplicate Primary OCRs</label>
     </customLabels>
     <customLabels>
+        <name>stgLabelDeceasedBatch</name>
+        <label>Recalculate Deceased Household Accounts</label>
+    </customLabels>
+    <customLabels>
         <name>stgLabelRDFieldMap</name>
         <label>Custom Field Mappings</label>
     </customLabels>
@@ -7532,6 +7700,10 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <label>Status to State Mapping</label>
     </customLabels>
     <customLabels>
+        <name>stgNavRD2StatusAutomation</name>
+        <label>Status Automation</label>
+    </customLabels>
+    <customLabels>
         <name>stgNavRDBatch</name>
         <label>Recurring Donations Batch</label>
     </customLabels>
@@ -7597,7 +7769,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </customLabels>
     <customLabels>
         <name>stgPowerOfUsHub</name>
-        <label>Power of Us Hub</label>
+        <label>Trailblazer Community</label>
     </customLabels>
     <customLabels>
         <name>stgRDNamingDescription</name>
@@ -7685,7 +7857,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </customLabels>
     <customLabels>
         <name>gsResourcesItemHubLabel</name>
-        <label>Power of Us Hub</label>
+        <label>Trailblazer Community</label>
     </customLabels>
     <customLabels>
         <name>gsResourcesItemHubLinkLabel</name>
@@ -7721,7 +7893,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </customLabels>
     <customLabels>
         <name>gseuResourcesItemQuestionsAnsweredLinkLabel</name>
-        <label>Power of Us Hub</label>
+        <label>Trailblazer Community</label>
     </customLabels>
     <customLabels>
         <name>gseuResourcesItemAboutNPSPLabel</name>
@@ -7754,6 +7926,10 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     <customLabels>
         <name>gseuResourcesItemCommunityGroupLinkLabel</name>
         <label>Trailhead Community</label>
+    </customLabels>
+    <customLabels>
+        <name>donationHistoryDatatableAriaLabel</name>
+        <label>Donation History</label>
     </customLabels>
     <reportTypes>
         <name>Contacts_Only</name>
@@ -7804,6 +7980,10 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <label>New Campaign</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.Pause</name>
+        <label>Pause</label>
+    </quickActions>
+    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>New Affiliation</label>
     </quickActions>
@@ -7816,8 +7996,28 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <label>New Recurring Donation</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
+        <label>New Opportunity</label>
+    </quickActions>
+    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>New Recurring Donation</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Quick_Update</name>
+        <label>Quick Update</label>
+    </quickActions>
+    <quickActions>
+        <name>npo02__Household__c.Update_Household</name>
+        <label>Update Household</label>
+    </quickActions>
+    <quickActions>
+        <name>Address__c.Update_Address</name>
+        <label>Update Address</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
+        <label>Close Recurring Donation</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -7838,6 +8038,10 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>New Relationship</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Quick_Update</name>
+        <label>Quick Update</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>

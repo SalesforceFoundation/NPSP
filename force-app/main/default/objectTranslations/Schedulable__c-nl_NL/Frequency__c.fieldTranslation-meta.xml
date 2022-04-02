@@ -3,4 +3,24 @@
     <name>Frequency__c</name>
     <help>Hoe vaak de opdracht moet worden uitgevoerd.</help>
     <label>Frequentie</label>
-    </CustomFieldTranslation>
+    <picklistValues>
+        <masterLabel>Hourly</masterLabel>
+        <translation>Per uur</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Daily</masterLabel>
+        <translation>Dagelijks</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Weekly</masterLabel>
+        <translation>Wekelijks</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Monthly</masterLabel>
+        <translation>Maandelijks</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Quarterly</masterLabel>
+        <translation>Driemaandelijks</translation>
+    </picklistValues>
+</CustomFieldTranslation>
