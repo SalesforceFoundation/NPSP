@@ -1370,7 +1370,7 @@ public with sharing class ADDR_Addresses_TEST {
 
         // Modify the Contact addresses directly, and set override
         Contact con = testContacts[0];
-        con.put('MailingStateCode', stateCode);
+        con.put('MailingState', state);
         con.is_Address_Override__c = true;
 
         Test.startTest();
@@ -1393,7 +1393,7 @@ public with sharing class ADDR_Addresses_TEST {
         }
 
         // Verify the Account's Billing Address info matches the Default Address record
-        assertEquals(testAddresses[0], defaultAddress);
+        assertEquals(retrievedAddresses[1], defaultAddress);
 
         // Verify the Contact's Address was updated as expected and that the Household and Contact Addresses are different.
         List<Account> retrievedAccounts = Database.query(buildAccountSoql());
@@ -1408,7 +1408,7 @@ public with sharing class ADDR_Addresses_TEST {
         System.assertEquals(false, isMatchAddressAccCon(eachContactAccount, listCon[0]));
 
         // Verify the new Address Mailing State matches Contact's MailingStateCode and not set as the Default
-        System.assertEquals(stateCode, newAddress.MailingState__c);
+        System.assertEquals('California', newAddress.MailingState__c);
         System.assertEquals(false, newAddress.Default_Address__c);
     }
 
@@ -2443,6 +2443,7 @@ public with sharing class ADDR_Addresses_TEST {
                 MailingStreet__c, MailingCity__c, MailingState__c,
                 MailingPostalCode__c, MailingCountry__c
             FROM Address__c
+            ORDER BY MailingState__c
         ];
     }
 
