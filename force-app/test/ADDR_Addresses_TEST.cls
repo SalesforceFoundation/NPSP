@@ -1393,7 +1393,7 @@ public with sharing class ADDR_Addresses_TEST {
         }
 
         // Verify the Account's Billing Address info matches the Default Address record
-        assertEquals(retrievedAddresses[0], defaultAddress);
+        assertEquals(retrievedAddresses[1], defaultAddress);
 
         // Verify the Contact's Address was updated as expected and that the Household and Contact Addresses are different.
         List<Account> retrievedAccounts = Database.query(buildAccountSoql());
@@ -1408,7 +1408,7 @@ public with sharing class ADDR_Addresses_TEST {
         System.assertEquals(false, isMatchAddressAccCon(eachContactAccount, listCon[0]));
 
         // Verify the new Address Mailing State matches Contact's MailingStateCode and not set as the Default
-        System.assertEquals(stateCode, newAddress.MailingState__c);
+        System.assertEquals('California', newAddress.MailingState__c);
         System.assertEquals(false, newAddress.Default_Address__c);
     }
 

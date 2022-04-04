@@ -164,7 +164,9 @@ public inherited sharing class HouseholdMembers implements IHouseholdMembers {
                 }
             } else {
                 // no match, not an override, make it a new default hh address
-                npspAddress.setAsDefault();
+                if (!npspContact.hasAddressOverride()) {
+                    npspAddress.setAsDefault();
+                }
                 npspAddress.setUndeliverable(npspContact.isUndeliverableMailingAddress());
                 addressesToInsert.add(npspAddress.getRecord());
             }
