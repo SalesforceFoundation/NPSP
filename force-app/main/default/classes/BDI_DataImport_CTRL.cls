@@ -53,9 +53,19 @@ public with sharing class BDI_DataImport_CTRL {
     private ID apexJobId;
 
     /*******************************************************************************************************
+    * @description Ids in context for processing if provided
+    */
+    public List<Id> dataImportIds { get; set; }
+
+    /*******************************************************************************************************
     * @description when the batch process was started
     */
     private DateTime dtStart;
+
+    /*******************************************************************************************************
+    * @description return URL which will be navigated to on close
+    */
+    private String retUrl;
 
     /*******************************************************************************************************
     * @description does the user have permissions and an eligible DataImportBatch record to update the batch/settings
@@ -84,6 +94,15 @@ public with sharing class BDI_DataImport_CTRL {
 
         // load up default settings or a specified batch
         loadBatchAndSettings(ApexPages.currentPage().getParameters().get('batchId'));
+        String diIds = ApexPages.currentPage().getParameters().get('diIds');
+        retUrl = UTIL_String.getInternalUrlPath(ApexPages.currentPage().getParameters().get('retURL'));
+
+        if (diIds != null) {
+            dataImportIds = new List<Id>();
+            for (String s : diIds.split(',')) {
+                dataImportIds.add(s);
+            }
+        }
     }
 
     /*******************************************************************************************************
@@ -224,7 +243,6 @@ public with sharing class BDI_DataImport_CTRL {
     * @return PageReference
     */
     public PageReference close() {
-        String retUrl = UTIL_String.getInternalUrlPath(ApexPages.currentPage().getParameters().get('retURL'));
 
         PageReference p;
         if (!String.isBlank(retUrl)) {
@@ -232,7 +250,8 @@ public with sharing class BDI_DataImport_CTRL {
         } else {
             p = USER_UserService.getHomePageReference();
         }
-        p.setRedirect(true);
+
+        p.setRedirect(false);
         return p;
     }
     
@@ -241,12 +260,16 @@ public with sharing class BDI_DataImport_CTRL {
     * @return null
     */
     public PageReference importData() {
-
         dtStart = system.now();
         try {
-            list<BDI_DataImport_API.ProcessDataImportBatchesResult> listResults =
-                BDI_DataImport_API.processDataImportBatches(new list<Id>{diBatch.Id});
-            apexJobId = listResults[0].apexJobId;
+            if (disPopulated()) {
+                apexJobId = BDI_DataImport_API.processDataImportRecords(null, dataImportIds, false);
+            } else {
+                List<BDI_DataImport_API.ProcessDataImportBatchesResult> listResults =
+                        BDI_DataImport_API.processDataImportBatches(new List<Id>{diBatch.Id});
+                apexJobId = listResults[0].apexJobId;
+            }
+
             if (apexJobId != null) {
                 batchRunning = true;
             }
@@ -262,12 +285,16 @@ public with sharing class BDI_DataImport_CTRL {
     * @return null
     */
     public PageReference startDryRun() {
-
         dtStart = system.now();
         try {
-            list<BDI_DataImport_API.ProcessDataImportBatchesResult> listResults =
-                BDI_DataImport_API.processDataImportBatches(new list<Id>{diBatch.Id}, true);
-            apexJobId = listResults[0].apexJobId;
+            if (disPopulated()) {
+                apexJobId = BDI_DataImport_API.processDataImportRecords(null, dataImportIds, true);
+            } else {
+                List<BDI_DataImport_API.ProcessDataImportBatchesResult> listResults =
+                    BDI_DataImport_API.processDataImportBatches(new List<Id>{diBatch.Id}, true);
+                apexJobId = listResults[0].apexJobId;
+            }
+
             if (apexJobId != null) {
                 batchRunning = true;
                 isDryRun = true;
@@ -295,6 +322,7 @@ public with sharing class BDI_DataImport_CTRL {
                                     CreatedDate, CreatedById, CompletedDate, ApexClassId, ApexClass.Name, CreatedBy.Name
                                     From AsyncApexJob where Id = :apexJobId];
             }
+            
             return aaj;
         }
         private set;
@@ -361,9 +389,19 @@ public with sharing class BDI_DataImport_CTRL {
     */
     public integer crecToProcess {
         get {
-            crecToProcess = [select count() from DataImport__c where Status__c <> :BDI_DataImport_API.bdiImported and
-            NPSP_Data_Import_Batch__c = :diBatch.Id];
-            return crecToProcess;
+            String bdiImported = BDI_DataImport_API.bdiImported;
+            String countQuery = 'SELECT count() FROM DataImport__c WHERE Status__c <> :bdiImported';
+
+            if (disPopulated()) {
+                countQuery += ' AND Id IN: dataImportIds';
+            } else if (diBatch != null) {
+                Id batchId = diBatch.Id;
+                countQuery += ' AND NPSP_Data_Import_Batch__c =: batchId';
+            }
+
+            countQuery += ' WITH SECURITY_ENFORCED';
+
+            return Database.countQuery(countQuery);
         }
         set;
     }
@@ -427,4 +465,10 @@ public with sharing class BDI_DataImport_CTRL {
         private set;
     }
 
+    /*******************************************************************************************************
+    * @description simple method returns whether the dataImportIds variable is not null and is populated
+    */
+    private Boolean disPopulated () {
+        return dataImportIds != null && dataImportIds.size() > 0;
+    }
 }

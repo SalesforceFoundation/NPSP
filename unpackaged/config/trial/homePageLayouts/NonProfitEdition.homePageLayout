@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<HomePageLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <narrowComponents>standard-CreateNew</narrowComponents>
+    <narrowComponents>standard-UsefulLinks</narrowComponents>
+    <narrowComponents>standard-RecentItems</narrowComponents>
+    <wideComponents>standard-Calendar</wideComponents>
+    <wideComponents>standard-Tasks</wideComponents>
+</HomePageLayout>

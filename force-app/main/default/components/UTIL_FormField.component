@@ -4,6 +4,7 @@
     <apex:attribute name="sObjType" type="String" description="The sObject type." required="true"/>
     <apex:attribute name="onchange" type="String"  default="" description="On change event."/>
     <apex:attribute name="required" type="Boolean" default="" description="When true marks the field as required, otherwise, the field is marked as required based on 'nillable' value." />
+    <apex:attribute name="appearRequired" type="Boolean" default="false" description="When true shows the field as required, defaults to false." />
     <apex:attribute name="styleClass" type="String" default="" description="The style to apply to the outer form element." />
     <apex:attribute name="labelOverride" type="String" default="" description="Override the standard field label with this text" />
     <apex:attribute name="showLabel" type="Boolean" default="true" description="When false, hide the field label" />
@@ -58,7 +59,7 @@
         rendered="{!($ObjectType[sObjType].fields[field].updateable
                     || $ObjectType[sObjType].fields[field].createable && sObj['Id']=='') && $ObjectType[sObjType].fields[field].type != 'boolean'}">        
         <apex:outputLabel for="{!$Component.inputx.util_inputfield.inputx}" styleClass="slds-form-element__label" rendered="{!showLabel == true && ftype!='boolean'}" id="lblInputField">
-            <apex:outputText rendered="{!IF(required == true, true, NOT($ObjectType[sObjType].fields[field].nillable))}" id="lblInputFieldRequired">
+            <apex:outputText rendered="{!IF(required == true || appearRequired == true, true, NOT($ObjectType[sObjType].fields[field].nillable))}" id="lblInputFieldRequired">
                 <abbr class="slds-required" title="{!$Label.lblRequired}">*</abbr>
             </apex:outputText>
             <apex:outputText rendered="{!showLabel == true}" value="{!label}"/>

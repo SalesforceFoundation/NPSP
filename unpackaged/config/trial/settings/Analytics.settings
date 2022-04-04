@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AnalyticsSettings xmlns="http://soap.sforce.com/2006/04/metadata">
+    <enableAnalyticsSharingEnable>true</enableAnalyticsSharingEnable>
+    <enableAutoCompleteCombo>true</enableAutoCompleteCombo>
+    <enableDashboardFlexiTable>true</enableDashboardFlexiTable>
+    <enableFloatingReportHeaders>true</enableFloatingReportHeaders>
+    <enableLightningReportBuilder>true</enableLightningReportBuilder>
+    <enableMassEnableReportBuilder>true</enableMassEnableReportBuilder>
+    <enableNewChartsEngine>true</enableNewChartsEngine>
+    <enableQueryLiveConnectors>true</enableQueryLiveConnectors>
+    <enableReportNotificationsEnable>true</enableReportNotificationsEnable>
+    <enableS1AnalyticsEclairEnable>true</enableS1AnalyticsEclairEnable>
+    <maxHoursAppInProgress>48</maxHoursAppInProgress>
+</AnalyticsSettings>

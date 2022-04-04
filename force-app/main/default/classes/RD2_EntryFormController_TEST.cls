@@ -34,7 +34,7 @@
 * @description Enhanced Recurring Donations Entry Form LWC Controller Tests
 *
 */
-@isTest
+@IsTest
 private with sharing class RD2_EntryFormController_TEST {
 
     private static final Date START_DATE = Date.newInstance(2019, 3, 1);
@@ -47,6 +47,8 @@ private with sharing class RD2_EntryFormController_TEST {
 
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
+
+    private static OrgConfig orgConfig = new OrgConfig();
 
     /****
     * @description Creates data required for unit tests
@@ -72,49 +74,73 @@ private with sharing class RD2_EntryFormController_TEST {
     /***
     * @description Verifies that Entry Form Controller gathers the correct org setting
     */
-    @isTest
+    @IsTest
     private static void shouldReturnSettings() {
-        Id accountId =  UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
+        Id accountId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
 
         Test.startTest();
-        Map<String, Object> orgSettingsByKey = RD2_EntryFormController.getRecurringSettings(accountId);
+        RD2_AppView initialView = RD2_EntryFormController.getInitialView(accountId, null);
         Test.stopTest();
 
-        System.assertEquals(RD2_NamingService.isAutomaticNamingEnabled, ((Boolean) orgSettingsByKey.get('isAutoNamingEnabled')),
+        System.assertEquals(RD2_NamingService.isAutomaticNamingEnabled, initialView.isAutoNamingEnabled,
             'Recurring Donation Auto Naming setting should be returned accordingly');
-        System.assertEquals(UserInfo.isMultiCurrencyOrganization(), (Boolean) orgSettingsByKey.get('isMultiCurrencyEnabled'),
+        System.assertEquals(UserInfo.isMultiCurrencyOrganization(), initialView.isMultiCurrencyEnabled,
             'Multi Currency Org should be detected in the configuration.');
-        System.assertEquals(String.valueOf(Account.SObjectType), (String) orgSettingsByKey.get('parentSObjectType'),
+        System.assertEquals(String.valueOf(Account.SObjectType), initialView.parentSObjectType,
             'Parent Sobject type should be correctly identified when value is not null');
 
-        System.assertEquals(true, ((Map<String,Boolean>)orgSettingsByKey.get('InstallmentPeriodPermissions')).get('Createable'),
+        System.assertEquals(true, initialView.InstallmentPeriodPermissions.get('Createable'),
             'Installment_Period__c.IsCreatable should return true');
-        System.assert(orgSettingsByKey.get('customFieldSets') instanceof List<RD2_EntryFormController.CustomField>,
-            'A list of Custom Fields should be returned');
     }
 
     /***
     * @description Verifies whether the org is the Elevate customer
     * in order to display the Elevate credit card widget if so.
     */
-    @isTest
+    @IsTest
+    private static void newRecordShouldDefaultStartDate() {
+        Test.startTest();
+        RD2_AppView initialView = RD2_EntryFormController.getInitialView(null, null);
+        Test.stopTest();
+
+        System.assertEquals(initialView.record.dateEstablished, Date.today(), 'Date established should default to today.');
+    }
+
+    /***
+    * @description Verifies whether the org is the Elevate customer
+    * in order to display the Elevate credit card widget if so.
+    */
+    @IsTest
+    private static void newRecordShouldDefaultDateEstablished() {
+        Test.startTest();
+        RD2_AppView initialView = RD2_EntryFormController.getInitialView(null, null);
+        Test.stopTest();
+
+        System.assertEquals(initialView.record.startDate, Date.today(), 'Start date should default to today.');
+    }
+
+    /***
+    * @description Verifies whether the org is the Elevate customer
+    * in order to display the Elevate credit card widget if so.
+    */
+    @IsTest
     private static void shouldDisplayElevateWidgetWhenElevateEnabledIsTrue() {
-        Id accountId =  UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
+        Id accountId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
 
         RD2_ElevateIntegrationService_TEST.enableElevateUserPermissions();
 
         Test.startTest();
-        Map<String, Object> orgSettingsByKey = RD2_EntryFormController.getRecurringSettings(accountId);
+        RD2_AppView initialView = RD2_EntryFormController.getInitialView(accountId, null);
         Test.stopTest();
 
-        System.assertEquals(true, ((Boolean) orgSettingsByKey.get('isElevateCustomer')),
+        System.assertEquals(true, initialView.isElevateCustomer,
             'The org should be Elevate customer');
     }
 
     /***
     * @description Verifies that Entry Form Controller returns the expected results for Account for Donor Type
     */
-    @isTest
+    @IsTest
     private static void shouldReturnAccountDonorType() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
@@ -131,9 +157,9 @@ private with sharing class RD2_EntryFormController_TEST {
         insert rd;
 
         Test.startTest();
-        Map<String, Object> response = RD2_EntryFormController.getRecurringData(rd.Id);
-        String donorType = (String)response.get('DonorType');
-        String period = (String)response.get('Period');
+        RD2_AppView view = RD2_EntryFormController.getInitialView(a.Id, rd.Id);
+        String donorType = view.record.donorType;
+        String period = view.record.recurringPeriod;
         Test.stopTest();
 
         System.assertEquals('Account', donorType);
@@ -143,7 +169,7 @@ private with sharing class RD2_EntryFormController_TEST {
     /***
     * @description Verifies that Entry Form Controller returns the expected results for Contact for Donor Type
     */
-    @isTest
+    @IsTest
     private static void shouldReturnContactDonorType() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
@@ -153,10 +179,10 @@ private with sharing class RD2_EntryFormController_TEST {
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
         Test.startTest();
-        Map<String, Object> response = RD2_EntryFormController.getRecurringData(rd.Id);
-        String donorType = (String)response.get('DonorType');
-        String period = (String)response.get('Period');
-        Integer frequency = Integer.valueOf(response.get('Frequency'));
+        RD2_AppView view = RD2_EntryFormController.getInitialView(null, rd.Id);
+        String donorType = view.record.donorType;
+        String period = view.record.recurringPeriod;
+        Integer frequency = view.record.recurringFrequency;
         Test.stopTest();
 
         System.assertEquals('Contact', donorType);
@@ -204,14 +230,16 @@ private with sharing class RD2_EntryFormController_TEST {
     /***
     * @description Verifies that Entry Form Controller excluded all NPSP packaged field and predefined excluded fields
     */
-    @isTest
+    @IsTest
     private static void shouldReturnRD2CustomFieldsWithoutNPSPNameSpaceAndExcludedFields() {
         Test.startTest();
-        List<RD2_EntryFormController.CustomField> customFields = RD2_entryFormController.getCustomFieldSectionFields();
+        List<InputFieldView> customFields = RD2_EntryFormController.getCustomFieldSectionFields();
         Test.stopTest();
 
-        for (RD2_EntryFormController.CustomField field : customFields) {
-            System.assert(!RD2_EntryFormController.excludedCustomFields.contains(field.apiName),
+        Set<String> excludedCustomFields = RD2_Settings.getExcludedCustomFields();
+
+        for (InputFieldView field : customFields) {
+            System.assert(!excludedCustomFields.contains(field.apiName),
                 'Excluded fields should not be return:' + field.apiName);
             System.assert(!field.apiName.startsWith('npsp__'),
                 'NPSP package field should not be return:' + field.apiName);
@@ -223,7 +251,7 @@ private with sharing class RD2_EntryFormController_TEST {
     /***
     * @description Verifies Commitment record created response is returned upon successful creation
     */
-    @isTest
+    @IsTest
     private static void shouldReturnCreatedResponseWhenCreateCommitmentSucceeds() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
@@ -248,12 +276,18 @@ private with sharing class RD2_EntryFormController_TEST {
     /**
     * @description Verifies an error record will be created when an error response is received from the Elevate API.
     */
-    @isTest
+    @IsTest
     private static void shouldCreateErrorRecordWhenElevateReturnsErrorResponse() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
         npe03__Recurring_Donation__c rd = buildRecurringDonation();
+
+        RD2_QueryService selectorStub = (RD2_QueryService)Test.createStub(
+                RD2_QueryService.class,
+                new RD2_QueryServiceMock(rd.clone())
+        );
+        RD2_EntryFormController.selector = selectorStub;
 
         Test.startTest();
         UTIL_Http_TEST.mockBadRequestCalloutResponse();
@@ -275,7 +309,7 @@ private with sharing class RD2_EntryFormController_TEST {
     /**
     * @description Verifies an error record will be created when update paymnet commitment fail.
     */
-    @isTest
+    @IsTest
     private static void shouldCreateErrorRecordWhenUpdatePaymentInfoReturnsErrorResponse() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
@@ -303,7 +337,7 @@ private with sharing class RD2_EntryFormController_TEST {
     /**
     * @description Verifies commitment success response is returned upon successful update 
     */
-    @isTest
+    @IsTest
     private static void shouldReturnSuccessResponseWhenUpdatePaymentInfoIsSuccess() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
@@ -351,7 +385,7 @@ private with sharing class RD2_EntryFormController_TEST {
     /**
     * @description Verifies commitment success response is returned upon successful schedule update 
     */
-    @isTest
+    @IsTest
     private static void shouldReturnSuccessResponseWhenUpdateElevateScheduleAmount() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
@@ -400,7 +434,7 @@ private with sharing class RD2_EntryFormController_TEST {
     /**
     * @description Verifies commitment success response is returned upon successful schedule update 
     */
-    @isTest
+    @IsTest
     private static void shouldReturnSuccessResponseWhenUpdateElevateSchedulePeriod() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
@@ -449,7 +483,7 @@ private with sharing class RD2_EntryFormController_TEST {
     /**
     * @description Verifies commitment success response is returned upon successful schedule update 
     */
-    @isTest
+    @IsTest
     private static void shouldReturnSuccessResponseWhenUpdateElevateScheduleFrequency() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
@@ -498,19 +532,18 @@ private with sharing class RD2_EntryFormController_TEST {
     /***
     * @description Verifies Recurring Donation should be validate and handle any error before calling Elevate API
     */
-    @isTest
+    @IsTest
     private static void shouldThrowExceptionWhenRDFieldValueIsInvalid() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
-        .withIsIntegrationEnabled(true)
-        .withHasIntegrationPermissions(false);
-        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
-            PS_IntegrationServiceConfig.class,
-            configStub
-        );
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
 
         npe03__Recurring_Donation__c rd = buildRecurringDonation();
+        RD2_QueryService selectorStub = (RD2_QueryService)Test.createStub(
+                RD2_QueryService.class,
+                new RD2_QueryServiceMock(rd.clone())
+        );
+        RD2_EntryFormController.selector = selectorStub;
 
         rd.CommitmentId__c = COMMITMENT_ID;
         rd.npe03__Amount__c = 0.9;
@@ -534,7 +567,7 @@ private with sharing class RD2_EntryFormController_TEST {
     /***
     * @description Verifies Recurring Donation should be validate and handle any error before calling Elevate API
     */
-    @isTest
+    @IsTest
     private static void shouldReturnSuccessWhenUpdatingRdFromController() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
@@ -589,7 +622,7 @@ private with sharing class RD2_EntryFormController_TEST {
     /**
     * @description Verifies commitment success response is returned upon successful campaign update
     */
-    @isTest
+    @IsTest
     private static void shouldReturnSuccessResponseWhenUpdateElevateCamapaign() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
@@ -636,7 +669,102 @@ private with sharing class RD2_EntryFormController_TEST {
         System.assertEquals(UTIL_Http.STATUS_OK, status,
             'The response status should match: ' + response);
     }
- 
+
+    @IsTest
+    private static void canSaveRecurringDonation() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        Contact donorContact = getContact();
+
+        RD2_SaveRequest req = new RD2_SaveRequest();
+
+        req.dayOfMonth = '15';
+        req.startDate = Date.newInstance(2022, 1, 15);
+        req.dateEstablished = Date.newInstance(2022, 1, 15);
+        req.recurringFrequency = 1;
+        req.contactId = donorContact.Id;
+        req.recurringStatus = 'Active';
+        req.donationValue = 5;
+        req.recurringType = 'Open';
+        req.recurringPeriod = 'Monthly';
+        req.paymentMethod = 'Credit Card';
+
+        SaveResultView result = RD2_EntryFormController.saveRecurringDonation(req);
+
+        System.assert(result.success, 'RD not inserted successfully');
+        System.assertNotEquals(result.recordId, null, 'Save result should have an Id');
+    }
+
+    @IsTest
+    private static void saveRequestMapsFieldsToRecurringDonation() {
+        RD2_SaveRequest req = new RD2_SaveRequest();
+
+        Id fakeCampaignId = UTIL_UnitTestData_TEST.mockId(Campaign.SObjectType);
+        Id fakeContactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
+        Id fakeRdId = UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.SObjectType);
+
+        Date fakeDate =  Date.newInstance(2022, 1, 15);
+        Date fakeDate2 =  Date.newInstance(2022, 1, 14);
+        req.dayOfMonth = '15';
+        req.recurringStatus = 'Active';
+        req.startDate = fakeDate;
+        req.dateEstablished = fakeDate2;
+        req.recurringFrequency = 1;
+        req.contactId = fakeContactId;
+        req.recurringStatus = 'Active';
+        req.donationValue = 5;
+        req.recurringType = 'Open';
+        req.recurringPeriod = 'Monthly';
+        req.paymentMethod = 'Credit Card';
+        req.campaignId = fakeCampaignId;
+        req.customFieldValues = new Map<String, Object>{
+                // utilizing this field as a fake custom field
+                'CommitmentId__c' => '123-456-789'
+        };
+        req.cardExpirationYear = '2025';
+        req.cardExpirationMonth = '2';
+        req.recordId = fakeRdId;
+
+        npe03__Recurring_Donation__c rd = req.toRecord();
+
+        System.assertEquals('15', rd.Day_of_Month__c);
+        System.assertEquals(fakeDate, rd.StartDate__c);
+        System.assertEquals(fakeDate2, rd.npe03__Date_Established__c);
+        System.assertEquals(1, rd.InstallmentFrequency__c);
+        System.assertEquals('123-456-789', rd.CommitmentId__c);
+        System.assertEquals(fakeCampaignId, rd.npe03__Recurring_Donation_Campaign__c);
+        System.assertEquals('Credit Card', rd.PaymentMethod__c);
+        System.assertEquals(5, rd.npe03__Amount__c);
+        System.assertEquals('2025', rd.CardExpirationYear__c);
+        System.assertEquals('2', rd.CardExpirationMonth__c);
+        System.assertEquals('Active', rd.Status__c);
+        System.assertEquals(fakeRdId, rd.Id);
+    }
+
+
+    @IsTest
+    private static void saveResponseIncludesErrorInformation() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        Contact donorContact = getContact();
+
+        RD2_SaveRequest req = new RD2_SaveRequest();
+
+        req.dayOfMonth = '15';
+        req.startDate = Date.newInstance(2022, 1, 15);
+        req.dateEstablished = Date.newInstance(2022, 1, 15);
+        req.recurringFrequency = 1;
+        req.contactId = donorContact.Id;
+        req.recurringStatus = 'Active';
+        req.donationValue = -1;
+        req.recurringType = 'Open';
+        req.recurringPeriod = 'Monthly';
+        req.paymentMethod = 'Credit Card';
+
+        SaveResultView result = RD2_EntryFormController.saveRecurringDonation(req);
+
+        System.assertEquals(false, result.success, 'Expected RD2SaveResult success to be false');
+        System.assertEquals(null, result.recordId, 'Expected empty record Id');
+        System.assertEquals(Label.RD2_AmountMustBeValid, result.errors[0].message, 'Wrong error message');
+    }
 
     // Helpers
     ////////////////
@@ -690,6 +818,25 @@ private with sharing class RD2_EntryFormController_TEST {
             .withDayOfMonth('1')
             .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
             .build();
+    }
+
+    public class RD2_QueryServiceMock implements StubProvider {
+
+        npe03__Recurring_Donation__c rd;
+
+        public RD2_QueryServiceMock(npe03__Recurring_Donation__c rd) {
+            this.rd = rd;
+        }
+
+        public Object handleMethodCall(Object stubbedObject,
+                String stubbedMethodName,
+                Type returnType,
+                List<Type> listOfParamTypes,
+                List<String> listOfParamNames,
+                List<Object> listOfArgs
+        ) {
+            return this.rd;
+        }
     }
 
 }

@@ -180,7 +180,7 @@
     <template if:true={displayEditModal}>
         <c-rd2-edit-payment-information-modal
             onclose={closeUpdatePaymentInformationModal}
-            account-holder-type={accountHolderType}
+            rd2-state={rd2State}
             default-record-type-id={defaultRecordTypeId}
             rd-record={rdRecord}>
         </c-rd2-edit-payment-information-modal>

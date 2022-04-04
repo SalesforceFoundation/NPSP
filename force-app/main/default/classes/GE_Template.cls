@@ -38,6 +38,7 @@
 public with sharing class GE_Template {
     static final String TEMPLATE_VERSION = '1.0';
     static final String FIELD_ELEMENT_TYPE = 'field';
+    private static FieldMappings mappings = FieldMappings.newInstance();
 
     /**
      * @description This method determines if there is a default template, 
@@ -112,35 +113,42 @@ public with sharing class GE_Template {
      */
     @TestVisible
     private static Form_Template__c buildDefaultTemplate() {
-        Form_Template__c newDefaultTemplate = new Form_Template__c();
-        List<StaticResource> defaultTemplateSRList = [SELECT 
-                    Id, 
-                    Body 
-            FROM StaticResource 
-            WHERE Name = 'DefaultGiftEntryTemplate' LIMIT 1];
+        Template orgSpecificDefaultTemplate = getOrgSpecificDefaultTemplate();
+        return getFormTemplateFor(orgSpecificDefaultTemplate);
+    }
 
-        String defaultTemplateSRJSON = '';
+    private static Form_Template__c getFormTemplateFor(Template aTemplate) {
+        Form_Template__c formTemplate = new Form_Template__c();
+        formTemplate.Name = aTemplate.name;
+        formTemplate.Description__c = aTemplate.description;
+        formTemplate.Template_JSON__c = JSON.serialize(aTemplate);
+        formTemplate.Format_Version__c = TEMPLATE_VERSION;
+        return formTemplate;
+    }
 
-        if (!defaultTemplateSRList.isEmpty()) {
-            defaultTemplateSRJSON = defaultTemplateSRList[0].Body.toString();
+    private static void applyNamespaceToBatchHeaderFields(Template aTemplate) {
+        List<BatchHeaderField> batchHeaderFieldList = aTemplate.batchHeaderFields;
+        for (BatchHeaderField batchHeaderField : batchHeaderFieldList) {
+            if (batchHeaderField.apiName.endsWith('__c')) {
+                batchHeaderField.apiName = UTIL_Namespace.StrTokenNSPrefix(batchHeaderField.apiName);
+            }
         }
+    }
+
+    private static void updateLayoutUsingLocalMigratedFieldMappings(Template aTemplate) {
+        Layout orgSpecificTemplate = aTemplate.layout;
+        List<Section> sectionList = orgSpecificTemplate.sections;
 
         // Get a mapping of partial dev names to full dev names for this org.
         // Example:
         // Account1_Name -> Account1_Name_ee63cf9df
-        // 
-        // This is used for updating the base JSON's field mapping dev names with the org's dev names. 
+        // This is used for updating the base JSON's field mapping dev names with the org's dev names.
         Map<String, String> updatedFieldDevNameMap = new Map<String, String>();
 
-        // This is used for updating the base JSON's object mapping dev names with the org's dev names. 
+        // This is used for updating the base JSON's object mapping dev names with the org's dev names.
         Map<String, String> updatedObjectDevNameMap = new Map<String, String>();
-        
-        populateDevNameMapping(updatedFieldDevNameMap, updatedObjectDevNameMap);
-        
-        Template defaultTemplate = (Template)JSON.deserialize(defaultTemplateSRJSON, Template.class);
-        Layout defaultLayout = defaultTemplate.layout;
-        List<Section> sectionList = defaultLayout.sections;
 
+        populateDevNameMapping(updatedFieldDevNameMap, updatedObjectDevNameMap);
         for (Section section : sectionList) {
             List<Element> elementList = section.elements;
 
@@ -152,11 +160,11 @@ public with sharing class GE_Template {
                     }
                 }
                 if (element.dataImportFieldMappingDevNames != null) {
-                    for (Integer i=0; i<element.dataImportFieldMappingDevNames.size(); i++) {
+                    for (Integer i = 0; i < element.dataImportFieldMappingDevNames.size(); i++) {
                         // Get the updated dev name for this org and replace it into the Base JSON
-                        String partialDevName = 
-                            element.dataImportFieldMappingDevNames.get(i).substringBeforeLast('_');
-    
+                        String partialDevName =
+                                element.dataImportFieldMappingDevNames.get(i).substringBeforeLast('_');
+
                         // If the updated Dev Name map doesn't contain the partial dev name
                         // it is not necessary to be updated. It is probably a field
                         // that is on the DI itself and not a mapped field.
@@ -165,21 +173,21 @@ public with sharing class GE_Template {
                             element.dataImportFieldMappingDevNames.set(i, updatedFieldDevNameMap.get(partialDevName));
                         } else {
                             String fullDevName = element.dataImportFieldMappingDevNames.get(i);
-    
+
                             if (fullDevName.endsWith('__c')) {
                                 fullDevName = UTIL_Namespace.StrTokenNSPrefix(fullDevName);
                                 // Align field api name with environment namespace if needed
                                 element.fieldApiName =
-                                    element.fieldApiName != null ?
-                                    UTIL_Namespace.StrTokenNSPrefix(element.fieldApiName) :
-                                    element.fieldApiName;
+                                        element.fieldApiName != null ?
+                                                UTIL_Namespace.StrTokenNSPrefix(element.fieldApiName) :
+                                                element.fieldApiName;
                                 // Align object api name with environment namespace if needed
                                 element.objectApiName = element.objectApiName != null ?
-                                    UTIL_Namespace.StrTokenNSPrefix(element.objectApiName) :
-                                    element.objectApiName;
+                                        UTIL_Namespace.StrTokenNSPrefix(element.objectApiName) :
+                                        element.objectApiName;
                             }
-    
-                            // If it is a DI field, apply the namespace, if there is one. 
+
+                            // If it is a DI field, apply the namespace, if there is one.
                             element.dataImportFieldMappingDevNames.set(i, fullDevName);
                         }
                     }
@@ -187,23 +195,45 @@ public with sharing class GE_Template {
             }
         }
 
-        // Update the batch header fields with the namespace prefix, if necessary
-        List<BatchHeaderField> batchHeaderFieldList = defaultTemplate.batchHeaderFields;
-        
-        for (BatchHeaderField batchHeaderField : batchHeaderFieldList) {
-
-            if (batchHeaderField.apiName.endsWith('__c')) {
-                batchHeaderField.apiName = UTIL_Namespace.StrTokenNSPrefix(batchHeaderField.apiName);
-            }
-        }
-
-        newDefaultTemplate.Name = defaultTemplate.name;
-        newDefaultTemplate.Description__c = defaultTemplate.description;
-        newDefaultTemplate.Template_JSON__c = JSON.serialize(defaultTemplate);
-        newDefaultTemplate.Format_Version__c = TEMPLATE_VERSION;
-        return newDefaultTemplate;
+        // In order to properly check whether any of the
+        // migrated field mappings have been deleted, the call
+        // to stripElementsWithDeletedFieldMappings() must happen
+        // after the template's dev names have been updated.
+        orgSpecificTemplate.stripElementsWithDeletedFieldMappings(mappings);
     }
-    
+
+    private static String getDefaultTemplateBaseJSON() {
+        String defaultTemplateSRJSON = '';
+        List<StaticResource> defaultTemplateSRList = [
+                SELECT
+                        Id,
+                        Body
+                FROM StaticResource
+                WHERE Name = 'DefaultGiftEntryTemplate'
+                LIMIT 1
+        ];
+
+
+        if (!defaultTemplateSRList.isEmpty()) {
+            defaultTemplateSRJSON = defaultTemplateSRList[0].Body.toString();
+        }
+        return defaultTemplateSRJSON;
+    }
+
+    private static Template getOrgSpecificDefaultTemplate() {
+        Template orgSpecificDefaultTemplate =
+                (Template) JSON.deserialize(getDefaultTemplateBaseJSON(), Template.class);
+
+        // Update the batch header fields with the namespace prefix, if necessary
+        applyNamespaceToBatchHeaderFields(orgSpecificDefaultTemplate);
+
+        // Update the Base Template to have it reflect the Developer Names of the
+        // migrated Field Mappings that exist in this Org.
+        updateLayoutUsingLocalMigratedFieldMappings(orgSpecificDefaultTemplate);
+
+        return orgSpecificDefaultTemplate;
+    }
+
     /**
      * @description This method builds a mapping of partial dev name to 
      * the full dev name using the org's field mapping custom metadata records. 
@@ -214,18 +244,8 @@ public with sharing class GE_Template {
     private static void populateDevNameMapping(Map<String,String> updatedFieldDevNameMap,
         Map<String,String> updatedObjectDevNameMap) {
 
-        // Get the org's migrated field mappings. 
-        List<Data_Import_Field_Mapping__mdt> fieldMappingCMTList = [
-                SELECT Id, 
-                        MasterLabel, 
-                        DeveloperName,
-                        Target_Object_Mapping__r.DeveloperName
-                FROM Data_Import_Field_Mapping__mdt 
-                WHERE Data_Import_Field_Mapping_Set__r.DeveloperName =: 
-                    BDI_MigrationMappingUtility.MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME
-            ];
-
-        for (Data_Import_Field_Mapping__mdt fieldMapping : fieldMappingCMTList) {
+        for (Data_Import_Field_Mapping__mdt fieldMapping :
+                (List<Data_Import_Field_Mapping__mdt>) mappings.getRecords()) {
             String partialFieldDevName = fieldMapping.DeveloperName.substringBeforeLast('_');
             String partialObjectDevName = 
                 fieldMapping.Target_Object_Mapping__r.DeveloperName.substringBeforeLast('_');
@@ -306,6 +326,30 @@ public with sharing class GE_Template {
             this.fieldMappingSetDevName = fieldMappingSetDevName;
             this.sections = sections;
         }
+
+        public Boolean containsField(SObjectField sObjectField) {
+            for (Section section : sections) {
+                List<Element> elements = section.elements;
+                for (Element element : elements) {
+                    if (element.fieldApiName == String.valueOf(sObjectField)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public void stripElementsWithDeletedFieldMappings(FieldMappings fieldMappings) {
+            for (Section section : sections) {
+                List<Element> els = new List<Element>();
+                for (Element e : section.elements) {
+                    if (!fieldMappings.isDeleted(e.fieldMappingDevName())) {
+                        els.add(e);
+                    }
+                }
+                section.elements = els;
+            }
+        }
     }
 
     /**
@@ -384,6 +428,10 @@ public with sharing class GE_Template {
             this.componentName = componentName;
             this.dataImportFieldMappingDevNames = dataImportFieldMappingDevNames;
             this.required = false;
+        }
+
+        private String fieldMappingDevName() {
+            return dataImportFieldMappingDevNames[0];
         }
     }
 

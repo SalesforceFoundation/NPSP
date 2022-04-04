@@ -1,0 +1,27 @@
+.bolder {
+    font-weight: bolder;
+}
+
+.lifetime .bolder .SMALL {
+    border-bottom: 10px;
+}
+
+.bold-title{
+    font-weight: 700;
+}
+
+.columns-mobile{
+    font-size: 14px;
+}
+
+.usd-value-desktop{
+    font-size: 16px;
+}
+
+.columns-desktop {
+    font-size: 18px;
+}
+
+.to-uppercase{
+    text-transform: uppercase;
+}

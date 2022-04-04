@@ -32,7 +32,7 @@
 * @date 2021
 * @description Domain class for Addresses in NPSP.
 */
-public inherited sharing class Addresses extends fflib_SObjects {
+public inherited sharing class Addresses extends fflib_SObjects2 {
 
     private Map<Id, Address__c> oldMap;
 
@@ -54,6 +54,16 @@ public inherited sharing class Addresses extends fflib_SObjects {
                 contactSelector = new ContactSelector();
             }
             return contactSelector;
+        }
+        set;
+    }
+
+    private static OrgConfig orgConfig {
+        get {
+            if (orgConfig == null) {
+                orgConfig = new OrgConfig();
+            }
+            return orgConfig;
         }
         set;
     }
@@ -240,7 +250,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
 
             NPSP_HouseholdAccount npspHouseholdAccount = new NPSP_HouseholdAccount(accountsById.get(accountId));
             updateAccountAddress(npspHouseholdAccount, addressToSyncToAccountsAndContacts, accountsToUpdate);
-
             clearAccountAddressDefaults(allAddressesByAccountId,
                 accountId, householdInfoByAccountId, addressesToUpdate);
 
@@ -324,10 +333,12 @@ public inherited sharing class Addresses extends fflib_SObjects {
         if (accountHasAddresses(allAddressesByAccountId, accountId)) {
             for (Address__c address : allAddressesByAccountId.get(accountId)) {
                 HouseholdInfo householdInfo = householdInfoByAccountId.get(accountId);
-                if (address.Id == householdInfo.defaultAddress.Id) {
+                NPSP_Address npspAddress = new NPSP_Address(address);
+                if (npspAddress.getRecord().Id == householdInfo.defaultAddress.Id) {
                     continue;
                 }
-                if (address.Default_Address__c) {
+
+                if (npspAddress.isDefault()) {
                     address.Default_Address__c = false;
                     address.Latest_End_Date__c = System.today();
                     addressesToUpdate.add(address);
@@ -893,9 +904,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     private Addresses defaultAddresses() {
-        fflib_SObjects defaultAddresses = selectByFieldValue(
+        List<Address__c> defaultAddresses = getRecordsByFieldValue(
                 Address__c.Default_Address__c, TRUE);
-        return new Addresses(defaultAddresses.getRecords());
+        return new Addresses(defaultAddresses);
     }
 
     private void updateLatestDatesForDefaultChanges() {
@@ -915,9 +926,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
     private Addresses addressesWithDefaultChanges() {
         List<Address__c> addressesWithDefaultChanges = new List<Address__c>();
         for (Address__c address : (List<Address__c>) getRecords()) {
-            NPSP_Address npspAddress = new NPSP_Address(address);
+            NPSP_Address npspAddress = new NPSP_Address(address, oldVersionOf(address));
 
-            if (npspAddress.isDefault()) {
+            if (npspAddress.hasDefaultChanged()) {
                 addressesWithDefaultChanges.add(address);
             }
         }
@@ -933,12 +944,31 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     private static Map<Id, Account> getAccountsByIds(Set<Id> accountIds) {
-        return new Map<Id, Account>([
-                SELECT Id, BillingStreet, BillingCity, BillingState,
-                        BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude, Undeliverable_Address__c
-                FROM Account
-                WHERE Id IN :accountIds
-        ]);
+        List<String> selectFields = accountAddressFields();
+
+        String accountAddressFieldsSOQL = new UTIL_Query()
+                .withSelectFields(selectFields)
+                .withFrom(String.valueOf(Account.SObjectType))
+                .withWhere('Id IN :accountIds')
+                .build();
+
+        return new Map<Id, Account>((Account[])Database.query(accountAddressFieldsSOQL));
+    }
+
+    private static List<String> accountAddressFields() {
+        List<String> selectFields = new List<String> {
+                'Id', 'BillingStreet',
+                'BillingCity', 'BillingState',
+                'BillingPostalCode', 'BillingCountry',
+                'BillingLatitude', 'BillingLongitude',
+                'Undeliverable_Address__c'
+        };
+
+        if (orgConfig.isStateCountryPicklistsEnabled()) {
+            selectFields.add('BillingCountryCode');
+            selectFields.add('BillingStateCode');
+        }
+        return selectFields;
     }
 
     /*******************************************************************************************************

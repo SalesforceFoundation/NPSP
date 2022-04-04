@@ -32,7 +32,7 @@
 * @date 2021
 * @description Domain class for Contacts in NPSP.
 */
-public inherited sharing class Contacts extends fflib_SObjects {
+public inherited sharing class Contacts extends fflib_SObjects2 {
 
     public Map<Id, Contact> oldMap;
 
@@ -144,10 +144,29 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return householdIdsToRename;
     }
 
+    public List<Id> getHouseholdIdsToRenameAndCountMembers() {
+        Set<Id> uniqueAccountsToHandle = new Set<Id>(getHouseholdIdsToRename());
+
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            Contact oldContact = oldVersionOf(contactRecord);
+            if (needsHHDeceasedFlagUpdate(contactRecord, oldContact)) {
+                uniqueAccountsToHandle.add(contactRecord.AccountId);
+            }
+        }
+
+        return new List<Id>(uniqueAccountsToHandle);
+    }
+
     public void resetDeprecatedFields() {
         for (Contact contactRecord : (List<Contact>) getRecords()) {
             // always clear this deprecated field to avoid confusing users.
             contactRecord.npe01__SystemAccountProcessor__c = null;
+        }
+    }
+
+    public void resetSustainerFields() {
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            contactRecord.Sustainer__c = oldVersionOf(contactRecord)?.Sustainer__c;
         }
     }
 
@@ -178,16 +197,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
         set;
     }
 
-    public List<Contact> contactsWithoutAccounts() {
-        List<Contact> contactsWithoutAccounts = new List<Contact>();
-        for (Contact contactRecord : (List<Contact>) getRecords()) {
-            if (isMissingAccount(contactRecord)) {
-                contactsWithoutAccounts.add(contactRecord);
-            }
-        }
-        return contactsWithoutAccounts;
-    }
-
     public Map<Id, Contact> getNewOwnerContactById() {
         Map<Id, Contact> newOwnerContactById = new Map<Id, Contact>();
         for (Contact contactRecord : (List<Contact>) getRecords()) {
@@ -197,6 +206,45 @@ public inherited sharing class Contacts extends fflib_SObjects {
             }
         }
         return newOwnerContactById;
+    }
+
+    public Set<Id> ids() {
+        return getIdFieldValues(Contact.Id).getIds();
+    }
+
+
+    public Set<Id> accountIds() {
+        Set<Id> setAccountId = new Set<Id>();
+        for (Integer i = 0; i < getRecords().size(); i++) {
+            Contact newRecord = (Contact) getRecords()[i];
+
+            // need to query account fields we need to look at
+            if (newRecord.AccountId != null) {
+                setAccountId.add(newRecord.AccountId);
+            }
+        }
+        return setAccountId;
+    }
+
+    public Contacts contactsWithNonNullAccountIds() {
+        List<Contact> contactsWithNonNullAccountId = new List<Contact>();
+        for (Contact contact :(List<Contact>)  getRecords()) {
+            if (contact.AccountId != null) {
+                contactsWithNonNullAccountId.add(contact);
+            }
+        }
+        return new Contacts(contactsWithNonNullAccountId);
+    }
+
+    public List<Contact> publicContactsWithNonNullAccountIds() {
+        List<Contact> contactsWithoutAccounts = new List<Contact>();
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            if (contactRecord.AccountId == null
+                    && contactRecord.npe01__Private__c != true) {
+                contactsWithoutAccounts.add(contactRecord);
+            }
+        }
+        return contactsWithoutAccounts;
     }
 
     /*******************************************************************************************************
@@ -236,17 +284,18 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 contactRecord.Fax != oldContact.Fax);
     }
 
-    public Set<Id> accountIds() {
-        Set<Id> setAccountId = new Set<Id>();
-        for (Integer i = 0; i < getRecords().size(); i++) {
-            Contact newRecord = (Contact) getRecords()[i];
-
-            // need to query account fields we need to look at
-            if (newRecord.AccountId != null) {
-                setAccountId.add(newRecord.AccountId);
-            }
+    private Boolean needsHHDeceasedFlagUpdate(Contact contactRecord, Contact oldContact) {
+        if (!isContactInHouseholdAccount(contactRecord)) {
+            return false;
         }
-        return setAccountId;
+        return contactRecord.Deceased__c != oldContact.Deceased__c;
+    }
+
+    private Boolean isContactInHouseholdAccount(Contact contactRecord) {
+        if (contactRecord.npe01__Organization_Type__c != CAO_Constants.HH_ACCOUNT_TYPE) {
+            return false;
+        }
+        return true;
     }
 
     /*******************************************************************************************************
@@ -256,7 +305,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     * @return Boolean
     */
     private Boolean needsHHAccountRename(Contact contactRecord, Contact oldContact) {
-        if (contactRecord.npe01__Organization_Type__c != CAO_Constants.HH_ACCOUNT_TYPE) {
+        if (!isContactInHouseholdAccount(contactRecord)) {
             return false;
         }
 
@@ -309,12 +358,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return false;
     }
 
-
-
-    private Boolean isMissingAccount(Contact contactRecord) {
-        return contactRecord.AccountId == null && contactRecord.npe01__Private__c != true;
-    }
-
     private Account accountFor(Contact contactRecord) {
         return accountById.get(contactRecord.AccountId);
     }
@@ -330,10 +373,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 FROM Account
                 WHERE Id IN :accountIds
         ]);
-    }
-
-    public Set<Id> ids() {
-       return getIdFieldValues(Contact.Id);
     }
 
 }

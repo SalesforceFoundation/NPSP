@@ -42,6 +42,29 @@ global with sharing class Callable_API implements System.Callable {
     ********************************************************************************************************/
     public class MalformedMethodInvocationException extends Exception {}
 
+
+    @TestVisible
+    private AdvancedMappingEnablementService advancedMappingEnablementService {
+        get {
+            if (advancedMappingEnablementService == null) {
+                advancedMappingEnablementService = new AdvancedMappingEnablementService();
+            }
+            return advancedMappingEnablementService;
+        }
+        set;
+    }
+
+    @TestVisible
+    private GiftEntryEnablementService giftEntryEnablementService {
+        get {
+            if (giftEntryEnablementService == null) {
+                giftEntryEnablementService = new GiftEntryEnablementService();
+            }
+            return giftEntryEnablementService;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description call function implementation of the callable Interface will dispatch to the appropriate
     * action handler based on the action text
@@ -89,8 +112,7 @@ global with sharing class Callable_API implements System.Callable {
             } when 'err.dispatchaction' {
                 // This method is to be used only by Salesforce.org apps and is subject to change at any time. Do NOT call this method.
                 // If you do so, your functionality can break without any warning or liability from Salesforce.
-                // If you have any questions, please inquire on the Power of Us Hub.
-
+               
                 // Since there are multiple actions that can be invoked, the ERR_Dispatch_API will get the remaining params out of the
                 // parameter service depending on which action was invoked
                 return CallableDispatchService_ERR.getInstanceOf(paramService).dispatch();
@@ -131,7 +153,6 @@ global with sharing class Callable_API implements System.Callable {
             } when 'allo.processoppsandpmts' {
                 // This method is to be used only by Salesforce.org apps and is subject to change at any time. Do NOT call this method.
                 // If you do so, your functionality can break without any warning or liability from Salesforce.
-                // If you have any questions, please inquire on the Power of Us Hub.
                 Set<Id> opportunityIds = paramService.getSetId(CallableApiParameters.PARAM_OPPORTUNITY_IDS);
                 String contextType = paramService.getString(CallableApiParameters.PARAM_CONTEXT_TYPE);
                 Datetime processingBoundary = paramService.getDatetime(CallableApiParameters.PARAM_PROCESSING_BOUNDARY);
@@ -145,8 +166,7 @@ global with sharing class Callable_API implements System.Callable {
 
             } when 'allo.validatepmtallocationconfig' {
                 // This method is to be used only by Salesforce.org apps and is subject to change at any time. Do NOT call this method.
-                // If you do so, your functionality can break without any warning or liability from Salesforce.
-                // If you have any questions, please inquire on the Power of Us Hub.
+                // If you do so, your functionality can break without any warning or liability from Salesforce.               
                 return ALLO_AllocationsSettings.getSettings().validatePaymentAllocationsConfiguration();
 
             } when 'settings.enablecustomizablerollups' {
@@ -159,7 +179,25 @@ global with sharing class Callable_API implements System.Callable {
                 // It returns the Job ID of the Scheduled Job.
                 return CallableApiApexDelegationService.handleApexScheduleJob(params);
 
-            } when else {
+            } when 'settings.enableadvancedmapping' {
+                if (advancedMappingEnablementService.isEnabled()) {
+                    return null;
+                }
+
+                advancedMappingEnablementService.enable();
+
+                return null;
+
+            } when 'settings.enablegiftentry' {
+                if (giftEntryEnablementService.isEnabled()) {
+                    return null;
+                }
+
+                giftEntryEnablementService.enable();
+
+                return null;
+            }
+            when else {
                 throw new MalformedMethodInvocationException(
                     String.format(System.Label.CallableApiMethodNotImplemented, new List<String> { action })
                 );
@@ -169,5 +207,4 @@ global with sharing class Callable_API implements System.Callable {
         // if the action does not return a value then return success
         return true;
     }
-
 }

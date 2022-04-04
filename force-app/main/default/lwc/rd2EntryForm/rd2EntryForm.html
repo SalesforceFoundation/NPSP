@@ -20,13 +20,14 @@
                     data-id="closeButton">
                 </lightning-button-icon>
                 <h2
-                    class="slds-text-heading_medium slds-text-heading--medium slds-hyphenate header-string slds-p-top_large slds-p-horizontal_medium" id="modal-heading-01">
-                    {header}
+                    class="slds-text-heading_medium slds-hyphenate header-string slds-p-top_large slds-p-horizontal_medium" id="modal-heading-01">
+                    {headerLabel}
                 </h2>
             </header>
 
-            <lightning-record-edit-form record-id={recordId} object-api-name="npe03__Recurring_Donation__c"
-                onsubmit={handleSubmit} onerror={handleSaveError} onsuccess={handleSuccess} data-id="outerRecordEditForm">
+            <lightning-record-edit-form record-id={recordId}
+                                        object-api-name="npe03__Recurring_Donation__c"
+                                        data-id="outerRecordEditForm">
                 <div class="slds-modal__content slds-p-top_none slds-p-horizontal_medium slds-p-bottom_medium" id="modal-content-id-1">
                     <template if:true={isLoading}>
                         <div class="slds-grid slds-grid_align-center">
@@ -41,11 +42,14 @@
                     <div class="error-container">
                         <template if:true={error.detail}>
                             <c-util-page-level-message title={error.header}
-                                variant="error"
-                                icon-name="utility:error" icon-size="x-small" icon-variant="inverse" data-id="error"
-                                data-qa-locator="error">
-
-                                <p slot="body" class="slds-p-horizontal_medium slds-p-vertical_xx-small slds-text-color_error">
+                                                       variant="error"
+                                                       icon-name="utility:error"
+                                                       icon-size="x-small"
+                                                       icon-variant="inverse"
+                                                       data-id="error"
+                                                       data-qa-locator="error">
+                                <p slot="body"
+                                   class="slds-p-horizontal_medium slds-p-vertical_xx-small slds-text-color_error">
                                     <lightning-formatted-text value={error.detail}></lightning-formatted-text>
                                 </p>
                             </c-util-page-level-message>
@@ -59,14 +63,13 @@
                             </h3>
                             <div aria-hidden="false" class="slds-section__content">
                                 <c-rd2-entry-form-donor-section
-                                        record-id={recordId}
-                                        parent-id={parentId}
-                                        parent-s-object-type={rdSettings.parentSObjectType}
+                                        rd2-state={rd2State}
                                         data-id="donorComponent"
                                         onerrorevent={handleChildComponentError}
                                         oncontactchange={handleContactChange}
                                         onaccountchange={handleAccountChange}
                                         ondonortypechange={handleDonorTypeChange}
+                                        ondateestablishedchange={handleDateEstablishedChange}
                                         if:true={isSettingReady}
                                 >
                                 </c-rd2-entry-form-donor-section>
@@ -85,6 +88,7 @@
                                         <lightning-layout-item padding="horizontal-small" size="6" if:true={fields.status}>
                                             <lightning-input-field
                                                     data-id="status"
+                                                    value={rd2State.recurringStatus}
                                                     field-name={fields.status.apiName}
                                                     onchange={handleStatusChange}
                                                     required>
@@ -93,7 +97,10 @@
 
                                         <lightning-layout-item padding="horizontal-small" size="6"
                                             if:true={fields.statusReason}>
-                                            <lightning-input-field field-name={fields.statusReason.apiName}>
+                                            <lightning-input-field
+                                                value={rd2State.statusReason}
+                                                onchange={handleStatusReasonChange}
+                                                field-name={fields.statusReason.apiName}>
                                             </lightning-input-field>
                                         </lightning-layout-item>
                                     </lightning-layout>
@@ -113,23 +120,28 @@
                                         if:true={fields.amount}>
                                         <lightning-input-field
                                                 field-name={fields.amount.apiName}
+                                                value={rd2State.donationValue}
                                                 data-id="amountField"
-                                                onchange={handleDonationValueChange}
+                                                onchange={handleAmountChange}
                                                 required
                                         >
                                         </lightning-input-field>
                                     </lightning-layout-item>
 
-                                    <template if:true={isMultiCurrencyEnabled}>
+                                    <template if:true={rd2State.isMultiCurrencyEnabled}>
                                         <lightning-layout-item padding="horizontal-small" size="6" small-device-size="6"
                                             if:true={fields.amount}>
                                             <div class="slds-p-horizontal_xx-small slds-m-bottom_x-small">
                                                 <label for="currencyField"
                                                     class="slds-form-element__label slds-no-flex">{fields.currency.label}</label>
-                                                <lightning-input-field id="currencyField" data-id="currencyField"
-                                                    field-name={fields.currency.apiName} variant="label-hidden"
-                                                    required onchange={handleCurrencyChange}>
-                                                </lightning-input-field>
+                                                <lightning-input-field id="currencyField"
+                                                                       data-id="currencyField"
+                                                                       field-name={fields.currency.apiName}
+                                                                       value={rd2State.currencyIsoCode}
+                                                                       variant="label-hidden"
+                                                                       onchange={handleCurrencyChange}
+                                                                       required
+                                                ></lightning-input-field>
                                             </div>
                                         </lightning-layout-item>
                                     </template>
@@ -137,22 +149,26 @@
                                 </lightning-layout>
 
                                 <c-rd2-entry-form-schedule-section
-                                        record-id={recordId}
+                                        rd2-state={rd2State}
                                         data-id="scheduleComponent"
                                         onerrorevent={handleChildComponentError}
                                         ontypechange={handleRecurringTypeChange}
+                                        ondayofmonthchange={handleDayOfMonthChange}
+                                        onstartdatechange={handleStartDateChange}
                                         onperiodchange={handleRecurringPeriodChange}
                                         onperiodtypechange={handleRecurringPeriodTypeChange}
-                                        onfrequencychange={handleDonationValueChange}
-                                        oninstallmentschange={handleDonationValueChange}
+                                        onfrequencychange={handleFrequencyChange}
+                                        oninstallmentschange={handleInstallmentsChange}
                                         if:true={isSettingReady}>
                                 </c-rd2-entry-form-schedule-section>
 
                                 <lightning-layout horizontal-align="spread" multiple-rows="true">
                                     <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6"
                                         if:true={fields.paymentMethod}>
-                                        <lightning-input-field field-name={fields.paymentMethod.apiName}
+                                        <lightning-input-field
+                                            field-name={fields.paymentMethod.apiName}
                                             onchange={handlePaymentChange}
+                                            value={rd2State.paymentMethod}
                                             data-id="paymentMethod">
                                         </lightning-input-field>
                                     </lightning-layout-item>
@@ -160,21 +176,18 @@
                                     <lightning-layout-item size="12" class="slds-p-bottom_small"
                                         if:true={isElevateWidgetEnabled}>
                                         <c-rd2-elevate-credit-card-form data-id='elevateWidget'
-                                            data-qa-locator='widget Elevate'    
+                                            rd2-state={rd2State}
+                                            data-qa-locator='widget Elevate'
                                             is-edit-mode={isCommitmentEdit}
                                             rd2-record-id={recordId}
-                                            card-exp-date={cardExpDate}
                                             card-last-four-label={cardLastFourLabel}
                                             ach-last-four-label={achLastFourLabel}
-                                            card-last-four={cardLastFour}
-                                            ach-last-four={achLastFour}
                                             next-donation-date={nextDonationDate}
-                                            payer-organization-name={organizationAccountName}
-                                            payer-first-name={contactFirstName}
-                                            payer-last-name={contactLastName}
-                                            ach-account-type={accountHolderType}
-                                            existing-payment-method={existingPaymentMethod}
-                                            payment-method={paymentMethod}>
+                                            payer-organization-name={rd2State.accountName}
+                                            payer-first-name={rd2State.contactFirstName}
+                                            payer-last-name={rd2State.contactLastName}
+                                            existing-payment-method={originalPaymentMethod}
+                                            payment-method={rd2State.paymentMethod}>
                                         </c-rd2-elevate-credit-card-form>
                                     </lightning-layout-item>
                                 </lightning-layout>
@@ -188,10 +201,14 @@
                             </h3>
                             <div aria-hidden="false" class="slds-section__content">
                                 <lightning-layout horizontal-align="spread" multiple-rows="true">
-                                    <template if:false={isAutoNamingEnabled}>
+                                    <template if:false={rd2State.isAutoNamingEnabled}>
                                         <lightning-layout-item padding="horizontal-small" size="12" if:true={fields.name}>
-                                            <lightning-input-field class="name-field-class" field-name={fields.name.apiName}
-                                                required>
+                                            <lightning-input-field class="name-field-class"
+                                                                   field-name={fields.name.apiName}
+                                                                   onchange={handleNameChange}
+                                                                   value={rd2State.recordName}
+                                                                   data-id="recordName"
+                                                                   required>
                                             </lightning-input-field>
                                         </lightning-layout-item>
                                     </template>
@@ -199,6 +216,8 @@
                                     <lightning-layout-item padding="horizontal-small" size="12" if:true={fields.campaign}>
                                         <lightning-input-field
                                                 data-id="campaignLookup"
+                                                onchange={handleCampaignChange}
+                                                value={rd2State.campaignId}
                                                 field-name={fields.campaign.apiName}>
                                         </lightning-input-field>
                                     </lightning-layout-item>
@@ -207,8 +226,9 @@
                                         <lightning-layout-item padding="horizontal-small" size="6" if:true={fields.changeType}>
                                             <lightning-input-field
                                                 data-id="changeType"
+                                                onchange={handleChangeTypeChange}
                                                 field-name={fields.changeType.apiName}
-                                                value={changeType}
+                                                value={rd2State.changeType}
                                             >
                                             </lightning-input-field>
                                         </lightning-layout-item>
@@ -223,8 +243,13 @@
                                     </h3>
                                     <div aria-hidden="false" class="slds-section__content">
 
-                                        <c-rd2-entry-form-custom-fields-section record-id={recordId} fields={customFields}
-                                            data-id="customFieldsComponent"></c-rd2-entry-form-custom-fields-section>
+                                        <c-rd2-entry-form-custom-fields-section
+                                            record-id={recordId}
+                                            fields={rd2State.customFieldSets}
+                                            data-id="customFieldsComponent"
+                                            onchange={handleCustomFieldChange}
+                                        >
+                                        </c-rd2-entry-form-custom-fields-section>
 
                                     </div>
                                 </div>

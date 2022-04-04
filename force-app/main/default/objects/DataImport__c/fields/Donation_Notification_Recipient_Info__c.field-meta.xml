@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Donation_Notification_Recipient_Info__c</fullName>
+    <description>Contact information, such as address or phone the donor provided for the notification recipient.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Contact information, such as address or phone the donor provided for the notification recipient.</inlineHelpText>
+    <label>Donation Notification Recipient Info</label>
+    <length>32768</length>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>5</visibleLines>
+</CustomField>

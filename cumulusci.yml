@@ -5,7 +5,7 @@ project:
     package:
         name: Nonprofit Success Pack
         namespace: npsp
-        api_version: 48.0
+        api_version: 53.0
         install_class: STG_InstallScript
         uninstall_class: STG_UninstallScript
     git:
@@ -112,6 +112,14 @@ tasks:
         group: Salesforce Metadata
         options:
             path: unpackaged/config/qa
+            namespace_inject: $project_config.project__package__namespace
+
+    deploy_gift_entry_unmanaged:
+        description: Deploys additional metadata for use with Gift Entry
+        class_path: cumulusci.tasks.salesforce.Deploy
+        group: Salesforce Metadata
+        options:
+            path: unpackaged/gift_entry
             namespace_inject: $project_config.project__package__namespace
 
     retrieve_qa_config:
@@ -582,6 +590,8 @@ tasks:
                     - NPSP_Engagement_Plan_Record_Page
                     - NPSP_GAU_Allocation
                     - NPSP_General_Accounting_Unit
+                Class:
+                    - SfdoLogUtils
 
     enable_pilot_in_scratch_org:
         description: Initialize the PilotEnabled Feature Parameter override in a Scratch Org environment
@@ -592,6 +602,13 @@ tasks:
                 %%%NAMESPACE%%%Error_Settings__c errSettings = %%%NAMESPACE%%%Error_Settings__c.getOrgDefaults();
                 errSettings.%%%NAMESPACE%%%OverrideFeature_PilotEnabled__c = true;
                 upsert errSettings;
+
+    deploy_core_mock_classes:
+        description: Deploy mock apex class(9)es) that will prevent compilation errors when the packaged code references file-based apex in the core stack for instrumentation purposes
+        class_path: cumulusci.tasks.salesforce.Deploy
+        group: Salesforce Metadata
+        options:
+            path: unpackaged/config/core_instrumentation_mock_classes
 
     run_tests:
         options:
@@ -835,6 +852,12 @@ flows:
                 options:
                     api_names: QA,Gift_Entry
 
+    deploy_unmanaged:
+        description: Override to the deploy_unmanaged flow to force a mock apex class to be deployed that will prevent compilation errors when the packaged code references file-based apex in the core stack for instrumentation purposes.
+        steps:
+            2.1:
+                when: not org_config.namespace
+                task: deploy_core_mock_classes
 
     qa_org_namespaced:
         description: Execute the qa_org flow against a namespaced scratch org and patch help text.
@@ -859,7 +882,7 @@ flows:
 
     ci_feature_2gp_trial:
         steps:
-            1: 
+            1:
                 flow: install_2gp_commit
             2:
                 flow: config_apextest
@@ -867,6 +890,36 @@ flows:
                 flow: config_trial
             4:
                 task: run_tests
+
+    config_trial_org:
+        steps:
+            # TODO: Update once we can test with a Beta instead of 2GP
+            #1:
+            #    flow: dependencies
+            2:
+                flow: install_2gp_commit #task: install_managed
+            3:
+                task: deploy_post
+            4:
+                flow: config_trial
+            5:
+                task: test_data_relationships
+                ignore_failure: true
+            6:
+                task: deploy_trial_translations
+            7:
+                task: deploy_reports
+            8:
+                flow: enable_rd2
+            9:
+                flow: enable_gift_entry
+            10:
+                task: execute_anon
+                options:
+                    path: scripts/trial/TrialCustomSettingsDefaults.cls
+                    apex: updateCustomSettingsDefaults();
+            11:
+                task: update_admin_profile
 
     config_trial:
         steps:
@@ -930,6 +983,40 @@ flows:
             2:
                 task: update_admin_profile
 
+    enable_gift_entry:
+        description: Enable the Gift Entry feature.
+        group: NPSP
+        steps:
+            1:
+                flow: enable_advanced_mapping
+            2:
+                task: execute_anon
+                options:
+                    apex: >
+                        String namespace = ('%%%NAMESPACE%%%').replace('__','');
+                        Type t = Type.forName(namespace, 'Callable_Api');
+                        Callable apiClass = (Callable)t.newInstance();
+                        apiClass.call('settings.enablegiftentry', null);
+
+    enable_advanced_mapping:
+        description: Enable the BDI Advanced Mapping feature.
+        group: NPSP
+        steps:
+            1:
+                task: execute_anon
+                options:
+                    apex: >
+                        String namespace = ('%%%NAMESPACE%%%').replace('__','');
+                        Type t = Type.forName(namespace, 'Callable_Api');
+                        Callable apiClass = (Callable)t.newInstance();
+                        apiClass.call('settings.enableadvancedmapping', null);
+            2:
+                task: custom_settings_value_wait
+                options:
+                    object: "%%%NAMESPACE%%%Data_Import_Settings__c"
+                    field: "%%%NAMESPACE%%%Field_Mapping_Method__c"
+                    value: "Data Import Field Mapping"
+
     enable_rd2:
         description: 'Fully configures and enables a Scratch org with Enhanced Recurring Donations (unmanaged code only)'
         group: NPSP
@@ -984,25 +1071,6 @@ flows:
                 # Wait until after the data migration job has completed
                 options:
                     class_name: RD2_DataMigration_BATCH
-
-    enable_rd2_managed:
-        description: 'Fully configures and enables a Scratch org with Enhanced Recurring Donations (managed package only)'
-        group: NPSP
-        steps:
-            1:
-                flow: enable_rd2
-                options:
-                    enable_crlp:
-                        managed: true
-                        param1: false
-                    custom_settings_value_wait:
-                        managed: true
-                    execute_anon:
-                        managed: true
-                        unmanaged: false
-                    deploy_rd2_config:
-                        managed: true
-                        unmanaged: false
 
     config_managed:
         steps:
@@ -1293,6 +1361,8 @@ flows:
                                 - Error__c.All
                                 - Grant_Deadline__c.All
                                 - Trigger_Handler__c.All_Triggers
+                            Class:
+                                - SfdoLogUtils
             2.7:
                 task: deploy_rd2_config
                 ## It's necessary to redeploy the RD2 config after deploying the "packaged" unmanaged code to

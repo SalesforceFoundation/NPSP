@@ -1,0 +1,138 @@
+#####################################################################################################################
+# @author       Michael Smith
+# @date         2021-08-23
+# @description  As SFDO Managed Packages start using the newly introduced Instrumentation Services to 'log' 
+#               usage data to Splunk and Argus, this Compliance Check action does two things:
+#               1. Ensures that Packaged Apex Classes do not make any direct reference to the core SfdoLogUtils class.
+#                  Any code references to this class will cause the Compliance build to fail.
+#               2. At least in the short term, adds an Instrumentation reviewer to any PR that in any way references or
+#                  or uses the SfdoInstrumentationService. This is primarily meant as a short term action to aid in
+#                  adoption of the new instrumentation services.
+#####################################################################################################################
+name: "Instrumentation Compliance"
+on:
+  pull_request:
+    # Filter the job to only execute if CLS files (not in the unpackaged folder) are in the PR
+    paths:    
+      - '**.cls'
+      - '!unpackaged/**.cls'
+
+jobs:
+  Instrumentation_Service_Compliance_Verification:
+
+    # Constant vars
+    # These should be adjusted per repository
+    env:
+      DEFAULT_REVIEWER: force2b
+      ALTERNATE_REVIEWER: lparrott
+      ASSIGNED_LABEL: Instrumentation
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get PR Owner
+        id: pr_owner
+        run: |
+          echo "::set-output name=owner::${{ github.event.pull_request.user.login }}"
+
+      - name: Set Reviewer
+        id: set_reviewer
+        run: |
+          if [[ "${{ steps.pr_owner.outputs.owner != env.DEFAULT_REVIEWER}}" == "true" ]]
+          then
+              echo "::set-output name=reviewer::${{ env.DEFAULT_REVIEWER }}"
+          else
+              echo "::set-output name=reviewer::${{ env.ALTERNATE_REVIEWER }}"
+          fi
+
+      - name: Check for previously assigned Instrumentation Label
+        id: label_check
+        run: |
+          echo "::set-output name=prlabels::${{ join(github.event.pull_request.labels.*.name, ',') }}"
+
+      - name: Check for references to the SfdoLogUtils or SfdoInstrumentationServices Apex classes
+        # If the Instrumentation label is already assigned to the PR, all checks are skipped to avoid redundant PR comments and alerts
+        id: get_pr_diff
+        if: contains(github.event.pull_request.labels.*.name, env.ASSIGNED_LABEL) == false
+        run: |
+          echo "- Did not find label '${{env.ASSIGNED_LABEL}}' in '${{steps.label_check.outputs.prlabels}}'"
+          echo "- Current PR Owner: '${{steps.pr_owner.outputs.owner}}'"
+          echo "- Assigned Reviewer: '${{steps.set_reviewer.outputs.reviewer}}'"
+          if [ $GITHUB_BASE_REF ]; then
+            # This changes the context of subseqent commands to get the full change for the PR
+            git fetch origin $GITHUB_HEAD_REF:$GITHUB_HEAD_REF
+
+            # Find references to "Sfdo" in the force-app/ folder structure. Filters for the specific class references in later steps.
+            export DIFF=$( git diff-tree origin/$GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw -- force-app/** | grep 'Sfdo' )
+          fi
+
+          # Assign the "git diff-tree" output to an internal workflow var to use later
+          # Escape newlines (replace \n with %0A) so it's a single line of text
+          echo "::set-output name=diff::$( echo "$DIFF" | sed ':a;N;$!ba;s/\n/%0A/g' )"
+
+      - name: Assign Reviewer if SfdoInstrumentationService is in use
+        id: assign_reviewers_if_instrumentation
+        if: contains(steps.get_pr_diff.outputs.diff, 'SfdoInstrumentationService')
+        uses: SalesforceFoundation/github-script@v4
+        with:
+          script: |
+            github.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: [ "${{env.ASSIGNED_LABEL}}" ]
+            })
+            github.issues.addAssignees({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              assignees: [ "${{steps.set_reviewer.outputs.reviewer}}" ]
+            })
+            github.pulls.requestReviewers({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              reviewers: [ "${{steps.set_reviewer.outputs.reviewer}}" ]
+            })
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: ':warning: @${{steps.set_reviewer.outputs.reviewer}} This Pull Request references the "SfdoInstrumentationService" class and must be reviewed by an Instrumentation owner. :warning:'
+            })
+
+      - name: Fail Build if SfdoLogUtils core class is directly referenced
+        id: assign_reviewers_if_core_class
+        if: contains(steps.get_pr_diff.outputs.diff, 'SfdoLogUtils.log(')
+        uses: SalesforceFoundation/github-script@v4
+        with:
+          script: |
+            github.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: [ "${{env.ASSIGNED_LABEL}}" ]
+            })
+            github.issues.addAssignees({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              assignees: [ "${{steps.set_reviewer.outputs.reviewer}}" ]
+            })
+            github.pulls.requestReviewers({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              reviewers: [ "${{steps.set_reviewer.outputs.reviewer}}" ]
+            })
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: ':no_entry: @${{steps.set_reviewer.outputs.reviewer}} This Pull Request references the "SfdoLogUtils" class which should not be called directly by package code :no_entry:'
+            })
+            core.setFailed('This Pull Request may be calling an SfdoLogUtils.log() method which should not be called directly by package code')
+

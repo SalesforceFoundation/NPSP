@@ -38,6 +38,8 @@
 @isTest(IsParallel=false)
 public class CRLP_RollupUI_TEST {
 
+    private static User standardUser = UTIL_UnitTestData_TEST.createStandardProfileUser();
+
     /*********************************************************************************************************
     * @description Tests that get rollup definitions returns the current rollups
     */
@@ -278,18 +280,183 @@ public class CRLP_RollupUI_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Verifies that setupRollupGrid() properly identifies user as not System Admin
+    * @description Verifies that setupRollupGrid() fails if the user is not an admin
     */
     @isTest
-    public static void shouldIdentifyUserAsNotSystemAdmin() {
-        User sysAdmin = UTIL_UnitTestData_TEST.createUser(UTIL_Profile.PROFILE_STANDARD_USER);
-
-        System.runAs(sysAdmin) {
-            CRLP_RollupUI_SVC.RollupGridModel model =
-                (CRLP_RollupUI_SVC.RollupGridModel) JSON.deserialize(CRLP_RollupUI_SVC.setupRollupGrid(), CRLP_RollupUI_SVC.RollupGridModel.class);
-
-            System.assertEquals(false, model.isSystemAdminUser, 'User should be identified as not System Administrator');
+    private static void setupRollupGridShouldFailForNonAdmin() {
+        // When
+        AuraHandledException auraException;
+        System.runAs(standardUser) {
+            try {
+                CRLP_RollupUI_SVC.setupRollupGrid();
+            } catch (AuraHandledException ex) {
+                auraException = ex;
+            }
         }
+        // Then
+        System.assert(auraException != null, 'An AuraHandledException should throw if the user is not an admin.');
+        System.assertEquals(Label.stgEditPermissionError, auraException.getMessage(), 'The aura handled exception ' +
+                'thrown should be an insufficient privileges error.');
+    }
+
+    /*********************************************************************************************************
+    * @description Verifies that getRollupDefinitions() fails if the user is not an admin
+    */
+    @isTest
+    private static void getRollupDefinitionsShouldFailForNonAdmin() {
+        // When
+        AuraHandledException auraException;
+        System.runAs(standardUser) {
+            try {
+                CRLP_RollupUI_SVC.getRollupDefinitions();
+            } catch (AuraHandledException ex) {
+                auraException = ex;
+            }
+        }
+        // Then
+        System.assert(auraException != null, 'An AuraHandledException should throw if the user is not an admin.');
+        System.assertEquals(Label.stgEditPermissionError, auraException.getMessage(), 'The aura handled exception ' +
+                'thrown should be an insufficient privileges error.');
+    }
+
+    /*********************************************************************************************************
+    * @description Verifies that getFilterGroupDefinitions() fails if the user is not an admin
+    */
+    @isTest
+    private static void getFilterGroupDefinitionsShouldFailForNonAdmin() {
+        // When
+        AuraHandledException auraException;
+        System.runAs(standardUser) {
+            try {
+                CRLP_RollupUI_SVC.getFilterGroupDefinitions();
+            } catch (AuraHandledException ex) {
+                auraException = ex;
+            }
+        }
+        // Then
+        System.assert(auraException != null, 'An AuraHandledException should throw if the user is not an admin.');
+        System.assertEquals(Label.stgEditPermissionError, auraException.getMessage(), 'The aura handled exception ' +
+                'thrown should be an insufficient privileges error.');
+    }
+
+    /*********************************************************************************************************
+    * @description Verifies that setupRollupDetail() fails if the user is not an admin
+    */
+    @isTest
+    private static void setupRollupDetailShouldFailForNonAdmin() {
+        // When
+        AuraHandledException auraException;
+        System.runAs(standardUser) {
+            try {
+                CRLP_RollupUI_SVC.setupRollupDetail(null, null, null);
+            } catch (AuraHandledException ex) {
+                auraException = ex;
+            }
+        }
+        // Then
+        System.assert(auraException != null, 'An AuraHandledException should throw if the user is not an admin.');
+        System.assertEquals(Label.stgEditPermissionError, auraException.getMessage(), 'The aura handled exception ' +
+                'thrown should be an insufficient privileges error.');
+    }
+
+    /*********************************************************************************************************
+    * @description Verifies that setupFilterGroupDetail() fails if the user is not an admin
+    */
+    @isTest
+    private static void setupFilterGroupDetailShouldFailForNonAdmin() {
+        // When
+        AuraHandledException auraException;
+        System.runAs(standardUser) {
+            try {
+                CRLP_RollupUI_SVC.setupFilterGroupDetail(null, null);
+            } catch (AuraHandledException ex) {
+                auraException = ex;
+            }
+        }
+        // Then
+        System.assert(auraException != null, 'An AuraHandledException should throw if the user is not an admin.');
+        System.assertEquals(Label.stgEditPermissionError, auraException.getMessage(), 'The aura handled exception ' +
+                'thrown should be an insufficient privileges error.');
+    }
+
+    /*********************************************************************************************************
+    * @description Verifies that saveRollup() fails if the user is not an admin
+    */
+    @isTest
+    private static void saveRollupShouldFailForNonAdmin() {
+        // When
+        AuraHandledException auraException;
+        System.runAs(standardUser) {
+            try {
+                CRLP_RollupUI_SVC.saveRollup(null);
+            } catch (AuraHandledException ex) {
+                auraException = ex;
+            }
+        }
+        // Then
+        System.assert(auraException != null, 'An AuraHandledException should throw if the user is not an admin.');
+        System.assertEquals(Label.stgEditPermissionError, auraException.getMessage(), 'The aura handled exception ' +
+                'thrown should be an insufficient privileges error.');
+    }
+
+    /*********************************************************************************************************
+    * @description Verifies that saveFilterGroupAndRules() fails if the user is not an admin
+    */
+    @isTest
+    private static void saveFilterGroupAndRulesShouldFailForNonAdmin() {
+        // When
+        AuraHandledException auraException;
+        System.runAs(standardUser) {
+            try {
+                CRLP_RollupUI_SVC.saveFilterGroupAndRules(null);
+            } catch (AuraHandledException ex) {
+                auraException = ex;
+            }
+        }
+        // Then
+        System.assert(auraException != null, 'An AuraHandledException should throw if the user is not an admin.');
+        System.assertEquals(Label.stgEditPermissionError, auraException.getMessage(), 'The aura handled exception ' +
+                'thrown should be an insufficient privileges error.');
+    }
+
+    /*********************************************************************************************************
+    * @description Verifies that getDeploymentStatus() fails if the user is not an admin
+    */
+    @isTest
+    private static void getDeploymentStatusShouldFailForNonAdmin() {
+        // When
+        AuraHandledException auraException;
+        System.runAs(standardUser) {
+            try {
+                CRLP_RollupUI_SVC.getDeploymentStatus(null, null, null, null);
+            } catch (AuraHandledException ex) {
+                auraException = ex;
+            }
+        }
+        // Then
+        System.assert(auraException != null, 'An AuraHandledException should throw if the user is not an admin.');
+        System.assertEquals(Label.stgEditPermissionError, auraException.getMessage(), 'The aura handled exception ' +
+                'thrown should be an insufficient privileges error.');
+    }
+
+    /*********************************************************************************************************
+    * @description Verifies that getFilterRuleConstantPicklistOptions() fails if the user is not an admin
+    */
+    @isTest
+    private static void getFilterRuleConstantPicklistOptionsShouldFailForNonAdmin() {
+        // When
+        AuraHandledException auraException;
+        System.runAs(standardUser) {
+            try {
+                CRLP_RollupUI_SVC.getFilterRuleConstantPicklistOptions(null, null);
+            } catch (AuraHandledException ex) {
+                auraException = ex;
+            }
+        }
+        // Then
+        System.assert(auraException != null, 'An AuraHandledException should throw if the user is not an admin.');
+        System.assertEquals(Label.stgEditPermissionError, auraException.getMessage(), 'The aura handled exception ' +
+                'thrown should be an insufficient privileges error.');
     }
 
     /********************************************************************************************************

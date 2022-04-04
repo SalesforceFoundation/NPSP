@@ -33,7 +33,7 @@
 * @description The ContactAdapter's role is to provide clients with a single Type
 * that will handle DML on Contacts and call the appropriate method on Domains.
 */
-public inherited sharing class ContactAdapter extends fflib_SObjects {
+public inherited sharing class ContactAdapter extends fflib_SObjects2 {
 
     public Map<Id, Contact> oldMap;
 
@@ -97,12 +97,15 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
     }
 
     public void onBeforeInsert(List<Contact> newSObjects) {
+        AccountAdapter.enableHouseholdDeceasedUpdate(true);
+
         Contacts contacts = new Contacts(newSObjects);
         contacts.resetDeprecatedFields();
+        contacts.resetSustainerFields();
 
         if (CAO_Constants.isHHAccountModel()) {
             householdServiceInstance.createOneToOneAndHouseholdAccountsFor(
-                    contacts.contactsWithoutAccounts());
+                    contacts.publicContactsWithNonNullAccountIds());
         } else {
             if (CAO_Constants.isOneToOne()) {
                 householdServiceInstance.createOneToOneAndHouseholdAccountsFor(
@@ -112,7 +115,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
 
             if (CAO_Constants.isBucketModel()) {
                 LegacyHouseholds.attachToBucketAccount(
-                        contacts.contactsWithoutAccounts());
+                        contacts.publicContactsWithNonNullAccountIds());
             }
         }
 
@@ -134,6 +137,8 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
     }
 
     public void onBeforeUpdate() {
+        AccountAdapter.enableHouseholdDeceasedUpdate(true);
+
         handleContactsBeforeUpdate(
                 new Contacts(getRecords(), oldMap.values()));
     }
@@ -212,11 +217,15 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
     }
 
     public void onAfterDelete(TDTM_Runnable.DmlWrapper dmlWrapper) {
+        AccountAdapter.enableHouseholdDeceasedUpdate(true);
+
         Households households = getHouseholdsFor(accountIds());
         households.handleContactDeletion(dmlWrapper);
     }
 
     public void onAfterUndelete(TDTM_Runnable.DmlWrapper dmlWrapper) {
+        AccountAdapter.enableHouseholdDeceasedUpdate(true);
+
         List<Contact> contactsWithAccountAndAddressFields =
                 getContactsWithAccountAndAddressFields();
 
@@ -238,8 +247,12 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
 
         if (contactAndOrgSettingsInst.isBucketAccountEnabled()) {
             LegacyHouseholds.attachToBucketAccount(
-                    contacts.contactsWithoutAccounts()
+                    contacts.publicContactsWithNonNullAccountIds()
             );
+        }
+
+        if (RD2_SustainerEvaluationService.isSustainerUpdateEnabled == false) {
+            contacts.resetSustainerFields();
         }
     }
 
@@ -259,16 +272,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
     }
 
     public Set<Id> accountIds() {
-        Set<Id> setAccountId = new Set<Id>();
-        for (Integer i = 0; i < getRecords().size(); i++) {
-            Contact newRecord = (Contact) getRecords()[i];
-
-            // need to query account fields we need to look at
-            if (newRecord.AccountId != null) {
-                setAccountId.add(newRecord.AccountId);
-            }
-        }
-        return setAccountId;
+        return getIdFieldValues(Contact.AccountId).getIds();
     }
 
     private Map<Id, Account> accountsById;
@@ -477,7 +481,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
         for (Integer i = 0; i < getRecords().size(); i++) {
             Contact newRecord = (Contact) getRecords()[i];
 
-            if (contactService.isContactAddressChanged(newRecord, oldVersionOf(newRecord))) {
+            if (new NPSP_Contact(newRecord, oldVersionOf(newRecord)).isAddressChanged()) {
                 UTIL_Address.normalizeLineBreak(newRecord);
             }
         }
@@ -827,7 +831,17 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
             // in which case we don't want to create a new address.
 
             // if the contacts address changed or if the contact with an address moves to a new household remember the contact
-            if (npspContact.isAddressChanged()) {
+            // if the Current_Address__c field is changing, the after update context will
+            // handle syncing the address fields
+            Boolean currentAddressChanged = false;
+            if (npspContact.oldVersion() != null && npspContact.oldVersion().getRecord() != null) {
+                Id oldCurrentAddress = npspContact.oldVersion().getRecord().Current_Address__c;
+                Id currentAddress = npspContact.getRecord().Current_Address__c;
+                if (currentAddress != oldCurrentAddress) {
+                    currentAddressChanged = true;
+                }
+            }
+            if (!currentAddressChanged && npspContact.isAddressChanged()) {
                 consWithAddressChanges.add(npspContact.getRecord());
             }
         }
@@ -896,7 +910,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
 
         if (contactAndOrgSettingsInst.isHouseholdAccountModelEnabled()) {
-            contactsWithoutAccounts.addAll(contacts.contactsWithoutAccounts());
+            contactsWithoutAccounts.addAll(contacts.publicContactsWithNonNullAccountIds());
         }
 
         if (contactAndOrgSettingsInst.isOneToOneAccountsEnabled()) {

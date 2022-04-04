@@ -26,7 +26,7 @@ export default class utilPageLevelMessage extends LightningElement {
     }
 
     get subtitleText() {
-        return this.subtitle ? this.subtitle : '';
+        return this.subtitle ? this.subtitle : "";
     }
 
     get hasIconName() {
@@ -47,7 +47,7 @@ export default class utilPageLevelMessage extends LightningElement {
     }
 
     get notificationClass() {
-        let classNames = 'slds-notify slds-notify_extension slds-notify_toast ';
+        let classNames = "slds-notify slds-notify_extension slds-notify_toast ";
         switch (this.variant) {
             case SUCCESS:
                 classNames += THEME_SUCCESS;
@@ -66,7 +66,7 @@ export default class utilPageLevelMessage extends LightningElement {
     }
 
     get subtitleClass() {
-        let classNames = (this.subtitleClassOverride || 'slds-p-top_x-small') + ' ';
+        let classNames = (this.subtitleClassOverride || "slds-p-top_x-small") + " ";
         if (this.variant === ERROR) {
             classNames += TEXT_ERROR;
         }

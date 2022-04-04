@@ -1,38 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FlexiPage xmlns="http://soap.sforce.com/2006/04/metadata">
     <flexiPageRegions>
-        <componentInstances>
-            <componentName>gseuHeader</componentName>
-        </componentInstances>
-        <componentInstances>
-            <componentInstanceProperties>
-                <name>pageTitle</name>
-                <value>gseuPageTitle</value>
-            </componentInstanceProperties>
-            <componentInstanceProperties>
-                <name>pageType</name>
-                <value>End User</value>
-            </componentInstanceProperties>
-            <componentName>gsChecklistSetup</componentName>
-        </componentInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentName>gseuHeader</componentName>
+                <identifier>gseuHeader</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>pageTitle</name>
+                    <value>gseuPageTitle</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>pageType</name>
+                    <value>End User</value>
+                </componentInstanceProperties>
+                <componentName>gsChecklistSetup</componentName>
+                <identifier>gsChecklistSetup</identifier>
+            </componentInstance>
+        </itemInstances>
         <name>region1</name>
         <type>Region</type>
     </flexiPageRegions>
     <flexiPageRegions>
-        <componentInstances>
-            <componentName>gseuTrailhead</componentName>
-        </componentInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentName>gseuTrailhead</componentName>
+                <identifier>gseuTrailhead</identifier>
+            </componentInstance>
+        </itemInstances>
         <name>region2</name>
         <type>Region</type>
     </flexiPageRegions>
     <flexiPageRegions>
-        <componentInstances>
-            <componentInstanceProperties>
-                <name>pageType</name>
-                <value>End User</value>
-            </componentInstanceProperties>
-            <componentName>gsResources</componentName>
-        </componentInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>pageType</name>
+                    <value>End User</value>
+                </componentInstanceProperties>
+                <componentName>gsResources</componentName>
+                <identifier>gsResources</identifier>
+            </componentInstance>
+        </itemInstances>
         <name>region3</name>
         <type>Region</type>
     </flexiPageRegions>
