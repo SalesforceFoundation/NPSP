@@ -1429,7 +1429,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationIntro</name>
-        <label>Met deze instellingen wordt het wijzigen van de status van terugkerende donaties geautomatiseerd als donateurs betalingen missen.&lt;br/&gt;&lt;br/&gt;Stel er is een maandelijks terugkerende donatie waarmee is gestart op 1 januari en waarvoor het aantal dagen voor Verstreken is ingesteld op 10, wordt de terugkerende donatie Verstreken op 12 februari als er geen nieuwe betaling wordt ontvangen. Als het aantal dagen voor Gesloten is ingesteld op 20, wordt de terugkerende donatie ingesteld op Gesloten op 22 februari.&lt;br/&gt;&lt;br/&gt;Salesforce begint voor het aantal dagen voor Verstreken en Gesloten te tellen op de dag na de verwachte betalingsdatum (2 februari in ons voorbeeld).&lt;br/&gt;&lt;br/&gt;Terugkerende donaties in Elevate worden niet meegenomen in de automatisering.</label>
+        <label>Met deze instellingen wordt het wijzigen van de status van terugkerende donaties geautomatiseerd als donateurs betalingen missen.&lt;br/&gt;&lt;br/&gt;Stel er is een maandelijks terugkerende donatie waarmee is gestart op 1 januari en waarvoor het aantal dagen voor Verstreken is ingesteld op 10, wordt de terugkerende donatie Verstreken op 12 februari als er geen nieuwe betaling wordt ontvangen. Als het aantal dagen voor Gesloten is ingesteld op 20, wordt de terugkerende donatie ingesteld op Gesloten op 22 februari.&lt;br/&gt;&lt;br/&gt;Salesforce begint voor het aantal dagen voor Verstreken en Gesloten te tellen op de dag na de verwachte betalingsdatum (2 februari in ons voorbeeld).</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationInvalidClosedStatus</name>
@@ -7979,10 +7979,6 @@ Opmerking: Het tabblad NPSP-instellingen is zichtbaar in de toepassing Nonprofit
         <label>Nieuwe Campagne</label>
     </quickActions>
     <quickActions>
-        <name>npe03__Recurring_Donation__c.Pause</name>
-        <label>Onderbreken</label>
-    </quickActions>
-    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>Nieuwe Gelieerde Organisatie</label>
     </quickActions>
@@ -7995,28 +7991,8 @@ Opmerking: Het tabblad NPSP-instellingen is zichtbaar in de toepassing Nonprofit
         <label>Nieuwe Terugkerende Donatie</label>
     </quickActions>
     <quickActions>
-        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
-        <label>Nieuwe Opportunity</label>
-    </quickActions>
-    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>Nieuwe Terugkerende Donatie</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Quick_Update</name>
-        <label>Snelle Update</label>
-    </quickActions>
-    <quickActions>
-        <name>npo02__Household__c.Update_Household</name>
-        <label>Huishouden bijwerken</label>
-    </quickActions>
-    <quickActions>
-        <name>Address__c.Update_Address</name>
-        <label>Adres bijwerken</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
-        <label>Terugkerende donatie sluiten</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -8037,10 +8013,6 @@ Opmerking: Het tabblad NPSP-instellingen is zichtbaar in de toepassing Nonprofit
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>Nieuwe Relatie</label>
-    </quickActions>
-    <quickActions>
-        <name>npe01__OppPayment__c.Quick_Update</name>
-        <label>Snelle Update</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>
