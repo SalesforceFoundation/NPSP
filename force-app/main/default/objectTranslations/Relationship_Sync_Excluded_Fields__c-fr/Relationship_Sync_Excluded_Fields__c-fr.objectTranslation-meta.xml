@@ -10,14 +10,4 @@
         <plural>true</plural>
         <value>Champs à exclure de la synchronisation</value>
     </caseValues>
-    <gender>Masculine</gender>
-    <startsWith>Consonant</startsWith>
-    <caseValues>
-        <plural>false</plural>
-        <value>Champ à exclure de la synchronisation</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Champs à exclure de la synchronisation</value>
-    </caseValues>
 </CustomObjectTranslation>
