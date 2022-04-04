@@ -1429,7 +1429,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationIntro</name>
-        <label>Mit dieser Einstellung wird das Ändern des Status wiederkehrender Spenden automatisiert, wenn Spender Ratenzahlungen auslassen.&lt;br/&gt;&lt;br/&gt;Angenommen, eine monatlich wiederkehrende Spende wurde am 1. Januar begonnen, und die Anzahl der Tage für &quot;Ausgesetzt&quot; ist auf 10 Tage festgelegt, dann wird die wiederkehrende Spende am 12. Februar in den Status &quot;Ausgesetzt&quot; versetzt, wenn keine Ratenzahlung eingegangen ist. Wenn die Anzahl der Tage für &quot;Geschlossen&quot; auf 20 Tage festgelegt ist, wird die wiederkehrende Spende am 22. Februar geschlossen.&lt;br/&gt;&lt;br/&gt;Salesforce beginnt mit der Zählung der Tage für &quot;Ausgesetzt&quot; und der Tage für &quot;Geschlossen&quot; am Tag nach der erwarteten Ratenzahlung (also in unserem Beispiel am 2. Februar).&lt;br/&gt;&lt;br/&gt;Wiederkehrende Elevate-Spenden sind von dieser Automatisierung ausgeschlossen.</label>
+        <label>Mit dieser Einstellung wird das Ändern des Status wiederkehrender Spenden automatisiert, wenn Spender Ratenzahlungen auslassen.&lt;br/&gt;&lt;br/&gt;Angenommen, eine monatlich wiederkehrende Spende wurde am 1. Januar begonnen, und die Anzahl der Tage für &quot;Ausgesetzt&quot; ist auf 10 Tage festgelegt, dann wird die wiederkehrende Spende am 12. Februar in den Status &quot;Ausgesetzt&quot; versetzt, wenn keine Ratenzahlung eingegangen ist. Wenn die Anzahl der Tage für &quot;Geschlossen&quot; auf 20 Tage festgelegt ist, wird die wiederkehrende Spende am 22. Februar geschlossen.&lt;br/&gt;&lt;br/&gt;Salesforce beginnt mit der Zählung der Tage für &quot;Ausgesetzt&quot; und der Tage für &quot;Geschlossen&quot; am Tag nach der erwarteten Ratenzahlung (also in unserem Beispiel am 2. Februar).</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationInvalidClosedStatus</name>
@@ -7980,10 +7980,6 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <label>Neue Kampagne</label>
     </quickActions>
     <quickActions>
-        <name>npe03__Recurring_Donation__c.Pause</name>
-        <label>Aufschub</label>
-    </quickActions>
-    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>Neue Zugehörigkeit</label>
     </quickActions>
@@ -7996,28 +7992,8 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <label>Neue wiederkehrende Spende</label>
     </quickActions>
     <quickActions>
-        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
-        <label>Neue Opportunity</label>
-    </quickActions>
-    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>Neue wiederkehrende Spende</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Quick_Update</name>
-        <label>Schnelle Aktualisierung</label>
-    </quickActions>
-    <quickActions>
-        <name>npo02__Household__c.Update_Household</name>
-        <label>Haushalt aktualisieren</label>
-    </quickActions>
-    <quickActions>
-        <name>Address__c.Update_Address</name>
-        <label>Adresse aktualisieren</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
-        <label>Wiederkehrende Spende schließen</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -8038,10 +8014,6 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>Neue Beziehung</label>
-    </quickActions>
-    <quickActions>
-        <name>npe01__OppPayment__c.Quick_Update</name>
-        <label>Schnelle Aktualisierung</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>

@@ -1429,7 +1429,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationIntro</name>
-        <label>Estos parámetros automatizan el cambio de Estado de Donación recurrente cuando los donantes fallan en los pagos de cuotas.&lt;br/&gt;&lt;br/&gt;Por ejemplo, si una donación recurrente mensual empezaba el 1 de enero y Número de días para Transcurrido está establecido en 10 días, la donación recurrente se convierte en Transcurrido el 12 de febrero si no se recibió ningún pago de cuota. Si Número de días para Cerrado está establecido en 20 días, la donación recurrente se convierte en Cerrado el 22 de febrero.&lt;br/&gt;&lt;br/&gt;Salesforce empieza a contar el Número de días para Transcurrido y Número de días para Cerrado el día después de la fecha esperada de la cuota (el 2 de febrero en nuestro ejemplo).&lt;br/&gt;&lt;br/&gt;Las donaciones recurrentes de Elevate no se incluyen en esta automatización.</label>
+        <label>Estos parámetros automatizan el cambio de Estado de Donación recurrente cuando los donantes fallan en los pagos de cuotas.&lt;br/&gt;&lt;br/&gt;Por ejemplo, si una donación recurrente mensual empezaba el 1 de enero y Número de días para Transcurrido está establecido en 10 días, la donación recurrente se convierte en Transcurrido el 12 de febrero si no se recibió ningún pago de cuota. Si Número de días para Cerrado está establecido en 20 días, la donación recurrente se convierte en Cerrado el 22 de febrero.&lt;br/&gt;&lt;br/&gt;Salesforce empieza a contar el Número de días para Transcurrido y Número de días para Cerrado el día después de la fecha esperada de la cuota (el 2 de febrero en nuestro ejemplo).</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationInvalidClosedStatus</name>
@@ -7969,10 +7969,6 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <label>Nueva campaña</label>
     </quickActions>
     <quickActions>
-        <name>npe03__Recurring_Donation__c.Pause</name>
-        <label>Pausa</label>
-    </quickActions>
-    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>Nueva afiliación</label>
     </quickActions>
@@ -7985,28 +7981,8 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <label>Nueva donación recurrente</label>
     </quickActions>
     <quickActions>
-        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
-        <label>Nueva oportunidad</label>
-    </quickActions>
-    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>Nueva donación recurrente</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Quick_Update</name>
-        <label>Actualización rápida</label>
-    </quickActions>
-    <quickActions>
-        <name>npo02__Household__c.Update_Household</name>
-        <label>Actualizar hogar</label>
-    </quickActions>
-    <quickActions>
-        <name>Address__c.Update_Address</name>
-        <label>Actualizar dirección</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
-        <label>Cerrar donación recurrente</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -8027,10 +8003,6 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>Nueva relación</label>
-    </quickActions>
-    <quickActions>
-        <name>npe01__OppPayment__c.Quick_Update</name>
-        <label>Actualización rápida</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>

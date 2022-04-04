@@ -1434,7 +1434,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationIntro</name>
-        <label>この 2 つの設定は、支援者から継続支援の支払がなかった場合に、継続支援の状況を自動的に変更します。&lt;br/&gt;&lt;br/&gt;たとえば、毎月の継続支援が 1 月 1 日に開始され、[失効までの日数] が 10 日に設定されている場合、予定日までに支払がなければ、継続支援が 2 月 12 日に失効します。[完了までの日数] が 20 日に設定されている場合は、継続支援が 2 月 22 日に完了します。&lt;br/&gt;&lt;br/&gt;[失効までの日数] と [完了までの日数] は、継続支援の支払予定日の翌日 (この例では 2 月 2 日) からカウントされます。&lt;br/&gt;&lt;br/&gt;Elevate の継続支援はこの自動化の対象外です。</label>
+        <label>この 2 つの設定は、支援者から継続支援の支払がなかった場合に、継続支援の状況を自動的に変更します。&lt;br/&gt;&lt;br/&gt;たとえば、毎月の継続支援が 1 月 1 日に開始され、[失効までの日数] が 10 日に設定されている場合、予定日までに支払がなければ、継続支援が 2 月 12 日に失効します。[完了までの日数] が 20 日に設定されている場合は、継続支援が 2 月 22 日に完了します。&lt;br/&gt;&lt;br/&gt;[失効までの日数] と [完了までの日数] は、継続支援の支払予定日の翌日 (この例では 2 月 2 日) からカウントされます。</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationInvalidClosedStatus</name>
@@ -7979,10 +7979,6 @@
         <label>新規キャンペーン</label>
     </quickActions>
     <quickActions>
-        <name>npe03__Recurring_Donation__c.Pause</name>
-        <label>一時停止</label>
-    </quickActions>
-    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>新規アフィリエーション</label>
     </quickActions>
@@ -7995,28 +7991,8 @@
         <label>新規継続支援</label>
     </quickActions>
     <quickActions>
-        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
-        <label>新規商談</label>
-    </quickActions>
-    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>新規継続支援</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Quick_Update</name>
-        <label>クイック更新</label>
-    </quickActions>
-    <quickActions>
-        <name>npo02__Household__c.Update_Household</name>
-        <label>世帯を更新</label>
-    </quickActions>
-    <quickActions>
-        <name>Address__c.Update_Address</name>
-        <label>住所を更新</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
-        <label>継続支援を完了</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -8037,10 +8013,6 @@
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>新規リレーション</label>
-    </quickActions>
-    <quickActions>
-        <name>npe01__OppPayment__c.Quick_Update</name>
-        <label>クイック更新</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>

@@ -1429,7 +1429,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationIntro</name>
-        <label>These settings automate changing the Recurring Donation Status when donors miss instalment payments.&lt;br/&gt;&lt;br/&gt;For example, given a monthly Recurring Donation started on January 1st, and Number of Days for Lapsed is set to 10 days, the Recurring Donation becomes Lapsed on February 12th if no instalment payment is received. If Number of Days for Closed is set to 20 days, the Recurring Donation becomes Closed on February 22nd.&lt;br/&gt;&lt;br/&gt;Salesforce begins counting Number of Days for Lapsed and Number of Days for Closed on the day after the expected instalment date (February 2nd in our example).&lt;br/&gt;&lt;br/&gt;Elevate Recurring Donations are not included in this automation.</label>
+        <label>These settings automate changing the Recurring Donation Status when donors miss instalment payments.&lt;br/&gt;&lt;br/&gt;For example, given a monthly Recurring Donation started on January 1st, and Number of Days for Lapsed is set to 10 days, the Recurring Donation becomes Lapsed on February 12th if no instalment payment is received. If Number of Days for Closed is set to 20 days, the Recurring Donation becomes Closed on February 22nd.&lt;br/&gt;&lt;br/&gt;Salesforce begins counting Number of Days for Lapsed and Number of Days for Closed on the day after the expected instalment date (February 2nd in our example).</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationInvalidClosedStatus</name>
@@ -7980,10 +7980,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <label>New Campaign</label>
     </quickActions>
     <quickActions>
-        <name>npe03__Recurring_Donation__c.Pause</name>
-        <label>Pause</label>
-    </quickActions>
-    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>New Affiliation</label>
     </quickActions>
@@ -7996,28 +7992,8 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <label>New Recurring Donation</label>
     </quickActions>
     <quickActions>
-        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
-        <label>New Opportunity</label>
-    </quickActions>
-    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>New Recurring Donation</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Quick_Update</name>
-        <label>Quick Update</label>
-    </quickActions>
-    <quickActions>
-        <name>npo02__Household__c.Update_Household</name>
-        <label>Update Household</label>
-    </quickActions>
-    <quickActions>
-        <name>Address__c.Update_Address</name>
-        <label>Update Address</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
-        <label>Close Recurring Donation</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -8038,10 +8014,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>New Relationship</label>
-    </quickActions>
-    <quickActions>
-        <name>npe01__OppPayment__c.Quick_Update</name>
-        <label>Quick Update</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>

@@ -1429,7 +1429,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationIntro</name>
-        <label>Ces paramètres automatisent la modification du statut de don récurrent lorsque les donateurs manquent des versements.&lt;br/&gt;&lt;br/&gt; Prenons l’exemple d’un don mensuel récurrent ayant commencé le 1er février dont le nombre de jours correspondant à la valeur Écoulé est défini sur 10. Le don récurrent devient écoulé le 12 février si aucun versement n’est reçu d’ici là. Si le nombre de jours correspondant à la valeur Fermé est défini sur 20, le don récurrent devient fermé le 22 février.&lt;br/&gt;&lt;br/&gt; Salesforce commence à comptabiliser le nombre de jours correspondant aux valeurs Écoulé et Fermé le lendemain de la date de versement prévue (le 2 février dans notre exemple).&lt;br/&gt;&lt;br/&gt; Les dons récurrents Elevate ne sont pas inclus dans cette automatisation.</label>
+        <label>Ces paramètres automatisent la modification du statut de don récurrent lorsque les donateurs manquent des versements.&lt;br/&gt;&lt;br/&gt; Prenons l’exemple d’un don mensuel récurrent ayant commencé le 1er février dont le nombre de jours correspondant à la valeur Écoulé est défini sur 10. Le don récurrent devient écoulé le 12 février si aucun versement n’est reçu d’ici là. Si le nombre de jours correspondant à la valeur Fermé est défini sur 20, le don récurrent devient fermé le 22 février.&lt;br/&gt;&lt;br/&gt; Salesforce commence à comptabiliser le nombre de jours correspondant aux valeurs Écoulé et Fermé le lendemain de la date de versement prévue (le 2 février dans notre exemple).</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationInvalidClosedStatus</name>
@@ -7981,10 +7981,6 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
         <label>Nouvelle campagne</label>
     </quickActions>
     <quickActions>
-        <name>npe03__Recurring_Donation__c.Pause</name>
-        <label>Interruption</label>
-    </quickActions>
-    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>Nouvelle affiliation</label>
     </quickActions>
@@ -7997,28 +7993,8 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
         <label>Nouveau don régulier</label>
     </quickActions>
     <quickActions>
-        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
-        <label>Nouvelle opportunité</label>
-    </quickActions>
-    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>Nouveau don régulier</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Quick_Update</name>
-        <label>Mise à jour rapide</label>
-    </quickActions>
-    <quickActions>
-        <name>npo02__Household__c.Update_Household</name>
-        <label>Mettre à jour un foyer</label>
-    </quickActions>
-    <quickActions>
-        <name>Address__c.Update_Address</name>
-        <label>Mettre à jour une adresse</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
-        <label>Fermer le don récurrent</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -8039,10 +8015,6 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>Nouvelle relation</label>
-    </quickActions>
-    <quickActions>
-        <name>npe01__OppPayment__c.Quick_Update</name>
-        <label>Mise à jour rapide</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>
