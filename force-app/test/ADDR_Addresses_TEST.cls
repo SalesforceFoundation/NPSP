@@ -1370,7 +1370,7 @@ public with sharing class ADDR_Addresses_TEST {
 
         // Modify the Contact addresses directly, and set override
         Contact con = testContacts[0];
-        con.put('MailingStateCode', stateCode);
+        con.put('MailingState', state);
         con.is_Address_Override__c = true;
 
         Test.startTest();
