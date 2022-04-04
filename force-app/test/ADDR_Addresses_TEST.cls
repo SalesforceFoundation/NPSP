@@ -1393,7 +1393,7 @@ public with sharing class ADDR_Addresses_TEST {
         }
 
         // Verify the Account's Billing Address info matches the Default Address record
-        assertEquals(testAddresses[0], defaultAddress);
+        assertEquals(retrievedAddresses[0], defaultAddress);
 
         // Verify the Contact's Address was updated as expected and that the Household and Contact Addresses are different.
         List<Account> retrievedAccounts = Database.query(buildAccountSoql());
@@ -2443,6 +2443,7 @@ public with sharing class ADDR_Addresses_TEST {
                 MailingStreet__c, MailingCity__c, MailingState__c,
                 MailingPostalCode__c, MailingCountry__c
             FROM Address__c
+            ORDER BY MailingState__c
         ];
     }
 
