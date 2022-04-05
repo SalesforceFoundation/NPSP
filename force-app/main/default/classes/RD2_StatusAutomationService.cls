@@ -186,16 +186,16 @@ public with sharing class RD2_StatusAutomationService {
         }
     }
 
-    private List<PicklistOptionView> createStatusOption(List<String> statusValues) {
+    private List<PicklistOptionView> createStatusOption(List<String> statusApiValues) {
         List<PicklistOptionView> options = new List<PicklistOptionView>();
-        for (String status : statusValues) {
-            String translatedStatus =  UTIL_Describe.getTranslatedPicklistLabel(
-                npe03__Recurring_Donation__c.SObjectType, npe03__Recurring_Donation__c.Status__c, status
+        for (String statusApiValue : statusApiValues) {
+            String statusLabel =  UTIL_Describe.getTranslatedPicklistLabel(
+                npe03__Recurring_Donation__c.SObjectType, npe03__Recurring_Donation__c.Status__c, statusApiValue
             );
               options.add(
                  new PicklistOptionView()
-                    .withLabel(translatedStatus)
-                    .withValue(status)
+                    .withLabel(statusLabel)
+                    .withValue(statusApiValue)
             );
         }
         return options;
