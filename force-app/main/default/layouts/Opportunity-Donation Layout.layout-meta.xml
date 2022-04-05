@@ -190,7 +190,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Elevate_Notification_Recipient_Info__c</field>
+                <field>Notification_Recipient_Information__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
