@@ -20,7 +20,7 @@
     </values>
     <values>
         <field>Target_Field_API_Name__c</field>
-        <value xsi:type="xsd:string">npsp__Notification_Recipient_Information__c</value>
+        <value xsi:type="xsd:string">npsp__Elevate_Notification_Recipient_Info__c</value>
     </values>
     <values>
         <field>Target_Object_Mapping__c</field>
