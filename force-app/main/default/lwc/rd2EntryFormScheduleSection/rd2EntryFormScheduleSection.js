@@ -411,4 +411,21 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
         });
         this.isLoading = true;
     }
+
+
+    /** Deprecated API properties */
+    @api recordId;
+
+    @api
+    load() {}
+
+    @api
+    getRecurringType() {}
+
+    @api
+    getInstallmentPeriod() {}
+
+    @api
+    forceRefresh() {}
+    
 }
