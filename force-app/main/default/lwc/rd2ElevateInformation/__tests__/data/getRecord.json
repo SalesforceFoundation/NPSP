@@ -30,7 +30,7 @@
         },
         "ACH_Last_4__c": {
             "displayValue": null,
-            "value": "5678"
+            "value": null
         },
         "CardExpirationMonth__c": {
             "displayValue": null,

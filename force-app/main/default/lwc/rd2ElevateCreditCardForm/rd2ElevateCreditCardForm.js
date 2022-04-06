@@ -1,43 +1,44 @@
-import { api, track, LightningElement } from 'lwc';
-import { constructErrorMessage } from 'c/utilCommon';
+import { api, track, LightningElement } from "lwc";
+import { constructErrorMessage } from "c/utilCommon";
 
-import tokenHandler from 'c/psElevateTokenHandler';
-import getOrgDomainInfo from '@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo';
+import tokenHandler from "c/psElevateTokenHandler";
+import getOrgDomainInfo from "@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo";
 
-import elevateWidgetLabel from '@salesforce/label/c.commonPaymentServices';
-import spinnerAltText from '@salesforce/label/c.geAssistiveSpinner';
-import elevateDisableButtonLabel from '@salesforce/label/c.RD2_ElevateDisableButtonLabel';
-import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessage';
-import nextPaymentDonationDateMessage from '@salesforce/label/c.RD2_NextPaymentDonationDateInfo';
-import nextACHPaymentDonationDateMessage from '@salesforce/label/c.RD2_NextACHPaymentDonationDateInfo';
-import cardholderNameLabel from '@salesforce/label/c.commonCardholderName';
-import elevateEnableButtonLabel from '@salesforce/label/c.RD2_ElevateEnableButtonLabel';
-import updatePaymentButtonLabel from '@salesforce/label/c.commonEditPaymentInformation';
-import cancelButtonLabel from '@salesforce/label/c.commonCancel';
-import commonExpirationDate from '@salesforce/label/c.commonMMYY';
-import { isNull } from 'c/util';
+import elevateWidgetLabel from "@salesforce/label/c.commonPaymentServices";
+import spinnerAltText from "@salesforce/label/c.geAssistiveSpinner";
+import elevateDisableButtonLabel from "@salesforce/label/c.RD2_ElevateDisableButtonLabel";
+import elevateDisabledMessage from "@salesforce/label/c.RD2_ElevateDisabledMessage";
+import nextPaymentDonationDateMessage from "@salesforce/label/c.RD2_NextPaymentDonationDateInfo";
+import nextACHPaymentDonationDateMessage from "@salesforce/label/c.RD2_NextACHPaymentDonationDateInfo";
+import cardholderNameLabel from "@salesforce/label/c.commonCardholderName";
+import elevateEnableButtonLabel from "@salesforce/label/c.RD2_ElevateEnableButtonLabel";
+import updatePaymentButtonLabel from "@salesforce/label/c.commonEditPaymentInformation";
+import cancelButtonLabel from "@salesforce/label/c.commonCancel";
+import commonExpirationDate from "@salesforce/label/c.commonMMYY";
+
+import { isNull } from "c/util";
 import {
     ACCOUNT_HOLDER_BANK_TYPES,
     ACCOUNT_HOLDER_TYPES,
     TOKENIZE_CREDIT_CARD_EVENT_ACTION,
-    TOKENIZE_ACH_EVENT_ACTION
-} from 'c/geConstants';
+    TOKENIZE_ACH_EVENT_ACTION,
+    DEFAULT_NAME_ON_CARD
+} from "c/geConstants";
 
-import { Rd2Service } from 'c/rd2Service';
-
-/***
-* @description Event name fired when the Elevate credit card widget is displayed or hidden
-* on the RD2 entry form
-*/
-const WIDGET_EVENT_NAME = 'rd2ElevateCreditCardForm';
-
-const DEFAULT_ACH_CODE = 'WEB';
+import { Rd2Service, CONTACT_DONOR_TYPE, ACCOUNT_DONOR_TYPE } from "c/rd2Service";
 
 /***
-* @description Payment services Elevate credit card widget on the Recurring Donation entry form
-*/
+ * @description Event name fired when the Elevate credit card widget is displayed or hidden
+ * on the RD2 entry form
+ */
+const WIDGET_EVENT_NAME = "rd2ElevateCreditCardForm";
+
+const DEFAULT_ACH_CODE = "WEB";
+
+/***
+ * @description Payment services Elevate credit card widget on the Recurring Donation entry form
+ */
 export default class rd2ElevateCreditCardForm extends LightningElement {
-
     labels = {
         elevateWidgetLabel,
         spinnerAltText,
@@ -49,9 +50,10 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         cancelButtonLabel,
         nextPaymentDonationDateMessage,
         nextACHPaymentDonationDateMessage,
-        commonExpirationDate
+        commonExpirationDate,
     };
-    
+    cardholderName;
+
     rd2Service = new Rd2Service();
 
     @track isLoading = true;
@@ -63,19 +65,16 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     _updatePaymentMode = false;
     enableWidgetOnPaymentMethodChange = true;
 
+    @api rd2State;
     @api rd2RecordId;
     @api existingPaymentMethod;
     @api isEditMode;
-    @api cardLastFour;
     @api cardLastFourLabel;
-    @api cardExpDate;
     @api achLastFourLabel;
-    @api achLastFour;
 
     @api payerOrganizationName;
     @api payerFirstName;
     @api payerLastName;
-    @api achAccountType;
 
     @api
     get paymentMethod() {
@@ -83,7 +82,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     set paymentMethod(value) {
-        if(this.shouldNotifyIframe(value)) {
+        if (this.shouldNotifyIframe(value)) {
             this.notifyIframePaymentMethodChanged(value);
         }
         this._paymentMethod = value;
@@ -92,16 +91,11 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
 
     notifyIframePaymentMethodChanged(newValue) {
         const iframe = this.selectIframe();
-        if(this.shouldEnableWidgetOnPaymentMethodChange(newValue)) {
+        if (this.shouldEnableWidgetOnPaymentMethodChange(newValue)) {
             this.handleUserEnabledWidget();
         }
         if (!isNull(iframe)) {
-            tokenHandler.setPaymentMethod(
-                iframe,
-                newValue,
-                this.handleError,
-                this.resolveMount
-            ).catch(err => {
+            tokenHandler.setPaymentMethod(iframe, newValue, this.handleError, this.resolveMount).catch((err) => {
                 this.handleError(err);
             });
         }
@@ -129,25 +123,44 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         return this.rd2Service.isACH(this.paymentMethod);
     }
 
-    get existingPaymentIsAch() {
-        return this.isEditMode && this.rd2Service.isACH(this.existingPaymentMethod);
+    /***
+     * @description Get the Credit Card expiration date, formated as MM/YYYY
+     */
+    get cardExpDate() {
+        const cardExpMonth = this.rd2State.cardExpirationMonth;
+        const cardExpYear = this.rd2State.cardExpirationYear;
+        return cardExpMonth && cardExpYear ? cardExpMonth + "/" + cardExpYear : "";
     }
 
-    get existingPaymentIsCard() {
-        return this.isEditMode && this.rd2Service.isCard(this.existingPaymentMethod);
+    get showExistingACHInfo() {
+        return this.isEditMode && this.originalPaymentMethodIsACH();
+    }
+
+    get showExistingCardInfo() {
+        return this.isEditMode && this.originalPaymentMethodIsCard();
+    }
+
+    originalPaymentMethodIsACH() {
+        const originalPaymentMethod = this.rd2Service.getOriginalPaymentMethod(this.rd2State);
+        return this.rd2Service.isACH(originalPaymentMethod);
+    }
+
+    originalPaymentMethodIsCard() {
+        const originalPaymentMethod = this.rd2Service.getOriginalPaymentMethod(this.rd2State);
+        return this.rd2Service.isCard(originalPaymentMethod);
     }
 
     get nextPaymentDateMessage() {
-        if(this.currentPaymentIsAch()) {
+        if (this.currentPaymentIsAch()) {
             return this.labels.nextACHPaymentDonationDateMessage;
-        } else if(this.currentPaymentIsCard) {
+        } else if (this.currentPaymentIsCard) {
             return this.labels.nextPaymentDonationDateMessage;
         }
     }
 
     shouldNotifyIframe(newPaymentMethod) {
         const oldPaymentMethod = this._paymentMethod ? this._paymentMethod : this.existingPaymentMethod;
-        const changed = (oldPaymentMethod !== undefined) && (oldPaymentMethod !== newPaymentMethod);
+        const changed = oldPaymentMethod !== undefined && oldPaymentMethod !== newPaymentMethod;
         const newMethodValidForElevate = this.rd2Service.isElevatePaymentMethod(newPaymentMethod);
         return changed && newMethodValidForElevate;
     }
@@ -156,7 +169,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         return this.enableWidgetOnPaymentMethodChange && this.isPaymentMethodChanged(newPaymentMethod);
     }
 
-    @api 
+    @api
     get nextDonationDate() {
         const localDate = new Date(this._nextDonationDate);
         return new Date(localDate.getUTCFullYear(), localDate.getUTCMonth(), localDate.getUTCDate());
@@ -167,24 +180,23 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     /***
-    * @description Get the organization domain information such as domain and the pod name
-    * in order to determine the Visualforce origin URL so that origin source can be verified.
-    */
+     * @description Get the organization domain information such as domain and the pod name
+     * in order to determine the Visualforce origin URL so that origin source can be verified.
+     */
     async connectedCallback() {
-        if(this.shouldLoadInDisabledMode()) {
+        if (this.shouldLoadInDisabledMode()) {
             this.isDisabled = true;
         }
 
-        const domainInfo = await getOrgDomainInfo()
-            .catch(error => {
-                this.handleError(error);
-            });
+        const domainInfo = await getOrgDomainInfo().catch((error) => {
+            this.handleError(error);
+        });
 
         tokenHandler.setVisualforceOriginURLs(domainInfo);
     }
 
     shouldLoadInDisabledMode() {
-        if(this.updatePaymentMode) {
+        if (this.updatePaymentMode) {
             return false;
         } else {
             return !this.isPaymentMethodChanged() && this.rd2RecordId;
@@ -192,24 +204,24 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     /***
-    * @description Listens for a message from the Visualforce iframe.
-    */
+     * @description Listens for a message from the Visualforce iframe.
+     */
     renderedCallback() {
         let component = this;
         tokenHandler.registerPostMessageListener(component);
     }
 
     /***
-    * @description Elevate credit card tokenization Visualforce page URL
-    */
+     * @description Elevate credit card tokenization Visualforce page URL
+     */
     get tokenizeCardPageUrl() {
         return tokenHandler.getTokenizeCardPageURL();
     }
 
     /***
-    * @description Method handles messages received from Visualforce iframe wrapper.
-    * @param message Message received from iframe
-    */
+     * @description Method handles messages received from Visualforce iframe wrapper.
+     * @param message Message received from iframe
+     */
     async handleMessage(message) {
         tokenHandler.handleMessage(message);
 
@@ -219,32 +231,32 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     /***
-    * @description Method sends a message to the Visualforce iframe wrapper for the Elevate sdk to mount
-    * the tokenization iframe.
-    */
+     * @description Method sends a message to the Visualforce iframe wrapper for the Elevate sdk to mount
+     * the tokenization iframe.
+     */
     requestMount() {
         const iframe = this.selectIframe();
         tokenHandler.mount(iframe, this.paymentMethod, this.handleError, this.resolveMount);
     }
 
     /***
-    * @description Handles a successful response from the Elevate sdk mount request.
-    */
+     * @description Handles a successful response from the Elevate sdk mount request.
+     */
     resolveMount = () => {
         this.isLoading = false;
         this.isMounted = true;
-    }
+    };
 
     /***
-    * @description Method sends a message to the visualforce page iframe requesting a token.
-    */
+     * @description Method sends a message to the visualforce page iframe requesting a token.
+     */
     requestToken() {
         this.clearError();
 
         const iframe = this.selectIframe();
-        if(this.rd2Service.isCard(this.paymentMethod)) {
+        if (this.rd2Service.isCard(this.paymentMethod)) {
             return this.requestCardToken(iframe);
-        } else if(this.rd2Service.isACH(this.paymentMethod)) {
+        } else if (this.rd2Service.isACH(this.paymentMethod)) {
             return this.requestAchToken(iframe);
         }
     }
@@ -254,13 +266,20 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     requestCardToken(iframe) {
-        const params = {nameOnCard: this.getCardholderName()};
+        const params = JSON.stringify(this.getCardParams());
         return tokenHandler.requestToken({
             iframe: iframe,
             tokenizeParameters: params,
             eventAction: TOKENIZE_CREDIT_CARD_EVENT_ACTION,
             handleError: this.handleError,
         });
+    }
+
+    getCardParams() {
+        const cardholderName = this.cardholderName || DEFAULT_NAME_ON_CARD;
+        return {
+            nameOnCard: cardholderName
+        };
     }
 
     requestAchToken(iframe) {
@@ -274,27 +293,27 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     getAchParams() {
-        if(this.achAccountType === ACCOUNT_HOLDER_TYPES.INDIVIDUAL) {
+        if (this.rd2State.donorType === CONTACT_DONOR_TYPE) {
             return {
                 accountHolder: {
                     firstName: this.payerFirstName,
                     lastName: this.payerLastName,
-                    type: this.achAccountType,
-                    bankType: ACCOUNT_HOLDER_BANK_TYPES.CHECKING
+                    type: ACCOUNT_HOLDER_TYPES.INDIVIDUAL,
+                    bankType: ACCOUNT_HOLDER_BANK_TYPES.CHECKING,
                 },
                 achCode: DEFAULT_ACH_CODE,
-                nameOnAccount: `${this.payerFirstName} ${this.payerLastName}`
+                nameOnAccount: `${this.payerFirstName} ${this.payerLastName}`,
             };
-        } else if(this.achAccountType === ACCOUNT_HOLDER_TYPES.BUSINESS) {
+        } else if (this.rd2State.donorType === ACCOUNT_DONOR_TYPE) {
             return {
                 accountHolder: {
                     businessName: this.payerLastName,
                     accountName: this.payerOrganizationName,
-                    type: this.achAccountType,
-                    bankType: ACCOUNT_HOLDER_BANK_TYPES.CHECKING
+                    type: ACCOUNT_HOLDER_TYPES.BUSINESS,
+                    bankType: ACCOUNT_HOLDER_BANK_TYPES.CHECKING,
                 },
                 achCode: DEFAULT_ACH_CODE,
-                nameOnAccount: this.payerOrganizationName
+                nameOnAccount: this.payerOrganizationName,
             };
         }
     }
@@ -305,12 +324,12 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     /***
-    * @description Handles user onclick event for disabling the widget.
-    */
+     * @description Handles user onclick event for disabling the widget.
+     */
     handleUserDisabledWidget() {
         this.hideWidget();
         tokenHandler.dispatchApplicationEvent(WIDGET_EVENT_NAME, {
-            isDisabled: true
+            isDisabled: true,
         });
     }
 
@@ -319,36 +338,36 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
      */
     handleUserCancelledWidget() {
         this.hideWidget();
-        if(this.isPaymentMethodChanged()) {
+        if (this.isPaymentMethodChanged()) {
             this.enableWidgetOnPaymentMethodChange = false;
         }
         tokenHandler.dispatchApplicationEvent(WIDGET_EVENT_NAME, {
-            isDisabled: true
+            isDisabled: true,
         });
     }
 
     /***
-    * @description Handles user onclick event for re-enabling the widget.
-    */
+     * @description Handles user onclick event for re-enabling the widget.
+     */
     handleUserEnabledWidget() {
         this.isLoading = true;
         this.displayWidget();
         tokenHandler.dispatchApplicationEvent(WIDGET_EVENT_NAME, {
-            isDisabled: false
+            isDisabled: false,
         });
     }
 
     /***
-    * @description Enables or disables the widget based on provided args.
-    */
+     * @description Enables or disables the widget based on provided args.
+     */
     displayWidget() {
         this.isDisabled = false;
         this.clearError();
     }
 
     /***
-    * @description Enables or disables the widget based on provided args.
-    */
+     * @description Enables or disables the widget based on provided args.
+     */
     hideWidget() {
         this.isDisabled = true;
         this.isMounted = false;
@@ -371,53 +390,41 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         let errorValue;
         let isObject = false;
 
-        if (typeof message.error === 'object') {
+        if (typeof message.error === "object") {
             errorValue = JSON.stringify(Object.values(message.error));
             isObject = true;
-
-        } else if (typeof message.error === 'string') {
+        } else if (typeof message.error === "string") {
             errorValue = message.error;
-
-        } else {//an unexpected error has been generated
+        } else {
+            //an unexpected error has been generated
             const error = constructErrorMessage(message);
-            errorValue = error
-                ? error.detail
-                : JSON.stringify(message);
+            errorValue = error ? error.detail : JSON.stringify(message);
         }
 
         this.alert = {
-            theme: 'error',
+            theme: "error",
             show: true,
             message: errorValue,
-            variant: 'inverse',
-            icon: 'utility:error'
+            variant: "inverse",
+            icon: "utility:error",
         };
 
         return {
             error: {
                 message: errorValue,
-                isObject: isObject
-            }
+                isObject: isObject,
+            },
         };
-    }
+    };
 
     /**
-     * @description Concatenate the cardholder first and last names if there are any
-     * @returns A concatenated Cardholder Name string from the First and Last Name fields
+     * Handles changes made to fields in the form
+     * @param event Event containing field change information
      */
-    getCardholderName() {
-        const nameField = this.template.querySelector('[data-id="cardholderName"]');
-        return nameField.value;
-    }
-
-    /**
-     * @description Concatenate the cardholder first and last names if there are any
-     * @returns A concatenated Cardholder Name string from the First and Last Name fields
-     */
-    @api
-    setCardholderName(donorName) {
-        const nameField = this.template.querySelector('[data-id="cardholderName"]');
-        nameField.value = donorName;
+    handleFieldChange(event) {
+        const fieldName = event.target.name;
+        const newVal = event.detail.value;
+        this[fieldName] = newVal;
     }
 
     /**
@@ -427,7 +434,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     @api
     returnToken() {
         return {
-            payload: this.requestToken()
+            payload: this.requestToken(),
         };
     }
 
@@ -438,5 +445,4 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     get qaLocatorExpirationDate() {
         return `text Expiration Date`;
     }
-
 }

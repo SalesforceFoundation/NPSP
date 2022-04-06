@@ -5,5 +5,5 @@
         <members>%%%NAMESPACE%%%DataImport__c.Do_Not_Automatically_Create_Payment__c</members>
         <name>CustomField</name>
     </types>
-    <version>40</version>
+    <version>53.0</version>
 </Package>

@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <h1>{title}</h1>
+        <h2 class="slds-text-heading_medium">{title}</h2>
         <div class="resource-list">
             <template for:each={resources} for:item="resource" for:index="index">
                 <div class="resource-item" key={resource.id} >
@@ -8,7 +8,7 @@
                         <span>{resource.label}</span>
                     </div>
                     <div class="link">
-                        <a href={resource.href} target="_blank">{resource.linkLabel}</a>
+                        <a href={resource.href} aria-label={resource.ariaLabel} target="_blank">{resource.linkLabel}</a>
                     </div>
                 </div>
             </template>

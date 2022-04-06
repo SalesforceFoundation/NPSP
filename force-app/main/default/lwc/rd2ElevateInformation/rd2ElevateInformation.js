@@ -48,7 +48,6 @@ import commonExpirationDate from '@salesforce/label/c.commonMMYY';
 
 import getAppConfigurationData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getAppConfigurationData';
 import getError from '@salesforce/apex/RD2_ElevateInformation_CTRL.getLatestErrorMessage';
-import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 
 const FIELDS = [
     FIELD_NAME,
@@ -121,6 +120,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     };
 
     rd2Service = new Rd2Service();
+    rd2State = this.rd2Service.init();
 
     isLoading = true;
     isElevateCustomer = false;
@@ -159,10 +159,10 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     /***
      * @description Initializes the component with data
      */
-    connectedCallback() {
+    async connectedCallback() {
         if (this.recordId) {
             this.populateAppConfigurationData();
-            this.populateRecurringData();
+            this.rd2State = await this.rd2Service.loadInitialView(this.rd2State, this.recordId);
         }
     }
 
@@ -205,16 +205,6 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
             })
             .finally(() => {
                 this.checkLoading();
-            });
-    }
-
-    populateRecurringData() {
-        getRecurringData({ recordId: this.recordId })
-            .then(response => {
-                this.accountHolderType = this.rd2Service.accountHolderTypeFor(response.DonorType);
-            })
-            .catch((error) => {
-                this.handleError(error);
             });
     }
 

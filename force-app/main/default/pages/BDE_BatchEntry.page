@@ -194,8 +194,8 @@
                "{!namespace}" + ":utilIllustration",
                {
                   size: "large",
-                  title: "{!$Label.bdeRetirementBlockerHeader}",
-                  message: "{!$Label.bdeRetirementBlockerMessage}",
+                  title: "{!JSENCODE($Label.bdeRetirementBlockerHeader)}",
+                  message: "{!JSENCODE($Label.bdeRetirementBlockerMessage)}",
                   variant: "lake-mountain",
                   illustrationClass: "slds-p-top_x-large slds-m-top_x-large",
                   shouldWrapText: true

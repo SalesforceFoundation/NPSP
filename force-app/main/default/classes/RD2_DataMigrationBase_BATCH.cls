@@ -210,7 +210,6 @@ public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<
     */
     public void finish(Database.BatchableContext context) {
         UTIL_BatchJobService.JobSummary summary = new UTIL_BatchJobService.JobSummary(batchJobId)
-            .withTotalRecords(totalRecords)
             .withTotalRecordsProcessed(totalRecords - totalRecordsFailed)
             .withTotalRecordsFailed(totalRecordsFailed)
             .withCompletedDate(Datetime.now());

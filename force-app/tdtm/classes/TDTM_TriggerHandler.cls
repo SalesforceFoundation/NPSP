@@ -338,8 +338,14 @@ public class TDTM_TriggerHandler {
         if (!dmlWrapper.objectsToUpdate.isEmpty()) {
             updateResults = UTIL_DMLService.updateRecords(dmlWrapper.objectsToUpdate, allOrNothing);
         }
-        List<Database.DeleteResult> deleteResults = Database.delete(dmlWrapper.objectsToDelete, allOrNothing);        
-        List<Database.UndeleteResult> undeleteResults = Database.undelete(dmlWrapper.objectsToUndelete, allOrNothing); //Not yet using this one, afaik, but no reason not to support it.
+        List<Database.DeleteResult> deleteResults;
+        if (!dmlWrapper.objectsToDelete.isEmpty()) {
+            deleteResults = Database.delete(dmlWrapper.objectsToDelete, allOrNothing);
+        }
+        List<Database.UndeleteResult> undeleteResults;
+        if (!dmlWrapper.objectsToUndelete.isEmpty()) {
+            undeleteResults = Database.undelete(dmlWrapper.objectsToUndelete, allOrNothing); //Not yet using this one, afaik, but no reason not to support it.
+        }
         
         //@TODO: We cannot support upsert because you cannot do upsert on SObject. You have to specify the actual type.        
         //Also, should we support Database.merge?

@@ -89,7 +89,7 @@ public with sharing class RD2_StatusMapper {
     private Map<String, String> statusLabelByValue {
         get {
             if (statusLabelByValue == null) {
-                statusLabelByValue = getActiveStatusValues();
+                statusLabelByValue = getActiveStatusPicklistValues();
             }
             return statusLabelByValue;
         }
@@ -137,7 +137,7 @@ public with sharing class RD2_StatusMapper {
      * @description Returns Recurring Donation Status picklist field value and labels
      * @return Map<String, String> State value mapped by the status key
      */
-    private Map<String, String> getActiveStatusValues() {
+    private Map<String, String> getActiveStatusPicklistValues() {
         Map<String, String> labelByValue = new Map<String, String>();
         List<Schema.PicklistEntry> statusEntries = npe03__Recurring_Donation__c.Status__c.getDescribe().getPicklistValues();
 
@@ -170,6 +170,23 @@ public with sharing class RD2_StatusMapper {
     }
 
     /**
+     * @description Returns all Recurring Donation Status that are mapped to Active State
+     * @return Set<String> Set of status
+     */
+    public Set<String> getActiveStatusValues() {
+        List<Mapping> allmappings = mappingByStatus.values();
+        Set<String> activeStates = new Set<String>();
+
+        for (Mapping mapping : allmappings) {
+            if (mapping.state == RD2_Constants.STATUS_ACTIVE) {
+                activeStates.add(mapping.status);
+            }
+        }
+
+        return activeStates;
+    }
+
+    /**
      * @description Returns all Recurring Donation Status that are mapped to Closed State
      * @return Set<String> Set of status
      */
@@ -184,6 +201,23 @@ public with sharing class RD2_StatusMapper {
         }
 
         return closedStates;
+    }
+
+    /**
+     * @description Returns all Recurring Donation Status that are mapped to Lapsed State
+     * @return Set<String> Set of status
+     */
+    public Set<String> getLapsedStatusValues() {
+        List<Mapping> allmappings = mappingByStatus.values();
+        Set<String> lapsedStates = new Set<String>();
+
+        for (Mapping mapping : allmappings) {
+            if (mapping.state == RD2_Constants.STATUS_LAPSED) {
+                lapsedStates.add(mapping.status);
+            }
+        }
+
+        return lapsedStates;
     }
 
     /**

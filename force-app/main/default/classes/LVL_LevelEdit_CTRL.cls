@@ -37,6 +37,7 @@ public with sharing class LVL_LevelEdit_CTRL {
 
     /** @description holds the Level currently being edited by the page */
     public Level__c lvl {get; set;}
+    private List<String> requiredFieldSetFields;
     
     /*******************************************************************************************************
     * @description constructor for the page
@@ -50,7 +51,11 @@ public with sharing class LVL_LevelEdit_CTRL {
         fieldSetList.add(UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan_Template__c'));
         if (!Test.isRunningTest()) controller.addFields(fieldSetList);
         lvl = (Level__c)controller.getRecord();
-        
+
+        // Keep track of which fields in the Field Set are required so we can create custom error messages
+        requiredFieldSetFields = UTIL_Describe.listStrFromFieldSet(UTIL_Namespace.StrTokenNSPrefix('Level__c'),
+            UTIL_Namespace.StrTokenNSPrefix('LevelEdit'), true);
+
         //if clone param is set, this is the clone button override
         Map<String,String> params = ApexPages.currentPage().getParameters();
         if (params.containsKey('clone') && params.get('clone') == '1') {
@@ -150,6 +155,9 @@ public with sharing class LVL_LevelEdit_CTRL {
     */
     public PageReference saveAndNew() {
         try {
+            if (reportFieldSetErrors()) {
+                return null;
+            }
             upsert lvl;
             // now fixup lvl to be the new next level
             lvl.Id = null;
@@ -170,6 +178,9 @@ public with sharing class LVL_LevelEdit_CTRL {
     */
     public PageReference save() {
         try {
+            if (reportFieldSetErrors()) {
+                return null;
+            }
             upsert lvl;
             return new PageReference('/' + lvl.Id);
         } catch (Exception ex) {
@@ -177,4 +188,20 @@ public with sharing class LVL_LevelEdit_CTRL {
             return null;
         }
     }
+
+    /*********************************************************************************************************
+    * @description Add errors to required Field Set fields that are empty
+    */
+    private Boolean reportFieldSetErrors(){
+        Boolean hasError = false;
+        for(String fieldPath : requiredFieldSetFields){
+            if (lvl.get(fieldPath) == null) {
+                hasError = true;
+                String fieldLabel = UTIL_Describe.getFieldLabel('Level__c', fieldPath);
+                lvl.addError(fieldPath, Label.errErrorTypeRequiredFieldMissing + ': ' + fieldLabel);
+            }
+        }
+        return hasError;
+    }
+
 }

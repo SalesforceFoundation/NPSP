@@ -6,6 +6,7 @@ import toggleInstructionsWhenClosed from "@salesforce/label/c.accordionSection_T
 
 export default class AccordionSection extends LightningElement {
     @api preventToggle = false;
+    @api title
     @api shadeOnOpen;
 
     @track isOpen = false;

@@ -9,18 +9,17 @@
         <formula>Contact.FirstName &amp; &quot; &quot; &amp; Contact.LastName &amp; &quot; Donation &quot; &amp; TEXT(MONTH(TODAY())) &amp; &quot;/&quot; &amp; TEXT(DAY(TODAY())) &amp; &quot;/&quot; &amp; TEXT(YEAR(TODAY()))</formula>
     </fieldOverrides>
     <fieldOverrides>
+        <field>%%%NAMESPACE%%%Acknowledgment_Status__c</field>
+        <literalValue>To Be Acknowledged</literalValue>
+    </fieldOverrides>
+    <fieldOverrides>
         <field>StageName</field>
-        <literalValue>Posted</literalValue>
+        <literalValue>Closed Won</literalValue>
     </fieldOverrides>
     <optionsCreateFeedItem>false</optionsCreateFeedItem>
     <quickActionLayout>
         <layoutSectionStyle>TwoColumnsLeftToRight</layoutSectionStyle>
         <quickActionLayoutColumns>
-            <quickActionLayoutItems>
-                <emptySpace>false</emptySpace>
-                <field>Name</field>
-                <uiBehavior>Required</uiBehavior>
-            </quickActionLayoutItems>
             <quickActionLayoutItems>
                 <emptySpace>false</emptySpace>
                 <field>CloseDate</field>
@@ -41,8 +40,24 @@
                 <field>CampaignId</field>
                 <uiBehavior>Edit</uiBehavior>
             </quickActionLayoutItems>
+            <quickActionLayoutItems>
+                <emptySpace>false</emptySpace>
+                <field>Description</field>
+                <uiBehavior>Edit</uiBehavior>
+            </quickActionLayoutItems>
         </quickActionLayoutColumns>
-        <quickActionLayoutColumns/>
+        <quickActionLayoutColumns>
+            <quickActionLayoutItems>
+                <emptySpace>false</emptySpace>
+                <field>%%%NAMESPACE%%%Acknowledgment_Status__c</field>
+                <uiBehavior>Edit</uiBehavior>
+            </quickActionLayoutItems>
+            <quickActionLayoutItems>
+                <emptySpace>false</emptySpace>
+                <field>%%%NAMESPACE%%%Acknowledgment_Date__c</field>
+                <uiBehavior>Edit</uiBehavior>
+            </quickActionLayoutItems>
+        </quickActionLayoutColumns>
     </quickActionLayout>
     <standardLabel>NewRecordType</standardLabel>
     <targetObject>Opportunity</targetObject>

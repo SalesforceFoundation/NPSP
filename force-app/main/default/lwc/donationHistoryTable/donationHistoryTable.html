@@ -1,0 +1,14 @@
+<template>   
+    <div style="height: 300px;">
+        <lightning-datatable
+                key-field="id"
+                data={data}
+                columns={columns}
+                enable-infinite-loading = {infiniteScroll}
+                hide-checkbox-column="true"
+                onloadmore={loadMoreDonationData}
+                class="slds-max-medium-table_stacked"
+                aria-label={label.donationHistoryDatatableAriaLabel}>
+        </lightning-datatable>
+    </div>
+</template>

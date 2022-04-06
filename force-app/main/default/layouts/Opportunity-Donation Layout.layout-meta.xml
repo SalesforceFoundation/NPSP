@@ -148,11 +148,23 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
+                <field>Tribute_Notification_Date__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Tribute_Notification_Status__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
                 <field>Honoree_Contact__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Honoree_Name__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Honoree_Information__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -171,6 +183,10 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Notification_Recipient_Name__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Notification_Recipient_Email__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>

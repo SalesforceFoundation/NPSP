@@ -148,7 +148,7 @@ global with sharing class BDI_DataImportService {
             DataImportBatch__c currentBatch = dataImportBatches[0];
             return currentBatch;
         } else {
-            throw(new BDIException(String.format(Label.bdiInvalidBatchId, new List<String>{ batchId })));   
+            throw(new BDIException(String.format(Label.bdiInvalidBatchId, new List<String>{ batchId })));
         }
     }
 
@@ -159,7 +159,7 @@ global with sharing class BDI_DataImportService {
     * @return Data_Import_Settings__c
     */
     public static Data_Import_Settings__c loadSettings(Id batchId) {
-        
+
         // load up the default or specific settings
         if (batchId == null) {
             return UTIL_CustomSettingsFacade.getDataImportSettings();
@@ -269,7 +269,7 @@ global with sharing class BDI_DataImportService {
 
         // ensure we are in the household account model!
         // if HEDA + Advancement is installed, one-to-one is also valid
-        Boolean validAccountModel = CAO_Constants.isHHAccountModel() 
+        Boolean validAccountModel = CAO_Constants.isHHAccountModel()
             || (ADV_PackageInfo_SVC.useAdv() && CAO_Constants.isOneToOne());
         if (!validAccountModel){
             throw(new BDIException(Label.bdiHouseholdModelRequired));
@@ -344,6 +344,38 @@ global with sharing class BDI_DataImportService {
             dataImportBatch.Records_Failed__c = cRecordsFailed;
             UTIL_DMLService.updateRecord(dataImportBatch);
         }
+    }
+
+    /*******************************************************************************************************
+     * @description Instrument that multiple gift were successfully processed through the DataImport Batch process
+     * @param Id Apex Batch Job to find related DataImport__c records for
+     * @return void
+     */
+    public static void instrumentGiftEntry(Id apexJobId) {
+        try {
+            String createStatus = System.Label.bdiCreated;
+            Integer insertedGifts = [SELECT Count()
+            FROM DataImport__c
+            WHERE ApexJobId__c = :apexJobId
+            AND DonationImportStatus__c = :createstatus];
+            if (insertedGifts > 0) {
+                instrumentGiftEntry(insertedGifts);
+            }
+
+        } catch (Exception ex) {}
+    }
+
+    /*******************************************************************************************************
+    * @description Instrument that multiple gift were successfully processed through the DataImport Batch process
+    * @param insertedGifts
+    * @return void
+    */
+    public static void instrumentGiftEntry(Integer insertedGifts) {
+        sfdoInstrumentationService.getInstance().log(
+            sfdoInstrumentationEnum.Feature.GiftEntry,
+            sfdoInstrumentationEnum.Component.Page,
+            sfdoInstrumentationEnum.Action.Save,
+            insertedGifts);
     }
 
     /*******************************************************************************************************
@@ -429,7 +461,7 @@ global with sharing class BDI_DataImportService {
     }
 
     /*******************************************************************************************************
-    * @description Sets diSettings based on the input settings. The method is called from tests only 
+    * @description Sets diSettings based on the input settings. The method is called from tests only
     * since the variable is global with private set().
     * @param diSettings Data Import Settings
     * @return void
@@ -681,7 +713,7 @@ global with sharing class BDI_DataImportService {
                 dataImportErrors.add(new DataImport__c(
                     Id = dataImport.Id,
                     Status__c = statusDIFailed(),
-                    FailureInformation__c = dataImport.Status__c == statusDIFailed() ? 
+                    FailureInformation__c = dataImport.Status__c == statusDIFailed() ?
                         dataImport.FailureInformation__c : e.getMessage(),
                     ApexJobId__c = apexJobId
                 ));
@@ -699,22 +731,22 @@ global with sharing class BDI_DataImportService {
     }
 
     /**
-     * @description Checks the DI for RD fields that are populated. 
-     *              If they are populated, make sure RD2 is enabled. If it is not, fail the DI. 
-     * @param  dataImports A list of DI's to check. 
-     * @return             Returns the DIs after they have been checked. 
-     */ 
+     * @description Checks the DI for RD fields that are populated.
+     *              If they are populated, make sure RD2 is enabled. If it is not, fail the DI.
+     * @param  dataImports A list of DI's to check.
+     * @return             Returns the DIs after they have been checked.
+     */
     private List<DataImport__c> checkRDFields(List<DataImport__C> dataImports) {
         String RDImportStatusField = 'RecurringDonationImportStatus__c';
-        
+
         for (DataImport__c DI : dataImports) {
             if (BDI_RecurringDonations.areRDFieldsPopulated(DI)) {
-                        
+
                 if (!(mappingService instanceof BDI_MappingServiceAdvanced)) {
                     LogBDIError(DI, DI_WITH_RD_FIELDS_NO_ADV_MAPPING, RDImportStatusField);
                 }
 
-                if (!RD2_EnablementService.isRecurringDonations2Enabled) { 
+                if (!RD2_EnablementService.isRecurringDonations2Enabled) {
                     LogBDIError(DI, DI_WITH_RD_FIELDS_NO_RD2, RDImportStatusField);
                 }
             }
@@ -952,10 +984,10 @@ global with sharing class BDI_DataImportService {
     *
     * TODO: Probably deprecate this method in favor of instance variant below
     */
-    global static Map<String, String> mapFieldsForDIObject(String dataImportObjectName, 
-                String targetObjectName, 
+    global static Map<String, String> mapFieldsForDIObject(String dataImportObjectName,
+                String targetObjectName,
                 List<String> dataImportFields) {
-        
+
         BDI_DataImportService bdi = new BDI_DataImportService(true, BDI_DataImportService.getDefaultMappingService());
         return bdi.mapDataImportFields(dataImportObjectName, targetObjectName, dataImportFields);
     }
@@ -969,14 +1001,14 @@ global with sharing class BDI_DataImportService {
     * @param dataImportFields the DataImport fields to consider
     * @return Map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
     */
-    public Map<String, String> mapDataImportFields(String dataImportObjectName, 
-                String targetObjectName, 
+    public Map<String, String> mapDataImportFields(String dataImportObjectName,
+                String targetObjectName,
                 List<String> dataImportFields) {
-        
+
         Map<String, String> targetFieldByDIField = mappingService.getFieldMap(dataImportObjectName, targetObjectName, dataImportFields);
 
         return targetFieldByDIField;
-    }    
+    }
 
     /*******************************************************************************************************
     * @description Copies non-null DI field values to the destination object, given the provided mapping.
@@ -988,7 +1020,7 @@ global with sharing class BDI_DataImportService {
     * @return boolean True if copied, False is not copied.
     */
     public static Boolean copyDIFieldToDestinationRecord(DataImport__c dataImport,
-        String dataImportField, 
+        String dataImportField,
         SObject destinationRecord,
         Map<String, String> mapDIFieldToDstField) {
 
@@ -1004,9 +1036,9 @@ global with sharing class BDI_DataImportService {
             }
 
             // If the destination field is a Boolean and the DI field intermediate requires interpretation to Boolean
-            // This allows for mapping checkboxes to a tri-state picklist - null, True, False - or a text with either 
+            // This allows for mapping checkboxes to a tri-state picklist - null, True, False - or a text with either
             // null, "True", or "False"
-            if (!(value instanceof Boolean) && 
+            if (!(value instanceof Boolean) &&
                 fieldIsBooleanDisplayType(destinationRecord, destinationField)) {
 
                 value = Boolean.valueOf(value);
@@ -1021,15 +1053,15 @@ global with sharing class BDI_DataImportService {
 
     /*******************************************************************************************************
     * @description Correctly handling checkbox fields requires mapping to a non-checkbox intermediate
-    *   DI field. Check if the destination field is boolean 
-    * @param destinationRecord The SObject to copy to 
+    *   DI field. Check if the destination field is boolean
+    * @param destinationRecord The SObject to copy to
     * @param destinationField The field mapped to on the destination record
     * @return true if field is Display Type BOOLEAN
     */
     private static Boolean fieldIsBooleanDisplayType(SObject destinationRecord, String destinationField) {
 
-        String destinationSObjectname = destinationRecord.getSObjectType().getDescribe().getName(); 
-        Schema.DisplayType destinationFieldDisplayType = 
+        String destinationSObjectname = destinationRecord.getSObjectType().getDescribe().getName();
+        Schema.DisplayType destinationFieldDisplayType =
             UTIL_Describe.getFieldDisplayType(destinationSObjectname, destinationField.toLowerCase());
 
         if(destinationFieldDisplayType == Schema.DisplayType.BOOLEAN) {
@@ -1991,7 +2023,7 @@ global with sharing class BDI_DataImportService {
     private void setCampaignImportStatusField(DataImport__c dataImport) {
 
         String campaignName = dataImport.Donation_Campaign_Name__c;
-        String currentImportStatus = dataImport.DonationCampaignImportStatus__c; 
+        String currentImportStatus = dataImport.DonationCampaignImportStatus__c;
         Id campaignId = dataImport.DonationCampaignImported__c;
 
         // if we have a campaign Id, and it isn't populated from previous dry-run match, set the status
@@ -2003,7 +2035,7 @@ global with sharing class BDI_DataImportService {
                 // The campaign exists!
                 dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatched;
             } else {
-                dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatchedNone;                
+                dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatchedNone;
             }
         }
     }
@@ -2110,15 +2142,55 @@ global with sharing class BDI_DataImportService {
     */
     public static Boolean anyFieldsPopulatedForObjectMapping(DataImport__c di,
                                                             Map<String,String> diFieldToTargetFieldMap) {
+        return anyFieldsPopulatedForObjectMapping(di, diFieldToTargetFieldMap, new String[]{});
+    }
+
+    /*******************************************************************************************************
+    * @description loops through fields provided in Map and determines if any of them have a value.  If at least
+    * one field does, then it returns true.  This variant of the method also allows a list of fields to ignore to be
+    * passed in since some fields may be mapped to two different object mappings, and others may always have a value.
+    * @param di the data import record to check
+    * @param diFieldToTargetFieldMap the mapping of DI field to target field that will be evaluated.
+    * @param fieldsToIgnore List of fields that should be ignored when checking for values, usually because these fields
+    * are shared with another object mapping, or are always populated.
+    * @return Boolean whether any fields were populated
+    */
+    public static Boolean anyFieldsPopulatedForObjectMapping(DataImport__c di,
+                                                            Map<String,String> diFieldToTargetFieldMap,
+                                                            String[] fieldsToIgnore) {
         Boolean isPopulated = false;
+
+        if (fieldsToIgnore == null) {
+            fieldsToIgnore = new String[]{};
+        } else {
+            // Force all fields to lower case so they can match correctly
+            for (Integer i = 0; i < fieldsToIgnore.size(); i++) {
+                fieldsToIgnore[i] = fieldsToIgnore[i].toLowerCase();
+            }
+        }
+
         for (String diField : diFieldToTargetFieldMap.keySet()){
-            if (di.get(diField) != null) {
+            // Set the is populated flag to true if the field should not be ignored, and it does have a value in the DI
+            Boolean shouldAddPopulatedField = !fieldsToIgnore.contains(diField.toLowerCase()) && di.get(diField) != null;
+            if (shouldAddPopulatedField) {
                 isPopulated = true;
                 break;
             }
         }
 
         return isPopulated;
+    }
+
+    /*******************************************************************************************************
+    * @description The source of the gift entry batch process - UI or someplace else
+    */
+    public static Boolean isFromGiftEntryUI {
+        get {
+            if (isFromGiftEntryUI == null) {
+                isFromGiftEntryUI = USER_UserService.isExecutionSourceFromUserInterface();
+            }
+            return isFromGiftEntryUI;
+        } set;
     }
 
     /*******************************************************************************************************

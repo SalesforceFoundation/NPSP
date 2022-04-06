@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sorted>true</sorted>
+    <standardValue>
+        <fullName>Attended</fullName>
+        <default>false</default>
+        <label>Attended</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Donated</fullName>
+        <default>false</default>
+        <label>Donated</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Invited</fullName>
+        <default>false</default>
+        <label>Invited</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Planned</fullName>
+        <default>false</default>
+        <label>Planned</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Received</fullName>
+        <default>false</default>
+        <label>Received</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Registered</fullName>
+        <default>false</default>
+        <label>Registered</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Responded</fullName>
+        <default>false</default>
+        <label>Responded</label>
+    </standardValue>
+    <standardValue>
+        <fullName>RSVP - No</fullName>
+        <default>false</default>
+        <label>RSVP - No</label>
+    </standardValue>
+    <standardValue>
+        <fullName>RSVP - Yes</fullName>
+        <default>false</default>
+        <label>RSVP - Yes</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Sent</fullName>
+        <default>false</default>
+        <label>Sent</label>
+    </standardValue>
+</StandardValueSet>

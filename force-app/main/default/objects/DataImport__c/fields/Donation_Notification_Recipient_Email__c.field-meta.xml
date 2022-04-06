@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Donation_Notification_Recipient_Email__c</fullName>
+    <description>The email address for the person receiving the notification.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The email address for the person receiving the notification.</inlineHelpText>
+    <label>Donation Notification Recipient Email</label>
+    <length>80</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

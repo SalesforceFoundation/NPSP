@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Prompt xmlns="http://soap.sforce.com/2006/04/metadata">
+    <masterLabel>Report Guidance - Standard Report Types</masterLabel>
+    <promptVersions>
+        <actionButtonLabel>Learn More About Reports</actionButtonLabel>
+        <actionButtonLink>https://sforce.co/3iufgTu</actionButtonLink>
+        <body>&lt;p&gt;While NPSP comes with many reports, you may need to create new ones to meet the unique needs of your organization. &lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;To get started, click New Report and select a report type.&lt;/p&gt;</body>
+        <customApplication>Nonprofit_Success_Pack</customApplication>
+        <delayDays>1</delayDays>
+        <description>Prompt for new admins with information around standard reporting</description>
+        <displayType>DockedComposer</displayType>
+        <header>NPSP How-To Tips</header>
+        <isPublished>true</isPublished>
+        <masterLabel>Report Guidance - Standard Report Types</masterLabel>
+        <publishedDate>2021-11-09</publishedDate>
+        <shouldDisplayActionButton>true</shouldDisplayActionButton>
+        <shouldIgnoreGlobalDelay>true</shouldIgnoreGlobalDelay>
+        <startDate>2021-03-04</startDate>
+        <targetPageKey1>Report</targetPageKey1>
+        <targetPageKey2>home</targetPageKey2>
+        <targetPageType>standard__objectPage</targetPageType>
+        <timesToDisplay>5</timesToDisplay>
+        <title>Create a New Report</title>
+        <userAccess>Everyone</userAccess>
+        <userProfileAccess>Everyone</userProfileAccess>
+        <versionNumber>1</versionNumber>
+        <videoLink>https://play.vidyard.com/vu6Jvg1j9xr4Ue1Xk9rBbD</videoLink>
+    </promptVersions>
+</Prompt>

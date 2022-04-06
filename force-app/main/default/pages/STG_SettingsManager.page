@@ -229,6 +229,15 @@
                                         class="slds-grow slds-m-left_large">
                                         {!$Label.stgNavRDFieldMap}</a>
                                 </li>
+                                <li role="treeitem" aria-level="2" id="idPanelRD2StatusAutomationNav"
+                                    class="{!IF(isRD2Enabled, 'slds-tree__item', 'hide')}"
+                                    style="{!IF(isRD2Enabled, 'display: block', 'display: none')}">
+
+                                    <a href="#" onclick="ShowPanel('idPanelRD2StatusAutomation');return false;"
+                                        class="slds-grow slds-m-left_large"
+                                        style="{!IF(isRD2Enabled, 'display: block', 'display: none')}">
+                                        {!$Label.stgNavRD2StatusAutomation}</a>
+                                </li>
                             </ul>
 
                             <!-- Bulk Data Processes -->
@@ -247,7 +256,7 @@
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelAlloBatchNav"><a href="#" onclick="ShowPanel('idPanelAlloBatch');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRollupAlloBatch}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelMakeDefaultAllocationsNav"><a href="#" onclick="ShowPanel('idPanelMakeDefaultAllocations');return false;" class="slds-grow slds-m-left_large">{!$Label.alloBatchCreateDefault}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelCreatePaymentsNav"><a href="#" onclick="ShowPanel('idPanelCreatePayments');return false;" class="slds-grow slds-m-left_large">{!$Label.stgLabelCreateMissingPayments}</a></li>
-                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRefreshHouseholdNamesNav"><a href="#" onclick="ShowPanel('idPanelRefreshHouseholdNames');return false;" class="slds-grow slds-m-left_large">{!$Label.stgHHNameRefreshTitle}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRefreshHouseholdDataNav"><a href="#" onclick="ShowPanel('idPanelRefreshHouseholdData');return false;" class="slds-grow slds-m-left_large">{!$Label.stgHHDataRefreshTitle}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppNamingBatchNav"><a href="#" onclick="ShowPanel('idPanelOppNamingBatch');return false;" class="slds-grow slds-m-left_large">{!$Label.stgLabelOppNamingRefreshTitle}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelUpdatePrimaryContactNav"><a href="#" onclick="ShowPanel('idPanelUpdatePrimaryContact');return false;" class="slds-grow slds-m-left_large">{!$Label.stgLabelOppPrimaryContactTitle}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDBatchNav"><a href="#" onclick="ShowPanel('idPanelRDBatch');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRDBatch}</a></li>
@@ -392,6 +401,10 @@
                     <apex:include pageName="STG_PanelRDCustomFieldMapping" id="idPanelRDFieldMap" />
                 </div>
 
+                <div class="panel noborder" id="idPanelRD2StatusAutomation" style="display:none">
+                    <apex:include pageName="STG_PanelRD2StatusAutomationSettings" id="idPanelRD2StatusAutomation"/>
+                </div>
+
                 <!-- Bulk Data Processes -->
                 <div class="panel noborder" id="idPanelSchedule" style="display:none" >
                     <apex:include pageName="STG_PanelSchedule" id="idPanelSchedule"/>
@@ -413,7 +426,7 @@
                     <apex:include pageName="STG_PanelCreatePayments" />
                 </div>
 
-                <div class="panel noborder" id="idPanelRefreshHouseholdNames" style="display:none" >
+                <div class="panel noborder" id="idPanelRefreshHouseholdData" style="display:none" >
                     <apex:include pageName="STG_PanelRenameHouseholds" />
                 </div>
 

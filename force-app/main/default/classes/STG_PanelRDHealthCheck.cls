@@ -121,7 +121,7 @@ public inherited sharing class STG_PanelRDHealthCheck {
     * - Create Installment Opportunity
     */
     public void verifyEnhancedRDConfig() {
-        RD2_Settings settings = new RD2_Settings();
+        RD2_Settings settings = RD2_Settings.getInstance();
         SupportedEnhancedRDValues supported = new SupportedEnhancedRDValues();
 
         result.withRecurringDonationScope();

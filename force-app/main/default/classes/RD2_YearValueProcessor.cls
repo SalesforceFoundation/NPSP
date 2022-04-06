@@ -58,7 +58,7 @@ public inherited sharing class RD2_YearValueProcessor {
         get {
             if (fiscalYearInfo == null) {
                 fiscalYearInfo = UTIL_FiscalYearInfo.getInstance()
-                    .withUseFiscalYear(new RD2_Settings().useFiscalYear);
+                    .withUseFiscalYear(RD2_Settings.getInstance().useFiscalYear);
             }
             return fiscalYearInfo;
         }

@@ -642,6 +642,10 @@ public with sharing class RD2_ValidationService {
             errorCollection.addError(System.Label.RD2_NumberInstallmentsNotAllowedWhenOpen);
         }
 
+        if (rdRecord.isElevateRecord() && rdRecord.isFixedLength()) {
+            errorCollection.addError(System.Label.RD2_ElevateRDCannotBeFixedLength);
+        }
+
         if (!rdRecord.isFixedLength()) {
             return;
         }

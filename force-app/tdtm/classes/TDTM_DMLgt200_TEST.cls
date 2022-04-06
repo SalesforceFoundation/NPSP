@@ -349,21 +349,13 @@ private class TDTM_DMLgt200_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Test creating 200+ new Contacts and validate that all 200+ have their account named properly.
-    * Not testing Household object with this logic.
+    * @description Test creating 200+ new Contacts and validate that all 200+ have their
+    * Household Account created.
     */
     @isTest
-    static void test_household_account_naming() {
-
+    static void insertingContactsShouldAutomaticallyCreateHouseholdAccounts() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        UTIL_Debug.disableDebugLogging();     // Override debug logging for this test because it's an expensive operation
-        UTIL_UnitTestData_TEST.disableAffiliationsTriggers();
-        UTIL_UnitTestData_TEST.disableRelationshipTriggers();
-        UTIL_UnitTestData_TEST.disableMergeTriggers();
-
-        Test.startTest();
 
         // Create more than 200 Contact records and then validate that all of the Household Accounts were created
         List<Contact> contacts = createMultipleTestContacts(insertCnt);
@@ -371,18 +363,43 @@ private class TDTM_DMLgt200_TEST {
 
         System.assertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
                 'There should be exactly ' + insertCnt.format() + ' Accounts');
+    }
 
-        // rename all the Contacts
+    /*********************************************************************************************************
+    * @description Test that changing the Last Name of Household Contacts
+    * prompts a renaming of the Contact's Household Accounts.
+    * For performance testing, increase the insert count, or use the class-level insertCnt
+    * variable.
+    */
+    @isTest
+    static void changeToHouseholdContactLastNameShouldRenameHouseholdAccount() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
+        // Arrange
+        // Insert Contacts (Default TDTM, Default Account/Contact model, i.e.,
+        // Household Account Contacts)
+        Integer insertCnt = 10;
+        List<Contact> contacts = createMultipleTestContacts(insertCnt);
+        insertWithAllowDupes(contacts);
+
+        // Act - rename all the Contacts
+        Test.startTest();
         Integer n = 0;
         for (Contact c : contacts) {
             c.LastName = 'ChangedLastName#' + (n++);
         }
         Database.update(contacts);
-
         Test.stopTest();
 
-        for (Contact c : [SELECT Id, FirstName, LastName, Account.Name FROM Contact WHERE Id IN :contacts]) {
-            System.assert(c.Account.Name.contains(c.LastName), 'The Account Name should contain the Contacts last name');
+        // Assert
+        for (Contact c : [
+                SELECT Id, FirstName, LastName, Account.Name
+                FROM Contact
+                WHERE Id IN :contacts
+        ]) {
+            System.assert(c.Account.Name.contains(c.LastName),
+                    'The Account Name should contain the Contacts last name');
         }
     }
 

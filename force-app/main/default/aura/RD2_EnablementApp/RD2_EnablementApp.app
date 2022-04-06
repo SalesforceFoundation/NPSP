@@ -37,6 +37,7 @@
     <aura:dependency resource="c:RD2_EnablementDelegate" />
     <aura:dependency resource="c:RD2_EnablementDelegateSimple" />
     <aura:dependency resource="c:rd2StatusMappingSettings" />
+    <aura:dependency resource="c:rd2StatusAutomationSettings" />
     <aura:dependency resource="c:utilIllustration" />
     <aura:dependency resource="c:bdeRetirementAlert" />
     <aura:dependency resource="c:bdiBatchNumberSettings" />

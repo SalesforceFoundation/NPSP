@@ -1,0 +1,135 @@
+{
+    "defaultDisplayMode": "expanded",
+    "displayRule": "displayRule",
+    "displayType": "accordion",
+    "elements": [
+      {
+        "customLabel": "Contact First Name",
+        "dataImportFieldMappingDevNames": [
+          "Contact1_First_Name_c16c496a7"
+        ],
+        "dataType": "STRING",
+        "elementType": "field",
+        "fieldApiName": "FirstName",
+        "id": "110d186a-bef3-f4f5-5618-d4829876f883",
+        "label": "Contact 1: First Name",
+        "objectApiName": "Contact",
+        "required": false,
+        "sectionId": "71dd7e32-3408-4d49-ea5c-d3dbd6374ba1"
+      },
+      {
+        "customLabel": "Contact Last Name",
+        "dataImportFieldMappingDevNames": [
+          "Contact1_Last_Name_34da232c5"
+        ],
+        "dataType": "STRING",
+        "elementType": "field",
+        "fieldApiName": "LastName",
+        "id": "fd8ea564-d3a5-46a6-cdbc-05afde989f65",
+        "label": "Contact 1: Last Name",
+        "objectApiName": "Contact",
+        "required": false,
+        "sectionId": "71dd7e32-3408-4d49-ea5c-d3dbd6374ba1"
+      },
+      {
+        "customLabel": "Contact Personal Email",
+        "dataImportFieldMappingDevNames": [
+          "Contact1_Personal_Email_27a7d1c57"
+        ],
+        "dataType": "EMAIL",
+        "elementType": "field",
+        "fieldApiName": "npe01__HomeEmail__c",
+        "id": "582b2cfd-ce2a-2b05-fe74-3f6d277c807c",
+        "label": "Contact 1: Personal Email",
+        "objectApiName": "Contact",
+        "required": false,
+        "sectionId": "71dd7e32-3408-4d49-ea5c-d3dbd6374ba1"
+      },
+      {
+        "customLabel": "Contact Preferred Email",
+        "dataImportFieldMappingDevNames": [
+          "Contact1_Preferred_Email_4c53edd61"
+        ],
+        "dataType": "PICKLIST",
+        "elementType": "field",
+        "fieldApiName": "npe01__Preferred_Email__c",
+        "id": "d7db9e5d-df83-1603-487e-7fdaf7565f02",
+        "label": "Contact 1: Preferred Email",
+        "objectApiName": "Contact",
+        "required": false,
+        "sectionId": "71dd7e32-3408-4d49-ea5c-d3dbd6374ba1"
+      },
+      {
+        "customLabel": "Contact Street",
+        "dataImportFieldMappingDevNames": [
+          "Home_Street_b4e6db8a0"
+        ],
+        "dataType": "STRING",
+        "elementType": "field",
+        "fieldApiName": "MailingStreet__c",
+        "id": "067dc155-fc17-ecb2-fd05-9e310d9d2c9b",
+        "label": "Address: Mailing Street",
+        "objectApiName": "Address__c",
+        "required": false,
+        "sectionId": "71dd7e32-3408-4d49-ea5c-d3dbd6374ba1"
+      },
+      {
+        "customLabel": "Contact City",
+        "dataImportFieldMappingDevNames": [
+          "Home_City_f69461c5a"
+        ],
+        "dataType": "STRING",
+        "elementType": "field",
+        "fieldApiName": "MailingCity__c",
+        "id": "43ed849f-6f75-fadc-be5d-1458fabdfa18",
+        "label": "Address: Mailing City",
+        "objectApiName": "Address__c",
+        "required": false,
+        "sectionId": "71dd7e32-3408-4d49-ea5c-d3dbd6374ba1"
+      },
+      {
+        "customLabel": "Contact State/Province",
+        "dataImportFieldMappingDevNames": [
+          "Home_State_Province_6954c0699"
+        ],
+        "dataType": "STRING",
+        "elementType": "field",
+        "fieldApiName": "MailingState__c",
+        "id": "a74ca6f9-beae-77aa-0ec4-19b4cea2bc8a",
+        "label": "Address: Mailing State/Province",
+        "objectApiName": "Address__c",
+        "required": false,
+        "sectionId": "71dd7e32-3408-4d49-ea5c-d3dbd6374ba1"
+      },
+      {
+        "customLabel": "Contact Zip/Postal Code",
+        "dataImportFieldMappingDevNames": [
+          "Home_Zip_Postal_Code_85fd7242a"
+        ],
+        "dataType": "STRING",
+        "elementType": "field",
+        "fieldApiName": "MailingPostalCode__c",
+        "id": "a936c83d-e838-5a38-35cb-f83bf4d641a1",
+        "label": "Address: Mailing Zip/Postal Code",
+        "objectApiName": "Address__c",
+        "required": false,
+        "sectionId": "71dd7e32-3408-4d49-ea5c-d3dbd6374ba1"
+      },
+      {
+        "customLabel": "Contact Country",
+        "dataImportFieldMappingDevNames": [
+          "Home_Country_a87869ab1"
+        ],
+        "dataType": "STRING",
+        "elementType": "field",
+        "fieldApiName": "MailingCountry__c",
+        "id": "85aa4958-2179-ec8b-7fc2-b9b8136b070a",
+        "label": "Address: Mailing Country",
+        "objectApiName": "Address__c",
+        "required": false,
+        "sectionId": "71dd7e32-3408-4d49-ea5c-d3dbd6374ba1"
+      }
+    ],
+    "id": "71dd7e32-3408-4d49-ea5c-d3dbd6374ba1",
+    "label": "Add or Edit Contact"
+  }
