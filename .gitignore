@@ -46,3 +46,4 @@ datasets/dev_org/test_data.db
 # LWC
 force-app/main/default/lwc/.eslintrc.json
 /node_modules
+/coverage

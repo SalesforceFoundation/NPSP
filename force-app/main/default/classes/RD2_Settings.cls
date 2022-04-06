@@ -34,7 +34,15 @@
 *
 */
 public with sharing class RD2_Settings {
-    
+    private static RD2_Settings rdSettings;
+
+    public static RD2_Settings getInstance() {
+        if (rdSettings == null) {
+            rdSettings = new RD2_Settings();
+        }
+        return rdSettings;
+    }
+
     /***
     * @description Recurring Donation custom settings
     */
@@ -46,6 +54,10 @@ public with sharing class RD2_Settings {
             return settings;
         }
         set;
+    }
+
+    public void reloadSetting() {
+        settings = null;
     }
 
     /***
@@ -112,14 +124,40 @@ public with sharing class RD2_Settings {
     }
 
     /***
+    * @description Retrieve RD2_Entry_Form_Custom_Fields Fieldset and eliminate any packaged and already displayed fields
+    * @return List<Schema.FieldSetMember>
+    */
+    public List<Schema.FieldSetMember> getCustomFieldSetMembers() {
+        Set<String> excludedCustomFields = getExcludedCustomFields();
+
+        List<Schema.FieldSetMember> fields = new List<Schema.FieldSetMember>();
+        List<Schema.FieldSetMember> fieldSetFields = Schema.SObjectType.npe03__Recurring_Donation__c.fieldSets.RD2_Entry_Form_Custom_Fields.getFields();
+
+        for (Schema.FieldSetMember field : fieldSetFields) {
+            if (excludedCustomFields.contains(field.getFieldPath())
+                    || field.getFieldPath().startsWith('npsp__')
+                    || field.getFieldPath().startsWith('npe03__')
+                    || !UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', field.getFieldPath()).isAccessible()
+                    ) {
+                continue;
+            }
+
+            fields.add(field);
+        }
+
+        return fields;
+    }
+
+
+    /***
     * @description Installment Opp Auto Creation Option,
     * If random string is input, the setting will be default to Always Create Next installment
     */
     public String installmentCreateOption {
         get {
             if (installmentCreateOption == null) {
-                installmentCreateOption = String.isNotBlank(settings.installmentOppAutoCreateOption__c)
-                    ? settings.installmentOppAutoCreateOption__c
+                installmentCreateOption = String.isNotBlank(settings.InstallmentOppAutoCreateOption__c)
+                    ? settings.InstallmentOppAutoCreateOption__c
                     : RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name();
             }
 
@@ -234,5 +272,78 @@ public with sharing class RD2_Settings {
         if (!Test.isRunningTest()) {
             upsert settings;
         }
+    }
+
+    public Boolean isStatusAutomationForClosedEnabled() {
+        return settings.StatusAutomationDaysForClosed__c != null;
+    }
+
+    public Boolean isStatusAutomationForLapsedEnabled() {
+        return settings.StatusAutomationDaysForLapsed__c != null;
+    }
+
+    public String statusAutomationClosedValue {
+        get {
+            if (statusAutomationClosedValue == null) {
+                statusAutomationClosedValue = settings.StatusAutomationClosedValue__c;
+            }
+            return statusAutomationClosedValue;
+        }
+        private set;
+    }
+
+    public String statusAutomationLapsedValue {
+        get {
+            if (statusAutomationLapsedValue == null) {
+                statusAutomationLapsedValue = settings.StatusAutomationLapsedValue__c;
+            }
+            return statusAutomationLapsedValue;
+        }
+        private set;
+    }
+
+    public Integer statusAutomationNumberOfDaysForClosed {
+        get {
+            if (statusAutomationNumberOfDaysForClosed == null) {
+                statusAutomationNumberOfDaysForClosed = (settings.StatusAutomationDaysForClosed__c == null)
+                    ? null
+                    : Integer.valueOf(settings.StatusAutomationDaysForClosed__c);
+            }
+            return statusAutomationNumberOfDaysForClosed;
+        }
+        private set;
+    }
+
+    public Integer statusAutomationNumberOfDaysForLapsed {
+        get {
+            if (statusAutomationNumberOfDaysForLapsed == null) {
+                statusAutomationNumberOfDaysForLapsed = (settings.StatusAutomationDaysForLapsed__c == null)
+                    ? null
+                    : Integer.valueOf(settings.StatusAutomationDaysForLapsed__c);
+            }
+            return statusAutomationNumberOfDaysForLapsed;
+        }
+        private set;
+    }
+
+    /**
+    * @description Set of fields that will be excluded from the RD2_EntryForm Custom Field Section
+    */
+    @TestVisible
+    private static Set<String> getExcludedCustomFields() {
+        return new Set<String> {
+                'CreatedById',
+                'CreatedDate',
+                'CurrencyIsoCode',
+                'Id',
+                'IsDeleted',
+                'LastModifiedById',
+                'LastModifiedDate',
+                'LastReferencedDate',
+                'LastViewedDate',
+                'Name',
+                'OwnerId',
+                'SystemModStamp'
+        };
     }
 }

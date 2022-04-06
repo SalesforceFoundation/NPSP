@@ -192,6 +192,11 @@ export default class GeFormWidgetAllocation extends LightningElement {
         this.fireFormWidgetChange({
             [apiNameFor(DATA_IMPORT_ADDITIONAL_JSON_FIELD)]: JSON.stringify(this.convertRowListToSObjectJSON())
         });
+
+        const addButton = this.template.querySelector('lightning-button');
+        if (addButton) {
+            addButton.focus();
+        }
     }
 
     reset() {

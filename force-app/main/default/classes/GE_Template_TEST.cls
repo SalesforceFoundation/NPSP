@@ -255,4 +255,84 @@ public with sharing class GE_Template_TEST {
             return null;
         }
     }
+    
+    @IsTest
+    static void defaultTemplateShouldNotIncludeDeletedFieldMappings() {
+        // GIVEN that a field mapping that was on the default template has been deleted
+        // WHEN the default template is generated
+        GE_Template.Template sampleTemplate = createSampleTemplate();
+        sampleTemplate.layout.stripElementsWithDeletedFieldMappings(
+                fieldMappingsWithPmtMethodDeleted()
+        );
+
+        // THEN the Template should not include deleted field mappings
+        System.assertEquals(true,
+                sampleTemplate.layout.containsField(npe01__OppPayment__c.npe01__Check_Reference_Number__c),
+                'The layout should include fields whose field mappings have not been ' +
+                        'deleted: ' + npe01__OppPayment__c.npe01__Check_Reference_Number__c);
+        System.assertEquals(false,
+                sampleTemplate.layout.containsField(npe01__OppPayment__c.npe01__Payment_Method__c),
+                'The layout should not include fields whose field mappings have been ' +
+                        'deleted: ' + npe01__OppPayment__c.npe01__Payment_Method__c);
+    }
+
+    private static FieldMappings fieldMappingsWithPmtMethodDeleted() {
+        Data_Import_Field_Mapping__mdt checkNumber = new Data_Import_Field_Mapping__mdt(
+                MasterLabel = 'Payment Check/Reference Number',
+                DeveloperName = 'Payment_Check_Reference_Number',
+                Source_Field_API_Name__c =
+                        String.valueOf(DataImport__c.Payment_Check_Reference_Number__c),
+                Target_Field_API_Name__c =
+                        String.valueOf(npe01__OppPayment__c.npe01__Check_Reference_Number__c),
+                Is_Deleted__c = false
+        );
+
+        Data_Import_Field_Mapping__mdt paymentMethod = new Data_Import_Field_Mapping__mdt(
+                MasterLabel = 'Payment Method',
+                DeveloperName = 'Payment_Method',
+                Source_Field_API_Name__c =
+                        String.valueOf(DataImport__c.Payment_Method__c),
+                Target_Field_API_Name__c =
+                        String.valueOf(npe01__OppPayment__c.npe01__Payment_Method__c),
+                Is_Deleted__c = true
+        );
+        List<Data_Import_Field_Mapping__mdt> d = new List<Data_Import_Field_Mapping__mdt>{
+                checkNumber,
+                paymentMethod
+        };
+        return new FieldMappings(d);
+    }
+
+    private static GE_Template.Template createSampleTemplate() {
+        GE_Template.Element field = new GE_Template.Element('field',
+                'True',
+                null,
+                'CustomLabel',
+                new List<String>{'Payment_Check_Reference_Number'});
+        field.fieldApiName = 'npe01__Check_Reference_Number__c';
+
+        GE_Template.Element field2 = new GE_Template.Element('field',
+                'True',
+                null,
+                'CustomLabel',
+                new List<String>{'Payment_Method'});
+        field2.fieldApiName = 'npe01__Payment_Method__c';
+
+        GE_Template.Element[] elements = new GE_Template.Element[]{field,field2};
+
+        GE_Template.Section section = new GE_Template.Section('SectionLabel',
+                'Accordion',
+                'Expanded',
+                'True',
+                elements);
+
+        GE_Template.Layout layout = new GE_Template.Layout('DefaultMappingSet',
+                new GE_Template.Section[]{section});
+
+        GE_Template.Template template = new GE_Template.Template('Sample Template',
+                'This is the description.',
+                '1.0',
+                layout);
+        return template;
+    }
 }

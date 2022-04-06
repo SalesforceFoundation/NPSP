@@ -1,0 +1,69 @@
+<template>
+  <lightning-card>
+    <lightning-layout multiple-rows="true">
+      <lightning-layout-item size="12">
+        <h2 class={summaryTitleClass}>
+          {labels.donationHistoryGivingSummaryTitle}
+        </h2>
+      </lightning-layout-item>
+      <template if:true={errorMessage}>
+        <lightning-layout-item
+        size="12"
+        class={rowClasses}
+      >
+        <span class="slds-var-m-top_medium bolder">{labels.commonUnknownError}</span>
+      </lightning-layout-item>
+      </template>
+      <template if:false={errorMessage}>
+        <lightning-layout-item
+          size="4"
+          class={rowClasses}
+        >
+          <span>{labels.donationHistoryLabelLifetime}</span>
+          <br />
+          <span class="bolder">
+            <lightning-formatted-number
+              class={usdValue}
+              value={lifetimeSummary}
+              format-style="currency"
+              currency-code="USD"
+            >
+            </lightning-formatted-number> 
+          </span>
+        </lightning-layout-item>
+        <lightning-layout-item
+          size="4"
+          class={rowClasses}
+        >
+          <span>{labels.donationHistoryLabelThisYear}</span>
+          <br />
+          <span class="bolder">
+            <lightning-formatted-number
+              value={thisYear}
+              format-style="currency"
+              currency-code="USD"
+              class={usdValue}
+            >
+            </lightning-formatted-number> 
+          </span>
+        </lightning-layout-item>
+        <lightning-layout-item
+          size="4"
+          class={lastElementClasses}
+        >
+          <span>{labels.donationHistoryLabelPreviousYear}</span>
+          <br />
+          <span class="bolder">
+            <lightning-formatted-number
+              value={previousYear}
+              format-style="currency"
+              class={usdValue}
+              currency-code="USD"
+            >
+            </lightning-formatted-number> 
+          </span>
+        </lightning-layout-item>
+      </template>
+    </lightning-layout>
+  </lightning-card>
+</template>

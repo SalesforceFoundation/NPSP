@@ -143,8 +143,38 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
         cancelCommitments(rds, oldRds, triggerAction);
 
+        updateSustainerForDeleteAndUndelete(rds, oldRds, triggerAction);
+
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
+            SfdoInstrumentationService.getInstance().log(
+                SfdoInstrumentationEnum.Feature.EnhancedRecurringDonations,
+                SfdoInstrumentationEnum.Component.TriggerAction,
+                SfdoInstrumentationEnum.Action.Create,
+                rds.size());
+        }
+
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
         return dmlActions;
+    }
+
+    private void updateSustainerForDeleteAndUndelete(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
+        if (triggerAction != TDTM_Runnable.Action.AfterDelete && triggerAction != TDTM_Runnable.Action.AfterUndelete) {
+            return;
+        }
+
+        RD2_SustainerEvaluationService sustainerService = new RD2_SustainerEvaluationService()
+        .withRecurringDonations(rds)
+        .withRecurringDonations(oldRds);
+
+        RD2_SustainerEvaluationService.setSustainerUpdateEnabled(true);
+
+        DmlWrapper sustainerDMLAction = new DmlWrapper();
+        sustainerDMLAction.objectsToUpdate = sustainerService.getContactsWithSustainerChanged();
+        TDTM_TriggerHandler.processDML(sustainerDMLAction);
+
+        sustainerDMLAction.objectsToUpdate = sustainerService.getAccountsWithSustainerChanged();
+        TDTM_TriggerHandler.processDML(sustainerDMLAction);
+        RD2_SustainerEvaluationService.setSustainerUpdateEnabled(false);
     }
 
     /***
@@ -287,7 +317,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
         List<ErrorRecord> errorRds = new RD2_ValidationService(rds, oldRds)
             .validate();
-        
+
         dmlActions.objectsWithError.addAll(errorRds);
     }
 
@@ -385,7 +415,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     */
     @TestVisible
     private Boolean shouldEvaluateOppsSynchronouslyOnInsert(Boolean isBulk) {
-        RD2_Settings settings = new RD2_Settings();
+        RD2_Settings settings = RD2_Settings.getInstance();
 
         if (settings.firstInstallmentCreateMode == RD2_Constants.FirstInstallmentOppCreateOptions.Synchronous.name()) {
             return true;
@@ -463,9 +493,9 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     }
 
     /**
-    * @description Cancel Commitments in Elevate for closed Recurring Donations containing a Commitment Id. 
+    * @description Cancel Commitments in Elevate for closed Recurring Donations containing a Commitment Id.
     *   If the Elevate RD is closed and Elevate Service is enabled,
-    *   the RD status will be set to pending process and an async job will be kick off 
+    *   the RD status will be set to pending process and an async job will be kick off
     *   to cancel the mathced commitment in Elevate.
     * @param rds Trigger.new records
     * @param oldRds Trigger.old records

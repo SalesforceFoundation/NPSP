@@ -1,91 +1,75 @@
-import { LightningElement, api, track, wire } from 'lwc';
-import CURRENCY from '@salesforce/i18n/currency';
-import { registerListener } from 'c/pubsubNoPageRef';
-import { Rd2Service, PERIOD } from 'c/rd2Service';
-import { isNull, showToast, constructErrorMessage, format, extractFieldInfo, buildFieldDescribes, isEmpty } from 'c/utilCommon';
-import { HTTP_CODES, PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD } from 'c/geConstants';
+import { LightningElement, api, track, wire } from "lwc";
+import { registerListener } from "c/pubsubNoPageRef";
+import { Rd2Service, ACTIONS } from "c/rd2Service";
+import {
+    isNull,
+    showToast,
+    constructErrorMessage,
+    format,
+    extractFieldInfo,
+    buildFieldDescribes,
+    isEmpty,
+} from "c/utilCommon";
+import { HTTP_CODES } from "c/geConstants";
 
-import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
+import { getObjectInfo } from "lightning/uiObjectInfoApi";
+import { getRecord, getFieldValue, getRecordNotifyChange } from "lightning/uiRecordApi";
 
-import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
+import RECURRING_DONATION_OBJECT from "@salesforce/schema/npe03__Recurring_Donation__c";
 
-import FIELD_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.Name';
-import FIELD_CAMPAIGN from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Recurring_Donation_Campaign__c';
-import FIELD_AMOUNT from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Amount__c';
-import FIELD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
-import FIELD_RECURRING_TYPE from '@salesforce/schema/npe03__Recurring_Donation__c.RecurringType__c';
-import FIELD_STATUS from '@salesforce/schema/npe03__Recurring_Donation__c.Status__c';
-import FIELD_STATUS_REASON from '@salesforce/schema/npe03__Recurring_Donation__c.ClosedReason__c';
-import FIELD_COMMITMENT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.CommitmentId__c';
-import FIELD_ACH_LAST4 from '@salesforce/schema/npe03__Recurring_Donation__c.ACH_Last_4__c';
-import FIELD_CARD_LAST4 from '@salesforce/schema/npe03__Recurring_Donation__c.CardLast4__c';
-import FIELD_CARD_EXPIRY_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationMonth__c';
-import FIELD_CARD_EXPIRY_YEAR from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationYear__c';
-import FIELD_INSTALLMENT_FREQUENCY from '@salesforce/schema/npe03__Recurring_Donation__c.InstallmentFrequency__c';
-import FIELD_INSTALLMENT_PERIOD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
-import FIELD_NEXT_DONATION_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c';
-import FIELD_CONTACT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__c';
-import FIELD_ORGANIZATION_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__c';
-import FIELD_CHANGE_TYPE from '@salesforce/schema/npe03__Recurring_Donation__c.ChangeType__c';
-import FIELD_PAID_AMOUNT from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Paid_Amount__c';
-import FIELD_PAID_INSTALLMENTS from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Total_Paid_Installments__c';
-import FIELD_INSTALLMENTS from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installments__c';
+import FIELD_NAME from "@salesforce/schema/npe03__Recurring_Donation__c.Name";
+import FIELD_CAMPAIGN from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Recurring_Donation_Campaign__c";
+import FIELD_AMOUNT from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Amount__c";
+import FIELD_PAYMENT_METHOD from "@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c";
+import FIELD_STATUS from "@salesforce/schema/npe03__Recurring_Donation__c.Status__c";
+import FIELD_STATUS_REASON from "@salesforce/schema/npe03__Recurring_Donation__c.ClosedReason__c";
+import FIELD_ACH_LAST4 from "@salesforce/schema/npe03__Recurring_Donation__c.ACH_Last_4__c";
+import FIELD_CARD_LAST4 from "@salesforce/schema/npe03__Recurring_Donation__c.CardLast4__c";
+import FIELD_INSTALLMENT_FREQUENCY from "@salesforce/schema/npe03__Recurring_Donation__c.InstallmentFrequency__c";
+import FIELD_INSTALLMENT_PERIOD from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c";
+import FIELD_CHANGE_TYPE from "@salesforce/schema/npe03__Recurring_Donation__c.ChangeType__c";
 
-import currencyFieldLabel from '@salesforce/label/c.lblCurrency';
-import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
-import closeButtonLabel from '@salesforce/label/c.commonClose';
-import saveButtonLabel from '@salesforce/label/c.stgBtnSave';
-import newHeaderLabel from '@salesforce/label/c.RD2_EntryFormHeader';
-import editHeaderLabel from '@salesforce/label/c.commonEdit';
-import donorSectionHeader from '@salesforce/label/c.RD2_EntryFormDonorSectionHeader';
-import scheduleSectionHeader from '@salesforce/label/c.RD2_EntryFormDonationSectionHeader';
-import otherSectionHeader from '@salesforce/label/c.RD2_EntryFormOtherSectionHeader';
-import statusSectionHeader from '@salesforce/label/c.RD2_EntryFormStatusSectionHeader';
-import customFieldsSectionHeader from '@salesforce/label/c.RD2_EntryFormCustomFieldsSectionHeader';
-import insertSuccessMessage from '@salesforce/label/c.RD2_EntryFormInsertSuccessMessage';
-import updateSuccessMessage from '@salesforce/label/c.RD2_EntryFormUpdateSuccessMessage';
-import flsErrorDetail from '@salesforce/label/c.RD2_EntryFormMissingPermissions';
-import flsErrorHeader from '@salesforce/label/c.geErrorFLSHeader';
-import elevateWidgetLabel from '@salesforce/label/c.commonPaymentServices';
-import spinnerAltText from '@salesforce/label/c.geAssistiveSpinner';
-import loadingMessage from '@salesforce/label/c.labelMessageLoading';
-import waitMessage from '@salesforce/label/c.commonWaitMessage';
-import savingRDMessage from '@salesforce/label/c.RD2_EntryFormSaveRecurringDonationMessage';
-import savingCommitmentMessage from '@salesforce/label/c.RD2_EntryFormSaveCommitmentMessage';
-import commitmentFailedMessage from '@salesforce/label/c.RD2_EntryFormSaveCommitmentFailedMessage';
-import contactAdminMessage from '@salesforce/label/c.commonContactSystemAdminMessage';
-import unknownError from '@salesforce/label/c.commonUnknownError';
+import currencyFieldLabel from "@salesforce/label/c.lblCurrency";
+import cancelButtonLabel from "@salesforce/label/c.stgBtnCancel";
+import closeButtonLabel from "@salesforce/label/c.commonClose";
+import saveButtonLabel from "@salesforce/label/c.stgBtnSave";
+import newHeaderLabel from "@salesforce/label/c.RD2_EntryFormHeader";
+import editHeaderLabel from "@salesforce/label/c.commonEdit";
+import donorSectionHeader from "@salesforce/label/c.RD2_EntryFormDonorSectionHeader";
+import scheduleSectionHeader from "@salesforce/label/c.RD2_EntryFormDonationSectionHeader";
+import otherSectionHeader from "@salesforce/label/c.RD2_EntryFormOtherSectionHeader";
+import statusSectionHeader from "@salesforce/label/c.RD2_EntryFormStatusSectionHeader";
+import customFieldsSectionHeader from "@salesforce/label/c.RD2_EntryFormCustomFieldsSectionHeader";
+import insertSuccessMessage from "@salesforce/label/c.RD2_EntryFormInsertSuccessMessage";
+import updateSuccessMessage from "@salesforce/label/c.RD2_EntryFormUpdateSuccessMessage";
+import flsErrorDetail from "@salesforce/label/c.RD2_EntryFormMissingPermissions";
+import flsErrorHeader from "@salesforce/label/c.geErrorFLSHeader";
+import elevateWidgetLabel from "@salesforce/label/c.commonPaymentServices";
+import spinnerAltText from "@salesforce/label/c.geAssistiveSpinner";
+import loadingMessage from "@salesforce/label/c.labelMessageLoading";
+import waitMessage from "@salesforce/label/c.commonWaitMessage";
+import savingRDMessage from "@salesforce/label/c.RD2_EntryFormSaveRecurringDonationMessage";
+import savingCommitmentMessage from "@salesforce/label/c.RD2_EntryFormSaveCommitmentMessage";
+import commitmentFailedMessage from "@salesforce/label/c.RD2_EntryFormSaveCommitmentFailedMessage";
+import contactAdminMessage from "@salesforce/label/c.commonContactSystemAdminMessage";
+import unknownError from "@salesforce/label/c.commonUnknownError";
 
-import getRecurringSettings from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
-import hasRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions';
-import handleCommitment from '@salesforce/apex/RD2_EntryFormController.handleCommitment';
-import logError from '@salesforce/apex/RD2_EntryFormController.logError';
+import handleCommitment from "@salesforce/apex/RD2_EntryFormController.handleCommitment";
+import logError from "@salesforce/apex/RD2_EntryFormController.logError";
 
-import MAILING_COUNTRY_FIELD from '@salesforce/schema/Contact.MailingCountry';
-import CONTACT_FIRST_NAME from '@salesforce/schema/Contact.FirstName';
-import CONTACT_LAST_NAME from '@salesforce/schema/Contact.LastName';
-import ACCOUNT_NAME from '@salesforce/schema/Account.Name';
-import ACCOUNT_PRIMARY_CONTACT_LAST_NAME from '@salesforce/schema/Account.npe01__One2OneContact__r.LastName';
-
-const CHANGE_TYPE_UPGRADE = 'Upgrade';
-const CHANGE_TYPE_DOWNGRADE = 'Downgrade';
-
-const RECURRING_TYPE_OPEN = 'Open';
-const RECURRING_TYPE_FIXED = 'Fixed';
-const ELEVATE_SUPPORTED_COUNTRIES = ['US', 'USA', 'United States', 'United States of America'];
-const ELEVATE_SUPPORTED_CURRENCIES = ['USD'];
+import MAILING_COUNTRY_FIELD from "@salesforce/schema/Contact.MailingCountry";
+import CONTACT_FIRST_NAME from "@salesforce/schema/Contact.FirstName";
+import CONTACT_LAST_NAME from "@salesforce/schema/Contact.LastName";
+import ACCOUNT_NAME from "@salesforce/schema/Account.Name";
+import ACCOUNT_PRIMARY_CONTACT_LAST_NAME from "@salesforce/schema/Account.npe01__One2OneContact__r.LastName";
 
 /***
-* @description Event name fired when the Elevate credit card widget
-* is displayed or hidden on the RD2 entry form
-*/
-const ELEVATE_WIDGET_EVENT_NAME = 'rd2ElevateCreditCardForm';
+ * @description Event name fired when the Elevate credit card widget
+ * is displayed or hidden on the RD2 entry form
+ */
+const ELEVATE_WIDGET_EVENT_NAME = "rd2ElevateCreditCardForm";
 
 export default class rd2EntryForm extends LightningElement {
-
-    listenerEvent = 'rd2EntryFormEvent';
-
     customLabels = Object.freeze({
         cancelButtonLabel,
         closeButtonLabel,
@@ -106,147 +90,97 @@ export default class rd2EntryForm extends LightningElement {
         savingCommitmentMessage,
         commitmentFailedMessage,
         contactAdminMessage,
-        unknownError
+        unknownError,
     });
 
     @api parentId;
     @api recordId;
 
-    @track isEdit = false;
-    @track isCommitmentEdit = false;
+    _contactId;
+    _accountId;
+
     @track record;
-    recordName;
-    @track isMultiCurrencyEnabled = false;
     @track fields = {};
-    @track rdSettings = {};
-    @track customFields = {};
     fieldInfos;
 
-    @track header = newHeaderLabel;
-
-    @track isAutoNamingEnabled;
-    @track isLoading = true;
-    @track loadingText = this.customLabels.loadingMessage;
-    @track hasCustomFields = false;
+    isLoading = true;
+    loadingText = this.customLabels.loadingMessage;
     isRecordReady = false;
-    @track isSettingReady = false;
-    @track isSaveButtonDisabled = true;
-    @track changeType;
-    @track showChangeTypeField = false;
-    isChangeLogEnabled = false;
-    periodToYearlyFrequencyMap;
-    donationValue;
-    recurringType;
+    isSettingReady = false;
+    isSaveButtonDisabled = true;
 
-    @track isElevateWidgetEnabled = false;
-    @track isElevateEditWidgetEnabled = false;
+    isElevateWidgetEnabled = false;
+    isElevateEditWidgetEnabled = false;
     hasUserDisabledElevateWidget = false;
-    isElevateCustomer = false;
-    commitmentId = null;
-    paymentMethodToken;
-    _paymentMethod;
-
-    contactId;
-    organizationAccountId;
-    organizationAccountName;
-    accountHolderType;
-    recurringPeriod;
-    periodType;
-    recurringDonationStatus;
-    closedStatusValues;
-
-    contact = {
-        MailingCountry: null
-    };
 
     rd2Service = new Rd2Service();
+    @track rd2State = this.rd2Service.init();
 
     @track error = {};
 
     /***
-    * @description Get the next donation date for this recurring donation
-    */
-    @api 
+     * @description Get the next donation date for this recurring donation
+     */
     get nextDonationDate() {
-        const localDate = new Date(this._nextDonationDate);
+        const localDate = new Date(this.rd2State.nextDonationDate);
         return new Date(localDate.getUTCFullYear(), localDate.getUTCMonth(), localDate.getUTCDate());
     }
 
     /***
-    * @description Get the Credit Card expiration date, formated as MM/YYYY
-    */
-    @api 
-    get cardExpDate(){
-        const cardExpMonth = getFieldValue(this.record, FIELD_CARD_EXPIRY_MONTH);
-        const cardExpYear = getFieldValue(this.record, FIELD_CARD_EXPIRY_YEAR);
-        return (cardExpMonth && cardExpYear) ? cardExpMonth + '/' + cardExpYear : '';
-    }
-
-    /***
-    * @description Get the Label for the Card Last 4 field
-    */
+     * @description Get the Label for the Card Last 4 field
+     */
     get cardLastFourLabel() {
-        return (this.fields.cardLastFour) ? this.fields.cardLastFour.label : '';
+        return this.fields.cardLastFour ? this.fields.cardLastFour.label : "";
     }
 
     /***
      * @description Get the Label for the Card Last 4 field
      */
     get achLastFourLabel() {
-        return (this.fields.achLastFour) ? this.fields.achLastFour.label : '';
+        return this.fields.achLastFour ? this.fields.achLastFour.label : "";
     }
 
     /***
-    * @description Dynamically render the new/edit form via CSS to show/hide based on the status of
-    * callouts to retrieve RD settings and other required data.
-    */
+     * @description Dynamically render the new/edit form via CSS to show/hide based on the status of
+     * callouts to retrieve RD settings and other required data.
+     */
     get cssEditForm() {
-        return (!this.isLoading && this.isSettingReady && this.isRecordReady)
-            ? ''
-            : 'slds-hide';
+        return !this.isLoading && this.isSettingReady && this.isRecordReady ? "" : "slds-hide";
     }
 
     /***
-    * @description Get settings required to enable or disable fields and populate their values
-    */
-    connectedCallback() {
-        getRecurringSettings({ parentId: this.parentId })
-            .then(response => {
-                this.isAutoNamingEnabled = response.isAutoNamingEnabled;
-                this.isMultiCurrencyEnabled = response.isMultiCurrencyEnabled;
-                this.isSettingReady = true;
-                this.isSaveButtonDisabled = false;
-                this.rdSettings = response;
-                this.customFields = response.customFieldSets;
-                this.hasCustomFields = Object.keys(this.customFields).length !== 0;
-                this.isElevateCustomer = response.isElevateCustomer;
-                this.isChangeLogEnabled = response.isChangeLogEnabled;
-                this.periodToYearlyFrequencyMap = response.periodToYearlyFrequencyMap;
-                this.closedStatusValues = response.closedStatusValues;
-            })
-            .catch((error) => {
-                this.handleError(error);
-            })
-            .finally(() => {
-                this.isLoading = false;
-                this.evaluateElevateEditWidget();
-                this.handleDonationValueChange();
+     * @description Get settings required to enable or disable fields and populate their values
+     */
+    async connectedCallback() {
+        try {
+            this.rd2State = await this.rd2Service.loadInitialView(this.state, this.recordId, this.parentId);
+        } catch (ex) {
+            this.perform({
+                type: ACTIONS.SET_ERROR,
+                payload: ex,
             });
+        }
+        this._contactId = this.rd2State.contactId;
+        this._accountId = this.rd2State.accountId;
 
-        /*
-        * Validate that the User has permissions to all required fields. If not, render a message at the top of the page
-        */
-        hasRequiredFieldPermissions()
-            .then(response => {
-                if (response === false) {
-                    this.handleError({
-                        header: this.customLabels.flsErrorHeader,
-                        detail: this.customLabels.flsErrorDetail
-                    });
-                }
+        this.isSaveButtonDisabled = false;
+        this.isSettingReady = true;
+        this.isLoading = false;
+
+        this.evaluateElevateEditWidget();
+
+        if (!this.rd2State.hasRequiredPermissions) {
+            this.handleError({
+                header: this.customLabels.flsErrorHeader,
+                detail: this.customLabels.flsErrorDetail,
             });
+        }
 
         registerListener(ELEVATE_WIDGET_EVENT_NAME, this.handleElevateWidgetDisplayState, this);
+    }
+
+    perform(action) {
+        this.rd2State = this.rd2Service.dispatch(this.rd2State, action);
     }
 
     /**
@@ -255,31 +189,25 @@ export default class rd2EntryForm extends LightningElement {
      * @param event
      */
     handleElevateWidgetDisplayState(event) {
-        if(this.shouldResetPaymentMethodOnStateChange(event)) {
+        if (this.shouldResetPaymentMethodOnStateChange(event)) {
             this.resetPaymentMethod();
         }
         this.hasUserDisabledElevateWidget = event.isDisabled;
     }
 
     shouldResetPaymentMethodOnStateChange(event) {
-        return event.isDisabled
-            && this.isEdit
-            && this._paymentMethod !== this.existingPaymentMethod
-            && this.isCommitmentEdit;
+        return event.isDisabled && this.isEdit && this.isPaymentMethodChanged() && this.isCommitmentEdit;
     }
 
     /***
-    * @description Retrieve Recurring Donation Object info
-    */
+     * @description Retrieve Recurring Donation Object info
+     */
     @wire(getObjectInfo, { objectApiName: RECURRING_DONATION_OBJECT.objectApiName })
     wiredRecurringDonationObjectInfo(response) {
         if (response.data) {
             let rdObjectInfo = response.data;
             this.setFields(rdObjectInfo.fields);
-            this.fieldInfos = buildFieldDescribes(
-                rdObjectInfo.fields,
-                rdObjectInfo.apiName
-            );
+            this.fieldInfos = buildFieldDescribes(rdObjectInfo.fields, rdObjectInfo.apiName);
 
             this.isRecordReady = true;
         }
@@ -290,8 +218,8 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Construct field describe info from the Recurring Donation SObject info
-    */
+     * @description Construct field describe info from the Recurring Donation SObject info
+     */
     setFields(fieldInfos) {
         this.fields.campaign = extractFieldInfo(fieldInfos, FIELD_CAMPAIGN.fieldApiName);
         this.fields.name = extractFieldInfo(fieldInfos, FIELD_NAME.fieldApiName);
@@ -300,37 +228,22 @@ export default class rd2EntryForm extends LightningElement {
         this.fields.status = extractFieldInfo(fieldInfos, FIELD_STATUS.fieldApiName);
         this.fields.statusReason = extractFieldInfo(fieldInfos, FIELD_STATUS_REASON.fieldApiName);
         this.fields.cardLastFour = extractFieldInfo(fieldInfos, FIELD_CARD_LAST4.fieldApiName);
-        this.fields.currency = { label: currencyFieldLabel, apiName: 'CurrencyIsoCode' };
+        this.fields.currency = { label: currencyFieldLabel, apiName: "CurrencyIsoCode" };
         this.fields.achLastFour = extractFieldInfo(fieldInfos, FIELD_ACH_LAST4.fieldApiName);
         this.fields.changeType = extractFieldInfo(fieldInfos, FIELD_CHANGE_TYPE.fieldApiName);
     }
 
     /***
-    * @description Retrieve Recurring Donation record value
-    */
-    @wire(getRecord, { recordId: '$recordId', fields: '$fieldInfos' })
+     * @description Retrieve Recurring Donation record value
+     */
+    @wire(getRecord, { recordId: "$recordId", fields: "$fieldInfos" })
     wiredRecurringDonationRecord(response) {
         if (response.data) {
             this.record = response.data;
-            this.header = editHeaderLabel + ' ' + this.record.fields.Name.value;
             this.isRecordReady = true;
-            this.isEdit = true;
-            this._paymentMethod = getFieldValue(this.record, FIELD_PAYMENT_METHOD);
-            this.existingPaymentMethod = getFieldValue(this.record, FIELD_PAYMENT_METHOD);
-            this.contactId = getFieldValue(this.record, FIELD_CONTACT_ID);
-            this.organizationAccountId = getFieldValue(this.record, FIELD_ORGANIZATION_ID);
-            this.commitmentId = getFieldValue(this.record, FIELD_COMMITMENT_ID);
-            this.isCommitmentEdit = !isNull(this.commitmentId);
-            this._nextDonationDate = getFieldValue(this.record, FIELD_NEXT_DONATION_DATE);
-            this.cardLastFour = getFieldValue(this.record, FIELD_CARD_LAST4);
-            this.achLastFour = getFieldValue(this.record, FIELD_ACH_LAST4);
-            this.recurringPeriod = getFieldValue(this.record, FIELD_INSTALLMENT_PERIOD);
-            this.recurringDonationStatus = getFieldValue(this.record, FIELD_STATUS);
 
             this.evaluateElevateEditWidget();
             this.evaluateElevateWidget();
-            this.handleDonationValueChange();
-
         } else if (response.error) {
             this.handleError(response.error);
         }
@@ -342,18 +255,61 @@ export default class rd2EntryForm extends LightningElement {
      * Otherwise, contact data should not be retrieved from database.
      */
     handleContactChange(event) {
-        if (this.isElevateCustomer && !this.isEdit) {
-            this.contactId = event.detail && event.detail.value ? event.detail.value : event.detail;
-            this.contact.MailingCountry = null;
-        }
+        this._contactId = event.detail;
+        this.perform({
+            type: ACTIONS.SET_CONTACT_ID,
+            payload: event.detail,
+        });
     }
 
     handleAccountChange(event) {
-        this.organizationAccountId = event.detail;
+        this._accountId = event.detail;
+        this.perform({
+            type: ACTIONS.SET_ACCOUNT_ID,
+            payload: event.detail,
+        });
     }
 
     handleDonorTypeChange(event) {
-        this.accountHolderType = this.rd2Service.accountHolderTypeFor(event.detail);
+        this.perform({
+            type: ACTIONS.SET_DONOR_TYPE,
+            payload: event.detail,
+        });
+    }
+
+    handleDateEstablishedChange(event) {
+        this.perform({
+            type: ACTIONS.SET_DATE_ESTABLISHED,
+            payload: event.detail,
+        });
+    }
+
+    handleNameChange(event) {
+        this.perform({
+            type: ACTIONS.SET_RECORD_NAME,
+            payload: event.target.value,
+        });
+    }
+
+    handleCampaignChange(event) {
+        this.perform({
+            type: ACTIONS.SET_CAMPAIGN_ID,
+            payload: event.target.value,
+        });
+    }
+
+    handleChangeTypeChange(event) {
+        this.perform({
+            type: ACTIONS.SET_CHANGE_TYPE,
+            payload: event.detail,
+        });
+    }
+
+    handleCustomFieldChange(event) {
+        this.perform({
+            type: ACTIONS.CUSTOM_FIELD_CHANGE,
+            payload: event.detail,
+        });
     }
 
     /**
@@ -361,343 +317,205 @@ export default class rd2EntryForm extends LightningElement {
      * Data is not refreshed when the contact Id is null.
      */
     @wire(getRecord, {
-        recordId: '$contactId', fields: [
-            MAILING_COUNTRY_FIELD,
-            CONTACT_LAST_NAME,
-            CONTACT_FIRST_NAME
-        ]
+        recordId: "$_contactId",
+        fields: [MAILING_COUNTRY_FIELD, CONTACT_LAST_NAME, CONTACT_FIRST_NAME],
     })
-    wiredGetRecord({error, data}) {
+    wiredGetRecord({ error, data }) {
         if (data) {
-            this.contact.MailingCountry = getFieldValue(data, MAILING_COUNTRY_FIELD);
-            this.contactLastName = getFieldValue(data, CONTACT_LAST_NAME);
-            this.contactFirstName = getFieldValue(data, CONTACT_FIRST_NAME);
-
+            const mailingCountry = getFieldValue(data, MAILING_COUNTRY_FIELD);
+            const lastName = getFieldValue(data, CONTACT_LAST_NAME);
+            const firstName = getFieldValue(data, CONTACT_FIRST_NAME);
+            this.perform({
+                type: ACTIONS.SET_CONTACT_DETAILS,
+                payload: { firstName, lastName, mailingCountry },
+            });
             this.handleElevateWidgetDisplay();
-
         } else if (error) {
             this.handleError(error);
         }
     }
 
     @wire(getRecord, {
-        recordId: '$organizationAccountId', fields: [ACCOUNT_NAME, ACCOUNT_PRIMARY_CONTACT_LAST_NAME]
+        recordId: "$_accountId",
+        fields: [ACCOUNT_NAME, ACCOUNT_PRIMARY_CONTACT_LAST_NAME],
     })
-    wiredGetDonorAccount({error, data}) {
-        if(data) {
-            this.organizationAccountName = getFieldValue(data, ACCOUNT_NAME);
-            this.contactLastName = getFieldValue(data, ACCOUNT_PRIMARY_CONTACT_LAST_NAME);
-        } else if(error) {
+    wiredGetDonorAccount({ error, data }) {
+        if (data) {
+            const accountName = getFieldValue(data, ACCOUNT_NAME);
+            const lastName = getFieldValue(data, ACCOUNT_PRIMARY_CONTACT_LAST_NAME);
+            this.perform({
+                type: ACTIONS.SET_ACCOUNT_DETAILS,
+                payload: { lastName, accountName },
+            });
+        } else if (error) {
             this.handleError(error);
         }
     }
 
     /***
-    * @description Checks if form re-rendering is required due to payment method change
-    * @param event Contains new payment method value
-    */
+     * @description Checks if form re-rendering is required due to payment method change
+     * @param event Contains new payment method value
+     */
     handlePaymentChange(event) {
         //reset the widget and the form related to the payment method
+        this.perform({
+            type: ACTIONS.SET_PAYMENT_METHOD,
+            payload: event.detail.value,
+        });
         this.hasUserDisabledElevateWidget = this.isCommitmentEdit;
-        this._paymentMethod = event.detail.value;
         this.isElevateEditWidgetEnabled = false;
         this.evaluateElevateWidget();
     }
 
     handleStatusChange(event) {
-        this.recurringDonationStatus = event.detail.value;
+        this.perform({
+            type: ACTIONS.SET_STATUS,
+            payload: event.detail.value,
+        });
         this.evaluateElevateEditWidget();
     }
 
+    handleStatusReasonChange(event) {
+        this.perform({
+            type: ACTIONS.SET_STATUS_REASON,
+            payload: event.detail.value,
+        });
+    }
+
     /***
-    * @description Handle schedule form fields:
-    * - Recurring Type change might hide or display the credit card widget.
-    * @param event
-    */
+     * @description Handle schedule form fields:
+     * - Recurring Type change might hide or display the credit card widget.
+     * @param event
+     */
     handleRecurringTypeChange(event) {
+        this.perform({
+            type: ACTIONS.SET_RECURRING_TYPE,
+            payload: event.detail,
+        });
         this.handleElevateWidgetDisplay();
-        this.handleDonationValueChange();
     }
 
     handleRecurringPeriodChange(event) {
-        this.recurringPeriod = event.detail.period;
+        this.perform({
+            type: ACTIONS.SET_RECURRING_PERIOD,
+            payload: event.detail,
+        });
         this.handleElevateWidgetDisplay();
-        this.handleDonationValueChange();
     }
 
     handleRecurringPeriodTypeChange(event) {
-        this.periodType = event.detail.periodType;
         this.handleElevateWidgetDisplay();
-        this.handleDonationValueChange();
+        this.perform({
+            type: ACTIONS.SET_PERIOD_TYPE,
+            payload: event.detail,
+        });
     }
 
+    handleDayOfMonthChange(event) {
+        this.perform({
+            type: ACTIONS.SET_DAY_OF_MONTH,
+            payload: event.detail,
+        });
+    }
+
+    handleStartDateChange(event) {
+        this.perform({
+            type: ACTIONS.SET_START_DATE,
+            payload: event.detail,
+        });
+    }
+
+    handleFrequencyChange(event) {
+        this.perform({
+            type: ACTIONS.SET_RECURRING_FREQUENCY,
+            payload: event.detail,
+        });
+    }
+
+    handleInstallmentsChange(event) {
+        this.perform({
+            type: ACTIONS.SET_PLANNED_INSTALLMENTS,
+            payload: event.detail,
+        });
+    }
 
     /***
      * @description Currency change might hide or display the credit card widget
      * @param event
      */
     handleCurrencyChange(event) {
+        this.perform({
+            type: ACTIONS.SET_CURRENCY,
+            payload: event.target.value,
+        });
         this.handleElevateWidgetDisplay();
-        this.handleDonationValueChange();
     }
 
     /***
-    * @description Checks if the credit card widget should be displayed.
-    */
+     * @description Checks if the credit card widget should be displayed.
+     */
     handleElevateWidgetDisplay() {
-        if (this.isElevateCustomer) {
+        if (this.rd2State.isElevateCustomer) {
             this.evaluateElevateWidget();
         }
     }
 
-    /***
-    * @description Checks if Change Log is Enabled, then checks the Annual Value
-    */
-    handleDonationValueChange() {
-        if (this.isChangeLogEnabled) {
-            if (!this.donationValue) {
-                this.donationValue = this.returnDonationValue(true);
-            }
-            if (!this.recurringType) {
-                this.recurringType = this.getRecurringType();
-            }
-            this.showChangeTypeField = this.isEdit;
-            this.checkForDonationValueChange();
-        }
+    handleAmountChange(event) {
+        this.perform({
+            type: ACTIONS.SET_DONATION_AMOUNT,
+            payload: event.target.value,
+        });
+    }
+
+    get isCommitmentEdit() {
+        return !!this.rd2State.commitmentId;
+    }
+
+    get showChangeTypeField() {
+        return !!this.rd2State.recordId && this.rd2State.isChangeLogEnabled;
+    }
+
+    get hasCustomFields() {
+        return Object.keys(this.rd2State.customFieldSets).length > 0;
     }
 
     /***
-    * @description Get the Annual Value based on the current Amount and Schedule
-    */
-    getAnnualValue(duringInit) {
-        const allFields = this.getAllFields();
-        const amount = duringInit ? getFieldValue(this.record, FIELD_AMOUNT)
-            : allFields[FIELD_AMOUNT.fieldApiName];
-        const formFrequency = allFields[FIELD_INSTALLMENT_FREQUENCY.fieldApiName];
-        const frequency = (duringInit || !formFrequency)
-            ? getFieldValue(this.record, FIELD_INSTALLMENT_FREQUENCY) : formFrequency;
-        const period = duringInit ? getFieldValue(this.record, FIELD_INSTALLMENT_PERIOD) 
-            : allFields[FIELD_INSTALLMENT_PERIOD.fieldApiName];
-        const yearlyFrequency = this.periodToYearlyFrequencyMap[period];
-        return amount * (yearlyFrequency / frequency);
-    }
-
-    /***
-    * @description Get the Expected Value based on the current Amount, Paid Amount and Installment Number
-    */
-    getExpectedTotalValue(duringInit) {
-        const allFields = this.getAllFields();
-        const amount = duringInit ? getFieldValue(this.record, FIELD_AMOUNT)
-            : allFields[FIELD_AMOUNT.fieldApiName];
-        const paidAmount = this.returnZeroIfNull(getFieldValue(this.record, FIELD_PAID_AMOUNT));
-        const paidInstallments = this.returnZeroIfNull(getFieldValue(this.record, FIELD_PAID_INSTALLMENTS));
-        const numberOfInstallments = duringInit ? getFieldValue(this.record, FIELD_INSTALLMENTS) 
-            : allFields[FIELD_INSTALLMENTS.fieldApiName];
-        const remainingInstallments = numberOfInstallments - paidInstallments;
-        const expectedValue = paidAmount + remainingInstallments * amount;
-        return expectedValue;
-    }
-
-    /***
-    * @description Returns 0 if the provided value is null
-    */
-    returnZeroIfNull(numberField) {
-        return numberField != null ? numberField : 0;
-    }
-
-    /***
-    * @description Returns the Annual Value for Open Donations and Expected Value for Fixed
-    */
-    returnDonationValue(duringInit) {
-        if (this.getRecurringType() === RECURRING_TYPE_OPEN) {
-            return this.getAnnualValue(duringInit);
-        } else if (this.getRecurringType() === RECURRING_TYPE_FIXED) {
-            return this.getExpectedTotalValue(duringInit);
-        }
-    }
-
-    /***
-    * @description Checks if the Annual or Expected Total Value changed, which will update the Change Type
-    */
-    checkForDonationValueChange() {
-        let newChangeType = '';
-        let newdonationValue = this.returnDonationValue();
-
-        if (this.recurringType != this.getRecurringType()) {
-            newChangeType = '';
-        } else if (newdonationValue > this.donationValue) {
-            newChangeType = CHANGE_TYPE_UPGRADE;
-        } else if (newdonationValue < this.donationValue) {
-            newChangeType = CHANGE_TYPE_DOWNGRADE;
-        }
-
-        this.changeType = newChangeType;
-    }
-
-    /***
-    * @description Checks if the Elevate Widget should be displayed on Edit
-    */
+     * @description Checks if the Elevate Widget should be displayed on Edit
+     */
     evaluateElevateEditWidget() {
-
-        if (this.isElevateCustomer && this.isEdit) {
-            const recurringType = this.getRecurringType();
-
+        if (this.rd2State.isElevateCustomer && this.rd2State.recordId) {
             // Since the widget requires interaction to Edit, this should start as true
-            this.hasUserDisabledElevateWidget = this.isCommitmentEdit;
+            this.hasUserDisabledElevateWidget = true;
 
-            this.isElevateEditWidgetEnabled = this.isElevatePaymentMethod()
-                && recurringType === RECURRING_TYPE_OPEN
-                && this.isScheduleSupported()
-                && this.isCurrencySupported()
-                && this.isCountrySupported()
-                && this.isValidStatusForElevate();
+            this.isElevateEditWidgetEnabled = this.rd2Service.isValidForElevate(this.rd2State);
 
             this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled;
         }
     }
 
     /***
-    * @description Checks if the Elevate widget should be displayed.
-    * The Elevate widget is applicable to new RDs only for now.
-    * @param paymentMethod Payment method
-    */
+     * @description Checks if the Elevate widget should be displayed.
+     * The Elevate widget is applicable to new RDs only for now.
+     */
     evaluateElevateWidget() {
-        const isScheduleSupported = this.isScheduleSupported();
-        const isValidPaymentMethod = this.isElevatePaymentMethod();
-        const currencySupported = this.isCurrencySupported();
-        const countrySupported = this.isCountrySupported();
-        const statusSupported = this.isValidStatusForElevate();
-        this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled
-            || (this.isElevateCustomer === true
-            && isValidPaymentMethod
-            && isScheduleSupported
-            && currencySupported
-            && countrySupported
-            && statusSupported);
-
-        this.populateCardHolderName();
-    }
-
-    isScheduleSupported() {
-        if(this.scheduleComponent) {
-            const recurringType = this.getRecurringType();
-            const isValidRecurringType = recurringType === RECURRING_TYPE_OPEN;
-            const isValidInstallmentPeriod = this.periodType === PERIOD.MONTHLY
-                || this.recurringPeriod !== PERIOD.FIRST_AND_FIFTEENTH;
-
-            return isValidRecurringType && isValidInstallmentPeriod;
-        }
-
-        return false;
-    }
-
-    isElevatePaymentMethod() {
-        return this._paymentMethod === PAYMENT_METHOD_CREDIT_CARD || this._paymentMethod === PAYMENT_METHOD_ACH;
+        const isStateValidForElevate = this.rd2Service.isValidForElevate(this.rd2State);
+        this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled || isStateValidForElevate;
     }
 
     /***
-    * @description Returns true if the Elevate widget is enabled and
-    * user did not click on the link to hide it
-    */
+     * @description Returns true if the Elevate widget is enabled and
+     * user did not click on the link to hide it
+     */
     isElevateWidgetDisplayed() {
-        return this.isElevateWidgetEnabled === true
-            && this.hasUserDisabledElevateWidget !== true;
+        return this.isElevateWidgetEnabled === true && this.hasUserDisabledElevateWidget !== true;
     }
 
     /***
-    * @description Returns true if Schedule fields has updated
-    */
-    hasElevateFieldsChange(allFields) {
-        const amount = getFieldValue(this.record, FIELD_AMOUNT);
-        const frequency = getFieldValue(this.record, FIELD_INSTALLMENT_FREQUENCY);
-        const period = getFieldValue(this.record, FIELD_INSTALLMENT_PERIOD);
-        const campaignId = getFieldValue(this.record, FIELD_CAMPAIGN);
-
-
-        const hasFrequencyField = allFields.hasOwnProperty(FIELD_INSTALLMENT_FREQUENCY.fieldApiName);
-        const amountChanged = amount !== Number(allFields[FIELD_AMOUNT.fieldApiName]);
-        const frequencyChanged = hasFrequencyField && (frequency !== Number(allFields[FIELD_INSTALLMENT_FREQUENCY.fieldApiName]));
-        const installmentPeriodChanged = period !== allFields[FIELD_INSTALLMENT_PERIOD.fieldApiName];
-        const campaignChanged = campaignId !== allFields[FIELD_CAMPAIGN.fieldApiName];
-
-        return amountChanged
-            || frequencyChanged
-            || installmentPeriodChanged
-            || campaignChanged;
-    }
-
-    /***
-    * @description Prepopulates the card holder name field on the Elevate credit card widget
-    */
-    populateCardHolderName() {
-        if (!this.isElevateWidgetDisplayed()) {
-            return;
-        }
-
-        // TO-DO: Prepopulate the Cardholder Name with the currently selected Contact or Organization Name
-        // when the component first registers, and ideally if the Contact or Org is changed.
-
-        // const creditCardForm = this.creditCardComponent;
-        // creditCardForm.setCardholderName('Test Name');
-
-        // const contactId = event.detail.fields.npe03__Contact__c.value;
-        // const accountId = event.detail.fields.npe03__Organization__c.value;
-        // getCardholderNamesForElevate({ contactId: contactId, accountId: accountId })
-        //     .then(response => {
-        //         this.cardholderName = response;
-        //     });
-    }
-
-    /***
-     * @description Returns true if the currency code on the Recurring Donatation
-     * is supported by the Elevate credit card widget
+     * @description Overrides the standard submit.
+     * Collects and validates fields displayed on the form and any integrated LWC
+     * and submits them for the record insert or update.
      */
-    isCurrencySupported() {
-        let currencyCode;
-
-        if (this.isMultiCurrencyEnabled) {
-            currencyCode = this.template.querySelector('lightning-input-field[data-id="currencyField"]').value;
-
-        } else {
-            currencyCode = CURRENCY;
-        }
-
-        return ELEVATE_SUPPORTED_CURRENCIES.includes(currencyCode);
-    }
-
-    /***
-     * @description Returns true if the Contact.MailingCountry
-     * is supported by the Elevate credit card widget
-     */
-    isCountrySupported() {
-        const country = (this.contactId && this.contact && this.contact.MailingCountry)
-            ? this.contact.MailingCountry
-            : null;
-
-        return isNull(country)
-            || ELEVATE_SUPPORTED_COUNTRIES.includes(country);
-    }
-
-    isValidStatusForElevate() {
-        if(this.isEdit) {
-            const originalStatus = getFieldValue(this.record, FIELD_STATUS);
-            if(this.isClosedStatus(originalStatus)) {
-                return false;
-            }
-        }
-        return !this.isClosedStatus(this.recurringDonationStatus);
-    }
-
-    isClosedStatus(status) {
-        return !!this.closedStatusValues?.includes(status);
-    }
-
-    /***
-    * @description Overrides the standard submit.
-    * Collects and validates fields displayed on the form and any integrated LWC
-    * and submits them for the record insert or update.
-    */
-    handleSubmit(event) {
+    handleSubmit() {
         this.clearError();
         this.isLoading = true;
         this.loadingText = this.customLabels.waitMessage;
@@ -707,55 +525,62 @@ export default class rd2EntryForm extends LightningElement {
             const allFields = this.getAllFields();
             if (this.shouldSendToElevate(allFields)) {
                 this.processCommitmentSubmit(allFields);
-
             } else {
                 this.processSubmit(allFields);
             }
-
         } else {
             this.isLoading = false;
             this.isSaveButtonDisabled = false;
         }
     }
 
-
     /***
-    * @description Overrides the standard submit when an
-    * Elevate recurring commitment record is to be created or updated.
-    */
+     * @description Overrides the standard submit when an
+     * Elevate recurring commitment record is to be created or updated.
+     */
     async processCommitmentSubmit(allFields) {
         try {
             if (this.isElevateWidgetDisplayed()) {
-                this.loadingText = this.rd2Service.getPaymentProcessingMessage(this.paymentMethod);
+                this.loadingText = this.rd2Service.getPaymentProcessingMessage(this.rd2State.paymentMethod);
 
                 const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
 
-                this.paymentMethodToken = await elevateWidget.returnToken().payload;
+                const paymentToken = await elevateWidget.returnToken().payload;
+                this.perform({
+                    type: ACTIONS.SET_PAYMENT_TOKEN,
+                    payload: paymentToken,
+                });
             }
-
         } catch (error) {
-            this.setSaveButtonDisabled(false);
+            this.enableSaveButton();
+            this.isLoading = false;
             return;
         }
 
         this.loadingText = this.customLabels.savingCommitmentMessage;
 
         try {
-            const rd = this.rd2Service.constructRecurringDonation(this.recordId, this.commitmentId)
+            const rd = this.rd2Service
+                .constructRecurringDonation(this.recordId, this.rd2State.commitmentId)
                 .withInputFieldValues(allFields);
 
             handleCommitment({
                 jsonRecord: rd.asJSON(),
-                paymentMethodToken: this.paymentMethodToken
+                paymentMethodToken: this.rd2State.paymentToken,
             })
-                .then(jsonResponse => {
+                .then((jsonResponse) => {
                     const response = isNull(jsonResponse) ? null : JSON.parse(jsonResponse);
-                    const isSuccess = isNull(response)
-                        || response.statusCode === HTTP_CODES.Created
-                        || response.statusCode === HTTP_CODES.OK;
+                    const isSuccess =
+                        isNull(response) ||
+                        response.statusCode === HTTP_CODES.Created ||
+                        response.statusCode === HTTP_CODES.OK;
                     const responseBody = JSON.parse(response.body);
 
                     if (isSuccess) {
+                        this.perform({
+                            type: ACTIONS.COMMITMENT_RESPONSE,
+                            payload: responseBody,
+                        });
                         rd.withCommitmentResponseBody(responseBody);
                         this.processSubmit(rd.record);
                     } else {
@@ -766,67 +591,67 @@ export default class rd2EntryForm extends LightningElement {
                 .catch((error) => {
                     this.handleSaveError(error);
                 });
-
         } catch (error) {
             this.handleSaveError(error);
         }
     }
 
     /***
-    * @description Determines if new or existing Recurring Donation update should send to Elevate
-    */
-    shouldSendToElevate(allFields) {
-        if (!this.isElevateCustomer) {
+     * @description Determines if new or existing Recurring Donation update should send to Elevate
+     */
+    shouldSendToElevate() {
+        if (!this.rd2State.isElevateCustomer) {
             return false;
         }
-    
-        return this.isElevateWidgetDisplayed()
-            || (this.hasElevateFieldsChange(allFields) 
-                && !isEmpty(this.getCommitmentId())
-                && !this.closedStatusValues.includes(getFieldValue(this.record, FIELD_STATUS))
-            );
+
+        return (
+            this.isElevateWidgetDisplayed() ||
+            (this.rd2Service.hasElevateFieldsChange(this.rd2State) &&
+                !isEmpty(this.getCommitmentId()) &&
+                !this.rd2Service.isOriginalStatusClosed(this.rd2State))
+        );
     }
 
     /***
-    * @description Returns commitment Id that can be retrieved from database, or
-    * set by the user in the custom fields section
-    */
+     * @description Returns commitment Id that can be retrieved from database, or
+     * set by the user in the custom fields section
+     */
     getCommitmentId() {
-        return !isEmpty(this.commitmentId)
-            ? this.commitmentId
-            : null;
-    }
-
-    getRecurringType() {
-        let recurringType;
-        // Use value from record until schedule component is present
-        if(this.record) {
-            recurringType = getFieldValue(this.record, FIELD_RECURRING_TYPE);
-        }
-        if(this.scheduleComponent && this.scheduleComponent.getRecurringType()) {
-            recurringType = this.scheduleComponent.getRecurringType();
-        }
-        return recurringType;
+        return !isEmpty(this.rd2State.commitmentId) ? this.rd2State.commitmentId : null;
     }
 
     /***
-    * @description Overrides the standard submit.
-    * Collects and validates fields displayed on the form and any integrated LWC
-    * and submits them for the record insert or update.
-    */
-    processSubmit(rdRecord) {
+     * @description Overrides the standard submit.
+     * Collects and validates fields displayed on the form and any integrated LWC
+     * and submits them for the record insert or update.
+     */
+    async processSubmit() {
         try {
             this.loadingText = this.customLabels.savingRDMessage;
-            this.template.querySelector('[data-id="outerRecordEditForm"]').submit(rdRecord);
+            const saveResult = await this.rd2Service.save(this.rd2State);
 
+            if (saveResult.success === true) {
+                this.perform({
+                    type: ACTIONS.RECORD_SAVED,
+                    payload: saveResult,
+                });
+
+                if (this.isEdit) {
+                    getRecordNotifyChange([{ recordId: this.rd2State.recordId }]);
+                }
+
+                this.handleSuccess();
+            } else {
+                this.handleSaveError(saveResult);
+            }
         } catch (error) {
             this.handleSaveError(error);
         }
     }
 
     /**
-    * @description Clears the error notification
-    */
+     * @description Clears the error notification
+     */
     clearError() {
         this.error = {};
     }
@@ -837,53 +662,44 @@ export default class rd2EntryForm extends LightningElement {
      */
     handleSaveError(error) {
         try {
-            this.error = constructErrorMessage(error);
+            const constructedError = constructErrorMessage(error);
             // Transform the error to a user-friendly error and log it when
             // the RD insert failed but the Elevate commitment has been created
-            if (isNull(this.recordId) && !isEmpty(this.getCommitmentId())) {
-
-                this.error.detail = format(
-                    this.customLabels.commitmentFailedMessage,
-                    [this.getCommitmentId(), this.error.detail]
-                );
-
-                logError({ recordId: this.recordId, errorMessage: this.error.detail })
-                    .catch((error) => { });
+            if (isNull(this.rd2State.recordId) && !isEmpty(this.getCommitmentId())) {
+                constructedError.detail = format(this.customLabels.commitmentFailedMessage, [
+                    this.getCommitmentId(),
+                    this.error.detail,
+                ]);
+                logError({ recordId: this.rd2State.recordId, errorMessage: this.error.detail }).catch(() => {});
             }
-        } catch (error) { }
+            this.setError(constructedError);
+        } catch (ex) {
+            console.error("Unhandled save error", ex);
+        }
 
-        this.setSaveButtonDisabled(false);
+        this.enableSaveButton();
+        this.isLoading = false;
     }
 
     /***
      * @description Handle error and disable the Save button
      */
     handleError(error) {
-        this.error = (error && error.detail)
-            ? error
-            : constructErrorMessage(error);
-
-        this.setSaveButtonDisabled(true);
+        this.setError(error);
+        this.disableSaveButton();
     }
 
-    /***
-    * @description Handle component display when an error occurs
-    * @param isDisabled: Indicates if the Save button should be disabled
-    */
-    setSaveButtonDisabled(isDisabled) {
-        const disableBtn = !!(isDisabled && isDisabled === true);
-
-        this.isLoading = disableBtn;
-        this.isSaveButtonDisabled = disableBtn;
+    setError(error) {
+        this.template.querySelector(".error-container").scrollIntoView();
+        this.error = error;
     }
 
-    /**
-    * @description Scroll to error if the error is rendered
-    */
-    renderedCallback() {
-        if (this.error && this.error.detail && this.isLoading === false) {
-            this.template.querySelector(".error-container").scrollIntoView(true);
-        }
+    disableSaveButton() {
+        this.isSaveButtonDisabled = true;
+    }
+
+    enableSaveButton() {
+        this.isSaveButtonDisabled = false;
     }
 
     /**
@@ -896,26 +712,23 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Fires an event to utilDedicatedListener with the cancel action
-    */
+     * @description Fires an event to utilDedicatedListener with the cancel action
+     */
     handleCancel() {
-        this.closeModal(this.recordId);
+        this.closeModal(this.rd2State.recordId);
     }
 
     /***
-    * @description Fires an event to utilDedicatedListener with the success action
-    */
-    handleSuccess(event) {
-        this.recordName = event.detail.fields.Name.value;
-        const recordId = event.detail.id;
-
+     * @description Fires an event to utilDedicatedListener with the success action
+     */
+    handleSuccess() {
         const message = this.isEdit
-            ? updateSuccessMessage.replace("{0}", this.recordName)
-            : insertSuccessMessage.replace("{0}", this.recordName);
+            ? updateSuccessMessage.replace("{0}", this.rd2State.recordName)
+            : insertSuccessMessage.replace("{0}", this.rd2State.recordName);
 
-        showToast(message, '', 'success');
+        showToast(message, "", "success");
 
-        this.closeModal(recordId);
+        this.closeModal(this.rd2State.recordId);
     }
 
     /**
@@ -924,37 +737,38 @@ export default class rd2EntryForm extends LightningElement {
     closeModal(recordId) {
         this.resetAllValues();
 
-        const closeModalEvent = new CustomEvent('closemodal', {
+        const closeModalEvent = new CustomEvent("closemodal", {
             detail: { recordId: recordId },
         });
         this.dispatchEvent(closeModalEvent);
     }
 
     /**
-    * @description Reset all input values when entry form modal is closed, Reset all values in LWC
-    *   because New override button will not refresh in the same lightning session
-    */
+     * @description Reset all input values when entry form modal is closed, Reset all values in LWC
+     *   because New override button will not refresh in the same lightning session
+     */
     resetAllValues() {
-        this.recordId = null;
         this.isLoading = false;
         this.isSaveButtonDisabled = false;
         this.isElevateWidgetEnabled = false;
         this.clearError();
 
-        const inputFields = this.template.querySelectorAll('lightning-input-field');
-        inputFields.forEach(field => {
+        const inputFields = this.template.querySelectorAll("lightning-input-field");
+        inputFields.forEach((field) => {
             if (field.value) {
                 field.clean();
             }
         });
 
+        this.perform({
+            type: ACTIONS.RESET,
+        });
+
         if (!isNull(this.donorComponent)) {
             this.donorComponent.resetValues();
-            this.donorComponent.forceRefresh();
         }
         if (!isNull(this.scheduleComponent)) {
             this.scheduleComponent.resetValues();
-            this.scheduleComponent.forceRefresh();
         }
         if (!isNull(this.customFieldsComponent)) {
             this.customFieldsComponent.resetValues();
@@ -962,8 +776,23 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     resetPaymentMethod() {
+        this.perform({
+            type: ACTIONS.SET_PAYMENT_METHOD,
+            payload: null,
+        });
         const field = this.template.querySelector('lightning-input-field[data-id="paymentMethod"]');
         field.reset();
+    }
+
+    get errorContainer() {
+        return this.template.querySelector(".error-container");
+    }
+
+    get headerLabel() {
+        if (this.rd2State.recordId) {
+            return `${editHeaderLabel} ${this.rd2State.recordName}`;
+        }
+        return newHeaderLabel;
     }
 
     /**
@@ -1005,49 +834,44 @@ export default class rd2EntryForm extends LightningElement {
         return this.template.querySelector("[data-id='submitButton']");
     }
 
-    /***
-     * @description Returns value of the Payment Method field
-     */
-    get paymentMethod() {
-        return this._paymentMethod;
+    get originalPaymentMethod() {
+        return this.rd2State.initialViewState.paymentMethod;
+    }
+
+    get isEdit() {
+        return !!this.rd2State.initialViewState.recordId;
     }
 
     /***
-    * @description Collects fields displayed on the form and any integrated LWC
-    */
+     * @description Collects fields displayed on the form and any integrated LWC
+     */
     getAllFields() {
-        const donorFields = (isNull(this.donorComponent))
-            ? {}
-            : this.donorComponent.returnValues();
+        const donorFields = isNull(this.donorComponent) ? {} : this.donorComponent.returnValues();
 
-        const scheduleFields = (isNull(this.scheduleComponent))
-            ? {}
-            : this.scheduleComponent.returnValues();
+        const scheduleFields = isNull(this.scheduleComponent) ? {} : this.scheduleComponent.returnValues();
 
-        const customFields = (isNull(this.customFieldsComponent))
-            ? {}
-            : this.customFieldsComponent.returnValues();
+        const customFields = isNull(this.customFieldsComponent) ? {} : this.customFieldsComponent.returnValues();
 
         const paymentMethod = {
-            [FIELD_PAYMENT_METHOD.fieldApiName]: this.paymentMethod
-        }
+            [FIELD_PAYMENT_METHOD.fieldApiName]: this.rd2State.paymentMethod,
+        };
 
         return { ...scheduleFields, ...donorFields, ...customFields, ...paymentMethod, ...this.returnValues() };
     }
 
+    isPaymentMethodChanged() {
+        return this.rd2Service.isPaymentMethodChanged(this.rd2State);
+    }
+
     /***
-    * @description Validate all fields on the integrated LWC sections
-    */
+     * @description Validate all fields on the integrated LWC sections
+     */
     isFormValid() {
-        const isDonorSectionValid = (isNull(this.donorComponent))
-            ? true
-            : this.donorComponent.isValid();
+        const isDonorSectionValid = isNull(this.donorComponent) ? true : this.donorComponent.isValid();
 
-        const isScheduleSectionValid = (isNull(this.scheduleComponent))
-            ? true
-            : this.scheduleComponent.isValid();
+        const isScheduleSectionValid = isNull(this.scheduleComponent) ? true : this.scheduleComponent.isValid();
 
-        const isCustomFieldSectionValid = (isNull(this.customFieldsComponent))
+        const isCustomFieldSectionValid = isNull(this.customFieldsComponent)
             ? true
             : this.customFieldsComponent.isValid();
 
@@ -1063,12 +887,11 @@ export default class rd2EntryForm extends LightningElement {
     isValid() {
         let isValid = true;
 
-        this.template.querySelectorAll('lightning-input-field')
-            .forEach(field => {
-                if (!field.reportValidity()) {
-                    isValid = false;
-                }
-            });
+        this.template.querySelectorAll("lightning-input-field").forEach((field) => {
+            if (!field.reportValidity()) {
+                isValid = false;
+            }
+        });
 
         return isValid;
     }
@@ -1079,9 +902,9 @@ export default class rd2EntryForm extends LightningElement {
      */
     returnValues() {
         let data = {};
-        const inputFields = this.template.querySelectorAll('lightning-input-field');
+        const inputFields = this.template.querySelectorAll("lightning-input-field");
 
-        inputFields.forEach(field => {
+        inputFields.forEach((field) => {
             data[field.fieldName] = field.value;
         });
 
@@ -1089,10 +912,10 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /**
-     * @description Close the modal when Escsape key is pressed
+     * @description Close the modal when Escape key is pressed
      */
     handleKeyUp(event) {
-        if (event.keyCode === 27 || event.code === 'Escape') {
+        if (event.keyCode === 27 || event.code === "Escape") {
             this.handleCancel();
         }
     }
@@ -1101,7 +924,7 @@ export default class rd2EntryForm extends LightningElement {
      * @description Trap focus onto the modal when the focus reaches the top
      */
     handleClosedButtonTrapFocus(event) {
-        if (event.shiftKey && event.code === 'Tab') {
+        if (event.shiftKey && event.code === "Tab") {
             event.stopPropagation();
             this.template.querySelector('[data-id="submitButton"]').focus();
         }
@@ -1111,7 +934,7 @@ export default class rd2EntryForm extends LightningElement {
      * @description Trap focus onto the modal when the focus reaches the end
      */
     handleSaveButtonTrapFocus(event) {
-        if (event.code === 'Tab') {
+        if (event.code === "Tab") {
             event.stopPropagation();
             this.template.querySelector('[data-id="closeButton"]').focus();
         }

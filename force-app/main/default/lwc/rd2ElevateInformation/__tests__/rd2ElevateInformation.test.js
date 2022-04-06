@@ -3,9 +3,9 @@ import rd2ElevateInformation from 'c/rd2ElevateInformation';
 import { getRecord } from 'lightning/uiRecordApi';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getNavigateCalledWith } from "lightning/navigation";
-import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
-import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getAppConfigurationData';
-import getError from '@salesforce/apex/RD2_ElevateInformation_CTRL.getLatestErrorMessage';
+import getAppConfigurationData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getAppConfigurationData';
+import getLatestErrorMessage from '@salesforce/apex/RD2_ElevateInformation_CTRL.getLatestErrorMessage';
+import getInitialView from '@salesforce/apex/RD2_EntryFormController.getInitialView';
 
 jest.mock(
     '@salesforce/apex/RD2_ElevateInformation_CTRL.getAppConfigurationData',
@@ -27,17 +27,16 @@ jest.mock(
     { virtual: true }
 );
 
-jest.mock('@salesforce/apex/RD2_EntryFormController.getRecurringData',
-    () => {
-        return { default: jest.fn() }
-    },
-    { virtual: true }
-);
+jest.mock("@salesforce/apex/RD2_EntryFormController.getInitialView",
+    () => ({ default: jest.fn() }),
+    { virtual: true });
 
 const mockGetObjectInfo = require('./data/getObjectInfo.json');
 const mockGetRecord = require('./data/getRecord.json');
 const mockGetAchRecord = require('./data/getAchRecord.json');
 const mockGetData = require('./data/getData.json');
+const mockGetInitialView = require('./data/getInitialView.json');
+const mockGetInitialViewACH = require('./data/getInitialViewACH.json');
 
 const ELEVATE_ID_FIELD_NAME = 'CommitmentId__c';
 const CC_LAST_4_FIELD_NAME = 'CardLast4__c';
@@ -86,15 +85,9 @@ describe('c-rd2-elevate-information', () => {
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
 
-            getData.mockResolvedValue(mockGetData);
-            getError.mockResolvedValue(null);
-            getRecurringData.mockResolvedValue({
-                "DonorType": "Contact",
-                "Period": "Monthly",
-                "Frequency": 1,
-                "RecurringType": "Open",
-                "Status__c": "Active"
-            });
+            getInitialView.mockResolvedValue(mockGetInitialView);
+            getAppConfigurationData.mockResolvedValue(mockGetData);
+            getLatestErrorMessage.mockResolvedValue(null);
 
             getRecord.emit(mockGetRecord);
 
@@ -142,7 +135,7 @@ describe('c-rd2-elevate-information', () => {
         it('should populate donor type for edit payment information modal', async () => {
             await flushPromises();
             const updatePaymentButton = getUpdatePaymentInformationLink(component);
-            expect(getData).toHaveBeenCalled();
+            expect(getAppConfigurationData).toHaveBeenCalled();
 
             expect(updatePaymentButton).toBeTruthy();
         });
@@ -152,15 +145,9 @@ describe('c-rd2-elevate-information', () => {
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
 
-            getData.mockResolvedValue(mockGetData);
-            getError.mockResolvedValue(null);
-            getRecurringData.mockResolvedValue({
-                "DonorType": "Contact",
-                "Period": "Monthly",
-                "Frequency": 1,
-                "RecurringType": "Open",
-                "Status__c": "Active"
-            });
+            getInitialView.mockResolvedValue(mockGetInitialViewACH);
+            getAppConfigurationData.mockResolvedValue(mockGetData);
+            getLatestErrorMessage.mockResolvedValue(null);
 
             getRecord.emit(mockGetAchRecord);
 
@@ -192,8 +179,9 @@ describe('c-rd2-elevate-information', () => {
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
 
-            getData.mockResolvedValue(mockGetData);
-            getError.mockResolvedValue(errorMessage);
+            getInitialView.mockResolvedValue(mockGetInitialView);
+            getAppConfigurationData.mockResolvedValue(mockGetData);
+            getLatestErrorMessage.mockResolvedValue(errorMessage);
             getRecord.emit(mockGetRecord);
 
             document.body.appendChild(component);
@@ -255,9 +243,14 @@ describe('c-rd2-elevate-information', () => {
 
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
+            const { record } = mockGetInitialView;
 
-            getData.mockResolvedValue(mockGetData);
-            getError.mockResolvedValue(null);
+            getInitialView.mockResolvedValue({
+                ...mockGetInitialView,
+                record: { ...record, recurringStatus: "Closed" },
+            });
+            getAppConfigurationData.mockResolvedValue(mockGetData);
+            getLatestErrorMessage.mockResolvedValue(null);
             getRecord.emit(mockGetRecordClosedElevateRDInProgress);
 
             document.body.appendChild(component);
@@ -310,15 +303,19 @@ describe('c-rd2-elevate-information', () => {
     */
     describe('on data load when commitment failed to be created', () => {
         const errorMessage = 'Unauthorized endpoint';
-
+        const PENDING_COMMITMENTID = '_PENDING_123TempCommitmentId';
         let mockGetRecordFailedCommitment = JSON.parse(JSON.stringify(mockGetRecord));
-        mockGetRecordFailedCommitment.fields[ELEVATE_ID_FIELD_NAME].value = '_PENDING_123TempCommitmentId';
+        mockGetRecordFailedCommitment.fields[ELEVATE_ID_FIELD_NAME].value = PENDING_COMMITMENTID;
 
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
-
-            getData.mockResolvedValue(mockGetData);
-            getError.mockResolvedValue(errorMessage);
+            const { record } = mockGetInitialView;
+            getInitialView.mockResolvedValue({
+                ...mockGetInitialView,
+                record: { ...record, commitmentId: PENDING_COMMITMENTID },
+            });
+            getAppConfigurationData.mockResolvedValue(mockGetData);
+            getLatestErrorMessage.mockResolvedValue(errorMessage);
             getRecord.emit(mockGetRecordFailedCommitment);
 
             document.body.appendChild(component);
@@ -362,8 +359,8 @@ describe('c-rd2-elevate-information', () => {
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
 
-            getData.mockResolvedValue(mockGetDataNoPermission);
-            getError.mockResolvedValue(null);
+            getAppConfigurationData.mockResolvedValue(mockGetDataNoPermission);
+            getLatestErrorMessage.mockResolvedValue(null);
             getRecord.emit(mockGetRecord);
 
             document.body.appendChild(component);
@@ -411,8 +408,8 @@ describe('c-rd2-elevate-information', () => {
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
 
-            getData.mockResolvedValue(mockGetData);
-            getError.mockResolvedValue(null);
+            getAppConfigurationData.mockResolvedValue(mockGetData);
+            getLatestErrorMessage.mockResolvedValue(null);
             getRecord.emit(mockGetRecordNoCommitment);
 
             document.body.appendChild(component);
@@ -467,8 +464,8 @@ describe('c-rd2-elevate-information', () => {
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
 
-            getData.mockResolvedValue(mockGetDataNoElevate);
-            getError.mockResolvedValue(null);
+            getAppConfigurationData.mockResolvedValue(mockGetDataNoElevate);
+            getLatestErrorMessage.mockResolvedValue(null);
             getRecord.emit(mockGetRecordNoCommitment);
 
             document.body.appendChild(component);

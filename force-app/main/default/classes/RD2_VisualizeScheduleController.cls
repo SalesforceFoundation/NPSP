@@ -67,7 +67,7 @@ public with sharing class RD2_VisualizeScheduleController {
     private static Date startDate {
         get {
             if (startDate == null) {
-                Integer matchDays = new RD2_Settings().nextDonationDateMatchDays;
+                Integer matchDays = RD2_Settings.getInstance().nextDonationDateMatchDays;
                 startDate = RD2_ScheduleService.currentDate.addDays(-matchDays);
             }
             return startDate;

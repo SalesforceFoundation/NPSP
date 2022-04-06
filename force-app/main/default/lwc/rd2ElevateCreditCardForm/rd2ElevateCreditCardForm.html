@@ -2,12 +2,12 @@
     <lightning-layout vertical-align='center' multiple-rows='true'>
 
         <lightning-layout-item size='12' padding='horizontal-small'>
-            <article class='credit-card-container slds-m-top_small'>
+            <article class='credit-card-container slds-var-m-top_small'>
 
                 <lightning-layout vertical-align='center' multiple-rows='true'>
 
                     <lightning-layout-item size='12'>
-                        <div class='credit-card-header slds-p-vertical_small slds-p-horizontal_x-small'>
+                        <div class='credit-card-header slds-var-p-vertical_small slds-var-p-horizontal_x-small'>
                             <lightning-layout vertical-align='center'>
                                 <lightning-layout-item size='6'>
                                     <h1 class='slds-text-body_regular' data-qa-locator='heading'>{labels.elevateWidgetLabel}</h1>
@@ -18,7 +18,7 @@
                                             <lightning-button variant="base"
                                                 label={labels.updatePaymentButtonLabel}
                                                 onclick={handleUserEnabledWidget}
-                                                class='slds-button slds-button_base slds-float_right hide-card-button'
+                                                class='slds-button slds-float_right hide-card-button'
                                                 data-qa-locator='button Update Payment Information'>
                                             </lightning-button>
                                         </template>
@@ -29,7 +29,7 @@
                                                     icon-name='utility:close'
                                                     icon-position="right"
                                                     onclick={handleUserCancelledWidget}
-                                                    class='slds-button slds-button_base slds-float_right hide-card-button'
+                                                    class='slds-button slds-float_right hide-card-button'
                                                     data-qa-locator='button Cancel Update Payment Information'>
                                                 </lightning-button>
                                             </template>
@@ -43,7 +43,7 @@
                                                     icon-name='utility:close'
                                                     icon-position="right"
                                                     onclick={handleUserDisabledWidget}
-                                                    class='slds-button slds-button_base slds-float_right hide-card-button'
+                                                    class='slds-button slds-float_right hide-card-button'
                                                     data-qa-locator='button Do Not Use Elevate'>
                                                 </lightning-button>
                                             </template>
@@ -54,23 +54,23 @@
                         </div>
                     </lightning-layout-item>
 
-                    <lightning-layout-item size="12" class='slds-p-horizontal_small slds-p-top_small'>
+                    <lightning-layout-item size="12" class='slds-var-p-horizontal_small slds-var-p-top_small'>
                         <template if:true={isDisabled}>
-                            <template if:true={existingPaymentIsCard}>
+                            <template if:true={showExistingCardInfo}>
                                 <lightning-layout vertical-align='center' multiple-rows='true'>
-                                    <lightning-layout-item size="4" class=" slds-text-color_weak slds-p-bottom_small">
+                                    <lightning-layout-item size="4" class=" slds-text-color_weak slds-var-p-bottom_small">
                                         <label for="last4CreditCard" id="creditCardLast4Label"
                                             class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none slds-m-bottom_x-small">
                                             {cardLastFourLabel}
                                         </label><br/>
                                         <lightning-formatted-text
                                             id="last4CreditCard"
-                                            value={cardLastFour}
+                                            value={rd2State.cardLastFour}
                                             data-qa-locator={qaLocatorLastFourDigits}
                                             aria-labelledby="creditCardLast4Label">
                                         </lightning-formatted-text>
                                     </lightning-layout-item>
-                                    <lightning-layout-item size="4" class="slds-text-color_weak slds-p-bottom_small">
+                                    <lightning-layout-item size="4" class="slds-text-color_weak slds-var-p-bottom_small">
                                         <label for="expirationDate" id="expirationDateLabel"
                                             class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none slds-m-bottom_x-small">
                                             {labels.commonExpirationDate}
@@ -83,16 +83,16 @@
                                     </lightning-layout-item>
                                 </lightning-layout>
                             </template>
-                            <template if:true={existingPaymentIsAch}>
+                            <template if:true={showExistingACHInfo}>
                                 <lightning-layout vertical-align='center' multiple-rows='true'>
-                                    <lightning-layout-item size="4" class=" slds-text-color_weak slds-p-bottom_small">
+                                    <lightning-layout-item size="4" class=" slds-text-color_weak slds-var-p-bottom_small">
                                         <label for="last4ACH"
                                                class="slds-form-element__label slds-text-body_regular slds-text-color_default slds-p-vertical_none slds-m-bottom_x-small">
                                             {achLastFourLabel}
                                         </label><br/>
                                         <lightning-formatted-text
                                                 id="last4ACH"
-                                                value={achLastFour}
+                                                value={rd2State.achLastFour}
                                                 data-qa-locator={qaLocatorLastFourDigits}>
                                         </lightning-formatted-text>
                                     </lightning-layout-item>
@@ -107,28 +107,31 @@
                                     </span>
                                     <lightning-button variant='base' label={labels.elevateEnableButtonLabel}
                                         title={labels.elevateEnableButtonLabel} onclick={handleUserEnabledWidget}
-                                        class='slds-m-left_xx-small' data-qa-locator='button Use Elevate Now'>
+                                        class='slds-var-m-left_xx-small' data-qa-locator='button Use Elevate Now'>
                                     </lightning-button>
                                 </p>
                             </template>
                         </template>
 
                         <template if:false={isDisabled}>
-                            <div if:true={alert.show} class='slds-p-bottom_medium'>
+                            <div if:true={alert.show} class='slds-var-p-bottom_medium'>
                                 <c-util-alert-banner if:true={alert.show} theme={alert.theme} variant={alert.variant}
                                                      icon={alert.icon} message={alert.message} data-qa-locator='alert Message'>
                                 </c-util-alert-banner>
                             </div>
                             <template if:true={updatePaymentMode}>
-                                <div class="slds-p-bottom_medium">
+                                <div class="slds-var-p-bottom_medium">
                                     <c-formatted-text-with-date value={nextPaymentDateMessage} date={nextDonationDate}></c-formatted-text-with-date>
                                 </div>
                             </template>
                             <template if:true={currentPaymentIsCard}>
-                                <div class="slds-col slds-size_1-of-2">
-                                    <lightning-input name="cardholderName" label={labels.cardholderNameLabel}
-                                                     data-qa-locator="input Elevate Cardholder Name" data-id="cardholderName">
-                                    </lightning-input>
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <lightning-input onchange={handleFieldChange}
+                                                         name="cardholderName" label={labels.cardholderNameLabel}
+                                                         data-qa-locator="input Elevate Cardholder Name" data-id="cardholderName">
+                                        </lightning-input>
+                                    </div>
                                 </div>
                             </template>
 

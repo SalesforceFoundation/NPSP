@@ -10,6 +10,14 @@
     </actionOverrides>
     <enableEnhancedLookup>false</enableEnhancedLookup>
     <enableReports>true</enableReports>
+    <compactLayoutAssignment>NPSP_Payment_Compact_Layout_Unmanaged</compactLayoutAssignment>
+    <compactLayouts>
+        <fullName>NPSP_Payment_Compact_Layout_Unmanaged</fullName>
+        <fields>Name</fields>
+        <fields>npe01__Payment_Amount__c</fields>
+        <fields>npe01__Scheduled_Date__c</fields>
+        <label>NPSP Payment Compact Layout (Unmanaged)</label>
+    </compactLayouts>
     <fields>
         <fullName>Payment_Status__c</fullName>
         <externalId>false</externalId>
@@ -47,4 +55,22 @@
         <requireRowSelection>false</requireRowSelection>
         <url>/apex/%%%NAMESPACE%%%PMT_PaymentWizard?id={!Opportunity.Id}&amp;wtype=writeoff</url>
     </webLinks>
+    <searchLayouts>
+        <customTabListAdditionalFields>npe01__Check_Reference_Number__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>npe01__Paid__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>npe01__Payment_Date__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>npe01__Payment_Amount__c</customTabListAdditionalFields>
+        <lookupDialogsAdditionalFields>npe01__Check_Reference_Number__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>npe01__Paid__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>npe01__Payment_Date__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>npe01__Payment_Amount__c</lookupDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>npe01__Check_Reference_Number__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>npe01__Paid__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>npe01__Payment_Date__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>npe01__Payment_Amount__c</lookupPhoneDialogsAdditionalFields>
+        <searchResultsAdditionalFields>npe01__Check_Reference_Number__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>npe01__Paid__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>npe01__Payment_Date__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>npe01__Payment_Amount__c</searchResultsAdditionalFields>
+    </searchLayouts>
 </CustomObject>
