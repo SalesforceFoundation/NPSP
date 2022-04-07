@@ -66,7 +66,7 @@ export default class DonationHistoryTable extends LightningElement {
                         cellAttributes: { alignment: "right" },
                         hideDefaultActions: true
                     },
-                    { label: commonAmount, fieldName: "amount", type: "currency", hideDefaultActions: true },
+                    { label: commonAmount, fieldName: "amount", type: "currency", typeAttributes: { currencyDisplayAs: "code", currencyCode: data.currencyISOCode },  hideDefaultActions: true },
                 ];
                 if (this.arePaymentsEnabled) {
                     this.columns.push({

@@ -58,6 +58,7 @@ public with sharing class DonationHistoryController {
         @AuraEnabled public Boolean isPaymentsEnabled;
         @AuraEnabled public String paymentMethodLabel;
         @AuraEnabled public Integer totalNumberOfRecords;
+        @AuraEnabled public String currencyISOCode;
     }
 
     private static final String EMPTY_PAYMENT_METHOD = '-';
@@ -100,6 +101,7 @@ public with sharing class DonationHistoryController {
             donationHistories.donations = buildHistoryFromOpportunities(historyService.getDonationHistory(contactId, offset, filter), contactId, paymentsEnabled);
             donationHistories.totalNumberOfRecords = historyService.getTotalNumberOfRecords(contactId, filter);
             donationHistories.isPaymentsEnabled = paymentsEnabled;
+            donationHistories.currencyISOCode = UserInfo.getDefaultCurrency();
             donationHistories.paymentMethodLabel = historyService.getPaymentMethodLabel();
             return donationHistories;
         } catch(AuraHandledException ex) {

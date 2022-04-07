@@ -41,7 +41,7 @@ public inherited sharing class DonationHistorySelector {
             SELECT Id, 
                 Name, 
                 CloseDate, 
-                Amount, 
+                convertCurrency(Amount),
                 Primary_Contact__r.Email, 
                 Primary_Contact__r.Name,
                 (
@@ -71,7 +71,7 @@ public inherited sharing class DonationHistorySelector {
             SELECT  Id, 
                     Name, 
                     CloseDate, 
-                    Amount, 
+                    convertCurrency(Amount),
                     Primary_Contact__r.Email, 
                     Primary_Contact__r.Name,
                     (

@@ -22,13 +22,11 @@
           <span>{labels.donationHistoryLabelLifetime}</span>
           <br />
           <span class="bolder">
-            <lightning-formatted-number
+            <p
               class={usdValue}
-              value={lifetimeSummary}
-              format-style="currency"
-              currency-code="USD"
             >
-            </lightning-formatted-number> 
+            {lifetimeSummary}
+          </p> 
           </span>
         </lightning-layout-item>
         <lightning-layout-item
@@ -38,13 +36,11 @@
           <span>{labels.donationHistoryLabelThisYear}</span>
           <br />
           <span class="bolder">
-            <lightning-formatted-number
-              value={thisYear}
-              format-style="currency"
-              currency-code="USD"
+            <p
               class={usdValue}
             >
-            </lightning-formatted-number> 
+            {thisYear}
+          </p> 
           </span>
         </lightning-layout-item>
         <lightning-layout-item
@@ -54,13 +50,11 @@
           <span>{labels.donationHistoryLabelPreviousYear}</span>
           <br />
           <span class="bolder">
-            <lightning-formatted-number
-              value={previousYear}
-              format-style="currency"
+            <p
               class={usdValue}
-              currency-code="USD"
             >
-            </lightning-formatted-number> 
+            {previousYear}
+          </p> 
           </span>
         </lightning-layout-item>
       </template>
