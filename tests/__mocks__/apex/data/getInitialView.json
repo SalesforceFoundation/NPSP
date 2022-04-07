@@ -33,6 +33,8 @@
     "contactId": "fake-contact-record-id",
     "recurringPeriod": "Monthly",
     "recurringType": "Open",
-    "dayOfMonth": "15"
+    "dayOfMonth": "15",
+    "startDate": "2021-02-03",
+    "dateEstablished": "2021-02-03"
   }
 }

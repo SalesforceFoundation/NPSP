@@ -49,7 +49,6 @@ class Rd2Service {
             const action = { type: ACTIONS.INITIAL_VIEW_LOAD, payload: initialView };
             return this.dispatch(state, action);
         } catch (ex) {
-            // TODO - Dispatch error action
             console.log("Error: ", ex);
             return state;
         }
@@ -59,19 +58,11 @@ class Rd2Service {
         let result;
         try {
             const saveRequest = this.getSaveRequest(rd2State);
-            result = await saveRecurringDonation(saveRequest);
-            console.log(JSON.parse(JSON.stringify(result)));
+            result = await saveRecurringDonation({ saveRequest });
         } catch (ex) {
             console.error(ex);
         }
-
-        if (result.success) {
-            const action = { type: ACTIONS.RECORD_SAVED, payload: result.recordId };
-            return this.dispatch(rd2State, action);
-        }
-
-        const action = { type: ACTIONS.RECORD_SAVE_FAILED, payload: result };
-        return this.dispatch(rd2State, action);
+        return result;
     }
 
     /***
@@ -137,6 +128,21 @@ class Rd2Service {
         }
     }
 
+    getPlannedInstallments(rd2State) {
+        if (this.isOpenLength(rd2State)) {
+            return null;
+        }
+        return rd2State.plannedInstallments;
+    }
+
+    getCustomFieldValues({ customFieldSets }) {
+        let fieldValues = {};
+        for (const field of customFieldSets) {
+            fieldValues[field.apiName] = field.value;
+        }
+        return fieldValues;
+    }
+
     getSaveRequest(rd2State) {
         const {
             recordId,
@@ -152,7 +158,6 @@ class Rd2Service {
             recurringFrequency,
             startDate,
             dayOfMonth,
-            plannedInstallments,
             recurringType,
             paymentToken,
             campaignId,
@@ -162,8 +167,10 @@ class Rd2Service {
             cardExpirationMonth,
             cardExpirationYear,
             paymentMethod,
-            customFieldValues,
         } = rd2State;
+
+        const plannedInstallments = this.getPlannedInstallments(rd2State);
+        const customFieldValues = this.getCustomFieldValues(rd2State);
 
         return {
             recordId,
@@ -208,6 +215,10 @@ class Rd2Service {
             countrySupported &&
             statusSupported
         );
+    }
+
+    isOpenLength({ recurringType }) {
+        return recurringType === RECURRING_TYPE_OPEN;
     }
 
     isElevateCustomer({ isElevateCustomer }) {
@@ -268,6 +279,42 @@ class Rd2Service {
         const originalPaymentMethod = this.getOriginalPaymentMethod(rd2State);
         const { paymentMethod } = rd2State;
         return originalPaymentMethod !== paymentMethod;
+    }
+
+    isAmountChanged(rd2State) {
+        const originalAmount = rd2State.initialViewState.donationValue;
+        const amount = rd2State.donationValue;
+        return amount !== originalAmount;
+    }
+
+    isFrequencyChanged(rd2State) {
+        const originalFrequency = rd2State.initialViewState.recurringFrequency;
+        const frequency = rd2State.recurringFrequency;
+        return originalFrequency !== frequency;
+    }
+
+    isPeriodChanged(rd2State) {
+        const originalPeriod = rd2State.initialViewState.recurringPeriod;
+        const period = rd2State.recurringPeriod;
+        return originalPeriod !== period;
+    }
+
+    isCampaignChanged(rd2State) {
+        const originalCampaignId = rd2State.initialViewState.campaignId;
+        const campaignId = rd2State.campaignId;
+        return originalCampaignId !== campaignId;
+    }
+
+    /***
+     * @description Returns true if Schedule fields has updated
+     */
+    hasElevateFieldsChange(rd2State) {
+        const amountChanged = this.isAmountChanged(rd2State);
+        const frequencyChanged = this.isFrequencyChanged(rd2State);
+        const installmentPeriodChanged = this.isPeriodChanged(rd2State);
+        const campaignChanged = this.isCampaignChanged(rd2State);
+
+        return amountChanged || frequencyChanged || installmentPeriodChanged || campaignChanged;
     }
 }
 

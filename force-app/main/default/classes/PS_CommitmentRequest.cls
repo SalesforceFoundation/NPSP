@@ -54,8 +54,14 @@ public inherited sharing class PS_CommitmentRequest {
      */
     public static final String STATUS_NEW = 'NEW';
     public static final String STATUS_ACTIVE = 'ACTIVE';
+    public static final String STATUS_LAPSED = 'LAPSED';
     public static final String STATUS_INACTIVE = 'INACTIVE';
     public static final String STATUS_FAILING = 'FAILING';
+
+    public static final Map<String, String> elevateStatusByRD2State = new Map<String, String> {
+        RD2_Constants.STATUS_LAPSED => STATUS_LAPSED,
+        RD2_Constants.STATUS_CLOSED => STATUS_INACTIVE
+    };
 
     /***
      * @description Commitment Status Reason
