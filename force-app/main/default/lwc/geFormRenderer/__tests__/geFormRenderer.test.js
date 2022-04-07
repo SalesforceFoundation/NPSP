@@ -189,6 +189,43 @@ describe('c-ge-form-renderer', () => {
             const componentName = dispatchEventSpy.mock.calls[0][0].detail.modalProperties.componentName;
             expect(componentName).toBe('geModalPrompt');
         });
+
+        it('dispatches an event to display a warning modal when adding schedule for gift with elevate authorization', async () => {
+            retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
+            getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
+            const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
+            const DUMMY_BATCH_ID = 'a0T11000007F8WQEA0';
+
+            element.batchId = DUMMY_BATCH_ID;
+
+            document.body.appendChild(element);
+
+            await flushPromises();
+
+            // simulate getting back data for DUMMY_CONTACT_ID
+            getRecord.emit(dataImportBatchRecord, config => {
+                return config.recordId === DUMMY_BATCH_ID;
+            });
+            element.giftInView = {
+                fields: {
+                    'Payment_Method__c': 'Credit Card',
+                    'Donation_Amount__c': '0.01',
+                    'Payment_Status__c': 'AUTHORIZED'
+                }
+            };
+
+            await flushPromises();
+
+            const dispatchEventSpy = jest.spyOn(element, 'dispatchEvent');
+            const button = element.shadowRoot.querySelector('[data-id="recurringButton"]');
+            button.click();
+
+            await flushPromises();
+
+            expect(dispatchEventSpy).toHaveBeenCalledTimes(1);
+            const componentName = dispatchEventSpy.mock.calls[0][0].detail.modalProperties.componentName;
+            expect(componentName).toBe('geModalPrompt');
+        });
     });
 
     it('loads a template with four sections', async () => {
