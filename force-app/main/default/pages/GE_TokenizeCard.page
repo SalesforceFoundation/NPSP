@@ -12,6 +12,8 @@
 
     <script src="{!elevateSDKURL}"></script>
     <script>
+        //const isContextCommunity = `{!sessionType}`;
+        //console.log('isContextCommunity: ', isContextCommunity);
         const sfdo = new sfdoPaymentsJsSdk();
         const lightningOrigin = buildLightningOrigin();
         const DEFAULT_NAME_ON_CARD = '[Not Provided]';
@@ -208,12 +210,14 @@
         }
 
         function buildLightningOrigin() {
-            const hostname = window.location.hostname;
-            const arr = hostname.split(".");
-            let domain = arr[0].replace('--npsp', '');
-            domain = domain.replace('--c', '');
+            const hostname = window.location.href;
+            //const hostname = window.location.hostname;
+            //const arr = hostname.split(".");
+            //let domain = arr[0].replace('--npsp', '');
+            //domain = domain.replace('--c', '');
 
-            return `https://${domain}.lightning.force.com`;
+            //return `https://${domain}.lightning.force.com`;
+            return hostname;
         }
 
         function isReadyToMount() {
