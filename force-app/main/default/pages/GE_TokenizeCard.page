@@ -12,8 +12,6 @@
 
     <script src="{!elevateSDKURL}"></script>
     <script>
-        //const isContextCommunity = `{!sessionType}`;
-        //console.log('isContextCommunity: ', isContextCommunity);
         const sfdo = new sfdoPaymentsJsSdk();
         const lightningOrigin = buildLightningOrigin();
         const DEFAULT_NAME_ON_CARD = '[Not Provided]';
