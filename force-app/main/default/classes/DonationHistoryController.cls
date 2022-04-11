@@ -101,7 +101,7 @@ public with sharing class DonationHistoryController {
             donationHistories.donations = buildHistoryFromOpportunities(historyService.getDonationHistory(contactId, offset, filter), contactId, paymentsEnabled);
             donationHistories.totalNumberOfRecords = historyService.getTotalNumberOfRecords(contactId, filter);
             donationHistories.isPaymentsEnabled = paymentsEnabled;
-            donationHistories.currencyISOCode = UserInfo.getDefaultCurrency();
+            donationHistories.currencyISOCode = UTIL_Currency.getInstance().getDefaultCurrency();
             donationHistories.paymentMethodLabel = historyService.getPaymentMethodLabel();
             return donationHistories;
         } catch(AuraHandledException ex) {
@@ -117,7 +117,6 @@ public with sharing class DonationHistoryController {
     @AuraEnabled(cacheable=true)
     public static List<String> getYearsWithDonations(Id contactId) {
         try {
-
             contactId = (contactId == null ? getContactIdByUserId() : contactId );
             return historyService.getYearsWithDonationsForContact(contactId);
         } catch (Exception e) {

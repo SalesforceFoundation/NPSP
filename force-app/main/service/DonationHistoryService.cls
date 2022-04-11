@@ -90,10 +90,11 @@ public with sharing class DonationHistoryService {
     public List<Opportunity> getDonationHistory(Id contactId, Integer offset, String filter) {
         if (hasAccessToDonationHistory()) {
             List<Opportunity> credits = null;
+            String amount = UTIL_Currency.getInstance().isMultiCurrencyOrganization() ? 'convertCurrency(Amount)' : 'Amount' ;
             if (shouldApplyFilterByYear(filter)) {
-                credits = selector.getWonOpportunitiesByContactIdAndYear(contactId, offset, Integer.valueOf(filter));
+                credits = selector.getWonOpportunitiesByContactIdAndYear(contactId, offset, Integer.valueOf(filter), amount);
             } else { 
-                credits = selector.getWonOpportunitiesByContactId(contactId, offset);
+                credits = selector.getWonOpportunitiesByContactId(contactId, offset, amount);
             }
             return credits;
         } else {
