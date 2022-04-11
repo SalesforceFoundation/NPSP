@@ -59,6 +59,7 @@ public with sharing class DonationHistoryController {
         @AuraEnabled public String paymentMethodLabel;
         @AuraEnabled public Integer totalNumberOfRecords;
         @AuraEnabled public String currencyISOCode;
+        @AuraEnabled public Boolean multiCurrency;
     }
 
     private static final String EMPTY_PAYMENT_METHOD = '-';
@@ -103,6 +104,7 @@ public with sharing class DonationHistoryController {
             donationHistories.isPaymentsEnabled = paymentsEnabled;
             donationHistories.currencyISOCode = UTIL_Currency.getInstance().getDefaultCurrency();
             donationHistories.paymentMethodLabel = historyService.getPaymentMethodLabel();
+            donationHistories.multiCurrency =  UTIL_Currency.getInstance().isMultiCurrencyOrganization();
             return donationHistories;
         } catch(AuraHandledException ex) {
             throw new AuraHandledException(ex.getMessage());

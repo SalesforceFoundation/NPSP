@@ -53,6 +53,7 @@ export default class DonationHistoryTable extends LightningElement {
                 this.data = data.donations;
                 this.paymentMethodLabel = data.paymentMethodLabel;
                 this.arePaymentsEnabled = data.isPaymentsEnabled;
+                const typeAttributes = data.multiCurrency ? { currencyDisplayAs: "code", currencyCode: data.currencyISOCode } : {};
                 this.columns = [
                     {
                         label: commonDate,
@@ -66,7 +67,7 @@ export default class DonationHistoryTable extends LightningElement {
                         cellAttributes: { alignment: "right" },
                         hideDefaultActions: true
                     },
-                    { label: commonAmount, fieldName: "amount", type: "currency", typeAttributes: { currencyDisplayAs: "code", currencyCode: data.currencyISOCode },  hideDefaultActions: true },
+                    { label: commonAmount, fieldName: "amount", type: "currency", typeAttributes,  hideDefaultActions: true },
                 ];
                 if (this.arePaymentsEnabled) {
                     this.columns.push({
