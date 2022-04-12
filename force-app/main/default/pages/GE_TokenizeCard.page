@@ -211,12 +211,13 @@
             console.log('hostname: ', window.location.hostname);
             console.log('href: ', window.location.href);
             const href = window.location.href;
+            const hostname = window.location.hostname;
             //const arr = hostname.split(".");
             //let domain = arr[0].replace('--npsp', '');
             //domain = domain.replace('--c', '');
 
             //return `https://${domain}.lightning.force.com`;
-            return href;
+            return hostname;
         }
 
         function isReadyToMount() {
