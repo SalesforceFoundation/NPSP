@@ -16,8 +16,8 @@ const FormFactorType = Object.freeze({
     Small: 'Small',
 });
 
-const MOBILE_CLASSES = 'slds-text-align_left slds-border_right columns-mobile slds-var-p-left_small slds-var-p-right_small to-uppercase';
-const DESKTOP_CLASSES = 'slds-text-align_left slds-border_right columns-desktop slds-var-p-left_small slds-var-p-right_small to-uppercase';
+const MOBILE_CLASSES = 'slds-text-align_left slds-text-heading_small slds-border_bottom slds-var-p-around_small';
+const DESKTOP_CLASSES = 'slds-text-align_left slds-text-heading_small slds-border_right slds-var-p-around_small';
 const FIELDS = [TOTAL_AMOUNT, AMOUNT_CURRENT_YEAR, AMOUNT_LAST_YEAR];
 
 export default class GivingSummary extends LightningElement {
@@ -77,9 +77,9 @@ export default class GivingSummary extends LightningElement {
      */
     get lastElementClasses() {
         if (this.isMobile) {
-            return 'columns-mobile slds-var-p-left_small slds-var-p-right_small slds-text-align_left to-uppercase';
+            return 'slds-text-heading_small  slds-var-p-around_small slds-text-align_left';
         }
-        return 'columns-desktop slds-text-align_left slds-var-p-left_small slds-var-p-right_small to-uppercase';
+        return 'slds-text-heading_small  slds-text-align_left slds-var-p-around_small';
     }
 
     /**
@@ -87,9 +87,9 @@ export default class GivingSummary extends LightningElement {
      */
      get usdValue() {
         if (this.isMobile) {
-            return 'columns-mobile';
+            return 'slds-text-title_bold';
         }
-        return 'usd-value-desktop';
+        return 'slds-text-title_bold';
     }
 
     /**

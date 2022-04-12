@@ -16,7 +16,10 @@
       </template>
       <template if:false={errorMessage}>
         <lightning-layout-item
-          size="4"
+          size="12"
+          small-device-size="12"
+          medium-device-size="4"
+          large-device-size="4"
           class={rowClasses}
         >
           <span>{labels.donationHistoryLabelLifetime}</span>
@@ -32,7 +35,10 @@
           </span>
         </lightning-layout-item>
         <lightning-layout-item
-          size="4"
+          size="12"
+          small-device-size="12"
+          medium-device-size="4"
+          large-device-size="4"
           class={rowClasses}
         >
           <span>{labels.donationHistoryLabelThisYear}</span>
@@ -48,7 +54,10 @@
           </span>
         </lightning-layout-item>
         <lightning-layout-item
-          size="4"
+          size="12"
+          small-device-size="12"
+          medium-device-size="4"
+          large-device-size="4"
           class={lastElementClasses}
         >
           <span>{labels.donationHistoryLabelPreviousYear}</span>
