@@ -7,6 +7,7 @@ import {
     SET_CONTACT_DETAILS,
     SET_CURRENCY,
     SET_ACCOUNT_DETAILS,
+    SET_CHANGE_TYPE,
     SET_DAY_OF_MONTH,
     SET_DONATION_AMOUNT,
     SET_DONOR_TYPE,
@@ -134,7 +135,7 @@ const getDonationValue = (state) => {
 
 const getChangeType = (state) => {
     if (isRecurringTypeChanged(state) || isNewRecord(state)) {
-        return "";
+        return state.changeType;
     }
 
     const oldValue = getDonationValue(state.initialViewState);
@@ -146,7 +147,7 @@ const getChangeType = (state) => {
         return CHANGE_TYPE_UPGRADE;
     }
 
-    return "";
+    return state.changeType;
 };
 
 const isAdvancedPeriod = (state) => {
@@ -257,6 +258,13 @@ const setAccountDetails = (state, { accountName, lastName }) => {
         ...state,
         accountName,
         contactLastName: lastName,
+    };
+};
+
+const setChangeType = (state, changeType) => {
+    return {
+        ...state,
+        changeType,
     };
 };
 
@@ -446,6 +454,8 @@ export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
             return setCurrency(state, action.payload);
         case SET_ACCOUNT_DETAILS:
             return setAccountDetails(state, action.payload);
+        case SET_CHANGE_TYPE:
+            return setChangeType(state, action.payload);
         case SET_DAY_OF_MONTH:
             return setDayOfMonth(state, action.payload);
         case SET_DONATION_AMOUNT:
