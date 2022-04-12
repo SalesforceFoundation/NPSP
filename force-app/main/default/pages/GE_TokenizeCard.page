@@ -211,12 +211,14 @@
             console.log('hostname: ', window.location.hostname);
             console.log('href: ', window.location.href);
             //const href = window.location.href;
-            const hostname = (window.location.hostname).replace('--npsp', '').replace('--c', '').split('/apex/');
+            const hostname = (window.location.hostname).replace('--npsp', '').replace('--c', '');
+            const arr = hostname.split('/apex/');
+            const domain = arr[0];
             //const arr = hostname.split(".");
             //let domain = arr[0].replace('--npsp', '');
             //domain = domain.replace('--c', '');
 
-            return `https://${hostname}`;
+            return `https://${domain}`;
             //return hostname;
         }
 
