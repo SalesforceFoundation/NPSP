@@ -214,6 +214,7 @@
             const hostname = (window.location.hostname).replace('--npsp', '').replace('--c', '');
             const arr = hostname.split('/apex/');
             const domain = arr[0];
+            console.log('domain', domain);
             //const arr = hostname.split(".");
             //let domain = arr[0].replace('--npsp', '');
             //domain = domain.replace('--c', '');
