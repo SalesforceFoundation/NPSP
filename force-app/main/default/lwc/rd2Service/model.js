@@ -135,7 +135,7 @@ const getDonationValue = (state) => {
 
 const getChangeType = (state) => {
     if (isRecurringTypeChanged(state) || isNewRecord(state)) {
-        return state.changeType;
+        return "";
     }
 
     const oldValue = getDonationValue(state.initialViewState);
