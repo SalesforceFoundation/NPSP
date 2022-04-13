@@ -302,7 +302,7 @@ private class DonationSelector_TEST {
 
         insert new List<Opportunity> { opportunityHardCreditOfContact0, opportunityAnotherHardCreditOfContact0};
 
-        System.assertEquals(2, new DonationHistorySelector().getWonOpportunitiesByContactId(contacts[0].id, 0, 'Amount').size(), 'Should return 2 records of opportunities');
+        System.assertEquals(2, new DonationHistorySelector().getWonOpportunitiesByContactId(contacts[0].id, 0).size(), 'Should return 2 records of opportunities');
     }
 
     @IsTest
@@ -333,6 +333,6 @@ private class DonationSelector_TEST {
 
         insert new List<Opportunity> { opportunityHardCreditOfContact0, opportunityAnotherHardCreditOfContact0};
 
-        System.assertEquals(1, new DonationHistorySelector().getWonOpportunitiesByContactIdAndYear(contacts[0].id, 0, 2019, 'Amount').size(), 'Should return 1 records of opportunities');
+        System.assertEquals(1, new DonationHistorySelector().getWonOpportunitiesByContactIdAndYear(contacts[0].id, 0, 2019).size(), 'Should return 1 records of opportunities');
     }
 }
