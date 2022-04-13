@@ -509,21 +509,20 @@ public with sharing class HH_Container_LCTRL {
     @AuraEnabled
     public static void saveHouseholdPage(SObject hh, List<Contact> listCon, List<Contact> listConRemove, List<Account>listHHMerge) {
         // We need to determine if the new Default Address is Undeliverable
-        Account winnerHousehold = (Account) hh;
-        Address__c defaultAddress = getAddressFromAccount(winnerHousehold.Id, winnerHousehold);
-        defaultAddress.Household_Account__c = winnerHousehold.Id;
+        Address__c defaultAddress = getAddressFromAccount(hh.Id, hh);
+        defaultAddress.Household_Account__c = hh.Id;
         Map<Address__c, Address__c> addressMatch = Addresses.getExistingAddresses(new List<Address__c>{defaultAddress});
         if(addressMatch.containsKey(defaultAddress) && addressMatch.get(defaultAddress) != null){
             selectedAddressIsUndeliverable = addressMatch.get(defaultAddress)?.Undeliverable__c;
         }
 
-        updateHousehold(winnerHousehold);
+        updateHousehold(hh);
         
         // need to merge any households (Accounts only) before we save contacts
         // so we avoid deleting a household if that contact was the last one in the hh.
         if (isNotEmpty(listHHMerge)) {
-            mergeHouseholds(winnerHousehold, listHHMerge);
-            updateWinnerHouseholdSustainerAfterMerge(winnerHousehold);
+            mergeHouseholds((Account)hh, listHHMerge);
+            updateWinnerHouseholdSustainerAfterMerge((Account)hh);
         }
 
         List<Contact> contacts = new List<Contact>(listCon);
