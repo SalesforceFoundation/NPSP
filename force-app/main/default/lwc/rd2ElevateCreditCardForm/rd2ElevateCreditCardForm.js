@@ -199,7 +199,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         if (this.updatePaymentMode) {
             return false;
         } else {
-            return !this.isPaymentMethodChanged() && this.rd2RecordId;
+            return !this.isPaymentMethodChanged() ; //&& this.rd2RecordId
         }
     }
 
