@@ -89,7 +89,7 @@ public class DonationHistoryController_TEST {
     */
     @IsTest
     private static void shouldThrowAccessException() {
-        User u = UTIL_UnitTestData_TEST.createUser('Minimum Access - Salesforce');
+        User standardUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.PROFILE_READ_ONLY);
 
         String message = '';
         try{
@@ -100,7 +100,7 @@ public class DonationHistoryController_TEST {
             DonationHistoryController.historyService = service;
             Test.startTest();
 
-            System.runAs(u){
+            System.runAs(standardUser){
                 DonationHistoryController.DonationHistoryAppView donationHistory = 
                 DonationHistoryController.getDonationHistory(new IdGen().generate(Contact.getSObjectType()), 0, 'lifetime'); 
             }
@@ -109,7 +109,7 @@ public class DonationHistoryController_TEST {
         } catch(Exception e){
             message = e.getMessage();
         }
-        System.assertEquals('Insufficient Permissions', message, 'should not have access to donationHistory');
+        System.assertEquals(Label.commonInsufficientPermissions, message, 'should not have access to donationHistory');
     }
     
     @IsTest
