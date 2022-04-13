@@ -41,7 +41,7 @@ public inherited sharing class DonationHistorySelector {
             'SELECT Id, '+
                     'Name, '+
                     'CloseDate,' +
-                    + String.escapeSingleQuotes(this.isMultiCurrencyOrganization()) + 
+                    + this.getOppAmountFieldForQuery() + 
                     ', Primary_Contact__r.Email, '+
                     'Primary_Contact__r.Name, ' +
                     '( SELECT npe01__Payment_Method__c, ' +
@@ -70,7 +70,7 @@ public inherited sharing class DonationHistorySelector {
             'SELECT  Id, '+
                     'Name,' +
                     'CloseDate, '+
-                    + String.escapeSingleQuotes(this.isMultiCurrencyOrganization()) +
+                    + this.getOppAmountFieldForQuery() +
                     ', Primary_Contact__r.Email, '+
                     'Primary_Contact__r.Name, ' +
                     '( '+
@@ -134,8 +134,8 @@ public inherited sharing class DonationHistorySelector {
     /** 
     * @description method to return Amount or converCurrency(Amount) field if org is multicurrency. 
     */
-    public String isMultiCurrencyOrganization(){
-        return UTIL_Currency.getInstance().isMultiCurrencyOrganization() ? 'convertCurrency(Amount)' : 'Amount' ;
+    public String getOppAmountFieldForQuery(){
+        return String.escapeSingleQuotes(UTIL_Currency.getInstance().isMultiCurrencyOrganization() ? 'convertCurrency(Amount)' : 'Amount');
     }
 
     /**
