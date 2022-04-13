@@ -208,6 +208,7 @@
         }
 
         function buildLightningOrigin() {
+
             const hostname = window.location.hostname;
             const arr = hostname.split(".");
             let domain = arr[0].replace('--npsp', '');
