@@ -212,8 +212,9 @@
             const arr = hostname.split(".");
             let domain = arr[0].replace('--npsp', '');
             domain = domain.replace('--c', '');
-
-            return `https://${domain}.lightning.force.com`;
+                
+                let instance = window.location.hostname.split('.')[1];
+                return `https://${domain}.${instance}.force.com`;
         }
 
         function isReadyToMount() {
