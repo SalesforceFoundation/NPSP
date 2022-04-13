@@ -87,9 +87,9 @@ export default class GivingSummary extends LightningElement {
      */
      get usdValue() {
         if (this.isMobile) {
-            return 'slds-text-title_bold';
+            return 'slds-text-heading_small bold-title';
         }
-        return 'slds-text-title_bold';
+        return 'slds-text-heading_small bold-title';
     }
 
     /**
