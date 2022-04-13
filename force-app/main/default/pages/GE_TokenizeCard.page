@@ -208,19 +208,14 @@
         }
 
         function buildLightningOrigin() {
-            console.log('hostname: ', window.location.hostname);
-            console.log('href: ', window.location.href);
-            //const href = window.location.href;
-            const hostname = (window.location.hostname).replace('--npsp', '').replace('--c', '');
-            const arr = hostname.split('/apex/');
-            const domain = arr[0];
-            console.log('domain', domain);
-            //const arr = hostname.split(".");
-            //let domain = arr[0].replace('--npsp', '');
-            //domain = domain.replace('--c', '');
 
-            return `https://${domain}`;
-            //return hostname;
+            const hostname = window.location.hostname;
+            const arr = hostname.split(".");
+            let domain = arr[0].replace('--npsp', '');
+            domain = domain.replace('--c', '');
+                
+                let instance = window.location.hostname.split('.')[1];
+                return `https://${domain}.${instance}.force.com`;
         }
 
         function isReadyToMount() {
