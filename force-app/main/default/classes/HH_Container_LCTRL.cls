@@ -509,19 +509,21 @@ public with sharing class HH_Container_LCTRL {
     @AuraEnabled
     public static void saveHouseholdPage(SObject hh, List<Contact> listCon, List<Contact> listConRemove, List<Account>listHHMerge) {
         // We need to determine if the new Default Address is Undeliverable
-        Address__c defaultAddress = getAddressFromAccount(hh.Id, hh);
-        defaultAddress.Household_Account__c = hh.Id;
+        Account winnerHousehold = (Account) hh;
+        Address__c defaultAddress = getAddressFromAccount(winnerHousehold.Id, winnerHousehold);
+        defaultAddress.Household_Account__c = winnerHousehold.Id;
         Map<Address__c, Address__c> addressMatch = Addresses.getExistingAddresses(new List<Address__c>{defaultAddress});
         if(addressMatch.containsKey(defaultAddress) && addressMatch.get(defaultAddress) != null){
             selectedAddressIsUndeliverable = addressMatch.get(defaultAddress)?.Undeliverable__c;
         }
 
-        updateHousehold(hh);
+        updateHousehold(winnerHousehold);
         
         // need to merge any households (Accounts only) before we save contacts
         // so we avoid deleting a household if that contact was the last one in the hh.
         if (isNotEmpty(listHHMerge)) {
-            mergeHouseholds((Account)hh, listHHMerge);
+            mergeHouseholds(winnerHousehold, listHHMerge);
+            updateWinnerHouseholdSustainerAfterMerge(winnerHousehold);
         }
 
         List<Contact> contacts = new List<Contact>(listCon);
@@ -531,7 +533,25 @@ public with sharing class HH_Container_LCTRL {
         if (isNotEmpty(listHHMerge)) {
             cleanupAddresses(new List<Id>{ (Id) hh.get('Id') });
         }          
-    }    
+    }
+
+    private static void updateWinnerHouseholdSustainerAfterMerge(Account winnerHousehold) {
+        DescribeFieldResult sustainerFieldDescribeResult = Account.Sustainer__c.getDescribe();
+
+        if (UTIL_Permissions.canRead(sustainerFieldDescribeResult, false)
+            && UTIL_Permissions.canUpdate(sustainerFieldDescribeResult, false)
+        ) {
+            List<Account> winnerWithSustainerChanged = new RD2_SustainerEvaluationService()
+            .withAccounts(new List<Account>{winnerHousehold})
+            .getAccountsWithSustainerChanged();
+
+            if (winnerWithSustainerChanged.size() != 0) {
+                RD2_SustainerEvaluationService.setSustainerUpdateEnabled(true);
+                UTIL_DMLService.updateRecords(winnerWithSustainerChanged);
+                RD2_SustainerEvaluationService.setSustainerUpdateEnabled(false);
+            }
+        }
+    }
 
     /*******************************************************************************************************
     * @description Checks if the Account list is not empty
