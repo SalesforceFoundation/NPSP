@@ -36,12 +36,12 @@ public inherited sharing class DonationHistorySelector {
     /**
     * @description method to return Opportunity and Payment data.
     */
-  public List<Opportunity> getWonOpportunitiesByContactId( Id contactId, Integer offset, String amount ) {       
+  public List<Opportunity> getWonOpportunitiesByContactId( Id contactId, Integer offset ) {       
         return Database.query(
             'SELECT Id, '+
                     'Name, '+
                     'CloseDate,' +
-                    + String.escapeSingleQuotes(amount) + 
+                    + String.escapeSingleQuotes(this.isMultiCurrencyOrganization()) + 
                     ', Primary_Contact__r.Email, '+
                     'Primary_Contact__r.Name, ' +
                     '( SELECT npe01__Payment_Method__c, ' +
@@ -65,12 +65,12 @@ public inherited sharing class DonationHistorySelector {
      * @param year Integer filter of year.
      * @return List<OpportunityContactRole>
      */
-    public List<Opportunity> getWonOpportunitiesByContactIdAndYear(Id contactId, Integer offset, Integer year, String amount) {
+    public List<Opportunity> getWonOpportunitiesByContactIdAndYear(Id contactId, Integer offset, Integer year ) {
         return Database.query(
             'SELECT  Id, '+
                     'Name,' +
                     'CloseDate, '+
-                    + String.escapeSingleQuotes(amount) +
+                    + String.escapeSingleQuotes(this.isMultiCurrencyOrganization()) +
                     ', Primary_Contact__r.Email, '+
                     'Primary_Contact__r.Name, ' +
                     '( '+
@@ -129,6 +129,13 @@ public inherited sharing class DonationHistorySelector {
                                 AND Calendar_Year(CloseDate) = :year
                                 WITH SECURITY_ENFORCED];
         return totalRecords;
+    }
+
+    /** 
+    * @description method to return Amount or converCurrency(Amount) field if org is multicurrency. 
+    */
+    public String isMultiCurrencyOrganization(){
+        return UTIL_Currency.getInstance().isMultiCurrencyOrganization() ? 'convertCurrency(Amount)' : 'Amount' ;
     }
 
     /**
