@@ -76,9 +76,7 @@ public inherited sharing class PS_ProductMetadata {
             mergedMetadata.putAll(existingMetadata);
         }
 
-        for(String key : updatedMetadata.keySet()) {
-            mergedMetadata.put(key, updatedMetadata.get(key));
-        }
+        mergedMetadata.putAll(updatedMetadata);
 
         return mergedMetadata;
     }
