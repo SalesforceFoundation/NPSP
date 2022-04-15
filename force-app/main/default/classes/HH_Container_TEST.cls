@@ -769,6 +769,56 @@ private class HH_Container_TEST {
 
     }
 
+    @IsTest
+    private static void shouldUpdateHouseholdSustainerAfterMergingContacts() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        List<Account> householdAccounts = buildAccounts(2);
+        insert householdAccounts;
+
+        List<Contact> contacts = buildContacts(householdAccounts, 1);
+        insert contacts;
+
+        insert new List<npe03__Recurring_Donation__c> {
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withDefaultValues()
+            .withStatusClosed()
+            .withContact(contacts[0].Id)
+            .withAmount(1)
+            .build(),
+
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withDefaultValues()
+            .withStatusActive()
+            .withContact(contacts[1].Id)
+            .withAmount(1)
+            .build()
+        };
+    
+        householdAccounts[0] = (Account) HH_Container_LCTRL.getHousehold(householdAccounts[0].Id);
+
+        for (Contact contact : contacts) {
+            contact.AccountId = householdAccounts[0].Id;
+        }
+
+        Test.startTest();
+        HH_Container_LCTRL.saveHouseholdPage(householdAccounts[0], contacts, new List<Contact>(), new List<Account>{householdAccounts[1]});
+        Test.stopTest();
+
+        List<npe03__Recurring_Donation__c> rds = [SELECT npe03__Organization__c, npe03__Contact__c FROM npe03__Recurring_Donation__c];
+        List<Account> accounts = getAccounts();
+
+        for (npe03__Recurring_Donation__c rd : rds) {
+            System.assertEquals(householdAccounts[0].Id, rd.npe03__Organization__c,
+                'All Recurring Donations should be reparent to the winning household if the old household is merged');
+        }
+
+        System.assertEquals(RD2_SustainerEvaluationService.SustainerType.Active.name(), accounts[0].Sustainer__c,
+            'The winning household Account should be mark as Active Sustainer when there is an Active RD attached to it.');
+    }
+
     // Helpers
     ////////////
 
@@ -906,7 +956,7 @@ private class HH_Container_TEST {
     private static Account[] getAccounts() {
         return [
             SELECT Name, BillingStreet, BillingCity,
-                BillingState, BillingPostalCode, BillingCountry
+                BillingState, BillingPostalCode, BillingCountry, Sustainer__c
             FROM Account
         ];
     }
