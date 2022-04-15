@@ -16,6 +16,6 @@
 .github/workflows/    @SalesforceFoundation/release-engineering-reviewers
 
 # NPSP Special Folders
-/unpackaged/pre/core_apex_class_mock/        @force2b
-/unpackaged/config/crlp_testing/             @force2b
-/force-app/main/instrumentation/             @force2b
+/unpackaged/config/core_instrumentation_mock_classes/        @force2b
+/unpackaged/config/crlp_testing/                             @force2b
+/force-app/main/instrumentation/                             @force2b
