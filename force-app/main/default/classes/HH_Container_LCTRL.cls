@@ -522,6 +522,7 @@ public with sharing class HH_Container_LCTRL {
         // so we avoid deleting a household if that contact was the last one in the hh.
         if (isNotEmpty(listHHMerge)) {
             mergeHouseholds((Account)hh, listHHMerge);
+            updateWinnerHouseholdSustainerAfterMerge((Account)hh);
         }
 
         List<Contact> contacts = new List<Contact>(listCon);
@@ -531,7 +532,25 @@ public with sharing class HH_Container_LCTRL {
         if (isNotEmpty(listHHMerge)) {
             cleanupAddresses(new List<Id>{ (Id) hh.get('Id') });
         }          
-    }    
+    }
+
+    private static void updateWinnerHouseholdSustainerAfterMerge(Account winnerHousehold) {
+        DescribeFieldResult sustainerFieldDescribeResult = Account.Sustainer__c.getDescribe();
+
+        if (UTIL_Permissions.canRead(sustainerFieldDescribeResult, false)
+            && UTIL_Permissions.canUpdate(sustainerFieldDescribeResult, false)
+        ) {
+            List<Account> winnerWithSustainerChanged = new RD2_SustainerEvaluationService()
+            .withAccounts(new List<Account>{winnerHousehold})
+            .getAccountsWithSustainerChanged();
+
+            if (winnerWithSustainerChanged.size() != 0) {
+                RD2_SustainerEvaluationService.setSustainerUpdateEnabled(true);
+                UTIL_DMLService.updateRecords(winnerWithSustainerChanged);
+                RD2_SustainerEvaluationService.setSustainerUpdateEnabled(false);
+            }
+        }
+    }
 
     /*******************************************************************************************************
     * @description Checks if the Account list is not empty

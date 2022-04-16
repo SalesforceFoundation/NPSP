@@ -226,6 +226,7 @@ describe("c-rd2-entry-form", () => {
                     cardExpirationYear: null,
                     cardLastFour: null,
                     campaignId: null,
+                    changeType: "",
                     commitmentId: null,
                     currencyIsoCode: null,
                     dayOfMonth: "15",
@@ -368,6 +369,7 @@ describe("c-rd2-entry-form", () => {
                 cardExpirationMonth: null,
                 cardExpirationYear: null,
                 cardLastFour: null,
+                changeType: "",
                 campaignId: null,
                 commitmentId: "ffd252d6-7ffc-46a0-994f-00f7582263d2",
                 currencyIsoCode: null,
@@ -687,6 +689,7 @@ describe("c-rd2-entry-form", () => {
                 cardExpirationYear: null,
                 cardLastFour: null,
                 campaignId: null,
+                changeType: "",
                 commitmentId: "ffd252d6-7ffc-46a0-994f-00f7582263d2",
                 currencyIsoCode: null,
                 dayOfMonth: "6",
@@ -764,6 +767,7 @@ describe("c-rd2-entry-form", () => {
                 cardExpirationMonth: "05",
                 cardExpirationYear: "2023",
                 cardLastFour: "1111",
+                changeType: "",
                 campaignId: null,
                 commitmentId: "ffd252d6-7ffc-46a0-994f-00f7582263d2",
                 currencyIsoCode: null,
@@ -849,14 +853,14 @@ describe("c-rd2-entry-form", () => {
         it("open donation, when form loads, change type picklist is empty", async () => {
             const changeTypePicklist = controller.changeTypePicklist();
             expect(changeTypePicklist).toBeTruthy();
-            expect(changeTypePicklist.value).toBe("");
+            expect(changeTypePicklist.getValue()).toBe("");
         });
 
         it("open donation, when amount increased, sets change type to upgrade", async () => {
             controller.amount().changeValue(5);
             await flushPromises();
             const changeTypePicklist = controller.changeTypePicklist();
-            expect(changeTypePicklist.value).toBe("Upgrade");
+            expect(changeTypePicklist.getValue()).toBe("Upgrade");
         });
 
         it("open donation, when frequency changed from monthly to weekly, sets change type to upgrade", async () => {
@@ -865,14 +869,14 @@ describe("c-rd2-entry-form", () => {
             controller.installmentPeriod().changeValue("Weekly");
             await flushPromises();
             const changeTypePicklist = controller.changeTypePicklist();
-            expect(changeTypePicklist.value).toBe("Upgrade");
+            expect(changeTypePicklist.getValue()).toBe("Upgrade");
         });
 
         it("open donation, when amount decreased, sets change type to downgrade", async () => {
             controller.amount().changeValue(0.25);
             await flushPromises();
             const changeTypePicklist = controller.changeTypePicklist();
-            expect(changeTypePicklist.value).toBe("Downgrade");
+            expect(changeTypePicklist.getValue()).toBe("Downgrade");
         });
 
         it("open donation, when amount changed and recurring type changed to fixed, blanks change type picklist", async () => {
@@ -880,11 +884,53 @@ describe("c-rd2-entry-form", () => {
             await flushPromises();
 
             const changeTypePicklist = controller.changeTypePicklist();
-            expect(changeTypePicklist.value).toBe("Upgrade");
+            expect(changeTypePicklist.getValue()).toBe("Upgrade");
             controller.recurringType().changeValue("Fixed");
             await flushPromises();
 
-            expect(changeTypePicklist.value).toBe("");
+            expect(changeTypePicklist.getValue()).toBe("");
+        });
+
+        it("open donation, persists manual change to change type picklist", async () => {
+            controller.amount().changeValue(5);
+            await flushPromises();
+
+            const changeTypePicklist = controller.changeTypePicklist();
+            expect(changeTypePicklist.getValue()).toBe("Upgrade");
+
+            changeTypePicklist.changeValue("Downgrade");
+            controller.dayOfMonth().changeValue(3);
+            await flushPromises();
+
+            controller.saveButton().click();
+            expect(saveRecurringDonation).toHaveBeenCalled();
+            const saveRequest = {
+                achLastFour: null,
+                accountId: "00163000010jyT6AAI",
+                cardExpirationMonth: null,
+                cardExpirationYear: null,
+                cardLastFour: null,
+                changeType: "Downgrade",
+                campaignId: null,
+                commitmentId: null,
+                currencyIsoCode: null,
+                customFieldValues: {},
+                dayOfMonth: 3,
+                paymentToken: null,
+                recordId: "a09S000000HAfRHIA1",
+                recordName: "",
+                recurringFrequency: 1,
+                recurringType: "Open",
+                recurringStatus: "Active",
+                startDate: "2021-04-29",
+                donationValue: 5,
+                contactId: "001fakeContactId",
+                dateEstablished: "2021-04-29",
+                recurringPeriod: "Monthly",
+                plannedInstallments: null,
+                statusReason: null,
+            };
+            expect(saveRecurringDonation).toHaveBeenCalledWith({ saveRequest });
         });
     });
 
@@ -930,7 +976,7 @@ describe("c-rd2-entry-form", () => {
             await flushPromises();
             const changeTypePicklist = controller.changeTypePicklist();
 
-            expect(changeTypePicklist.value).toBe("Upgrade");
+            expect(changeTypePicklist.getValue()).toBe("Upgrade");
         });
 
         it("fixed donation, when number of planned installments decreased, sets change type to downgrade", async () => {
@@ -938,7 +984,7 @@ describe("c-rd2-entry-form", () => {
             await flushPromises();
             const changeTypePicklist = controller.changeTypePicklist();
 
-            expect(changeTypePicklist.value).toBe("Downgrade");
+            expect(changeTypePicklist.getValue()).toBe("Downgrade");
         });
     });
 });
