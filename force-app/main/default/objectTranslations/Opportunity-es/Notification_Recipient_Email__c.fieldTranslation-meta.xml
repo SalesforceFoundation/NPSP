@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Notification_Recipient_Email__c</name>
+    <help>La dirección de correo electrónico de la persona que recibe notificación de homenaje/en memoria.</help>
+    <label>Correo electrónico destinatario notific.</label>
+</CustomFieldTranslation>

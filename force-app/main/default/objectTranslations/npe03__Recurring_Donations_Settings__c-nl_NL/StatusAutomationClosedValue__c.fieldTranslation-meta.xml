@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>StatusAutomationClosedValue__c</name>
+    <help>De status van de terugkerende donatie(s) als Statusautomatisering de record Terugkerende donatie sluit.</help>
+    <label>Waarde Statusautomatisering gesloten</label>
+</CustomFieldTranslation>

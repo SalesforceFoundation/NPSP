@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Notification_Preference__c</name>
+    <help>Geeft aan hoe de ontvanger op de hoogte moet worden gesteld. Bijvoorbeeld per e-mail of telefonisch.</help>
+    <label>Voorkeuren voor donatiekennisgeving</label>
+    <picklistValues>
+        <masterLabel>Email</masterLabel>
+        <translation>E-mail</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Postal Mail</masterLabel>
+        <translation>Post</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Phone</masterLabel>
+        <translation>Telefoon</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Do Not Notify</masterLabel>
+        <translation>Niet op de hoogte brengen</translation>
+    </picklistValues>
+</CustomFieldTranslation>

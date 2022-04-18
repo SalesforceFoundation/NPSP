@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>All_Members_Deceased__c</name>
+    <help>Si se selecciona, todos los miembros de este hogar están fallecidos. No actualice este campo manualmente. NPSP lo actualiza automáticamente como resultado de las actualizaciones en la casilla Fallecido en Contactos de miembro de hogar.</help>
+    <label>Todos los miembros de hogar fallecidos</label>
+</CustomFieldTranslation>

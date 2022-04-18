@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Tribute_Type__c</name>
+    <help>Geeft aan of de donatie een eerbetoon is aan een individu of ter nagedachtenis is van een individu.</help>
+    <label>Type donatie-eerbetoon</label>
+    <picklistValues>
+        <masterLabel>Honor</masterLabel>
+        <translation>Eerbetoon</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Memorial</masterLabel>
+        <translation>Nagedachtenis</translation>
+    </picklistValues>
+</CustomFieldTranslation>
