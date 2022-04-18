@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Card_Expiration_Month__c</name>
+    <help>Le mois d’expiration de la carte utilisée pour ce don récurrent.</help>
+    <label>Mois d’expiration carte - Récurrent</label>
+</CustomFieldTranslation>

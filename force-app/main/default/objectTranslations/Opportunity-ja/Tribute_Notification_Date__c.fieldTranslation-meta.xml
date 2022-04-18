@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Tribute_Notification_Date__c</name>
+    <label>敬意/追悼通知日</label>
+</CustomFieldTranslation>

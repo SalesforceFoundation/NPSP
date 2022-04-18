@@ -1,2 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata"/>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label>FS de entrada BDE</label>
+        <name>BDE_Entry_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label>FS de lista BDE</label>
+        <name>BDE_List_FS</name>
+    </fieldSets>
+</CustomObjectTranslation>

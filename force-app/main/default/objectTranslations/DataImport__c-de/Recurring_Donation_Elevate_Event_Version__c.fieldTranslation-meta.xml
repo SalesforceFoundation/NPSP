@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Elevate_Event_Version__c</name>
+    <help>Die Version des Elevate-Ereignisses, das zum Erstellen diese Datenimportdatensatzes verwendet wurde.</help>
+    <label>Elevate-Ereignisversion wiederk. Spende</label>
+</CustomFieldTranslation>

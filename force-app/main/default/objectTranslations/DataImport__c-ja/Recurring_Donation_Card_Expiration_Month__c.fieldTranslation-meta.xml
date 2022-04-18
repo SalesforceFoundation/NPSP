@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Card_Expiration_Month__c</name>
+    <help>この継続支援で使用されたカードの有効期限 (月)。</help>
+    <label>継続支援のカードの有効期限 (月)</label>
+</CustomFieldTranslation>

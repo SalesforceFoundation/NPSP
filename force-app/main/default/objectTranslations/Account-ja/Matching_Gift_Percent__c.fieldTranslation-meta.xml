@@ -2,5 +2,5 @@
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Matching_Gift_Percent__c</name>
     <help>会社がマッチングする支援の割合。</help>
-    <label>マッチングギフト パーセント</label>
+    <label>マッチング支援 パーセント</label>
 </CustomFieldTranslation>

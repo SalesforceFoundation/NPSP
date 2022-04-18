@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Notification_Recipient_Info__c</name>
+    <help>La información de contacto, como la dirección o el teléfono que proporcionó el donante para el destinatario de la notificación.</help>
+    <label>Información destinatario notif. donación</label>
+</CustomFieldTranslation>

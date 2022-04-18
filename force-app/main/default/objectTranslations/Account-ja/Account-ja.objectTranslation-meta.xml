@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label>BDE エントリ FS</label>
+        <name>BDE_Entry_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label>BDE リスト FS</label>
+        <name>BDE_List_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label>世帯カスタムを管理</label>
+        <name>Manage_Household_Custom</name>
+    </fieldSets>
     <webLinks>
         <name>Manage_Household</name>
         <label>世帯の管理</label>
@@ -43,11 +55,11 @@
             <section>Grantmaking Information</section>
         </sections>
         <sections>
-            <label>マッチングギフト情報</label>
+            <label>マッチング支援情報</label>
             <section>Matching Gift Information</section>
         </sections>
         <sections>
-            <label>マッチングギフト コメント</label>
+            <label>マッチング支援 コメント</label>
             <section>Matching Gift Comments</section>
         </sections>
         <sections>
