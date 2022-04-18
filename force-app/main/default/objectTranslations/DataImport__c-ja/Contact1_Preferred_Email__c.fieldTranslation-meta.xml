@@ -4,7 +4,7 @@
     <label>メール連絡先(取引先責任者1)</label>
     <picklistValues>
         <masterLabel>Personal</masterLabel>
-        <translation>取引先責任者</translation>
+        <translation>個人</translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>Work</masterLabel>

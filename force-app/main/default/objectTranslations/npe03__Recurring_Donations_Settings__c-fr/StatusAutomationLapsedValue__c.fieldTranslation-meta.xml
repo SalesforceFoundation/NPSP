@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>StatusAutomationLapsedValue__c</name>
+    <help>Statut de don récurrent défini lorsque l’automatisation du statut met à jour l’enregistrement de don récurrent vers Écoulé.</help>
+    <label>Automatisation du statut - Écoulé</label>
+</CustomFieldTranslation>

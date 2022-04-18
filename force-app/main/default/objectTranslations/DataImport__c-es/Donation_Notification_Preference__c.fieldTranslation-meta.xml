@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Notification_Preference__c</name>
+    <help>Indica cómo debe notificarse al destinatario de la notificación. Por ejemplo, por correo electrónico o por teléfono.</help>
+    <label>Preferencia de notificación de donación</label>
+    <picklistValues>
+        <masterLabel>Email</masterLabel>
+        <translation>Correo electrónico</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Postal Mail</masterLabel>
+        <translation>Correo</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Phone</masterLabel>
+        <translation>Teléfono</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Do Not Notify</masterLabel>
+        <translation>No notificar</translation>
+    </picklistValues>
+</CustomFieldTranslation>

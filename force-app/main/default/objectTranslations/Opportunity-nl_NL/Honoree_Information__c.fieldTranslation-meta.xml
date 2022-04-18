@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Honoree_Information__c</name>
+    <help>Contactgegevens, zoals e-mailadres, adres en telefoonnummer, door de donateur opgegeven voor de gehonoreerde.</help>
+    <label>Gegevens van gehonoreerde</label>
+</CustomFieldTranslation>

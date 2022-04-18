@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Notification_Recipient_Email__c</name>
+    <help>Het e-mailadres van de persoon die een kennisgeving ontvangt.</help>
+    <label>E-mailadres voor donatiekennisgevingen</label>
+</CustomFieldTranslation>

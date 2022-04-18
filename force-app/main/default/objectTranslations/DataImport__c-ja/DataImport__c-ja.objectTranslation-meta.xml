@@ -15,7 +15,7 @@
     <layouts>
         <layout>Data Import Layout</layout>
         <sections>
-            <label>取引先責任者１情報</label>
+            <label>取引先責任者1 情報</label>
             <section>Contact1 Information</section>
         </sections>
         <sections>
@@ -31,7 +31,7 @@
             <section>Account1 Organization Information</section>
         </sections>
         <sections>
-            <label>取引先責任者２情報</label>
+            <label>取引先責任者2 情報</label>
             <section>Contact2 Information</section>
         </sections>
         <sections>

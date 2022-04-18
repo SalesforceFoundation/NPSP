@@ -59,20 +59,35 @@ public class RD2_StatusAutomationService_TEST {
         RD2_StatusAutomationService service = new RD2_StatusAutomationService();
         RD2_StatusAutomationView view = service.getStatusAutomationView();
         Test.stopTest();
+
+        RD2_StatusMapper statusMapper = new RD2_StatusMapper();
+        Set<String> lapsedStatusValues = statusMapper.getLapsedStatusValues();
+        Set<String> closedStatusValues = statusMapper.getClosedStatusValues();
+        String lapsedStatusLabel =  UTIL_Describe.getTranslatedPicklistLabel(
+            npe03__Recurring_Donation__c.SObjectType, npe03__Recurring_Donation__c.Status__c, RD2_Constants.STATUS_LAPSED
+        );
+        String closedStatusLabel =  UTIL_Describe.getTranslatedPicklistLabel(
+            npe03__Recurring_Donation__c.SObjectType, npe03__Recurring_Donation__c.Status__c, RD2_Constants.STATUS_CLOSED
+        );
         
         System.assertEquals(true, view.rd2Enabled, 'RD2 should be enabled');
         System.assertEquals(DAYS_FOR_LAPSED, view.numberOfDaysForLapsed,
             'The view state should retrieve the correct number of days for Lapsed');
         System.assertEquals(DAYS_FOR_CLOSED, view.numberOfDaysForClosed,
             'The view state should retrieve the correct number of days for Closed');
-        System.assertEquals(RD2_Constants.STATUS_LAPSED, view.lapsedStatus,
+        System.assertEquals(lapsedStatusLabel, view.lapsedStatus,
             'The view state should retrieve the correct Automation Lapsed Status');
-        System.assertEquals(RD2_Constants.STATUS_CLOSED, view.closedStatus,
+        System.assertEquals(closedStatusLabel, view.closedStatus,
             'The view state should retrieve the correct Automation Closed Status');
-        System.assertEquals( RD2_Constants.STATUS_LAPSED, view.lapsedStatusOption[0].label,
-            'The Lapsed status picklist option should include Lapsed Status');
-        System.assertEquals(RD2_Constants.STATUS_CLOSED, view.closedStatusOption[0].label,
-            'The Closed status picklist option should include Closed Status');
+
+        for (PicklistOptionView pickListOption : view.lapsedStatusOption) {
+            System.assert(lapsedStatusValues.contains(pickListOption.value),
+                'Only Status mapped to Lapsed State should be in the Lapsed Status Option');
+        }
+        for (PicklistOptionView pickListOption : view.closedStatusOption) {
+            System.assert(closedStatusValues.contains(pickListOption.value),
+                'Only Status mapped to Closed State should be in the Closed Status Option');
+        }
     }
 
     @IsTest

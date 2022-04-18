@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label>Columnas de ficha de entrada de regalos en lote</label>
+        <name>BatchGiftEntryTabColumns</name>
+    </fieldSets>
     <webLinks>
         <name>Process_Batch</name>
         <label>Procesar lote</label>

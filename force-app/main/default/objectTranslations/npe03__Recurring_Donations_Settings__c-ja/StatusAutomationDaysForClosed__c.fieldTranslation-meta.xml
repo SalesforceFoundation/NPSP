@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>StatusAutomationDaysForClosed__c</name>
+    <help>指定した日数を経過後に、期待していた支援を受領していない場合は、NPSP の [継続支援状況] が [状況の自動化の完了値] に更新されます。</help>
+    <label>状況の自動化の完了までの日数</label>
+</CustomFieldTranslation>
