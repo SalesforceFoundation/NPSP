@@ -1,28 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-
-  <!-- DEPRECATED FIELDS: These have to be manually copied/pasted back into this file after a translation run -->
-  <fields>
-    <label>Déprécié:Toujours utiliser dernier jour du mois</label>
-    <name>%%%NAMESPACE%%%Always_Use_Last_Day_Of_Month__c</name>
-  </fields>
-  <fields>
-    <label>Déprécié:Montant du versement</label>
-    <name>npe03__Installment_Amount__c</name>
-  </fields>
-  <fields>
-    <label>Déprécié:Statut de date de fin</label>
-    <name>npe03__Open_Ended_Status__c</name>
-  </fields>
-  <fields>
-    <label>Déprécié:Critère</label>
-    <name>npe03__Schedule_Type__c</name>
-  </fields>
-  <fields>
-    <label>Déprécié:Total</label>
-    <name>npe03__Total__c</name>
-  </fields>
-  <!-- END MANUALLY COPIED DEPRECATED FIELDS -->
   <fields>
     <name>npe03__Amount__c</name>
     <help>Le montant de chaque opportunité de versement.</help>

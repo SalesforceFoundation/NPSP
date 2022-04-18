@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help><!-- The type of Task. --></help>
-    <label><!-- Type --></label>
+    <help/>
+    <label/>
     <name>Type__c</name>
     <picklistValues>
         <masterLabel>Call</masterLabel>
-        <translation><!-- Call --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>Email</masterLabel>
-        <translation><!-- Email --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>Meeting</masterLabel>
-        <translation><!-- Meeting --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>Other</masterLabel>
-        <translation><!-- Other --></translation>
+        <translation/>
     </picklistValues>
 </CustomFieldTranslation>

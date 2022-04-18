@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Tribute_Type__c</name>
+    <help>Indique si le don est en l’honneur ou à la mémoire d’un individu.</help>
+    <label>Type d’hommage du don</label>
+    <picklistValues>
+        <masterLabel>Honor</masterLabel>
+        <translation>Hommage</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Memorial</masterLabel>
+        <translation>Commémoration</translation>
+    </picklistValues>
+</CustomFieldTranslation>
