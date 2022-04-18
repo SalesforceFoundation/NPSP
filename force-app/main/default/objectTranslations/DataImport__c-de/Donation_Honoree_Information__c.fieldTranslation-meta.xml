@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Honoree_Information__c</name>
+    <help>Kontaktinformationen, wie etwa E-Mail, Adresse, oder Telefonnummer, die der Spender für den Geehrten der Spende angegeben hat.</help>
+    <label>Informationen zum Geehrten der Spende</label>
+</CustomFieldTranslation>

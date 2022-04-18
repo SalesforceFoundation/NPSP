@@ -59,9 +59,14 @@ public with sharing class RD2_StatusAutomationService {
     public RD2_StatusAutomationView getStatusAutomationView() {
         rd2Settings.reloadSetting();
         RD2_StatusAutomationView view = new RD2_StatusAutomationView();
+        view.closedStatus = UTIL_Describe.getTranslatedPicklistLabel(
+            npe03__Recurring_Donation__c.SObjectType, npe03__Recurring_Donation__c.Status__c, rd2Settings.statusAutomationClosedValue
+        );
 
-        view.closedStatus = rd2Settings.statusAutomationClosedValue;
-        view.lapsedStatus = rd2Settings.statusAutomationLapsedValue;
+        view.lapsedStatus = UTIL_Describe.getTranslatedPicklistLabel(
+            npe03__Recurring_Donation__c.SObjectType, npe03__Recurring_Donation__c.Status__c, rd2Settings.statusAutomationLapsedValue
+        );
+
         view.numberOfDaysForClosed = rd2Settings.statusAutomationNumberOfDaysForClosed;
         view.numberOfDaysForLapsed = rd2Settings.statusAutomationNumberOfDaysForLapsed;
         view.closedStatusOption = createStatusOption(
@@ -181,13 +186,16 @@ public with sharing class RD2_StatusAutomationService {
         }
     }
 
-    private List<PicklistOptionView> createStatusOption(List<String> statusValues) {
+    private List<PicklistOptionView> createStatusOption(List<String> statusApiValues) {
         List<PicklistOptionView> options = new List<PicklistOptionView>();
-        for (String status : statusValues) {
+        for (String statusApiValue : statusApiValues) {
+            String statusLabel =  UTIL_Describe.getTranslatedPicklistLabel(
+                npe03__Recurring_Donation__c.SObjectType, npe03__Recurring_Donation__c.Status__c, statusApiValue
+            );
               options.add(
                  new PicklistOptionView()
-                    .withLabel(status)
-                    .withValue(status)
+                    .withLabel(statusLabel)
+                    .withValue(statusApiValue)
             );
         }
         return options;
