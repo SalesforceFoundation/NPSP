@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label>LevelEdit</label>
+        <name>LevelEdit</name>
+    </fieldSets>
     <validationRules>
         <errorMessage>La cible est un champ obligatoire du niveau. Veuillez indiquer l’objet cible pour ce niveau.</errorMessage>
         <name>Target_Required</name>

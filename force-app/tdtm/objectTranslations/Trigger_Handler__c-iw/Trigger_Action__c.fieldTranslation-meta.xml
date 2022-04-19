@@ -5,30 +5,30 @@
     <name>Trigger_Action__c</name>
     <picklistValues>
         <masterLabel>AfterDelete</masterLabel>
-        <translation><!-- AfterDelete --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>AfterInsert</masterLabel>
-        <translation><!-- AfterInsert --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>AfterUndelete</masterLabel>
-        <translation><!-- AfterUndelete --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>AfterUpdate</masterLabel>
-        <translation><!-- AfterUpdate --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>BeforeDelete</masterLabel>
-        <translation><!-- BeforeDelete --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>BeforeInsert</masterLabel>
-        <translation><!-- BeforeInsert --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>BeforeUpdate</masterLabel>
-        <translation><!-- BeforeUpdate --></translation>
+        <translation/>
     </picklistValues>
 </CustomFieldTranslation>

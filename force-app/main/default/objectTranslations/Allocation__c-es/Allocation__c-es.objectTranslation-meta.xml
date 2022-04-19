@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label>Gestionar campos adicionales de asignaciones</label>
+        <name>ManageAllocationsAdditionalFields</name>
+    </fieldSets>
     <webLinks>
         <name>Manage_Allocations</name>
         <label>Gestionar asignaciones</label>

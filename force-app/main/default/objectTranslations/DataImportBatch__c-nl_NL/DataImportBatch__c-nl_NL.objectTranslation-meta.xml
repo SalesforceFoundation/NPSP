@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label>Kolommen voor tabblad voor batchinvoer van giften</label>
+        <name>BatchGiftEntryTabColumns</name>
+    </fieldSets>
     <webLinks>
         <name>Process_Batch</name>
         <label>Batch verwerken</label>

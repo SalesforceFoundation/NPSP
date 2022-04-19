@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>StatusAutomationDaysForClosed__c</name>
+    <help>Une fois le nombre de jours indiqués écoulés, NPSP met à jour le statut de don récurrent vers la valeur d’automatisation du statut Fermé si les dons ne sont pas reçus comme prévu.</help>
+    <label>Jours d’automatisation statut - Fermé</label>
+</CustomFieldTranslation>

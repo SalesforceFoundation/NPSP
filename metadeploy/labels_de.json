@@ -17,7 +17,7 @@
             "description": "legal text shown in modal dialog"
         },
         "error_message": {
-            "message": "Wenn bei der Installation ein Problem auftritt, melden Sie es bitte beim [Nonprofit Success Pack](https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&sort=LAST_MODIFIED_DATE_DESC).",
+            "message": "Wenn bei der Installation ein Problem auftritt, melden Sie es bitte in der [Nonprofit Success Pack](https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&sort=LAST_MODIFIED_DATE_DESC)-Gruppe.",
             "description": "shown after failed installation (markdown)"
         }
     },
@@ -31,7 +31,7 @@
             "description": "shown before user starts installation (markdown)"
         },
         "post_install_message": {
-            "message": "Vielen Dank für die Installation von NPSP. Bitte besuchen Sie bei Fragen zu NPSP die [Nonprofit Success Pack](https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&sort=LAST_MODIFIED_DATE_DESC)-Gruppe.",
+            "message": "Vielen Dank für die Installation von NPSP. Bitte besuchen Sie bei Fragen zu NPSP die [Nonprofit Success Pack](https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&sort=LAST_MODIFIED_DATE_DESC)-Gruppe.\n",
             "description": "shown after successful installation (markdown)"
         }
     },
@@ -174,7 +174,7 @@
             "message": "Für das Nonprofit Success Pack ist Chatter erforderlich. Aktivieren Sie Chatter in Ihrer Organisation, und versuchen Sie es noch einmal.",
             "description": "shown if validation fails"
         },
-        "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation. See the Power of Us Hub for assistance.": {
+        "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation. See NPSP documentation for assistance.": {
             "message": "Für die Installation von Nonprofit Success Pack muss das erweiterte Währungsmanagement deaktiviert sein, Sie können es aber nach der Installation aktivieren.",
             "description": "shown if validation fails"
         },

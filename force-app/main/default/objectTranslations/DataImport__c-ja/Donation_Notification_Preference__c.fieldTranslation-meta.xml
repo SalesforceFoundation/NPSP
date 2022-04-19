@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Notification_Preference__c</name>
+    <help>通知受信者への通知方法。</help>
+    <label>支援の通知設定</label>
+    <picklistValues>
+        <masterLabel>Email</masterLabel>
+        <translation>メール</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Postal Mail</masterLabel>
+        <translation>郵便</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Phone</masterLabel>
+        <translation>電話</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Do Not Notify</masterLabel>
+        <translation>通知しない</translation>
+    </picklistValues>
+</CustomFieldTranslation>
