@@ -43,6 +43,14 @@ private with sharing class STG_SettingsManager_TEST {
     private static final String OPTION_NAME_DISABLE_ALL = RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name();
     private static final String OPTION_NAME_ALWAYS_CREATE_NEXT = RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name();
 
+    /**
+    * @description Reference new labels in 238 that are not being picked up by the Packaging Spider
+    */
+    private static final String LABEL_REFERENCE_RD_RD2_STATUS_AUTOMATION = Label.stgNavRD2StatusAutomation;
+    private static final String LABEL_REFERENCE_HOUSEHOLD_REFRESH_TITLE = Label.stgHHDataRefreshTitle;
+    private static final String LABEL_REFERENCE_CONTACT_MERGE_STAGE_CURRENT = Label.conMergeStageCurrent;
+    private static final String LABEL_REFERENCE_CONTACT_MERGE_STAGE_COMPLETE = Label.conMergeStageComplete;
+
     /*********************************************************************************************************
     * @description Tests the Settings Manager page
     * @return void
