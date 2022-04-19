@@ -45,11 +45,25 @@ private with sharing class STG_SettingsManager_TEST {
 
     /**
     * @description Reference new labels in 238 that are not being picked up by the Packaging Spider
+    *
+    * TODO IN 240 : CONSIDER CREATING A NEW APEX CLASS WITH NEW LABELS ADDED TO THE RELEASE, BUT ONLY FOR LABELS THAT ARE 
+    *    REFERENCED BY VISUALFORCE PAGES ONLY (I.E., NO APEX/LWC/AURA REFERENCE)
     */
-    private static final String LABEL_REFERENCE_RD_RD2_STATUS_AUTOMATION = Label.stgNavRD2StatusAutomation;
-    private static final String LABEL_REFERENCE_HOUSEHOLD_REFRESH_TITLE = Label.stgHHDataRefreshTitle;
-    private static final String LABEL_REFERENCE_CONTACT_MERGE_STAGE_CURRENT = Label.conMergeStageCurrent;
-    private static final String LABEL_REFERENCE_CONTACT_MERGE_STAGE_COMPLETE = Label.conMergeStageComplete;
+    private static final List<String> LABEL_REFERENCES_FOR_238_BETA = new List<String>{ 
+        Label.stgNavRD2StatusAutomation,
+        Label.stgHHDataRefreshTitle,
+        Label.conMergeStageCurrent,
+        Label.conMergeStageComplete,
+        Label.REL_ViewerGraphical,
+        Label.REL_ViewerTabular,
+        Label.conMergeStageNotStarted,
+        Label.lblEmpty,
+        Label.stgBtnRunHHDeceasedBatch,
+        Label.stgHHDataRefreshTitle,
+        Label.stgHelpHHData,
+        Label.stgHelpDeceasedBatch,
+        Label.stgLabelDeceasedBatch
+    };
 
     /*********************************************************************************************************
     * @description Tests the Settings Manager page
