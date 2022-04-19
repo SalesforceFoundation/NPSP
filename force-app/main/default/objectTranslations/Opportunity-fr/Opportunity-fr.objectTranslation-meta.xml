@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label>Entrée BDE FS v2</label>
+        <name>BDE_Entry_FS_v2</name>
+    </fieldSets>
+    <fieldSets>
+        <label>Nouvelle liste BDE v2</label>
+        <name>BDE_List_FS_v2</name>
+    </fieldSets>
     <webLinks>
         <name>Email_Acknowledgment</name>
         <label>E-mail de confirmation</label>

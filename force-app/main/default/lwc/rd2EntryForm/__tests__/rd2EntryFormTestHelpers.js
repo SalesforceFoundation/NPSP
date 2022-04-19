@@ -228,7 +228,8 @@ export class RD2FormController {
     }
 
     changeTypePicklist() {
-        return this.element.shadowRoot.querySelector('lightning-input-field[data-id="changeType"]');
+        const field = this.element.shadowRoot.querySelector('lightning-input-field[data-id="changeType"]');
+        return new RD2FormField(field);
     }
 
     errorPageLevelMessage() {

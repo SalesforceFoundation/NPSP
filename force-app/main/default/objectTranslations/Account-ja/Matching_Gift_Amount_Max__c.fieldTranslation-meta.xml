@@ -2,5 +2,5 @@
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Matching_Gift_Amount_Max__c</name>
     <help>会社が 1 回の支援でマッチングする最大支援金額。</help>
-    <label>マッチングギフト 最大金額</label>
+    <label>マッチング支援 最大金額</label>
 </CustomFieldTranslation>
