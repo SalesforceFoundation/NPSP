@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>StatusAutomationLapsedValue__c</name>
+    <help>De status van de terugkerende donatie(s) als Statusautomatisering de record Terugkerende donatie bijwerkt naar Verstreken.</help>
+    <label>Waarde Statusautomatisering verstreken</label>
+</CustomFieldTranslation>

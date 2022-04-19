@@ -167,6 +167,7 @@ class Rd2Service {
             cardExpirationMonth,
             cardExpirationYear,
             paymentMethod,
+            changeType,
         } = rd2State;
 
         const plannedInstallments = this.getPlannedInstallments(rd2State);
@@ -197,6 +198,7 @@ class Rd2Service {
             cardExpirationYear,
             paymentMethod,
             customFieldValues,
+            changeType,
         };
     }
 

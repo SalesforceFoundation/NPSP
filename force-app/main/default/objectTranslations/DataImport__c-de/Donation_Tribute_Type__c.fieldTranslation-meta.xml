@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Tribute_Type__c</name>
+    <help>Gibt an, ob die Spende zur Ehrung einer Person oder im Gedenken an eine Person erfolgt.</help>
+    <label>Spendenanerkennungstyp</label>
+    <picklistValues>
+        <masterLabel>Honor</masterLabel>
+        <translation>Ehrung</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Memorial</masterLabel>
+        <translation>Gedenken</translation>
+    </picklistValues>
+</CustomFieldTranslation>

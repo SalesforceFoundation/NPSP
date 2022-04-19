@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Honoree_Name__c</name>
+    <help>El nombre del galardonado como lo proporciona el donante.</help>
+    <label>Nombre de galardonado con donación</label>
+</CustomFieldTranslation>

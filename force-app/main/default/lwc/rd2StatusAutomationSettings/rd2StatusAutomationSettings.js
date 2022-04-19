@@ -104,15 +104,12 @@ export default class Rd2StatusAutomationSettings extends LightningElement {
         this.inputDaysForLapsed = automationSettings.numberOfDaysForLapsed;
 
         this.assignInputDaysThreshold();
-
-        this.closedStatus = automationSettings.closedStatus;
-        this.inputClosedStatus = automationSettings.closedStatus;
-
-        this.lapsedStatus = automationSettings.lapsedStatus;
-        this.inputLapsedStatus = automationSettings.lapsedStatus;
-
         this.closedStatusOption = automationSettings.closedStatusOption;
         this.lapsedStatusOption = automationSettings.lapsedStatusOption;
+        this.closedStatus = automationSettings.closedStatus;
+        this.lapsedStatus = automationSettings.lapsedStatus;
+    
+        this.assignInputStatusWithApiValue(automationSettings);
 
         this.displayState = STATES.READY;
     }
@@ -188,6 +185,15 @@ export default class Rd2StatusAutomationSettings extends LightningElement {
         this.adjustDaysForClosedErrorMessage();
     }
 
+    assignInputStatusWithApiValue(automationSettings) {
+        this.inputClosedStatus = automationSettings.closedStatusOption.filter(
+            closedStatusOption => closedStatusOption.label === this.closedStatus
+        )[0]?.value;
+        this.inputLapsedStatus = automationSettings.lapsedStatusOption.filter(
+            lapsedStatusOption => lapsedStatusOption.label === this.lapsedStatus
+        )[0]?.value;
+    }
+
     adjustDaysForClosedErrorMessage() {
         this.minimumDaysForClosedErrorMessage = 
             (!isNull(this.inputDaysForLapsed) && this.minimumDaysForClosed >= 0 && this.inputDaysForClosed >= 0) 
@@ -195,8 +201,7 @@ export default class Rd2StatusAutomationSettings extends LightningElement {
                 : '';
     }
     resetSettingsInput() {
-        this.inputClosedStatus = this.closedStatus;
-        this.inputLapsedStatus = this.lapsedStatus;
+        this.assignInputStatusWithApiValue(this.automationSettings);
         this.inputDaysForClosed = this.automationSettings.numberOfDaysForClosed;
         this.inputDaysForLapsed = this.automationSettings.numberOfDaysForLapsed;
     }
