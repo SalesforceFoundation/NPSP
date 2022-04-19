@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label><!-- Operation --></label>
+    <label/>
     <name>Operation__c</name>
     <picklistValues>
         <masterLabel>Average</masterLabel>
-        <translation><!-- Average --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>Best Year</masterLabel>
-        <translation><!-- Best Year --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>Best Year Total</masterLabel>
-        <translation><!-- Best Year Total --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>Count</masterLabel>
-        <translation><!-- Count --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>Donor Streak</masterLabel>
-        <translation><!-- Donor Streak --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>First</masterLabel>
-        <translation><!-- First --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>Largest</masterLabel>
-        <translation><!-- Largest --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>Last</masterLabel>
-        <translation><!-- Last --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>Smallest</masterLabel>
-        <translation><!-- Smallest --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>Sum</masterLabel>
-        <translation><!-- Sum --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>Years Donated</masterLabel>
-        <translation><!-- Years Donated --></translation>
+        <translation/>
     </picklistValues>
 </CustomFieldTranslation>

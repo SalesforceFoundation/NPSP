@@ -301,7 +301,7 @@ export default class rd2EntryForm extends LightningElement {
     handleChangeTypeChange(event) {
         this.perform({
             type: ACTIONS.SET_CHANGE_TYPE,
-            payload: event.detail,
+            payload: event.detail.value,
         });
     }
 

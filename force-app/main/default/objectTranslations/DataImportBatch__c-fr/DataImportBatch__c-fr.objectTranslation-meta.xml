@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label>Colonnes de l’onglet Saisie de dons par lots</label>
+        <name>BatchGiftEntryTabColumns</name>
+    </fieldSets>
     <webLinks>
         <name>Process_Batch</name>
         <label>Traiter le lot</label>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Sustainer__c</name>
+    <help>Indique si ce contact est un donateur récurrent actif, non régulier ou inactif. La valeur est basée sur le statut des dons récurrents associés.</help>
+    <label>Soutien</label>
+    <picklistValues>
+        <masterLabel>Active</masterLabel>
+        <translation>Actif</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Lapsed</masterLabel>
+        <translation>Écoulé</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Former</masterLabel>
+        <translation>Précédent</translation>
+    </picklistValues>
+</CustomFieldTranslation>

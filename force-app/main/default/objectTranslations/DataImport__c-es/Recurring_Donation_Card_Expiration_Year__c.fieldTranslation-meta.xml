@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Card_Expiration_Year__c</name>
+    <help>El año de caducidad de la tarjeta empleada para esta donación recurrente.</help>
+    <label>Año caducidad tarjeta donac. recurrente</label>
+</CustomFieldTranslation>

@@ -57,6 +57,7 @@ public with sharing class RD2_SaveRequest {
     @AuraEnabled public String cardLastFour {get; set;}
     @AuraEnabled public String cardExpirationMonth {get; set;}
     @AuraEnabled public String cardExpirationYear {get; set;}
+    @AuraEnabled public String changeType {get; set;}
     @AuraEnabled public Map<String, Object> customFieldValues {get; set;}
 
     public npe03__Recurring_Donation__c toRecord() {
@@ -89,6 +90,7 @@ public with sharing class RD2_SaveRequest {
         rd.CardExpirationYear__c = cardExpirationYear;
         rd.CardLast4__c = cardLastFour;
         rd.ACH_Last_4__c = achLastFour;
+        rd.ChangeType__c = changeType;
 
         if (customFieldValues != null) {
             for (String fieldApiName : customFieldValues.keySet()) {

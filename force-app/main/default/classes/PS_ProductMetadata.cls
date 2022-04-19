@@ -68,14 +68,17 @@ public inherited sharing class PS_ProductMetadata {
         return this.origin?.type != null;
     }
 
-    public Map<String, Object> mergeWithExistingMetadata(Map<String, Object> existingMetadata) {
+    public Map<String, Object> mergeWithExistingMetadata(final Map<String, Object> existingMetadata) {
         Map<String, Object> updatedMetadata = this.toUntypedMap();
+        Map<String, Object> mergedMetadata = new Map<String, Object>();
 
-        for(String key : updatedMetadata.keySet()) {
-            existingMetadata.put(key, updatedMetadata.get(key));
+        if (existingMetadata != null) {
+            mergedMetadata.putAll(existingMetadata);
         }
 
-        return existingMetadata;
+        mergedMetadata.putAll(updatedMetadata);
+
+        return mergedMetadata;
     }
 
     public Map<String, Object> toUntypedMap() {
