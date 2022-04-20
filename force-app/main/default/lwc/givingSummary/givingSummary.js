@@ -86,9 +86,6 @@ export default class GivingSummary extends LightningElement {
      * @description returns the classes of the last row if it is mobile or desktop
      */
      get usdValue() {
-        if (this.isMobile) {
-            return 'slds-text-heading_small bold-title';
-        }
         return 'slds-text-heading_small bold-title';
     }
 
