@@ -1,7 +1,7 @@
 name: CSpell
 on: push
 jobs:
-  eslint:
+  cspell:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
