@@ -1,7 +1,7 @@
 name: ESLint
 on: push
 jobs:
-  build:
+  eslint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -14,3 +14,6 @@ jobs:
           eslint-args: '--ignore-path=.gitignore --quiet'
           extensions: 'js,jsx,ts,tsx'
           annotations: true
+      - name: Run ESLint
+        run: |
+          npx eslint "**/*.{js,son}"
