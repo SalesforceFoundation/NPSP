@@ -5,6 +5,7 @@
     "@salesforce/eslint-config-lwc": "^3.2.1",
     "@salesforce/eslint-plugin-lightning": "^1.0.0",
     "@salesforce/sfdx-lwc-jest": "^1.0.1",
+    "cspell": "^5.19.7",
     "eslint": "^8.13.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jest": "^26.0.0",
@@ -21,7 +22,8 @@
     "test:unit:watch": "lwc-jest --watch --skipApiVersionCheck",
     "test:unit:debug": "lwc-jest --debug --skipApiVersionCheck",
     "test:unit:a11y": "SA11Y_AUTO=1 SA11Y_CLEANUP=1 lwc-jest --skipApiVersionCheck",
-    "lint:lwc": "eslint force-app/main/default/lwc"
+    "lint:lwc": "eslint force-app/main/default/lwc/**/*.js",
+    "cspell:lwc": "cspell force-app/main/default/lwc/**/*.js"
   },
   "dependencies": {
     "js-yaml": "^4.0.0"

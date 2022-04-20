@@ -21,4 +21,4 @@ jobs:
           yarn install
       - name: Run ESLint
         run: |
-          npm run lint:lwc
+          npm run cspell:lwc
