@@ -21,4 +21,4 @@ jobs:
           yarn install
       - name: Run ESLint
         run: |
-          npx eslint "**/*.{js,son}"
+          npm run lint:lwc
