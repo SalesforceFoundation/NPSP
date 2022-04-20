@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Honoree_Information__c</name>
+    <help>敬意/追悼を表す名誉会員のメール、住所、電話番号などの連絡先情報で、支援者によって指定されます。</help>
+    <label>支援の名誉会員情報</label>
+</CustomFieldTranslation>

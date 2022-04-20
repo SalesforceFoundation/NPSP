@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help><!-- The context in which this class should run, for example, before a record is inserted, after a record is deleted, etc. --></help>
-    <label><!-- Trigger Action --></label>
+    <help/>
+    <label/>
     <name>Trigger_Action__c</name>
     <picklistValues>
         <masterLabel>AfterDelete</masterLabel>
-        <translation><!-- AfterDelete --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>AfterInsert</masterLabel>
-        <translation><!-- AfterInsert --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>AfterUndelete</masterLabel>
-        <translation><!-- AfterUndelete --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>AfterUpdate</masterLabel>
-        <translation><!-- AfterUpdate --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>BeforeDelete</masterLabel>
-        <translation><!-- BeforeDelete --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>BeforeInsert</masterLabel>
-        <translation><!-- BeforeInsert --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>BeforeUpdate</masterLabel>
-        <translation><!-- BeforeUpdate --></translation>
+        <translation/>
     </picklistValues>
 </CustomFieldTranslation>

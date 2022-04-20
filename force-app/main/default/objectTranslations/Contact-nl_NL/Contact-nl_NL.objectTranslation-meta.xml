@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label>BDE-vermelding FS</label>
+        <name>BDE_Entry_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label>BDE-lijst FS</label>
+        <name>BDE_List_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label>Samenvoeging van contactpersonen gevonden FS</label>
+        <name>ContactMergeFoundFS</name>
+    </fieldSets>
     <webLinks>
         <name>Merge_Contacts</name>
         <label>Contactpersonen Samenvoegen</label>

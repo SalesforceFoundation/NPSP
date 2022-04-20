@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>StatusAutomationDaysForClosed__c</name>
+    <help>Na het opgegeven aantal dagen werkt NPSP de status voor terugkerende donaties bij naar de waarde Statusautomatisering gesloten, als de donaties niet naar verwachting worden ontvangen.</help>
+    <label>Statusautomatisering - dagen gesloten</label>
+</CustomFieldTranslation>

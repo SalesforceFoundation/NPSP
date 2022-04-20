@@ -41,7 +41,7 @@ private with sharing class PS_ProductMetadata_TEST {
     */
     @isTest
     private static void shouldCreateUntypedMap() {
-        String campaignId = '701R00000027JNdIAA';
+        String campaignId = UTIL_UnitTestData_TEST.mockId(Campaign.SObjectType);
         String originType = PS_Request.OriginType.CRM.name();
         
         PS_ProductMetadata productMetadata = new PS_ProductMetadata()
@@ -75,7 +75,7 @@ private with sharing class PS_ProductMetadata_TEST {
 
     @IsTest
     static void productMetadataShouldPreserveOrigin() {
-        String newCampaignId = '701R00000027JNdIAA';
+        String newCampaignId = UTIL_UnitTestData_TEST.mockId(Campaign.SObjectType);
         String serializedProductMetadata = '{"origin":{"type":"CRM"},"campaign":{"id":"701R00000027JNdIAM"}}';
         Map<String, Object> untypedMetadata = (Map<String, Object>) JSON.deserializeUntyped(serializedProductMetadata);
 
@@ -90,7 +90,7 @@ private with sharing class PS_ProductMetadata_TEST {
 
     @IsTest
     static void productMetadataShouldPreserveAny() {
-        String newCampaignId = '701R00000027JNdIAA';
+        String newCampaignId = UTIL_UnitTestData_TEST.mockId(Campaign.SObjectType);
         String serializedProductMetadata = '{"origin":{"type":"CRM"},"campaign":{"id":"701R00000027JNdIAM"},"consent":{"message":"Some message","optin":true}}';
         Map<String, Object> untypedMetadata = (Map<String, Object>) JSON.deserializeUntyped(serializedProductMetadata);
 
@@ -109,6 +109,20 @@ private with sharing class PS_ProductMetadata_TEST {
 
         System.assertEquals('Some message', consentMessage);
         System.assertEquals(true, optin);
+    }
+
+    @IsTest
+    static void productMetadataShouldMergeWhenExistingMetadataIsNull() {
+        String newCampaignId = UTIL_UnitTestData_TEST.mockId(Campaign.SObjectType);
+        PS_ProductMetadata productMetadata = new PS_ProductMetadata().withCampaign(newCampaignId);
+
+        Test.startTest();
+        Map<String, Object> updatedUntypedMetadata = productMetadata.mergeWithExistingMetadata(null);
+        Test.stopTest();
+
+        PS_ProductMetadata updatedMetadata = parseUntypedMetadata(updatedUntypedMetadata);
+
+        System.assertEquals(newCampaignId, updatedMetadata.campaign.id);
     }
 
     /**
