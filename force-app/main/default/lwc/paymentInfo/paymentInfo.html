@@ -1,0 +1,45 @@
+<template>
+    <div class="slds-box slds-theme_default">
+        <lightning-card>
+          <h3 slot="title" class="slds-text-title_bold">
+            <lightning-icon
+              icon-name="standard:client"
+              size="small"
+            ></lightning-icon>
+            <span class="slds-m-left_small"
+              >Access data using SOQL Query</span
+            >
+          </h3>
+    
+          <lightning-layout>
+            <lightning-layout-item size="12">
+              <lightning-datatable
+                key-field="id"
+                data={data}
+                columns={columns}
+                is-loading={tableLoadingState}
+              >
+              </lightning-datatable>
+            </lightning-layout-item>
+          </lightning-layout>
+        </lightning-card>
+        <br /><br /><br />
+      
+      <lightning-card>
+        <h3 slot="title" class="slds-text-title_bold">
+          <lightning-icon
+            icon-name="standard:client"
+            size="small"
+          ></lightning-icon>
+          <span class="slds-m-left_small"
+            >Access data using Apex Methods</span
+          >
+        </h3>
+      <div><b>Elevate SDK URL:</b> {elevateSDKURL}</div><br />
+      <div><b>Client Id:</b> {clientId}</div><br />
+      <div><b>Merchant Id:</b> {merchantId}</div><br />
+      <div><b>Gateway Id:</b> {gatewayId}</div><br />
+      <div><b>JWT Token:</b> {jwtToken}</div><br />
+    </lightning-card>
+    </div>
+</template>
