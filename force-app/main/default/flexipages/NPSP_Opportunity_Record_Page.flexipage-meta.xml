@@ -191,20 +191,6 @@
                 <identifier>activityTab2</identifier>
             </componentInstance>
         </itemInstances>
-        <itemInstances>
-            <componentInstance>
-                <componentInstanceProperties>
-                    <name>body</name>
-                    <value>facet-87f4ff8b-a605-442f-a5ac-891eba2eba1b</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>title</name>
-                    <value>Standard.Tab.collaborate</value>
-                </componentInstanceProperties>
-                <componentName>flexipage:tab</componentName>
-                <identifier>collaborateTab</identifier>
-            </componentInstance>
-        </itemInstances>
         <name>facet-314a7f32-26b2-4bd1-bc01-2a0328da12c5</name>
         <type>Facet</type>
     </flexiPageRegions>
