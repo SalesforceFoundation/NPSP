@@ -24,7 +24,7 @@
           <br />
           <span class="bolder">
             <lightning-formatted-number
-              class={usdValue}
+              class="slds-text-heading_small bold-title"
               value={lifetimeSummary}
               format-style="currency"
               currency-code="USD"
@@ -44,7 +44,7 @@
               value={thisYear}
               format-style="currency"
               currency-code="USD"
-              class={usdValue}
+              class="slds-text-heading_small bold-title"
             >
             </lightning-formatted-number> 
           </span>
@@ -52,7 +52,7 @@
         <lightning-layout-item
           size="12"
           medium-device-size="4"
-          class={lastElementClasses}
+          class="slds-text-heading_small  slds-var-p-around_small slds-text-align_left"
         >
           <span>{labels.donationHistoryLabelPreviousYear}</span>
           <br />
@@ -60,7 +60,7 @@
             <lightning-formatted-number
               value={previousYear}
               format-style="currency"
-              class={usdValue}
+              class="slds-text-heading_small bold-title"
               currency-code="USD"
             >
             </lightning-formatted-number> 

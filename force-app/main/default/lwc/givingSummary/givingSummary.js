@@ -73,20 +73,6 @@ export default class GivingSummary extends LightningElement {
     }
 
     /**
-     * @description returns the classes of the last row if it is mobile or desktop
-     */
-    get lastElementClasses() {
-        return 'slds-text-heading_small  slds-var-p-around_small slds-text-align_left';
-    }
-
-    /**
-     * @description returns the classes of the last row if it is mobile or desktop
-     */
-     get usdValue() {
-        return 'slds-text-heading_small bold-title';
-    }
-
-    /**
      * @description Returns wether we are running in mobile or desktop
      * @returns True if it is mobile
      */
