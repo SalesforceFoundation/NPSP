@@ -270,16 +270,6 @@
         <name>facet-bba4c430-44a0-423e-8e7d-a0a6e28ee13b</name>
         <type>Facet</type>
     </flexiPageRegions>
-    <flexiPageRegions>
-        <itemInstances>
-            <componentInstance>
-                <componentName>forceChatter:recordFeedContainer</componentName>
-                <identifier>forceChatter_recordFeedContainer</identifier>
-            </componentInstance>
-        </itemInstances>
-        <name>facet-41a167da-609b-479b-9a39-9c6582b430c2</name>
-        <type>Facet</type>
-    </flexiPageRegions>
     <masterLabel>NPSP Account Record Page</masterLabel>
     <sobjectType>Account</sobjectType>
     <template>
