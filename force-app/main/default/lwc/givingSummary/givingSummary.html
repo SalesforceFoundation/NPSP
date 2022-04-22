@@ -16,51 +16,42 @@
       </template>
       <template if:false={errorMessage}>
         <lightning-layout-item
-          size="4"
+          size="12"
+          medium-device-size="4"
           class={rowClasses}
         >
           <span>{labels.donationHistoryLabelLifetime}</span>
           <br />
           <span class="bolder">
-            <lightning-formatted-number
-              class={usdValue}
-              value={lifetimeSummary}
-              format-style="currency"
-              currency-code="USD"
-            >
-            </lightning-formatted-number> 
+            <p class="slds-text-heading_small bold-title">
+              {lifetimeSummary}
+            </p> 
           </span>
         </lightning-layout-item>
         <lightning-layout-item
-          size="4"
+          size="12"
+          medium-device-size="4"
           class={rowClasses}
         >
           <span>{labels.donationHistoryLabelThisYear}</span>
           <br />
           <span class="bolder">
-            <lightning-formatted-number
-              value={thisYear}
-              format-style="currency"
-              currency-code="USD"
-              class={usdValue}
-            >
-            </lightning-formatted-number> 
+            <p class="slds-text-heading_small bold-title" >
+              {thisYear}
+            </p> 
           </span>
         </lightning-layout-item>
         <lightning-layout-item
-          size="4"
-          class={lastElementClasses}
+          size="12"
+          medium-device-size="4"
+          class="slds-text-heading_small  slds-var-p-around_small slds-text-align_left"
         >
           <span>{labels.donationHistoryLabelPreviousYear}</span>
           <br />
           <span class="bolder">
-            <lightning-formatted-number
-              value={previousYear}
-              format-style="currency"
-              class={usdValue}
-              currency-code="USD"
-            >
-            </lightning-formatted-number> 
+            <p class="slds-text-heading_small bold-title">
+              {previousYear}
+            </p> 
           </span>
         </lightning-layout-item>
       </template>

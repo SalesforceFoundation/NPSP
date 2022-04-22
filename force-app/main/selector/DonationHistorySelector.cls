@@ -36,28 +36,27 @@ public inherited sharing class DonationHistorySelector {
     /**
     * @description method to return Opportunity and Payment data.
     */
-  public List<Opportunity> getWonOpportunitiesByContactId( Id contactId, Integer offset ) {
-        return [
-            SELECT Id, 
-                Name, 
-                CloseDate, 
-                Amount, 
-                Primary_Contact__r.Email, 
-                Primary_Contact__r.Name,
-                (
-                    SELECT npe01__Payment_Method__c,
-                        npe01__Paid__c
-                    FROM npe01__OppPayment__r 
-                    ORDER BY CreatedDate
-                )
-            FROM Opportunity
-            WHERE IsWon = true 
-            AND Primary_Contact__r.Id =:contactId 
-            WITH SECURITY_ENFORCED
-            ORDER BY CloseDate 
-            DESC LIMIT 50
-            OFFSET :offset
-        ];
+  public List<Opportunity> getWonOpportunitiesByContactId( Id contactId, Integer offset ) {       
+        return Database.query(
+            'SELECT Id, '+
+                    'Name, '+
+                    'CloseDate,' +
+                    + this.getOppAmountFieldForQuery() + 
+                    ', Primary_Contact__r.Email, '+
+                    'Primary_Contact__r.Name, ' +
+                    '( SELECT npe01__Payment_Method__c, ' +
+                        'npe01__Paid__c ' +
+                        'FROM npe01__OppPayment__r ' +
+                        'ORDER BY CreatedDate ' +
+                    ') ' +
+            'FROM Opportunity ' +
+            'WHERE IsWon = true ' +
+            'AND Primary_Contact__r.Id =:contactId ' +
+            'WITH SECURITY_ENFORCED ' +
+            'ORDER BY CloseDate ' +
+            'DESC LIMIT 50 ' +
+            'OFFSET :offset' 
+        );
     }
 
     /**
@@ -66,29 +65,29 @@ public inherited sharing class DonationHistorySelector {
      * @param year Integer filter of year.
      * @return List<OpportunityContactRole>
      */
-    public List<Opportunity> getWonOpportunitiesByContactIdAndYear(Id contactId, Integer offset, Integer year) {
-        return [
-            SELECT  Id, 
-                    Name, 
-                    CloseDate, 
-                    Amount, 
-                    Primary_Contact__r.Email, 
-                    Primary_Contact__r.Name,
-                    (
-                        SELECT npe01__Payment_Method__c,
-                            npe01__Paid__c
-                        FROM npe01__OppPayment__r 
-                        ORDER BY CreatedDate
-                    ) 
-            FROM Opportunity
-            WHERE IsWon = true 
-                AND Primary_Contact__r.Id =:contactId 
-                AND Calendar_Year(CloseDate) = :year
-            WITH SECURITY_ENFORCED
-            ORDER BY Opportunity.CloseDate 
-            DESC LIMIT 50
-            OFFSET :offset
-        ];
+    public List<Opportunity> getWonOpportunitiesByContactIdAndYear(Id contactId, Integer offset, Integer year ) {
+        return Database.query(
+            'SELECT  Id, '+
+                    'Name,' +
+                    'CloseDate, '+
+                    + this.getOppAmountFieldForQuery() +
+                    ', Primary_Contact__r.Email, '+
+                    'Primary_Contact__r.Name, ' +
+                    '( '+
+                    '    SELECT npe01__Payment_Method__c, '+
+                    '        npe01__Paid__c '+
+                    '    FROM npe01__OppPayment__r '+
+                    '    ORDER BY CreatedDate '+
+                    ') '+
+            'FROM Opportunity '+
+            'WHERE IsWon = true '+
+            '    AND Primary_Contact__r.Id =:contactId '+
+            '    AND Calendar_Year(CloseDate) = :year '+
+            'WITH SECURITY_ENFORCED '+
+            'ORDER BY Opportunity.CloseDate '+
+            'DESC LIMIT 50 '+
+            'OFFSET :offset' 
+        );
     }
 
     /**
@@ -130,6 +129,13 @@ public inherited sharing class DonationHistorySelector {
                                 AND Calendar_Year(CloseDate) = :year
                                 WITH SECURITY_ENFORCED];
         return totalRecords;
+    }
+
+    /** 
+    * @description method to return Amount or converCurrency(Amount) field if org is multicurrency. 
+    */
+    public String getOppAmountFieldForQuery(){
+        return String.escapeSingleQuotes(UTIL_Currency.getInstance().isMultiCurrencyOrganization() ? 'convertCurrency(Amount)' : 'Amount');
     }
 
     /**
