@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>View</actionName>
+        <comment>Action override created by Lightning App Builder during activation.</comment>
+        <content>NPSP_Contact_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Flexipage</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <content>%%%NAMESPACE%%%CON_DeleteContactOverride</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <compactLayoutAssignment>NPSP_Contact_Compact_Layout_Unmanaged</compactLayoutAssignment>
+    <compactLayouts>
+        <fullName>NPSP_Contact_Compact_Layout_Unmanaged</fullName>
+        <fields>Name</fields>
+        <fields>AccountId</fields>
+        <fields>%%%NAMESPACE%%%Primary_Affiliation__c</fields>
+        <fields>Email</fields>
+        <fields>Phone</fields>
+        <fields>npo02__TotalOppAmount__c</fields>
+        <fields>npo02__LastCloseDate__c</fields>
+        <label>NPSP Contact Compact Layout (Unmanaged)</label>
+    </compactLayouts>
+    <fields>
+        <fullName>Gender__c</fullName>
+        <description>This field is configured in NPSP Settings &gt; Relationships &gt; Relationships as the Gender field. Do not delete this field unless you remove the reference or select another Gender field there.</description>
+        <externalId>false</externalId>
+        <label>Gender</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Male</fullName>
+                    <default>false</default>
+                    <label>Male</label>
+                </value>
+                <value>
+                    <fullName>Female</fullName>
+                    <default>false</default>
+                    <label>Female</label>
+                </value>
+                <value>
+                    <fullName>Non-Binary</fullName>
+                    <default>false</default>
+                    <label>Non-Binary</label>
+                </value>
+                <value>
+                    <fullName>Prefer Not To Say</fullName>
+                    <default>false</default>
+                    <label>Prefer Not To Say</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <listViews>
+        <fullName>AllContacts</fullName>
+        <filterScope>Everything</filterScope>
+        <label>All Contacts</label>
+    </listViews>
+    <listViews>
+        <fullName>BirthdaysThisMonth</fullName>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>CONTACT.BIRTHDATE</field>
+            <operation>equals</operation>
+            <value>THIS_MONTH</value>
+        </filters>
+        <label>Birthdays This Month</label>
+    </listViews>
+    <listViews>
+        <fullName>MyContacts</fullName>
+        <filterScope>Mine</filterScope>
+        <label>My Contacts</label>
+    </listViews>
+    <listViews>
+        <fullName>NewLastWeek</fullName>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>CONTACT.CREATED_DATE</field>
+            <operation>equals</operation>
+            <value>LAST_WEEK</value>
+        </filters>
+        <label>New Last Week</label>
+    </listViews>
+    <webLinks>
+        <fullName>Relationships_Viewer</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <linkType>url</linkType>
+        <masterLabel>Relationships Viewer</masterLabel>
+        <openType>replace</openType>
+        <protected>false</protected>
+        <url>{!URLFOR(&apos;/apex/%%%NAMESPACE%%%REL_RelationshipsViewer?id=&apos; + Contact.Id)}</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Copy_Address_to_Household</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <height>600</height>
+        <linkType>url</linkType>
+        <masterLabel>Copy Address to Household</masterLabel>
+        <openType>sidebar</openType>
+        <protected>false</protected>
+        <url>/apex/%%%NAMESPACE%%%ADDR_CopyAddrHHObjBTN?id={!Contact.Id}</url>
+    </webLinks>
+    <searchLayouts>
+        <customTabListAdditionalFields>FULL_NAME</customTabListAdditionalFields>
+        <customTabListAdditionalFields>ACCOUNT.NAME</customTabListAdditionalFields>
+        <customTabListAdditionalFields>CONTACT.PHONE4</customTabListAdditionalFields>
+        <customTabListAdditionalFields>CONTACT.PHONE1</customTabListAdditionalFields>
+        <customTabListAdditionalFields>CONTACT.PHONE3</customTabListAdditionalFields>
+        <customTabListAdditionalFields>CONTACT.EMAIL</customTabListAdditionalFields>
+        <customTabListAdditionalFields>CONTACT.ADDRESS2_STREET</customTabListAdditionalFields>
+        <customTabListAdditionalFields>CONTACT.ADDRESS2_CITY</customTabListAdditionalFields>
+        <customTabListAdditionalFields>CONTACT.ADDRESS2_STATE</customTabListAdditionalFields>
+        <lookupDialogsAdditionalFields>FULL_NAME</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>ACCOUNT.NAME</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>CONTACT.PHONE4</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>CONTACT.PHONE1</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>CONTACT.PHONE3</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>CONTACT.EMAIL</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>CONTACT.ADDRESS2_STREET</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>CONTACT.ADDRESS2_CITY</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>CONTACT.ADDRESS2_STATE</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>CONTACT.ADDRESS2_ZIP</lookupDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>FULL_NAME</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>CONTACT.PHONE1</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>CONTACT.PHONE4</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>CONTACT.PHONE3</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>CONTACT.PHONE5</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>CONTACT.PHONE6</lookupPhoneDialogsAdditionalFields>
+        <searchResultsAdditionalFields>FULL_NAME</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>ACCOUNT.NAME</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>%%%NAMESPACE%%%Primary_Affiliation__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>CONTACT.PHONE1</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>CONTACT.EMAIL</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>CONTACT.ADDRESS2_CITY</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>CONTACT.ADDRESS2_STATE</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>npo02__TotalOppAmount__c</searchResultsAdditionalFields>
+    </searchLayouts>
+    <validationRules>
+        <fullName>Contact_Preferred_Email</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND(
+            ISPICKVAL( npe01__Preferred_Email__c ,&quot;&quot;),
+            OR(
+            LEN(npe01__AlternateEmail__c  )&gt;0,
+            LEN(npe01__WorkEmail__c )&gt;0,
+            LEN(npe01__HomeEmail__c  )&gt;0
+            )
+            )</errorConditionFormula>
+        <errorDisplayField>npe01__Preferred_Email__c</errorDisplayField>
+        <errorMessage>Please select a Preferred Email</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Contact_Preferred_Phone</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND(
+            ISPICKVAL(npe01__PreferredPhone__c ,&quot;&quot;),
+            OR(
+            LEN(MobilePhone)&gt;0,
+            LEN( npe01__WorkPhone__c)&gt;0,
+            LEN( OtherPhone )&gt;0
+            )
+            )</errorConditionFormula>
+        <errorDisplayField>npe01__PreferredPhone__c</errorDisplayField>
+        <errorMessage>Please select a Preferred Phone</errorMessage>
+    </validationRules>
+</CustomObject>

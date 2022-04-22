@@ -8,16 +8,6 @@
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>Flexipage</type>
     </actionOverrides>
-    <compactLayoutAssignment>NPSP_Address_Compact_Layout_Unmanaged</compactLayoutAssignment>
-    <compactLayouts>
-        <fullName>NPSP_Address_Compact_Layout_Unmanaged</fullName>
-        <fields>Name</fields>
-        <fields>%%%NAMESPACE%%%Household_Account__c</fields>
-        <fields>%%%NAMESPACE%%%Default_Address__c</fields>
-        <fields>%%%NAMESPACE%%%Address_Type__c</fields>
-        <fields>%%%NAMESPACE%%%Formula_MailingAddress__c</fields>
-        <label>NPSP Address Compact Layout (Unmanaged)</label>
-    </compactLayouts>
     <compactLayouts>
         <fullName>%%%NAMESPACE%%%NPSP_Address_Compact_Layout</fullName>
         <fields>Name</fields>
@@ -26,20 +16,12 @@
         <label>NPSP Address Compact Layout</label>
     </compactLayouts>
     <searchLayouts>
-        <lookupDialogsAdditionalFields>%%%NAMESPACE%%%Formula_MailingAddress__c</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>%%%NAMESPACE%%%Household_Account__c</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>%%%NAMESPACE%%%Address_Type__c</lookupDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>%%%NAMESPACE%%%Formula_MailingAddress__c</lookupPhoneDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>%%%NAMESPACE%%%Household_Account__c</lookupPhoneDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>%%%NAMESPACE%%%Address_Type__c</lookupPhoneDialogsAdditionalFields>
-        <searchFilterFields>%%%NAMESPACE%%%Formula_MailingAddress__c</searchFilterFields>
-        <searchFilterFields>%%%NAMESPACE%%%Household_Account__c</searchFilterFields>
-        <searchFilterFields>%%%NAMESPACE%%%Address_Type__c</searchFilterFields>
         <searchResultsAdditionalFields>%%%NAMESPACE%%%Household_Account__c</searchResultsAdditionalFields>
         <searchResultsAdditionalFields>%%%NAMESPACE%%%Address_Type__c</searchResultsAdditionalFields>
         <searchResultsAdditionalFields>%%%NAMESPACE%%%Formula_MailingAddress__c</searchResultsAdditionalFields>
         <searchResultsAdditionalFields>%%%NAMESPACE%%%Default_Address__c</searchResultsAdditionalFields>
     </searchLayouts>
+
     <label>Address</label>
     <pluralLabel>Addresses</pluralLabel>
     <nameField>

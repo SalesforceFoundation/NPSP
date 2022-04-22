@@ -9,10 +9,6 @@
         <formula>Contact.FirstName &amp; &quot; &quot; &amp; Contact.LastName &amp; &quot; In-Kind &quot; &amp; TEXT(MONTH(TODAY())) &amp; &quot;/&quot; &amp; TEXT(DAY(TODAY())) &amp; &quot;/&quot; &amp; TEXT(YEAR(TODAY()))</formula>
     </fieldOverrides>
     <fieldOverrides>
-        <field>%%%NAMESPACE%%%Acknowledgment_Status__c</field>
-        <literalValue>To Be Acknowledged</literalValue>
-    </fieldOverrides>
-    <fieldOverrides>
         <field>StageName</field>
         <literalValue>In-Kind Received</literalValue>
     </fieldOverrides>
@@ -20,6 +16,11 @@
     <quickActionLayout>
         <layoutSectionStyle>TwoColumnsLeftToRight</layoutSectionStyle>
         <quickActionLayoutColumns>
+            <quickActionLayoutItems>
+                <emptySpace>false</emptySpace>
+                <field>Name</field>
+                <uiBehavior>Required</uiBehavior>
+            </quickActionLayoutItems>
             <quickActionLayoutItems>
                 <emptySpace>false</emptySpace>
                 <field>CloseDate</field>
@@ -30,21 +31,6 @@
                 <field>StageName</field>
                 <uiBehavior>Required</uiBehavior>
             </quickActionLayoutItems>
-            <quickActionLayoutItems>
-                <emptySpace>false</emptySpace>
-                <field>%%%NAMESPACE%%%Fair_Market_Value__c</field>
-                <uiBehavior>Edit</uiBehavior>
-            </quickActionLayoutItems>
-            <quickActionLayoutItems>
-                <emptySpace>false</emptySpace>
-                <field>CampaignId</field>
-                <uiBehavior>Edit</uiBehavior>
-            </quickActionLayoutItems>
-            <quickActionLayoutItems>
-                <emptySpace>false</emptySpace>
-                <field>%%%NAMESPACE%%%In_Kind_Description__c</field>
-                <uiBehavior>Edit</uiBehavior>
-            </quickActionLayoutItems>
         </quickActionLayoutColumns>
         <quickActionLayoutColumns>
             <quickActionLayoutItems>
@@ -54,17 +40,7 @@
             </quickActionLayoutItems>
             <quickActionLayoutItems>
                 <emptySpace>false</emptySpace>
-                <field>%%%NAMESPACE%%%In_Kind_Donor_Declared_Value__c</field>
-                <uiBehavior>Edit</uiBehavior>
-            </quickActionLayoutItems>
-            <quickActionLayoutItems>
-                <emptySpace>false</emptySpace>
-                <field>%%%NAMESPACE%%%Acknowledgment_Status__c</field>
-                <uiBehavior>Edit</uiBehavior>
-            </quickActionLayoutItems>
-            <quickActionLayoutItems>
-                <emptySpace>false</emptySpace>
-                <field>%%%NAMESPACE%%%Acknowledgment_Date__c</field>
+                <field>%%%NAMESPACE%%%In_Kind_Description__c</field>
                 <uiBehavior>Edit</uiBehavior>
             </quickActionLayoutItems>
         </quickActionLayoutColumns>
