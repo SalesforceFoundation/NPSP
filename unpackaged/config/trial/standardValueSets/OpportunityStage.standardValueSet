@@ -11,22 +11,31 @@
         <won>false</won>
     </standardValue>
     <standardValue>
-        <fullName>Identification</fullName>
+        <fullName>Pledged</fullName>
         <default>false</default>
-        <label>Identification</label>
+        <label>Pledged</label>
         <closed>false</closed>
         <forecastCategory>Pipeline</forecastCategory>
-        <probability>10</probability>
+        <probability>50</probability>
         <won>false</won>
     </standardValue>
     <standardValue>
-        <fullName>Qualification</fullName>
+        <fullName>Closed Lost</fullName>
         <default>false</default>
-        <label>Qualification</label>
-        <closed>false</closed>
-        <forecastCategory>Pipeline</forecastCategory>
-        <probability>10</probability>
+        <label>Closed Lost</label>
+        <closed>true</closed>
+        <forecastCategory>Omitted</forecastCategory>
+        <probability>0</probability>
         <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Closed Won</fullName>
+        <default>false</default>
+        <label>Closed Won</label>
+        <closed>true</closed>
+        <forecastCategory>Closed</forecastCategory>
+        <probability>100</probability>
+        <won>true</won>
     </standardValue>
     <standardValue>
         <fullName>LOI Submitted</fullName>
@@ -44,6 +53,60 @@
         <closed>false</closed>
         <forecastCategory>Pipeline</forecastCategory>
         <probability>30</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Cultivating</fullName>
+        <default>false</default>
+        <label>Cultivating</label>
+        <closed>false</closed>
+        <forecastCategory>Omitted</forecastCategory>
+        <probability>10</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>In-Kind Not Yet Received</fullName>
+        <default>false</default>
+        <label>In-Kind Not Yet Received</label>
+        <closed>false</closed>
+        <forecastCategory>Omitted</forecastCategory>
+        <probability>50</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>In-Kind Received</fullName>
+        <default>false</default>
+        <label>In-Kind Received</label>
+        <closed>true</closed>
+        <forecastCategory>Omitted</forecastCategory>
+        <probability>100</probability>
+        <won>true</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Withdrawn</fullName>
+        <default>false</default>
+        <label>Withdrawn</label>
+        <closed>true</closed>
+        <forecastCategory>Omitted</forecastCategory>
+        <probability>0</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Identification</fullName>
+        <default>false</default>
+        <label>Identification</label>
+        <closed>false</closed>
+        <forecastCategory>Pipeline</forecastCategory>
+        <probability>10</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Qualification</fullName>
+        <default>false</default>
+        <label>Qualification</label>
+        <closed>false</closed>
+        <forecastCategory>Pipeline</forecastCategory>
+        <probability>10</probability>
         <won>false</won>
     </standardValue>
     <standardValue>
@@ -65,24 +128,6 @@
         <won>false</won>
     </standardValue>
     <standardValue>
-        <fullName>Pledged</fullName>
-        <default>false</default>
-        <label>Pledged</label>
-        <closed>false</closed>
-        <forecastCategory>Pipeline</forecastCategory>
-        <probability>50</probability>
-        <won>false</won>
-    </standardValue>
-    <standardValue>
-        <fullName>In-Kind Not Yet Received</fullName>
-        <default>false</default>
-        <label>In-Kind Not Yet Received</label>
-        <closed>false</closed>
-        <forecastCategory>Omitted</forecastCategory>
-        <probability>50</probability>
-        <won>false</won>
-    </standardValue>
-    <standardValue>
         <fullName>Proposal/Review</fullName>
         <default>false</default>
         <label>Proposal/Review</label>
@@ -101,27 +146,9 @@
         <won>false</won>
     </standardValue>
     <standardValue>
-        <fullName>In-Kind Received</fullName>
-        <default>false</default>
-        <label>In-Kind Received</label>
-        <closed>true</closed>
-        <forecastCategory>Omitted</forecastCategory>
-        <probability>100</probability>
-        <won>true</won>
-    </standardValue>
-    <standardValue>
         <fullName>Awarded</fullName>
         <default>false</default>
         <label>Awarded</label>
-        <closed>true</closed>
-        <forecastCategory>Closed</forecastCategory>
-        <probability>100</probability>
-        <won>true</won>
-    </standardValue>
-    <standardValue>
-        <fullName>Closed Won</fullName>
-        <default>false</default>
-        <label>Closed Won</label>
         <closed>true</closed>
         <forecastCategory>Closed</forecastCategory>
         <probability>100</probability>
@@ -137,27 +164,9 @@
         <won>true</won>
     </standardValue>
     <standardValue>
-        <fullName>Withdrawn</fullName>
-        <default>false</default>
-        <label>Withdrawn</label>
-        <closed>true</closed>
-        <forecastCategory>Omitted</forecastCategory>
-        <probability>0</probability>
-        <won>false</won>
-    </standardValue>
-    <standardValue>
         <fullName>Declined</fullName>
         <default>false</default>
         <label>Declined</label>
-        <closed>true</closed>
-        <forecastCategory>Omitted</forecastCategory>
-        <probability>0</probability>
-        <won>false</won>
-    </standardValue>
-    <standardValue>
-        <fullName>Closed Lost</fullName>
-        <default>false</default>
-        <label>Closed Lost</label>
         <closed>true</closed>
         <forecastCategory>Omitted</forecastCategory>
         <probability>0</probability>

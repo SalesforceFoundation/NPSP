@@ -8,10 +8,6 @@
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>Flexipage</type>
     </actionOverrides>
-    <searchLayouts>
-        <searchResultsAdditionalFields>%%%NAMESPACE%%%ImportedDate__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>%%%NAMESPACE%%%FailureInformation__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>%%%NAMESPACE%%%Account1_Name__c</searchResultsAdditionalFields>
-    </searchLayouts>
+
     <enableReports>true</enableReports>
 </CustomObject>
