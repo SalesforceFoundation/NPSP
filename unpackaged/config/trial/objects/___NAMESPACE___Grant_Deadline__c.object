@@ -30,11 +30,6 @@
         <type>Text</type>
     </nameField>
     <deploymentStatus>Deployed</deploymentStatus>
-    <searchLayouts>
-        <lookupPhoneDialogsAdditionalFields>%%%NAMESPACE%%%Grant_Deadline_Due_Date__c</lookupPhoneDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>%%%NAMESPACE%%%Type__c</lookupPhoneDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>%%%NAMESPACE%%%Grant_Deliverable_Requirements__c</lookupPhoneDialogsAdditionalFields>
-    </searchLayouts>
     <sharingModel>ControlledByParent</sharingModel>
     <description>A custom object for tracking various grant/gift seeking deliverables such as the LOI delivery date, application date, and report due dates.</description>
     <enableActivities>true</enableActivities>
