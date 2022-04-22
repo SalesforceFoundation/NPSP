@@ -1016,6 +1016,11 @@ flows:
                     field: "%%%NAMESPACE%%%Field_Mapping_Method__c"
                     value: "Data Import Field Mapping"
 
+    enable_rd2_managed:
+        steps:
+            1: 
+                flow: enable_rd2
+
     enable_rd2:
         description: 'Fully configures and enables a Scratch org with Enhanced Recurring Donations (unmanaged code only)'
         group: NPSP
