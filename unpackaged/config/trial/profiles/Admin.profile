@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Profile xmlns="http://soap.sforce.com/2006/04/metadata">
     <applicationVisibilities>
-        <application>Nonprofit_Success_Pack</application>
-        <default>true</default>
+        <application>%%%NAMESPACE%%%Nonprofit_CRM</application>
+        <default>false</default>
         <visible>true</visible>
     </applicationVisibilities>
     <applicationVisibilities>
-        <application>%%%NAMESPACE%%%Nonprofit_CRM</application>
-        <default>false</default>
-        <visible>false</visible>
+        <application>Nonprofit_Success_Pack</application>
+        <default>true</default>
+        <visible>true</visible>
     </applicationVisibilities>
     <layoutAssignments>
         <layout>Account-Household Lightning Layout</layout>
@@ -22,23 +22,10 @@
         <recordType>Account.Organization</recordType>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>Campaign-%%%NAMESPACE%%%NPSP Campaign Layout</layout>
-        <recordType>Campaign.Event</recordType>
-    </layoutAssignments>
-    <layoutAssignments>
-        <layout>Campaign-%%%NAMESPACE%%%NPSP Campaign Layout</layout>
-        <recordType>Campaign.Fundraising</recordType>
-    </layoutAssignments>
-    <layoutAssignments>
-        <layout>Campaign-%%%NAMESPACE%%%NPSP Campaign Layout</layout>
-        <recordType>Campaign.General</recordType>
-    </layoutAssignments>
-    <layoutAssignments>
-        <layout>Campaign-%%%NAMESPACE%%%NPSP Campaign Layout</layout>
-        <recordType>Campaign.Marketing</recordType>
-    </layoutAssignments>
-    <layoutAssignments>
         <layout>Contact-Contact Lightning Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>Campaign-%%%NAMESPACE%%%NPSP Campaign Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
         <layout>Opportunity-%%%NAMESPACE%%%Donation Layout</layout>
@@ -68,41 +55,11 @@
         <layout>Opportunity-%%%NAMESPACE%%%Membership Layout</layout>
         <recordType>Opportunity.Membership</recordType>
     </layoutAssignments>
-    <recordTypeVisibilities>
-        <default>false</default>
-        <recordType>Account.HH_Account</recordType>
-        <visible>true</visible>
-    </recordTypeVisibilities>
+    <layoutAssignments>
+        <layout>%%%NAMESPACE%%%Grant_Deadline__c-Deliverable</layout>
+    </layoutAssignments>
     <recordTypeVisibilities>
         <default>true</default>
-        <personAccountDefault>true</personAccountDefault>
-        <recordType>Account.Organization</recordType>
-        <visible>true</visible>
-    </recordTypeVisibilities>
-    <recordTypeVisibilities>
-        <default>false</default>
-        <recordType>Campaign.Event</recordType>
-        <visible>true</visible>
-    </recordTypeVisibilities>
-    <recordTypeVisibilities>
-        <default>false</default>
-        <recordType>Campaign.Fundraising</recordType>
-        <visible>true</visible>
-    </recordTypeVisibilities>
-    <recordTypeVisibilities>
-        <default>true</default>
-        <personAccountDefault>true</personAccountDefault>
-        <recordType>Campaign.General</recordType>
-        <visible>true</visible>
-    </recordTypeVisibilities>
-    <recordTypeVisibilities>
-        <default>false</default>
-        <recordType>Campaign.Marketing</recordType>
-        <visible>true</visible>
-    </recordTypeVisibilities>
-    <recordTypeVisibilities>
-        <default>true</default>
-        <personAccountDefault>true</personAccountDefault>
         <recordType>Opportunity.Donation</recordType>
         <visible>true</visible>
     </recordTypeVisibilities>
@@ -131,12 +88,13 @@
         <recordType>Opportunity.Membership</recordType>
         <visible>true</visible>
     </recordTypeVisibilities>
+    <recordTypeVisibilities>
+        <default>false</default>
+        <recordType>Opportunity.NPSP_Default</recordType>
+        <visible>false</visible>
+    </recordTypeVisibilities>
     <tabVisibilities>
         <tab>%%%NAMESPACE%%%Address__c</tab>
-        <visibility>DefaultOn</visibility>
-    </tabVisibilities>
-    <tabVisibilities>
-        <tab>%%%NAMESPACE%%%Batch_Data_Entry</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>
@@ -152,15 +110,15 @@
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>
-        <tab>%%%NAMESPACE%%%DataImportBatch__c</tab>
-        <visibility>DefaultOn</visibility>
-    </tabVisibilities>
-    <tabVisibilities>
         <tab>%%%NAMESPACE%%%Engagement_Plan_Template__c</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>
         <tab>%%%NAMESPACE%%%General_Accounting_Unit__c</tab>
+        <visibility>DefaultOn</visibility>
+    </tabVisibilities>
+    <tabVisibilities>
+        <tab>%%%NAMESPACE%%%Grant_Deadline__c</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>
@@ -185,10 +143,6 @@
     </tabVisibilities>
     <tabVisibilities>
         <tab>npe5__Affiliation__c</tab>
-        <visibility>DefaultOn</visibility>
-    </tabVisibilities>
-    <tabVisibilities>
-        <tab>%%%NAMESPACE%%%GE_Gift_Entry</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
 </Profile>
