@@ -1,0 +1,35 @@
+name: Lint
+on: push
+jobs:
+  eslint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v2-beta
+        with:
+          node-version: '14'
+          cache: 'yarn'
+          cache-dependency-path: yarn.lock
+      - name: Install Packages
+        run: |
+          yarn install
+      - name: Run ESLint
+        run: |
+          npm run lint:lwc
+  cspell:
+    name: CSpell
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v2-beta
+        with:
+          node-version: '14'
+          cache: 'yarn'
+          cache-dependency-path: yarn.lock
+      - name: Install Packages
+        run: |
+          yarn install
+      - name: Run CSpell
+        run: |
+          npm run cspell:lwc
