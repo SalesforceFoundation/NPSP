@@ -1,5 +1,5 @@
 import { api, LightningElement, wire } from 'lwc';
-import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
+import { getRecord, getFieldDisplayValue } from 'lightning/uiRecordApi';
 import donationHistoryGivingSummaryTitle from '@salesforce/label/c.donationHistoryGivingSummaryTitle';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 import donationHistoryLabelLifetime from '@salesforce/label/c.donationHistoryLabelLifetime';
@@ -46,11 +46,20 @@ export default class GivingSummary extends LightningElement {
                 this.errorMessage=true;
             } else if (data) {
                 this.contact = data;
-                this.lifetimeSummary = getFieldValue(this.contact, TOTAL_AMOUNT);
-                this.thisYear = getFieldValue(this.contact, AMOUNT_CURRENT_YEAR);
-                this.previousYear = getFieldValue(this.contact, AMOUNT_LAST_YEAR);
+                this.lifetimeSummary = this.getConvertedAmount(getFieldDisplayValue(this.contact, TOTAL_AMOUNT));
+                this.thisYear = this.getConvertedAmount(getFieldDisplayValue(this.contact, AMOUNT_CURRENT_YEAR));
+                this.previousYear = this.getConvertedAmount(getFieldDisplayValue(this.contact, AMOUNT_LAST_YEAR));
             }
         }
+
+    /**
+     * @description Returns converted amounts if necessary
+    */
+    getConvertedAmount = (displayValue) => {
+        const regExp = /\(([^)]+)\)/;
+        const matches = regExp.exec(displayValue);
+        return matches ? matches[1] : displayValue;
+    }
 
     /**
      * @description Returns the classes to be applied to the rows accordling if it is mobile or desktop

@@ -58,6 +58,8 @@ public with sharing class DonationHistoryController {
         @AuraEnabled public Boolean isPaymentsEnabled;
         @AuraEnabled public String paymentMethodLabel;
         @AuraEnabled public Integer totalNumberOfRecords;
+        @AuraEnabled public String currencyISOCode;
+        @AuraEnabled public Boolean multiCurrency;
     }
 
     private static final String EMPTY_PAYMENT_METHOD = '-';
@@ -100,7 +102,9 @@ public with sharing class DonationHistoryController {
             donationHistories.donations = buildHistoryFromOpportunities(historyService.getDonationHistory(contactId, offset, filter), contactId, paymentsEnabled);
             donationHistories.totalNumberOfRecords = historyService.getTotalNumberOfRecords(contactId, filter);
             donationHistories.isPaymentsEnabled = paymentsEnabled;
+            donationHistories.currencyISOCode = UTIL_Currency.getInstance().getDefaultCurrency();
             donationHistories.paymentMethodLabel = historyService.getPaymentMethodLabel();
+            donationHistories.multiCurrency =  UTIL_Currency.getInstance().isMultiCurrencyOrganization();
             return donationHistories;
         } catch(AuraHandledException ex) {
             throw new AuraHandledException(ex.getMessage());
@@ -115,7 +119,6 @@ public with sharing class DonationHistoryController {
     @AuraEnabled(cacheable=true)
     public static List<String> getYearsWithDonations(Id contactId) {
         try {
-
             contactId = (contactId == null ? getContactIdByUserId() : contactId );
             return historyService.getYearsWithDonationsForContact(contactId);
         } catch (Exception e) {
