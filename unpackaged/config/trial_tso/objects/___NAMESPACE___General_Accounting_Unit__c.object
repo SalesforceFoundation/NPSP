@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>View</actionName>
+        <comment>Action override created by Lightning App Builder during activation.</comment>
+        <content>NPSP_General_Accounting_Unit</content>
+        <formFactor>Large</formFactor>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Flexipage</type>
+    </actionOverrides>
+    <compactLayoutAssignment>NPSP_General_Accounting_Unit</compactLayoutAssignment>
+    <compactLayouts>
+        <fullName>NPSP_General_Accounting_Unit</fullName>
+        <fields>Name</fields>
+        <fields>%%%NAMESPACE%%%Active__c</fields>
+        <fields>%%%NAMESPACE%%%Total_Allocations__c</fields>
+        <fields>%%%NAMESPACE%%%Total_Number_of_Allocations__c</fields>
+        <label>NPSP General Accounting Unit</label>
+    </compactLayouts>
+    <label>General Accounting Unit</label>
+    <pluralLabel>General Accounting Units</pluralLabel>
+    <nameField>
+        <label>General Accounting Unit Name</label>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+    </nameField>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <enableActivities>true</enableActivities>
+    <enableReports>true</enableReports>
+    <searchLayouts>
+        <customTabListAdditionalFields>%%%NAMESPACE%%%Active__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>%%%NAMESPACE%%%Description__c</customTabListAdditionalFields>
+        <lookupDialogsAdditionalFields>%%%NAMESPACE%%%Active__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>%%%NAMESPACE%%%Description__c</lookupDialogsAdditionalFields>
+        <searchResultsAdditionalFields>%%%NAMESPACE%%%Active__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>%%%NAMESPACE%%%Description__c</searchResultsAdditionalFields>
+    </searchLayouts>
+    <sharingModel>ReadWrite</sharingModel>
+    <description>Accounting units used for allocating Opportunities.</description>
+</CustomObject>

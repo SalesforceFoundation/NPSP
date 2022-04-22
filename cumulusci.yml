@@ -98,6 +98,14 @@ tasks:
             path: unpackaged/config/trial
             namespace_inject: $project_config.project__package__namespace
 
+    deploy_tso_config:
+        description: Deploys the post-install configuration for a trial/new org.
+        class_path: cumulusci.tasks.salesforce.Deploy
+        group: Salesforce Metadata
+        options:
+            path: unpackaged/config/trial_tso
+            namespace_inject: $project_config.project__package__namespace
+
     deploy_pmm_trial_config:
         description: Deploys the PMM customizations for the trial metadata. PMM must be installed.
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -900,7 +908,7 @@ flows:
             3:
                 task: deploy_post
             4:
-                flow: config_trial
+                task: deploy_tso_config
             5:
                 task: test_data_relationships
                 ignore_failure: true
