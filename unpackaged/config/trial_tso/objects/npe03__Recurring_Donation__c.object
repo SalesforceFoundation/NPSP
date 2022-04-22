@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>New</actionName>
+        <comment>Custom Recurring Donation Entry Form</comment>
+        <content>%%%NAMESPACE%%%RD2_EntryForm</content>
+        <formFactor>Large</formFactor>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>LightningComponent</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <comment>Custom Recurring Donation Entry Form</comment>
+        <content>%%%NAMESPACE%%%RD2_EntryForm</content>
+        <formFactor>Large</formFactor>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>LightningComponent</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <comment>Action override created by Lightning App Builder during activation.</comment>
+        <content>NPSP_Recurring_Donation</content>
+        <formFactor>Large</formFactor>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Flexipage</type>
+    </actionOverrides>
+    <compactLayoutAssignment>Enhanced_Recurring_Donations</compactLayoutAssignment>
+    <compactLayouts>
+        <fullName>Enhanced_Recurring_Donations</fullName>
+        <fields>Name</fields>
+        <fields>npe03__Amount__c</fields>
+        <fields>npe03__Installment_Period__c</fields>
+        <fields>%%%NAMESPACE%%%InstallmentFrequency__c</fields>
+        <fields>npe03__Next_Payment_Date__c</fields>
+        <fields>%%%NAMESPACE%%%Status__c</fields>
+        <label>Enhanced Recurring Donations</label>
+    </compactLayouts>
+    <compactLayouts>
+        <fullName>NPSP_Recurring_Donation_Compact_Layout_Unmanaged</fullName>
+        <fields>Name</fields>
+        <fields>npe03__Amount__c</fields>
+        <fields>npe03__Installment_Period__c</fields>
+        <label>NPSP Recurring Donation Compact Layout (Unmanaged)</label>
+    </compactLayouts>
+    <webLinks>
+        <fullName>Refresh_Opportunities</fullName>
+        <availability>online</availability>
+        <description>Run the check opp routine for Recurring Donations.</description>
+        <displayType>button</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <linkType>url</linkType>
+        <masterLabel>Refresh Opportunities</masterLabel>
+        <openType>replace</openType>
+        <protected>false</protected>
+        <url>{!URLFOR(&apos;/apex/%%%NAMESPACE%%%RD_AddDonationsBTN?id=&apos; + npe03__Recurring_Donation__c.Id)}</url>
+    </webLinks>
+    <enableActivities>true</enableActivities>
+    <enableReports>true</enableReports>
+    <listViews>
+        <fullName>All_Recurring_Donations</fullName>
+        <columns>NAME</columns>
+        <columns>%%%NAMESPACE%%%Status__c</columns>
+        <columns>npe03__Amount__c</columns>
+        <columns>npe03__Next_Payment_Date__c</columns>
+        <columns>npe03__Installment_Period__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All Recurring Donations</label>
+    </listViews>
+    <searchLayouts>
+        <searchResultsAdditionalFields>%%%NAMESPACE%%%Status__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>npe03__Next_Payment_Date__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>npe03__Amount__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>npe03__Paid_Amount__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>npe03__Schedule_Type__c</searchResultsAdditionalFields>
+    </searchLayouts>
+</CustomObject>
