@@ -29,12 +29,6 @@
     <enableActivities>true</enableActivities>
     <enableReports>true</enableReports>
     <sharingModel>ControlledByParent</sharingModel>
-    <searchLayouts>
-        <lookupDialogsAdditionalFields>%%%NAMESPACE%%%Status__c</lookupDialogsAdditionalFields>
-        <lookupDialogsAdditionalFields>%%%NAMESPACE%%%Engagement_Plan_Template__c</lookupDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>%%%NAMESPACE%%%Status__c</lookupPhoneDialogsAdditionalFields>
-        <lookupPhoneDialogsAdditionalFields>%%%NAMESPACE%%%Engagement_Plan_Template__c</lookupPhoneDialogsAdditionalFields>
-    </searchLayouts>
     <description>An Engagement Plan is a set of tasks that helps you engage with your constituents.</description>
     <fields>
         <fullName>%%%NAMESPACE%%%Engagement_Plan_Template__c</fullName>
