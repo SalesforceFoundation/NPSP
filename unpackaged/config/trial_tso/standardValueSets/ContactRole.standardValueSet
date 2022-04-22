@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sorted>false</sorted>
+    <standardValue>
+        <fullName>Donor</fullName>
+        <default>false</default>
+        <label>Donor</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Household Member</fullName>
+        <default>false</default>
+        <label>Household Member</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Soft Credit</fullName>
+        <default>false</default>
+        <label>Soft Credit</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Matched Donor</fullName>
+        <default>false</default>
+        <label>Matched Donor</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Honoree</fullName>
+        <default>false</default>
+        <label>Honoree</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Notification Recipient</fullName>
+        <default>false</default>
+        <label>Notification Recipient</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Grant Manager</fullName>
+        <default>false</default>
+        <label>Grant Manager</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Decision Maker</fullName>
+        <default>false</default>
+        <label>Decision Maker</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Influencer</fullName>
+        <default>false</default>
+        <label>Influencer</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Solicitor</fullName>
+        <default>false</default>
+        <label>Solicitor</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Workplace Giving</fullName>
+        <default>false</default>
+        <label>Workplace Giving</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Other</fullName>
+        <default>false</default>
+        <label>Other</label>
+    </standardValue>
+</StandardValueSet>

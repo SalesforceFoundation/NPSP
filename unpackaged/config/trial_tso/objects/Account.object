@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>View</actionName>
+        <comment>Action override created by Lightning App Builder during activation.</comment>
+        <content>NPSP_Account_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Flexipage</type>
+    </actionOverrides>
+    <compactLayoutAssignment>NPSP_Organization_Account</compactLayoutAssignment>
+    <compactLayouts>
+        <fullName>NPSP_Household_Account</fullName>
+        <fields>Name</fields>
+        <fields>npe01__One2OneContact__c</fields>
+        <fields>Phone</fields>
+        <fields>npo02__NumberOfClosedOpps__c</fields>
+        <fields>npo02__TotalOppAmount__c</fields>
+        <label>NPSP Household Account</label>
+    </compactLayouts>
+    <compactLayouts>
+        <fullName>NPSP_Organization_Account</fullName>
+        <fields>Name</fields>
+        <fields>npe01__One2OneContact__c</fields>
+        <fields>Phone</fields>
+        <fields>npo02__NumberOfClosedOpps__c</fields>
+        <fields>npo02__TotalOppAmount__c</fields>
+        <label>NPSP Organization Account</label>
+    </compactLayouts>
+    <fields>
+        <fullName>Level__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Sample Level field for use with Level feature. May be deleted or edited as needed.</description>
+        <externalId>false</externalId>
+        <label>Level</label>
+        <referenceTo>%%%NAMESPACE%%%Level__c</referenceTo>
+        <relationshipLabel>Households</relationshipLabel>
+        <relationshipName>Accounts</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Previous_Level__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Sample Previous Level field for use with new Level feature. May be edited or deleted as needed.</description>
+        <externalId>false</externalId>
+        <label>Previous Level</label>
+        <referenceTo>%%%NAMESPACE%%%Level__c</referenceTo>
+        <relationshipLabel>Households (Previous Level)</relationshipLabel>
+        <relationshipName>Accounts1</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Lookup</type>
+    </fields>
+    <listViews>
+        <fullName>Household_Accounts</fullName>
+        <columns>ACCOUNT.NAME</columns>
+        <columns>npo02__Formal_Greeting__c</columns>
+        <columns>npo02__Informal_Greeting__c</columns>
+        <columns>npo02__TotalOppAmount__c</columns>
+        <columns>npo02__AverageAmount__c</columns>
+        <columns>npo02__Best_Gift_Year__c</columns>
+        <columns>npo02__HouseholdPhone__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>ACCOUNT.RECORDTYPE</field>
+            <operation>equals</operation>
+            <value>Account.HH_Account</value>
+        </filters>
+        <label>Household Accounts</label>
+    </listViews>
+    <listViews>
+        <fullName>Organization_Accounts</fullName>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>ACCOUNT.RECORDTYPE</field>
+            <operation>equals</operation>
+            <value>Account.Organization</value>
+        </filters>
+        <label>Organization Accounts</label>
+    </listViews>
+    <listViews>
+        <fullName>AllAccounts</fullName>
+        <columns>ACCOUNT.NAME</columns>
+        <columns>ACCOUNT.ADDRESS1_STATE</columns>
+        <columns>ACCOUNT.PHONE1</columns>
+        <columns>npo02__TotalOppAmount__c</columns>
+        <columns>npo02__OppAmountLastNDays__c</columns>
+        <columns>npo02__AverageAmount__c</columns>
+        <columns>ACCOUNT.TYPE</columns>
+        <columns>ACCOUNT.RECORDTYPE</columns>
+        <filterScope>Everything</filterScope>
+        <label>All Accounts</label>
+    </listViews>
+    <listViews>
+        <fullName>MyAccounts</fullName>
+        <filterScope>Mine</filterScope>
+        <label>My Accounts</label>
+    </listViews>
+    <listViews>
+        <fullName>MyOrganizations</fullName>
+        <filterScope>Mine</filterScope>
+        <label>My Organizations</label>
+    </listViews>
+    <listViews>
+        <fullName>NewLastWeek</fullName>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>ACCOUNT.CREATED_DATE</field>
+            <operation>equals</operation>
+            <value>LAST_WEEK</value>
+        </filters>
+        <label>New Last Week</label>
+    </listViews>
+    <listViews>
+        <fullName>NewThisWeek</fullName>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>ACCOUNT.CREATED_DATE</field>
+            <operation>equals</operation>
+            <value>THIS_WEEK</value>
+        </filters>
+        <label>New This Week</label>
+    </listViews>
+    <recordTypes>
+        <fullName>HH_Account</fullName>
+        <active>true</active>
+        <label>Household Account</label>
+        <compactLayoutAssignment>NPSP_Household_Account</compactLayoutAssignment>
+        <picklistValues>
+            <picklist>Type</picklist>
+            <values>
+                <fullName>Household</fullName>
+                <default>true</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <recordTypes>
+        <fullName>Organization</fullName>
+        <active>true</active>
+        <compactLayoutAssignment>NPSP_Organization_Account</compactLayoutAssignment>
+        <label>Organization</label>
+        <picklistValues>
+            <picklist>Type</picklist>
+            <values>
+                <fullName>Corporate</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Foundation</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Government</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Nonprofit</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <searchLayouts>
+        <customTabListAdditionalFields>ACCOUNT.RECORDTYPE</customTabListAdditionalFields>
+        <customTabListAdditionalFields>npe01__One2OneContact__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>npo02__TotalOppAmount__c</customTabListAdditionalFields>
+        <searchResultsAdditionalFields>ACCOUNT.ADDRESS1_CITY</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>ACCOUNT.ADDRESS1_STATE</searchResultsAdditionalFields>
+    </searchLayouts>
+</CustomObject>
