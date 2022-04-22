@@ -6,9 +6,6 @@
   ],
   "hasSampleData": "false",
   "settings": {
-    "chatterSettings": {
-      "enableChatter": true
-    },
     "apexSettings": {
       "enableDisableParallelApexTesting": true
     },
