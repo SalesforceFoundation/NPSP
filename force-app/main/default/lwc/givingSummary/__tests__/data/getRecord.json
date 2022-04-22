@@ -5,15 +5,15 @@
     "recordTypeInfo": null,
     "fields": {
         "npo02__TotalOppAmount__c": {
-            "displayValue": null,
+            "displayValue": "USD 7000",
             "value": "7000"
         },
         "npo02__OppAmountThisYear__c": {
-            "displayValue": null,
+            "displayValue": "USD 6000",
             "value": "6000"
         },
         "npo02__OppAmountLastYear__c": {
-            "displayValue": null,
+            "displayValue": "USD 1000",
             "value": "1000"
         }
     }
