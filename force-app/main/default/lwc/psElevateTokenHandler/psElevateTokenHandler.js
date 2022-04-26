@@ -4,6 +4,7 @@ import { getNamespace, isFunction, isNull, validateJSONString } from 'c/utilComm
 import PAYMENT_AUTHORIZATION_TOKEN_FIELD from
         '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import tokenRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
+import { isBlank } from 'c/util';
 
 
 /***
@@ -53,12 +54,18 @@ class psElevateTokenHandler {
         const productionEnhancedUrl = `https://${domainInfo.orgDomain}--${namespace}.vf.force.com`;
         const sandboxEnhancedUrl =  `https://${domainInfo.orgDomain}--${namespace}.sandbox.vf.force.com`;
 
-        return [
+        const originURLs = [
             {value: url},
             {value: alternateUrl},
             {value: productionEnhancedUrl},
             {value: sandboxEnhancedUrl}
         ];
+
+        if (!isBlank(domainInfo.communityBaseURL)) {
+            return [...originURLs, { value: domainInfo.communityBaseURL }];
+        } else {
+            return originURLs;
+        }
     }
 
     /***
@@ -98,10 +105,15 @@ class psElevateTokenHandler {
     */
     registerPostMessageListener(component) {
         const self = this;
+
         window.onmessage = async function (event) {
             if (self.shouldHandleMessage(event)) {
-                const message = JSON.parse(event.data);
-                component.handleMessage(message);
+                if (typeof event.data === 'object') {
+                    component.handleMessage(event.data);
+                } else {
+                    const message = JSON.parse(event.data);
+                    component.handleMessage(message);
+                }
             }
         }
     }
@@ -134,6 +146,7 @@ class psElevateTokenHandler {
     */
     handleMessage(message) {
         const isValidMessageType = message.type === 'post__npsp';
+        console.log("Handling Message: ", JSON.stringify(message));
         if (isValidMessageType) {
             if (isFunction(this.tokenCallback)) {
                 this.tokenCallback(message);
