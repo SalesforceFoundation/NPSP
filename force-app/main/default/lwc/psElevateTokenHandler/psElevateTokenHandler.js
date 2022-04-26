@@ -146,7 +146,6 @@ class psElevateTokenHandler {
     */
     handleMessage(message) {
         const isValidMessageType = message.type === 'post__npsp';
-        console.log("Handling Message: ", JSON.stringify(message));
         if (isValidMessageType) {
             if (isFunction(this.tokenCallback)) {
                 this.tokenCallback(message);
