@@ -796,8 +796,6 @@ flows:
             6:
                 flow: config_regression
             7:
-                task: deploy_recurring_donation_unmanaged
-            8:
                 task: snapshot_changes
 
     config_dev:
