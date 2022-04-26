@@ -130,14 +130,6 @@ tasks:
             path: unpackaged/gift_entry
             namespace_inject: $project_config.project__package__namespace
 
-    deploy_recurring_donation_unmanaged:
-        description: Deploys additional metadata for use with Recurring Donations
-        class_path: cumulusci.tasks.salesforce.Deploy
-        group: Salesforce Metadata
-        options:
-            path: unpackaged/recurring_donation
-            namespace_inject: $project_config.project__package__namespace
-
     retrieve_qa_config:
         description: Retrieves additional fields used for QA purposes
         class_path: cumulusci.tasks.salesforce.sourcetracking.RetrieveChanges
