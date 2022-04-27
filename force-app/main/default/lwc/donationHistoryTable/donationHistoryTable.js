@@ -1,4 +1,4 @@
-import { api, LightningElement, wire, track } from 'lwc';
+import { api, LightningElement, track } from 'lwc';
 import donationHistoryDatatableAriaLabel from '@salesforce/label/c.donationHistoryDatatableAriaLabel';
 import getDonationHistory from '@salesforce/apex/DonationHistoryController.getDonationHistory';
 import commonAmount from '@salesforce/label/c.commonAmount';
