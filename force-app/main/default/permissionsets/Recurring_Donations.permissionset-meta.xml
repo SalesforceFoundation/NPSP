@@ -22,11 +22,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>npe03__Recurring_Donation__c.DisableFirstInstallment__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
         <field>npe03__Recurring_Donation__c.EndDate__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -61,7 +56,7 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>false</editable>
+        <editable>true</editable>
         <field>npe03__Recurring_Donation__c.npe03__Contact__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -86,12 +81,12 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>true</editable>
+        <editable>false</editable>
         <field>npe03__Recurring_Donation__c.npe03__Last_Payment_Date__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>true</editable>
+        <editable>false</editable>
         <field>npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c</field>
         <readable>true</readable>
     </fieldPermissions>
