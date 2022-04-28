@@ -6,7 +6,8 @@ import lblStatus from '@salesforce/label/c.lblStatus';
 import dateStarted from '@salesforce/label/c.dateStarted'
 import lastDonationDate from '@salesforce/label/c.lastDonationDate';
 import nextInstallment from '@salesforce/label/c.nextInstallment';
-import lastUpdate from '@salesforce/label/c.lastUpdate';
+import endDate from '@salesforce/label/c.endDate';
+import lastUpdated from '@salesforce/label/c.lastUpdated';
 import commonActions from '@salesforce/label/c.commonActions';
 
 export default class RecurringDonationTable extends LightningElement {
@@ -20,9 +21,10 @@ export default class RecurringDonationTable extends LightningElement {
         "paymentMethod": "maestro",
         "frequency": "Monthly on the 22nd",
         "status": "Active",
+        "endDate": "12/10/2023",
         "lastDonationDate": "4/10/2023",
-        "nextInstallment": "14/10/2023",
-        "lastUpdate": "4/01/2023"
+        "nextInstallment": "10/14/2023",
+        "lastUpdated": "4/01/2023"
       },
       {
         "id": 2,
@@ -32,9 +34,10 @@ export default class RecurringDonationTable extends LightningElement {
         "paymentMethod": "laser",
         "frequency": "Monthly on the 22nd",
         "status": "Active",
+        "endDate": "12/10/2023",
         "lastDonationDate": "4/10/2023",
-        "nextInstallment": "14/10/2023",
-        "lastUpdate": "4/01/2023"
+        "nextInstallment": "2 of 5 installments paid. Next on 2/22/2022",
+        "lastUpdated": "4/01/2023"
       },
       {
         "id": 3,
@@ -44,9 +47,10 @@ export default class RecurringDonationTable extends LightningElement {
         "paymentMethod": "switch",
         "frequency": "Monthly on the 22nd",
         "status": "Active",
+        "endDate": "12/10/2023",
         "lastDonationDate": "4/10/2023",
-        "nextInstallment": "14/10/2023",
-        "lastUpdate": "4/01/2023"
+        "nextInstallment": "10/14/2023",
+        "lastUpdated": "4/01/2023"
       },
       {
         "id": 4,
@@ -56,9 +60,10 @@ export default class RecurringDonationTable extends LightningElement {
         "paymentMethod": "diners-club-enroute",
         "frequency": "Monthly on the 22nd",
         "status": "Active",
+        "endDate": "12/10/2023",
         "lastDonationDate": "4/10/2023",
-        "nextInstallment": "14/10/2023",
-        "lastUpdate": "4/01/2023"
+        "nextInstallment": "10/14/2023",
+        "lastUpdated": "4/01/2023"
       },
       {
         "id": 5,
@@ -68,9 +73,10 @@ export default class RecurringDonationTable extends LightningElement {
         "paymentMethod": "diners-club-us-ca",
         "frequency": "Monthly on the 22nd",
         "status": "Active",
+        "endDate": "12/10/2023",
         "lastDonationDate": "4/10/2023",
-        "nextInstallment": "14/10/2023",
-        "lastUpdate": "4/01/2023"
+        "nextInstallment": "2 of 5 installments paid. Next on 2/22/2022",
+        "lastUpdated": "4/01/2023"
     }];
     actions = [
         { label: 'View', name: 'view' },
@@ -82,9 +88,10 @@ export default class RecurringDonationTable extends LightningElement {
         { label: commonPaymentMethod, fieldName: "paymentMethod", type: "text", hideDefaultActions: true },
         { label: lblStatus, fieldName: "status", type: "text", hideDefaultActions: true },
         { label: dateStarted, fieldName: "dateStarted", type: "text", hideDefaultActions: true },
+        { label: endDate, fieldName: "endDate", type: "text", hideDefaultActions: true },
         { label: lastDonationDate, fieldName: "lastDonationDate", type: "text", hideDefaultActions: true },
         { label: nextInstallment, fieldName: "nextInstallment", type: "text", hideDefaultActions: true },
-        { label: lastUpdate, fieldName: "lastUpdate", type: "text", hideDefaultActions: true },
+        { label: lastUpdated, fieldName: "lastUpdated", type: "text", hideDefaultActions: true },
         { label: commonActions, type: 'action', typeAttributes: {
             rowActions: this.actions,
             menuAlignment: 'center'

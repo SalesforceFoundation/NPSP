@@ -5905,12 +5905,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Actions</value>
     </labels>
     <labels>
-        <fullName>lastUpdate</fullName>
+        <fullName>endDate</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Last Update</shortDescription>
-        <value>Last Update</value>
+        <shortDescription>End Date</shortDescription>
+        <value>End Date</value>
+    </labels>
+    <labels>
+        <fullName>lastUpdated</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Last Updated</shortDescription>
+        <value>Last Updated</value>
     </labels>
     <labels>
         <fullName>commonAssistiveError</fullName>
