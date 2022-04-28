@@ -7,6 +7,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>npe03__Recurring_Donation__c.CommitmentId__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>npe03__Recurring_Donation__c.ClosedReason__c</field>
         <readable>true</readable>
     </fieldPermissions>
