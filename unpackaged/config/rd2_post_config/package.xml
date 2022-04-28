@@ -6,10 +6,6 @@
         <name>Profile</name>
     </types>
     <types>
-        <members>Recurring_Donations</members>
-        <name>PermissionSet</name>
-    </types>
-    <types>
         <members>npe03__Recurring_Donation__c</members>
         <name>CustomObject</name>
     </types>
