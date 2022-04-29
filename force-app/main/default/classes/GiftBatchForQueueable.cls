@@ -83,15 +83,12 @@ public inherited sharing class GiftBatchForQueueable {
     }
 
     private void disableRD2AsynchronousProcesses() {
-        if (gifts.hasRecurringGifts()) {
-            RD2_Settings rd2Settings = RD2_Settings.getInstance();
-            rd2Settings.firstInstallmentCreateMode = RD2_Constants.FirstInstallmentOppCreateOptions.Synchronous.name();
-        }
+        RD2_Settings rd2Settings = RD2_Settings.getInstance();
+        rd2Settings.firstInstallmentCreateMode = RD2_Constants.FirstInstallmentOppCreateOptions.Synchronous.name();
     }
 
     public GiftBatchForQueueable(GiftBatchId giftBatchId) {
         this.giftBatchId = giftBatchId;
-        disableRD2AsynchronousProcesses();
     }
 
     public GiftBatchId id() {
@@ -106,6 +103,9 @@ public inherited sharing class GiftBatchForQueueable {
         List<Id> giftIdsToSelect = chunkedIds.get(0);
         gifts = new Gifts(giftsSelector.getGiftsReadyToMoveToProcessing(giftIdsToSelect, CHUNK_LIMIT));
         gifts.moveProcessableToProcessingStatus();
+        if (gifts.hasRecurringGifts()) {
+            disableRD2AsynchronousProcesses();
+        }
     }
 
     public void preprocessRecurringGifts() {

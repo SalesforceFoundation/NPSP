@@ -365,6 +365,7 @@ public with sharing class GE_GiftEntryController {
        try {
            giftBatchService.processGiftsFor(new GiftBatchId(batchId));
        } catch (Exception ex) {
+           System.debug(ex.getStackTraceString());
           throw new AuraHandledException(ex.getMessage());
        }
     }
