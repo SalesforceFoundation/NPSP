@@ -285,12 +285,20 @@ public class RD2_QueueableService {
     public static void enqueueOppNamingService(List<Opportunity> updatedOpps) {
         OpportunityNamingService service = new OpportunityNamingService(updatedOpps);
 
-        if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs() && !Test.isRunningTest()) {
+        if (canQueueNamingService()) {
             System.enqueueJob(service);
 
         } else {
             service.refreshOppNames();
         }
+    }
+
+    private static Boolean canQueueNamingService() {
+        RD2_Settings settings = RD2_Settings.getInstance();
+        Boolean shouldRunSynchronously =
+            settings.firstInstallmentCreateMode == RD2_Constants.FirstInstallmentOppCreateOptions.Synchronous.name();
+        return Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()
+            && !Test.isRunningTest() && !shouldRunSynchronously;
     }
 
     /**

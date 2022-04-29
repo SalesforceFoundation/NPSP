@@ -82,8 +82,16 @@ public inherited sharing class GiftBatchForQueueable {
         set;
     }
 
+    private void disableRD2AsynchronousProcesses() {
+        if (gifts.hasRecurringGifts()) {
+            RD2_Settings rd2Settings = RD2_Settings.getInstance();
+            rd2Settings.firstInstallmentCreateMode = RD2_Constants.FirstInstallmentOppCreateOptions.Synchronous.name();
+        }
+    }
+
     public GiftBatchForQueueable(GiftBatchId giftBatchId) {
         this.giftBatchId = giftBatchId;
+        disableRD2AsynchronousProcesses();
     }
 
     public GiftBatchId id() {
