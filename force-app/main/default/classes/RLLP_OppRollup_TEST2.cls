@@ -449,6 +449,10 @@ public with sharing class RLLP_OppRollup_TEST2 {
     */
     @IsTest
     static void getISOCodeWithNullRollupFieldSetDoesNotThrowException() {
+        if (!UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+            return;
+        }
+
         List<SObject> opportunitiesWithRollupFieldSets = [SELECT MAX(npo02__CombinedRollupFieldset__c) RollupFieldSet
                                                           FROM Opportunity
                                                           WHERE Id != NULL];
