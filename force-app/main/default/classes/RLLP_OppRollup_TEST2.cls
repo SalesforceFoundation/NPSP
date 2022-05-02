@@ -405,9 +405,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = CAO_Constants.OCR_DONOR_ROLE
         ));
-        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c(
-            npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR
-        ));
+
         //exercise internal multicurrency helper methods, check currency conversion
         decimal d = UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates('USD', 55.00);
         d = UTIL_CurrencyConversion.convertAmountUsingStandardRates('USD', 'USD', 55.00);
