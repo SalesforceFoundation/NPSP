@@ -5865,28 +5865,12 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Amount</value>
     </labels>
     <labels>
-        <fullName>commonPaymentMethod</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Payment Method</shortDescription>
-        <value>Payment Method</value>
-    </labels>
-    <labels>
         <fullName>dateStarted</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Date Started</shortDescription>
         <value>Date Started</value>
-    </labels>
-    <labels>
-        <fullName>lastDonationDate</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Last Donation Date</shortDescription>
-        <value>Last Donation Date</value>
     </labels>
     <labels>
         <fullName>nextInstallment</fullName>
