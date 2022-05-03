@@ -326,6 +326,16 @@ public with sharing class RD2_Settings {
         private set;
     }
 
+    public Boolean isGiftEntryMode {
+        get {
+            if(isGiftEntryMode == null) {
+                isGiftEntryMode = false;
+            }
+            return isGiftEntryMode;
+        }
+        set;
+    }
+
     /**
     * @description Set of fields that will be excluded from the RD2_EntryForm Custom Field Section
     */

@@ -84,7 +84,7 @@ public inherited sharing class GiftBatchForQueueable {
 
     private void disableRD2AsynchronousProcesses() {
         RD2_Settings rd2Settings = RD2_Settings.getInstance();
-        rd2Settings.firstInstallmentCreateMode = RD2_Constants.FirstInstallmentOppCreateOptions.Synchronous.name();
+        rd2Settings.isGiftEntryMode = true;
     }
 
     public GiftBatchForQueueable(GiftBatchId giftBatchId) {

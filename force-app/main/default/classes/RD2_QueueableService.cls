@@ -295,10 +295,9 @@ public class RD2_QueueableService {
 
     private static Boolean canQueueNamingService() {
         RD2_Settings settings = RD2_Settings.getInstance();
-        Boolean shouldRunSynchronously =
-            settings.firstInstallmentCreateMode == RD2_Constants.FirstInstallmentOppCreateOptions.Synchronous.name();
+
         return Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()
-            && !Test.isRunningTest() && !shouldRunSynchronously;
+            && !Test.isRunningTest() && !settings.isGiftEntryMode;
     }
 
     /**
