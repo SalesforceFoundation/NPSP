@@ -180,7 +180,7 @@ public with sharing class RD2_Settings {
 
             return firstInstallmentCreateMode;
         }
-        set;
+        private set;
     }
 
     /***
