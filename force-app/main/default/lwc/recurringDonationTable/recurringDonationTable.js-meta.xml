@@ -10,7 +10,7 @@
     </targets>
     <targetConfigs>
         <targetConfig targets="lightningCommunity__Default,lightning__RecordPage">
-            <property label="Donation Filter" name="donationTypeFilter" type="String" datasource="all,elevate,non-elevate" default="all"/>
+            <property label="Donation Filter" name="donationTypeFilter" type="String" datasource="Show all Recurring Donations,Show Elevate Recurring Donations,Show Non-Elevate Recurring Donations" default="Show all Recurring Donations"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>
