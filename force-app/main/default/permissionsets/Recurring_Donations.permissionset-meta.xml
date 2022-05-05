@@ -116,7 +116,8 @@
         <readable>true</readable>
     </fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
-    <label>Recurring Donations</label>
+    <label>NPSP Recurring Donations</label>
+    <description>Edit and view details about NPSP Recurring Donations.</description>
     <objectPermissions>
         <allowCreate>true</allowCreate>
         <allowDelete>false</allowDelete>
