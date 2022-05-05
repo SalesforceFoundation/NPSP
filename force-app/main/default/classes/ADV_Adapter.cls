@@ -129,7 +129,7 @@ global virtual with sharing class ADV_Adapter {
 
         TDTM_Runnable.Action triggerAction = TDTM_TriggerActionHelper.getTriggerActionFromName(action);
 
-        AccountService accountsAdapter = new AccountService(listNew, listOld);
+        AccountsServiceImpl accountsAdapter = new AccountsServiceImpl(listNew, listOld);
         switch on triggerAction {
             when BeforeInsert {
                 accountsAdapter.setAccountTypeAndIndividualFieldValues();

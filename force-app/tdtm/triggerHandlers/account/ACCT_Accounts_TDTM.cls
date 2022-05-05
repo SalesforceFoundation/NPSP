@@ -55,17 +55,17 @@ public class ACCT_Accounts_TDTM extends TDTM_Runnable {
 
         switch on triggerAction {
             when BeforeInsert {
-                AccountService accountsAdapter = new AccountService(listNew);
+                AccountsServiceImpl accountsAdapter = new AccountsServiceImpl(listNew);
                 accountsAdapter.onBeforeInsert();
             }
             when BeforeUpdate {
                 if (!isContactBeforeInsertContext()) {
-                    AccountService accountsAdapter = new AccountService(listNew, listOld);
+                    AccountsServiceImpl accountsAdapter = new AccountsServiceImpl(listNew, listOld);
                     accountsAdapter.onBeforeUpdate_ACCT_Accounts_TDTM();
                 }
             }
             when AfterUpdate {
-                AccountService accountsAdapter = new AccountService(listNew, listOld);
+                AccountsServiceImpl accountsAdapter = new AccountsServiceImpl(listNew, listOld);
                 accountsAdapter.onAfterUpdate(new TDTM_Runnable.DmlWrapper());
             }
         }

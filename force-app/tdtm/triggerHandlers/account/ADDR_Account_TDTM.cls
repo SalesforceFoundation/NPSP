@@ -47,23 +47,23 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        AccountService accountsAdapter;
+        AccountsServiceImpl accountsAdapter;
         DmlWrapper dmlWrapper = new DmlWrapper();
         switch on triggerAction {
             when BeforeInsert {
-                accountsAdapter = new AccountService(listNew);
+                accountsAdapter = new AccountsServiceImpl(listNew);
                 accountsAdapter.onBeforeInsert();
             }
             when BeforeUpdate {
-                accountsAdapter = new AccountService(listNew, listOld);
+                accountsAdapter = new AccountsServiceImpl(listNew, listOld);
                 accountsAdapter.onBeforeUpdate_ADDR_Account_TDTM();
             }
             when AfterInsert {
-                accountsAdapter = new AccountService(listNew);
+                accountsAdapter = new AccountsServiceImpl(listNew);
                 accountsAdapter.onAfterInsert(dmlWrapper);
             }
             when AfterUpdate {
-                accountsAdapter = new AccountService(listNew, listOld);
+                accountsAdapter = new AccountsServiceImpl(listNew, listOld);
                 accountsAdapter.onAfterUpdate(dmlWrapper);
             }
         }
