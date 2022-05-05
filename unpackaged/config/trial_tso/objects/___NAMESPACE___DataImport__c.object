@@ -9,9 +9,17 @@
         <type>Flexipage</type>
     </actionOverrides>
     <searchLayouts>
+        <listViewButtons>%%%NAMESPACE%%%Import_Selected_Data_Import_Records</listViewButtons>
+        <listViewButtons>%%%NAMESPACE%%%Process_Data_Import</listViewButtons>
+        <listViewButtons>%%%NAMESPACE%%%Delete_All_Data_Import_Records</listViewButtons>
+        <listViewButtons>%%%NAMESPACE%%%Delete_Imported_Data_Import_Records</listViewButtons>
         <searchResultsAdditionalFields>%%%NAMESPACE%%%ImportedDate__c</searchResultsAdditionalFields>
         <searchResultsAdditionalFields>%%%NAMESPACE%%%FailureInformation__c</searchResultsAdditionalFields>
         <searchResultsAdditionalFields>%%%NAMESPACE%%%Account1_Name__c</searchResultsAdditionalFields>
+        <searchResultsCustomButtons>%%%NAMESPACE%%%Import_Selected_Data_Import_Records</searchResultsCustomButtons>
+        <searchResultsCustomButtons>%%%NAMESPACE%%%Process_Data_Import</searchResultsCustomButtons>
+        <searchResultsCustomButtons>%%%NAMESPACE%%%Delete_All_Data_Import_Records</searchResultsCustomButtons>
+        <searchResultsCustomButtons>%%%NAMESPACE%%%Delete_Imported_Data_Import_Records</searchResultsCustomButtons>
     </searchLayouts>
     <enableReports>true</enableReports>
 </CustomObject>
