@@ -97,7 +97,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
     }
 
     public void onBeforeInsert(List<Contact> newSObjects) {
-        AccountAdapter.enableHouseholdDeceasedUpdate(true);
+        AccountService.enableHouseholdDeceasedUpdate(true);
 
         Contacts contacts = new Contacts(newSObjects);
         contacts.resetDeprecatedFields();
@@ -137,7 +137,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
     }
 
     public void onBeforeUpdate() {
-        AccountAdapter.enableHouseholdDeceasedUpdate(true);
+        AccountService.enableHouseholdDeceasedUpdate(true);
 
         handleContactsBeforeUpdate(
                 new Contacts(getRecords(), oldMap.values()));
@@ -217,14 +217,14 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
     }
 
     public void onAfterDelete(TDTM_Runnable.DmlWrapper dmlWrapper) {
-        AccountAdapter.enableHouseholdDeceasedUpdate(true);
+        AccountService.enableHouseholdDeceasedUpdate(true);
 
         Households households = getHouseholdsFor(accountIds());
         households.handleContactDeletion(dmlWrapper);
     }
 
     public void onAfterUndelete(TDTM_Runnable.DmlWrapper dmlWrapper) {
-        AccountAdapter.enableHouseholdDeceasedUpdate(true);
+        AccountService.enableHouseholdDeceasedUpdate(true);
 
         List<Contact> contactsWithAccountAndAddressFields =
                 getContactsWithAccountAndAddressFields();
