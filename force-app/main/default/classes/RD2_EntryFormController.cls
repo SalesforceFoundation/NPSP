@@ -178,7 +178,6 @@ public with sharing class RD2_EntryFormController {
                 String.valueOf(npe03__Recurring_Donation__c.npe03__Installments__c),
                 String.valueOf(npe03__Recurring_Donation__c.RecurringType__c),
                 String.valueOf(npe03__Recurring_Donation__c.npe03__Recurring_Donation_Campaign__c),
-                String.valueOf(npe03__Recurring_Donation__c.CommitmentId__c),
                 String.valueOf(npe03__Recurring_Donation__c.PaymentMethod__c)
         };
         requiredFields.addAll(request.getCustomFieldNames());
