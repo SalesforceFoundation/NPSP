@@ -5865,6 +5865,46 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Amount</value>
     </labels>
     <labels>
+        <fullName>dateStarted</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Date Started</shortDescription>
+        <value>Date Started</value>
+    </labels>
+    <labels>
+        <fullName>nextInstallment</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Next Installment</shortDescription>
+        <value>Next Installment</value>
+    </labels>
+    <labels>
+        <fullName>commonActions</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>label for datatable Actions</shortDescription>
+        <value>Actions</value>
+    </labels>
+    <labels>
+        <fullName>endDate</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>End Date</shortDescription>
+        <value>End Date</value>
+    </labels>
+    <labels>
+        <fullName>lastUpdated</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Last Updated</shortDescription>
+        <value>Last Updated</value>
+    </labels>
+    <labels>
         <fullName>commonAssistiveError</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
