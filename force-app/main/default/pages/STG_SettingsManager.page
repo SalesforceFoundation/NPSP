@@ -44,6 +44,10 @@
     .hide {
         display: none;
     }
+
+    .slds-scope .slds-button_neutral {
+        border-color: #C9C9C9;
+    }
 </style>
 
 <script>
