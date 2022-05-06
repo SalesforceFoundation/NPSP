@@ -13,8 +13,11 @@ import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 export default class RecurringDonationTable extends LightningElement {
     @api
     donationTypeFilter = 'Show all Recurring Donations';
+
     paymentMethod = '';
+
     lastDonationDate = '';
+    
     data = [{
         "id": 1,
         "dateStarted": "7/4/2022",
