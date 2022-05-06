@@ -4,7 +4,8 @@ import { dispatch, getPageAccess } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 import DataImport from '@salesforce/schema/DataImport__c';
-import { registerListener } from 'c/pubsubNoPageRef'
+import { registerListener } from 'c/pubsubNoPageRef';
+import { NavigationMixin } from 'lightning/navigation';
 
 const EVENT_TOGGLE_MODAL = 'togglemodal';
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
@@ -12,7 +13,7 @@ const GIFT_ENTRY = 'Gift_Entry';
 const TEMPLATE_BUILDER = 'Template_Builder';
 const SINGLE_GIFT_ENTRY = 'Single_Gift_Entry';
 
-export default class geHome extends LightningElement {
+export default class geHome extends NavigationMixin(LightningElement) {
 
     // Expose custom labels to template
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
@@ -96,7 +97,12 @@ export default class geHome extends LightningElement {
     * @description Method clears out any query parameters in the url.
     */
     resetUrlParameters() {
-        window.history.pushState({}, document.title, this.giftEntryTabName);
+        this[NavigationMixin.Navigate]({
+            type: 'standard__navItemPage',
+            attributes: {
+                apiName: this.giftEntryTabName,
+            }
+        }, true);
     }
 
     /*******************************************************************************
