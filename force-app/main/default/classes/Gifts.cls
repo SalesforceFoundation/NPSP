@@ -149,6 +149,16 @@ public with sharing class Gifts {
         prepareForProcessing();
     }
 
+    public Boolean hasRecurringGifts() {
+        for (DataImport__c dataImport : dataImportsById.values()) {
+            Gift gift = new Gift(dataImport);
+            if (gift.hasPopulatedRecurringFields()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void preprocessRecurringGifts() {
         for (DataImport__c dataImport : dataImportsById.values()) {
             Gift gift = new Gift(dataImport);
