@@ -223,7 +223,7 @@ public inherited sharing class ALLO_AllocationsRecalculateService {
 
                 //Calculate proportional amount for non-percentage based Payment allocations
                 // convertToPercentages must be true, the Percentage null, sourceAmount cannot be null and either Default Allocations are not enabled or the allocation is not for the Default Allocation
-                if (convertToPercentages && allocation.Percent__c == null & sourceAmount != null) {
+                if (convertToPercentages && allocation.Percent__c == null & sourceAmount != null & sourceAmount != 0) {
                     // Determine Percentage
                     Decimal allocationPercent = ((allocation.Amount__c != null) ? allocation.Amount__c : 0) / sourceAmount * 100;
 
