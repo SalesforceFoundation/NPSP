@@ -80,28 +80,59 @@ export default class geHome extends NavigationMixin(LightningElement) {
     * view and set the respective view record id.
     */
     handleChangeView(event) {
-        this.resetUrlParameters();
 
         this.view = event.detail.view;
         if (this.view === TEMPLATE_BUILDER && event.detail.formTemplateId) {
-            this.formTemplateId = event.detail.formTemplateId;
-            this.cloneFormTemplate = event.detail.clone;
+            this.goToCloneTemplate(event.detail.formTemplateId);
         } else if (this.view === SINGLE_GIFT_ENTRY) {
-            this.dispatchEvent(new CustomEvent('newsinglegift'));
+            this.goToView(SINGLE_GIFT_ENTRY);
+        } else if (this.view === TEMPLATE_BUILDER) {
+            this.formTemplateId = undefined;
+            this.goToView(TEMPLATE_BUILDER);
         } else {
             this.formTemplateId = undefined;
+            this.goToGiftEntryHome();
         }
     }
 
     /*******************************************************************************
-    * @description Method clears out any query parameters in the url.
+    * @description Method navigates to the Gift Entry home screen
     */
-    resetUrlParameters() {
+    goToGiftEntryHome() {
+        this.goToView();
+    }
+
+    /*******************************************************************************
+    * @description Method navigates to the Clone Template screen
+    * 
+    * @param formTemplateId: String of Template Id to clone
+    */
+    goToCloneTemplate(formTemplateId) {
+        this.goToView(TEMPLATE_BUILDER, formTemplateId);
+    }
+
+    /*******************************************************************************
+    * @description Method navigates to the provided View Name
+    * 
+    * @param viewName: String of View Name that user should be navigated to
+    * @param formTemplateId: String of Template Id to clone
+    */
+    goToView(viewName, formTemplateId) {
+        let state = {};
+        if(viewName !== undefined){
+            state.c__view = viewName;
+        }
+        if(formTemplateId !== undefined){
+            state.c__clone = true;
+            state.c__formTemplateRecordId = formTemplateId;
+        }
+
         this[NavigationMixin.Navigate]({
             type: 'standard__navItemPage',
             attributes: {
                 apiName: this.giftEntryTabName,
-            }
+            },
+            state
         }, true);
     }
 
