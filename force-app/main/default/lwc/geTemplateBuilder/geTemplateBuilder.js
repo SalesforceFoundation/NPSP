@@ -1360,6 +1360,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             // create custom migrated field mapping sets yet.
             this.formTemplate.layout.fieldMappingSetDevName = DEFAULT_FIELD_MAPPING_SET;
 
+            delete this.formTemplate.permissionErrors;
+            delete this.formTemplate.permissionErrorType;
+
             const preppedFormTemplate = {
                 id: this.formTemplateRecordId || null,
                 templateJSON: JSON.stringify(this.formTemplate),

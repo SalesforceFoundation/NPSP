@@ -1077,6 +1077,8 @@ public with sharing class GE_GiftEntryController {
         GE_Template.Template template;
         if (templateObj != null && templateObj.Template_JSON__c != null) {
             template = (GE_Template.Template)JSON.deserialize(templateObj.Template_JSON__c, GE_Template.Template.class);
+            template.permissionErrors = null;
+            template.permissionErrorType = null;
         }
         return template;
     }
