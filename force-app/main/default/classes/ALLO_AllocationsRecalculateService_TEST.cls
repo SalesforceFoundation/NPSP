@@ -621,7 +621,7 @@ public class ALLO_AllocationsRecalculateService_TEST {
     }
 
      /**
-     * @description This is a copy of confirmRecalculateServicePreservesFullPercentageWhenDefaultingPaymentAllocationsFromParent
+     * @description confirms that Allocations are no longer defaulted on Payments when sourceAmount = 0 so that Divide by Zero error no longer occurs.
      *              with 0 for opportunity and allocation amount, this was done to test W-9458922
      *              Default Allocations Enabled
      *              Payment Allocations Enabled
@@ -630,10 +630,10 @@ public class ALLO_AllocationsRecalculateService_TEST {
      *              Opportunity Amount $0
      *                  Opportunity Allocation 1 for GAU 1, $0.00
      *                  Opportunity Allocation 2 for GAU 2, $0.00
+     *                  Payment amount of 0 with no allocations
      * 
      *              No allocations created on payment that is autocreated
      * 
-     *              Run RecalculateService, confirm Payment Allocations created with Appropriate Irrational Percentages
      * 
      */ 
     @isTest 
@@ -661,7 +661,7 @@ public class ALLO_AllocationsRecalculateService_TEST {
         List<General_Accounting_Unit__c> gaus = alloSetupTest.getGAUs();
         General_Accounting_Unit__c defaultGAU = alloSetupTest.getDefaultGAU();
 
-        // Setup irregular Allocations
+        // Setup Opportunity Allocations
         List<Allocation__c> alloForInsert = new List<Allocation__c>{
             new Allocation__c (General_Accounting_Unit__c = gaus[0].Id, Opportunity__c = opp.Id, Amount__c = 0, Percent__c = null),
             new Allocation__c (General_Accounting_Unit__c = gaus[1].Id, Opportunity__c = opp.Id, Amount__c = 0, Percent__c = null)
