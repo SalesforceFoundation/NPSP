@@ -83,7 +83,7 @@ export default class geHome extends NavigationMixin(LightningElement) {
 
         this.view = event.detail.view;
         if (this.view === TEMPLATE_BUILDER && event.detail.formTemplateId) {
-            this.goToCloneTemplate(event.detail.formTemplateId);
+            this.goToView(TEMPLATE_BUILDER, event.detail.formTemplateId, event.detail.clone);
         } else if (this.view === SINGLE_GIFT_ENTRY) {
             this.goToView(SINGLE_GIFT_ENTRY);
         } else if (this.view === TEMPLATE_BUILDER) {
@@ -91,40 +91,28 @@ export default class geHome extends NavigationMixin(LightningElement) {
             this.goToView(TEMPLATE_BUILDER);
         } else {
             this.formTemplateId = undefined;
-            this.goToGiftEntryHome();
+            this.goToView();
         }
-    }
-
-    /*******************************************************************************
-    * @description Method navigates to the Gift Entry home screen
-    */
-    goToGiftEntryHome() {
-        this.goToView();
-    }
-
-    /*******************************************************************************
-    * @description Method navigates to the Clone Template screen
-    * 
-    * @param formTemplateId: String of Template Id to clone
-    */
-    goToCloneTemplate(formTemplateId) {
-        this.goToView(TEMPLATE_BUILDER, formTemplateId);
     }
 
     /*******************************************************************************
     * @description Method navigates to the provided View Name
     * 
-    * @param viewName: String of View Name that user should be navigated to
-    * @param formTemplateId: String of Template Id to clone
+    * @param viewName: String of View Name to navigate to
+    * @param formTemplateId: String of Template Id to Edit
+    * @param isClone: Boolean set to true if template should be cloned
+    * 
     */
-    goToView(viewName, formTemplateId) {
+    goToView(viewName, formTemplateId, isClone) {
         let state = {};
-        if(viewName !== undefined){
+        if (viewName !== undefined) {
             state.c__view = viewName;
         }
-        if(formTemplateId !== undefined){
-            state.c__clone = true;
+        if (formTemplateId !== undefined) {
             state.c__formTemplateRecordId = formTemplateId;
+        }
+        if (isClone === true) {
+            state.c__clone = isClone;
         }
 
         this[NavigationMixin.Navigate]({
