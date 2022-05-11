@@ -676,16 +676,6 @@ public class ALLO_AllocationsRecalculateService_TEST {
         npe01__OppPayment__c pmt = new npe01__OppPayment__c(npe01__opportunity__c=opp.Id, npe01__Payment_Amount__c=0);   
         insert pmt;                                
 
-        System.assertEquals (1, pmts.size(), '# of Payments Present');
-
-        List<Allocation__c> pmtAllocs = [SELECT     Id,
-                                                    General_Accounting_Unit__c,
-                                                    Percent__c,
-                                                    Amount__c
-                                         FROM Allocation__c
-                                         WHERE Payment__c = :pmts[0].Id];
-        System.assertEquals(0, pmtAllocs.size(), 'No Allocations since allocations triggers are off');
-
         Set<Id> oppIdsAsSet = new Set<Id>();
         oppIdsAsSet.add(opp.Id);
 
