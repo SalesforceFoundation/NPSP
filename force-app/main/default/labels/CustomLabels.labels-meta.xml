@@ -5865,20 +5865,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Amount</value>
     </labels>
     <labels>
-        <fullName>dateStarted</fullName>
+        <fullName>firstDonation</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Date Started</shortDescription>
-        <value>Date Started</value>
+        <shortDescription>First Donation</shortDescription>
+        <value>First Donation</value>
     </labels>
     <labels>
-        <fullName>nextInstallment</fullName>
+        <fullName>nextDonation</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Next Installment</shortDescription>
-        <value>Next Installment</value>
+        <shortDescription>Next Donation</shortDescription>
+        <value>Next Donation</value>
     </labels>
     <labels>
         <fullName>commonActions</fullName>
@@ -5889,20 +5889,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Actions</value>
     </labels>
     <labels>
-        <fullName>endDate</fullName>
+        <fullName>mostRecentDonation</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>End Date</shortDescription>
-        <value>End Date</value>
+        <shortDescription>Most Recent Donation</shortDescription>
+        <value>Most Recent Donation</value>
     </labels>
     <labels>
-        <fullName>lastUpdated</fullName>
+        <fullName>lastModified</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Last Updated</shortDescription>
-        <value>Last Updated</value>
+        <shortDescription>Last Modified</shortDescription>
+        <value>Last Modified</value>
     </labels>
     <labels>
         <fullName>commonAssistiveError</fullName>
