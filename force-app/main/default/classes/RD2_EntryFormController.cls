@@ -99,7 +99,10 @@ public with sharing class RD2_EntryFormController {
     public static RD2_AppView getInitialView(Id parentId, Id recordId) {
         RD2_AppView view = new RD2_AppView();
 
-        view.hasRequiredPermissions = hasRequiredFieldPermissions();
+        // rename, PermissionsService?
+        PermissionsChecker perms = new PermissionsChecker(new RD2_EntryFormPermissions.ForGetInitialView());
+        view.hasRequiredPermissions = perms.getRequiredPermissionsInfo().hasAllPermissions();
+
         if (!view.hasRequiredPermissions) {
             return view;
         }
@@ -164,25 +167,16 @@ public with sharing class RD2_EntryFormController {
 
     @TestVisible
     private static Boolean hasRequiredSavePermissions(RD2_SaveRequest request) {
-        Set<String> requiredFields = new Set<String>{
-                String.valueOf(npe03__Recurring_Donation__c.Status__c),
-                String.valueOf(npe03__Recurring_Donation__c.ClosedReason__c),
-                String.valueOf(npe03__Recurring_Donation__c.npe03__Contact__c),
-                String.valueOf(npe03__Recurring_Donation__c.npe03__Organization__c),
-                String.valueOf(npe03__Recurring_Donation__c.npe03__Date_Established__c),
-                String.valueOf(npe03__Recurring_Donation__c.npe03__Amount__c),
-                String.valueOf(npe03__Recurring_Donation__c.npe03__Installment_Period__c),
-                String.valueOf(npe03__Recurring_Donation__c.InstallmentFrequency__c),
-                String.valueOf(npe03__Recurring_Donation__c.StartDate__c),
-                String.valueOf(npe03__Recurring_Donation__c.Day_of_Month__c),
-                String.valueOf(npe03__Recurring_Donation__c.npe03__Installments__c),
-                String.valueOf(npe03__Recurring_Donation__c.RecurringType__c),
-                String.valueOf(npe03__Recurring_Donation__c.npe03__Recurring_Donation_Campaign__c),
-                String.valueOf(npe03__Recurring_Donation__c.CommitmentId__c),
-                String.valueOf(npe03__Recurring_Donation__c.PaymentMethod__c)
-        };
-        requiredFields.addAll(request.getCustomFieldNames());
-        return permissions.canUpdate(npe03__Recurring_Donation__c.SObjectType, requiredFields);
+        // use UTIL_Describe to get the field describe and then the SObject Token off the describe
+        List<Schema.SObjectField> customFieldReferences = new List<Schema.SObjectField>();
+        for (String fieldName : request.getCustomFieldNames()) {
+            Schema.SObjectField fieldRef = npe03__Recurring_Donation__c.SObjectType.getDescribe().fields.getMap().get(fieldName);
+            if (fieldRef != null) {
+                customFieldReferences.add(fieldRef);
+            }
+        }
+        PermissionsChecker permsChecker = new PermissionsChecker(new RD2_EntryFormPermissions.ForSaveRecurringDonation(customFieldReferences));
+        return permsChecker.getRequiredPermissionsInfo().hasAllPermissions();
     }
 
     /**

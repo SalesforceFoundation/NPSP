@@ -1,19 +1,22 @@
 public with sharing class FieldAccessDefinition {
     public Schema.SObjectField field;
-    public DataAccessLevel level;
-    public Boolean isOptional;
+    private Boolean isOptional;
 
-    public FieldAccessDefinition(SObjectField field, DataAccessLevel level, Boolean isOptional) {
+    public FieldAccessDefinition(Schema.SObjectField field, Boolean isOptional) {
         this.isOptional = isOptional;
         this.field = field;
-        if (level == DataAccessLevel.DEL || level == DataAccessLevel.CREATE) {
-            throw new FieldAccessDefinitionException('Cannot define FieldAccessDefinition with access level: ' + this.level.name());
-        }
-        this.level = level;
     }
 
-    public FieldAccessDefinition(SObjectField field, DataAccessLevel level) {
-        this(field, level, false);
+    public Boolean isRequired() {
+        return !this.isOptional;
+    }
+
+    public String getFieldName() {
+        return String.valueOf(this.field);
+    }
+
+    public FieldAccessDefinition(SObjectField field) {
+        this(field, false);
     }
 
     public class FieldAccessDefinitionException extends Exception {}

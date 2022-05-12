@@ -1,12 +1,10 @@
 public with sharing class PermissionsChecker {
     private IDefinePermissions definedPermissions;
 
-    private List<FieldAccessDefinition> readFields;
-    private List<FieldAccessDefinition> editFields;
-    private List<ObjectAccessDefinition> readObjects;
-    private List<ObjectAccessDefinition> editObjects;
-    private List<ObjectAccessDefinition> deleteObjects;
-    private List<ObjectAccessDefinition> createObjects;
+    private List<ObjectAccessDefinition> readAccessDefinitions;
+    private List<ObjectAccessDefinition> editAccessDefinitions;
+    private List<ObjectAccessDefinition> deleteAccessDefinitions;
+    private List<ObjectAccessDefinition> createAccessDefinitions;
 
     @TestVisible
     private UTIL_Permissions utilPermissions {
@@ -26,54 +24,101 @@ public with sharing class PermissionsChecker {
     }
 
     public void initializeAccessDefinitionsByLevel() {
-        this.readFields = new List<FieldAccessDefinition>();
-        this.editFields = new List<FieldAccessDefinition>();
-        this.readObjects = new List<ObjectAccessDefinition>();
-        this.editObjects = new List<ObjectAccessDefinition>();
-        this.deleteObjects = new List<ObjectAccessDefinition>();
-        this.createObjects = new List<ObjectAccessDefinition>();
+        this.readAccessDefinitions = new List<ObjectAccessDefinition>();
+        this.editAccessDefinitions = new List<ObjectAccessDefinition>();
+        this.deleteAccessDefinitions = new List<ObjectAccessDefinition>();
+        this.createAccessDefinitions = new List<ObjectAccessDefinition>();
     }
 
     public void populateAccessDefinitionsByLevel() {
-        for (FieldAccessDefinition fieldAccessDef : definedPermissions.getFieldAccessDefinitions()) {
-            if (fieldAccessDef.level == DataAccessLevel.READ) {
-                this.readFields.add(fieldAccessDef);
-            } else if (fieldAccessDef.level == DataAccessLevel.MODIFY) {
-                this.editFields.add(fieldAccessDef);
-            }
-        }
-
-        for (ObjectAccessDefinition objectAccessDef : definedPermissions.getObjectAccessDefinitions()) {
+        for (ObjectAccessDefinition objectAccessDef : definedPermissions.getAccessDefinitions()) {
             if (objectAccessDef.level == DataAccessLevel.READ) {
-                this.readObjects.add(objectAccessDef);
-            }
-
-            if (objectAccessDef.level == DataAccessLevel.CREATE) {
-                this.createObjects.add(objectAccessDef);
-            }
-
-            if (objectAccessDef.level == DataAccessLevel.MODIFY) {
-                this.editObjects.add(objectAccessDef);
-            }
-
-            if (objectAccessDef.level == DataAccessLevel.DEL) {
-                this.deleteObjects.add(objectAccessDef);
+                this.readAccessDefinitions.add(objectAccessDef);
+            } else if (objectAccessDef.level == DataAccessLevel.CREATE) {
+                this.createAccessDefinitions.add(objectAccessDef);
+            } else if (objectAccessDef.level == DataAccessLevel.MODIFY) {
+                this.editAccessDefinitions.add(objectAccessDef);
+            } else if (objectAccessDef.level == DataAccessLevel.DEL) {
+                this.deleteAccessDefinitions.add(objectAccessDef);
             }
         }
     }
 
-    public Boolean hasFieldPermissions() {
+    public PermissionsInfo getRequiredPermissionsInfo() {
+        PermissionsInfo permInfo = new PermissionsInfo();
+
+        permInfo.hasRequiredRead = this.hasAllReadPermissions();
+        permInfo.hasRequiredEdit = this.hasAllEditPermissions();
+        permInfo.hasRequiredCreate = this.hasAllCreatePermissions();
+        permInfo.hasRequiredDelete = this.hasAllDeletePermissions();
+
+        return permInfo;
+    }
+
+    private Boolean hasAllDeletePermissions() {
+        for (ObjectAccessDefinition deleteAccessDef : this.deleteAccessDefinitions) {
+            if (!this.hasRequiredDeletePermissions(deleteAccessDef)) {
+                return false;
+            }
+        }
         return true;
     }
 
-    public Boolean hasObjectPermissions() {
-        for (ObjectAccessDefinition objectAccessDef : definedPermissions.getObjectAccessDefinitions()) {
-
+    private Boolean hasAllReadPermissions() {
+        for (ObjectAccessDefinition readAccessDef : this.readAccessDefinitions) {
+            if (!this.hasRequiredReadPermissions(readAccessDef)) {
+                return false;
+            }
         }
-
-        return false;
+        return true;
     }
-    
+
+    private Boolean hasAllEditPermissions() {
+        for (ObjectAccessDefinition editAccessDef : this.editAccessDefinitions) {
+            if (!this.hasRequiredEditPermissions(editAccessDef)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private Boolean hasAllCreatePermissions() {
+        for (ObjectAccessDefinition createAccessDef : this.createAccessDefinitions) {
+            if (!this.hasRequiredCreatePermissions(createAccessDef)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private Boolean hasRequiredCreatePermissions(ObjectAccessDefinition objectAccessDef) {
+        Set<Schema.SObjectField> fieldRefs = objectAccessDef.getRequiredAccessFields();
+        if (fieldRefs.size() == 0) {
+            return true;
+        }
+        return utilPermissions.canCreate(objectAccessDef.sObjectType, fieldRefs);
+    }
+
+    private Boolean hasRequiredDeletePermissions(ObjectAccessDefinition objectAccessDef) {
+        return utilPermissions.canDelete(objectAccessDef.sObjectType);
+    }
+
+    private Boolean hasRequiredEditPermissions(ObjectAccessDefinition objectAccessDef) {
+        Set<Schema.SObjectField> fieldRefs = objectAccessDef.getRequiredAccessFields();
+        if (fieldRefs.size() == 0) {
+            return true;
+        }
+        return utilPermissions.canUpdate(objectAccessDef.sObjectType, fieldRefs);
+    }
+
+    private Boolean hasRequiredReadPermissions(ObjectAccessDefinition objectAccessDef) {
+        Set<Schema.SObjectField> fieldRefs = objectAccessDef.getRequiredAccessFields();
+        if (fieldRefs.size() == 0) {
+            return true;
+        }
+        return utilPermissions.canRead(objectAccessDef.sObjectType, fieldRefs);
+    }
+
     public Boolean hasFieldPermissionsStripInaccessible(List<SObject> sObjectsToCheck) {
         Boolean hasNecessaryEditAccess = this.hasEditPermissionsStripInaccessible(sObjectsToCheck);
         Boolean hasNecessaryReadAccess = this.hasReadPermissionsStripInaccessible(sObjectsToCheck);
@@ -85,14 +130,28 @@ public with sharing class PermissionsChecker {
     private Boolean hasReadPermissionsStripInaccessible(List<SObject> sObjects) {
         SObjectAccessDecision readDecision = Security.stripInaccessible(AccessType.READABLE, sObjects);
         Map<String, Set<String>> removedFields = readDecision.getRemovedFields();
-        for (FieldAccessDefinition fieldAccessDef : this.readFields) {
+//        for (FieldAccessDefinition fieldAccessDef : this.readFields) {
+//
+//        }
 
-        }
+        return false;
     }
 
-    private Boolean hasEditPermissionsStripInaccessible(List<SObject> sObjects) {
-        return true;
-    }
+//    private Boolean hasEditPermissionsStripInaccessible(List<SObject> sObjects) {
+//        SObjectAccessDecision editDecision = Security.stripInaccessible(AccessType.UPDATABLE, sObjects);
+//        Map<String, Set<String>> removedFields = editDecision.getRemovedFields();
+//        for (String objectName : removedFields.keySet()) {
+//            Set<String> removedFieldNames = removedFields.get(objectName);
+//            if (removedFieldNames.size() == 0) {
+//                continue;
+//            }
+//            ObjectAccessDefinition objectAccess = definedPermissions.getAccessDefinitionsByObjectName(objectName);
+//            Set<Schema.SObjectField> requiredFieldNames = objectAccess.getRequiredAccessFields();
+//
+//        }
+//        // return requiredFieldNames.retainAll(removedFieldNames);
+//        return true;
+//    }
 
     public Boolean hasObjectPermissionsStripInaccessible(List<SObject> sObjectsToCheck) {
         return false;
