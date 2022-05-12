@@ -671,8 +671,7 @@ public class ALLO_AllocationsRecalculateService_TEST {
         npe01__OppPayment__c pmt = new npe01__OppPayment__c(npe01__opportunity__c=opp.Id, npe01__Payment_Amount__c=0);   
         insert pmt;                                
 
-        Set<Id> oppIdsAsSet = new Set<Id>();
-        oppIdsAsSet.add(opp.Id);
+        Set<Id> oppIdsAsSet = new Set<Id>{ opp.Id };
 
         ALLO_AllocationsWrapper allocWrapper = new ALLO_AllocationsRetrievalService()
                                                 .withOpportunities(oppIdsAsSet)
