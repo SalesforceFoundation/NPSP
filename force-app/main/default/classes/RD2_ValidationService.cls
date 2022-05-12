@@ -233,13 +233,19 @@ public with sharing class RD2_ValidationService {
             if (!elevateService.hasUpdatePermissions(rd, oldRd)) {
                 errorCollection.addError(System.Label.RD2_ElevatePermissionRequired);
             }
+            
+            // TODO: Reorganize, this method calls additional methods
+            // Split into RD and Elevate RD?
             validateActiveRecurringDonation(rd, errorCollection);
+            
             validateInstallmentFrequency(rd, errorCollection);
             validateCurrencyChange(rd, oldRd, errorCollection);
             validateElevateRDScheduleCannotBeInTheFuture(rd, errorCollection);
             validateRecurringDonationEndDate(rd, errorCollection);
             validateStatus(rd, errorCollection);
-            validateDayOfMonthChange(rd, oldRd, errorCollection);
+
+            // TODO: Group Elevate checks
+            validateElevateDayOfMonthChange(rd, oldRd, errorCollection);
             validateElevateRDCampaignCannotUpdateToEmpty(rd, oldRd, errorCollection);
             validateClosedElevateRecurringDonation(rd, oldRd, errorCollection);
 
@@ -619,9 +625,10 @@ public with sharing class RD2_ValidationService {
     * @param oldRd The previous version of the Recurring Donation
     * @return void
     */
-    private void validateDayOfMonthChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, ErrorRecord errorCollection) {
+    private void validateElevateDayOfMonthChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, ErrorRecord errorCollection) {
         if (RD2_ElevateIntegrationService.isIntegrationEnabled()
             && String.isNotBlank(rd.CommitmentId__c)
+            && String.isNotBlank(oldRd.CommitmentId__c)
             && (rd.npe03__Installment_Period__c == RD_Constants.INSTALLMENT_PERIOD_MONTHLY
                 && rd.npe03__Installment_Period__c == oldRd.npe03__Installment_Period__c
                 && rd.Day_of_Month__c != oldRd.Day_of_Month__c)) {

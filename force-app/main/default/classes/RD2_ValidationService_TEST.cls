@@ -827,6 +827,41 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /**
+    * @description Verifies that existing RD that becomes Elevate connected can have Day of Month changed
+    */
+    @isTest
+    private static void shouldAllowNewElevateRDUpdateWhenDayOfMonthChanges() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
+
+        npe03__Recurring_Donation__c oldRd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
+            .build();
+        npe03__Recurring_Donation__c rd = oldRd.clone();
+        rd.CommitmentId__c = RD2_ElevateIntegrationService_TEST.COMMITMENT_ID;
+        rd.Day_of_Month__c = '1';
+
+        RD2_ValidationService validationService = new RD2_ValidationService(
+            new List<npe03__Recurring_Donation__c>{rd},
+            new List<npe03__Recurring_Donation__c>{oldRd}
+        );
+
+        Test.startTest();
+        List<ErrorRecord> errorRecords = validationService.validate();
+        Test.stopTest();
+
+        String errMessage = '';
+        if(errorRecords.size() > 0){
+            errMessage = errorRecords[0].getFirstError();
+        }
+        System.assert(String.isBlank(errMessage),
+            'Update should succeed when existing RD becomes Elevate connected and Day of Month changes: ' + errMessage
+        );
+    }
+
+    /**
     * @description Verifies that Elevate RD cannot have amount less than 1 dollar
     */
     @isTest
