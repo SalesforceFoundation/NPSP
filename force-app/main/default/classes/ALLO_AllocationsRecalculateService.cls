@@ -168,12 +168,11 @@ public inherited sharing class ALLO_AllocationsRecalculateService {
         // Allocations should not be copied to the target if the target object's amount is null
         if (amount == null) {
             return;
-        } else {
+        } else if (sourceAmount == 0 && convertToPercentages) {
             // Allocations should not be copied to target if source amount is zero and convert to percentage is true
-            if (sourceAmount == 0 && convertToPercentages) {
                 return;
             }
-        }
+        
 
         // Convert Amount to 0.  Will only get here with null amount if Parent is a Payment
         amount = (amount != null) ? amount : 0;
