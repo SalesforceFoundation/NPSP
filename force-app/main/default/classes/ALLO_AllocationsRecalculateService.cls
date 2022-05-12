@@ -170,7 +170,7 @@ public inherited sharing class ALLO_AllocationsRecalculateService {
             return;
         } else if (sourceAmount == 0 && convertToPercentages) {
             // Allocations should not be copied to target if source amount is zero and convert to percentage is true
-                return;
+            return;
             }
         
 

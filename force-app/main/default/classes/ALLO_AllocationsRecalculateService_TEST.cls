@@ -668,11 +668,6 @@ public class ALLO_AllocationsRecalculateService_TEST {
         };
         insert alloForInsert;
 
-        List<npe01__OppPayment__c> pmts = [SELECT   Id,
-                                                    Name
-                                           FROM npe01__OppPayment__c
-                                           WHERE    npe01__Opportunity__c = :opp.Id];
-
         npe01__OppPayment__c pmt = new npe01__OppPayment__c(npe01__opportunity__c=opp.Id, npe01__Payment_Amount__c=0);   
         insert pmt;                                
 
@@ -684,6 +679,7 @@ public class ALLO_AllocationsRecalculateService_TEST {
                                                 .retrieveData()
                                                 .allocationsWrapper;
 
+        Test.startTest();
         ALLO_AllocationsReviewService allocReviewSvc = new ALLO_AllocationsReviewService()
                                                             .withAllocationsWrapper(allocWrapper);
                                                             
@@ -694,6 +690,7 @@ public class ALLO_AllocationsRecalculateService_TEST {
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForInsert, 0, 'Before Recalculate - Insert List');
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForUpdate, 0, 'Before Recalculate - Update List');
 
+        Test.stopTest();
         allocRecalcSvc.processOpportunityAllocations();
 
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForDelete, 0, 'After Recalculate - Delete List');
