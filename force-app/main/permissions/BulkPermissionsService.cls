@@ -1,4 +1,4 @@
-public with sharing class PermissionsChecker {
+public with sharing class BulkPermissionsService {
     private IDefinePermissions definedPermissions;
 
     private List<ObjectAccessDefinition> readAccessDefinitions;
@@ -17,7 +17,7 @@ public with sharing class PermissionsChecker {
         set;
     }
 
-    public PermissionsChecker(IDefinePermissions definedPermissions) {
+    public BulkPermissionsService(IDefinePermissions definedPermissions) {
         this.definedPermissions = definedPermissions;
         this.initializeAccessDefinitionsByLevel();
         this.populateAccessDefinitionsByLevel();
@@ -93,9 +93,6 @@ public with sharing class PermissionsChecker {
 
     private Boolean hasRequiredCreatePermissions(ObjectAccessDefinition objectAccessDef) {
         Set<Schema.SObjectField> fieldRefs = objectAccessDef.getRequiredAccessFields();
-        if (fieldRefs.size() == 0) {
-            return true;
-        }
         return utilPermissions.canCreate(objectAccessDef.sObjectType, fieldRefs);
     }
 
@@ -105,17 +102,11 @@ public with sharing class PermissionsChecker {
 
     private Boolean hasRequiredEditPermissions(ObjectAccessDefinition objectAccessDef) {
         Set<Schema.SObjectField> fieldRefs = objectAccessDef.getRequiredAccessFields();
-        if (fieldRefs.size() == 0) {
-            return true;
-        }
         return utilPermissions.canUpdate(objectAccessDef.sObjectType, fieldRefs);
     }
 
     private Boolean hasRequiredReadPermissions(ObjectAccessDefinition objectAccessDef) {
         Set<Schema.SObjectField> fieldRefs = objectAccessDef.getRequiredAccessFields();
-        if (fieldRefs.size() == 0) {
-            return true;
-        }
         return utilPermissions.canRead(objectAccessDef.sObjectType, fieldRefs);
     }
 
@@ -137,21 +128,21 @@ public with sharing class PermissionsChecker {
         return false;
     }
 
-//    private Boolean hasEditPermissionsStripInaccessible(List<SObject> sObjects) {
-//        SObjectAccessDecision editDecision = Security.stripInaccessible(AccessType.UPDATABLE, sObjects);
-//        Map<String, Set<String>> removedFields = editDecision.getRemovedFields();
-//        for (String objectName : removedFields.keySet()) {
-//            Set<String> removedFieldNames = removedFields.get(objectName);
-//            if (removedFieldNames.size() == 0) {
-//                continue;
-//            }
-//            ObjectAccessDefinition objectAccess = definedPermissions.getAccessDefinitionsByObjectName(objectName);
-//            Set<Schema.SObjectField> requiredFieldNames = objectAccess.getRequiredAccessFields();
-//
-//        }
-//        // return requiredFieldNames.retainAll(removedFieldNames);
-//        return true;
-//    }
+    private Boolean hasEditPermissionsStripInaccessible(List<SObject> sObjects) {
+        SObjectAccessDecision editDecision = Security.stripInaccessible(AccessType.UPDATABLE, sObjects);
+        Map<String, Set<String>> removedFields = editDecision.getRemovedFields();
+        Set<Schema.SObjectField> requiredFieldNames;
+        for (String objectName : removedFields.keySet()) {
+            Set<String> removedFieldNames = removedFields.get(objectName);
+            if (removedFieldNames.size() == 0) {
+                continue;
+            }
+            ObjectAccessDefinition objectAccess = definedPermissions.getAccessDefinitionsByObjectName(objectName);
+            requiredFieldNames = objectAccess.getRequiredAccessFields(); // used to return Set<String>
+        }
+        // return requiredFieldNames.retainAll(removedFieldNames);
+        return false;
+    }
 
     public Boolean hasObjectPermissionsStripInaccessible(List<SObject> sObjectsToCheck) {
         return false;

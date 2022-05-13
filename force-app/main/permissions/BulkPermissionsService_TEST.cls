@@ -1,9 +1,13 @@
 @IsTest
-private class PermissionsChecker_TEST {
+private class BulkPermissionsService_TEST {
     private class TestPermissions implements IDefinePermissions {
         public List<ObjectAccessDefinition> definitions = new List<ObjectAccessDefinition>();
         public List<ObjectAccessDefinition> getAccessDefinitions() {
             return definitions;
+        }
+
+        public ObjectAccessDefinition getAccessDefinitionsByObjectName(String objectName) {
+            return null;
         }
     }
 
@@ -16,10 +20,17 @@ private class PermissionsChecker_TEST {
                 new FieldAccessDefinition(Account.npo02__Formal_Greeting__c)
         });
         perms.definitions.add(accountAccess);
-
-        PermissionsChecker checker = new PermissionsChecker(perms);
+        UTIL_PermissionsMock mockPerms = new UTIL_PermissionsMock()
+                .setNoFieldAccess(Account.Name)
+                .setNoFieldAccess(Account.npo02__Formal_Greeting__c);
+        UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(
+                UTIL_Permissions.class,
+                mockPerms);
+        BulkPermissionsService checker = new BulkPermissionsService(perms);
+        checker.utilPermissions = utilPermissionsMock;
         PermissionsInfo info = checker.getRequiredPermissionsInfo();
         System.debug(JSON.serializePretty(info));
+        System.assertEquals(false, info.hasRequiredRead, 'Expected to not have read access.');
     }
 
     @IsTest
@@ -92,6 +103,9 @@ private class PermissionsChecker_TEST {
         public UTIL_PermissionsMock setNoObjectAccess(Schema.SObjectType sObjectType) {
             return this.setObjectAccessLevel(sObjectType, NO_ACCESS);
         }
+        public UTIL_PermissionsMock setNoFieldAccess(Schema.SObjectField field) {
+            return this.setFieldAccessLevel(field, NO_ACCESS);
+        }
 
         private UTIL_PermissionsMock setObjectAccessLevel(Schema.SObjectType sObjectType, String accessLevel) {
             sObjectTypeToAccessLevel.put(sObjectType, accessLevel);
@@ -103,6 +117,44 @@ private class PermissionsChecker_TEST {
             return this;
         }
 
+        private Boolean canRead(Schema.SObjectField field) {
+            String accessLevel = fieldToAccessLevelMap.get(field);
+            if (accessLevel == READ_ACCESS || accessLevel == EDIT_ACCESS) {
+                return true;
+            } else if (accessLevel == NO_ACCESS) {
+                return false;
+            }
+            return defaultResult;
+        }
+
+        private Boolean canRead(Set<Schema.SObjectField> fields) {
+            for (Schema.SObjectField field : fields) {
+                if (!this.canRead(field)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private Boolean canUpdate(Set<Schema.SObjectField> fields) {
+            for (Schema.SObjectField field : fields) {
+                if (!this.canUpdate(field)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private Boolean canUpdate(Schema.SObjectField field) {
+            String accessLevel = fieldToAccessLevelMap.get(field);
+            if (accessLevel == EDIT_ACCESS) {
+                return true;
+            } else if (accessLevel == NO_ACCESS || accessLevel == READ_ACCESS) {
+                return false;
+            }
+            return defaultResult;
+        }
+
         public Object handleMethodCall(
                 Object stubbedObject,
                 String stubbedMethodName,
@@ -111,21 +163,11 @@ private class PermissionsChecker_TEST {
                 List<String> listOfParamNames,
                 List<Object> listOfArgs) {
             if (stubbedMethodName == 'canRead') {
-                Schema.SObjectField field = (Schema.SObjectField)listOfArgs[1];
-                String accessLevel = fieldToAccessLevelMap.get(field);
-                if (accessLevel == READ_ACCESS || accessLevel == EDIT_ACCESS) {
-                    return true;
-                } else if (accessLevel == NO_ACCESS) {
-                    return false;
-                }
+                Set<Schema.SObjectField> fields = (Set<Schema.SObjectField>)listOfArgs[1];
+                return this.canRead(fields);
             } else if (stubbedMethodName == 'canUpdate') {
-                Schema.SObjectField field = (Schema.SObjectField)listOfArgs[1];
-                String accessLevel = fieldToAccessLevelMap.get(field);
-                if (accessLevel == EDIT_ACCESS) {
-                    return true;
-                } else if (accessLevel == NO_ACCESS || accessLevel == READ_ACCESS) {
-                    return false;
-                }
+                Set<Schema.SObjectField> fields = (Set<Schema.SObjectField>)listOfArgs[1];
+                return this.canUpdate(fields);
             } else if (stubbedMethodName == 'canDelete') {
 
             } else if (stubbedMethodName == 'canCreate') {

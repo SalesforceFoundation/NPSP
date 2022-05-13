@@ -7,7 +7,7 @@ public with sharing class FieldAccessDefinition {
         this.field = field;
     }
 
-    public Boolean isRequired() {
+    public Boolean isRequiredAccess() {
         return !this.isOptional;
     }
 

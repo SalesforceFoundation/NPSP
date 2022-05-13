@@ -100,7 +100,7 @@ public with sharing class RD2_EntryFormController {
         RD2_AppView view = new RD2_AppView();
 
         // rename, PermissionsService?
-        PermissionsChecker perms = new PermissionsChecker(new RD2_EntryFormPermissions.ForGetInitialView());
+        BulkPermissionsService perms = new BulkPermissionsService(new RD2_EntryFormPermissions.ForGetInitialView());
         view.hasRequiredPermissions = perms.getRequiredPermissionsInfo().hasAllPermissions();
 
         if (!view.hasRequiredPermissions) {
@@ -175,7 +175,7 @@ public with sharing class RD2_EntryFormController {
                 customFieldReferences.add(fieldRef);
             }
         }
-        PermissionsChecker permsChecker = new PermissionsChecker(new RD2_EntryFormPermissions.ForSaveRecurringDonation(customFieldReferences));
+        BulkPermissionsService permsChecker = new BulkPermissionsService(new RD2_EntryFormPermissions.ForSaveRecurringDonation(customFieldReferences));
         return permsChecker.getRequiredPermissionsInfo().hasAllPermissions();
     }
 

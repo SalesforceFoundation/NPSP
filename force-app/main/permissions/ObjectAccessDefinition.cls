@@ -22,7 +22,7 @@ public with sharing class ObjectAccessDefinition {
     private Set<Schema.SObjectField> getRequiredFields(List<FieldAccessDefinition> fieldAccessDefinitions) {
         Set<Schema.SObjectField> fieldNames = new Set<Schema.SObjectField>();
         for (FieldAccessDefinition fieldAccessDefinition : fieldAccessDefinitions) {
-            if (fieldAccessDefinition.isRequired()) {
+            if (fieldAccessDefinition.isRequiredAccess()) {
                 fieldNames.add(fieldAccessDefinition.field);
             }
         }

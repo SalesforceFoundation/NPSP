@@ -50,12 +50,6 @@ public with sharing class RD2_EntryFormPermissions {
             }
             return fieldAccessDefinitions;
         }
-
-        public List<ObjectAccessDefinition> getObjectAccessDefinitions() {
-            return new List<ObjectAccessDefinition> {
-                    new ObjectAccessDefinition(npe03__Recurring_Donation__c.SObjectType, DataAccessLevel.MODIFY)
-            };
-        }
     }
 
     public class ForGetInitialView implements IDefinePermissions {
