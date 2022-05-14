@@ -76,9 +76,4 @@ public interface fflib_IObjects extends fflib_IDomain
 	 * @return Returns True is the domain has objects
 	 */
 	Boolean isNotEmpty();
-
-	/**
-	 * @return Returns the amount of records contained in the domain
-	 */
-	Integer size();
 }

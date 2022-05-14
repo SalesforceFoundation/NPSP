@@ -151,7 +151,7 @@ private with sharing class fflib_SObjectSelectorTest
 	{
 		Testfflib_SObjectSelector selector = new Testfflib_SObjectSelector();
 		String soql = selector.newQueryFactory().toSOQL();
-		Pattern p = Pattern.compile('SELECT (.*) FROM Account ORDER BY Name DESC NULLS FIRST , AnnualRevenue ASC NULLS LAST ');
+		Pattern p = Pattern.compile(expectedQueryString);
 		Matcher m = p.matcher(soql);
 		System.assert(m.matches(), 'Generated SOQL does not match expected pattern. Here is the generated SOQL: ' + soql);
 		System.assertEquals(1, m.groupCount(), 'Unexpected number of groups captured.');
@@ -159,18 +159,6 @@ private with sharing class fflib_SObjectSelectorTest
 		assertFieldListString(fieldListString, null);
 	}
 	
-	static testMethod void testSOQL_defaultSorting()
-	{
-		Testfflib_SObjectSelectorDefaultSorting selector = new Testfflib_SObjectSelectorDefaultSorting(false);
-		String soql = selector.newQueryFactory().toSOQL();
-		Pattern p = Pattern.compile('SELECT (.*) FROM Account ORDER BY Name ASC NULLS FIRST ');
-		Matcher m = p.matcher(soql);
-		System.assert(m.matches(), 'Generated SOQL does not match expected pattern. Here is the generated SOQL: ' + soql);
-		System.assertEquals(1, m.groupCount(), 'Unexpected number of groups captured.');
-		String fieldListString = m.group(1);
-		assertFieldListString(fieldListString, null);
-	}
-
 	static testMethod void testDefaultConfig()
 	{
 		Testfflib_SObjectSelector selector = new Testfflib_SObjectSelector();
@@ -220,7 +208,7 @@ private with sharing class fflib_SObjectSelectorTest
 		String soql = qf.toSOQL();
 
 		//Then
-		Pattern soqlPattern = Pattern.compile('SELECT (.*) FROM Account ORDER BY Name DESC NULLS FIRST , AnnualRevenue ASC NULLS LAST ');
+		Pattern soqlPattern = Pattern.compile(expectedQueryString);
 		Matcher soqlMatcher = soqlPattern.matcher(soql);
 		soqlMatcher.matches();
 
@@ -247,126 +235,11 @@ private with sharing class fflib_SObjectSelectorTest
 		String soql = qf.toSOQL();
 
 		// Assert that the
-		Pattern soqlPattern = Pattern.compile('SELECT (.*) FROM Account ORDER BY Name DESC NULLS FIRST , AnnualRevenue ASC NULLS LAST ');
+		Pattern soqlPattern = Pattern.compile(expectedQueryString);
 		Matcher soqlMatcher = soqlPattern.matcher(soql);
 		system.assert(soqlMatcher.matches(), 'The SOQL should have that expected.');
 	}
-
-	@IsTest
-	static void testConfigureQueryFactoryFields() {
-		//Given
-		Testfflib_UserSObjectSelector selector = new Testfflib_UserSObjectSelector();
-		fflib_QueryFactory qf = new fflib_QueryFactory(Account.SObjectType);
-
-		Set<String> expectedSelectFields = new Set<String>{ 'Owner.Name', 'Owner.Id', 'Owner.Username', 'Owner.LastLoginDate' };
-		if (UserInfo.isMultiCurrencyOrganization())
-		{
-			expectedSelectFields.add('Owner.CurrencyIsoCode');
-		}
-
-		//When
-		selector.configureQueryFactoryFields(qf, 'Owner');
-
-		//Then
-		String soql = qf.toSOQL();
-		Pattern soqlPattern = Pattern.compile('SELECT (.*) FROM Account');
-		Matcher soqlMatcher = soqlPattern.matcher(soql);
-		System.assert(soqlMatcher.matches(), 'Generated SOQL does not match expected pattern. Here is the generated SOQL: ' + soql);
-
-		List<String> actualSelectFields = soqlMatcher.group(1).deleteWhiteSpace().split(',');
-		System.assertEquals(expectedSelectFields, new Set<String>(actualSelectFields));
-	}
-
-	@IsTest
-	static void testAddQueryFactorySubselect() {
-		//Given
-		Testfflib_UserSObjectSelector selector = new Testfflib_UserSObjectSelector();
-		fflib_QueryFactory qf = new fflib_QueryFactory(Account.SObjectType);
-
-		Set<String> expectedSelectFields = new Set<String>{ 'Name', 'Id', 'Username', 'LastLoginDate' };
-		if (UserInfo.isMultiCurrencyOrganization())
-		{
-			expectedSelectFields.add('CurrencyIsoCode');
-		}
-
-		//When
-		selector.addQueryFactorySubselect(qf);
-
-		//Then
-		String soql = qf.toSOQL();
-		Pattern soqlPattern = Pattern.compile('SELECT Id, \\(SELECT (.*) FROM Users ORDER BY Name ASC NULLS FIRST \\) +FROM Account');
-		Matcher soqlMatcher = soqlPattern.matcher(soql);
-		System.assert(soqlMatcher.matches(), 'Generated SOQL does not match expected pattern. Here is the generated SOQL: ' + soql);
-
-		List<String> actualSelectFields = soqlMatcher.group(1).deleteWhiteSpace().split(',');
-		System.assertEquals(expectedSelectFields, new Set<String>(actualSelectFields));
-	}
-
-	@IsTest
-	static void testAddQueryFactorySubselect2() {
-		//Given
-		Testfflib_UserSObjectSelector selector = new Testfflib_UserSObjectSelector();
-		fflib_QueryFactory qf = new fflib_QueryFactory(Account.SObjectType);
-
-		Set<String> expectedSelectFields = new Set<String>{ 'Name', 'Id', 'Username', 'LastLoginDate' };
-		if (UserInfo.isMultiCurrencyOrganization())
-		{
-			expectedSelectFields.add('CurrencyIsoCode');
-		}
-
-		//When
-		selector.addQueryFactorySubselect(qf, 'Users');
-
-		//Then
-		String soql = qf.toSOQL();
-		Pattern soqlPattern = Pattern.compile('SELECT Id, \\(SELECT (.*) FROM Users ORDER BY Name ASC NULLS FIRST \\) +FROM Account');
-		Matcher soqlMatcher = soqlPattern.matcher(soql);
-		System.assert(soqlMatcher.matches(), 'Generated SOQL does not match expected pattern. Here is the generated SOQL: ' + soql);
-
-		List<String> actualSelectFields = soqlMatcher.group(1).deleteWhiteSpace().split(',');
-		System.assertEquals(expectedSelectFields, new Set<String>(actualSelectFields));
-	}
-
-	@IsTest
-	static void testGetFieldListString() {
-		//Given
-		Testfflib_UserSObjectSelector selector = new Testfflib_UserSObjectSelector();
-		fflib_QueryFactory qf = new fflib_QueryFactory(Account.SObjectType);
-
-		Set<String> expectedSelectFields = new Set<String>{ 'Name', 'Id', 'Username', 'LastLoginDate' };
-		if (UserInfo.isMultiCurrencyOrganization())
-		{
-			expectedSelectFields.add('CurrencyIsoCode');
-		}
-
-		//When
-		String fieldListString = selector.getFieldListString();
-
-		//Then
-		List<String> actualSelectFields = fieldListString.deleteWhiteSpace().split(',');
-		System.assertEquals(expectedSelectFields, new Set<String>(actualSelectFields));
-	}
-
-	@IsTest
-	static void testGetRelatedFieldListString() {
-		//Given
-		Testfflib_UserSObjectSelector selector = new Testfflib_UserSObjectSelector();
-
-		Set<String> expectedSelectFields = new Set<String>{ 'Owner.Name', 'Owner.Id', 'Owner.Username', 'Owner.LastLoginDate' };
-		if (UserInfo.isMultiCurrencyOrganization())
-		{
-			expectedSelectFields.add('Owner.CurrencyIsoCode');
-		}
-
-		//When
-		String fieldListString = selector.getRelatedFieldListString('Owner');
-
-		//Then
-		List<String> actualSelectFields = fieldListString.deleteWhiteSpace().split(',');
-		System.assertEquals(expectedSelectFields, new Set<String>(actualSelectFields));
-
-	}
-
+	
 	private static void assertEqualsSelectFields(String expectedSelectFields, String actualSelectFields)
 	{
 		Set<String> expected = new Set<String>(expectedSelectFields.deleteWhiteSpace().split(','));
@@ -404,57 +277,14 @@ private with sharing class fflib_SObjectSelectorTest
 		
 		public override String getOrderBy()
 		{
-			return 'Name DESC, AnnualRevenue ASC NULLS LAST';
+			String sortVal = 'AnnualRevenue ASC NULLS LAST';
+			if (isAccountNameSortable) {
+				sortVal = 'Name DESC, ' + sortVal;
+			}
+			return sortVal;
 		}
 	}
 	
-	private class Testfflib_UserSObjectSelector extends fflib_SObjectSelector
-	{
-		public Testfflib_UserSObjectSelector()
-		{
-			super();
-		}
-
-		public List<Schema.SObjectField> getSObjectFieldList()
-		{
-			return new List<Schema.SObjectField> {
-				User.Name,
-				User.Id,
-				User.Username,
-				User.LastLoginDate
-			};
-		}
-
-		public Schema.SObjectType getSObjectType()
-		{
-			return User.SObjectType;
-		}
-
-	}
-
-	private class Testfflib_SObjectSelectorDefaultSorting extends fflib_SObjectSelector
-	{
-		public Testfflib_SObjectSelectorDefaultSorting(Boolean includeFieldSetFields)
-		{
-			super(includeFieldSetFields);
-		}
-
-		public List<Schema.SObjectField> getSObjectFieldList()
-		{
-			return new List<Schema.SObjectField> {
-				Account.Name,
-				Account.Id,
-				Account.AccountNumber,
-				Account.AnnualRevenue
-			};
-		}
-
-		public Schema.SObjectType getSObjectType()
-		{
-			return Account.sObjectType;
-		}
-	}
-
 	/**
 	 * Create test user
 	 **/
@@ -463,7 +293,7 @@ private with sharing class fflib_SObjectSelectorTest
 		// Can only proceed with test if we have a suitable profile - Chatter External license has no access to Opportunity
 		List<Profile> testProfiles = [Select Id From Profile where UserLicense.Name='Chatter External' limit 1];
 		if(testProfiles.size()!=1)
-			return null; 		
+			return null;
 
 		// Can only proceed with test if we can successfully insert a test user 
 		String testUsername = System.now().format('yyyyMMddhhmmss') + '@testorg.com';
@@ -474,85 +304,27 @@ private with sharing class fflib_SObjectSelectorTest
 			return null;
 		}		
 		return testUser;
-	}
-
-	@isTest
-	static void testPolymorphicSelectWithRelatedType() {
-		//Given		
-
-		Testfflib_CampaignMemberSelector cmSelector = new Testfflib_CampaignMemberSelector();
-		fflib_QueryFactory qf = cmSelector.newQueryFactory();
-		new Testfflib_LeadSelector().configureQueryFactoryFields(qf, 'Lead');
-		new Testfflib_UserSelector().configureQueryFactoryFields(qf, 'Lead.Owner');
-
-
-		Set<String> expectedSelectFields = new Set<String>{
-				'Id', 'Status', 'Lead.Id', 'Lead.OwnerId', 'Lead.Owner.Id', 'Lead.Owner.UserRoleId'
-		};
-		if (UserInfo.isMultiCurrencyOrganization()) {
-			expectedSelectFields.add('CurrencyIsoCode');
-		}
-
-		//When
-		String soql = qf.toSOQL();
-
-		//Then
-		Pattern soqlPattern = Pattern.compile('SELECT (.*) FROM CampaignMember ORDER BY CreatedDate ASC NULLS FIRST ');
-		Matcher soqlMatcher = soqlPattern.matcher(soql);
-		soqlMatcher.matches();
-
-		List<String> actualSelectFields = soqlMatcher.group(1).deleteWhiteSpace().split(',');
-		System.assertEquals(expectedSelectFields, new Set<String>(actualSelectFields));
-	}
-
-	private class Testfflib_CampaignMemberSelector extends fflib_SObjectSelector {
-		public Testfflib_CampaignMemberSelector() {
-			super();
-		}
-
-		public List<Schema.SObjectField> getSObjectFieldList() {
-			return new List<Schema.SObjectField>{
-					CampaignMember.Id,
-					CampaignMember.Status
-			};
-		}
-
-		public Schema.SObjectType getSObjectType() {
-			return CampaignMember.sObjectType;
-		}
-	}
-
-	private class Testfflib_UserSelector extends fflib_SObjectSelector {
-		public Testfflib_UserSelector() {
-			super();
-		}
-
-		public List<Schema.SObjectField> getSObjectFieldList() {
-			return new List<Schema.SObjectField>{
-					User.UserRoleId,
-					User.Id
-			};
-		}
-
-		public Schema.SObjectType getSObjectType() {
-			return User.sObjectType;
-		}
-	}
-
-	private class Testfflib_LeadSelector extends fflib_SObjectSelector {
-		public Testfflib_LeadSelector() {
-			super();
-		}
-
-		public List<Schema.SObjectField> getSObjectFieldList() {
-			return new List<Schema.SObjectField>{
-					Lead.OwnerId,
-					Lead.Id
-			};
-		}
-
-		public Schema.SObjectType getSObjectType() {
-			return Lead.sObjectType;
-		}
 	}	
+
+	public static Boolean isAccountNameSortable {
+		get {
+			if (isAccountNameSortable == null) {
+				isAccountNameSortable = Account.Name.getDescribe().isSortable();
+			}
+			return isAccountNameSortable;
+		} private set;
+	}
+
+	public static String expectedQueryString {
+		get {
+			if (expectedQueryString == null) {
+				expectedQueryString = 'SELECT (.*) FROM Account ORDER BY';
+				if (isAccountNameSortable) {
+					expectedQueryString += ' Name DESC NULLS FIRST ,';
+				}
+				expectedQueryString += ' AnnualRevenue ASC NULLS LAST ';		
+			}
+			return expectedQueryString;
+		} private set; 
+	}
 }
