@@ -43,10 +43,24 @@ public inherited sharing class Application {
                     .setBindingType(fflib_AppBindingType.Service)
                     .setImplementationType(AccountsServiceImpl.class)
                     .setInterfaceType(IAccountsService.class)
-                    .setSequence(1.0)
                     .setSharingMode(fflib_SharingMode.WithSharing);
             }
             return accountServiceBinding;
+        }
+        set;
+    }
+
+    private static fflib_IAppBinding accountDomainBinding {
+        get {
+            if (accountDomainBinding == null) {
+                accountDomainBinding = new fflib_AppBinding()
+                        .setBindingObject(Account.SObjectType)
+                        .setBindingType(fflib_AppBindingType.Domain)
+                        .setImplementationType(Accounts.class)
+                        .setInterfaceType(IAccounts.class)
+                        .setSharingMode(fflib_SharingMode.WithSharing);
+            }
+            return accountDomainBinding;
         }
         set;
     }
@@ -56,7 +70,8 @@ public inherited sharing class Application {
             if (appBindingModule == null) {
                 appBindingModule = new fflib_AppBindingModule();
                 appBindingModule.addBindings(new List<fflib_IAppBinding>{
-                    accountServiceBinding
+                    accountServiceBinding,
+                    accountDomainBinding
                 });
                 System.debug(appBindingModule);
             }
