@@ -74,7 +74,7 @@ public inherited sharing class AccountsServiceImpl extends fflib_SObjects2 imple
     }
 
     public AccountsServiceImpl(){}
-
+    // TODO: SObjects2 should be used by domain classes and not services
     public AccountsServiceImpl(List<Account> records) {
         this(records, null);
     }

@@ -39,6 +39,9 @@
 */
 public with sharing class AccountsService {
 
+    public static void beforeAccountsAreInserted(List<Account> accounts) {
+    }
+
     private static IAccountsService service() {
         return (IAccountsService) Application.Service.newInstance(IAccountsService.class);
     }
