@@ -40,6 +40,8 @@ public virtual class fflib_SObjects
 		Errors = new ErrorFactory();
 	}
 
+	public fflib_SObjects(){}
+
 	/**
 	 * Class constructor
 	 */

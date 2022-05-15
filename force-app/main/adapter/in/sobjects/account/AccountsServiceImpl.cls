@@ -30,13 +30,13 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description The AccountsAdapter's role is to provide clients with a single Type
+* @description The AccountService's role is to provide clients with a single Type
 * that will handle DML on Accounts and call the appropriate method on Domains. Since many
 * domain objects are persisted on the Accounts standard object, (Households,
 * HouseholdAddresses, Organizations, OrganizationAddresses, etc.) the Adapter requests
 * domain instances for each of them.
 */
-public inherited sharing class AccountsServiceImpl extends fflib_SObjects2 {
+public inherited sharing class AccountsServiceImpl extends fflib_SObjects2 implements IAccountsService {
 
     public Map<Id, Account> oldMap = new Map<Id, Account>();
 
@@ -72,6 +72,8 @@ public inherited sharing class AccountsServiceImpl extends fflib_SObjects2 {
         }
         set;
     }
+
+    public AccountsServiceImpl(){}
 
     public AccountsServiceImpl(List<Account> records) {
         this(records, null);

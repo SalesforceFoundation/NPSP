@@ -45,6 +45,8 @@ public virtual class fflib_SObjects2
 		this((List<SObject>) objects);
 	}
 
+	public fflib_SObjects2(){}
+
 	/**
 	 * Class constructor
 	 *

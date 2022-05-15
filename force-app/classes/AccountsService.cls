@@ -37,7 +37,7 @@
  * instance of the service instead of the service's actual implementation allowing for implementations to be changed
  * without requiring changes on the client.
 */
-public with sharing class AccountsService implements IAccountsService {
+public with sharing class AccountsService {
 
     private static IAccountsService service() {
         return (IAccountsService) Application.Service.newInstance(IAccountsService.class);

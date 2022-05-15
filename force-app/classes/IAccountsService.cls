@@ -35,5 +35,4 @@
  * switching of implementations without requiring any change at the client level.
 */
 public interface IAccountsService {
-
 }

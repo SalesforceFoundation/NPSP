@@ -35,6 +35,8 @@ public virtual class fflib_Objects implements fflib_IObjects
 		this.objects = objects.clone();
 	}
 
+	public fflib_Objects(){}
+
 	public virtual Object getType()
 	{
 		return Object.class;
