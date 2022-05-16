@@ -5858,7 +5858,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>commonAmount</fullName>
-        <categories>Gift Entry</categories>
+        <categories>Recurring Donations</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Amount</shortDescription>
@@ -5866,7 +5866,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>firstDonation</fullName>
-        <categories>Gift Entry</categories>
+        <categories>Recurring Donations</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>First Donation</shortDescription>
@@ -5874,23 +5874,15 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>nextDonation</fullName>
-        <categories>Gift Entry</categories>
+        <categories>Recurring Donations</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Next Donation</shortDescription>
         <value>Next Donation</value>
     </labels>
     <labels>
-        <fullName>commonActions</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>label for datatable Actions</shortDescription>
-        <value>Actions</value>
-    </labels>
-    <labels>
         <fullName>mostRecentDonation</fullName>
-        <categories>Gift Entry</categories>
+        <categories>Recurring Donations</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Most Recent Donation</shortDescription>
@@ -5898,7 +5890,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>lastModified</fullName>
-        <categories>Gift Entry</categories>
+        <categories>Recurring Donations</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Last Modified</shortDescription>
