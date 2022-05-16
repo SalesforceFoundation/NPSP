@@ -27,8 +27,8 @@ export default class RecurringDonationTable extends LightningElement {
         "frequency": "Monthly on the 22nd",
         "status": "Active",
         "mostRecenDonation": "12/10/2023",
-        "nextDonation": "Paid Donation: 1 of 5. Next Donation: 1/12/2022.",
-        "lastModified": "4/01/2023"
+        "lastModified": "4/01/2023",
+        "nextDonation": "Paid Donation: 1 of 5. Next Donation: 1/12/2022."
       },
       {
         "id": 2,
@@ -39,8 +39,8 @@ export default class RecurringDonationTable extends LightningElement {
         "frequency": "Monthly on the 22nd",
         "status": "Active",
         "mostRecenDonation": "12/10/2023",
-        "nextDonation": "Paid Donation: 3 of 6. Next Donation: 12/20/2022.",
-        "lastModified": "4/01/2023"
+        "lastModified": "4/01/2023",
+        "nextDonation": "Paid Donation: 3 of 6. Next Donation: 12/20/2022."
       },
       {
         "id": 3,
@@ -51,8 +51,8 @@ export default class RecurringDonationTable extends LightningElement {
         "frequency": "Monthly on the 22nd",
         "status": "Active",
         "mostRecenDonation": "12/10/2023",
-        "nextDonation": "Paid Donation: 2 of 5. Next Donation: 2/22/2022.",
-        "lastModified": "4/01/2023"
+        "lastModified": "4/01/2023",
+        "nextDonation": "Paid Donation: 2 of 5. Next Donation: 2/22/2022."
       },
       {
         "id": 4,
@@ -63,8 +63,8 @@ export default class RecurringDonationTable extends LightningElement {
         "frequency": "Monthly on the 22nd",
         "status": "Active",
         "mostRecenDonation": "12/10/2023",
-        "nextDonation": "Paid Donation: 2 of 10. Next Donation: 11/11/2022.",
-        "lastModified": "4/01/2023"
+        "lastModified": "4/01/2023",
+        "nextDonation": "Paid Donation: 2 of 10. Next Donation: 11/11/2022."
       },
       {
         "id": 5,
@@ -75,8 +75,8 @@ export default class RecurringDonationTable extends LightningElement {
         "frequency": "Monthly on the 22nd",
         "status": "Active",
         "mostRecenDonation": "12/10/2023",
-        "nextDonation": "Paid Donation: 6 of 8. Next Donation: 12/22/2022.",
-        "lastModified": "4/01/2023"
+        "lastModified": "4/01/2023",
+        "nextDonation": "Paid Donation: 6 of 8. Next Donation: 12/22/2022."
     }];
     actions = [
       { label: 'View', name: 'view' },

@@ -5858,7 +5858,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>commonAmount</fullName>
-        <categories>Recurring Donations</categories>
+        <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Amount</shortDescription>
