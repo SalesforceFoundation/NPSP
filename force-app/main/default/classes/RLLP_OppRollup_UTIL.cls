@@ -364,9 +364,10 @@ public without sharing class RLLP_OppRollup_UTIL {
         //iterate over objects provided to us
         for (sobject r : objectList){
             //pull Id from rollup field and add to set
-            string[] rcf = ((string)(r.get('RollupFieldset'))).split(';\\|;',-4);
-            if(rcf.size() > 1 && rcf[1] != '')
-                opptysForCurrency.add((Id)rcf[4]);
+            List<String> rollupFieldSet = ((String)(r.get('RollupFieldset')))?.split(';\\|;',-4);
+            if (rollupFieldSet?.size() > 1 && rollupFieldSet?.get(1) != '') {
+                opptysForCurrency.add((Id)rollupFieldSet[4]);
+            }
         }
         
         if (!objectlist.isEmpty()){
