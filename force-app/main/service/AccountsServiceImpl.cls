@@ -36,7 +36,7 @@
 * HouseholdAddresses, Organizations, OrganizationAddresses, etc.) the Adapter requests
 * domain instances for each of them.
 */
-public inherited sharing class AccountsServiceImpl extends fflib_SObjects2 implements IAccountsService {
+public inherited sharing class AccountsServiceImpl extends fflib_SObjects2 {
 
     public Map<Id, Account> oldMap = new Map<Id, Account>();
 

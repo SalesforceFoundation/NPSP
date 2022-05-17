@@ -31,12 +31,17 @@
  */
 /**
 * @author Salesforce.org
-* @description Accounts domain class
+* @description This class uses getters to define and return the default module for interface/implementation bindings
+ * in the code base
 */
-public inherited sharing class Accounts extends fflib_SObjects2 {
+public with sharing class AppBindingModules {
 
-    public static IAccounts newInstance(List<Account> records)
-    {
-        return (IAccounts) Application.Domain.newInstance(records, Schema.Account.SObjectType);
+    public static fflib_IAppBindingModule defaultModule() {
+        fflib_IAppBindingModule module = new fflib_AppBindingModule();
+        module.addBindings(DomainAppBindings.getBindings());
+        module.addBindings(ServiceAppBindings.getBindings());
+
+        return module;
     }
+
 }

@@ -35,53 +35,8 @@
 */
 public inherited sharing class Application {
 
-    private static fflib_IAppBinding accountServiceBinding {
-        get {
-            if (accountServiceBinding == null) {
-                accountServiceBinding = new fflib_AppBinding()
-                    .setBindingObject(Account.SObjectType)
-                    .setBindingType(fflib_AppBindingType.Service)
-                    .setImplementationType(AccountsServiceImpl.class)
-                    .setInterfaceType(IAccountsService.class)
-                    .setSharingMode(fflib_SharingMode.WithSharing);
-            }
-            return accountServiceBinding;
-        }
-        set;
-    }
-
-    private static fflib_IAppBinding accountDomainBinding {
-        get {
-            if (accountDomainBinding == null) {
-                accountDomainBinding = new fflib_AppBinding()
-                        .setBindingObject(Account.SObjectType)
-                        .setBindingType(fflib_AppBindingType.Domain)
-                        .setImplementationType(Accounts.class)
-                        .setInterfaceType(IAccounts.class)
-                        .setSharingMode(fflib_SharingMode.WithSharing);
-            }
-            return accountDomainBinding;
-        }
-        set;
-    }
-
-    private static fflib_IAppBindingModule appBindingModule {
-        get {
-            if (appBindingModule == null) {
-                appBindingModule = new fflib_AppBindingModule();
-                appBindingModule.addBindings(new List<fflib_IAppBinding>{
-                    accountServiceBinding,
-                    accountDomainBinding
-                });
-                System.debug(appBindingModule);
-            }
-            return appBindingModule;
-        }
-        private set;
-    }
-
     private static fflib_IAppBindingResolver bindingResolver = new fflib_AppBindingResolver()
-        .addModule(appBindingModule);
+        .addModule(AppBindingModules.defaultModule());
 
     public static final fflib_IUnitOfWorkFactory UnitOfWork =
             new fflib_ClassicUnitOfWorkFactory(

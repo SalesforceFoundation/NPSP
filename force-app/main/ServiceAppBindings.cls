@@ -31,12 +31,25 @@
  */
 /**
 * @author Salesforce.org
-* @description Accounts domain class
+* @description This class uses getters to define and return the default interface/implementation bindings for the
+ * "Service" binding type to be used by the 'Application.cls' in the fflib dynamic domain factory so that we can
+ * define the implementation dynamically instead of callers referencing the domain implementation directly.
 */
-public inherited sharing class Accounts extends fflib_SObjects2 {
+public with sharing class ServiceAppBindings {
 
-    public static IAccounts newInstance(List<Account> records)
-    {
-        return (IAccounts) Application.Domain.newInstance(records, Schema.Account.SObjectType);
+    public static List<fflib_IAppBinding> getBindings() {
+        List<fflib_IAppBinding> serviceAppBindings = new List<fflib_IAppBinding>();
+        serviceAppBindings.add(getAccountServiceBinding());
+
+        return serviceAppBindings;
+    }
+
+    private static fflib_IAppBinding getAccountServiceBinding() {
+        return new fflib_AppBinding()
+            .setBindingObject(Account.SObjectType)
+            .setBindingType(fflib_AppBindingType.Service)
+            .setImplementationType(AccountsServiceImpl.class)
+            .setInterfaceType(IAccountsService.class)
+            .setSharingMode(fflib_SharingMode.WithSharing);
     }
 }
