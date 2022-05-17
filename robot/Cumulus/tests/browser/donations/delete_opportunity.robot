@@ -27,7 +27,7 @@ Create Donation from a Contact and Delete Opportunity
     [Documentation]                      Create an opportunity using API for a contact. Navigate to Opportunities listings, select the
     ...                                  new opportunity > click on dropdown and select Delete
 
-    [tags]                               W-038461                 feature:Donations        unstable
+    [tags]                               W-038461   feature:Donations   unstable    api
 
     Go To Page                           Detail
     ...                                  Opportunity

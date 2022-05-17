@@ -43,7 +43,7 @@ Setup Test Data
     Set suite variable    ${NS}
 *** Test Cases ***
 Batch Template Default values Setting
-    [Documentation]                 Set default values in batch template and verify they auto poputale in batch for.
+    [Documentation]                 Set default values in batch template and verify they auto poputale in batch form.
     ...                             Change default values in batch template and verify the auto poputale in batch form.
     ...                             Leave default values blank and verify they do not auto popuate in batch form
 

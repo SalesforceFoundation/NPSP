@@ -42,11 +42,11 @@ Edit An Enhanced Recurring donation record of type open
     [Documentation]               After creating an open recurring donation using API, The test ensures that the user
      ...                          is able to invoke the pause modal by clicking on the pause button.
      ...                          User can fill the paused reason and check the date to pause
-     ...                          Validates the Pasued text next to the paused installment date and current and next
+     ...                          Validates the Paused text next to the paused installment date and current and next
      ...                          Year values
 
 
-    [tags]                                                      W-8116680          feature:RD2
+    [tags]                                        W-8116680     feature:RD2     stable
 
     Go To Page                                    Listing                                   npe03__Recurring_Donation__c
 

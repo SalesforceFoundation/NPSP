@@ -32,11 +32,11 @@ Setup Custom Fields and data
 *** Test Cases ***
 
 Verify Status Mappings For Custom Status Picklist Values
-    [Documentation]     This testcase is to ensure that the status mappings for the exiting values
+    [Documentation]     This test case is to ensure that the status mappings for the exiting values
     ...                 remain intact . The newly added status mapping values appear in the status
-    ...                 mappinngs section and remain unmapped.
+    ...                 mappings section and remain unmapped.
 
-    [tags]                                       feature:RD                   unstable                 notonfeaturebranch
+    [tags]                       feature:RD     unstable    notonfeaturebranch  deprecated  unit
 
     Open NPSP Settings           Recurring Donations       Status to State Mapping
     Sleep                        1

@@ -29,7 +29,7 @@ Setup Test Data
 Progress Bar and Totals in Batch
     [Documentation]          Create a batch and give values to Expected amount and count of gits fields, and check Required Expected totals Match checkbox .   
     ...                      Verify progress bar apprear with total amount and count of gifts in batch form.    
-    ...                      Verify I should not be able to process batch until total git amount and count of gifts matches.    
+    ...                      Verify I should not be able to process batch until total gift amount and count of gifts matches.
     ...                      Verify the progress bar get updated after deleting one of the saved gifts. 
 
     [tags]                                 unstable      feature:GE        W-8279400

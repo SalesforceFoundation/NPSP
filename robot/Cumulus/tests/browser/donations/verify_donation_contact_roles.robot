@@ -37,7 +37,7 @@ Setup Test Data
 
 Create Donation from Contact and Verify Contact Roles on Opportunity Page
 
-    [tags]                                 W-038461                 feature:Donations
+    [tags]                                 W-038461     feature:Donations   stable  api
 
     Go To Page                             Detail
     ...                                    Opportunity
