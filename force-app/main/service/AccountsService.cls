@@ -39,7 +39,8 @@
 */
 public with sharing class AccountsService {
 
-    public static void beforeAccountsAreInserted(List<Account> accounts) {
+    public static void onBeforeInsert(List<Account> accounts) {
+        service().onBeforeInsert(accounts);
     }
 
     private static IAccountsService service() {

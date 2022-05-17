@@ -36,7 +36,7 @@
 * HouseholdAddresses, Organizations, OrganizationAddresses, etc.) the Adapter requests
 * domain instances for each of them.
 */
-public inherited sharing class AccountsServiceImpl extends fflib_SObjects2 {
+public inherited sharing class AccountsServiceImpl extends fflib_SObjects2 implements IAccountsService {
 
     public Map<Id, Account> oldMap = new Map<Id, Account>();
 
@@ -85,7 +85,7 @@ public inherited sharing class AccountsServiceImpl extends fflib_SObjects2 {
                 (oldlist);
     }
 
-    public void onBeforeInsert() {
+    public void onBeforeInsert(List<Account> accounts) {
         setAccountTypeAndIndividualFieldValues();
         if (AddressService.isAddressManagementEnabled()) {
             normalizeLineBreaksFor(householdAccounts());
