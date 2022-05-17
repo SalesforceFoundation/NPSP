@@ -405,6 +405,7 @@ public with sharing class RLLP_OppRollup_TEST2 {
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = CAO_Constants.OCR_DONOR_ROLE
         ));
+
         //exercise internal multicurrency helper methods, check currency conversion
         decimal d = UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates('USD', 55.00);
         d = UTIL_CurrencyConversion.convertAmountUsingStandardRates('USD', 'USD', 55.00);
@@ -438,6 +439,29 @@ public with sharing class RLLP_OppRollup_TEST2 {
         map<Id, Opportunity> omap = RLLP_OppRollup_UTIL.rcfFindCurrency(sobjectList);
 
         // UNDONE: THERE ARE NO ASSERTS!!!!
+    }
+
+    /*********************************************************************************************************
+    * @description For new Falcon instances, an aggregate query that returns no results is not returning an empty
+     * list but is returning a single record where the properties are null. This tests that scenario.
+    */
+    @IsTest
+    static void getISOCodeWithNullRollupFieldSetDoesNotThrowException() {
+        if (!UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+            return;
+        }
+
+        List<SObject> opportunitiesWithRollupFieldSets = [SELECT MAX(npo02__CombinedRollupFieldset__c) RollupFieldSet
+                                                          FROM Opportunity
+                                                          WHERE Id != NULL];
+        Exception findCurrencyISOException;
+        try {
+            RLLP_OppRollup_UTIL.rcfFindCurrency(opportunitiesWithRollupFieldSets);
+        } catch (Exception ex) {
+            findCurrencyISOException = ex;
+        }
+        System.assertEquals(null, findCurrencyISOException, 'Retrieving the ISO codes for opportunities with define ' +
+                'rollup field sets populated should not throw an exception when the rollup field set is null.');
     }
     /*********************************************************************************************************
     * @description Runs testRollupAlls test method for the One to One account processor.
