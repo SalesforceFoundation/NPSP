@@ -4,7 +4,8 @@ import { dispatch, getPageAccess } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 import DataImport from '@salesforce/schema/DataImport__c';
-import { registerListener } from 'c/pubsubNoPageRef'
+import { registerListener } from 'c/pubsubNoPageRef';
+import { NavigationMixin } from 'lightning/navigation';
 
 const EVENT_TOGGLE_MODAL = 'togglemodal';
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
@@ -12,7 +13,7 @@ const GIFT_ENTRY = 'Gift_Entry';
 const TEMPLATE_BUILDER = 'Template_Builder';
 const SINGLE_GIFT_ENTRY = 'Single_Gift_Entry';
 
-export default class geHome extends LightningElement {
+export default class geHome extends NavigationMixin(LightningElement) {
 
     // Expose custom labels to template
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
@@ -79,24 +80,48 @@ export default class geHome extends LightningElement {
     * view and set the respective view record id.
     */
     handleChangeView(event) {
-        this.resetUrlParameters();
 
         this.view = event.detail.view;
         if (this.view === TEMPLATE_BUILDER && event.detail.formTemplateId) {
-            this.formTemplateId = event.detail.formTemplateId;
-            this.cloneFormTemplate = event.detail.clone;
+            this.goToView(TEMPLATE_BUILDER, event.detail.formTemplateId, event.detail.clone);
         } else if (this.view === SINGLE_GIFT_ENTRY) {
-            this.dispatchEvent(new CustomEvent('newsinglegift'));
+            this.goToView(SINGLE_GIFT_ENTRY);
+        } else if (this.view === TEMPLATE_BUILDER) {
+            this.formTemplateId = undefined;
+            this.goToView(TEMPLATE_BUILDER);
         } else {
             this.formTemplateId = undefined;
+            this.goToView();
         }
     }
 
     /*******************************************************************************
-    * @description Method clears out any query parameters in the url.
+    * @description Method navigates to the provided View Name
+    * 
+    * @param viewName: String of View Name to navigate to
+    * @param formTemplateId: String of Template Id to Edit
+    * @param isClone: Boolean set to true if template should be cloned
+    * 
     */
-    resetUrlParameters() {
-        window.history.pushState({}, document.title, this.giftEntryTabName);
+    goToView(viewName, formTemplateId, isClone) {
+        let state = {};
+        if (viewName !== undefined) {
+            state.c__view = viewName;
+        }
+        if (formTemplateId !== undefined) {
+            state.c__formTemplateRecordId = formTemplateId;
+        }
+        if (isClone === true) {
+            state.c__clone = isClone;
+        }
+
+        this[NavigationMixin.Navigate]({
+            type: 'standard__navItemPage',
+            attributes: {
+                apiName: this.giftEntryTabName,
+            },
+            state
+        }, true);
     }
 
     /*******************************************************************************
