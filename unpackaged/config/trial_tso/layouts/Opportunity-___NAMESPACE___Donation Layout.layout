@@ -135,11 +135,23 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
+                <field>%%%NAMESPACE%%%Tribute_Notification_Date__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>%%%NAMESPACE%%%Tribute_Notification_Status__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
                 <field>%%%NAMESPACE%%%Honoree_Contact__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>%%%NAMESPACE%%%Honoree_Name__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>%%%NAMESPACE%%%Honoree_Information__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -154,6 +166,10 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>%%%NAMESPACE%%%Notification_Recipient_Name__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>%%%NAMESPACE%%%Notification_Recipient_Email__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
