@@ -1,8 +1,8 @@
 import { LightningElement, api, wire } from 'lwc';
 import { CloseActionScreenEvent } from 'lightning/actions';
 import { getRecord, getFieldValue } from "lightning/uiRecordApi";
-import { showToast, constructErrorMessage} from "c/utilCommon";
-
+import { constructErrorMessage} from "c/utilCommon";
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import refundPaymentTitle from "@salesforce/label/c.pmtRefundPaymentTitle";
 import cancelButtonLabel from "@salesforce/label/c.stgBtnCancel";
 import commonRefreshPage from "@salesforce/label/c.commonRefreshPage";
@@ -100,7 +100,7 @@ export default class Lwc_QuickAction extends LightningElement {
             return;
 
         } else if (response.isSuccess === true) {
-            showToast('', this.labels.refundProcessing + ' {0}', 'info', '', [
+            this.showToast('', this.labels.refundProcessing + ' {0}', 'info', '', [
                 {
                     url: '/' + response.redirectToPaymentId,
                     label: this.labels.commonRefreshPage,
@@ -108,10 +108,21 @@ export default class Lwc_QuickAction extends LightningElement {
             );
 
         } else if (response.isSuccess === false) {
-            showToast(this.labels.refundPaymentErrorMessage, response.errorMessage, 'error');
+            this.showToast(this.labels.refundPaymentErrorMessage, response.errorMessage, 'error');
         }
         
         this.handleClose();
+    }
+
+    showToast(title, message, variant, mode, messageData){
+        const event = new ShowToastEvent({
+            title: title,
+            message: message,
+            variant: variant,
+            mode: mode,
+            messageData: messageData
+        });
+        dispatchEvent(event);
     }
 
     displayErrorMessage(errorMessage) {
