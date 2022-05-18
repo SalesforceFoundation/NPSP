@@ -48,8 +48,13 @@ public with sharing class ServiceAppBindings {
         return new fflib_AppBinding()
             .setBindingObject(Account.SObjectType)
             .setBindingType(fflib_AppBindingType.Service)
-            .setImplementationType(AccountsServiceImpl.class)
-            .setInterfaceType(IAccountsService.class)
+            .setImplementationType(
+                Type.forName(
+                    UTIL_Namespace.getNamespace(), 'AccountsServiceImpl')
+            )
+            .setInterfaceType(
+                Type.forName(UTIL_Namespace.getNamespace(), 'IAccountsService')
+            )
             .setSharingMode(fflib_SharingMode.WithSharing);
     }
 }
