@@ -50,7 +50,7 @@ Edit An Enhanced Recurring donation record of type open
      ...                          User can fill the paused reason and check the dates to pause
      ...                          Validates the behavior of consecutive dates getting automatically selected
 
-    [tags]                                                     W-8116720          feature:RD2
+    [tags]                                        W-8116720          feature:RD2    stable  deprecated  unit
 
     Go To Page                                    Listing                                   npe03__Recurring_Donation__c
 
