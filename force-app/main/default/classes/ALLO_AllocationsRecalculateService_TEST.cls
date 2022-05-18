@@ -620,6 +620,105 @@ public class ALLO_AllocationsRecalculateService_TEST {
         ALLO_UnitTestHelper_TEST.assertPaymentAllocation(pmtAlloc1, pmts[0].Id, 50.01, percentGAU2, gaus[1].Id, 'Payment Allocation For GAU[1]');
     }
 
+     /**
+     * @description confirms that Allocations are no longer defaulted on Payments when sourceAmount = 0 so that Divide by Zero error no longer occurs.
+     *              with 0 for opportunity and allocation amount, this was done to test W-9458922
+     *              Default Allocations Enabled
+     *              Payment Allocations Enabled
+     *              [ALLO_AllocationsRecalculateService.processPaymentAllocations]
+     *              
+     *              Opportunity Amount $0
+     *                  Opportunity Allocation 1 for GAU 1, $0.00
+     *                  Opportunity Allocation 2 for GAU 2, $0.00
+     *                  Payment amount of 0 with no allocations
+     * 
+     *              No allocations created on payment that is autocreated
+     * 
+     * 
+     */ 
+    @isTest 
+    private static void confirmRecalculateServicePreservesWithZeroAmountOpportunity() {
+
+        ALLO_UnitTestHelper_TEST.AllocationSetupTest alloSetupTest = new ALLO_UnitTestHelper_TEST.AllocationSetupTest()
+            .enableDefaultAllocations()
+            .enablePaymentAllocations()
+            .disableAllocationTriggers()
+            .applyConfiguration();
+
+        List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
+        insert ctcs;
+
+        Opportunity opp = new Opportunity(
+            Name = 'Opp-recalcPmtAlloPercentCheck',
+            Amount = 0,
+            ContactID = ctcs[0].Id,
+            CloseDate = System.today(),
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
+        );
+        insert opp;
+
+
+        List<General_Accounting_Unit__c> gaus = alloSetupTest.getGAUs();
+        General_Accounting_Unit__c defaultGAU = alloSetupTest.getDefaultGAU();
+
+        // Setup Opportunity Allocations
+        List<Allocation__c> alloForInsert = new List<Allocation__c>{
+            new Allocation__c (General_Accounting_Unit__c = gaus[0].Id, Opportunity__c = opp.Id, Amount__c = 0, Percent__c = null),
+            new Allocation__c (General_Accounting_Unit__c = gaus[1].Id, Opportunity__c = opp.Id, Amount__c = 0, Percent__c = null)
+        };
+        insert alloForInsert;
+
+        npe01__OppPayment__c pmt = new npe01__OppPayment__c(npe01__opportunity__c=opp.Id, npe01__Payment_Amount__c=0);   
+        insert pmt;                                
+
+        Set<Id> oppIdsAsSet = new Set<Id>{ opp.Id };
+
+        ALLO_AllocationsWrapper allocWrapper = new ALLO_AllocationsRetrievalService()
+                                                .withOpportunities(oppIdsAsSet)
+                                                .retrieveData()
+                                                .allocationsWrapper;
+
+        Test.startTest();
+        ALLO_AllocationsReviewService allocReviewSvc = new ALLO_AllocationsReviewService()
+                                                            .withAllocationsWrapper(allocWrapper);
+                                                            
+        ALLO_AllocationsRecalculateService allocRecalcSvc = new ALLO_AllocationsRecalculateService()
+                                                                .withAllocationsWrapper(allocWrapper);
+
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForDelete, 0, 'Before Recalculate - Delete List');
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForInsert, 0, 'Before Recalculate - Insert List');
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForUpdate, 0, 'Before Recalculate - Update List');
+
+        Test.stopTest();
+        allocRecalcSvc.processOpportunityAllocations();
+
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForDelete, 0, 'After Recalculate - Delete List');
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForInsert, 0, 'After Recalculate - Insert List');
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForUpdate, 0, 'After Recalculate - Update List');
+
+        // Have to process DML before processing the Payment Allocations
+        ALLO_AllocationsDMLService allocDMLSvc = new ALLO_AllocationsDMLService()
+                                                        .withAllocationsWrapper(allocWrapper);
+        allocDMLSvc.processAllocationResults();
+
+        // Manually clearing pending DML
+        allocWrapper.clearPendingDML();
+
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForDelete, 0, 'Before Process Payment Allocations - Delete List');
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForInsert, 0, 'Before Process Payment Allocations - Insert List');
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForUpdate, 0, 'Before Process Payment Allocations - Update List');
+
+        allocRecalcSvc.processPaymentAllocations();
+
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForDelete, 0, 'After Process Payment Allocations - Delete List');
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForInsert, 0, 'After Process Payment Allocations - Insert List');
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForUpdate, 0, 'After Process Payment Allocations - Update List');
+
+        Allocation__c pmtAlloc0 = ALLO_UnitTestHelper_TEST.findByGAU(allocWrapper.allocationsForInsert, gaus[0]);
+        Allocation__c pmtAlloc1 = ALLO_UnitTestHelper_TEST.findByGAU(allocWrapper.allocationsForInsert, gaus[1]);
+
+    }
+
     /**
      * @description Confirm Recalculate Service creates correct DML changes when
      *              Default Allocations Enabled
