@@ -34,5 +34,5 @@
 * @description Interface for the accounts domain class
 */
 public interface IAccounts {
-
+    IAccounts needsTypeAndIndividualFieldsSet();
 }
