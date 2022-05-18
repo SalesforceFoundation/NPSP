@@ -55,7 +55,7 @@ public class ACCT_Accounts_TDTM extends TDTM_Runnable {
 
         switch on triggerAction {
             when BeforeInsert {
-                AccountsService.onBeforeInsert(listNew);
+                AccountsService.onBeforeInsert((List<Account>)listNew);
             }
             when BeforeUpdate {
                 if (!isContactBeforeInsertContext()) {
