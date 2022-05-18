@@ -42,6 +42,7 @@ public without sharing class UTIL_Http {
     public static final Integer STATUS_CODE_NOT_FOUND = 404;
     public static final Integer STATUS_CODE_REQUEST_TIMEOUT = 408;
     public static final Integer STATUS_CODE_CONFLICT = 409;
+    public static final Integer STATUS_CODE_UNPROCESSABLE_ENTITY = 422;
     public static final Integer STATUS_CODE_INTERNAL_SERVER_ERROR = 500;
     public static final Integer STATUS_CODE_SERVICE_UNAVAILABLE = 503;
     public static final Integer STATUS_CODE_GATEWAY_TIMEOUT = 504;
@@ -50,6 +51,7 @@ public without sharing class UTIL_Http {
     public static final String STATUS_NOT_FOUND = 'Not Found';
     public static final String STATUS_TIMED_OUT = 'Request Timeout';
     public static final String STATUS_CONFLICT = 'Conflict';
+    public static final String STATUS_UNPROCESSABLE_ENTITY = 'Unprocessable Entity';
 
     public static final String TIMED_OUT_MESSAGE = 'timed out';
 
