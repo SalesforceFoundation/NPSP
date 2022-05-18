@@ -20,7 +20,7 @@ Check Recurring Donation Autoname
     [Documentation]              This test verifies that the Autonaming setting for Recurring Donations is working properly.
     ...                          When the autonaming setting is enabled , After a recurring donation is created, verify that
     ...                          Recurring donation has Autonaming
-    [tags]                       stable      deprecated   unit     W-039820   feature:Recurring Donations
+    [tags]                         deprecated   unit     W-039820   feature:Recurring Donations
 
     #Enable Autonaming Setting
     @{recurringsettings} =       Salesforce Query                             npe03__Recurring_Donations_Settings__c

@@ -41,7 +41,7 @@ Edit An Enhanced Recurring donation record of type open
      ...                          Verifies the opportunity status reflects the right status after closing
 
 
-    [tags]                                  W-040346    feature:RD2     stable  api
+    [tags]                                  W-040346    feature:RD2   api
 
     Go To Page                              Listing                                   npe03__Recurring_Donation__c
 

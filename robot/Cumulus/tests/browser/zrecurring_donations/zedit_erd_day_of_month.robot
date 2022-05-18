@@ -41,7 +41,7 @@ Edit Day Of Month For Enhanced Recurring donation record of type open
      ...                          Ensure there is only one Opportunity
 
 
-    [tags]                                  W-042266    feature:RD2     stable    api
+    [tags]                                  W-042266    feature:RD2     api
 
     Go To Page                              Listing                                   npe03__Recurring_Donation__c
     Current Page Should Be                  Listing                                   npe03__Recurring_Donation__c

@@ -7,7 +7,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create via API
-    [Tags]    stable    deprecated
+    [Tags]        deprecated
     &{contact} =  API Create Contact
     Go To Record Home  ${contact}[Id]
     Page Should Contain  ${contact}[FirstName] ${contact}[LastName]

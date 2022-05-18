@@ -16,7 +16,7 @@ User On A Non RD2 Enbaled Org should Not See Status Mappings Option
      ...                          Under NPSP Settings
 
 
-    [tags]                        W-8211276     stable
+    [tags]                        W-8211276
 
     Go To Page                   Custom                        NPSP_Settings
     Open Main Menu               Recurring Donations
