@@ -33,10 +33,27 @@
 * @author Salesforce.org
 * @description Accounts domain class
 */
-public inherited sharing class Accounts extends fflib_SObjects2 {
+public inherited sharing class Accounts extends fflib_SObjects2 implements IAccounts {
 
     public static IAccounts newInstance(List<Account> records)
     {
         return (IAccounts) Application.Domain.newInstance(records, Schema.Account.SObjectType);
+    }
+
+    public IAccounts needsTypeAndIndividualFieldsSet() {
+        return (IAccounts) getRecords (
+            isMissingAccountTypeCriteria()
+                .addOrCriteria(isNotIndividualAccountCriteria())
+        );
+    }
+
+    private fflib_Criteria isMissingAccountTypeCriteria() {
+        return new fflib_Criteria()
+            .equalTo(Account.npe01__SYSTEM_AccountType__c, null);
+    }
+
+    private fflib_Criteria isNotIndividualAccountCriteria() {
+        return new fflib_Criteria()
+                .equalTo(Account.npe01__SYSTEM_AccountType__c, null);
     }
 }
