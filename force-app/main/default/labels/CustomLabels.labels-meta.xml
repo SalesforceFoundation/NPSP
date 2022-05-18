@@ -6273,6 +6273,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Records Processed</value>
     </labels>
     <labels>
+        <fullName>commonRefreshPage</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refresh page to check status</shortDescription>
+        <value>Refresh page to check status</value>
+    </labels>
+    <labels>
         <fullName>commonRequired</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -11814,12 +11822,76 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>You can&apos;t modify Payment currencies directly. Update the parent Opportunity&apos;s currency, and NPSP will automatically update the currency of all related Payment records.</value>
     </labels>
     <labels>
+        <fullName>pmtNoRefundPermissionMessage</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message displayed when the user has no permission to apply the Refund</shortDescription>
+        <value>You do not have permissions to Refund Payments.</value>
+    </labels>
+    <labels>
+        <fullName>pmtOriginalPaymentNotCompleted</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cannot refund the payment</shortDescription>
+        <value>The transaction is not completed.</value>
+    </labels>
+    <labels>
         <fullName>pmtPaidPaymentDateRequired</fullName>
         <categories>Payment, Accounting Data Consistency</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>pmtPaidPaymentDateRequired</shortDescription>
         <value>A paid Payment must have a Payment Date.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentErrorMessage</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtPaidPaymentDateRequired</shortDescription>
+        <value>There was an error processing the refund.</value>
+    </labels>
+    <labels>
+        <fullName>pmtPaymentNotFund</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cannot find the payment in Elevate</shortDescription>
+        <value>Can not find the corressponding payment record in Elevate.</value>
+    </labels>
+    <labels>
+        <fullName>pmtPaymentNotRefundable</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cannot refund the payment</shortDescription>
+        <value>Cannot refund a transaction twice or refund a refund.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentMessage</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund Information</shortDescription>
+        <value>This will refund the payment made on {{VALUE}} in the amount of {{VALUE}}</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundProcessing</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Payment refund submitted for processing</shortDescription>
+        <value>Payment refund submitted for processing.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentTitle</fullName>
+        <categories>Payment, Refund</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund Payment Title</shortDescription>
+        <value>Refund Payment</value>
     </labels>
     <labels>
         <fullName>pmtUnpaidPaymentScheduledDateRequired</fullName>
