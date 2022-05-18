@@ -54,16 +54,6 @@ public inherited sharing class Application {
     public static final fflib_ISelectorFactory Selector =
             new fflib_DynamicSelectorFactory(bindingResolver);
 
-    public static final fflib_ISelectorFactory WithoutSharingSelector =
-            new fflib_DynamicSelectorFactory(
-                    bindingResolver.bySharingMode(fflib_SharingMode.WithoutSharing)
-            );
-
-    public static final fflib_ISelectorFactory InheritedSharingSelector =
-            new fflib_DynamicSelectorFactory(
-                    bindingResolver.bySharingMode(fflib_SharingMode.InheritedSharing)
-            );
-
     public static final fflib_IDomainFactory Domain =
             new fflib_DynamicDomainFactory(bindingResolver, Selector);
 
