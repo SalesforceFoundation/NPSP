@@ -53,6 +53,10 @@
         <name>CustomField</name>
     </types>
     <types>
+        <members>%%%NAMESPACE%%%DataImport__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
         <members>%%%NAMESPACE%%%Grant_Deadline__c</members>
         <name>CustomTab</name>
     </types>
@@ -82,6 +86,7 @@
         <members>%%%NAMESPACE%%%Address__c-%%%NAMESPACE%%%Address Layout</members>
         <members>%%%NAMESPACE%%%Allocation__c-%%%NAMESPACE%%%Allocation Layout</members>
         <members>%%%NAMESPACE%%%Batch__c-%%%NAMESPACE%%%Batch Layout</members>
+        <members>%%%NAMESPACE%%%DataImport__c-%%%NAMESPACE%%%Data Import Layout</members>
         <members>%%%NAMESPACE%%%DataImportBatch__c-%%%NAMESPACE%%%NPSP Data Import Batch Layout</members>
         <members>%%%NAMESPACE%%%Engagement_Plan_Task__c-%%%NAMESPACE%%%Engagement Plan Task Layout</members>
         <members>%%%NAMESPACE%%%Engagement_Plan_Template__c-%%%NAMESPACE%%%Engagement Plan Template Layout</members>
