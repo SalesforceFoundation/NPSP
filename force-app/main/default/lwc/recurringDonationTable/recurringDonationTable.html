@@ -5,7 +5,11 @@
                 data={data}
                 hide-checkbox-column="true"
                 class="slds-max-medium-table_stacked"
-                columns={columns}>
+                columns={columns}
+                onrowaction={handleRowAction}>
         </lightning-datatable>
     </div>
+    <c-update-payment-method-modal></c-update-payment-method-modal>
+    <c-change-amount-or-frequency-modal></c-change-amount-or-frequency-modal>
+    <c-stop-recurring-donation-modal></c-stop-recurring-donation-modal>
 </template>

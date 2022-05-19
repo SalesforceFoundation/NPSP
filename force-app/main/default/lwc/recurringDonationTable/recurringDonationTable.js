@@ -1,4 +1,4 @@
-import { LightningElement, api, wire } from 'lwc';
+import { LightningElement, api, wire, track } from 'lwc';
 import commonAmount from '@salesforce/label/c.commonAmount';
 import RDCL_Frequency from '@salesforce/label/c.RDCL_Frequency';
 import lblStatus from '@salesforce/label/c.lblStatus';
@@ -79,10 +79,23 @@ export default class RecurringDonationTable extends LightningElement {
         "nextDonation": "Paid Donation: 6 of 8. Next Donation: 12/22/2022."
     }];
     actions = [
-      { label: 'View', name: 'view' },
-      { label: 'Delete', name: 'delete' }
+      { label: 'Update Payment Method', name: 'updatePaymentMethod' },
+      { label: 'Change Amount or Frequency', name: 'changeAmountOrFrequency' },
+      { label: 'Stop Recurring Donation', name: 'stopRecurringDonation' }
     ];
+
     columns = [];
+
+    openUpdatePaymentMethodModal() {
+      this.template.querySelector('c-update-payment-method-modal').openmodal();
+    }
+    openchangeAmountOrFrequency() {
+      this.template.querySelector('c-change-amount-or-frequency-modal').openmodal();
+    }
+    openstopRecurringDonation() {
+      this.template.querySelector('c-stop-recurring-donation-modal').openmodal();
+    }
+
     @wire(getObjectInfo, { objectApiName: RECURRING_DONATION })
     oppInfo({ data, error }) {
         if (data){
@@ -102,5 +115,22 @@ export default class RecurringDonationTable extends LightningElement {
             }}
         ];
         }
+      }
+      handleRowAction(e) {
+        const action = e.detail.action;
+        console.log(JSON.stringify(action));
+        switch (action.name) {
+            case 'updatePaymentMethod':
+                this.openUpdatePaymentMethodModal();
+                break;
+            case 'changeAmountOrFrequency':
+                this.openchangeAmountOrFrequency()
+                break;
+            case 'stopRecurringDonation':
+                this.openstopRecurringDonation();
+                break;
+            default:
+                break;
+      }
     }
 }
