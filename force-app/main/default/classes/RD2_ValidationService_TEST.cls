@@ -365,7 +365,7 @@ private with sharing class RD2_ValidationService_TEST {
 
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
         for (String day : new Set<String>{
-            '15', '10', '28', '29', '30'
+            '15', '10', '28', '29', '31'
         }) {
             rds.add(rdBuilder
                 .withDayOfMonth(day)
@@ -550,6 +550,40 @@ private with sharing class RD2_ValidationService_TEST {
             'The RD should be under the same organization');
         System.assertEquals(householdContact.Id, rd.npe03__Contact__c,
             'The RD should have the household contact as its primary contact');
+    }
+
+    /***
+    * @description Verifies RD that has an Account ID added that is the same as the 
+    * Contact's Account can be updated
+    */
+    @isTest
+    private static void shouldUpdateRdWhenAccountFromContactIsAdded() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        List<Contact> householdContacts = getContacts();
+
+        npe03__Recurring_Donation__c oldRd = getRecurringDonationBuilder()
+            .withContact(householdContacts[0].Id)
+            .build();
+
+        npe03__Recurring_Donation__c rd = oldRd.clone();
+        rd.npe03__Organization__c = householdContacts[0].AccountId;
+
+        RD2_ValidationService validationService = new RD2_ValidationService(
+            new List<npe03__Recurring_Donation__c>{rd},
+            new List<npe03__Recurring_Donation__c>{oldRd}
+        );
+
+        Test.startTest();
+        List<ErrorRecord> errorRecords = validationService.validate();
+        Test.stopTest();
+
+        String errMessage = '';
+        if(errorRecords.size() > 0){
+            errMessage = errorRecords[0].getFirstError();
+        }
+        System.assert(String.isBlank(errMessage),
+            'Update should succeed when RD has Account added that is same as Contact Account: ' + errMessage
+        );
     }
 
     /***
