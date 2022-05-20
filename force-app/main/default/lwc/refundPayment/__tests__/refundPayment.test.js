@@ -37,7 +37,7 @@ describe('c-refund-payment', () => {
         await flushPromises();
 
         expect(cancelButton(component).title).toBe('c.stgBtnCancel');
-        expect(refundButton(component).title).toBe('c.pmtRefundPaymentTitle');
+        expect(refundButton(component).title).toBe('c.pmtRefundPaymentConfirmedButton');
     });
 
     it('The screen should be closed on Cancel', async () => {
