@@ -47,6 +47,11 @@ public inherited sharing class Accounts extends fflib_SObjects2 implements IAcco
         );
     }
 
+    public static IHouseholds newHouseholdAccounts(List<SObject> records) {
+        Application.Domain.replaceWith(Account.SObjectType, IHouseholds.class, Households.Constructor.class);
+        return (IHouseholds) Application.Domain.newInstance(records);
+    }
+
     private fflib_Criteria isMissingAccountTypeCriteria() {
         return new fflib_Criteria()
             .equalTo(Account.npe01__SYSTEM_AccountType__c, null);

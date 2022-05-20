@@ -32,7 +32,7 @@
 * @date 2021
 * @description Contact repository responsible for retrieval and storing of Contacts for specified Accounts
 */
-public inherited sharing class Households extends fflib_SObjects2 {
+public inherited sharing class Households extends fflib_SObjects2 implements IHouseholds {
 
     private Map<Id, Contacts> membersByHouseholdId {
         get {
@@ -85,6 +85,14 @@ public inherited sharing class Households extends fflib_SObjects2 {
             'zh_TW'
     };
 
+    public class Constructor implements fflib_IDomainConstructor
+    {
+        public fflib_SObjects2 construct(List<Object> records)
+        {
+            return new Households((List<SObject>) records);
+        }
+    }
+
     /*******************************************************************************************************************
      * @description the current user's Locale/Language
      */
@@ -98,6 +106,8 @@ public inherited sharing class Households extends fflib_SObjects2 {
         }
         set;
     }
+
+    public Households(){}
 
     /*******************************************************************************************************
     * @description Constructor

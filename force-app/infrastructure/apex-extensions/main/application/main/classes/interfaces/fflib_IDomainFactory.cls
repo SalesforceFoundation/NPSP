@@ -101,6 +101,8 @@ public interface fflib_IDomainFactory
 	 **/
 	fflib_IDomain newInstance(List<SObject> records, Schema.SObjectType sObjectType);
 
+	void replaceWith(SObjectType sObjectType, Type domainInterfaceType, Type replacementType);
+
 	/**
 	 * Registers a mock in the Factory by providing a mock instance of a domain
 	 * This method is only available for backward compatibility for

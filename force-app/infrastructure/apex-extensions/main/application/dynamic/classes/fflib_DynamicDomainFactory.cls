@@ -72,6 +72,15 @@ public virtual class fflib_DynamicDomainFactory
 		);
 	}
 
+	public void replaceWith(SObjectType sObjectType, Type domainInterfaceType, Type replacementImplType) {
+		resolver.byType(fflib_AppBindingType.Domain)
+				.byObject(sObjectType)
+				.resolve()
+				.get(0) // TODO - validate that there are any resolved bindings
+				.setImplementationType(replacementImplType)
+				.setInterfaceType(domainInterfaceType);
+	}
+
 	public fflib_IDomain newInstance(List<Object> objects, Object objectType)
 	{
 		if (hasMock(objectType)) return (fflib_IDomain) getMock(objectType);
