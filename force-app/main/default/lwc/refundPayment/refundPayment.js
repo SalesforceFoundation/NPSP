@@ -17,7 +17,7 @@ import getPermissionData from "@salesforce/apex/PMT_RefundController.getPermissi
 import PAYMENT_AMOUNT_FIELD from '@salesforce/schema/npe01__oppPayment__c.npe01__Payment_Amount__c';
 import PAYMENT_DATE_FIELD from '@salesforce/schema/npe01__oppPayment__c.npe01__Payment_Date__c';
 
-export default class Lwc_QuickAction extends LightningElement {
+export default class refundPayment extends LightningElement {
     @api recordId;
     hasError = false;
     errorMessage;
@@ -53,11 +53,11 @@ export default class Lwc_QuickAction extends LightningElement {
     }
 
     get paymentDateMessage() {
-        return this.labels.refundPaymentMessage.split('{{VALUE}}')[0];
+        return this.labels.refundPaymentMessage.split(/{[^}]*}/)[0];
     }
 
     get paymentAmountMessage() {
-        return this.labels.refundPaymentMessage.split('{{VALUE}}')[1];
+        return this.labels.refundPaymentMessage.split(/{[^}]*}/)[1];
     }
 
     async connectedCallback() {

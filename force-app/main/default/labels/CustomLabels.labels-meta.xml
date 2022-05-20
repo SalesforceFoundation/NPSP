@@ -6277,8 +6277,8 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Payment</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Refresh page to check status</shortDescription>
-        <value>Refresh page to check status</value>
+        <shortDescription>Refresh page to show the latest updates.</shortDescription>
+        <value>Refresh page to show the latest updates.</value>
     </labels>
     <labels>
         <fullName>commonRequired</fullName>
@@ -11827,7 +11827,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Message displayed when the user has no permission to apply the Refund</shortDescription>
-        <value>You do not have permissions to Refund Payments.</value>
+        <value>You don&apos;t have permissions to refund Payments. Contact your Salesforce admin for help.</value>
     </labels>
     <labels>
         <fullName>pmtOriginalPaymentNotCompleted</fullName>
@@ -11850,7 +11850,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Payment</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>pmtPaidPaymentDateRequired</shortDescription>
+        <shortDescription>Error message title for refund</shortDescription>
         <value>There was an error processing the refund.</value>
     </labels>
     <labels>
@@ -11858,8 +11858,8 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Payment</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Cannot find the payment in Elevate</shortDescription>
-        <value>Can not find the corressponding payment record in Elevate.</value>
+        <shortDescription>Error message for missing Elevate payment record</shortDescription>
+        <value>The corresponding Elevate payment record couldn&apos;t be found. Contact your Salesforce admin for help.</value>
     </labels>
     <labels>
         <fullName>pmtPaymentNotRefundable</fullName>
@@ -11875,7 +11875,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Refund Information</shortDescription>
-        <value>This will refund the payment made on {{VALUE}} in the amount of {{VALUE}}</value>
+        <value>This will refund the payment made on {0} in the amount of {1}</value>
     </labels>
     <labels>
         <fullName>pmtRefundProcessing</fullName>
