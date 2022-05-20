@@ -18,7 +18,7 @@ User on a RD2 enbaled Org should See Status Mappings Option along with default m
      ...                          A table with default mapped values get populated
 
 
-    [tags]                       W-8211315  feature:RD2   unstable    deprecated  unit
+    [tags]                       W-8211315  feature:RD2   unstable    unit
     Open NPSP Settings           Recurring Donations               Status to State Mapping
     Verify Status To State Mappings
     ...                          Active=Active

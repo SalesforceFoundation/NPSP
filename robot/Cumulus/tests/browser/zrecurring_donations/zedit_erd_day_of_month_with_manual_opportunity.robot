@@ -89,7 +89,7 @@ Edit Day Of Month For Enhanced Recurring donation record of type open with a man
      ...                          changes.
 
 
-    [tags]                             W-040346     feature:RD2   deprecated  unit
+    [tags]                             W-040346     feature:RD2   unit
 
     Go To Page                         Details
     ...                                npe03__Recurring_Donation__c

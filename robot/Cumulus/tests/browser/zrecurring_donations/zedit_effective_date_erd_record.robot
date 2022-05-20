@@ -55,7 +55,7 @@ Edit An Enhanced Recurring donation record of type open
      ...                          is edited and effective date is updated to next month , Verifies that future schedule is shown
      ...                          with the right values reflected. Verifies the current year and future year schedules are updated
      ...                          Verifies the opportunity status
-    [tags]                                   W-041167            feature:RD2    deprecated  unit
+    [tags]                                   W-041167            feature:RD2    unit
 
     Go To Page                               Details
     ...                                      npe03__Recurring_Donation__c

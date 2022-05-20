@@ -32,7 +32,7 @@ Remove Primary Affiliation for Contact
     [Documentation]                   Creates a contact, organization account and primary affiliation via API
     ...                               Open contact and delete affiliation from organization affiliation related list
     ...                               Verifies that contact does not show under affiliated contacts in the account page
-    [tags]                            W-037651  feature:Affiliations    notonfeaturebranch  deprecated  unit
+    [tags]                            W-037651  feature:Affiliations    notonfeaturebranch  unit
     Go To Page                        Details                      Contact                 object_id=${contact1}[Id]
     Select Tab                        Related
     Click Related Item Popup Link     Organization Affiliations    ${account1}[Name]       Delete

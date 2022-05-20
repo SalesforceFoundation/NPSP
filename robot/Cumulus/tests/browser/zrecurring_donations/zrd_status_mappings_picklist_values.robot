@@ -36,7 +36,7 @@ Verify Status Mappings For Custom Status Picklist Values
     ...                 remain intact . The newly added status mapping values appear in the status
     ...                 mappings section and remain unmapped.
 
-    [tags]                       feature:RD     unstable    notonfeaturebranch  deprecated  unit
+    [tags]                       feature:RD     unstable    notonfeaturebranch  unit
 
     Open NPSP Settings           Recurring Donations       Status to State Mapping
     Sleep                        1
