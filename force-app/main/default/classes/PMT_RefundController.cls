@@ -34,6 +34,17 @@
 * @description Apex Controller for paymnet refund
 */
 public with sharing class PMT_RefundController {
+    @TestVisible
+    private static PaymentSelector paymentSelector {
+        get {
+            if (paymentSelector == null) {
+                paymentSelector = new PaymentSelector();
+            }
+            return paymentSelector;
+        }
+        set;
+    }
+
     @AuraEnabled
     public static RefundView getPermissionData() {
         RefundView refundView = new RefundView();
@@ -49,7 +60,7 @@ public with sharing class PMT_RefundController {
         if (!refundView.hasRequiredPermissions) {
             return refundView;
         }
-        String transactionId = [SELECT Elevate_Payment_ID__c FROM npe01__OppPayment__c WHERE Id =: paymentId LIMIT 1]?.Elevate_Payment_ID__c;
+        String transactionId = paymentSelector.getPaymentWithElevateId(paymentId)?.Elevate_Payment_ID__c;
         PMT_RefundService refundService = new PMT_RefundService();
 
         if (PMT_RefundService.isElevateEnabled() && String.isNotBlank(transactionId)) {
@@ -78,16 +89,6 @@ public with sharing class PMT_RefundController {
         }
 
         return refundView;
-    }
-
-    private static npe01__OppPayment__c getPaymentRecord(Id paymentId) {
-        List<npe01__OppPayment__c> payment = [
-            SELECT npe01__Payment_Amount__c,
-                npe01__Payment_Date__c
-            FROM npe01__OppPayment__c
-            WHERE Id =: paymentId LIMIT 1];
-
-            return (payment.size() > 0) ? payment[0] : null;
     }
 
     public class RefundView {

@@ -36,32 +36,32 @@
 @IsTest
 public with sharing class PMT_RefundController_TEST {
     @isTest
-    private static void userWithNoPermissionShouldNotBeAbleToRetrieveData() {
+    private static void userWithNoPermissionShouldNotBeAbleToPerformAnyRefundAction() {
         User readOnlyUser = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
 
         System.runAs(readOnlyUser) {
-            PMT_RefundController.RefundView refundView = PMT_RefundController.getPermissionData();
+            PMT_RefundController.RefundView initialRefundView = PMT_RefundController.getPermissionData();
+            PMT_RefundController.RefundView afterRefundView = PMT_RefundController.processRefund(null);
 
-            System.assertEquals(false, refundView.hasRequiredPermissions, 'Read-only user should not have access to refund');
-        }
-    }
-
-    @isTest
-    private static void userWIthNoPermissionShouldNotBeAbleToExecuteRefundLogic() {
-        User readOnlyUser = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
-
-        System.runAs(readOnlyUser) {
-            PMT_RefundController.RefundView refundView = PMT_RefundController.processRefund(null);
-            System.assertEquals(false, refundView.hasRequiredPermissions, 'Read-only user should not be able to refund');
+            System.assertEquals(false, initialRefundView.hasRequiredPermissions, 'Read-only user should not have access to refund');
+            System.assertEquals(false, afterRefundView.hasRequiredPermissions, 'Read-only user should not be able to refund');
         }
     }
 
     @isTest
     private static void verifyRefundCalloutIsMadeWhenPaymentIsAnElevateRecord() {
         PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
-        UTIL_Http_TEST.CalloutMock calloutMock = UTIL_Http_TEST.mockSuccessCalloutResponse(null);
-        
+        PaymentSelector_TEST.Stub selectorStub = new PaymentSelector_TEST.Stub();
         npe01__OppPayment__c payment = getPaymentRecord();
+        selectorStub.elevatePaymentRecord = payment;
+
+        PMT_RefundController.paymentSelector = (PaymentSelector) Test.createStub(
+            PaymentSelector.class,
+            selectorStub
+        );
+
+        UTIL_Http_TEST.CalloutMock calloutMock = UTIL_Http_TEST.mockSuccessCalloutResponse(null);
+
         Test.startTest();
         PMT_RefundController.RefundView refundView = PMT_RefundController.processRefund(payment.Id);
         Test.stopTest();
@@ -79,7 +79,15 @@ public with sharing class PMT_RefundController_TEST {
         PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
         UTIL_Http_TEST.CalloutMock calloutMock = UTIL_Http_TEST.mockNotFoundCalloutResponse();
 
+        PaymentSelector_TEST.Stub selectorStub = new PaymentSelector_TEST.Stub();
         npe01__OppPayment__c payment = getPaymentRecord();
+        selectorStub.elevatePaymentRecord = payment;
+
+        PMT_RefundController.paymentSelector = (PaymentSelector) Test.createStub(
+            PaymentSelector.class,
+            selectorStub
+        );
+
         Test.startTest();
         PMT_RefundController.RefundView refundView = PMT_RefundController.processRefund(payment.Id);
         Test.stopTest();
@@ -93,26 +101,12 @@ public with sharing class PMT_RefundController_TEST {
     }
 
     private static npe01__OppPayment__c getPaymentRecord() {
-        insert UTIL_UnitTestData_TEST.getContact();
-        Account account = [SELECT Id FROM Account LIMIT 1];
-
-        Opportunity opp = new TEST_OpportunityBuilder()
-        .withAccount(account.Id)
-        .withOpenStage()
-        .withCloseDate(System.today())
-        .withAMount(500)
-        .build();
-
-    insert opp;
-
-    npe01__OppPayment__c payment =  new npe01__OppPayment__c(
+        return new npe01__OppPayment__c(
+            Id = UTIL_UnitTestData_TEST.mockId(npe01__OppPayment__c.SObjectType),
             npe01__Paid__c = true,
             npe01__Payment_Amount__c = 250,
-            npe01__Opportunity__c = opp.Id,
+            npe01__Opportunity__c = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType),
             Elevate_Payment_ID__c = 'random-id'
-    );
-
-    insert payment;
-    return payment;
+        );
     }
 }
