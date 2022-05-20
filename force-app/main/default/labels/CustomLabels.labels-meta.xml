@@ -11826,8 +11826,8 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Payment</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Cannot refund the payment</shortDescription>
-        <value>The transaction is not completed.</value>
+        <shortDescription>Refund rror message when Elevate hasn&apos;t processed the payment yet.</shortDescription>
+        <value>Payment can&apos;t be refunded because Elevate hasn&apos;t processed the payment yet.</value>
     </labels>
     <labels>
         <fullName>pmtPaidPaymentDateRequired</fullName>
@@ -11858,8 +11858,8 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Payment</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Cannot refund the payment</shortDescription>
-        <value>Cannot refund a transaction twice or refund a refund.</value>
+        <shortDescription>Refund error when the payment has already been refund, or is a refund itself</shortDescription>
+        <value>This payment has already been refunded, or is a refund itself.</value>
     </labels>
     <labels>
         <fullName>pmtRefundPaymentMessage</fullName>
@@ -11867,15 +11867,23 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Refund Information</shortDescription>
-        <value>This will refund the payment made on {0} in the amount of {1}</value>
+        <value>Refund the payment made on {0} in the amount of {1}.</value>
     </labels>
     <labels>
         <fullName>pmtRefundProcessing</fullName>
         <categories>Payment</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Payment refund submitted for processing</shortDescription>
-        <value>Payment refund submitted for processing.</value>
+        <shortDescription>Refund submitted for processing.</shortDescription>
+        <value>Refund submitted for processing.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentConfirmedButton</fullName>
+        <categories>Payment, Refund</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund Payment Button</shortDescription>
+        <value>Refund Payment</value>
     </labels>
     <labels>
         <fullName>pmtRefundPaymentTitle</fullName>
@@ -11883,7 +11891,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Refund Payment Title</shortDescription>
-        <value>Refund Payment</value>
+        <value>Refund Payment?</value>
     </labels>
     <labels>
         <fullName>pmtUnpaidPaymentScheduledDateRequired</fullName>

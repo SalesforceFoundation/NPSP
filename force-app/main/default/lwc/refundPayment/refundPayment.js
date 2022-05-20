@@ -4,6 +4,7 @@ import { getRecord, getFieldValue } from "lightning/uiRecordApi";
 import { constructErrorMessage} from "c/utilCommon";
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import refundPaymentTitle from "@salesforce/label/c.pmtRefundPaymentTitle";
+import refundPaymentConfirmButton from "@salesforce/label/c.pmtRefundPaymentConfirmedButton";
 import cancelButtonLabel from "@salesforce/label/c.stgBtnCancel";
 import commonRefreshPage from "@salesforce/label/c.commonRefreshPage";
 import noRefundPermissionMessage from "@salesforce/label/c.pmtNoRefundPermissionMessage";
@@ -23,6 +24,7 @@ export default class refundPayment extends LightningElement {
     errorMessage;
     labels = Object.freeze({
         refundPaymentTitle,
+        refundPaymentConfirmButton,
         cancelButtonLabel,
         commonRefreshPage,
         noRefundPermissionMessage,
