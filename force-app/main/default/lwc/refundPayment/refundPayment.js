@@ -32,7 +32,7 @@ export default class refundPayment extends LightningElement {
     });
     refundView;
     paymentAmount;
-    _paymentDate;
+    paymentDate;
 
     @wire(getRecord, {
         recordId: '$recordId',
@@ -43,13 +43,8 @@ export default class refundPayment extends LightningElement {
             this.errorMessage = constructErrorMessage(error).detail;
         } else if (data) {
             this.paymentAmount = getFieldValue(data, PAYMENT_AMOUNT_FIELD);
-            this._paymentDate = getFieldValue(data, PAYMENT_DATE_FIELD);
+            this.paymentDate = getFieldValue(data, PAYMENT_DATE_FIELD);
         }
-    }
-
-    get paymentDate() {
-        const localDate = new Date(this._paymentDate);
-        return new Date(localDate.getUTCFullYear(), localDate.getUTCMonth(), localDate.getUTCDate());
     }
 
     get paymentDateMessage() {
@@ -83,11 +78,6 @@ export default class refundPayment extends LightningElement {
             this.displayErrorMessage(constructErrorMessage(error).detail);
         });
 
-    }
-
-    formatDate() {
-        const localDate = new Date(this._nextDonationDate);
-        return new Date(localDate.getUTCFullYear(), localDate.getUTCMonth(), localDate.getUTCDate());
     }
 
     handleClose(){
