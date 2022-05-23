@@ -494,9 +494,7 @@ public with sharing class ADDR_Contacts_TEST {
         }
 
         OrgConfig orgConfig = new OrgConfig();
-        if (orgConfig.isStateCountryPicklistsEnabled() == false) {
-            return;
-        }
+        Boolean isStateCountryEnabled = orgConfig.isStateCountryPicklistsEnabled();
 
         final String TEST_STREET = '123 Household Street';
         final String TEST_CITY = 'Seattle';
@@ -512,48 +510,64 @@ public with sharing class ADDR_Contacts_TEST {
         );
         testContact.MailingStreet = TEST_STREET;
         testContact.MailingCity = TEST_CITY;
-        testContact.MailingStateCode = TEST_STATE_CODE;
         testContact.MailingPostalCode = TEST_POSTAL;
-        testContact.MailingCountryCode = TEST_COUNTRY_CODE;
+        if (isStateCountryEnabled) {
+            testContact.put('MailingStateCode', TEST_STATE_CODE);
+            testContact.put('MailingCountryCode', TEST_COUNTRY_CODE);
+        } else {
+            testContact.put('MailingState', TEST_STATE);
+            testContact.put('MailingCountry', TEST_COUNTRY);
+        }
 
         Test.startTest();
         insert testContact;
         Test.stopTest();
 
-        testContact = [SELECT Id, AccountId, Current_Address__c, 
-                        MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, MailingStateCode, MailingCountryCode
-                                    FROM Contact
-                                    WHERE Id = :testContact.Id];
+        String contactSOQL = 'SELECT Id, AccountId, Current_Address__c, ' 
+                        + 'MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry';
+        if (isStateCountryEnabled) {
+            contactSOQL += ', MailingStateCode, MailingCountryCode';
+        }
+        contactSOQL += ' FROM Contact WHERE Id = \'' + testContact.Id +'\'';
+        testContact = Database.query(contactSOQL);
+
         Address__c addr = [SELECT MailingStreet__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c
                                     FROM Address__c
                                     WHERE Id = :testContact.Current_Address__c
                                     LIMIT 1];
-        Account a = [SELECT BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingStateCode, BillingCountryCode
-                                    FROM Account
-                                    WHERE Id = :testContact.AccountId 
-                                    LIMIT 1];
+
+        String accountSOQL = 'SELECT Id, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry';
+        if (isStateCountryEnabled) {
+            accountSOQL += ', BillingStateCode, BillingCountryCode';
+        }
+        accountSOQL += ' FROM Account WHERE Id = \'' + testContact.AccountId +'\'';
+        Account acct = Database.query(accountSOQL);
 
         System.assertEquals(testContact.MailingStreet, TEST_STREET);
         System.assertEquals(testContact.MailingCity, TEST_CITY);
         System.assertEquals(testContact.MailingPostalCode, TEST_POSTAL);
-        System.assertEquals(testContact.MailingState, TEST_STATE);
-        System.assertEquals(testContact.MailingCountry, TEST_COUNTRY);
-        System.assertEquals(testContact.MailingStateCode, TEST_STATE_CODE);
-        System.assertEquals(testContact.MailingCountryCode, TEST_COUNTRY_CODE);
+        System.assertEquals(testContact.MailingState, TEST_STATE, 'The MailingState field should lhave a value');
+        System.assertEquals(testContact.MailingCountry, TEST_COUNTRY, 'The MailingCountry field should lhave a value');
+        if (isStateCountryEnabled) {
+            System.assertEquals(testContact.get('MailingStateCode'), TEST_STATE_CODE, 'The MailingStateCode field should lhave a value');
+            System.assertEquals(testContact.get('MailingCountryCode'), TEST_COUNTRY_CODE, 'The MailingCountryCode field should lhave a value');
+        }
 
-        System.assertEquals(a.BillingStreet, TEST_STREET);
-        System.assertEquals(a.BillingCity, TEST_CITY);
-        System.assertEquals(a.BillingPostalCode, TEST_POSTAL);
-        System.assertEquals(a.BillingState, TEST_STATE);
-        System.assertEquals(a.BillingCountry, TEST_COUNTRY);
-        System.assertEquals(a.BillingStateCode, TEST_STATE_CODE);
-        System.assertEquals(a.BillingCountryCode, TEST_COUNTRY_CODE);
+        System.assertEquals(acct.BillingStreet, TEST_STREET);
+        System.assertEquals(acct.BillingCity, TEST_CITY);
+        System.assertEquals(acct.BillingPostalCode, TEST_POSTAL);
+        System.assertEquals(acct.BillingState, TEST_STATE, 'The BillingState field should lhave a value');
+        System.assertEquals(acct.BillingCountry, TEST_COUNTRY, 'The BillingCountry field should lhave a value');
+        if (isStateCountryEnabled) {
+            System.assertEquals(acct.get('BillingStateCode'), TEST_STATE_CODE, 'The BillingStateCode field should lhave a value');
+            System.assertEquals(acct.get('BillingCountryCode'), TEST_COUNTRY_CODE, 'The BillingCountryCode field should lhave a value');
+        }
 
         System.assertEquals(addr.MailingStreet__c, TEST_STREET);
         System.assertEquals(addr.MailingCity__c, TEST_CITY);
         System.assertEquals(addr.MailingPostalCode__c, TEST_POSTAL);
-        System.assertEquals(addr.MailingState__c, TEST_STATE);
-        System.assertEquals(addr.MailingCountry__c, TEST_COUNTRY);
+        System.assertEquals(addr.MailingState__c, TEST_STATE, 'The MailingState field should lhave a value');
+        System.assertEquals(addr.MailingCountry__c, TEST_COUNTRY, 'The MailingCountry field should lhave a value');
     }
 
 
