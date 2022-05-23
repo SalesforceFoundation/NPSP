@@ -1,4 +1,4 @@
-import { LightningElement, api, wire, track } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
 import commonAmount from '@salesforce/label/c.commonAmount';
 import RDCL_Frequency from '@salesforce/label/c.RDCL_Frequency';
 import lblStatus from '@salesforce/label/c.lblStatus';
@@ -6,6 +6,9 @@ import firstDonation from '@salesforce/label/c.firstDonation'
 import nextDonation from '@salesforce/label/c.nextDonation';
 import mostRecentDonation from '@salesforce/label/c.mostRecentDonation';
 import lastModified from '@salesforce/label/c.lastModified';
+import updatePaymentMethod from '@salesforce/label/c.updatePaymentMethod';
+import changeAmountOrFrequency from '@salesforce/label/c.changeAmountOrFrequency';
+import stopRecurringDonation from '@salesforce/label/c.stopRecurringDonation';
 
 import RECURRING_DONATION from '@salesforce/schema/npe03__Recurring_Donation__c';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
@@ -13,6 +16,12 @@ import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 export default class RecurringDonationTable extends LightningElement {
     @api
     donationTypeFilter = 'Show all Recurring Donations';
+
+    openUpdatePaymentMethod = false;
+
+    openChangeAmountOrFrequency = false;
+
+    openStopRecurringDonation = false;
 
     paymentMethod = '';
 
@@ -79,16 +88,13 @@ export default class RecurringDonationTable extends LightningElement {
         "nextDonation": "Paid Donation: 6 of 8. Next Donation: 12/22/2022."
     }];
     actions = [
-      { label: 'Update Payment Method', name: 'updatePaymentMethod' },
-      { label: 'Change Amount or Frequency', name: 'changeAmountOrFrequency' },
-      { label: 'Stop Recurring Donation', name: 'stopRecurringDonation' }
+      { label: updatePaymentMethod, name: 'updatePaymentMethod' },
+      { label: changeAmountOrFrequency, name: 'changeAmountOrFrequency' },
+      { label: stopRecurringDonation, name: 'stopRecurringDonation' }
     ];
 
     columns = [];
 
-    openUpdatePaymentMethodModal() {
-      this.template.querySelector('c-update-payment-method-modal').openmodal();
-    }
     openchangeAmountOrFrequency() {
       this.template.querySelector('c-change-amount-or-frequency-modal').openmodal();
     }
@@ -118,19 +124,33 @@ export default class RecurringDonationTable extends LightningElement {
       }
       handleRowAction(e) {
         const action = e.detail.action;
-        console.log(JSON.stringify(action));
         switch (action.name) {
             case 'updatePaymentMethod':
-                this.openUpdatePaymentMethodModal();
+                this.openUpdatePaymentMethod = true;
                 break;
             case 'changeAmountOrFrequency':
-                this.openchangeAmountOrFrequency()
+                this.openChangeAmountOrFrequency = true;
                 break;
             case 'stopRecurringDonation':
-                this.openstopRecurringDonation();
+                this.openStopRecurringDonation = true;
                 break;
             default:
                 break;
+      }
+    }
+    handleClose(event){ 
+      switch (event.detail) {
+        case 'updatePaymentMethod':
+            this.openUpdatePaymentMethod = false;
+            break;
+        case 'changeAmountOrFrequency':
+            this.openChangeAmountOrFrequency = false;
+            break;
+        case 'stopRecurringDonation':
+            this.openStopRecurringDonation = false;
+            break;
+        default:
+            break;
       }
     }
 }

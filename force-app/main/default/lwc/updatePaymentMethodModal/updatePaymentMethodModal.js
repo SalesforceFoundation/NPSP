@@ -1,14 +1,13 @@
-import { LightningElement, track, api } from 'lwc';
-
+import { LightningElement, api } from 'lwc';
+import updatePaymentMethod from '@salesforce/label/c.updatePaymentMethod';
 export default class UpdatePaymentMethodModal extends LightningElement {
-    @track open = false;
+    @api openUpdatePaymentMethod;
 
-    @api 
-    openmodal() {
-        this.open = true
+    labels = {
+        updatePaymentMethod
     }
 
     closeModal() {
-        this.open = false
+        this.dispatchEvent(new CustomEvent('close', {detail: 'updatePaymentMethod'}));
     } 
 }

@@ -1,14 +1,15 @@
-import { LightningElement, api, track } from 'lwc';
-
+import { LightningElement, api } from 'lwc';
+import changeAmountOrFrequency from '@salesforce/label/c.changeAmountOrFrequency';
+import updateRecurringDonation from '@salesforce/label/c.updateRecurringDonation';
 export default class ChangeAmountOrFrequencyModal extends LightningElement {
-    @track open = false;
+    @api openChangeAmountOrFrequency;
 
-    @api 
-    openmodal() {
-        this.open = true
+    labels = {
+        changeAmountOrFrequency,
+        updateRecurringDonation
     }
 
     closeModal() {
-        this.open = false
+        this.dispatchEvent(new CustomEvent('close', {detail: 'changeAmountOrFrequency'}));
     } 
 }

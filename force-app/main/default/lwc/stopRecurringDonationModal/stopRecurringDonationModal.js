@@ -1,14 +1,16 @@
-import { LightningElement, api, track } from 'lwc';
-
+import { LightningElement, api } from 'lwc';
+import stopRecurringDonation from '@salesforce/label/c.stopRecurringDonation';
+import stopRecurringDonationModalTitle from '@salesforce/label/c.stopRecurringDonationModalTitle';
 export default class StopRecurringDonationModal extends LightningElement {
-    @track open = false;
 
-    @api 
-    openmodal() {
-        this.open = true
+    labels = {
+        stopRecurringDonation,
+        stopRecurringDonationModalTitle
     }
 
+    @api openStopRecurringDonation;
+
     closeModal() {
-        this.open = false
+        this.dispatchEvent(new CustomEvent('close', {detail: 'stopRecurringDonation'}));
     } 
 }
