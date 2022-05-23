@@ -1025,7 +1025,7 @@ global with sharing class BDI_DataImportService {
         Map<String, String> mapDIFieldToDstField) {
 
         Object value = dataImport.get(dataImportField);
-
+        
         // explicitly avoid updating unchecked booleans (since we can't tell the difference between null and false)
         if (value != null && value != false) {
             String destinationField = mapDIFieldToDstField.get(dataImportField);

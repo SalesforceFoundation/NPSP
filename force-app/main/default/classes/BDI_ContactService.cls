@@ -44,7 +44,12 @@ public with sharing class BDI_ContactService {
         mapDIIdToC1 = new Map<Id, Contact>();
         mapDIIdToC2 = new Map<Id, Contact>();
         mapDIKeyToContact = new Map<String, Contact>();
+        sObjsForDuplicateManagement = new SObject[]{};
+        dupeResults = new Map<SObject, DataStagingDuplicate>();
     }
+
+    private SObject[] sObjsForDuplicateManagement;
+    private Map<SObject, DataStagingDuplicate> dupeResults;
 
     /*******************************************************************************************************
     * @description cached map to get Contact1 for a DI
@@ -101,11 +106,14 @@ public with sharing class BDI_ContactService {
 
         // first, validate any required fields on contacts
         verifyContactData();
-
+        Long startTime = System.currentTimeMillis();
         // try to match our existing contacts
         BDI_PerfLogger.PerfLog pl = BDI_DataImportService.perfLogger.newPerfLog('matchExistingContacts');
         matchExistingContacts();
         pl.stop();
+        Long endTime = System.currentTimeMillis();
+        Long matchingTime = endTime - startTime;
+        System.debug('Total matching time is ' + matchingTime);
 
         if (bdi.isDryRun) {
             return;
@@ -317,6 +325,7 @@ public with sharing class BDI_ContactService {
                 continue;
             List<String> listDiKey = listDIKeyCx(di, strCx);
             Contact con = ContactFromDiKeys(listDiKey);
+            
             Boolean bothContactsSpecified = (strCx == 'Contact1' && isContactSpecified(di, 'Contact2')) || 
                 (strCx == 'Contact2' && isContactSpecified(di, 'Contact1'));
 
@@ -434,6 +443,7 @@ public with sharing class BDI_ContactService {
         Set<Id> setHHId = new Set<Id>();
         String c1CustomIDField = BDI_DataImportService.strDIContactCustomIDField('Contact1', bdi.diSettings);
         String c2CustomIDField = BDI_DataImportService.strDIContactCustomIDField('Contact2', bdi.diSettings);
+        
 
         // since the npsp email fields and phone fields are not indexed, we optimize our query to just
         // filter on Name (plus Id and UniqueId) if both First and Last are included in the criteria.
@@ -449,6 +459,15 @@ public with sharing class BDI_ContactService {
                 !UTIL_Describe.isMiddleNameEnabled() &&
                 !UTIL_Describe.isNameSuffixEnabled();
 
+        if (isDuplicateManagement) {
+            System.debug('inQueryCandidateContacts isDuplicateManagement true');
+            Long startDMTime = System.currentTimeMillis();
+            performDuplicateManagement();
+            Long endDMTime = System.currentTimeMillis();
+            Long DMTime = endDMTime - startDMTime;
+            System.debug('DuplicateManagementTimeIs: ' + DMTime);
+        }
+    
         for (DataImport__c di : bdi.listDI) {
             // skip di's that already have an error
             if (di.Status__c == BDI_DataImport_API.bdiFailed)
@@ -468,6 +487,7 @@ public with sharing class BDI_ContactService {
                     addDoubleToSet((Double)di.get(c2CustomIDField), setCustomIDNumber);
                 }
             }
+
 
             if (filterOnlyByName) {
                 // Names
@@ -500,7 +520,7 @@ public with sharing class BDI_ContactService {
 
         String strSoql = getSoqlSelectForContact();
         strSoql += ' WHERE (Id IN :setSFId) ';
-
+        
         if (isCustomIDInContactMatchRules && isCustomIdInContactDatatypeString) {
             strSoql += ' OR (' + bdi.diSettings.Contact_Custom_Unique_ID__c + ' IN :setCustomIDString) ';
         } else if (isCustomIDInContactMatchRules && !isCustomIdInContactDatatypeString) {
@@ -577,10 +597,14 @@ public with sharing class BDI_ContactService {
 
             strSoql += String.isBlank(strAnd) ? '' : ')';
         }
-
+        System.debug('strSoql is: ' + strSoql); 
+        Long startTime = System.currentTimeMillis();
         BDI_PerfLogger.PerfLog pl = BDI_DataImportService.perfLogger.newPerfLog('SOQL existing Contacts', BDI_PerfLogger.QUERY);
         List<Contact> listCon = database.query(strSoql);
         pl.stop();
+        Long endTime = System.currentTimeMillis();
+        Long queryTime = endTime - startTime;
+        System.debug('ContactQueryTimeIs: ' + queryTime);
         return listCon;
     }
 
@@ -959,6 +983,45 @@ public with sharing class BDI_ContactService {
         return listDiKey;
     }
 
+    
+
+    public SObject mapContactFromDIToSobj (DataImport__c di, Integer iCon) {
+        /*
+        String strCx = UTIL_Namespace.StrTokenNSPrefix('Contact' + String.valueOf(iCon));
+        String fName = strCx + '_Firstname__c';
+        String lName = strCx + '_Lastname__c';
+        String personalEmail = strCx + '_Personal_Email__c';
+
+        SObject sObj = null;
+
+        if (di.get(lName) != null ) {
+            sObj = new Contact(LastName = String.valueOf(di.get(lName)),
+                                 FirstName = String.valueOf(di.get(fName)),
+                                 npe01__HomeEmail__c = String.valueOf(di.get(personalEmail)));
+        }
+        return sObj;
+        */
+        Contact tempCont = new Contact();
+        SObject sObj = null;
+        Boolean isModified = false;
+
+        //Determine the correct set of fields mappings to use based on which contact is specified 
+        Map<String, String> mapDIFieldToConField = (iCon == 1) ? mapDIFieldToC1Field : mapDIFieldToC2Field;
+
+        // Loop through the field mappings and create the contact
+        for (String strDIField : mapDIFieldToConField.keySet()) {
+            if (BDI_DataImportService.copyDIFieldToDestinationRecord(di, strDIField, tempCont, mapDIFieldToConField)) {
+                isModified = true;
+            }
+        }
+
+        // Only convert to generic sObj if there were actually fields copied 
+        if (isModified) {
+            sObj = tempCont;
+        }
+        return sObj;
+    }
+
     /*******************************************************************************************************
     * @description finds a contact in our map, by matching against all the contact dikeys
     * @param listDiKey list of dikey's to try to match against
@@ -1147,6 +1210,19 @@ public with sharing class BDI_ContactService {
     }
 
     /*******************************************************************************************************
+    * @description whether the Duplicate Management matching option is in the contact matching rules
+    */
+    private boolean isDuplicateManagement {
+        get {
+            String str = bdi.diSettings.Contact_Matching_Rule__c;
+            if (str == null || str == '') {
+                return false;
+            }
+            return str.contains('Duplicate Management');
+        } private set;
+    }
+
+    /*******************************************************************************************************
     * @description whether the Contact Custom Uniue ID field is a String datatype
     */
     private boolean isCustomIdInContactDatatypeString {
@@ -1166,6 +1242,85 @@ public with sharing class BDI_ContactService {
             return isCustomIdInContactDatatypeString;
         }
         set;
+    }
+
+    /*******************************************************************************************************
+    * @description updates DI records with salesforce ids if it finds a match using duplicate management rules
+    */
+    private void performDuplicateManagement() {
+        System.debug('In isDuplicateManagement');
+        Map<SObject,DataImport__c[]> c1SObjectToDIs = new Map<SObject,DataImport__c[]>();
+        Map<SObject,DataImport__c[]> c2SObjectToDIs = new Map<SObject,DataImport__c[]>();
+        for (DataImport__c di : bdi.listDI) {
+            //System.debug('Checking DI: ' + di);
+            // skip di's that already have an error
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
+                continue;
+
+            SObject tempSObjC1;
+            SObject tempSObjC2;
+
+            // Only add a contact for matching if there is information for it and there isn't already an Id specified
+            if (di.Contact1Imported__c == null && isContactSpecified(di, 'Contact1')) {
+                //System.debug('adding Contact1 to Map');
+                addSobjToDIMap(c1SObjectToDIs, di, 1);
+            }
+
+            // Only add a contact for matching if there is information for it and there isn't already an Id specified
+            if (di.Contact2Imported__c == null && isContactSpecified(di, 'Contact2')) {
+                addSobjToDIMap(c2SObjectToDIs, di, 2);
+            }
+        }
+
+        // Return if there were no sObjects added for dupe matching.
+        if (sObjsForDuplicateManagement == null || sObjsForDuplicateManagement.size() == 0) {
+            System.debug('returning because of lack of sobjects for matching');
+            return;
+        }   
+        //System.debug('sObjsForDupeMgmt Size: ' + sObjsForDuplicateManagement.size());
+
+        dupeResults = UTIL_DuplicateMgmt.findDuplicatesBulk(sObjsForDuplicateManagement, 100);
+        //System.debug('dupeResultsSize is : ' + dupeResults.size());
+        // Return if there were no dupe results
+        if (dupeResults == null || dupeResults.size() == 0) {
+            return;
+        }
+        
+        for (SObject sObj : dupeResults.keySet()) {
+            // If there was a duplicate detected then update all the DIs for that contact with the 
+            // duplicate's record id
+            if (dupeResults.get(sObj) != null && dupeResults.get(sObj).duplicateId != null) {
+                DataStagingDuplicate dupeResult = dupeResults.get(sObj);
+                DataImport__c[] c1DIs = c1SObjectToDIs.get(sObj);
+
+                if (c1DIs != null) {
+                    for (DataImport__c di : c1DIs) {
+                        di.Contact1Imported__c = dupeResult.duplicateId;
+                    }
+                }
+
+                DataImport__c[] c2DIs = c2SObjectToDIs.get(sObj);
+                if (c2DIs != null) {
+                    for (DataImport__c di : c2DIs) {
+                        di.Contact2Imported__c = dupeResult.duplicateId;
+                    }
+                }
+            }
+        }
+    }
+
+    private void addSobjToDIMap (Map<SObject,DataImport__c[]> sObjectToDIsMap, DataImport__c di, Integer iCon) {
+        SObject tempSObj = mapContactFromDIToSobj(di, iCon);
+        //System.debug('tempSobj Is: ' + tempSObj);
+        sObjsForDuplicateManagement.add(tempSObj);
+        //System.debug('sobjsForDupeManagement after temp obj added: ' + sObjsForDuplicateManagement);
+
+        // If the SObject is already a key in the map, then add it to the list of DIs, otherwise create new list with DI.
+        if (sObjectToDIsMap.get(tempSObj) != null) {
+            sObjectToDIsMap.put(tempSObj,(DataImport__c[])sObjectToDIsMap.get(tempSObj).add(di));
+        } else {
+            sObjectToDIsMap.put(tempSObj,new DataImport__c[]{di});
+        }
     }
 
 }
