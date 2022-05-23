@@ -341,6 +341,13 @@ public inherited sharing class NPSP_Address implements IAddress {
         address.Geolocation__Latitude__s = (Decimal) getSObjectField(sobjSrc, fieldPrefixSrc, 'Latitude');
         address.Geolocation__Longitude__s = (Decimal) getSObjectField(sobjSrc, fieldPrefixSrc, 'Longitude');
 
+        if (orgConfig.isStateCountryPicklistsEnabled()) {
+            if (address.MailingCountry__c == null && getSObjectField(sobjSrc, fieldPrefixSrc, 'CountryCode') != null) {
+                address.MailingState__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'StateCode');
+                address.MailingCountry__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'CountryCode');
+            }
+        }
+
         // if specified, also include Address Type
         if (addrType != null) {
             address.Address_Type__c = addrType;

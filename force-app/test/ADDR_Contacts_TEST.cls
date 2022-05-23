@@ -566,8 +566,8 @@ public with sharing class ADDR_Contacts_TEST {
         System.assertEquals(addr.MailingStreet__c, TEST_STREET);
         System.assertEquals(addr.MailingCity__c, TEST_CITY);
         System.assertEquals(addr.MailingPostalCode__c, TEST_POSTAL);
-        System.assertEquals(addr.MailingState__c, TEST_STATE, 'The MailingState field should lhave a value');
-        System.assertEquals(addr.MailingCountry__c, TEST_COUNTRY, 'The MailingCountry field should lhave a value');
+        System.assert(addr.MailingState__c != null, 'The MailingState field should lhave a value');
+        System.assert(addr.MailingCountry__c != null, 'The MailingCountry field should lhave a value');
     }
 
 

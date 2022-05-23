@@ -63,6 +63,10 @@ public inherited sharing class AddressService {
         sobjDst.put(strFieldPrefixDst + 'Country', sobjSrc.get(strFieldPrefixSrc + 'Country'));
         sobjDst.put(strFieldPrefixDst + 'Latitude', sobjSrc.get(strFieldPrefixSrc + 'Latitude'));
         sobjDst.put(strFieldPrefixDst + 'Longitude', sobjSrc.get(strFieldPrefixSrc + 'Longitude'));
+        if (orgConfig.isStateCountryPicklistsEnabled()) {
+            sobjDst.put(strFieldPrefixDst + 'StateCode', sobjSrc.get(strFieldPrefixSrc + 'StateCode'));
+            sobjDst.put(strFieldPrefixDst + 'CountryCode', sobjSrc.get(strFieldPrefixSrc + 'CountryCode'));
+        }
     }
 
     /*******************************************************************************************************
@@ -151,8 +155,13 @@ public inherited sharing class AddressService {
         sobjDst.put(strFieldPrefix + 'PostalCode', addr.MailingPostalCode__c);
         sobjDst.put(strFieldPrefix + 'Latitude', addr.Geolocation__Latitude__s);
         sobjDst.put(strFieldPrefix + 'Longitude', addr.Geolocation__Longitude__s);
-        sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
-        sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
+        if (orgConfig.isStateCountryPicklistsEnabled() && addr.MailingCountry__c != null && addr.MailingCountry__c.length() == 2) {
+            sobjDst.put(strFieldPrefix + 'StateCode', addr.MailingState__c);
+            sobjDst.put(strFieldPrefix + 'CountryCode', addr.MailingCountry__c);                
+        } else {
+            sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
+            sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);    
+        }
 
         if (strFieldAddrType != null) {
             sobjDst.put(strFieldAddrType, addr.Address_Type__c);
