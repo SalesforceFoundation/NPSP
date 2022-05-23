@@ -483,6 +483,83 @@ public with sharing class ADDR_Contacts_TEST {
                 'Contact address undeliverable status should match account undeliverable status.');
     }
 
+    /**
+     * @description Validates that the address logic works properly when State and Country Picklsits are enabled in an org
+     */
+    @IsTest
+    private static void shouldCreateAddressForContactWithAllFieldsFilledIn() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+
+        OrgConfig orgConfig = new OrgConfig();
+        if (orgConfig.isStateCountryPicklistsEnabled() == false) {
+            return;
+        }
+
+        final String TEST_STREET = '123 Household Street';
+        final String TEST_CITY = 'Seattle';
+        final String TEST_STATE = 'Washington';
+        final String TEST_STATE_CODE = 'WA';
+        final String TEST_POSTAL = '08534';
+        final String TEST_COUNTRY = 'United States';
+        final String TEST_COUNTRY_CODE = 'US';
+
+        Contact testContact = new Contact(
+            FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + UTIL_UnitTestData_TEST.getUniqueString()
+        );
+        testContact.MailingStreet = TEST_STREET;
+        testContact.MailingCity = TEST_CITY;
+        testContact.MailingStateCode = TEST_STATE_CODE;
+        testContact.MailingPostalCode = TEST_POSTAL;
+        testContact.MailingCountryCode = TEST_COUNTRY_CODE;
+
+        Test.startTest();
+        insert testContact;
+        Test.stopTest();
+
+        testContact = [SELECT Id, AccountId, Current_Address__c, 
+                        MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, MailingStateCode, MailingCountryCode
+                                    FROM Contact
+                                    WHERE Id = :testContact.Id];
+        Address__c addr = [SELECT MailingStreet__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c
+                                    FROM Address__c
+                                    WHERE Id = :testContact.Current_Address__c
+                                    LIMIT 1];
+        Account a = [SELECT BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingStateCode, BillingCountryCode
+                                    FROM Account
+                                    WHERE Id = :testContact.AccountId 
+                                    LIMIT 1];
+
+        System.assertEquals(testContact.MailingStreet, TEST_STREET);
+        System.assertEquals(testContact.MailingCity, TEST_CITY);
+        System.assertEquals(testContact.MailingPostalCode, TEST_POSTAL);
+        System.assertEquals(testContact.MailingState, TEST_STATE);
+        System.assertEquals(testContact.MailingCountry, TEST_COUNTRY);
+        System.assertEquals(testContact.MailingStateCode, TEST_STATE_CODE);
+        System.assertEquals(testContact.MailingCountryCode, TEST_COUNTRY_CODE);
+
+        System.assertEquals(a.BillingStreet, TEST_STREET);
+        System.assertEquals(a.BillingCity, TEST_CITY);
+        System.assertEquals(a.BillingPostalCode, TEST_POSTAL);
+        System.assertEquals(a.BillingState, TEST_STATE);
+        System.assertEquals(a.BillingCountry, TEST_COUNTRY);
+        System.assertEquals(a.BillingStateCode, TEST_STATE_CODE);
+        System.assertEquals(a.BillingCountryCode, TEST_COUNTRY_CODE);
+
+        System.assertEquals(addr.MailingStreet__c, TEST_STREET);
+        System.assertEquals(addr.MailingCity__c, TEST_CITY);
+        System.assertEquals(addr.MailingPostalCode__c, TEST_POSTAL);
+        System.assertEquals(addr.MailingState__c, TEST_STATE);
+        System.assertEquals(addr.MailingCountry__c, TEST_COUNTRY);
+    }
+
+
+    // ====================================================
+    // Helper Methods
+
     private static List<Account> createTestAccountsWithBillingAddress(Integer numberOfAccountsToCreate) {
         List<Account> testAccounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(
                 numberOfAccountsToCreate, CAO_Constants.HH_ACCOUNT_TYPE);
