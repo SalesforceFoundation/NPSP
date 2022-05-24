@@ -155,18 +155,50 @@ public inherited sharing class AddressService {
         sobjDst.put(strFieldPrefix + 'PostalCode', addr.MailingPostalCode__c);
         sobjDst.put(strFieldPrefix + 'Latitude', addr.Geolocation__Latitude__s);
         sobjDst.put(strFieldPrefix + 'Longitude', addr.Geolocation__Longitude__s);
-        String countryField = 'Country';
-        String stateField = 'State';
-        if (orgConfig.isStateCountryPicklistsEnabled()) {
-            if (addr.MailingCountry__c != null && addr.MailingCountry__c.length() <= 3) {
-                countryField = 'CountryCode';
+
+        if (!orgConfig.isStateCountryPicklistsEnabled()) {
+            sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
+            sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
+        } else {
+            if (addr.MailingCountry__c != null) {
+                if (orgConfig.validCountriesByLabel().containsKey(addr.MailingCountry__c
+                        .toUpperCase()
+                )) {
+                    sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
+                    sobjDst.put(strFieldPrefix + 'CountryCode',
+                            orgConfig.validCountriesByLabel().get(
+                                    addr.MailingCountry__c.toUpperCase()));
+                } else if (orgConfig.validCountriesByCode().containsKey(addr.MailingCountry__c
+                        .toUpperCase())) {
+                    sobjDst.put(strFieldPrefix + 'CountryCode', addr.MailingCountry__c.toUpperCase());
+                    sobjDst.put(strFieldPrefix + 'Country',
+                            orgConfig.validCountriesByCode().get(
+                                    addr.MailingCountry__c.toUpperCase()));
+                } else {
+                    // allow the invalid country to be placed in the country field, so Salesforce will generate the error.
+                    sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
+                }
+            } else { // MailingCountry = null
+                sobjDst.put(strFieldPrefix + 'CountryCode', null);
+                sobjDst.put(strFieldPrefix + 'Country', null);
             }
-            if (addr.MailingState__c != null && addr.MailingState__c.length() == 2) {
-                stateField = 'StateCode';
+            if (addr.MailingState__c != null) {
+                if (orgConfig.validStatesByLabel().containsKey(addr.MailingState__c
+                        .toUpperCase())) {
+                    sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
+                    sobjDst.put(strFieldPrefix + 'StateCode', orgConfig.validStatesByLabel()
+                            .get(addr
+                                    .MailingState__c.toUpperCase()));
+                } else {
+                    // too expensive for us to create the map of CountryCode|StateCode to StateLabel
+                    // so we will just try to save any state that isn't a label as a code.
+                    sobjDst.put(strFieldPrefix + 'StateCode', addr.MailingState__c.toUpperCase());
+                }
+            } else { // MailingState = null
+                sobjDst.put(strFieldPrefix + 'StateCode', null);
+                sobjDst.put(strFieldPrefix + 'State', null);
             }
         }
-        sobjDst.put(strFieldPrefix + countryField, addr.MailingCountry__c);
-        sobjDst.put(strFieldPrefix + stateField, addr.MailingState__c);
 
         if (strFieldAddrType != null) {
             sobjDst.put(strFieldAddrType, addr.Address_Type__c);
