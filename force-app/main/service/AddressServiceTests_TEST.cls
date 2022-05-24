@@ -45,16 +45,18 @@ private class AddressServiceTests_TEST {
      * state code depending on the value in the Country (or CountryCode) value.
      */
     @IsTest
-    static void shouldNotDirectlySetStateCodeValue() {
+    static void shouldDirectlySetStateCodeValue() {
         if (!orgConfig.isStateCountryPicklistsEnabled()) {
             return;
         }
 
         // Arrange
+        String stateName = 'Minnesota';
+        String stateCode = 'MN';
         Contact aContact = new Contact();
         IAddress anAddress = new NPSP_Address(
                 new Address__c(
-                        MailingState__c = 'Montana',
+                        MailingState__c = stateName,
                         MailingCountry__c = 'United States'
                 )
         );
@@ -69,8 +71,8 @@ private class AddressServiceTests_TEST {
         );
 
         // Assert
-        System.assertEquals(null, aContact.get('MailingStateCode'),
-                'The copyOntoSObject method should not be setting State Code values.');
+        System.assertEquals(stateCode, aContact.get('MailingStateCode'),
+                'The copyOntoSObject method should be setting State Code values.');
     }
 
     @IsTest
