@@ -95,9 +95,7 @@ public with sharing class RD2_SaveRequest {
         if (customFieldValues != null && !customFieldValues.isEmpty()) {
             setCustomFieldValues(
                 rd,
-                getUpdateableFields(
-                    getCustomFieldDescribeResults()
-                )
+                getCreateableFields()
             );
         }
 
@@ -105,7 +103,20 @@ public with sharing class RD2_SaveRequest {
     }
 
     public Set<String> getCustomFieldNames() {
-        return customFieldValues == null ? new Set<String>{} : customFieldValues.keySet();
+        return customFieldValues == null ? new Set<String>{} : getCreateableFields().keySet();
+    }
+
+    private Map<String, DescribeFieldResult> getCreateableFields() {
+        Map<String, DescribeFieldResult> fieldDescribeResultsByFieldName = getCustomFieldDescribeResults();
+
+        for (String fieldApiName : fieldDescribeResultsByFieldName.keySet()) {
+            DescribeFieldResult describeFieldResult = fieldDescribeResultsByFieldName.get(fieldApiName);
+
+            if (!describeFieldResult.isCreateable()) {
+                fieldDescribeResultsByFieldName.remove(fieldApiName);
+            }
+        }
+        return fieldDescribeResultsByFieldName;
     }
 
     private Map<String, DescribeFieldResult> getCustomFieldDescribeResults() {
@@ -125,15 +136,6 @@ public with sharing class RD2_SaveRequest {
         return fieldDescribesByFieldName;
     }
 
-    private Map<String, DescribeFieldResult> getUpdateableFields(Map<String, DescribeFieldResult> fieldDescribesByFieldName) {
-        for (String fieldApiName : fieldDescribesByFieldName.keySet()) {
-            DescribeFieldResult describeFieldResult = fieldDescribesByFieldName.get(fieldApiName);
-            if (!describeFieldResult.isUpdateable() && !describeFieldResult.isCreateable()) {
-                fieldDescribesByFieldName.remove(fieldApiName);
-            }
-        }
-        return fieldDescribesByFieldName;
-    }
 
     private void setCustomFieldValues(npe03__Recurring_Donation__c rd,
                                       Map<String, DescribeFieldResult> fieldDescribesByFieldName) {
