@@ -1355,7 +1355,6 @@ public with sharing class ADDR_Addresses_TEST {
     @IsTest
     private static void testAddressOverrideCreatesNewAddressWhenStateCodeIsChanged() {
         if (!orgConfig.isStateCountryPicklistsEnabled()) {
-
             return;
         }
 
@@ -1370,7 +1369,7 @@ public with sharing class ADDR_Addresses_TEST {
 
         // Modify the Contact addresses directly, and set override
         Contact con = testContacts[0];
-        con.put('MailingState', state);
+        con.put('MailingStateCode', stateCode);
         con.is_Address_Override__c = true;
 
         Test.startTest();
@@ -1408,7 +1407,7 @@ public with sharing class ADDR_Addresses_TEST {
         System.assertEquals(false, isMatchAddressAccCon(eachContactAccount, listCon[0]));
 
         // Verify the new Address Mailing State matches Contact's MailingStateCode and not set as the Default
-        System.assertEquals('California', newAddress.MailingState__c);
+        System.assertEquals(stateCode, newAddress.MailingState__c);
         System.assertEquals(false, newAddress.Default_Address__c);
     }
 

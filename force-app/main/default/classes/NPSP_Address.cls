@@ -343,8 +343,10 @@ public inherited sharing class NPSP_Address implements IAddress {
 
         if (orgConfig.isStateCountryPicklistsEnabled()) {
             if (address.MailingCountry__c == null && getSObjectField(sobjSrc, fieldPrefixSrc, 'CountryCode') != null) {
-                address.MailingState__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'StateCode');
                 address.MailingCountry__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'CountryCode');
+            }
+            if (getSObjectField(sobjSrc, fieldPrefixSrc, 'StateCode') != null) {
+                address.MailingState__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'StateCode');
             }
         }
 

@@ -155,13 +155,18 @@ public inherited sharing class AddressService {
         sobjDst.put(strFieldPrefix + 'PostalCode', addr.MailingPostalCode__c);
         sobjDst.put(strFieldPrefix + 'Latitude', addr.Geolocation__Latitude__s);
         sobjDst.put(strFieldPrefix + 'Longitude', addr.Geolocation__Longitude__s);
-        if (orgConfig.isStateCountryPicklistsEnabled() && addr.MailingCountry__c != null && addr.MailingCountry__c.length() == 2) {
-            sobjDst.put(strFieldPrefix + 'StateCode', addr.MailingState__c);
-            sobjDst.put(strFieldPrefix + 'CountryCode', addr.MailingCountry__c);                
-        } else {
-            sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
-            sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);    
+        String countryField = 'Country';
+        String stateField = 'State';
+        if (orgConfig.isStateCountryPicklistsEnabled()) {
+            if (addr.MailingCountry__c != null && addr.MailingCountry__c.length() <= 3) {
+                countryField = 'CountryCode';
+            }
+            if (addr.MailingState__c != null && addr.MailingState__c.length() == 2) {
+                stateField = 'StateCode';
+            }
         }
+        sobjDst.put(strFieldPrefix + countryField, addr.MailingCountry__c);
+        sobjDst.put(strFieldPrefix + stateField, addr.MailingState__c);
 
         if (strFieldAddrType != null) {
             sobjDst.put(strFieldAddrType, addr.Address_Type__c);
