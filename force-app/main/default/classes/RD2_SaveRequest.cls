@@ -92,11 +92,13 @@ public with sharing class RD2_SaveRequest {
         rd.ACH_Last_4__c = achLastFour;
         rd.ChangeType__c = changeType;
 
-        if (customFieldValues != null) {
-            for (String fieldApiName : customFieldValues.keySet()) {
-                Object fieldValue = customFieldValues.get(fieldApiName);
-                rd.put(fieldApiName, fieldValue);
-            }
+        if (customFieldValues != null && !customFieldValues.isEmpty()) {
+            setCustomFieldValues(
+                rd,
+                getUpdateableFields(
+                    getCustomFieldDescribeResults()
+                )
+            );
         }
 
         return rd;
@@ -104,5 +106,81 @@ public with sharing class RD2_SaveRequest {
 
     public Set<String> getCustomFieldNames() {
         return customFieldValues == null ? new Set<String>{} : customFieldValues.keySet();
+    }
+
+    private Map<String, DescribeFieldResult> getCustomFieldDescribeResults() {
+        Map<String, DescribeFieldResult> fieldDescribesByFieldName = new Map<String, DescribeFieldResult>();
+        DescribeSObjectResult recurringDonationDescribeResult = UTIL_Describe.getObjectDescribe(
+            npe03__Recurring_Donation__c.SObjectType
+        );
+
+        for (String fieldApiName : customFieldValues.keySet()) {
+            DescribeFieldResult fieldDescribe = UTIL_Describe.getFieldDescribe(
+                recurringDonationDescribeResult.getName(),
+                UTIL_Namespace.StrTokenNSPrefix(fieldApiName));
+
+            fieldDescribesByFieldName.put(fieldApiName, fieldDescribe);
+        }
+
+        return fieldDescribesByFieldName;
+    }
+
+    private Map<String, DescribeFieldResult> getUpdateableFields(Map<String, DescribeFieldResult> fieldDescribesByFieldName) {
+        for (String fieldApiName : fieldDescribesByFieldName.keySet()) {
+            DescribeFieldResult describeFieldResult = fieldDescribesByFieldName.get(fieldApiName);
+            if (!describeFieldResult.isUpdateable() && !describeFieldResult.isCreateable()) {
+                fieldDescribesByFieldName.remove(fieldApiName);
+            }
+        }
+        return fieldDescribesByFieldName;
+    }
+
+    private void setCustomFieldValues(npe03__Recurring_Donation__c rd,
+                                      Map<String, DescribeFieldResult> fieldDescribesByFieldName) {
+
+        for (String fieldApiName : fieldDescribesByFieldName.keySet()) {
+            DescribeFieldResult fieldDescribe = fieldDescribesByFieldName.get(fieldApiName);
+
+            switch on fieldDescribe.getType() {
+                when BOOLEAN {
+                    rd.put(fieldApiName, Boolean.valueOf(
+                        String.valueOf(customFieldValues.get(fieldApiName)))
+                    );
+                }
+                when DATE {
+                    rd.put(fieldApiName, Date.valueOf(
+                        String.valueOf(customFieldValues.get(fieldApiName)))
+                    );
+                }
+                when DATETIME {
+                    rd.put(fieldApiName, Datetime.valueOf(
+                        String.valueOf(customFieldValues.get(fieldApiName))
+                            .replace('T', ' ')
+                        )
+                    );
+                }
+                when TIME {
+                    String timeStr = String.valueOf(customFieldValues.get(fieldApiName));
+
+                    List<String> timeSplitByDelimiter = timeStr.split(':');
+                    Time timeValue = Time.newInstance(
+                            Integer.valueOf(timeSplitByDelimiter[0]),
+                            Integer.valueOf(timeSplitByDelimiter[1]),
+                            0,
+                            0);
+
+                    rd.put(fieldApiName, timeValue);
+                }
+                when CURRENCY, PERCENT, DOUBLE, INTEGER {
+                    rd.put(fieldApiName, Double.valueOf(
+                        String.valueOf(customFieldValues.get(fieldApiName)))
+                    );
+                } when else {
+                    rd.put(fieldApiName, String.valueOf(
+                        customFieldValues.get(fieldApiName))
+                    );
+                }
+            }
+        }
     }
 }
