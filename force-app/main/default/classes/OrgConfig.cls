@@ -40,6 +40,9 @@ public inherited sharing class OrgConfig {
     private static Map<String, String> validCountriesByLabel = new Map<String, String>();
 
     public Map<String, String> validCountriesByLabel() {
+        if (validCountriesByLabel.isEmpty()) {
+            initValidStateCountryCodes();
+        }
         return validCountriesByLabel;
     }
 
@@ -49,6 +52,9 @@ public inherited sharing class OrgConfig {
     private static Map<String, String> validStatesByLabel = new Map<String, String>();
 
     public Map<String, String> validStatesByLabel() {
+        if (validStatesByLabel.isEmpty()) {
+            initValidStateCountryCodes();
+        }
         return validStatesByLabel;
     }
 
@@ -58,6 +64,9 @@ public inherited sharing class OrgConfig {
     private static Map<String, String> validCountriesByCode = new Map<String, String>();
 
     public Map<String, String> validCountriesByCode() {
+        if (validCountriesByCode.isEmpty()) {
+            initValidStateCountryCodes();
+        }
         return validCountriesByCode;
     }
 
@@ -72,7 +81,7 @@ public inherited sharing class OrgConfig {
     private static Boolean isStateCountryPicklistsEnabled {
         get {
             if (isStateCountryPicklistsEnabled == null) {
-                isStateCountryPicklistsEnabled = initValidStateCountryCodes();
+                isStateCountryPicklistsEnabled = stateAndCountryPicklistsEnabled();
             }
             return isStateCountryPicklistsEnabled;
         }
@@ -111,5 +120,12 @@ public inherited sharing class OrgConfig {
             }
         }
         return isCodesEnabled;
+    }
+
+    private static Boolean stateAndCountryPicklistsEnabled() {
+        fflib_SObjectDescribe accountDescribe =
+                fflib_SObjectDescribe.getDescribe(Account.SObjectType);
+        SObjectField sObjectField = accountDescribe.getField('BillingStateCode');
+        return sObjectField != null;
     }
 }
