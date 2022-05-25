@@ -365,7 +365,7 @@ private with sharing class RD2_ValidationService_TEST {
 
         List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
         for (String day : new Set<String>{
-            '15', '10', '28', '29', '31'
+            '15', '10', '28', '29', '30'
         }) {
             rds.add(rdBuilder
                 .withDayOfMonth(day)
@@ -892,6 +892,49 @@ private with sharing class RD2_ValidationService_TEST {
         }
         System.assert(String.isBlank(errMessage),
             'Update should succeed when existing RD becomes Elevate connected and Day of Month changes: ' + errMessage
+        );
+    }
+
+    /**
+    * @description Verifies that existing RD that becomes Elevate connected can have Campaign cleared
+    */
+    @isTest
+    private static void shouldAllowNewElevateRDUpdateWhenCampaignIsCleared() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
+
+        Campaign campaign = new Campaign(
+            name = 'campaign',
+            isActive = true
+        );
+
+        insert campaign;
+
+        npe03__Recurring_Donation__c oldRd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
+            .withCampaign(campaign.Id)
+            .build();
+        npe03__Recurring_Donation__c rd = oldRd.clone();
+        rd.CommitmentId__c = RD2_ElevateIntegrationService_TEST.COMMITMENT_ID;
+        rd.npe03__Recurring_Donation_Campaign__c = null;
+
+        RD2_ValidationService validationService = new RD2_ValidationService(
+            new List<npe03__Recurring_Donation__c>{rd},
+            new List<npe03__Recurring_Donation__c>{oldRd}
+        );
+
+        Test.startTest();
+        List<ErrorRecord> errorRecords = validationService.validate();
+        Test.stopTest();
+
+        String errMessage = '';
+        if(errorRecords.size() > 0){
+            errMessage = errorRecords[0].getFirstError();
+        }
+        System.assert(String.isBlank(errMessage),
+            'Update should succeed when existing RD becomes Elevate connected and Campaign is cleared: ' + errMessage
         );
     }
 
