@@ -38,6 +38,7 @@ public inherited sharing class PS_Request {
     public enum ElevateEndpoint {
         TOKENIZE,
         PURCHASE,
+        REFUND,
         COMMITMENT,
         COMMITMENT_CANCEL,
         COMMITMENT_UPDATE_BULK,
@@ -61,6 +62,7 @@ public inherited sharing class PS_Request {
 
     public static String ROLE_PAYMENT_TOKENS = 'Payments.Tokens';
     public static String ROLE_PAYMENT_PURCHASE = 'Payments.Purchase';
+    public static String ROLE_PAYMENT_REFUND = 'Payments.Refund';
     public static String ROLE_PAYMENT_COMMITMENTS = 'Payments.Commitments';
     public static String ROLE_PAYMENT_BATCH = 'Payments.Batch';
 
@@ -73,6 +75,7 @@ public inherited sharing class PS_Request {
     
     public static String ENDPOINT_TOKENIZE = '/v1/payments/verified/tokens';
     public static String ENDPOINT_PURCHASE = '/v1/payments/verified/purchase';
+    public static String ENDPOINT_REFUND = '/v1/payments/verified/refund';
     public static String ENDPOINT_COMMITMENT = '/v1/payments/verified/commitments';
     public static String ENDPOINT_COMMITMENT_CANCEL = '/v1/payments/verified/commitments/{0}/cancel';
     public static String ENDPOINT_COMMITMENT_UPDATE_BULK = '/v1/payments/verified/commitments/update/bulk';
@@ -247,7 +250,8 @@ public inherited sharing class PS_Request {
 
             } else if (endpoint == ElevateEndpoint.PURCHASE) {
                 value = ENDPOINT_PURCHASE;
-
+            } else if (endpoint == ElevateEndpoint.REFUND) {
+                value = ENDPOINT_REFUND;
             } else if (endpoint == ElevateEndpoint.COMMITMENT) {
                 value = ENDPOINT_COMMITMENT;
 
@@ -397,6 +401,8 @@ public inherited sharing class PS_Request {
                 value = ROLE_PAYMENT_COMMITMENTS;
             } else if (isElevateBatchEndpoint()) {
                 value = ROLE_PAYMENT_BATCH;
+            } else if (isRefundEndpoint()) {
+                value = ROLE_PAYMENT_REFUND;
             }
             return value;
         }
@@ -420,6 +426,10 @@ public inherited sharing class PS_Request {
             return endpoint == ElevateEndpoint.COMMITMENT
                     || endpoint == ElevateEndpoint.COMMITMENT_CANCEL
                     || endpoint == ElevateEndpoint.COMMITMENT_UPDATE_BULK;
+        }
+
+        private Boolean isRefundEndpoint() {
+            return endpoint == ElevateEndpoint.REFUND;
         }
     }
 }
