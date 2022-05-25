@@ -79,7 +79,7 @@ public with sharing class PMT_RefundService_TEST {
         System.assertEquals(1, calloutMock.getCalloutCounter(),
             '1 callout should be made when the refund callout is made');
         System.assertEquals(UTIL_Http.STATUS_CODE_CONFLICT, response.statusCode,
-            'The status code should return 404 not found when the Elevate record cannot be found');
+            'The status code should return 409 conflic when the payment is not refundable');
         System.assertEquals(System.Label.pmtPaymentNotRefundable, response.getErrorMessages(),
             'The response body should be convert to not refundable error message');
     }
@@ -96,7 +96,7 @@ public with sharing class PMT_RefundService_TEST {
         System.assertEquals(1, calloutMock.getCalloutCounter(),
             '1 callout should be made when the refund callout is made');
         System.assertEquals(UTIL_Http.STATUS_CODE_UNPROCESSABLE_ENTITY, response.statusCode,
-            'The status code should return 404 not found when the Elevate record cannot be found');
+            'The status code should return 422 unprocessable when the transaction is not completed');
         System.assertEquals(System.Label.pmtOriginalPaymentNotCompleted, response.getErrorMessages(),
             'The response body should be convert to original transaction is not completed error message');
     }
