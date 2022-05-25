@@ -1,0 +1,20 @@
+{
+    "apiName": "npe01__OppPayment__c",
+    "childRelationships": {},
+    "id": "001fakeAccountId",
+    "lastModifiedById": "00563000007oQ64AAE",
+    "lastModifiedDate": "2021-04-26T16:41:53.000Z",
+    "recordTypeId": "012000000000000AAA",
+    "recordTypeInfo": null,
+    "systemModstamp": "2021-04-26T16:41:53.000Z",
+    "fields": {
+      "npe01__Payment_Amount__c": {
+        "displayValue": null,
+        "value": "$0.50"
+      },
+      "npe01__Payment_Date__c": {
+        "displayValue": null,
+        "value": "2021-04-26T16:41:53.000Z"
+      }
+    }
+  }
