@@ -396,6 +396,10 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
             PS_IntegrationServiceConfig.class,
             configStub
         );
+        PMT_RefundService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
 
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
     }
