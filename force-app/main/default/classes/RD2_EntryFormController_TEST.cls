@@ -44,6 +44,7 @@ private with sharing class RD2_EntryFormController_TEST {
     private static final String CARD_EXPIRATION_MONTH = '11';
     private static final String CARD_EXPIRATION_YEAR = '2019';
     private static final String EVENT_VERSION = '1';
+    private static final String NO_CREATE_PERMISSION = 'NoCreate';
 
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
@@ -695,6 +696,67 @@ private with sharing class RD2_EntryFormController_TEST {
     }
 
     @IsTest
+    private static void canSaveRDWithCustomFieldsNotCreateable() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        Contact donorContact = getContact();
+
+        UTIL_PermissionsMock utilPermissionsMockInstance = new UTIL_PermissionsMock().canUpdate();
+        UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class,
+                utilPermissionsMockInstance);
+        UTIL_Permissions.setInstance(utilPermissionsMock);
+
+        RD2_SaveRequest req = new RD2_SaveRequest();
+        req.dayOfMonth = '15';
+        req.startDate = Date.newInstance(2022, 1, 15);
+        req.dateEstablished = Date.newInstance(2022, 1, 15);
+        req.recurringFrequency = 1;
+        req.contactId = donorContact.Id;
+        req.recurringStatus = 'Active';
+        req.donationValue = 5;
+        req.recurringType = 'Open';
+        req.recurringPeriod = 'Monthly';
+        req.paymentMethod = 'Credit Card';
+        req.customFieldValues = new Map<String, Object> {
+            NO_CREATE_PERMISSION => 'TestNoCreateValue1',
+            NO_CREATE_PERMISSION + '_1' => 'TestNoCreateValue2'
+        };
+
+        SaveResultView result = RD2_EntryFormController.saveRecurringDonation(req);
+
+        for (String fieldName : req.customFieldValues.keySet()) {
+            System.assertNotEquals(NO_CREATE_PERMISSION, fieldName.substringBefore('_'), 'All fields that are not' +
+                ' createable should be removed from the save request.');
+        }
+
+        System.assert(result.success, 'RD not inserted successfully');
+        System.assertNotEquals(result.recordId, null, 'Save result should have an Id');
+    }
+
+    @IsTest
+    private static void rdCustomFieldsMapToCorrectFieldType() {
+
+        RD2_SaveRequest saveRequest = new RD2_SaveRequest();
+        saveRequest.customFieldValues = new Map<String, Object> {
+            'TestField' => 'TestFieldValue'
+        };
+
+        RD2_SaveRequestHelperMock saveRequestHelperMockInstance = new RD2_SaveRequestHelperMock();
+        RD2_SaveRequestHelper saveRequestHelperMock = (RD2_SaveRequestHelper)
+            Test.createStub(RD2_SaveRequestHelper.class, saveRequestHelperMockInstance);
+        saveRequest.requestHelper = saveRequestHelperMock;
+
+        UTIL_DescribeMock describeMock = getDescribeMock();
+
+        testMapToBoolean(describeMock, saveRequest, saveRequestHelperMockInstance);
+        testMapToDate(describeMock, saveRequest, saveRequestHelperMockInstance);
+        testMapToDateTime(describeMock, saveRequest, saveRequestHelperMockInstance);
+        testMapToTime(describeMock, saveRequest, saveRequestHelperMockInstance);
+        testMapToCurrency(describeMock, saveRequest, saveRequestHelperMockInstance);
+        testMapToDouble(describeMock, saveRequest, saveRequestHelperMockInstance);
+        testMapToInteger(describeMock, saveRequest, saveRequestHelperMockInstance);
+    }
+
+    @IsTest
     private static void saveRequestMapsFieldsToRecurringDonation() {
         RD2_SaveRequest req = new RD2_SaveRequest();
 
@@ -820,6 +882,115 @@ private with sharing class RD2_EntryFormController_TEST {
             .build();
     }
 
+    private static void testMapToBoolean(UTIL_DescribeMock describeMock,
+            RD2_SaveRequest saveRequest,
+            RD2_SaveRequestHelperMock saveRequestHelperMockInstance) {
+
+        describeMock.setFieldType(DisplayType.BOOLEAN);
+        saveRequest.toRecord();
+        System.assert(saveRequestHelperMockInstance.setRecurringDonationFieldCalled);
+        System.assert(saveRequestHelperMockInstance.paramValues()[2] instanceof Boolean);
+    }
+
+    private static void testMapToDate(UTIL_DescribeMock describeMock,
+            RD2_SaveRequest saveRequest,
+            RD2_SaveRequestHelperMock saveRequestHelperMockInstance) {
+
+        saveRequest.customFieldValues = new Map<String, Object> {
+                'TestDate' => String.valueOf(Date.today())
+        };
+
+        describeMock.setFieldType(DisplayType.DATE);
+        saveRequest.toRecord();
+        System.assert(saveRequestHelperMockInstance.setRecurringDonationFieldCalled);
+        System.assert(saveRequestHelperMockInstance.paramValues()[2] instanceof Date);
+    }
+
+    private static void testMapToDateTime(UTIL_DescribeMock describeMock,
+            RD2_SaveRequest saveRequest,
+            RD2_SaveRequestHelperMock saveRequestHelperMockInstance) {
+
+        saveRequest.customFieldValues = new Map<String, Object> {
+            'TestDatetime' => String.valueOf(Datetime.newInstance(
+                Date.today().year(),
+                Date.today().month(),
+                Date.today().day()
+            ))
+        };
+
+        describeMock.setFieldType(DisplayType.DATETIME);
+        saveRequest.toRecord();
+        System.assert(saveRequestHelperMockInstance.setRecurringDonationFieldCalled);
+        System.assert(saveRequestHelperMockInstance.paramValues()[2] instanceof Datetime);
+    }
+
+    private static void testMapToTime(UTIL_DescribeMock describeMock,
+            RD2_SaveRequest saveRequest,
+            RD2_SaveRequestHelperMock saveRequestHelperMockInstance) {
+
+        saveRequest.customFieldValues = new Map<String, Object> {
+            'TestTime' => String.valueOf(Time.newInstance(
+                18, 30, 2, 20
+            ))
+        };
+
+        describeMock.setFieldType(DisplayType.TIME);
+        saveRequest.toRecord();
+        System.assert(saveRequestHelperMockInstance.setRecurringDonationFieldCalled);
+        System.assert(saveRequestHelperMockInstance.paramValues()[2] instanceof Time);
+    }
+
+    private static void testMapToCurrency(UTIL_DescribeMock describeMock,
+            RD2_SaveRequest saveRequest,
+            RD2_SaveRequestHelperMock saveRequestHelperMockInstance) {
+
+        saveRequest.customFieldValues = new Map<String, Object> {
+            'TestCurrency' => 5.00
+        };
+
+        describeMock.setFieldType(DisplayType.CURRENCY);
+        saveRequest.toRecord();
+        System.assert(saveRequestHelperMockInstance.setRecurringDonationFieldCalled);
+        System.assert(saveRequestHelperMockInstance.paramValues()[2] instanceof Double);
+    }
+
+    private static void testMapToDouble(UTIL_DescribeMock describeMock,
+            RD2_SaveRequest saveRequest,
+            RD2_SaveRequestHelperMock saveRequestHelperMockInstance) {
+
+        saveRequest.customFieldValues = new Map<String, Object> {
+            'TestDouble' => String.valueOf(15.1524)
+        };
+
+        describeMock.setFieldType(DisplayType.DOUBLE);
+        saveRequest.toRecord();
+        System.assert(saveRequestHelperMockInstance.setRecurringDonationFieldCalled);
+        System.assert(saveRequestHelperMockInstance.paramValues()[2] instanceof Double);
+    }
+
+    private static void testMapToInteger(UTIL_DescribeMock describeMock,
+            RD2_SaveRequest saveRequest,
+            RD2_SaveRequestHelperMock saveRequestHelperMockInstance) {
+
+        saveRequest.customFieldValues = new Map<String, Object> {
+            'TestInteger' => 15
+        };
+
+        describeMock.setFieldType(DisplayType.INTEGER);
+        saveRequest.toRecord();
+        System.assert(saveRequestHelperMockInstance.setRecurringDonationFieldCalled);
+        System.assert(saveRequestHelperMockInstance.paramValues()[2] instanceof Integer);
+    }
+
+    private static UTIL_DescribeMock getDescribeMock() {
+        UTIL_DescribeMock utilDescribeMockInstance = new UTIL_DescribeMock();
+        UTIL_Describe utilDescribeMock = (UTIL_Describe) Test.createStub(UTIL_Describe.class,
+                utilDescribeMockInstance);
+        UTIL_Describe.setInstance(utilDescribeMock);
+
+        return utilDescribeMockInstance;
+    }
+
     public class RD2_QueryServiceMock implements StubProvider {
 
         npe03__Recurring_Donation__c rd;
@@ -839,4 +1010,81 @@ private with sharing class RD2_EntryFormController_TEST {
         }
     }
 
+    private class UTIL_PermissionsMock implements StubProvider {
+        Boolean canUpdate = false;
+
+        public UTIL_PermissionsMock canUpdate() {
+            canUpdate = true;
+
+            return this;
+        }
+
+        public Object handleMethodCall(Object stubbedObject, String stubbedMethodName,
+                Type returnType, List<Type> paramTypes, List<String> listOfParamNames,
+                List<Object> args) {
+
+            switch on stubbedMethodName {
+                when 'canCreateInstanced' {
+                    if (String.valueOf(args[1]).substringBefore('_').equals(NO_CREATE_PERMISSION)) {
+                        return false;
+                    }
+                }
+                when 'canUpdate' {
+                    return canUpdate;
+                }
+            }
+            return null;
+        }
+    }
+
+    private class UTIL_DescribeMock implements StubProvider {
+        private DisplayType fieldType;
+
+        public UTIL_DescribeMock setFieldType(DisplayType fieldTypeArg) {
+            fieldType = fieldTypeArg;
+
+            return this;
+        }
+
+        public DisplayType fieldType() {
+            return fieldType;
+        }
+
+        public Object handleMethodCall(Object stubbedObject, String stubbedMethodName,
+                Type returnType, List<Type> paramTypes, List<String> listOfParamNames,
+                List<Object> args) {
+
+            switch on stubbedMethodName {
+                when 'getFieldTypeInstance' {
+                    return fieldType.name().toUpperCase();
+                }
+                when 'getObjectDescribeInstance' {
+                    return UTIL_Describe.getObjectDescribe(npe03__Recurring_Donation__c.SObjectType);
+                }
+            }
+            return null;
+        }
+    }
+
+    private class RD2_SaveRequestHelperMock implements StubProvider {
+        private Boolean setRecurringDonationFieldCalled;
+        private List<Object> parameterValues;
+
+        public List<Object> paramValues() {
+            return parameterValues;
+        }
+
+        public Object handleMethodCall(Object stubbedObject, String stubbedMethodName,
+                Type returnType, List<Type> argTypes, List<String> listOfParamNames,
+                List<Object> args) {
+
+            switch on stubbedMethodName {
+                when 'setRecurringDonationField' {
+                    parameterValues = args;
+                    setRecurringDonationFieldCalled = true;
+                }
+            }
+            return null;
+        }
+    }
 }

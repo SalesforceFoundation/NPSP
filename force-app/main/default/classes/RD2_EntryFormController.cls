@@ -180,7 +180,7 @@ public with sharing class RD2_EntryFormController {
                 String.valueOf(npe03__Recurring_Donation__c.npe03__Recurring_Donation_Campaign__c),
                 String.valueOf(npe03__Recurring_Donation__c.PaymentMethod__c)
         };
-        requiredFields.addAll(request.getCustomFieldNames());
+        requiredFields.addAll(request.getCustomFieldNamesForPermissionCheck());
         return permissions.canUpdate(npe03__Recurring_Donation__c.SObjectType, requiredFields);
     }
 
@@ -247,7 +247,7 @@ public with sharing class RD2_EntryFormController {
 
     @AuraEnabled
     public static SaveResultView saveRecurringDonation(RD2_SaveRequest saveRequest) {
-        npe03__Recurring_Donation__c rd = saveRequest.toRecord();
+        npe03__Recurring_Donation__c rd = saveRequest.removeNonCreateableFields().toRecord();
         Database.SaveResult sr;
 
         if (!hasRequiredSavePermissions(saveRequest)) {
