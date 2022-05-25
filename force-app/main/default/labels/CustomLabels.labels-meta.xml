@@ -5865,6 +5865,38 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Amount</value>
     </labels>
     <labels>
+        <fullName>firstDonation</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>First Donation</shortDescription>
+        <value>First Donation</value>
+    </labels>
+    <labels>
+        <fullName>nextDonation</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Next Donation</shortDescription>
+        <value>Next Donation</value>
+    </labels>
+    <labels>
+        <fullName>mostRecentDonation</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Most Recent Donation</shortDescription>
+        <value>Most Recent Donation</value>
+    </labels>
+    <labels>
+        <fullName>lastModified</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Last Modified</shortDescription>
+        <value>Last Modified</value>
+    </labels>
+    <labels>
         <fullName>commonAssistiveError</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -6231,6 +6263,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Records Processed</shortDescription>
         <value>Records Processed</value>
+    </labels>
+    <labels>
+        <fullName>commonRefreshPage</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refresh page to show the latest updates.</shortDescription>
+        <value>Refresh page to show the latest updates.</value>
     </labels>
     <labels>
         <fullName>commonRequired</fullName>
@@ -11774,12 +11814,100 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>You can&apos;t modify Payment currencies directly. Update the parent Opportunity&apos;s currency, and NPSP will automatically update the currency of all related Payment records.</value>
     </labels>
     <labels>
+        <fullName>pmtNoRefundPermissionMessage</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message displayed when the user has no permission to apply the Refund</shortDescription>
+        <value>You don&apos;t have permissions to refund Payments. Contact your Salesforce admin for help.</value>
+    </labels>
+    <labels>
+        <fullName>pmtOriginalPaymentNotCompleted</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund rror message when Elevate hasn&apos;t processed the payment yet.</shortDescription>
+        <value>Payment can&apos;t be refunded because Elevate hasn&apos;t processed the payment yet.</value>
+    </labels>
+    <labels>
         <fullName>pmtPaidPaymentDateRequired</fullName>
         <categories>Payment, Accounting Data Consistency</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>pmtPaidPaymentDateRequired</shortDescription>
         <value>A paid Payment must have a Payment Date.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentDate</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Payment Date</shortDescription>
+        <value>Payment Date</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentErrorMessage</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message title for refund</shortDescription>
+        <value>There was an error processing the refund.</value>
+    </labels>
+    <labels>
+        <fullName>pmtPaymentNotFund</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message for missing Elevate payment record</shortDescription>
+        <value>The corresponding Elevate payment record couldn&apos;t be found. Contact your Salesforce admin for help.</value>
+    </labels>
+    <labels>
+        <fullName>pmtPaymentNotRefundable</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund error when the payment has already been refund, or is a refund itself</shortDescription>
+        <value>This payment has already been refunded, or is a refund itself.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundAmount</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund Amount</shortDescription>
+        <value>Refund Amount</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentMessage</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund Information</shortDescription>
+        <value>Refund the following payment:</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundProcessing</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund submitted for processing.</shortDescription>
+        <value>Refund submitted for processing.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentConfirmedButton</fullName>
+        <categories>Payment, Refund</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund Payment Button</shortDescription>
+        <value>Refund Payment</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentTitle</fullName>
+        <categories>Payment, Refund</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund Payment Title</shortDescription>
+        <value>Refund Payment?</value>
     </labels>
     <labels>
         <fullName>pmtUnpaidPaymentScheduledDateRequired</fullName>

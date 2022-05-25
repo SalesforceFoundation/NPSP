@@ -1228,7 +1228,7 @@
         <customTabListAdditionalFields>OPPORTUNITY.STAGE_NAME</customTabListAdditionalFields>
         <customTabListAdditionalFields>OPPORTUNITY.CLOSE_DATE</customTabListAdditionalFields>
         <customTabListAdditionalFields>OPPORTUNITY.RECORDTYPE</customTabListAdditionalFields>
-        <listViewButtons>Email_Acknowledgments</listViewButtons>
+        <listViewButtons>%%%NAMESPACE%%%Email_Acknowledgments</listViewButtons>
         <lookupDialogsAdditionalFields>OPPORTUNITY.NAME</lookupDialogsAdditionalFields>
         <lookupDialogsAdditionalFields>ACCOUNT.NAME</lookupDialogsAdditionalFields>
         <lookupDialogsAdditionalFields>OPPORTUNITY.AMOUNT</lookupDialogsAdditionalFields>

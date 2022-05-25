@@ -19,9 +19,8 @@ describe('c-giving-summary', () => {
                 element.shadowRoot.querySelector('lightning-card')
             ).toBeDefined();
             expect(element.shadowRoot.querySelector('.lifetime')).toBeDefined();
-            const value = element.shadowRoot.querySelector('lightning-formatted-number').value;
-            expect(value).toBe('7000');
-
+            const value = element.shadowRoot.querySelector('p').innerHTML;
+            expect(value).toBe('USD 7000');
         });
     });
 });
