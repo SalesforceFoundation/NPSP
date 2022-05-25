@@ -1,0 +1,6 @@
+{
+    "hasRequiredPermissions" : true,
+    "isSuccess" : true,
+    "redirectToPaymentId" : "a01FakePayment00Id",
+    "errorMessage" : null
+}
