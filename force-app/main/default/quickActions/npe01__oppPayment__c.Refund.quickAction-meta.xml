@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QuickAction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Refund a Payment</description>
+    <height>250</height>
+    <label>Refund</label>
+    <lightningWebComponent>refundPayment</lightningWebComponent>
+    <optionsCreateFeedItem>false</optionsCreateFeedItem>
+    <type>LightningWebComponent</type>
+    <width>0</width>
+</QuickAction>
