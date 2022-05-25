@@ -153,6 +153,8 @@ private with sharing class PS_Request_TEST {
                 || endpoint == PS_Request.ElevateEndpoint.REMOVE_FROM_ELEVATE_BATCH) {
 
                 roles = PS_Request.ROLE_PAYMENT_BATCH;
+            } else if (endpoint == PS_Request.ElevateEndpoint.REFUND) {
+                roles = PS_Request.ROLE_PAYMENT_REFUND;
             }
 
             String jwtPayload = new PS_Request.JWTPayload(sfdoId, endpoint).getAsString();
