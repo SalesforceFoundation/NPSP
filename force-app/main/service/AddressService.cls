@@ -46,8 +46,9 @@ public inherited sharing class AddressService {
     }
 
     /*******************************************************************************************************
-    * @description Utility to copy Address fields between Contacts and Accounts (or vice-versa).
-    * Handles instances where State and Country picklists are enabled, and multiline street addresses.
+    * Doesn't do anything special when State and Country picklists are enabled (the
+     * platform will fill out State and Country Code values using the values from the
+     * picklist fields), and multiline street addresses.
     * @param sobjSrc the source Contact or Account
     * @param strFieldPrefixSrc the address fields to copy from, ie., Mailing, Other, Shipping, Billing
     * @param sobjDst the destination Contact or Account
