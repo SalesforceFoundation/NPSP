@@ -1,9 +1,10 @@
 import { LightningElement, api, wire } from 'lwc';
 import { CloseActionScreenEvent } from 'lightning/actions';
 import { getRecord, getFieldValue } from "lightning/uiRecordApi";
-import { constructErrorMessage} from "c/utilCommon";
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { constructErrorMessage, showToast} from "c/utilCommon";
 import refundPaymentTitle from "@salesforce/label/c.pmtRefundPaymentTitle";
+import refundAmount from "@salesforce/label/c.pmtRefundAmount";
+import refundPaymentDate from "@salesforce/label/c.pmtRefundPaymentDate";
 import refundPaymentConfirmButton from "@salesforce/label/c.pmtRefundPaymentConfirmedButton";
 import cancelButtonLabel from "@salesforce/label/c.stgBtnCancel";
 import commonRefreshPage from "@salesforce/label/c.commonRefreshPage";
@@ -29,6 +30,8 @@ export default class refundPayment extends LightningElement {
         commonRefreshPage,
         noRefundPermissionMessage,
         refundPaymentMessage,
+        refundAmount,
+        refundPaymentDate,
         refundProcessing,
         refundPaymentErrorMessage
     });
@@ -47,14 +50,6 @@ export default class refundPayment extends LightningElement {
             this.paymentAmount = getFieldValue(data, PAYMENT_AMOUNT_FIELD);
             this.paymentDate = getFieldValue(data, PAYMENT_DATE_FIELD);
         }
-    }
-
-    get paymentDateMessage() {
-        return this.labels.refundPaymentMessage.split(/{[^}]*}/)[0];
-    }
-
-    get paymentAmountMessage() {
-        return this.labels.refundPaymentMessage.split(/{[^}]*}/)[1];
     }
 
     async connectedCallback() {
@@ -92,7 +87,7 @@ export default class refundPayment extends LightningElement {
             return;
 
         } else if (response.isSuccess === true) {
-            this.showToast('', this.labels.refundProcessing + ' {0}', 'info', '', [
+            showToast('', this.labels.refundProcessing + ' {0}', 'info', '', [
                 {
                     url: '/' + response.redirectToPaymentId,
                     label: this.labels.commonRefreshPage,
@@ -100,21 +95,10 @@ export default class refundPayment extends LightningElement {
             );
 
         } else if (response.isSuccess === false) {
-            this.showToast(this.labels.refundPaymentErrorMessage, response.errorMessage, 'error');
+            showToast(this.labels.refundPaymentErrorMessage, response.errorMessage, 'error');
         }
         
         this.handleClose();
-    }
-
-    showToast(title, message, variant, mode, messageData){
-        const event = new ShowToastEvent({
-            title: title,
-            message: message,
-            variant: variant,
-            mode: mode,
-            messageData: messageData
-        });
-        dispatchEvent(event);
     }
 
     displayErrorMessage(errorMessage) {

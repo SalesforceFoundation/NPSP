@@ -11838,6 +11838,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>A paid Payment must have a Payment Date.</value>
     </labels>
     <labels>
+        <fullName>pmtRefundPaymentDate</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Payment Date</shortDescription>
+        <value>Payment Date</value>
+    </labels>
+    <labels>
         <fullName>pmtRefundPaymentErrorMessage</fullName>
         <categories>Payment</categories>
         <language>en_US</language>
@@ -11862,12 +11870,20 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>This payment has already been refunded, or is a refund itself.</value>
     </labels>
     <labels>
+        <fullName>pmtRefundAmount</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund Amount</shortDescription>
+        <value>Refund Amount</value>
+    </labels>
+    <labels>
         <fullName>pmtRefundPaymentMessage</fullName>
         <categories>Payment</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Refund Information</shortDescription>
-        <value>Refund the payment made on {0} in the amount of {1}.</value>
+        <value>Refund the following payment:</value>
     </labels>
     <labels>
         <fullName>pmtRefundProcessing</fullName>

@@ -1,6 +1,5 @@
 import { createElement } from 'lwc';
 import { CloseScreenEventName } from 'lightning/actions';
-import { ShowToastEventName } from 'lightning/platformShowToastEvent';
 import refundPayment from 'c/refundPayment';
 import { getRecord } from "lightning/uiRecordApi";
 import processRefund from "@salesforce/apex/PMT_RefundController.processRefund";
@@ -35,7 +34,9 @@ describe('c-refund-payment', () => {
         processRefund.mockResolvedValue(mockRefundView);
         document.body.appendChild(component);
         await flushPromises();
-
+        const refundMessage = component.shadowRoot.querySelector('span');
+        expect(refundMessage).not.toBeNull();
+        expect(refundMessage.textContent).toBe('c.pmtRefundPaymentMessage');
         expect(cancelButton(component).title).toBe('c.stgBtnCancel');
         expect(refundButton(component).title).toBe('c.pmtRefundPaymentConfirmedButton');
     });
@@ -76,8 +77,6 @@ describe('c-refund-payment', () => {
 
         const actionHandler = jest.fn();
         component.addEventListener(CloseScreenEventName, actionHandler);
-        const toastHandler = jest.fn();
-        component.addEventListener(ShowToastEventName, toastHandler);
         refundButton(component).click();
         await flushPromises();
         expect(actionHandler).toHaveBeenCalled();
