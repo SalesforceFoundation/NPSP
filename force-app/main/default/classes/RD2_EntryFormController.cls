@@ -247,7 +247,7 @@ public with sharing class RD2_EntryFormController {
 
     @AuraEnabled
     public static SaveResultView saveRecurringDonation(RD2_SaveRequest saveRequest) {
-        npe03__Recurring_Donation__c rd = saveRequest.removeNonCreateableFields().toRecord();
+        npe03__Recurring_Donation__c rd = saveRequest.removeNonCreateableCustomFields().toRecord();
         Database.SaveResult sr;
 
         if (!hasRequiredSavePermissions(saveRequest)) {

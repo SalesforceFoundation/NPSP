@@ -757,6 +757,30 @@ private with sharing class RD2_EntryFormController_TEST {
     }
 
     @IsTest
+    private static void rdCustomFieldsMapToCorrectFieldTypeWithNullValue() {
+
+        RD2_SaveRequest saveRequest = new RD2_SaveRequest();
+        saveRequest.customFieldValues = new Map<String, Object> {
+            'TestField' => null
+        };
+
+        RD2_SaveRequestHelperMock saveRequestHelperMockInstance = new RD2_SaveRequestHelperMock();
+        RD2_SaveRequestHelper saveRequestHelperMock = (RD2_SaveRequestHelper)
+                Test.createStub(RD2_SaveRequestHelper.class, saveRequestHelperMockInstance);
+        saveRequest.requestHelper = saveRequestHelperMock;
+
+        UTIL_DescribeMock describeMock = getDescribeMock();
+
+        testMapToBoolean(describeMock, saveRequest, saveRequestHelperMockInstance);
+        testMapToDate(describeMock, saveRequest, saveRequestHelperMockInstance);
+        testMapToDateTime(describeMock, saveRequest, saveRequestHelperMockInstance);
+        testMapToTime(describeMock, saveRequest, saveRequestHelperMockInstance);
+        testMapToCurrency(describeMock, saveRequest, saveRequestHelperMockInstance);
+        testMapToDouble(describeMock, saveRequest, saveRequestHelperMockInstance);
+        testMapToInteger(describeMock, saveRequest, saveRequestHelperMockInstance);
+    }
+
+    @IsTest
     private static void saveRequestMapsFieldsToRecurringDonation() {
         RD2_SaveRequest req = new RD2_SaveRequest();
 
@@ -889,7 +913,8 @@ private with sharing class RD2_EntryFormController_TEST {
         describeMock.setFieldType(DisplayType.BOOLEAN);
         saveRequest.toRecord();
         System.assert(saveRequestHelperMockInstance.setRecurringDonationFieldCalled);
-        System.assert(saveRequestHelperMockInstance.paramValues()[2] instanceof Boolean);
+        System.assert(saveRequestHelperMockInstance.paramValues()[2] instanceof Boolean ||
+                saveRequestHelperMockInstance.paramValues()[2] == null);
     }
 
     private static void testMapToDate(UTIL_DescribeMock describeMock,
@@ -903,7 +928,8 @@ private with sharing class RD2_EntryFormController_TEST {
         describeMock.setFieldType(DisplayType.DATE);
         saveRequest.toRecord();
         System.assert(saveRequestHelperMockInstance.setRecurringDonationFieldCalled);
-        System.assert(saveRequestHelperMockInstance.paramValues()[2] instanceof Date);
+        System.assert(saveRequestHelperMockInstance.paramValues()[2] instanceof Date ||
+                saveRequestHelperMockInstance.paramValues()[2] == null);
     }
 
     private static void testMapToDateTime(UTIL_DescribeMock describeMock,
@@ -921,7 +947,8 @@ private with sharing class RD2_EntryFormController_TEST {
         describeMock.setFieldType(DisplayType.DATETIME);
         saveRequest.toRecord();
         System.assert(saveRequestHelperMockInstance.setRecurringDonationFieldCalled);
-        System.assert(saveRequestHelperMockInstance.paramValues()[2] instanceof Datetime);
+        System.assert(saveRequestHelperMockInstance.paramValues()[2] instanceof Datetime ||
+            saveRequestHelperMockInstance.paramValues()[2] == null);
     }
 
     private static void testMapToTime(UTIL_DescribeMock describeMock,
@@ -937,7 +964,8 @@ private with sharing class RD2_EntryFormController_TEST {
         describeMock.setFieldType(DisplayType.TIME);
         saveRequest.toRecord();
         System.assert(saveRequestHelperMockInstance.setRecurringDonationFieldCalled);
-        System.assert(saveRequestHelperMockInstance.paramValues()[2] instanceof Time);
+        System.assert(saveRequestHelperMockInstance.paramValues()[2] instanceof Time ||
+            saveRequestHelperMockInstance.paramValues()[2] == null);
     }
 
     private static void testMapToCurrency(UTIL_DescribeMock describeMock,
@@ -951,7 +979,8 @@ private with sharing class RD2_EntryFormController_TEST {
         describeMock.setFieldType(DisplayType.CURRENCY);
         saveRequest.toRecord();
         System.assert(saveRequestHelperMockInstance.setRecurringDonationFieldCalled);
-        System.assert(saveRequestHelperMockInstance.paramValues()[2] instanceof Double);
+        System.assert(saveRequestHelperMockInstance.paramValues()[2] instanceof Double ||
+            saveRequestHelperMockInstance.paramValues()[2] == null);
     }
 
     private static void testMapToDouble(UTIL_DescribeMock describeMock,
@@ -965,7 +994,8 @@ private with sharing class RD2_EntryFormController_TEST {
         describeMock.setFieldType(DisplayType.DOUBLE);
         saveRequest.toRecord();
         System.assert(saveRequestHelperMockInstance.setRecurringDonationFieldCalled);
-        System.assert(saveRequestHelperMockInstance.paramValues()[2] instanceof Double);
+        System.assert(saveRequestHelperMockInstance.paramValues()[2] instanceof Double ||
+            saveRequestHelperMockInstance.paramValues()[2] == null);
     }
 
     private static void testMapToInteger(UTIL_DescribeMock describeMock,
@@ -979,7 +1009,8 @@ private with sharing class RD2_EntryFormController_TEST {
         describeMock.setFieldType(DisplayType.INTEGER);
         saveRequest.toRecord();
         System.assert(saveRequestHelperMockInstance.setRecurringDonationFieldCalled);
-        System.assert(saveRequestHelperMockInstance.paramValues()[2] instanceof Integer);
+        System.assert(saveRequestHelperMockInstance.paramValues()[2] instanceof Integer ||
+            saveRequestHelperMockInstance.paramValues()[2] == null);
     }
 
     private static UTIL_DescribeMock getDescribeMock() {

@@ -145,14 +145,14 @@ public with sharing class RD2_SaveRequest {
         return customFieldValues == null ? new Set<String>{} : customFieldValues.keySet();
     }
 
-    public RD2_SaveRequest removeNonCreateableFields() {
+    public RD2_SaveRequest removeNonCreateableCustomFields() {
         DescribeSObjectResult rdSObjectDescribe = describeUtil.getObjectDescribeInstance(
                 npe03__Recurring_Donation__c.SObjectType);
 
         for (String fieldApiName : customFieldValues.keySet()) {
             if (!permissions.canCreateInstanced(
                     rdSObjectDescribe.getName(),
-                    fieldApiName,
+                    UTIL_Namespace.StrTokenNSPrefix(fieldApiName),
                     false)) {
 
                 customFieldValues.remove(fieldApiName);
@@ -173,41 +173,48 @@ public with sharing class RD2_SaveRequest {
 
             switch on describeUtil.getFieldTypeInstance(
                     recurringDonationDescribeResult.getName(),
-                    fieldApiName) {
+                    UTIL_Namespace.StrTokenNSPrefix(fieldApiName)) {
 
                 when 'BOOLEAN' {
-                    requestHelper.setRecurringDonationField(rd, fieldApiName, Boolean.valueOf(fieldValue));
+                    Boolean booleanFieldValue = String.isBlank(fieldValue) ? null : Boolean.valueOf(fieldValue);
+                    requestHelper.setRecurringDonationField(rd, fieldApiName, booleanFieldValue);
                 }
                 when 'DATE' {
-                    requestHelper.setRecurringDonationField(rd, fieldApiName, Date.valueOf(fieldValue));
+                    Date dateFieldValue = String.isBlank(fieldValue) ? null : Date.valueOf(fieldValue);
+                    requestHelper.setRecurringDonationField(rd, fieldApiName, dateFieldValue);
                 }
                 when 'DATETIME' {
-                    requestHelper.setRecurringDonationField(rd, fieldApiName, Datetime.valueOf(
-                        fieldValue.replace('T', ' ')
-                    ));
+                    Datetime dateFieldValue = String.isBlank(fieldValue) ? null : Datetime.valueOf(
+                        fieldValue.replace('T', ' '));
+
+                    requestHelper.setRecurringDonationField(rd, fieldApiName, dateFieldValue);
                 }
                 when 'TIME' {
-                    String timeStr = fieldValue;
-
-                    List<String> timeSplitByDelimiter = timeStr.split(':');
-                    Time timeValue = Time.newInstance(
-                            Integer.valueOf(timeSplitByDelimiter[0]),
-                            Integer.valueOf(timeSplitByDelimiter[1]),
-                            0,
-                            0);
-
-                    requestHelper.setRecurringDonationField(rd, fieldApiName, timeValue);
+                    Time timeFieldValue = String.isBlank(fieldValue) ? null : convertToTime(fieldValue);
+                    requestHelper.setRecurringDonationField(rd, fieldApiName, timeFieldValue);
                 }
                 when 'CURRENCY', 'PERCENT', 'DOUBLE' {
-                    requestHelper.setRecurringDonationField(rd, fieldApiName, Double.valueOf(fieldValue));
+                    Double doubleFieldValue = String.isBlank(fieldValue) ? null : Double.valueOf(fieldValue);
+                    requestHelper.setRecurringDonationField(rd, fieldApiName, doubleFieldValue);
                 }
                 when 'INTEGER' {
-                    requestHelper.setRecurringDonationField(rd, fieldApiName, Integer.valueOf(fieldValue));
+                    Integer integerFieldValue = String.isBlank(fieldValue) ? null : Integer.valueOf(fieldValue);
+                    requestHelper.setRecurringDonationField(rd, fieldApiName, integerFieldValue);
                 }
                 when else {
                     requestHelper.setRecurringDonationField(rd, fieldApiName, fieldValue);
                 }
             }
         }
+    }
+
+    private Time convertToTime(String fieldValue) {
+        List<String> timeSplitByDelimiter = fieldValue.split(':');
+        Time timeValue = Time.newInstance(
+                Integer.valueOf(timeSplitByDelimiter[0]),
+                Integer.valueOf(timeSplitByDelimiter[1]),
+                0,
+                0);
+        return timeValue;
     }
 }
