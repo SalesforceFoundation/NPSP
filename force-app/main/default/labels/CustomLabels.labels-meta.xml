@@ -15751,7 +15751,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label for Stop Recurring Donation Recurring Donations Action</shortDescription>
-        <value>Stop Recurring this Donation?</value>
+        <value>Stop this Recurring Donation?</value>
     </labels>
     <labels>
         <fullName>updateRecurringDonation</fullName>
