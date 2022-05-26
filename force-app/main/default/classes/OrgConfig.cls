@@ -34,6 +34,42 @@
 */
 public inherited sharing class OrgConfig {
 
+    /*******************************************************************************************************
+    * @description map from Country name (UPPER CASE) to Country Code
+    */
+    private static Map<String, String> validCountriesByLabel = new Map<String, String>();
+
+    public Map<String, String> validCountriesByLabel() {
+        if (validCountriesByLabel.isEmpty()) {
+            initValidStateCountryCodes();
+        }
+        return validCountriesByLabel;
+    }
+
+    /*******************************************************************************************************
+    * @description map from State name (UPPER CASE) to State Code
+    */
+    private static Map<String, String> validStatesByLabel = new Map<String, String>();
+
+    public Map<String, String> validStatesByLabel() {
+        if (validStatesByLabel.isEmpty()) {
+            initValidStateCountryCodes();
+        }
+        return validStatesByLabel;
+    }
+
+    /*******************************************************************************************************
+    * @description map from Country Code to Country Name
+    */
+    private static Map<String, String> validCountriesByCode = new Map<String, String>();
+
+    public Map<String, String> validCountriesByCode() {
+        if (validCountriesByCode.isEmpty()) {
+            initValidStateCountryCodes();
+        }
+        return validCountriesByCode;
+    }
+
     public Boolean isPersonAccountsEnabled() {
         return UTIL_Describe.isValidField(String.valueOf(Account.SObjectType), 'isPersonAccount');
     }
@@ -54,6 +90,34 @@ public inherited sharing class OrgConfig {
 
     public Boolean isStateCountryPicklistsEnabled() {
         return isStateCountryPicklistsEnabled;
+    }
+
+    /*******************************************************************************************************
+    * @description utility to determine if the "State and Country Picklist" field feature is enabled in Salesforce
+    */
+    private static void initValidStateCountryCodes() {
+        // If State & Country Picklists are enabled in the org, build maps of the
+        // valid Labels and Codes for each field to use for validation
+        Map<String, Schema.SObjectField> acctFields = Account.getSObjectType().getDescribe().fields.getMap();
+        Boolean isCodesEnabled = acctFields.containsKey('BillingCountryCode');
+        if (isCodesEnabled) {
+            List<Schema.PicklistEntry> countryPLValues = acctFields.get('BillingCountryCode').getDescribe().getPicklistValues();
+            for (Schema.PicklistEntry p : countryPLValues) {
+                if (p.isActive()) {
+                    validCountriesByLabel.put(p.getLabel().toUpperCase(), p.getValue());
+                    validCountriesByCode.put(p.getValue(), p.getLabel());
+                }
+            }
+            List<Schema.PicklistEntry> statePLValues = acctFields.get('BillingStateCode').getDescribe().getPicklistValues();
+            for (Schema.PicklistEntry p : statePLValues) {
+                if (p.isActive()) {
+                    validStatesByLabel.put(p.getLabel().toUpperCase(), p.getValue());
+                    // we can't have an accurate map of valid StateCodes, because they are not unique.
+                    // ideally we would have a map of CountryCode + StateCode -> StateLabel
+                    // but Salesforce provides us no way of figuring out picklist dependencies efficiently.
+                }
+            }
+        }
     }
 
     private static Boolean stateAndCountryPicklistsEnabled() {
