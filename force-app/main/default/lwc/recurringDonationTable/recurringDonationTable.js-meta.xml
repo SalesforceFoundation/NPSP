@@ -11,6 +11,7 @@
     <targetConfigs>
         <targetConfig targets="lightningCommunity__Default,lightning__RecordPage">
             <property label="Show these types of Recurring Donations" name="donationTypeFilter" type="String" datasource="All Recurring Donations,Elevate Recurring Donations,Non-Elevate Recurring Donations" default="All Recurring Donations"/>
+            <property label="Allow ACH payment method" name="allowACHPaymentMethod" type="Boolean" default="true"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

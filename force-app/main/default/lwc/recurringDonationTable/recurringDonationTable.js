@@ -23,6 +23,8 @@ export default class RecurringDonationTable extends LightningElement {
 
     openStopRecurringDonation = false;
 
+    @api 
+    allowACHPaymentMethod;
     paymentMethod = '';
 
     lastDonationDate = '';
