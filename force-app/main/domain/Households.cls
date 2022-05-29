@@ -105,7 +105,8 @@ public inherited sharing class Households extends fflib_SObjects2 implements IHo
     * @description Constructor
     * @param accountIds Account Ids to initialize the Contact Repository with
     */
-    public Households(Set<Id> accountIds) {
+    @TestVisible
+    private Households(Set<Id> accountIds) {
         super((List<Object>) householdSelector.findByIds(accountIds));
     }
 
@@ -113,7 +114,8 @@ public inherited sharing class Households extends fflib_SObjects2 implements IHo
     * @description Constructor
     * @param accountIds Account Ids to initialize the Contact Repository with
     */
-    public Households(List<SObject> accounts) {
+    @TestVisible
+    private Households(List<SObject> accounts) {
         super(accounts, Account.SObjectType);
     }
 
@@ -122,15 +124,25 @@ public inherited sharing class Households extends fflib_SObjects2 implements IHo
         return (IHouseholds) Application.Domain.newInstance(records, Account.SObjectType);
     }
 
+    public static IHouseholds newInstance(Set<Id> recordIds) {
+        Application.Domain.replaceWith(Account.SObjectType, IHouseholds.class, Households.Constructor.class);
+        return (IHouseholds) Application.Domain.newInstance(householdSelector.findByIds(recordIds), Account.SObjectType);
+    }
+
     public List<SObject> getHouseholds() {
         return getRecords(isHouseholdAccount());
     }
 
     private fflib_Criteria isHouseholdAccount() {
         return new fflib_Criteria()
-                .notEqualTo(Account.RecordTypeId, null)
                 .andCriteria()
-                .equalTo(Account.RecordTypeId, ContactAndOrgSettings.rtIdForAccountModel(true));
+                .notEqualTo(Account.RecordTypeId, null)
+                .addOrCriteria(
+                    new fflib_Criteria()
+                        .orCriteria()
+                        .equalTo(Account.RecordTypeId, ContactAndOrgSettings.rtIdForAccountModel(true))
+                        .equalTo(Account.npe01__SYSTEM_AccountType__c, CAO_Constants.HH_ACCOUNT_TYPE)
+                );
     }
 
     public Contacts membersOf(HouseholdId aHouseholdId) {

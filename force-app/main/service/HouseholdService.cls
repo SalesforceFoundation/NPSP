@@ -299,7 +299,7 @@ public inherited sharing class HouseholdService {
             return;
         }
 
-        Households households = new Households(new Set<Id>(ids));
+        IHouseholds households = Households.newInstance(new Set<Id>(ids));
         households.updateHouseholds(dmlWrapper);
     }
 

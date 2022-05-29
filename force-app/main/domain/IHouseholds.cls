@@ -34,7 +34,11 @@
 * @description Interface definition for Households domain
 */
 public interface IHouseholds {
-    List<SObject> getHouseholds();
-    void setTypeAndIndividualFields();
     IHouseholds newInstance(List<SObject> records);
+    List<SObject> getHouseholds();
+    Contacts membersOf(HouseholdId recordId);
+
+    void setTypeAndIndividualFields();
+    void updateHouseholds(TDTM_Runnable.DmlWrapper dmlWrapper);
+    void handleContactDeletion(TDTM_Runnable.DmlWrapper dmlWrapper);
 }

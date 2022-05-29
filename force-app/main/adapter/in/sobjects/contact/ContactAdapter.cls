@@ -219,7 +219,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
     public void onAfterDelete(TDTM_Runnable.DmlWrapper dmlWrapper) {
         AccountsServiceImpl.enableHouseholdDeceasedUpdate(true);
 
-        Households households = getHouseholdsFor(accountIds());
+        IHouseholds households = getHouseholdsFor(accountIds());
         households.handleContactDeletion(dmlWrapper);
     }
 
@@ -982,8 +982,8 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
 
     }
 
-    private Households getHouseholdsFor(Set<Id> ids) {
-        return new Households(householdSelector.findByIds(ids));
+    private IHouseholds getHouseholdsFor(Set<Id> ids) {
+        return Households.newInstance(ids);
     }
 
 }
