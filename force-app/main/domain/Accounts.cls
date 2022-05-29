@@ -44,7 +44,8 @@ public with sharing class Accounts extends fflib_SObjects2 implements IAccounts 
         return (IAccounts) Application.Domain.newInstance(records, Account.SObjectType);
     }
 
-    public Accounts(List<SObject> records) {
+    @TestVisible
+    private Accounts(List<SObject> records) {
         super(records, Account.SObjectType);
     }
 
