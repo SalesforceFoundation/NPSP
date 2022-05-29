@@ -38,8 +38,7 @@
 */
 public with sharing class Accounts extends fflib_SObjects2 implements IAccounts {
 
-    public static IAccounts newInstance(List<Account> records)
-    {
+    public static IAccounts newInstance(List<SObject> records) {
         Application.Domain.replaceWith(Account.SObjectType, IAccounts.class, Accounts.Constructor.class);
         return (IAccounts) Application.Domain.newInstance(records, Account.SObjectType);
     }
