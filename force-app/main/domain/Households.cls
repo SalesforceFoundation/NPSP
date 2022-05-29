@@ -85,14 +85,6 @@ public inherited sharing class Households extends fflib_SObjects2 implements IHo
             'zh_TW'
     };
 
-    public class Constructor implements fflib_IDomainConstructor
-    {
-        public fflib_SObjects2 construct(List<Object> records)
-        {
-            return new Households((List<SObject>) records);
-        }
-    }
-
     /*******************************************************************************************************************
      * @description the current user's Locale/Language
      */
@@ -121,8 +113,28 @@ public inherited sharing class Households extends fflib_SObjects2 implements IHo
     * @description Constructor
     * @param accountIds Account Ids to initialize the Contact Repository with
     */
-    public Households(List<Account> accounts) {
-        super(accounts);
+    public Households(List<SObject> accounts) {
+        super(accounts, Account.SObjectType);
+    }
+
+    public class Constructor extends fflib_SObjects2 implements fflib_IDomainConstructor
+    {
+        public fflib_IDomain construct(List<Object> records)
+        {
+            List<SObject> filteredHouseholdAccounts = new Households((List<SObject>) records).getHouseholds();
+            return (fflib_IDomain) new Households(filteredHouseholdAccounts);
+        }
+    }
+
+    public List<SObject> getHouseholds() {
+        return getRecords(isHouseholdAccount());
+    }
+
+    private fflib_Criteria isHouseholdAccount() {
+        return new fflib_Criteria()
+                .equalTo(Account.RecordTypeId, ContactAndOrgSettings.rtIdForAccountModel(true))
+                .andCriteria()
+                .notEqualTo(Account.RecordTypeId, null);
     }
 
     public Contacts membersOf(HouseholdId aHouseholdId) {
@@ -131,6 +143,14 @@ public inherited sharing class Households extends fflib_SObjects2 implements IHo
             return new Contacts(new List<Contact>());
         } else {
             return members;
+        }
+    }
+
+    public void setTypeAndIndividualFields() {
+        for (Account household : (List<Account>) getHouseholds()) {
+            household.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
+            household.Type = CAO_Constants.HH_TYPE;
+            household.npe01__SYSTEMIsIndividual__c = true;
         }
     }
 
