@@ -89,7 +89,7 @@ public inherited sharing class AccountsServiceImpl extends fflib_SObjects2 imple
         setAccountTypeAndIndividualFieldValues(accounts);
 
         normalizeLineBreaksFor(Households.newInstance(accounts).getRecords());
-//        if (AddressService.isOrgAccountAddressesEnabled()) {
+//        if (AddressesServiceImpl.isOrgAccountAddressesEnabled()) {
 //            normalizeLineBreaksFor(orgAccounts());
 //        }
 //
@@ -127,12 +127,12 @@ public inherited sharing class AccountsServiceImpl extends fflib_SObjects2 imple
     }
 
     public void onBeforeUpdate_ADDR_Account_TDTM() {
-        if (AddressService.isAddressManagementEnabled()) {
+        if (AddressesServiceImpl.isAddressManagementEnabled()) {
             normalizeLineBreaksFor(
                     withAddressChanges().householdAccounts()
             );
         }
-        if (AddressService.isOrgAccountAddressesEnabled()) {
+        if (AddressesServiceImpl.isOrgAccountAddressesEnabled()) {
             normalizeLineBreaksFor(
                     withAddressChanges().orgAccounts()
             );
@@ -316,11 +316,11 @@ public inherited sharing class AccountsServiceImpl extends fflib_SObjects2 imple
     public AccountsServiceImpl updatedAccountsWithAddressesToCreateOrUpdate() {
         List<Account> updatedAccountsWithAddressesToCreate = new List<Account>();
 
-        if (AddressService.isAddressManagementEnabled()) {
+        if (AddressesServiceImpl.isAddressManagementEnabled()) {
             updatedAccountsWithAddressesToCreate.addAll(withAddressChanges().householdAccounts());
         }
 
-        if (AddressService.isOrgAccountAddressesEnabled()) {
+        if (AddressesServiceImpl.isOrgAccountAddressesEnabled()) {
             updatedAccountsWithAddressesToCreate.addAll(withAddressChanges().orgAccounts());
         }
 
@@ -330,10 +330,10 @@ public inherited sharing class AccountsServiceImpl extends fflib_SObjects2 imple
     public AccountsServiceImpl newAccountsWithAddressesToCreate() {
         List<Account> addressesToCreate = new List<Account>();
 
-        if (AddressService.isAddressManagementEnabled()) {
+        if (AddressesServiceImpl.isAddressManagementEnabled()) {
             addressesToCreate.addAll(withAddresses().householdAccounts());
         }
-        if (AddressService.isOrgAccountAddressesEnabled()) {
+        if (AddressesServiceImpl.isOrgAccountAddressesEnabled()) {
             addressesToCreate.addAll(withAddresses().orgAccounts());
         }
 

@@ -57,10 +57,10 @@ public inherited sharing class HouseholdService {
     }
 
     @TestVisible
-    private AddressService addressServiceInstance {
+    private AddressesServiceImpl addressServiceInstance {
         get {
             if (addressServiceInstance == null) {
-                addressServiceInstance = new AddressService();
+                addressServiceInstance = new AddressesServiceImpl();
             }
             return addressServiceInstance;
         }
@@ -332,7 +332,7 @@ public inherited sharing class HouseholdService {
                     || accountRecord != null && CAO_Constants.isOneToOne() && isOneToOne(accountRecord)) {
                 // if a user has blanked out the Account for a Contact, this will put it right back
                 contactRecord.AccountId = accountRecord.Id;
-                if (CAO_Constants.isHHAccountModel() && AddressService.isAddressManagementEnabled()) {
+                if (CAO_Constants.isHHAccountModel() && AddressesServiceImpl.isAddressManagementEnabled()) {
                     ContactAddress contactAddress = new ContactAddress(contactRecord);
                     if (contactAddress.hasAddress()) { // todo: should check for changes on
                         // before update
@@ -363,7 +363,7 @@ public inherited sharing class HouseholdService {
 
                 if (CAO_Constants.isHHAccountModel()) {
                     configureHouseholdAccount(contactRecord, accountRecord);
-                    if (AddressService.isAddressManagementEnabled()) {
+                    if (AddressesServiceImpl.isAddressManagementEnabled()) {
                         contactsNeedingAddressesCreated.add(contactRecord);
                     }
                 } else {

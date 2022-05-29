@@ -49,10 +49,10 @@ public inherited sharing class NPSP_Address implements IAddress {
     }
 
     @TestVisible
-    private AddressService addressService {
+    private AddressesServiceImpl addressService {
         get {
             if (addressService == null) {
-                addressService = new AddressService();
+                addressService = new AddressesServiceImpl();
             }
             return addressService;
         }

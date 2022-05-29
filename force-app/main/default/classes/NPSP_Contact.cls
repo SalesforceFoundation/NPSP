@@ -50,10 +50,10 @@ public inherited sharing class NPSP_Contact {
     }
 
     @TestVisible
-    private AddressService addressService {
+    private AddressesServiceImpl addressService {
         get {
             if (addressService == null) {
-                addressService = new AddressService();
+                addressService = new AddressesServiceImpl();
             }
             return addressService;
         }

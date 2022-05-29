@@ -32,7 +32,7 @@
 * @date 2021
 * @description Address Service class in NPSP.
 */
-public inherited sharing class AddressService {
+public inherited sharing class AddressesServiceImpl {
 
     @TestVisible
     private OrgConfig orgConfig {

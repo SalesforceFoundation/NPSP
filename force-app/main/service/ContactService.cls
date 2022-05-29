@@ -35,10 +35,10 @@
 public with sharing class ContactService {
 
     @TestVisible
-    private AddressService addressServiceInstance {
+    private AddressesServiceImpl addressServiceInstance {
         get {
             if (addressServiceInstance == null) {
-                addressServiceInstance = new AddressService();
+                addressServiceInstance = new AddressesServiceImpl();
             }
             return addressServiceInstance;
         }

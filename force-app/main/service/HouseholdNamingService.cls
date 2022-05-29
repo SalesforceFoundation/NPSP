@@ -62,10 +62,10 @@ public without sharing class HouseholdNamingService {
     }
 
     @TestVisible
-    private AddressService addressService {
+    private AddressesServiceImpl addressService {
         get {
             if (addressService == null) {
-                addressService = new AddressService();
+                addressService = new AddressesServiceImpl();
             }
             return addressService;
         }

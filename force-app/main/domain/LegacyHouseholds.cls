@@ -57,10 +57,10 @@ public inherited sharing class LegacyHouseholds extends fflib_SObjects2 {
     }
 
     @TestVisible
-    private static AddressService addressService {
+    private static AddressesServiceImpl addressService {
         get {
             if (addressService == null) {
-                addressService = new AddressService();
+                addressService = new AddressesServiceImpl();
             }
             return addressService;
         }

@@ -60,7 +60,7 @@ private class AddressServiceTests_TEST {
                         MailingCountry__c = 'United States'
                 )
         );
-        AddressService addressService = new AddressService();
+        AddressesServiceImpl addressService = new AddressesServiceImpl();
 
         // Act
         addressService.copyOntoSObject(
@@ -84,7 +84,7 @@ private class AddressServiceTests_TEST {
                         Undeliverable__c = true
                 )
         );
-        AddressService addressService = new AddressService();
+        AddressesServiceImpl addressService = new AddressesServiceImpl();
 
         // Act
         addressService.copyOntoSObject(
