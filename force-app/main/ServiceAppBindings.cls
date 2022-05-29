@@ -53,7 +53,8 @@ public with sharing class ServiceAppBindings {
                     UTIL_Namespace.getNamespace(), 'AccountsServiceImpl')
             )
             .setInterfaceType(
-                Type.forName(UTIL_Namespace.getNamespace(), 'IAccountsService')
+                Type.forName(
+                    UTIL_Namespace.getNamespace(), 'IAccountsService')
             )
             .setSharingMode(fflib_SharingMode.WithSharing);
     }
