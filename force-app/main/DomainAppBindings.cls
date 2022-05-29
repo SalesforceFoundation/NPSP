@@ -47,7 +47,7 @@ public with sharing class DomainAppBindings {
         fflib_IAppBinding accountBinding = new fflib_AppBinding()
                 .setBindingObject(Account.SObjectType)
                 .setBindingType(fflib_AppBindingType.Domain)
-                .setImplementationType(Accounts.class)
+                .setImplementationType(Accounts.Constructor.class)
                 .setInterfaceType(IAccounts.class)
                 .setSharingMode(fflib_SharingMode.WithSharing);
         return accountBinding;
