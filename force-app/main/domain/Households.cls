@@ -35,7 +35,7 @@
  * newInstance() method to retrieve the domain instance from the domain factory. Logic is used in the inner
  * Constructor class to ensure only household records are contained in the instanced domain collection.
 */
-public inherited sharing class Households extends fflib_SObjects2 implements IHouseholds {
+public with sharing class Households extends fflib_SObjects2 implements IHouseholds {
 
     private Map<Id, Contacts> membersByHouseholdId {
         get {

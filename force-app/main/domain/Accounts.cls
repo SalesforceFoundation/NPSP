@@ -32,8 +32,11 @@
 /**
 * @author Salesforce.org
 * @description Accounts domain class
+ * THIS CLASS SHOULD NOT CONTAIN ANY PUBLIC CONSTRUCTORS. To retrieve an instance of this domain, use the public static
+ * newInstance() method to retrieve the domain instance from the domain factory. Logic is used in the inner
+ * Constructor class to ensure only household records are contained in the instanced domain collection.
 */
-public inherited sharing class Accounts extends fflib_SObjects2 implements IAccounts {
+public with sharing class Accounts extends fflib_SObjects2 implements IAccounts {
 
     public static IAccounts newInstance(List<Account> records)
     {
