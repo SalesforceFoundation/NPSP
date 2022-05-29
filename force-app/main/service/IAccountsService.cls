@@ -36,4 +36,5 @@
 */
 public interface IAccountsService {
     void onBeforeInsert(List<Account> accounts);
+    void setAccountTypeAndIndividualFieldValues(List<Account> accounts);
 }

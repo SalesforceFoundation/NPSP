@@ -36,4 +36,5 @@
 public interface IHouseholds {
     List<SObject> getHouseholds();
     void setTypeAndIndividualFields();
+    IHouseholds newInstance(List<SObject> records);
 }
