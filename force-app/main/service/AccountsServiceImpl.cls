@@ -249,7 +249,8 @@ public inherited sharing class AccountsServiceImpl extends fflib_SObjects2 imple
         Households.newInstance(accounts.getAccounts())
             .setTypeAndIndividualFields();
 
-//            setTypeAndIndividualFieldsForOneToOneAccount(acc);
+        OneToOneAccounts.newInstance(accounts.getAccounts())
+            .setTypeAndIndividualFields();
     }
 
     public void setSystemAccountTypeAndIndividualFieldValues() {
@@ -357,21 +358,6 @@ public inherited sharing class AccountsServiceImpl extends fflib_SObjects2 imple
 
     private Boolean isRecordTypeIdChanged(Account acc) {
         return acc.RecordTypeId != oldVersionOf(acc).RecordTypeId;
-    }
-
-    private void setTypeAndIndividualFieldsForOneToOneAccount(Account acc) {
-        acc.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
-        acc.npe01__SYSTEMIsIndividual__c = true;
-    }
-
-    private void setTypeAndIndividualFieldsForHouseholdAccount(Account acc) {
-        acc.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
-        acc.Type = CAO_Constants.HH_TYPE;
-        acc.npe01__SYSTEMIsIndividual__c = true;
-    }
-
-    private Boolean needsTypeAndIndividualFieldsSet(Account acc) {
-        return isMissingAccountType(acc) || isNotIndividualAccount(acc);
     }
 
     private Boolean isNotIndividualAccount(Account acc) {
