@@ -130,8 +130,8 @@ public with sharing class Households extends fflib_SObjects2 implements IHouseho
     }
 
     public IHouseholds getHouseholds() {
-        return (IHouseholds) getRecords(
-            isHouseholdAccount()
+        return (IHouseholds) new Households(
+            getRecords( isHouseholdAccount() )
         );
     }
 
