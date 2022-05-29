@@ -37,5 +37,5 @@
  * switching of implementations without requiring any change at the client level.
 */
 public interface IAddressesService {
-
+    void normalizeLineBreaksFor(List<SObject> records);
 }
