@@ -37,7 +37,8 @@ public inherited sharing class Accounts extends fflib_SObjects2 implements IAcco
 
     public static IAccounts newInstance(List<Account> records)
     {
-        return (IAccounts) Application.Domain.newInstance(records);
+        Application.Domain.replaceWith(Account.SObjectType, IAccounts.class, Accounts.Constructor.class);
+        return (IAccounts) Application.Domain.newInstance(records, Account.SObjectType);
     }
 
     public Accounts(List<SObject> records) {
