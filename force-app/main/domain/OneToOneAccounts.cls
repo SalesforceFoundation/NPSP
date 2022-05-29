@@ -49,9 +49,16 @@ public with sharing class OneToOneAccounts extends fflib_SObjects2 implements IO
     }
 
     public IOneToOneAccounts getOneToOneAccounts() {
-        return (IOneToOneAccounts) getRecords(
+        return (IOneToOneAccounts) new OneToOneAccounts(getRecords(
             isOneToOneAccount()
-        );
+        ));
+    }
+
+    public void setTypeAndIndividualFields() {
+        for (Account oneToOneAccount : (List<Account>) getRecords()) {
+            oneToOneAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+            oneToOneAccount.npe01__SYSTEMIsIndividual__c = true;
+        }
     }
 
     private fflib_Criteria isOneToOneAccount() {
