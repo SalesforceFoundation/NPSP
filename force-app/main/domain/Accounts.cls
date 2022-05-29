@@ -37,19 +37,18 @@ public inherited sharing class Accounts extends fflib_SObjects2 implements IAcco
 
     public static IAccounts newInstance(List<Account> records)
     {
-        return (IAccounts) Application.Domain.newInstance(records, Schema.Account.SObjectType);
+        return (IAccounts) Application.Domain.newInstance(records);
+    }
+
+    public Accounts(List<SObject> records) {
+        super(records, Account.SObjectType);
     }
 
     public IAccounts needsTypeAndIndividualFieldsSet() {
-        return (IAccounts) getRecords (
+        return new Accounts ((List<SObject>) getRecords (
             isMissingAccountTypeCriteria()
                 .addOrCriteria(isNotIndividualAccountCriteria())
-        );
-    }
-
-    public static IHouseholds newHouseholdAccounts(List<SObject> records) {
-        Application.Domain.replaceWith(Account.SObjectType, IHouseholds.class, Households.Constructor.class);
-        return (IHouseholds) Application.Domain.newInstance(records);
+        ));
     }
 
     private fflib_Criteria isMissingAccountTypeCriteria() {
@@ -59,6 +58,18 @@ public inherited sharing class Accounts extends fflib_SObjects2 implements IAcco
 
     private fflib_Criteria isNotIndividualAccountCriteria() {
         return new fflib_Criteria()
-                .equalTo(Account.npe01__SYSTEM_AccountType__c, null);
+                .notEqualTo(Account.npe01__SYSTEMIsIndividual__c, true);
+    }
+
+    public List<SObject> getAccounts() {
+        return (List<SObject>) getRecords();
+    }
+
+    public class Constructor implements fflib_IDomainConstructor
+    {
+        public fflib_IDomain construct(List<Object> records)
+        {
+            return (fflib_IDomain) new Accounts((List<SObject>) records);
+        }
     }
 }
