@@ -132,11 +132,11 @@ global virtual with sharing class ADV_Adapter {
         AccountsServiceImpl accountsAdapter = new AccountsServiceImpl(listNew, listOld);
         switch on triggerAction {
             when BeforeInsert {
-                accountsAdapter.setAccountTypeAndIndividualFieldValues();
+                AccountsService.setAccountTypeAndIndividualFieldValues(listNew);
             }
 
             when BeforeUpdate {
-                accountsAdapter.setAccountTypeAndIndividualFieldValues();
+                AccountsService.setAccountTypeAndIndividualFieldValues(listNew);
                 accountsAdapter.setSystemAccountTypeAndIndividualFieldValues();
             }
         }
