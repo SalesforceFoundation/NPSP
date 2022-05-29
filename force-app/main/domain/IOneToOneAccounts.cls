@@ -35,4 +35,6 @@
 */
 public interface IOneToOneAccounts extends fflib_ISObjects {
     IOneToOneAccounts getOneToOneAccounts();
+
+    void setTypeAndIndividualFields();
 }

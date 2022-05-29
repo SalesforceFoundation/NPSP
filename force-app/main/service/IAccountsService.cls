@@ -36,5 +36,9 @@
 */
 public interface IAccountsService {
     void onBeforeInsert(List<Account> accounts);
+//    void onBeforeUpdate_ADDR_Account_TDTM();
+//    void onAfterInsert(TDTM_Runnable.DmlWrapper dmlWrapper);
+//    void onAfterUpdate(TDTM_Runnable.DmlWrapper dmlWrapper);
+
     void setAccountTypeAndIndividualFieldValues(List<Account> accounts);
 }

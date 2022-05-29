@@ -36,4 +36,6 @@
 public interface IAccounts extends fflib_ISObjects {
     IAccounts needsTypeAndIndividualFieldsSet();
     List<SObject> getAccounts();
+
+    void resetSustainerFields();
 }
