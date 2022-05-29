@@ -51,8 +51,7 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         DmlWrapper dmlWrapper = new DmlWrapper();
         switch on triggerAction {
             when BeforeInsert {
-                accountsAdapter = new AccountsServiceImpl(listNew);
-                accountsAdapter.onBeforeInsert();
+                AccountsService.onBeforeInsert((List<Account>)listNew);
             }
             when BeforeUpdate {
                 accountsAdapter = new AccountsServiceImpl(listNew, listOld);
