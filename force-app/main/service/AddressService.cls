@@ -127,6 +127,15 @@ public inherited sharing class AddressService {
         return str1.equals(str2);
     }
 
+    private void normalizeLineBreaksFor(List<SObject> records) {
+        if (isAddressManagementEnabled()) {
+            for (Integer i = 0; i < records.size(); i++) {
+                Account newRecord = (Account) records[i];
+                UTIL_Address.normalizeLineBreak(newRecord);
+            }
+        }
+    }
+
     /*******************************************************************************************************
     * @description Utility to copy Address fields from an Address object to a Contact or Account.
     * Handles instances where State and Country picklists are enabled, and multiline street addresses.
