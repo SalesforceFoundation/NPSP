@@ -33,7 +33,7 @@
 * @author Salesforce.org
 * @description Interface definition for Households domain
 */
-public interface IHouseholds {
+public interface IHouseholds extends fflib_ISObjects {
     IHouseholds newInstance(List<SObject> records);
     List<SObject> getHouseholds();
     Contacts membersOf(HouseholdId recordId);
