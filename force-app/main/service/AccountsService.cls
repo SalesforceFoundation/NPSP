@@ -45,6 +45,21 @@ public with sharing class AccountsService {
         service().onBeforeInsert(accounts);
     }
 
+//    public static void onBeforeUpdate_ADDR_Account_TDTM(List<Account> newAccounts, List<Account> oldAccounts) {
+//        service().onBeforeUpdate_ADDR_Account_TDTM(newAccounts, oldAccounts);
+//    }
+//
+//    public static void onAfterInsert(List<Account> newAccounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
+//        service().onAfterInsert(dmlWrapper);
+//    }
+//
+//    public static void onAfterUpdate(List<Account> newAccounts,
+//                                     List<Account> oldAccounts,
+//                                     TDTM_Runnable.DmlWrapper dmlWrapper) {
+//
+//        service().onAfterUpdate(dmlWrapper);
+//    }
+
     public static void setAccountTypeAndIndividualFieldValues(List<Account> accounts) {
         service().setAccountTypeAndIndividualFieldValues(accounts);
     }
