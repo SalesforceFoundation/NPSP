@@ -129,8 +129,8 @@ public with sharing class Households extends fflib_SObjects2 implements IHouseho
         return (IHouseholds) Application.Domain.newInstance(householdSelector.findByIds(recordIds), Account.SObjectType);
     }
 
-    public List<SObject> getHouseholds() {
-        return getRecords(
+    public IHouseholds getHouseholds() {
+        return (IHouseholds) getRecords(
             isHouseholdAccount()
         );
     }
@@ -427,7 +427,10 @@ public with sharing class Households extends fflib_SObjects2 implements IHouseho
     {
         public fflib_IDomain construct(List<Object> records)
         {
-            List<SObject> filteredHouseholdAccounts = new Households((List<SObject>) records).getHouseholds();
+            List<SObject> filteredHouseholdAccounts = new Households((List<SObject>) records)
+                .getHouseholds()
+                .getRecords();
+
             return (fflib_IDomain) new Households(filteredHouseholdAccounts);
         }
     }
