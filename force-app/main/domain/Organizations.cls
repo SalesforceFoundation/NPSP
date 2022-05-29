@@ -34,7 +34,7 @@
 * @description Organizations domain class
 * THIS CLASS SHOULD NOT CONTAIN ANY PUBLIC CONSTRUCTORS. To retrieve an instance of this domain, use the public static
 * newInstance() method to retrieve the domain instance from the domain factory. Logic is used in the inner
-* Constructor class to ensure only household records are contained in the instanced domain collection.
+* Constructor class to ensure only organization records are contained in the instanced domain collection.
 */
 public with sharing class Organizations extends fflib_SObjects2 implements IOrganizations {
     @TestVisible
