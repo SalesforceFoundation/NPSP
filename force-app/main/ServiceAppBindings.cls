@@ -39,12 +39,13 @@ public with sharing class ServiceAppBindings {
 
     public static List<fflib_IAppBinding> getBindings() {
         List<fflib_IAppBinding> serviceAppBindings = new List<fflib_IAppBinding>();
-        serviceAppBindings.add(getAccountServiceBinding());
+        serviceAppBindings.add(getAccountsServiceBinding());
+        serviceAppBindings.add(getAddressesServiceBinding());
 
         return serviceAppBindings;
     }
 
-    private static fflib_IAppBinding getAccountServiceBinding() {
+    private static fflib_IAppBinding getAccountsServiceBinding() {
         return new fflib_AppBinding()
             .setBindingObject(Account.SObjectType)
             .setBindingType(fflib_AppBindingType.Service)
@@ -57,5 +58,20 @@ public with sharing class ServiceAppBindings {
                     UTIL_Namespace.getNamespace(), 'IAccountsService')
             )
             .setSharingMode(fflib_SharingMode.WithSharing);
+    }
+
+    private static fflib_IAppBinding getAddressesServiceBinding() {
+        return new fflib_AppBinding()
+                .setBindingObject(Address__c.SObjectType)
+                .setBindingType(fflib_AppBindingType.Service)
+                .setImplementationType(
+                        Type.forName(
+                                UTIL_Namespace.getNamespace(), 'AddressesServiceImpl')
+                )
+                .setInterfaceType(
+                        Type.forName(
+                                UTIL_Namespace.getNamespace(), 'IAddressesService')
+                )
+                .setSharingMode(fflib_SharingMode.WithSharing);
     }
 }
