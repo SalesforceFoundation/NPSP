@@ -102,9 +102,6 @@ public with sharing class Households extends fflib_SObjects2 implements IHouseho
         set;
     }
 
-    @TestVisible
-    private Households(){}
-
     /*******************************************************************************************************
     * @description Constructor
     * @param accountIds Account Ids to initialize the Contact Repository with
