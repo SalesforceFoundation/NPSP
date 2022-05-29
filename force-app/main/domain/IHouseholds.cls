@@ -34,5 +34,6 @@
 * @description Interface definition for Households domain
 */
 public interface IHouseholds {
-
+    List<SObject> getHouseholds();
+    void setTypeAndIndividualFields();
 }

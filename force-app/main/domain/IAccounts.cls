@@ -33,6 +33,7 @@
 * @author Salesforce.org
 * @description Interface for the accounts domain class
 */
-public interface IAccounts {
+public interface IAccounts extends fflib_ISObjects {
     IAccounts needsTypeAndIndividualFieldsSet();
+    List<SObject> getAccounts();
 }
