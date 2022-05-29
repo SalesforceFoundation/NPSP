@@ -91,10 +91,11 @@ public inherited sharing class AccountsServiceImpl extends fflib_SObjects2 imple
         AddressesService.normalizeLineBreaksFor(
             Households.newInstance(accounts).getRecords()
         );
-//        if (AddressesServiceImpl.isOrgAccountAddressesEnabled()) {
-//            normalizeLineBreaksFor(orgAccounts());
-//        }
-//
+
+        AddressesService.normalizeLineBreaksFor(
+            Organizations.newInstance(accounts).getRecords()
+        );
+
 //        resetSustainerFields();
     }
 
@@ -247,6 +248,7 @@ public inherited sharing class AccountsServiceImpl extends fflib_SObjects2 imple
     private void setTypeAndIndividualFields(IAccounts accounts) {
         Households.newInstance(accounts.getAccounts())
             .setTypeAndIndividualFields();
+
 //            setTypeAndIndividualFieldsForOneToOneAccount(acc);
     }
 
