@@ -152,7 +152,7 @@ public with sharing class RD2_SaveRequest {
         for (String fieldApiName : customFieldValues.keySet()) {
             if (!permissions.canCreateInstanced(
                     rdSObjectDescribe.getName(),
-                    UTIL_Namespace.StrTokenNSPrefix(fieldApiName),
+                    fieldApiName,
                     false)) {
 
                 customFieldValues.remove(fieldApiName);
@@ -173,7 +173,7 @@ public with sharing class RD2_SaveRequest {
 
             switch on describeUtil.getFieldTypeInstance(
                     recurringDonationDescribeResult.getName(),
-                    UTIL_Namespace.StrTokenNSPrefix(fieldApiName)) {
+                    fieldApiName) {
 
                 when 'BOOLEAN' {
                     Boolean booleanFieldValue = String.isBlank(fieldValue) ? null : Boolean.valueOf(fieldValue);
