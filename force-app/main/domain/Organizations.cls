@@ -48,9 +48,9 @@ public with sharing class Organizations extends fflib_SObjects2 implements IOrga
     }
 
     public IOrganizations getOrganizations() {
-        return (IOrganizations) getRecordsByFieldValue(
+        return new Organizations( getRecordsByFieldValue(
             Account.npe01__SYSTEMIsIndividual__c, false
-        );
+        ));
     }
 
     public class Constructor implements fflib_IDomainConstructor {
