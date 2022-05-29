@@ -86,19 +86,19 @@ public inherited sharing class AccountsServiceImpl extends fflib_SObjects2 imple
     }
 
     public void onBeforeInsert(List<Account> accounts) {
-        setAccountTypeAndIndividualFieldValues();
-        if (AddressService.isAddressManagementEnabled()) {
-            normalizeLineBreaksFor(householdAccounts());
-        }
-        if (AddressService.isOrgAccountAddressesEnabled()) {
-            normalizeLineBreaksFor(orgAccounts());
-        }
-
-        resetSustainerFields();
+        setAccountTypeAndIndividualFieldValues(accounts);
+//        if (AddressService.isAddressManagementEnabled()) {
+//            normalizeLineBreaksFor(householdAccounts());
+//        }
+//        if (AddressService.isOrgAccountAddressesEnabled()) {
+//            normalizeLineBreaksFor(orgAccounts());
+//        }
+//
+//        resetSustainerFields();
     }
 
     public void onBeforeUpdate_ACCT_Accounts_TDTM() {
-        setAccountTypeAndIndividualFieldValues();
+//        setAccountTypeAndIndividualFieldValues();
         setSystemAccountTypeAndIndividualFieldValues();
         if (shouldSetCustomNamingFieldAndReplaceGreetings()) {
             setCustomNamingField();
@@ -236,12 +236,17 @@ public inherited sharing class AccountsServiceImpl extends fflib_SObjects2 imple
         return accountsById;
     }
 
-    public void setAccountTypeAndIndividualFieldValues() {
-        for (Account acc : (List<Account>) getRecords()) {
-            if (needsTypeAndIndividualFieldsSet(acc)) {
-                setTypeAndIndividualFields(acc);
-            }
-        }
+    public void setAccountTypeAndIndividualFieldValues(List<Account> accountRecords) {
+        setTypeAndIndividualFields(
+            Accounts.newInstance(accountRecords)
+                .needsTypeAndIndividualFieldsSet()
+        );
+    }
+
+    private void setTypeAndIndividualFields(IAccounts accounts) {
+        Households.newInstance(accounts.getAccounts())
+            .setTypeAndIndividualFields();
+//            setTypeAndIndividualFieldsForOneToOneAccount(acc);
     }
 
     public void setSystemAccountTypeAndIndividualFieldValues() {
@@ -349,14 +354,6 @@ public inherited sharing class AccountsServiceImpl extends fflib_SObjects2 imple
 
     private Boolean isRecordTypeIdChanged(Account acc) {
         return acc.RecordTypeId != oldVersionOf(acc).RecordTypeId;
-    }
-
-    private void setTypeAndIndividualFields(Account acc) {
-        if (isHouseholdAccount(acc)) {
-            setTypeAndIndividualFieldsForHouseholdAccount(acc);
-        } else if (isOneToOneAccount(acc)) {
-            setTypeAndIndividualFieldsForOneToOneAccount(acc);
-        }
     }
 
     private void setTypeAndIndividualFieldsForOneToOneAccount(Account acc) {
