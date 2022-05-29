@@ -29,7 +29,6 @@
 */
 /**
 * @author Salesforce.org
-* @date 2021
 * @description Domain class for Household accounts.
  * THIS CLASS SHOULD NOT CONTAIN ANY PUBLIC CONSTRUCTORS. To retrieve an instance of this domain, use the public static
  * newInstance() method to retrieve the domain instance from the domain factory. Logic is used in the inner
@@ -104,7 +103,7 @@ public with sharing class Households extends fflib_SObjects2 implements IHouseho
 
     /*******************************************************************************************************
     * @description Constructor
-    * @param accountIds Account Ids to initialize the Contact Repository with
+    * @param accountIds Account Ids to use for selector query
     */
     @TestVisible
     private Households(Set<Id> accountIds) {
@@ -113,11 +112,11 @@ public with sharing class Households extends fflib_SObjects2 implements IHouseho
 
     /*******************************************************************************************************
     * @description Constructor
-    * @param accountIds Account Ids to initialize the Contact Repository with
+    * @param accounts List of SObject records to use for domain constructor
     */
     @TestVisible
-    private Households(List<SObject> accounts) {
-        super(accounts, Account.SObjectType);
+    private Households(List<SObject> records) {
+        super(records, Account.SObjectType);
     }
 
     public static IHouseholds newInstance(List<SObject> records) {
