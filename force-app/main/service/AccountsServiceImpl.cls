@@ -87,9 +87,8 @@ public inherited sharing class AccountsServiceImpl extends fflib_SObjects2 imple
 
     public void onBeforeInsert(List<Account> accounts) {
         setAccountTypeAndIndividualFieldValues(accounts);
-//        if (AddressService.isAddressManagementEnabled()) {
-//            normalizeLineBreaksFor(householdAccounts());
-//        }
+
+        normalizeLineBreaksFor(Households.newInstance(accounts).getRecords());
 //        if (AddressService.isOrgAccountAddressesEnabled()) {
 //            normalizeLineBreaksFor(orgAccounts());
 //        }
