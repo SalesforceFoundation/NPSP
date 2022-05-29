@@ -117,13 +117,9 @@ public inherited sharing class Households extends fflib_SObjects2 implements IHo
         super(accounts, Account.SObjectType);
     }
 
-    public class Constructor extends fflib_SObjects2 implements fflib_IDomainConstructor
-    {
-        public fflib_IDomain construct(List<Object> records)
-        {
-            List<SObject> filteredHouseholdAccounts = new Households((List<SObject>) records).getHouseholds();
-            return (fflib_IDomain) new Households(filteredHouseholdAccounts);
-        }
+    public static IHouseholds newInstance(List<SObject> records) {
+        Application.Domain.replaceWith(Account.SObjectType, IHouseholds.class, Households.Constructor.class);
+        return (IHouseholds) Application.Domain.newInstance(records, Account.SObjectType);
     }
 
     public List<SObject> getHouseholds() {
@@ -132,9 +128,9 @@ public inherited sharing class Households extends fflib_SObjects2 implements IHo
 
     private fflib_Criteria isHouseholdAccount() {
         return new fflib_Criteria()
-                .equalTo(Account.RecordTypeId, ContactAndOrgSettings.rtIdForAccountModel(true))
+                .notEqualTo(Account.RecordTypeId, null)
                 .andCriteria()
-                .notEqualTo(Account.RecordTypeId, null);
+                .equalTo(Account.RecordTypeId, ContactAndOrgSettings.rtIdForAccountModel(true));
     }
 
     public Contacts membersOf(HouseholdId aHouseholdId) {
@@ -411,6 +407,15 @@ public inherited sharing class Households extends fflib_SObjects2 implements IHo
      */
     private static Boolean isHouseholdMember(Contact contactRecord) {
         return contactRecord.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
+    }
+
+    public class Constructor extends fflib_SObjects2 implements fflib_IDomainConstructor
+    {
+        public fflib_IDomain construct(List<Object> records)
+        {
+            List<SObject> filteredHouseholdAccounts = new Households((List<SObject>) records).getHouseholds();
+            return (fflib_IDomain) new Households(filteredHouseholdAccounts);
+        }
     }
 
 }
