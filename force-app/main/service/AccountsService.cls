@@ -39,8 +39,14 @@
 */
 public with sharing class AccountsService {
 
+    private AccountsService(){}
+
     public static void onBeforeInsert(List<Account> accounts) {
         service().onBeforeInsert(accounts);
+    }
+
+    public static void setAccountTypeAndIndividualFieldValues(List<Account> accounts) {
+        service().setAccountTypeAndIndividualFieldValues(accounts);
     }
 
     private static IAccountsService service() {
