@@ -36,7 +36,7 @@ public inherited sharing class HouseholdSelector {
 
     private List<Account> getHouseholdAccountsWithContactsAndSingleOpp(Set<Id> accountIds) {
         List<Account> accounts = [
-                SELECT Id, Type, npe01__SYSTEM_AccountType__c, npe01__One2OneContact__c, (
+                SELECT Id, Type, npe01__SYSTEM_AccountType__c, npe01__One2OneContact__c, RecordTypeId, (
                         SELECT Id, AccountId,
                                 Account.npe01__One2OneContact__c,
                                 Current_Address__c

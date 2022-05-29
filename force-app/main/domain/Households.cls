@@ -130,7 +130,9 @@ public with sharing class Households extends fflib_SObjects2 implements IHouseho
     }
 
     public List<SObject> getHouseholds() {
-        return getRecords(isHouseholdAccount());
+        return getRecords(
+            isHouseholdAccount()
+        );
     }
 
     private fflib_Criteria isHouseholdAccount() {
