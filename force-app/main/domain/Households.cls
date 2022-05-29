@@ -30,7 +30,10 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Contact repository responsible for retrieval and storing of Contacts for specified Accounts
+* @description Domain class for Household accounts.
+ * THIS CLASS SHOULD NOT CONTAIN ANY PUBLIC CONSTRUCTORS. To retrieve an instance of this domain, use the public static
+ * newInstance() method to retrieve the domain instance from the domain factory. Logic is used in the inner
+ * Constructor class to ensure only household records are contained in the instanced domain collection.
 */
 public inherited sharing class Households extends fflib_SObjects2 implements IHouseholds {
 
@@ -99,7 +102,8 @@ public inherited sharing class Households extends fflib_SObjects2 implements IHo
         set;
     }
 
-    public Households(){}
+    @TestVisible
+    private Households(){}
 
     /*******************************************************************************************************
     * @description Constructor
@@ -155,7 +159,7 @@ public inherited sharing class Households extends fflib_SObjects2 implements IHo
     }
 
     public void setTypeAndIndividualFields() {
-        for (Account household : (List<Account>) getHouseholds()) {
+        for (Account household : (List<Account>) getRecords()) {
             household.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
             household.Type = CAO_Constants.HH_TYPE;
             household.npe01__SYSTEMIsIndividual__c = true;
