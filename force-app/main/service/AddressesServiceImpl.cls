@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Address Service class in NPSP.
+* @description Addresses Service implementation class in NPSP.
 */
 public inherited sharing class AddressesServiceImpl {
 
@@ -127,7 +127,7 @@ public inherited sharing class AddressesServiceImpl {
         return str1.equals(str2);
     }
 
-    private void normalizeLineBreaksFor(List<SObject> records) {
+    public void normalizeLineBreaksFor(List<SObject> records) {
         if (isAddressManagementEnabled()) {
             for (Integer i = 0; i < records.size(); i++) {
                 Account newRecord = (Account) records[i];
