@@ -34,5 +34,5 @@
 * @description Interface definition for Organization accounts domain
 */
 public interface IOrganizations extends fflib_ISObjects {
-
+    IOrganizations getOrganizations();
 }

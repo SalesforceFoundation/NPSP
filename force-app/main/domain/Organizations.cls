@@ -47,10 +47,19 @@ public with sharing class Organizations extends fflib_SObjects2 implements IOrga
         return (IOrganizations) Application.Domain.newInstance(records, Account.SObjectType);
     }
 
+    public IOrganizations getOrganizations() {
+        return (IOrganizations) getRecordsByFieldValue(
+            Account.npe01__SYSTEMIsIndividual__c, false
+        );
+    }
+
     public class Constructor implements fflib_IDomainConstructor {
-        public fflib_IDomain construct(List<Object> records)
-        {
-            return (fflib_IDomain) new Organizations((List<SObject>) records);
+        public fflib_IDomain construct(List<Object> records) {
+            List<SObject> filteredOrganizations = new Organizations((List<SObject>) records)
+                .getOrganizations()
+                .getRecords();
+
+            return (fflib_IDomain) new Organizations((List<SObject>) filteredOrganizations);
         }
     }
 }
