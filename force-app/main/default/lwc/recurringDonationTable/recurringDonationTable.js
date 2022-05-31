@@ -29,12 +29,9 @@ export default class RecurringDonationTable extends LightningElement {
 
     columns = [];
 
-	connectedCallback() {
-        this.retrieveData();
-    }
-
     @wire(getObjectInfo, { objectApiName: RECURRING_DONATION })
     oppInfo({ data, error }) {
+        this.retrieveData();
         if (data){
           this.paymentMethod = data.fields.PaymentMethod__c.label;
           this.columns = [

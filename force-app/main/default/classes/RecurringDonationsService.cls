@@ -67,7 +67,7 @@ public with sharing class RecurringDonationsService {
     * @author Salesforce.org
     * @date 2022
     * @description method to check recurring donation permissions.
-    * @return List<RecurringDonationsController.RecurringDonation> returns processed Recurring Donations.
+    * @return Boolean returns access to Recurring Donations.
     */
     private Boolean hasAccessToRecurringDonation() {
         return permissions.canRead(npe03__Recurring_Donation__c.SObjectType, new Set<SObjectField>{

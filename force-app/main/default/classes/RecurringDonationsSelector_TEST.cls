@@ -72,20 +72,4 @@ public class RecurringDonationsSelector_TEST {
 
         System.assertNotEquals(null, result, 'Recurring Donations should not be null');
     }
-
-    /**
-    * @author Salesforce.org
-    * @date 2022
-    * @description Method to test that the results are returned correctly
-    */
-    @IsTest
-    private static void testGetCurrentContactId() {
-
-        Test.startTest();
-        RecurringDonationsSelector selector = new RecurringDonationsSelector();
-        Id result = selector.getCurrentContactId();
-        Test.stopTest();
-
-        System.assertEquals(null, result, 'System Administrator should not have a related ContactId');
-    }
 }

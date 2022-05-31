@@ -39,7 +39,7 @@ public inherited sharing class RecurringDonationsSelector {
     private Id currentContactId {
         get {
             if(currentContactId == null) {
-                currentContactId = getCurrentContactId();
+                currentContactId = USER_UserService.getContactIdByUserId();
             }
             return currentContactId;
         }
@@ -66,16 +66,4 @@ public inherited sharing class RecurringDonationsSelector {
 
         return recurringDonations;
     }
-
-  /**
-   * @description Returns the Contact ID related to the Experience Site user.
-   * @return ID
-   */
-  	@TestVisible
-	private Id getCurrentContactId() {
-		
-		User usr = [SELECT ContactId FROM USER WHERE ID = :UserInfo.getUserId()];
-		
-		return usr.ContactId;
-	}
 }
