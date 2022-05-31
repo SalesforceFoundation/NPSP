@@ -43,6 +43,20 @@ public class RecurringDonationsController_TEST {
     * @description Method to test that the results are returned correctly
     */
     @IsTest
+    private static void testInstanceRecurringDonationsService() {
+        Test.startTest();
+        RecurringDonationsService service = RecurringDonationsController.donationService;
+        Test.stopTest();
+
+        System.assertNotEquals(null, service, 'Should instance RecurringDonationsService');
+    }
+
+    /**
+    * @author Salesforce.org
+    * @date 2022
+    * @description Method to test that the results are returned correctly
+    */
+    @IsTest
     private static void testGetData() {
         
         Account acc = new Account(

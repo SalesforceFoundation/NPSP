@@ -57,9 +57,11 @@ public with sharing class RecurringDonationsController {
     public class RecurringDonation {
         @AuraEnabled public npe03__Recurring_Donation__c recurringDonation;
         @AuraEnabled public String frequency;
-        public RecurringDonation(npe03__Recurring_Donation__c recurringDonation, String frequency) {
+        @AuraEnabled public String status;
+        public RecurringDonation(npe03__Recurring_Donation__c recurringDonation, String frequency, String status) {
             this.recurringDonation = recurringDonation;
             this.frequency = frequency;
+            this.status = status;
         }
     }
 

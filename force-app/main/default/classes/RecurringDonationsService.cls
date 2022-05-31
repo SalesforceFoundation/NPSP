@@ -89,7 +89,8 @@ public with sharing class RecurringDonationsService {
             List<RecurringDonationsController.RecurringDonation> recurringDonations = new List<RecurringDonationsController.RecurringDonation>();
             for(npe03__Recurring_Donation__c recDonation : selector.getRecurringDonations()) {
                 recurringDonations.add( new RecurringDonationsController.RecurringDonation( recDonation,
-                                                                                            getFrequency(recDonation)));
+                                                                                            getFrequency(recDonation),
+                                                                                            ''));
 
             }
 
