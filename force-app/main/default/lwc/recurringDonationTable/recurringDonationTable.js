@@ -13,7 +13,8 @@ import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 export default class RecurringDonationTable extends LightningElement {
     @api
     donationTypeFilter = 'Show all Recurring Donations';
-
+    @api 
+    allowACHPaymentMethod;
     paymentMethod = '';
 
     lastDonationDate = '';
