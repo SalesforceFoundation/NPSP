@@ -34,13 +34,8 @@
 * @description Recurring Donations Service class.
 */
 public with sharing class RD2_ERecurringDonationsService {
-    
-    private final String MONTHLY = 'Monthly';
-    private final String WEEKLY = 'Weekly';
-    private final String YEARLY = 'Yearly';
-    private final String STATUS_PAUSED = 'Paused';
+
     private final String STATUS_CANCELED = 'Canceled';
-    private final String STATE_CLOSED = 'Closed';
 
     @TestVisible
     private UTIL_Permissions permissions {
@@ -121,7 +116,7 @@ public with sharing class RD2_ERecurringDonationsService {
 
         if(recurringDonation.InstallmentFrequency__c == 1) {
             if(recurringDonation.npe03__Installment_Period__c.isAlpha()) {
-                if(recurringDonation.npe03__Installment_Period__c == 'Monthly') {
+                if(recurringDonation.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
                     frequency = String.format(System.Label.frequencyPeriodOnTheDayOfTheMonth, new List<String>{recurringDonation.npe03__Installment_Period__c, mapDayOfMonth.get(recurringDonation.Day_of_Month__c).ToLowerCase()});
                 } else {
                     frequency = recurringDonation.npe03__Installment_Period__c;
@@ -130,11 +125,11 @@ public with sharing class RD2_ERecurringDonationsService {
                 frequency = String.format(System.Label.frequencyOnThePeriod, new List<String>{recurringDonation.npe03__Installment_Period__c});
             }
         } else {
-            if(recurringDonation.npe03__Installment_Period__c == MONTHLY) {
+            if(recurringDonation.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
                 frequency = String.format(System.Label.frequencyMonthly, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c), mapDayOfMonth.get(recurringDonation.Day_of_Month__c).ToLowerCase()});
-            } else if(recurringDonation.npe03__Installment_Period__c == YEARLY) {
+            } else if(recurringDonation.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_YEARLY) {
                 frequency = String.format(System.Label.frequencyYearly, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c)});
-            } else if(recurringDonation.npe03__Installment_Period__c == WEEKLY) {
+            } else if(recurringDonation.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY) {
                 frequency = String.format(System.Label.frequencyWeekly, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c)});
             }
         }
@@ -174,9 +169,9 @@ public with sharing class RD2_ERecurringDonationsService {
             mapStatus.put(ple.getValue(), ple.getLabel());
         }
 
-        if(recurringDonation.Status__c == STATUS_PAUSED) {
+        if(recurringDonation.Status__c == RD2_Constants.STATUS_PAUSED) {
             status = mapStatus.get(recurringDonation.Status__c);
-        } else if(recurringDonation.Status__c != STATUS_PAUSED && statusMapper.getState(recurringDonation.Status__c) != STATE_CLOSED) {
+        } else if(recurringDonation.Status__c != RD2_Constants.STATUS_PAUSED && statusMapper.getState(recurringDonation.Status__c) != RD2_Constants.STATUS_CLOSED) {
             status = statusMapper.getState(recurringDonation.Status__c);
         } else {
             status = STATUS_CANCELED;
