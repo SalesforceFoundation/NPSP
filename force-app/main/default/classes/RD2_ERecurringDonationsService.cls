@@ -38,6 +38,9 @@ public with sharing class RD2_ERecurringDonationsService {
     private final String MONTHLY = 'Monthly';
     private final String WEEKLY = 'Weekly';
     private final String YEARLY = 'Yearly';
+    private final String STATUS_PAUSED = 'Paused';
+    private final String STATUS_CANCELED = 'Canceled';
+    private final String STATE_CLOSED = 'Closed';
 
     @TestVisible
     private UTIL_Permissions permissions {
@@ -74,7 +77,8 @@ public with sharing class RD2_ERecurringDonationsService {
             npe03__Recurring_Donation__c.npe03__Amount__c,
             npe03__Recurring_Donation__c.npe03__Installment_Period__c,
             npe03__Recurring_Donation__c.InstallmentFrequency__c,
-            npe03__Recurring_Donation__c.Day_of_Month__c
+            npe03__Recurring_Donation__c.Day_of_Month__c,
+            npe03__Recurring_Donation__c.Status__c
         });
     }
 
@@ -90,7 +94,7 @@ public with sharing class RD2_ERecurringDonationsService {
             for(npe03__Recurring_Donation__c recDonation : selector.getRecurringDonations()) {
                 recurringDonations.add( new RD2_ERecurringDonationsController.RecurringDonationView( recDonation,
                                                                                             getFrequency(recDonation),
-                                                                                            ''));
+                                                                                            getStatus(recDonation)));
 
             }
 
@@ -153,5 +157,31 @@ public with sharing class RD2_ERecurringDonationsService {
         }
         
         return frequency;
+    }
+
+    /** 
+    * @author Salesforce.org
+    * @date 2022
+    * @description process Recurring Donation record to build the status string.
+    * @return String returns the Status string.
+    */
+    private String getStatus(npe03__Recurring_Donation__c recurringDonation) {
+        RD2_StatusMapper statusMapper = RD2_StatusMapper.getInstance();
+        String status = '';
+
+        Map<String, String> mapStatus = new Map<String, String>();
+        for(Schema.PicklistEntry ple : Schema.SObjectType.npe03__Recurring_Donation__c.fields.Status__c.getPicklistValues()){
+            mapStatus.put(ple.getValue(), ple.getLabel());
+        }
+
+        if(recurringDonation.Status__c == STATUS_PAUSED) {
+            status = mapStatus.get(recurringDonation.Status__c);
+        } else if(recurringDonation.Status__c != STATUS_PAUSED && statusMapper.getState(recurringDonation.Status__c) != STATE_CLOSED) {
+            status = statusMapper.getState(recurringDonation.Status__c);
+        } else {
+            status = STATUS_CANCELED;
+        }
+
+        return status;
     }
 }
