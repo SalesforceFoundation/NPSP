@@ -73,6 +73,7 @@ public with sharing class Gift {
     public Gift(DataImport__c dataImport, Donation donation) {
         this.donation = donation;
         this.dataImport = dataImport;
+        this.updateDonorType();
         this.populateAvailableFields();
         this.populateSoftCredits();
     }
@@ -192,6 +193,33 @@ public with sharing class Gift {
         }
 
         this.availableFields = fields;
+    }
+
+    private void updateDonorType() {
+        if (this.dataImport.Account1Imported__c == null) {
+            return;
+        }
+
+        Account acc =  [
+            SELECT npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c
+            FROM Account
+            WHERE Id =: this.dataImport.Account1Imported__c
+        ][0];
+
+        if (hasPledgedDonationFromHouseHold(acc)) {
+            this.dataImport.Donation_Donor__c = 'Contact1';
+            this.dataImport.Contact1Imported__c = acc.npe01__One2OneContact__c;
+        }
+    }
+
+    private Boolean hasPledgedDonationFromHouseHold(Account acc) {
+        return this.dataImport.PaymentImported__c != null
+            && isHousehold(acc);
+    }
+
+    private Boolean isHousehold(Account acc) {
+        return this.dataImport.Donation_Donor__c == 'Account1'
+            && acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
     }
 
     private void populateSoftCredits() {
