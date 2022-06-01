@@ -33,7 +33,7 @@
 * @date 2022
 * @description Recurring Donations Service class.
 */
-public with sharing class RecurringDonationsService {
+public with sharing class RD2_ERecurringDonationsService {
     
     private final String MONTHLY = 'Monthly';
     private final String WEEKLY = 'Weekly';
@@ -51,10 +51,10 @@ public with sharing class RecurringDonationsService {
     }
     
     @TestVisible
-    private RecurringDonationsSelector selector {
+    private RD2_ERecurringDonationsSelector selector {
         get {
             if(selector == null) {
-                selector = new RecurringDonationsSelector();
+                selector = new RD2_ERecurringDonationsSelector();
             }
             return selector;
         }
@@ -82,13 +82,13 @@ public with sharing class RecurringDonationsService {
     * @author Salesforce.org
     * @date 2022
     * @description method to return Recurring Donation list.
-    * @return List<RecurringDonationsController.RecurringDonation> returns processed Recurring Donations.
+    * @return List<RD2_ERecurringDonationsController.RecurringDonationView> returns processed Recurring Donations.
     */
-    public List<RecurringDonationsController.RecurringDonation> getData() {
+    public List<RD2_ERecurringDonationsController.RecurringDonationView> getData() {
         if(hasAccessToRecurringDonation()) {
-            List<RecurringDonationsController.RecurringDonation> recurringDonations = new List<RecurringDonationsController.RecurringDonation>();
+            List<RD2_ERecurringDonationsController.RecurringDonationView> recurringDonations = new List<RD2_ERecurringDonationsController.RecurringDonationView>();
             for(npe03__Recurring_Donation__c recDonation : selector.getRecurringDonations()) {
-                recurringDonations.add( new RecurringDonationsController.RecurringDonation( recDonation,
+                recurringDonations.add( new RD2_ERecurringDonationsController.RecurringDonationView( recDonation,
                                                                                             getFrequency(recDonation),
                                                                                             ''));
 
@@ -118,36 +118,36 @@ public with sharing class RecurringDonationsService {
         if(recurringDonation.InstallmentFrequency__c == 1) {
             if(recurringDonation.npe03__Installment_Period__c.isAlpha()) {
                 if(recurringDonation.npe03__Installment_Period__c == 'Monthly') {
-                    frequency = String.format(Label.frequencyB, new List<String>{recurringDonation.npe03__Installment_Period__c, mapDayOfMonth.get(recurringDonation.Day_of_Month__c).ToLowerCase()});
+                    frequency = String.format(System.Label.frequencyPeriodOnTheDayOfTheMonth, new List<String>{recurringDonation.npe03__Installment_Period__c, mapDayOfMonth.get(recurringDonation.Day_of_Month__c).ToLowerCase()});
                 } else {
                     frequency = recurringDonation.npe03__Installment_Period__c;
                 }
             } else {
-                frequency = String.format(Label.frequencyA, new List<String>{recurringDonation.npe03__Installment_Period__c});
+                frequency = String.format(System.Label.frequencyOnThePeriod, new List<String>{recurringDonation.npe03__Installment_Period__c});
             }
         } else {
             if(recurringDonation.npe03__Installment_Period__c == MONTHLY) {
-                frequency = String.format(Label.frequencyM, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c), mapDayOfMonth.get(recurringDonation.Day_of_Month__c).ToLowerCase()});
+                frequency = String.format(System.Label.frequencyMonthly, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c), mapDayOfMonth.get(recurringDonation.Day_of_Month__c).ToLowerCase()});
             } else if(recurringDonation.npe03__Installment_Period__c == YEARLY) {
-                frequency = String.format(Label.frequencyY, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c)});
+                frequency = String.format(System.Label.frequencyYearly, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c)});
             } else if(recurringDonation.npe03__Installment_Period__c == WEEKLY) {
-                frequency = String.format(Label.frequencyW, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c)});
+                frequency = String.format(System.Label.frequencyWeekly, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c)});
             }
         }
 
         if(frequency.right(1).isNumeric()) {
             switch on frequency.right(1) {
                 when '1' {
-                    frequency += Label.firstOrdinalNumber;
+                    frequency += System.Label.firstOrdinalNumber;
                 }
                 when '2' {
-                    frequency += Label.secondOrdinalNumber;
+                    frequency += System.Label.secondOrdinalNumber;
                 }
                 when '3' {
-                    frequency += Label.thirdOrdinalNumber;
+                    frequency += System.Label.thirdOrdinalNumber;
                 }
                 when else {
-                    frequency += Label.otherOrdinalNumber;
+                    frequency += System.Label.otherOrdinalNumber;
                 }
             }
         }

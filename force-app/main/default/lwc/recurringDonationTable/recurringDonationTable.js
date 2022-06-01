@@ -6,7 +6,7 @@ import firstDonation from '@salesforce/label/c.firstDonation'
 import nextDonation from '@salesforce/label/c.nextDonation';
 import mostRecentDonation from '@salesforce/label/c.mostRecentDonation';
 import lastModified from '@salesforce/label/c.lastModified';
-import getData from '@salesforce/apex/RecurringDonationsController.getData';
+import getData from '@salesforce/apex/RD2_ERecurringDonationsController.getData';
 
 import RECURRING_DONATION from '@salesforce/schema/npe03__Recurring_Donation__c';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
@@ -31,7 +31,7 @@ export default class RecurringDonationTable extends LightningElement {
 
     @wire(getObjectInfo, { objectApiName: RECURRING_DONATION })
     oppInfo({ data, error }) {
-        this.retrieveData();
+        this.getRecurringDonationFields();
         if (data){
           this.paymentMethod = data.fields.PaymentMethod__c.label;
           this.columns = [
@@ -51,7 +51,7 @@ export default class RecurringDonationTable extends LightningElement {
         }
     }
 	
-	retrieveData() {
+	getRecurringDonationFields() {
         getData()
         .then((data) => {
             if (data) {

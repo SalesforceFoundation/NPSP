@@ -34,13 +34,13 @@
 * @group Donation
 * @description Controller class for Recurring Donations LWC.
 */
-public with sharing class RecurringDonationsController {
+public with sharing class RD2_ERecurringDonationsController {
     
     @TestVisible
-    private static RecurringDonationsService donationService {
+    private static RD2_ERecurringDonationsService donationService {
         get {
             if (donationService == null) {
-                donationService = new RecurringDonationsService();
+                donationService = new RD2_ERecurringDonationsService();
             }
             return donationService;
         }
@@ -54,11 +54,11 @@ public with sharing class RecurringDonationsController {
     * @date 2022
     * @description Recurring Donations inner class.
     */
-    public class RecurringDonation {
+    public class RecurringDonationView {
         @AuraEnabled public npe03__Recurring_Donation__c recurringDonation;
         @AuraEnabled public String frequency;
         @AuraEnabled public String status;
-        public RecurringDonation(npe03__Recurring_Donation__c recurringDonation, String frequency, String status) {
+        public RecurringDonationView(npe03__Recurring_Donation__c recurringDonation, String frequency, String status) {
             this.recurringDonation = recurringDonation;
             this.frequency = frequency;
             this.status = status;
@@ -67,14 +67,15 @@ public with sharing class RecurringDonationsController {
 
     /**
      * @description returns a list of processed recurring donations
-     * @return List<RecurringDonation> List of processed recurring donation records
+     * @return List<RecurringDonationView> List of processed recurring donation records
      */
     @AuraEnabled(cacheable=true)
-    public static List<RecurringDonation> getData() {
+    public static List<RecurringDonationView> getData() {
         try {
             return donationService.getData();
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
     }
+    
 }

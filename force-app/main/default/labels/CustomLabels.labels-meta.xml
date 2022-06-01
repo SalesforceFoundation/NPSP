@@ -5897,7 +5897,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Last Modified</value>
     </labels>
     <labels>
-        <fullName>frequencyA</fullName>
+        <fullName>frequencyOnThePeriod</fullName>
         <categories>Recurring Donations</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -5905,7 +5905,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>On the {0}</value>
     </labels>
     <labels>
-        <fullName>frequencyB</fullName>
+        <fullName>frequencyPeriodOnTheDayOfTheMonth</fullName>
         <categories>Recurring Donations</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -5913,7 +5913,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>{0} on the {1}</value>
     </labels>
     <labels>
-        <fullName>frequencyY</fullName>
+        <fullName>frequencyYearly</fullName>
         <categories>Recurring Donations</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -5921,7 +5921,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Every {0} years</value>
     </labels>
     <labels>
-        <fullName>frequencyM</fullName>
+        <fullName>frequencyMonthly</fullName>
         <categories>Recurring Donations</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -5929,7 +5929,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Every {0} months on the {1}</value>
     </labels>
     <labels>
-        <fullName>frequencyW</fullName>
+        <fullName>frequencyWeekly</fullName>
         <categories>Recurring Donations</categories>
         <language>en_US</language>
         <protected>true</protected>

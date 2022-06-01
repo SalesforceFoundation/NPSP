@@ -1,10 +1,10 @@
 /*
-    Copyright (c) 2022, Salesforce.org
+    Copyright (c) 2022 Salesforce.org
     All rights reserved.
-   
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-   
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -31,45 +31,39 @@
 /**
 * @author Salesforce.org
 * @date 2022
-* @group Donation
-* @description Unit Test Class for test the recurring donations selector.
+* @description Recurring Donations Selector class.
 */
-@IsTest
-public class RecurringDonationsSelector_TEST {
-    
+public inherited sharing class RD2_ERecurringDonationsSelector {
+
+    @TestVisible
+    private Id currentContactId {
+        get {
+            if(currentContactId == null) {
+                currentContactId = USER_UserService.getContactIdByUserId();
+            }
+            return currentContactId;
+        }
+        set;
+    }
+
     /**
-    * @author Salesforce.org
-    * @date 2022
-    * @description Method to test that the results are returned correctly
-    */
-    @IsTest
-    private static void testGetRecurringDonations() {
-        Account acc = new Account(
-            Name = 'Test acc'
-        );
-        insert acc;
+     * @description Returns the Recurring Donation records related to the Experience Site user.
+     * @return List<npe03__Recurring_Donation__c>
+     */
+    public List<npe03__Recurring_Donation__c> getRecurringDonations() {
 
-        Contact con = new Contact(
-            LastName = 'Test con',
-            AccountId = acc.ID
-        );
-        insert con;
+		Id currentContactId = this.currentContactId;
+		List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>();
+		if(currentContactId != NULL) {
+			recurringDonations = [  SELECT npe03__Amount__c,
+										npe03__Installment_Period__c,
+										InstallmentFrequency__c,
+										Day_of_Month__c
+									FROM npe03__Recurring_Donation__c
+									WHERE npe03__Contact__c = :currentContactId
+									WITH SECURITY_ENFORCED ];
+		}
 
-        npe03__Recurring_Donation__c rDonation01 = new npe03__Recurring_Donation__c(
-            npe03__Amount__c = 100,
-            npe03__Installment_Period__c = 'Monthly',
-            InstallmentFrequency__c = 1,
-            Day_of_Month__c = '23',
-            npe03__Contact__c = con.ID
-        );
-        insert rDonation01;
-
-        Test.startTest();
-        RecurringDonationsSelector selector = new RecurringDonationsSelector();
-        selector.currentContactId = con.Id;
-        List<npe03__Recurring_Donation__c> result = selector.getRecurringDonations();
-        Test.stopTest();
-
-        System.assertNotEquals(null, result, 'Recurring Donations should not be null');
+        return recurringDonations;
     }
 }
