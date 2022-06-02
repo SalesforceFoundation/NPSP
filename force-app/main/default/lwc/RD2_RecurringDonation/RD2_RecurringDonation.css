@@ -1,0 +1,33 @@
+.slds-resizable__divider::before{
+    background-color: transparent;
+}
+.slds-max-medium-table_stacked td:before{
+    display: inline;
+}
+.tableScroll {
+    overflow: auto;
+    overflow-y: hidden;
+    height: 10rem;
+}
+.dv-dynamic-mobile{
+    float: right;
+}
+.row-label-alignment{
+    display: inline;
+}
+.hide-td{
+    display: none;
+}
+.slds-table_header-fixed tbody tr:first-child td{
+    border-top: var(--lwc-borderWidthThin,1px) solid var(--lwc-colorBorder,rgb(229, 229, 229));
+}
+.viewMore{
+    cursor: pointer;
+    text-align: center;
+}
+.viewMore::before{
+    color: #0070D2;
+}
+.slds-dropdown-mobile div.slds-dropdown {
+    position: relative;
+}

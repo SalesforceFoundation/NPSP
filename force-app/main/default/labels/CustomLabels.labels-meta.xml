@@ -1738,6 +1738,22 @@
         <value>No Errors</value>
     </labels>
     <labels>
+        <fullName>RD2_ViewMoreDetails</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for view more info on recurring donation table component</shortDescription>
+        <value>View More Details</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ViewLessDetails</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for view less info on recurring donation table component</shortDescription>
+        <value>View Less Details</value>
+    </labels>
+    <labels>
         <fullName>RD2_ElevateNotSupported</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
