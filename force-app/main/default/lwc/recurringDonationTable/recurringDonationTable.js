@@ -88,6 +88,7 @@ export default class RecurringDonationTable extends LightningElement {
     oppInfo({ data, error }) {
         if (data){
           this.paymentMethod = data.fields.PaymentMethod__c.label;
+          console.log('this is a test');
           this.columns = [
             { label: commonAmount, fieldName: "amount", type: "currency", hideDefaultActions: true },
             { label: RDCL_Frequency, fieldName: "frequency", type: "text", hideDefaultActions: true },
