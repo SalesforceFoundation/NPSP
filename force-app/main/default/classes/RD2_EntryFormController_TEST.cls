@@ -804,7 +804,7 @@ private with sharing class RD2_EntryFormController_TEST {
         req.campaignId = fakeCampaignId;
         req.customFieldValues = new Map<String, Object>{
                 // utilizing this field as a fake custom field
-                'CommitmentId__c' => '123-456-789'
+                UTIL_Namespace.StrTokenNSPrefix('CommitmentId__c') => '123-456-789'
         };
         req.cardExpirationYear = '2025';
         req.cardExpirationMonth = '2';
