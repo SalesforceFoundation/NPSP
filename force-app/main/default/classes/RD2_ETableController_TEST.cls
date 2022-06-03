@@ -35,27 +35,10 @@
 * @description Unit Test Class for test the recurring donations controller and selector.
 */
 @IsTest
-public class RD2_ERecurringDonationsController_TEST {
+public class RD2_ETableController_TEST {
     
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     
-    /**
-    * @author Salesforce.org
-    * @date 2022
-    * @description Method to test that the results are returned correctly
-    */
-    @IsTest
-    private static void testInstanceRecurringDonationsService() {
-        
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        Test.startTest();
-        RD2_ERecurringDonationsService service = RD2_ERecurringDonationsController.donationService;
-        Test.stopTest();
-
-        System.assertNotEquals(null, service, 'Should instance RD2_ERecurringDonationsService');
-    }
-
     /**
     * @author Salesforce.org
     * @date 2022
@@ -125,12 +108,10 @@ public class RD2_ERecurringDonationsController_TEST {
 
         List<SObject> records = new List<SObject> {rDonation01,rDonation02,rDonation03,rDonation04,rDonation05,rDonation06};
         RecurringDonationsSelectorMock mock = new RecurringDonationsSelectorMock(records);
-        RD2_ERecurringDonationsService service = new RD2_ERecurringDonationsService();
-        service.selector = (RD2_ERecurringDonationsSelector) Test.createStub(RD2_ERecurringDonationsSelector.class, mock);
-        RD2_ERecurringDonationsController.donationService = service;
+        RD2_ETableController.selector = (RD2_ERecurringDonationsSelector) Test.createStub(RD2_ERecurringDonationsSelector.class, mock);
        
         Test.startTest();
-        List<RD2_ERecurringDonationsController.RecurringDonationView> result = RD2_ERecurringDonationsController.getData();
+        List<RD2_ETableController.TableView> result = RD2_ETableController.getData();
         Test.stopTest();
 
         System.assertNotEquals(null, result, 'Recurring Donations should not be null');

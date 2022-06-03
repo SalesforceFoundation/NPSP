@@ -6,7 +6,7 @@ import firstDonation from '@salesforce/label/c.firstDonation'
 import nextDonation from '@salesforce/label/c.nextDonation';
 import mostRecentDonation from '@salesforce/label/c.mostRecentDonation';
 import lastModified from '@salesforce/label/c.lastModified';
-import getData from '@salesforce/apex/RD2_ERecurringDonationsController.getData';
+import getData from '@salesforce/apex/RD2_ETableController.getData';
 
 import RECURRING_DONATION from '@salesforce/schema/npe03__Recurring_Donation__c';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
@@ -30,7 +30,7 @@ export default class RecurringDonationTable extends LightningElement {
     columns = [];
 
     @wire(getObjectInfo, { objectApiName: RECURRING_DONATION })
-    oppInfo({ data, error }) {
+    oppInfo({ data }) {
         this.getRecurringDonationFields();
         if (data){
           this.paymentMethod = data.fields.PaymentMethod__c.label;
