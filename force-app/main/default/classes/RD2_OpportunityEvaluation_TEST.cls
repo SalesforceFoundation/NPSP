@@ -45,6 +45,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
     private static final Date START_DATE = Date.newInstance(2019, 9, 15);
     private static final Integer MONTHS_TO_DEC = START_DATE.monthsBetween(Date.newInstance(2019, 12, 15));
     private static final Integer MONTHS_TO_YEAR_END = START_DATE.monthsBetween(Date.newInstance(2020, 1, 1));
+    public static final Integer OPP_FILTER_DATE_RANGE = 10;
 
     /****
     * @description Creates data required for unit tests
@@ -89,6 +90,35 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         Exception actuaException = runBatch(new RD_RecurringDonations_BATCH());
 
         System.assertEquals(null, actuaException, 'An exception is expected because Enhanced RD is not enabled');
+    }
+
+    /**
+     * @description Verifies Recurring Donations with unmodified Opportunities are not processed
+     */
+    @IsTest
+    private static void shouldNotProcessRDsWithUnmodifiedOpps() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        configureRecurringDonationsOppFilter();
+        final Date batchRunDate = Date.today().addDays(OPP_FILTER_DATE_RANGE);
+        RD2_ScheduleService.currentDate = batchRunDate;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withStatusClosed()
+            .build();
+        insert rd;
+
+        Opportunity oldOpp = TEST_OpportunityBuilder.getOpportunityBuilder(rd)
+            .withClosedWonStage()
+            .withCloseDate(START_DATE)
+            .build();
+        insert oldOpp;
+
+        runBatch(new RD2_OpportunityEvaluation_BATCH(batchRunDate));
+
+        assertBatchJobIteration(0);
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'No new Opp should be created: ' + opps);
     }
 
     /**
@@ -1439,4 +1469,20 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
 
         return rdGateway.getRecord(rd.Id);
     }
+
+    /***
+    * @description Stubs custom settings configuration to enable Filtered Recurring Donations Batch
+    * @return none
+    */
+    public static void configureRecurringDonationsOppFilter() {
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                IsRecurringDonations2Enabled__c = true,
+                npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name(),
+                Enable_Opportunity_Batch_Filter__c = true,
+                Batch_Filter_Date_Range__c = OPP_FILTER_DATE_RANGE
+            )
+        );
+    }
+
 }

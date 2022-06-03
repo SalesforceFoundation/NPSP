@@ -201,11 +201,21 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     */
     @TestVisible
     private String getRDBatchQuery() {
+        Boolean rdBatchFilterOn = getOpportunityModifiedFilterEnabled();
+        String rdFilterWhereClause;
+        if (rdBatchFilterOn) {
+            Integer dateRange = getOpportunityModifiedDateRange();
+            Date earliestModifiedDate = currentDate.addDays(-dateRange);
+            rdFilterWhereClause = 'Id IN (SELECT npe03__Recurring_Donation__c' 
+                + 'FROM Opportunity WHERE LastModifiedDate > :earliestModifiedDate)';
+        }
+
         return new UTIL_Query()
             .withFrom(npe03__Recurring_Donation__c.SObjectType)
             .withSelectFields(
                 new Set<String>{ 'Id' }
             )
+            .withWhere(rdFilterWhereClause)
             .build();
     }
 
@@ -245,6 +255,19 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
         }
 
         return configValue.intValue();
+    }
+
+    private Integer getOpportunityModifiedDateRange() {
+        Integer dateRange = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Batch_Filter_Date_Range__c.intValue();
+        if (dateRange == null) {
+            dateRange = 30;
+        }
+        return dateRange;
+    }
+
+    private Boolean getOpportunityModifiedFilterEnabled() {
+        Boolean filterEnabled = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Enable_Opportunity_Batch_Filter__c;
+        return filterEnabled;
     }
 
     /**

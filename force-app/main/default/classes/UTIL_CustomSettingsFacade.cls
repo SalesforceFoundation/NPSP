@@ -645,6 +645,9 @@ public without sharing class UTIL_CustomSettingsFacade {
             settings.UseFiscalYearForRecurringDonationValue__c = false;
             settings.EnableChangeLog__c = false;
 
+            settings.Enable_Opportunity_Batch_Filter__c = false;
+            settings.Batch_Filter_Date_Range__c = 30;
+
             List<RecordType> oppRecordTypes = [SELECT Id FROM RecordType WHERE SObjectType = 'Opportunity' AND IsActive = true];
             if (oppRecordTypes.size() > 0) {
                 settings.npe03__Record_Type__c = oppRecordTypes[0].id;
@@ -915,6 +918,8 @@ public without sharing class UTIL_CustomSettingsFacade {
         recurringDonationsSettings.StatusAutomationDaysForClosed__c = settings.StatusAutomationDaysForClosed__c;
         recurringDonationsSettings.StatusAutomationLapsedValue__c = settings.StatusAutomationLapsedValue__c;
         recurringDonationsSettings.StatusAutomationClosedValue__c = settings.StatusAutomationClosedValue__c;
+        recurringDonationsSettings.Batch_Filter_Date_Range__c = settings.Batch_Filter_Date_Range__c;
+        recurringDonationsSettings.Enable_Opportunity_Batch_Filter__c = settings.Enable_Opportunity_Batch_Filter__c;
 
         orgRecurringDonationsSettings = recurringDonationsSettings;
 
