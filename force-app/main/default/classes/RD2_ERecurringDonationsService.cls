@@ -34,10 +34,8 @@
 * @description Recurring Donations Service class.
 */
 public with sharing class RD2_ERecurringDonationsService {
-    
-    private final String MONTHLY = 'Monthly';
-    private final String WEEKLY = 'Weekly';
-    private final String YEARLY = 'Yearly';
+
+    private final String STATUS_CANCELED = 'Canceled';
 
     @TestVisible
     private UTIL_Permissions permissions {
@@ -74,7 +72,8 @@ public with sharing class RD2_ERecurringDonationsService {
             npe03__Recurring_Donation__c.npe03__Amount__c,
             npe03__Recurring_Donation__c.npe03__Installment_Period__c,
             npe03__Recurring_Donation__c.InstallmentFrequency__c,
-            npe03__Recurring_Donation__c.Day_of_Month__c
+            npe03__Recurring_Donation__c.Day_of_Month__c,
+            npe03__Recurring_Donation__c.Status__c
         });
     }
 
@@ -90,7 +89,7 @@ public with sharing class RD2_ERecurringDonationsService {
             for(npe03__Recurring_Donation__c recDonation : selector.getRecurringDonations()) {
                 recurringDonations.add( new RD2_ERecurringDonationsController.RecurringDonationView( recDonation,
                                                                                             getFrequency(recDonation),
-                                                                                            ''));
+                                                                                            getStatus(recDonation)));
 
             }
 
@@ -117,7 +116,7 @@ public with sharing class RD2_ERecurringDonationsService {
 
         if(recurringDonation.InstallmentFrequency__c == 1) {
             if(recurringDonation.npe03__Installment_Period__c.isAlpha()) {
-                if(recurringDonation.npe03__Installment_Period__c == 'Monthly') {
+                if(recurringDonation.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
                     frequency = String.format(System.Label.frequencyPeriodOnTheDayOfTheMonth, new List<String>{recurringDonation.npe03__Installment_Period__c, mapDayOfMonth.get(recurringDonation.Day_of_Month__c).ToLowerCase()});
                 } else {
                     frequency = recurringDonation.npe03__Installment_Period__c;
@@ -126,11 +125,11 @@ public with sharing class RD2_ERecurringDonationsService {
                 frequency = String.format(System.Label.frequencyOnThePeriod, new List<String>{recurringDonation.npe03__Installment_Period__c});
             }
         } else {
-            if(recurringDonation.npe03__Installment_Period__c == MONTHLY) {
+            if(recurringDonation.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
                 frequency = String.format(System.Label.frequencyMonthly, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c), mapDayOfMonth.get(recurringDonation.Day_of_Month__c).ToLowerCase()});
-            } else if(recurringDonation.npe03__Installment_Period__c == YEARLY) {
+            } else if(recurringDonation.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_YEARLY) {
                 frequency = String.format(System.Label.frequencyYearly, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c)});
-            } else if(recurringDonation.npe03__Installment_Period__c == WEEKLY) {
+            } else if(recurringDonation.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY) {
                 frequency = String.format(System.Label.frequencyWeekly, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c)});
             }
         }
@@ -153,5 +152,31 @@ public with sharing class RD2_ERecurringDonationsService {
         }
         
         return frequency;
+    }
+
+    /** 
+    * @author Salesforce.org
+    * @date 2022
+    * @description process Recurring Donation record to build the status string.
+    * @return String returns the Status string.
+    */
+    private String getStatus(npe03__Recurring_Donation__c recurringDonation) {
+        RD2_StatusMapper statusMapper = RD2_StatusMapper.getInstance();
+        String status = '';
+
+        Map<String, String> mapStatus = new Map<String, String>();
+        for(Schema.PicklistEntry ple : Schema.SObjectType.npe03__Recurring_Donation__c.fields.Status__c.getPicklistValues()){
+            mapStatus.put(ple.getValue(), ple.getLabel());
+        }
+
+        if(recurringDonation.Status__c == RD2_Constants.STATUS_PAUSED) {
+            status = mapStatus.get(recurringDonation.Status__c);
+        } else if(recurringDonation.Status__c != RD2_Constants.STATUS_PAUSED && statusMapper.getState(recurringDonation.Status__c) != RD2_Constants.STATUS_CLOSED) {
+            status = statusMapper.getState(recurringDonation.Status__c);
+        } else {
+            status = STATUS_CANCELED;
+        }
+
+        return status;
     }
 }
