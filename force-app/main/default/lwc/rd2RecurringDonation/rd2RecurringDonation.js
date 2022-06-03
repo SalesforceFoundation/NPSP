@@ -142,7 +142,7 @@ export default class RecurringDonationTable extends LightningElement {
     }
 
     /**
-     * @description Returns the classes to be applied to the rows accordling if it is mobile or desktop
+     * @description Returns the classes to be applied to the rows according if it is mobile or desktop
      */
     get rowClasses() {
       if (this.isMobile) {
@@ -152,7 +152,7 @@ export default class RecurringDonationTable extends LightningElement {
     }
 
     /**
-     * @description Returns the classes to be applied to the headers accordling if it is mobile or desktop
+     * @description Returns the classes to be applied to the headers according if it is mobile or desktop
      */
      get headClasses() {
       if (this.isMobile) {
