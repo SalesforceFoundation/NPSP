@@ -134,7 +134,7 @@ export default class RecurringDonationTable extends LightningElement {
     }
   
     /**
-     * @description Returns wether we are running in mobile or desktop
+     * @description Returns whether we are running in mobile or desktop
      * @returns True if it is mobile
      */
      get isMobile() {
