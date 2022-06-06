@@ -67,6 +67,7 @@ public with sharing class PMT_RefundService {
         set;
     }
 
+    @TestVisible
     private List<npe01__OppPayment__c> originalPayments {
         get {
             if (originalPayments == null && originalPaymentIds != null) {
@@ -92,6 +93,7 @@ public with sharing class PMT_RefundService {
     }
 
     private List<npe01__OppPayment__c> refundRecords;
+    @TestVisible
     private List<Opportunity> opportunities;
     private ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
 

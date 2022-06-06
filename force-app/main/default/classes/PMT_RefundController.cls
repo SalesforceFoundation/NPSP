@@ -52,6 +52,17 @@ public with sharing class PMT_RefundController {
 
         return refundView;
     }
+    
+    @TestVisible
+    private static PMT_RefundService refundService {
+        get {
+            if (refundService == null) {
+                refundService = new PMT_RefundService();
+            }
+            return refundService;
+        }
+        set;
+    }
 
     @AuraEnabled 
     public static RefundView processRefund(Id paymentId) {
@@ -83,14 +94,13 @@ public with sharing class PMT_RefundController {
     }
 
     private static void processElevateRefund(npe01__OppPayment__c originalPayment, RefundView refundView) {
-        UTIL_Http.Response response = new PMT_RefundService()
+        UTIL_Http.Response response = refundService
             .processElevateRefund(originalPayment.Elevate_Payment_ID__c);
         processResponse(refundView, response);
         refundView.redirectToPaymentId = originalPayment.Id;
     }
 
     private static void processNonElevateRefund(npe01__OppPayment__c originalPayment, RefundView refundView) {
-        PMT_RefundService refundService = new PMT_RefundService();
         refundService.withOriginalPayments(new List<npe01__OppPayment__c>{originalPayment})
             .processRefunds();
 
