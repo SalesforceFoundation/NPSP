@@ -7,7 +7,6 @@ import geLabelService from 'c/geLabelService';
 import getOpenDonationsView from '@salesforce/apex/GE_GiftEntryController.getOpenDonationsView';
 import OPPORTUNITY from '@salesforce/schema/Opportunity';
 import PAYMENT from '@salesforce/schema/npe01__OppPayment__c';
-import { hasNestedProperty } from 'c/utilCommon';
 
 export default class geReviewDonations extends NavigationMixin(LightningElement) {
 
@@ -76,7 +75,7 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
 
     get hasPendingDonations() {
         if (!this.donorId) return false;
-        return this.opportunities && this.opportunities.length > 0 ? true : false;
+        return this.opportunities && this.opportunities.length > 0;
     }
 
     get reviewDonationsComputedClass() {
@@ -92,33 +91,27 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
     }
 
     get isUpdatingPayment() {
-        return this._donationType === PAYMENT.objectApiName ? true : false;
+        return this._donationType === PAYMENT.objectApiName;
     }
 
     get isUpdatingOpportunity() {
         return this._donationType === OPPORTUNITY.objectApiName &&
             !this.selectedDonation.hasOwnProperty('applyPayment') &&
-            !this.selectedDonation.hasOwnProperty('new') ?
-            true :
-            false;
+            !this.selectedDonation.hasOwnProperty('new');
     }
 
     get isApplyingNewPayment() {
         return this._donationType === OPPORTUNITY.objectApiName &&
-            this.selectedDonation.hasOwnProperty('applyPayment') ?
-            true :
-            false;
+            this.selectedDonation.hasOwnProperty('applyPayment');
     }
 
     get isCreatingNewOpportunity() {
         return this._donationType === OPPORTUNITY.objectApiName &&
-            this.selectedDonation.hasOwnProperty('new') ?
-            true :
-            false;
+            this.selectedDonation.hasOwnProperty('new');
     }
 
     get hasSelectedDonation() {
-        return this.selectedDonation ? true : false;
+        return !!this.selectedDonation;
     }
 
     get reviewDonationsMessage() {
@@ -142,9 +135,7 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
     get showDonorLink() {
         return this.isApplyingNewPayment ||
             this.isUpdatingOpportunity ||
-            this.isUpdatingPayment ?
-            true :
-            false;
+            this.isUpdatingPayment;
     }
 
     /*******************************************************************************
