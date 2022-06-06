@@ -40,7 +40,7 @@ public with sharing class PMT_RefundController_TEST {
         User readOnlyUser = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
 
         System.runAs(readOnlyUser) {
-            PMT_RefundController.RefundView initialRefundView = PMT_RefundController.getPermissionData();
+            PMT_RefundController.RefundView initialRefundView = PMT_RefundController.getInitialView(null);
             PMT_RefundController.RefundView afterRefundView = PMT_RefundController.processRefund(null);
 
             System.assertEquals(false, initialRefundView.hasRequiredPermissions, 'Read-only user should not have access to refund');
@@ -52,8 +52,8 @@ public with sharing class PMT_RefundController_TEST {
     private static void verifyRefundCalloutIsMadeWhenPaymentIsAnElevateRecord() {
         PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
         PaymentSelector_TEST.Stub selectorStub = new PaymentSelector_TEST.Stub();
-        npe01__OppPayment__c payment = getPaymentRecord();
-        selectorStub.elevatePaymentRecord = new List<npe01__OppPayment__c>{ payment };
+        npe01__OppPayment__c payment = getElevatePaymentRecord();
+        selectorStub.paymentRecords = new List<npe01__OppPayment__c>{ payment };
 
         PMT_RefundController.paymentSelector = (PaymentSelector) Test.createStub(
             PaymentSelector.class,
@@ -80,8 +80,8 @@ public with sharing class PMT_RefundController_TEST {
         UTIL_Http_TEST.CalloutMock calloutMock = UTIL_Http_TEST.mockNotFoundCalloutResponse();
 
         PaymentSelector_TEST.Stub selectorStub = new PaymentSelector_TEST.Stub();
-        npe01__OppPayment__c payment = getPaymentRecord();
-        selectorStub.elevatePaymentRecord = new List<npe01__OppPayment__c>{ payment };
+        npe01__OppPayment__c payment = getElevatePaymentRecord();
+        selectorStub.paymentRecords = new List<npe01__OppPayment__c>{ payment };
 
         PMT_RefundController.paymentSelector = (PaymentSelector) Test.createStub(
             PaymentSelector.class,
@@ -100,13 +100,89 @@ public with sharing class PMT_RefundController_TEST {
             'The error message should be added to the view when the callout failed');
     }
 
-    private static npe01__OppPayment__c getPaymentRecord() {
+    @isTest
+    private static void verifyRefundRecordIdShouldBeReturnedOnSuccessfulRefund() {
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
+        npe01__OppPayment__c refundRecord = getPaymentRecord();
+
+        PMT_RefundService_TEST.Stub refundServiceStub = new PMT_RefundService_TEST.Stub();
+        refundServiceStub.refundRecords = new List<npe01__OppPayment__c>{ refundRecord };
+
+        PMT_RefundController.refundService = (PMT_RefundService) Test.createStub(
+            PMT_RefundService.class,
+            refundServiceStub
+        );
+
+        PaymentSelector_TEST.Stub selectorStub = new PaymentSelector_TEST.Stub();
+        selectorStub.paymentRecords = new List<npe01__OppPayment__c>{ refundRecord };
+
+        PMT_RefundController.paymentSelector = (PaymentSelector) Test.createStub(
+            PaymentSelector.class,
+            selectorStub
+        );
+
+        Test.startTest();
+        PMT_RefundController.RefundView refundView = PMT_RefundController.processRefund(UTIL_UnitTestData_TEST.mockId(npe01__OppPayment__c.SObjectType));
+        Test.stopTest();
+
+        System.assertEquals(refundRecord.Id, refundView.redirectToPaymentId,
+            'The refund record should exist when the refund is successful');
+    }
+
+    @isTest
+    private static void verifyDoubleRefundErrorShouldBeReturnWhenRefundProcessFail() {
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
+
+        ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
+        errorResult.errorsExist = true;
+        errorResult.errorRecords.add(
+            ERR_Handler.createError(System.Label.pmtPaymentNotRefundable, 'random')
+        );
+
+        PMT_RefundService_TEST.Stub refundServiceStub = new PMT_RefundService_TEST.Stub();
+        refundServiceStub.errors = errorResult;
+
+        PMT_RefundController.refundService = (PMT_RefundService) Test.createStub(
+            PMT_RefundService.class,
+            refundServiceStub
+        );
+
+        PaymentSelector_TEST.Stub selectorStub = new PaymentSelector_TEST.Stub();
+        selectorStub.paymentRecords = new List<npe01__OppPayment__c>{ getPaymentRecord() };
+
+        PMT_RefundController.paymentSelector = (PaymentSelector) Test.createStub(
+            PaymentSelector.class,
+            selectorStub
+        );
+
+        Test.startTest();
+        PMT_RefundController.RefundView refundView = PMT_RefundController.processRefund(UTIL_UnitTestData_TEST.mockId(npe01__OppPayment__c.SObjectType));
+        Test.stopTest();
+
+        System.assertEquals(false, refundView.isSuccess,
+            'The process should fail and the view should set to not successful');
+        System.assertEquals(null, refundView.redirectToPaymentId,
+            'No redirection Id should be set');
+        System.assertEquals(System.Label.pmtPaymentNotRefundable, refundView.errorMessage,
+            'The error message from the error record should be set onto the Refund View');
+    }
+
+    private static npe01__OppPayment__c getElevatePaymentRecord() {
         return new npe01__OppPayment__c(
             Id = UTIL_UnitTestData_TEST.mockId(npe01__OppPayment__c.SObjectType),
             npe01__Paid__c = true,
             npe01__Payment_Amount__c = 250,
             npe01__Opportunity__c = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType),
             Elevate_Payment_ID__c = 'random-id'
+        );
+    }
+
+    private static npe01__OppPayment__c getPaymentRecord() {
+        return new npe01__OppPayment__c(
+            Id = UTIL_UnitTestData_TEST.mockId(npe01__OppPayment__c.SObjectType),
+            npe01__Paid__c = true,
+            npe01__Payment_Amount__c = 250,
+            npe01__Opportunity__c = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType)
         );
     }
 }

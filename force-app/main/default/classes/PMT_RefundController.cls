@@ -44,15 +44,7 @@ public with sharing class PMT_RefundController {
         }
         set;
     }
-
-    @AuraEnabled
-    public static RefundView getPermissionData() {
-        RefundView refundView = new RefundView();
-        refundView.hasRequiredPermissions = hasRequiredPermission();
-
-        return refundView;
-    }
-    
+ 
     @TestVisible
     private static PMT_RefundService refundService {
         get {
@@ -64,15 +56,29 @@ public with sharing class PMT_RefundController {
         set;
     }
 
-    @AuraEnabled 
-    public static RefundView processRefund(Id paymentId) {
-        RefundView refundView = getPermissionData();
+    @AuraEnabled
+    public static RefundView getInitialView(Id paymentId) {
+        RefundView refundView = new RefundView();
+        setPermissionData(refundView);
 
         if (!refundView.hasRequiredPermissions) {
             return refundView;
         }
 
-        npe01__OppPayment__c originalPayment = paymentSelector.getPaymentRecordForRefund(new Set<Id>{paymentId})[0];
+        refundView.originalPayment = paymentSelector.getPaymentRecordForRefund(paymentId);
+        return refundView;
+    }
+
+    @AuraEnabled 
+    public static RefundView processRefund(Id paymentId) {
+        RefundView refundVIew = new RefundView();
+        setPermissionData(refundView);
+
+        if (!refundView.hasRequiredPermissions) {
+            return refundView;
+        }
+
+        npe01__OppPayment__c originalPayment = paymentSelector.getPaymentRecordForRefund(paymentId);
 
         if (originalPAyment.RefundType__c == PMT_RefundService.FULL_REFUND || originalPayment.npe01__Payment_Amount__c <= 0) {
             refundView.isSuccess = false;
@@ -89,6 +95,11 @@ public with sharing class PMT_RefundController {
         return refundView;
     }
 
+
+    private static void setPermissionData(RefundView refundView) {
+        refundView.hasRequiredPermissions = hasRequiredPermission();
+    }
+
     private static Boolean isElevatePayment(String transactionId) {
         return PMT_RefundService.isElevateEnabled() && String.isNotBlank(transactionId);
     }
@@ -101,8 +112,9 @@ public with sharing class PMT_RefundController {
     }
 
     private static void processNonElevateRefund(npe01__OppPayment__c originalPayment, RefundView refundView) {
-        refundService.withOriginalPayments(new List<npe01__OppPayment__c>{originalPayment})
-            .processRefunds();
+        refundService.withOriginalPayments(new List<npe01__OppPayment__c>{originalPayment});
+        refundService.processRefunds();
+        refundService.processDML();
 
         ERR_Handler.Errors errors = refundService.getErrors();
         If (!errors.errorRecords.isEmpty()) {
@@ -138,5 +150,6 @@ public with sharing class PMT_RefundController {
         @AuraEnabled public Boolean isSuccess;
         @AuraEnabled public Id redirectToPaymentId;
         @AuraEnabled public String errorMessage;
+        @AuraEnabled public npe01__OppPayment__c originalPayment;
     }
 }

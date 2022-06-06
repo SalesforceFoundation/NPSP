@@ -71,7 +71,7 @@ public with sharing class PMT_RefundService {
     private List<npe01__OppPayment__c> originalPayments {
         get {
             if (originalPayments == null && originalPaymentIds != null) {
-                originalPayments = paymentSelector.getPaymentRecordForRefund(originalPaymentIds);
+                originalPayments = paymentSelector.getPaymentRecordsForRefund(originalPaymentIds);
             }
             return originalPayments;
         }
@@ -159,11 +159,9 @@ public with sharing class PMT_RefundService {
             updateParentOpportunity(originalPayment);
             updateOriginalPayment(originalPayment);
         }
-
-        processDML();
     }
 
-    private void processDML() {
+    public void processDML() {
         Savepoint sp = Database.setSavepoint();
         List<Database.SaveResult> refundRecordSaveResults = new List<Database.SaveResult>();
         List<Database.SaveResult> opportunitySaveResults = new List<Database.SaveResult>();

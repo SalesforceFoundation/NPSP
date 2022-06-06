@@ -1,7 +1,6 @@
 import { LightningElement, api, wire } from 'lwc';
 import { CloseActionScreenEvent } from 'lightning/actions';
 import { NavigationMixin } from 'lightning/navigation';
-import { getRecord, getFieldValue } from "lightning/uiRecordApi";
 import { constructErrorMessage, showToast} from "c/utilCommon";
 import refundPaymentTitle from "@salesforce/label/c.pmtRefundPaymentTitle";
 import refundAmount from "@salesforce/label/c.pmtRefundAmount";
@@ -15,17 +14,13 @@ import refundPaymentMessage from "@salesforce/label/c.pmtRefundPaymentMessage";
 import refundProcessing from "@salesforce/label/c.pmtRefundProcessing";
 import loadingMessage from "@salesforce/label/c.labelMessageLoading";
 import spinnerAltText from "@salesforce/label/c.geAssistiveSpinner";
-
+import getInitialView from "@salesforce/apex/PMT_RefundController.getInitialView";
 import processRefund from "@salesforce/apex/PMT_RefundController.processRefund";
-import getPermissionData from "@salesforce/apex/PMT_RefundController.getPermissionData";
-
-import PAYMENT_AMOUNT_FIELD from '@salesforce/schema/npe01__oppPayment__c.npe01__Payment_Amount__c';
-import PAYMENT_DATE_FIELD from '@salesforce/schema/npe01__oppPayment__c.npe01__Payment_Date__c';
 
 export default class refundPayment extends NavigationMixin(LightningElement) {
-    @api recordId;
+    _recordId;
     hasError = false;
-    isLoading = false;
+    isLoading = true;
     errorMessage;
     labels = Object.freeze({
         refundPaymentTitle,
@@ -44,30 +39,30 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
     refundView;
     paymentAmount;
     paymentDate;
+    currencyCode;
 
-    @wire(getRecord, {
-        recordId: '$recordId',
-        fields: [PAYMENT_AMOUNT_FIELD, PAYMENT_DATE_FIELD]})
-    wiredRecord({ error, data }) {
-        if (error) {
-            this.hasError = true;
-            this.errorMessage = constructErrorMessage(error).detail;
-        } else if (data) {
-            this.paymentAmount = getFieldValue(data, PAYMENT_AMOUNT_FIELD);
-            this.paymentDate = getFieldValue(data, PAYMENT_DATE_FIELD);
-        }
+    @api set recordId(value) {
+        this._recordId = value;
+        getInitialView({
+            paymentId: this.recordId
+        }) 
+            .then((response) => {
+                if (response.hasRequiredPermissions === false) {
+                    this.displayErrorMessage(this.labels.noRefundPermissionMessage);
+                    return;
+                }
+                this.paymentAmount = response.originalPayment.npe01__Payment_Amount__c;
+                this.paymentDate = response.originalPayment.npe01__Payment_Date__c;
+                this.currencyCode = response.originalPayment.CurrencyIsoCode;
+                this.isLoading = false;
+        })
+        .catch((error) => {
+            this.displayErrorMessage(constructErrorMessage(error).detail);
+        });
     }
 
-    async connectedCallback() {
-        try {
-            this.refundView = await getPermissionData();
-            if (this.refundView.hasRequiredPermissions === false) {
-                this.displayErrorMessage(this.labels.noRefundPermissionMessage);
-            }
-
-        }catch (ex) {
-            this.displayErrorMessage(constructErrorMessage(ex).detail);
-        }
+    get recordId() {
+        return this._recordId;
     }
 
     handleRefund() {

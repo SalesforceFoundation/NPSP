@@ -5,7 +5,7 @@
                 <lightning-formatted-text value={errorMessage}></lightning-formatted-text>
             </span>
         </div>
-        <template if:true={isLoading}>
+        <div if:true={isLoading}>
             <div class="slds-grid slds-grid_align-center">
                 <div class="slds-is-relative slds-size_1-of-1">
                     <lightning-spinner alternative-text={labels.spinnerAltText} data-text={labels.loadingMessage}
@@ -14,7 +14,7 @@
                     <c-util-stencil column-count="1"></c-util-stencil>
                 </div>
             </div>
-        </template>
+        </div>
         <div if:false={isLoading}>
             <div if:false={hasError}>
                 <span>{labels.refundPaymentMessage}</span>
@@ -22,8 +22,8 @@
                     <div class="slds-form-element slds-form-element_horizontal slds-p-left_none slds-" role="listitem">
                         <label class="slds-form-element__label slds-text-title_bold slds-p-top_none" for="refund-amount">{labels.refundAmount}</label>
                         <div class="slds-form-element__control">
-                        <lightning-formatted-number id="refund-amount" value={paymentAmount} format-style="currency" currency-code="USD" currency-display-as="name">
-                        </lightning-formatted-number>
+                            <lightning-formatted-number id="refund-amount" value={paymentAmount} format-style="currency" currency-code={currencyCode} currency-display-as="name">
+                            </lightning-formatted-number>
                         </div>
                     </div>
                     <div class="slds-form-element slds-form-element_horizontal slds-p-left_none" role="listitem">

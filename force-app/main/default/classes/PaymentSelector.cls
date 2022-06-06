@@ -44,13 +44,18 @@ public with sharing class PaymentSelector {
         set;
     }
     
-    public List<npe01__OppPayment__c> getPaymentRecordForRefund(Set<Id> paymentIds) {
+    public npe01__OppPayment__c getPaymentRecordForRefund(Id paymentId) {
+        return getPaymentRecordsForRefund(new Set<Id>{paymentId})?.get(0);
+    }
+
+    public List<npe01__OppPayment__c> getPaymentRecordsForRefund(Set<Id> paymentIds) {
         Set<String> queryFields = new Set<String>{
             'Id',
             'Elevate_Payment_ID__c',
             'npe01__Payment_Amount__c',
             'npe01__Opportunity__c',
             'npe01__Opportunity__r.Amount',
+            'npe01__Payment_Date__c',
             String.valueOf(npe01__OppPayment__c.RefundType__c)
         };
 
