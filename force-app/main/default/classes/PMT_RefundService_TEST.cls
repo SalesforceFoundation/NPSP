@@ -41,7 +41,7 @@ public with sharing class PMT_RefundService_TEST {
         UTIL_Http_TEST.CalloutMock calloutMock = UTIL_Http_TEST.mockSuccessCalloutResponse(null);
         PMT_RefundService refundService = new PMT_RefundService();
         Test.startTest();
-        UTIL_Http.Response response = refundService.processRefund('random-id');
+        UTIL_Http.Response response = refundService.processElevateRefund('random-id');
         Test.stopTest();
 
         System.assertEquals(1, calloutMock.getCalloutCounter(),
@@ -56,7 +56,7 @@ public with sharing class PMT_RefundService_TEST {
         UTIL_Http_TEST.CalloutMock calloutMock = UTIL_Http_TEST.mockNotFoundCalloutResponse();
         PMT_RefundService refundService = new PMT_RefundService();
         Test.startTest();
-        UTIL_Http.Response response = refundService.processRefund('random-id');
+        UTIL_Http.Response response = refundService.processElevateRefund('random-id');
         Test.stopTest();
 
         System.assertEquals(1, calloutMock.getCalloutCounter(),
@@ -73,7 +73,7 @@ public with sharing class PMT_RefundService_TEST {
         UTIL_Http_TEST.CalloutMock calloutMock = UTIL_Http_TEST.mockDataConflictCalloutResponse();
         PMT_RefundService refundService = new PMT_RefundService();
         Test.startTest();
-        UTIL_Http.Response response = refundService.processRefund('random-id');
+        UTIL_Http.Response response = refundService.processElevateRefund('random-id');
         Test.stopTest();
 
         System.assertEquals(1, calloutMock.getCalloutCounter(),
@@ -90,7 +90,7 @@ public with sharing class PMT_RefundService_TEST {
         UTIL_Http_TEST.CalloutMock calloutMock = UTIL_Http_TEST.mockDataUnprocessableResponse();
         PMT_RefundService refundService = new PMT_RefundService();
         Test.startTest();
-        UTIL_Http.Response response = refundService.processRefund('random-id');
+        UTIL_Http.Response response = refundService.processElevateRefund('random-id');
         Test.stopTest();
 
         System.assertEquals(1, calloutMock.getCalloutCounter(),

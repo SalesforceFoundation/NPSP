@@ -34,6 +34,18 @@
 * @description Payment Refund Service
 */
 public with sharing class PMT_RefundService {
+    public static final String FULL_REFUND = 'Refund';
+
+    private Boolean isMultiCurrencyEnabled {
+        get {
+            if (isMultiCurrencyEnabled == null) {
+                isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
+            }
+            return isMultiCurrencyEnabled;
+        }
+        set;
+    }
+
     private UTIL_Http.RequestService requestService {
         get {
             if (requestService == null) {
@@ -44,9 +56,45 @@ public with sharing class PMT_RefundService {
         set;
     }
 
-    /***
-     * @description Contains configuration related to the Elevate integration service config and permissions
-     */
+    @TestVisible
+    private static PaymentSelector paymentSelector {
+        get {
+            if (paymentSelector == null) {
+                paymentSelector = new PaymentSelector();
+            }
+            return paymentSelector;
+        }
+        set;
+    }
+
+    private List<npe01__OppPayment__c> originalPayments {
+        get {
+            if (originalPayments == null && originalPaymentIds != null) {
+                originalPayments = paymentSelector.getPaymentRecordForRefund(originalPaymentIds);
+            }
+            return originalPayments;
+        }
+        set;
+    }
+
+    private Set<Id> originalPaymentIds {
+        get {
+            if (originalPaymentIds == null) {
+                if (originalPayments != null) {
+                    originalPaymentIds = UTIL_SObject.extractIds(originalPayments);
+                } else if (refundRecords != null) {
+                    UTIL_SObject.extractId(refundRecords, npe01__OppPayment__c.originalPayment__c);
+                }
+            }
+            return originalPaymentIds;
+        }
+        set;
+    }
+
+    private List<npe01__OppPayment__c> refundRecords;
+    private List<Opportunity> opportunities;
+    private ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
+
     @TestVisible
     private static PS_IntegrationServiceConfig config {
         get {
@@ -62,7 +110,30 @@ public with sharing class PMT_RefundService {
         return config.isIntegrationEnabled();
     }
 
-    public UTIL_Http.Response processRefund(String transactionId) {
+    public PMT_RefundService withOriginalPaymentIds(Set<Id> originalPaymentIds) {
+        this.originalPaymentIds = originalPaymentIds;
+        return this;
+    }
+
+    public PMT_RefundService withOriginalPayments(List<npe01__OppPayment__c> originalPayments) {
+        this.originalPayments = originalPayments;
+        return this;
+    }
+
+    public PMT_RefundService withRefundRecords(List<npe01__OppPayment__c> refundRecords) {
+        this.refundRecords = refundRecords;
+        return this;
+    }
+
+    public List<npe01__OppPayment__c> getRefundRecords() {
+        return this.refundRecords;
+    }
+
+    public ERR_Handler.Errors getErrors() {
+        return errorResult;
+    }
+
+    public UTIL_Http.Response processElevateRefund(String transactionId) {
         HttpRequest request = buildRefundRequest(transactionId);
 
         UTIL_Http.Response response;
@@ -74,6 +145,86 @@ public with sharing class PMT_RefundService {
 
         processPaymentStatusCode(response);
         return response;
+    }
+
+    public void processRefunds() {
+        Boolean shouldBuildRefundRecord = this.refundRecords == null;
+ 
+        for (npe01__OppPayment__c originalPayment : this.originalPayments) {
+            if (shouldBuildRefundRecord) {
+                buildRefundRecord(originalPayment);
+            }
+            updateParentOpportunity(originalPayment);
+            updateOriginalPayment(originalPayment);
+        }
+
+        processDML();
+    }
+
+    private void processDML() {
+        Savepoint sp = Database.setSavepoint();
+        List<Database.SaveResult> refundRecordSaveResults = new List<Database.SaveResult>();
+        List<Database.SaveResult> opportunitySaveResults = new List<Database.SaveResult>();
+        List<Database.SaveResult> originalPaymentSaveResults = new List<Database.SaveResult>();
+
+        if (!this.refundRecords.isEmpty()) {
+            refundRecordSaveResults = Database.insert(this.refundRecords, false);
+            processError(refundRecordSaveResults, this.refundRecords);
+        }
+
+        if (!this.opportunities.isEmpty()) {
+            opportunitySaveResults = Database.update(this.opportunities, false);
+            processError(opportunitySaveResults, this.opportunities);
+        }
+
+        if (!this.originalPayments.isEmpty()) {
+            originalPaymentSaveResults = Database.update(this.originalPayments, false);
+            processError(originalPaymentSaveResults, this.originalPayments);
+        }
+
+        if (this.errorResult != null && !this.errorResult.errorRecords.isEmpty()) {
+            Database.rollback(sp);
+        }
+    }
+
+
+    private void processError(List<Database.SaveResult> saveResults, List<SObject> records) {
+        if (records == null || records.isEmpty()) {
+            return;
+        }
+        ERR_Handler.Errors dmlErrors = ERR_Handler.getErrorsOnly(saveResults, records);
+        if (dmlErrors.errorRecords.isEmpty()) {
+            return;
+        }
+
+        errorResult.errorRecords.addAll(
+            dmlErrors.errorRecords
+        );
+    }
+
+    private void buildRefundRecord(npe01__OppPayment__c originalPayment) {
+        npe01__OppPayment__c refund = new npe01__OppPayment__c(
+            npe01__Payment_Amount__c = -1 * originalPayment.npe01__Payment_Amount__c,
+            npe01__Opportunity__c = originalPayment.npe01__Opportunity__c,
+            originalPayment__c = originalPayment.Id
+        );
+        
+        if (isMultiCurrencyEnabled) {
+            refund.put(UTIL_Currency.CURRENCY_ISO_CODE_FIELD, originalPayment.get(UTIL_Currency.CURRENCY_ISO_CODE_FIELD));
+        }
+    }
+
+    private void updateParentOpportunity(npe01__OppPayment__c originalPayment) {
+        this.opportunities.add(
+            new Opportunity(
+                Id = originalPayment.npe01__Opportunity__c,
+                Amount = originalPayment.npe01__Opportunity__r.Amount - originalPayment.npe01__Payment_Amount__c
+            )
+        );
+    }
+
+    private void updateOriginalPayment(npe01__OppPayment__c originalPayment) {
+        originalPayment.RefundType__c = FULL_REFUND;
     }
 
     private HttpRequest buildRefundRequest(String transactionId) {

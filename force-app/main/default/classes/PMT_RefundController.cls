@@ -60,16 +60,47 @@ public with sharing class PMT_RefundController {
         if (!refundView.hasRequiredPermissions) {
             return refundView;
         }
-        String transactionId = paymentSelector.getPaymentWithElevateId(paymentId)?.Elevate_Payment_ID__c;
-        PMT_RefundService refundService = new PMT_RefundService();
 
-        if (PMT_RefundService.isElevateEnabled() && String.isNotBlank(transactionId)) {
-            UTIL_Http.Response response = refundService.processRefund(transactionId);
-            processResponse(refundView, response);
-            refundView.redirectToPaymentId = paymentId;
+        npe01__OppPayment__c originalPayment = paymentSelector.getPaymentRecordForRefund(new Set<Id>{paymentId})[0];
+
+        if (originalPayment.npe01__Payment_Amount__c <= 0) {
+            refundView.errorMessage = System.Label.pmtPaymentNotRefundable;
+            return refundView;
+        }
+
+        if (isElevatePayment(originalPayment.Elevate_Payment_ID__c)) {
+            processElevateRefund(originalPayment, refundView);
+        } else {
+            processNonElevateRefund(originalPayment, refundView);
         }
 
         return refundView;
+    }
+
+    private static Boolean isElevatePayment(String transactionId) {
+        return PMT_RefundService.isElevateEnabled() && String.isNotBlank(transactionId);
+    }
+
+    private static void processElevateRefund(npe01__OppPayment__c originalPayment, RefundView refundView) {
+        UTIL_Http.Response response = new PMT_RefundService()
+            .processElevateRefund(originalPayment.Elevate_Payment_ID__c);
+        processResponse(refundView, response);
+        refundView.redirectToPaymentId = originalPayment.Id;
+    }
+
+    private static void processNonElevateRefund(npe01__OppPayment__c originalPayment, RefundView refundView) {
+        PMT_RefundService refundService = new PMT_RefundService();
+        refundService.withOriginalPayments(new List<npe01__OppPayment__c>{originalPayment})
+            .processRefunds();
+
+        ERR_Handler.Errors errors = refundService.getErrors();
+        If (!errors.errorRecords.isEmpty()) {
+            refundView.isSuccess = false;
+            refundVIew.errorMessage = errors.errorRecords[0].Full_Message__c;
+        } else {
+            refundView.redirectToPaymentId = refundService.getRefundRecords()[0].Id;
+            refundView.isSuccess = true;
+        }
     }
 
     private static Boolean hasRequiredPermission() {

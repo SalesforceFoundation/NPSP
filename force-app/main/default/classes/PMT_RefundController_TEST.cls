@@ -53,7 +53,7 @@ public with sharing class PMT_RefundController_TEST {
         PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
         PaymentSelector_TEST.Stub selectorStub = new PaymentSelector_TEST.Stub();
         npe01__OppPayment__c payment = getPaymentRecord();
-        selectorStub.elevatePaymentRecord = payment;
+        selectorStub.elevatePaymentRecord = new List<npe01__OppPayment__c>{ payment };
 
         PMT_RefundController.paymentSelector = (PaymentSelector) Test.createStub(
             PaymentSelector.class,
@@ -81,7 +81,7 @@ public with sharing class PMT_RefundController_TEST {
 
         PaymentSelector_TEST.Stub selectorStub = new PaymentSelector_TEST.Stub();
         npe01__OppPayment__c payment = getPaymentRecord();
-        selectorStub.elevatePaymentRecord = payment;
+        selectorStub.elevatePaymentRecord = new List<npe01__OppPayment__c>{ payment };
 
         PMT_RefundController.paymentSelector = (PaymentSelector) Test.createStub(
             PaymentSelector.class,

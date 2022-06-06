@@ -34,7 +34,31 @@
 * @description Selector Class for npe01__OppPayment__c Sobject
 */
 public with sharing class PaymentSelector {
-    public npe01__OppPayment__c getPaymentWithElevateId(Id paymentId) {
-        return [SELECT Elevate_Payment_ID__c FROM npe01__OppPayment__c WHERE Id =: paymentId];
+    private Boolean isMultiCurrencyEnabled {
+        get {
+            if (isMultiCurrencyEnabled == null) {
+                isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
+            }
+            return isMultiCurrencyEnabled;
+        }
+        set;
+    }
+    
+    public List<npe01__OppPayment__c> getPaymentRecordForRefund(Set<Id> paymentId) {
+        Set<String> queryFields = new Set<String>{
+            'Id', 'Elevate_Payment_ID__c', 'npe01__Payment_Amount__c', 'npe01__Opportunity__c', 'npe01__Opprtuniy__r.Amount'
+        };
+
+        if (isMultiCurrencyEnabled) {
+            queryFields.add(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
+        }
+
+        String soql = new UTIL_Query()
+        .withFrom(npe01__OppPayment__c.SObjectType)
+        .withSelectFields(queryFields)
+        .withWhere('Id IN: paymentIds')
+        .build();
+
+        return Database.query(soql);
     }
 }
