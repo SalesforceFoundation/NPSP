@@ -525,7 +525,7 @@ public abstract class CRLP_Batch_Base {
             get {
                 if (maxDaysAgo == null) {
                     if (base.isRdBatchFilterEnabled) {
-                            maxDaysAgo = base.rdBatchFilterDateRange;
+                        maxDaysAgo = base.rdBatchFilterDateRange;
                     } else {
                         maxDaysAgo = getMaxIntegerValueFromRollupsForType(CRLP_Operation.TimeBoundOperationType.Days_Back);
                     }
@@ -587,7 +587,7 @@ public abstract class CRLP_Batch_Base {
             get {
                 if (overrideForLastNDaysValue == null) {
                     if (base.isRdBatchFilterEnabled) {
-                            overrideForLastNDaysValue = base.rdBatchFilterDateRange;
+                        overrideForLastNDaysValue = base.rdBatchFilterDateRange;
                     } else if (base.customizableRollupSettings.Rollups_IncrementalLastNDays_ValOverride__c != null) {
                         overrideForLastNDaysValue = (Integer) base.customizableRollupSettings.Rollups_IncrementalLastNDays_ValOverride__c;
                     }

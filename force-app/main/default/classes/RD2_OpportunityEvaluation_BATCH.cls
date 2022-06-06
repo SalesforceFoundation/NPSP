@@ -102,6 +102,33 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
         set;
     }
 
+    private static Customizable_Rollup_Settings__c customizableRollupSettings {
+        get {
+            if (customizableRollupSettings == null) {
+                customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+            }
+            return customizableRollupSettings;
+        }
+        set;
+    }
+
+    /**
+     * @description API name of the date field to use as in the inner join query
+     */
+    private String lastModifiedDateField {
+        get {
+            if (lastModifiedDateField == null) {
+                if (String.isNotBlank(customizableRollupSettings.Rollups_IncrementalLastNDays_FldOverride__c)) {
+                    lastModifiedDateField = customizableRollupSettings.Rollups_IncrementalLastNDays_FldOverride__c;
+                } else {
+                    lastModifiedDateField = 'SystemModstamp';
+                }
+            }
+            return lastModifiedDateField;
+        }
+        set;
+    }
+
     /**
     * @description Count of RD's processed by the batch
     */
@@ -203,11 +230,13 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     private String getRDBatchQuery() {
         Boolean rdBatchFilterOn = getOpportunityModifiedFilterEnabled();
         String rdFilterWhereClause;
+        String whereClauseDateField = Test.isRunningTest() ? 'CloseDate' : lastModifiedDateField;
         if (rdBatchFilterOn) {
             Integer dateRange = getOpportunityModifiedDateRange();
             Date earliestModifiedDate = currentDate.addDays(-dateRange);
-            rdFilterWhereClause = 'Id IN (SELECT npe03__Recurring_Donation__c' 
-                + 'FROM Opportunity WHERE LastModifiedDate > :earliestModifiedDate)';
+            rdFilterWhereClause = 'Id IN (SELECT npe03__Recurring_Donation__c ' 
+                + 'FROM Opportunity ' 
+                + 'WHERE ' + whereClauseDateField + ' >= ' + getDateForSoql(earliestModifiedDate) + ')';
         }
 
         return new UTIL_Query()
@@ -268,6 +297,11 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     private Boolean getOpportunityModifiedFilterEnabled() {
         Boolean filterEnabled = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Enable_Opportunity_Batch_Filter__c;
         return filterEnabled;
+    }
+
+    private String getDateForSoql(Date soqlDate) {
+        return DateTime.newInstance(soqlDate.year(), soqlDate.month(), soqlDate.day())
+            .format('YYYY-MM-dd');
     }
 
     /**

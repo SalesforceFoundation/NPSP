@@ -289,6 +289,44 @@ private class CRLP_Batch_Base_TEST {
                 'The outer query should not contain "ORDER BY" or "LIMIT".');
     }
 
+    /**
+     * @description Confirms RD NonSkew query with Batch Filter enabled includes an inner join
+     */
+    @isTest
+    private static void recurringDonationRollupGeneratesIncrementalModeJoinQuery() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.RecurringDonations;
+        String userDefinedLastNDaysFieldOverride = 'LastModifiedDate';
+        Integer userDefinedLastNDaysValueOverride = 20;
+        Integer oppFilterDateRange = RD2_OpportunityEvaluation_TEST.OPP_FILTER_DATE_RANGE;
+        configureIncrementalFieldOverrides(
+                jobType,
+                userDefinedLastNDaysFieldOverride,
+                userDefinedLastNDaysValueOverride);
+
+        CRLP_RollupProcessingOptions.RollupTypeFilter typeFilter =
+                CRLP_RollupProcessingOptions.RollupTypeFilter.All;
+        CRLP_Batch_Base_NonSkew rdBatchJob = new CRLP_RD_BATCH(typeFilter);
+        rdBatchJob.isScheduledJob = true;
+
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(rdBatchJob, null, null, null);
+        
+        String query = queryBuilder.buildQuery();
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
+
+        System.assertEquals(2, query.countMatches('SELECT'),
+            'Recurring Donation Filtered query should include inner join');
+
+        System.assert(generatedWhereClause.contains('FROM'));
+        System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
+                'where clause for the inner join should contain a where filter on the Opportunities.');
+        System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + oppFilterDateRange), 
+                'Where clause should use Opp Date Range Setting, not Rollup Override value: ' + oppFilterDateRange);
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
+                'The outer query should not contain "ORDER BY" or "LIMIT".');
+    }
+
     /******************************** Chunk Mode Tests *****************************/
 
     @isTest
@@ -552,44 +590,6 @@ private class CRLP_Batch_Base_TEST {
 
         System.assertEquals(1, query.countMatches('SELECT'),
             'Recurring Donation Nonskew query should not include inner join');
-    }
-
-    /**
-     * @description Confirms RD NonSkew query with Batch Filter enabled includes an inner join
-     */
-    @isTest
-    private static void recurringDonationRollupGeneratesIncrementalModeJoinQuery() {
-        CRLP_RollupProcessingOptions.RollupType jobType =
-                CRLP_RollupProcessingOptions.RollupType.RecurringDonations;
-        String userDefinedLastNDaysFieldOverride = 'LastModifiedDate';
-        Integer userDefinedLastNDaysValueOverride = 20;
-        Integer oppFilterDateRange = RD2_OpportunityEvaluation_TEST.OPP_FILTER_DATE_RANGE;
-        configureIncrementalFieldOverrides(
-                jobType,
-                userDefinedLastNDaysFieldOverride,
-                userDefinedLastNDaysValueOverride);
-
-        CRLP_RollupProcessingOptions.RollupTypeFilter typeFilter =
-                CRLP_RollupProcessingOptions.RollupTypeFilter.All;
-        CRLP_Batch_Base_NonSkew rdBatchJob = new CRLP_RD_BATCH(typeFilter);
-        rdBatchJob.isScheduledJob = true;
-
-        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
-                new CRLP_Batch_Base.BatchQueryBuilder(rdBatchJob, null, null, null);
-        
-        String query = queryBuilder.buildQuery();
-        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
-
-        System.assertEquals(2, query.countMatches('SELECT'),
-            'Recurring Donation Filtered query should include inner join');
-
-        System.assert(generatedWhereClause.contains('FROM'));
-        System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
-                'where clause for the inner join should contain a where filter on the Opportunities.');
-        System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + oppFilterDateRange), 
-                'Where clause should use Opp Date Range Setting, not Rollup Override value: ' + oppFilterDateRange);
-        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
     }
     
     /**

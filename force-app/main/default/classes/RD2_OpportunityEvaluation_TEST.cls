@@ -99,7 +99,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
     private static void shouldNotProcessRDsWithUnmodifiedOpps() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         configureRecurringDonationsOppFilter();
-        final Date batchRunDate = Date.today().addDays(OPP_FILTER_DATE_RANGE);
+        final Date batchRunDate = Date.today();
         RD2_ScheduleService.currentDate = batchRunDate;
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
@@ -107,11 +107,10 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
             .build();
         insert rd;
 
-        Opportunity oldOpp = TEST_OpportunityBuilder.getOpportunityBuilder(rd)
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
             .withClosedWonStage()
             .withCloseDate(START_DATE)
             .build();
-        insert oldOpp;
 
         runBatch(new RD2_OpportunityEvaluation_BATCH(batchRunDate));
 
@@ -119,6 +118,39 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'No new Opp should be created: ' + opps);
+    }
+
+    /**
+     * @description Verifies Recurring Donations with unmodified and mofidied Opportunities are processed
+     */
+    @IsTest
+    private static void shouldProcessRDsWithinModifiedOppDateRange() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        configureRecurringDonationsOppFilter();
+        final Date batchRunDate = Date.today();
+        RD2_ScheduleService.currentDate = batchRunDate;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .build();
+        insert rd;
+
+        Opportunity oldOpp = TEST_OpportunityBuilder.getOpportunityBuilder(rd)
+            .withClosedWonStage()
+            .withCloseDate(START_DATE)
+            .build();
+        Opportunity newOpp = TEST_OpportunityBuilder.getOpportunityBuilder(rd)
+            .withClosedWonStage()
+            .withCloseDate(batchRunDate)
+            .build();
+
+        insert new List<Opportunity>{oldOpp, newOpp};
+
+        runBatch(new RD2_OpportunityEvaluation_BATCH(batchRunDate));
+
+        assertBatchJobIteration(1);
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(3, opps.size(), 'One new Opp should be created: ' + opps);
     }
 
     /**
