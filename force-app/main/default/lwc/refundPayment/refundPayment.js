@@ -20,7 +20,7 @@ import processRefund from "@salesforce/apex/PMT_RefundController.processRefund";
 export default class refundPayment extends NavigationMixin(LightningElement) {
     _recordId;
     hasError = false;
-    isLoading = true;
+    isLoading = false;
     errorMessage;
     labels = Object.freeze({
         refundPaymentTitle,
@@ -43,6 +43,7 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
 
     @api set recordId(value) {
         this._recordId = value;
+        this.isLoading = true;
         getInitialView({
             paymentId: this.recordId
         }) 
@@ -51,13 +52,14 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
                     this.displayErrorMessage(this.labels.noRefundPermissionMessage);
                     return;
                 }
-                this.paymentAmount = response.originalPayment.npe01__Payment_Amount__c;
-                this.paymentDate = response.originalPayment.npe01__Payment_Date__c;
-                this.currencyCode = response.originalPayment.CurrencyIsoCode;
+                this.paymentAmount = response.paymentAmount;
+                this.paymentDate = response.paymentDate;
+                this.currencyCode = response.currencyCode;
                 this.isLoading = false;
         })
         .catch((error) => {
             this.displayErrorMessage(constructErrorMessage(error).detail);
+            this.isLoading = false;
         });
     }
 

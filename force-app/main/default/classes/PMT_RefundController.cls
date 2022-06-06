@@ -65,7 +65,10 @@ public with sharing class PMT_RefundController {
             return refundView;
         }
 
-        refundView.originalPayment = paymentSelector.getPaymentRecordForRefund(paymentId);
+        npe01__OppPayment__c originalPayment = paymentSelector.getPaymentRecordForRefund(paymentId);
+        refundView.paymentDate = originalPayment.npe01__Payment_Date__c;
+        refundView.paymentAmount = originalPayment.npe01__Payment_Amount__c;
+        refundView.currencyCode = (String) originalPayment.get(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
         return refundView;
     }
 
@@ -150,6 +153,8 @@ public with sharing class PMT_RefundController {
         @AuraEnabled public Boolean isSuccess;
         @AuraEnabled public Id redirectToPaymentId;
         @AuraEnabled public String errorMessage;
-        @AuraEnabled public npe01__OppPayment__c originalPayment;
+        @AuraEnabled public Decimal paymentAmount;
+        @AuraEnabled public String currencyCode;
+        @AuraEnabled public Date paymentDate;
     }
 }
