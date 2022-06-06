@@ -103,7 +103,7 @@ export default class RecurringDonationTable extends LightningElement {
         getData()
         .then((data) => {
             if (data) {
-                this.data = data.map((d) => { return {...d.recurringDonation, frequency: d.frequency, status: d.status}});
+                this.data = data.map((d) => { return {...d.recurringDonation, frequency: d.frequency, status: d.status, paymentMethod: d.paymentMethod}});
             }
         });
     }

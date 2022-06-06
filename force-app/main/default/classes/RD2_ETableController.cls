@@ -84,10 +84,12 @@ public with sharing class RD2_ETableController {
         @AuraEnabled public npe03__Recurring_Donation__c recurringDonation;
         @AuraEnabled public String frequency;
         @AuraEnabled public String status;
-        public TableView(npe03__Recurring_Donation__c recurringDonation, String frequency, String status) {
+        @AuraEnabled public String paymentMethod;
+        public TableView(npe03__Recurring_Donation__c recurringDonation, String frequency, String status, String paymentMethod) {
             this.recurringDonation = recurringDonation;
             this.frequency = frequency;
             this.status = status;
+            this.paymentMethod = paymentMethod;
         }
     }
 
@@ -116,7 +118,8 @@ public with sharing class RD2_ETableController {
             for(npe03__Recurring_Donation__c recDonation : selector.getRecurringDonations()) {
                 recurringDonations.add( new RD2_ETableController.TableView( recDonation,
                                                                             controller.getFrequency(recDonation),
-                                                                            controller.getStatus(recDonation)));
+                                                                            controller.getStatus(recDonation),
+                                                                            controller.getPaymentMethod(recDonation)));
 
             }
 
@@ -130,6 +133,7 @@ public with sharing class RD2_ETableController {
     * @author Salesforce.org
     * @date 2022
     * @description process Recurring Donation record to build the frequency string.
+    * @param recurringDonation recurring dontation record
     * @return String returns the frequency string.
     */
     private String getFrequency(npe03__Recurring_Donation__c recurringDonation) {
@@ -185,6 +189,7 @@ public with sharing class RD2_ETableController {
     * @author Salesforce.org
     * @date 2022
     * @description process Recurring Donation record to build the status string.
+    * @param recurringDonation recurring dontation record
     * @return String returns the Status string.
     */
     private String getStatus(npe03__Recurring_Donation__c recurringDonation) {
@@ -210,6 +215,32 @@ public with sharing class RD2_ETableController {
     /** 
     * @author Salesforce.org
     * @date 2022
+    * @description process Recurring Donation record to build the status string.
+    * @param recurringDonation recurring dontation record
+    * @return String returns the PaymentMethod string.
+    */
+    private String getPaymentMethod(npe03__Recurring_Donation__c recurringDonation) {
+        String paymentMethod = '';
+
+        if(String.IsBlank(recurringDonation.CommitmentId__c)) {
+            //Non-Elevate RD
+            paymentMethod = recurringDonation.PaymentMethod__c;
+        
+        } else {
+            //Elevate RD
+            if(recurringDonation.PaymentMethod__c == RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD) {
+                paymentMethod = String.format(System.Label.creditCardElevatePayment, new List<String>{recurringDonation.PaymentMethod__c, recurringDonation.CardLast4__c, recurringDonation.CardExpirationMonth__c, recurringDonation.CardExpirationYear__c});
+            } else {
+                paymentMethod = String.format(System.Label.achElevatePayment, new List<String>{recurringDonation.PaymentMethod__c, recurringDonation.ACH_Last_4__c});
+            }
+        }
+
+        return paymentMethod;
+    }
+
+    /** 
+    * @author Salesforce.org
+    * @date 2022
     * @description method to check recurring donation permissions.
     * @return Boolean returns access to Recurring Donations.
     */
@@ -219,7 +250,13 @@ public with sharing class RD2_ETableController {
             npe03__Recurring_Donation__c.npe03__Installment_Period__c,
             npe03__Recurring_Donation__c.InstallmentFrequency__c,
             npe03__Recurring_Donation__c.Day_of_Month__c,
-            npe03__Recurring_Donation__c.Status__c
+            npe03__Recurring_Donation__c.Status__c,
+            npe03__Recurring_Donation__c.CommitmentId__c,
+            npe03__Recurring_Donation__c.PaymentMethod__c,
+            npe03__Recurring_Donation__c.CardLast4__c,
+            npe03__Recurring_Donation__c.CardExpirationYear__c,
+            npe03__Recurring_Donation__c.CardExpirationMonth__c,
+            npe03__Recurring_Donation__c.ACH_Last_4__c
         });
     }
 }

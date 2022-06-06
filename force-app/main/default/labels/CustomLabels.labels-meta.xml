@@ -5969,6 +5969,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>th</value>
     </labels>
     <labels>
+        <fullName>creditCardElevatePayment</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>To show the Payment method when credit card is used</shortDescription>
+        <value>{0}, *{1} Exp.{2}/{3}</value>
+    </labels>
+    <labels>
+        <fullName>achElevatePayment</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>To show the Payment method when ACH is used</shortDescription>
+        <value>{0}, *{1}</value>
+    </labels>
+    <labels>
         <fullName>commonAssistiveError</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
