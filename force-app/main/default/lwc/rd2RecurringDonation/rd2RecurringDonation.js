@@ -57,12 +57,12 @@ export default class RecurringDonationTable extends LightningElement {
         "firstDonation": "7/4/2022",
         "donor": "Saba",
         "amount": 69,
-        "paymentMethod": "Credit Card, *1111Exp. 11/2023",
+        "paymentMethod": "Credit Card, *1111 Exp. 11/2023",
         "frequency": "Monthly on the 22nd",
         "status": "Active",
         "mostRecentDonation": "12/10/2023",
         "lastModified": "4/01/2023",
-        "nextDonation": "<div class='slds-truncate dv-dynamic-width'>Paid Donation: 1 of 5.<br/> Next Donation: 1/12/2022.</div>"
+        "nextDonation": "Paid Donation: 1 of 5. Next Donation: 1/12/2022."
       },
       {
         "id": 2,
@@ -74,19 +74,19 @@ export default class RecurringDonationTable extends LightningElement {
         "status": "Active",
         "mostRecentDonation": "12/10/2023",
         "lastModified": "4/01/2023",
-        "nextDonation": "<div class='slds-truncate dv-dynamic-width'>Paid Donation: 3 of 6.<br/> Next Donation: 12/20/2022.</div>"
+        "nextDonation": "Paid Donation: 3 of 6. Next Donation: 12/20/2022."
       },
       {
         "id": 3,
         "firstDonation": "3/31/2022",
         "donor": "Page",
         "amount": 43,
-        "paymentMethod": "Credit Card, *1111Exp. 11/2023",
+        "paymentMethod": "Credit Card, *1111 Exp. 11/2023",
         "frequency": "Monthly on the 22nd",
         "status": "Active",
         "mostRecentDonation": "12/10/2023",
         "lastModified": "4/01/2023",
-        "nextDonation": "<div class='slds-truncate dv-dynamic-width'>Paid Donation: 2 of 5.<br/> Next Donation: 2/22/2022.</div>"
+        "nextDonation": "Paid Donation: 2 of 5. Next Donation: 2/22/2022."
       },
       {
         "id": 4,
@@ -98,7 +98,7 @@ export default class RecurringDonationTable extends LightningElement {
         "status": "Active",
         "mostRecentDonation": "12/10/2023",
         "lastModified": "4/01/2023",
-        "nextDonation": "<div class='slds-truncate dv-dynamic-width'>Paid Donation: 2 of 10.<br/> Next Donation: 11/11/2022.</div>"
+        "nextDonation": "Paid Donation: 2 of 10. Next Donation: 11/11/2022."
       },
       {
         "id": 5,
@@ -110,7 +110,7 @@ export default class RecurringDonationTable extends LightningElement {
         "status": "Active",
         "mostRecentDonation": "12/10/2023",
         "lastModified": "4/01/2023",
-        "nextDonation": "<div class='slds-truncate dv-dynamic-width'>Paid Donation: 6 of 8.<br/> Next Donation: 12/22/2022.</div>"
+        "nextDonation": "Paid Donation: 6 of 8. Next Donation: 12/22/2022."
     }];
 
     actions = [
@@ -131,6 +131,10 @@ export default class RecurringDonationTable extends LightningElement {
       if(!this.isMobile){
         this.tdClasses = '';
       }
+      this.data.forEach(element => {
+        element.nexDonationFormatFirstElement = element.nextDonation.split('.')[0] || element.nextDonation;
+        element.nexDonationFormatSecondElement = element.nextDonation.split('.')[1] || '';
+      });
     }
   
     /**
@@ -163,117 +167,115 @@ export default class RecurringDonationTable extends LightningElement {
 
     //FOR HANDLING THE HORIZONTAL SCROLL OF TABLE MANUALLY
     tableOuterDivScrolled(event) {
-        this._tableViewInnerDiv = this.template.querySelector(".tableViewInnerDiv");
-        if (this._tableViewInnerDiv) {
-            if (!this._tableViewInnerDivOffsetWidth || this._tableViewInnerDivOffsetWidth === 0) {
-                this._tableViewInnerDivOffsetWidth = this._tableViewInnerDiv.offsetWidth;
-            }
-            this._tableViewInnerDiv.style = 'width:' + (event.currentTarget.scrollLeft + this._tableViewInnerDivOffsetWidth) + "px;" + this.tableBodyStyle;
-        }
-        this.tableScrolled(event);
+      this._tableViewInnerDiv = this.template.querySelector(".tableViewInnerDiv");
+      if (this._tableViewInnerDiv) {
+          if (!this._tableViewInnerDivOffsetWidth || this._tableViewInnerDivOffsetWidth === 0) {
+              this._tableViewInnerDivOffsetWidth = this._tableViewInnerDiv.offsetWidth;
+          }
+          this._tableViewInnerDiv.style = 'width:' + (event.currentTarget.scrollLeft + this._tableViewInnerDivOffsetWidth) + "px;" + this.tableBodyStyle;
+      }
+      this.tableScrolled(event);
     }
  
     tableScrolled(event) {
-        if (this.enableInfiniteScrolling) {
-            if ((event.target.scrollTop + event.target.offsetHeight) >= event.target.scrollHeight) {
-                this.dispatchEvent(new CustomEvent('showmorerecords', {
-                    bubbles: true
-                }));
-            }
-        }
-        if (this.enableBatchLoading) {
-            if ((event.target.scrollTop + event.target.offsetHeight) >= event.target.scrollHeight) {
-                this.dispatchEvent(new CustomEvent('shownextbatch', {
-                    bubbles: true
-                }));
-            }
-        }
+      if (this.enableInfiniteScrolling) {
+          if ((event.target.scrollTop + event.target.offsetHeight) >= event.target.scrollHeight) {
+              this.dispatchEvent(new CustomEvent('showmorerecords', {
+                  bubbles: true
+              }));
+          }
+      }
+      if (this.enableBatchLoading) {
+          if ((event.target.scrollTop + event.target.offsetHeight) >= event.target.scrollHeight) {
+              this.dispatchEvent(new CustomEvent('shownextbatch', {
+                  bubbles: true
+              }));
+          }
+      }
     }
  
-    //#region ***************** RESIZABLE COLUMNS *************************************/
+    //************************************* RESIZABLE COLUMNS *************************************/
+
     handlemouseup(e) {
-        this._tableThColumn = undefined;
-        this._tableThInnerDiv = undefined;
-        this._pageX = undefined;
-        this._tableThWidth = undefined;
+      this._tableThColumn = undefined;
+      this._tableThInnerDiv = undefined;
+      this._pageX = undefined;
+      this._tableThWidth = undefined;
     }
  
     handlemousedown(e) {
-        if (!this._initWidths) {
-            this._initWidths = [];
-            let tableThs = this.template.querySelectorAll("table thead .dv-dynamic-width");
-            tableThs.forEach(th => {
-                this._initWidths.push(th.style.width);
-            });
-        }
- 
-        this._tableThColumn = e.target.parentElement;
-        this._tableThInnerDiv = e.target.parentElement;
-        while (this._tableThColumn.tagName !== "TH") {
-            this._tableThColumn = this._tableThColumn.parentNode;
-        }
-        while (!this._tableThInnerDiv.className.includes("slds-cell-fixed")) {
-            this._tableThInnerDiv = this._tableThInnerDiv.parentNode;
-        }
-        this._pageX = e.pageX;
- 
-        this._padding = this.paddingDiff(this._tableThColumn);
- 
-        this._tableThWidth = this._tableThColumn.offsetWidth - this._padding;
+      if (!this._initWidths) {
+          this._initWidths = [];
+          let tableThs = this.template.querySelectorAll("table thead .dv-dynamic-width");
+          tableThs.forEach(th => {
+              this._initWidths.push(th.style.width);
+          });
+      }
+
+      this._tableThColumn = e.target.parentElement;
+      this._tableThInnerDiv = e.target.parentElement;
+      while (this._tableThColumn.tagName !== "TH") {
+          this._tableThColumn = this._tableThColumn.parentNode;
+      }
+      while (!this._tableThInnerDiv.className.includes("slds-cell-fixed")) {
+          this._tableThInnerDiv = this._tableThInnerDiv.parentNode;
+      }
+      this._pageX = e.pageX;
+
+      this._padding = this.paddingDiff(this._tableThColumn);
+
+      this._tableThWidth = this._tableThColumn.offsetWidth - this._padding;
     }
  
     handlemousemove(e) {
-            if (this._tableThColumn && this._tableThColumn.tagName === "TH") {
-            this._diffX = e.pageX - this._pageX;
- 
-            this.template.querySelector("table").style.width = (this.template.querySelector("table") - (this._diffX)) + 'px';
- 
-            this._tableThColumn.style.width = (this._tableThWidth + this._diffX) + 'px';
-            this._tableThInnerDiv.style.width = this._tableThColumn.style.width;
- 
-            let tableThs = this.template.querySelectorAll("table thead .dv-dynamic-width");
-            let tableBodyRows = this.template.querySelectorAll("table tbody tr");
-            tableBodyRows.forEach(row => {
-                let rowTds = row.querySelectorAll(".dv-dynamic-width");
-                rowTds.forEach((td, ind) => {
-                    rowTds[ind].style.width = tableThs[ind].style.width;
-                });
-            });
-        }
-    }
- 
-    handledblclickresizable() {
+      if (this._tableThColumn && this._tableThColumn.tagName === "TH") {
+        this._diffX = e.pageX - this._pageX;
+
+        this.template.querySelector("table").style.width = (this.template.querySelector("table") - (this._diffX)) + 'px';
+
+        this._tableThColumn.style.width = (this._tableThWidth + this._diffX) + 'px';
+        this._tableThInnerDiv.style.width = this._tableThColumn.style.width;
+
         let tableThs = this.template.querySelectorAll("table thead .dv-dynamic-width");
         let tableBodyRows = this.template.querySelectorAll("table tbody tr");
-        tableThs.forEach((th, ind) => {
-            th.style.width = this._initWidths[ind];
-            th.querySelector(".slds-cell-fixed").style.width = this._initWidths[ind];
-        });
         tableBodyRows.forEach(row => {
             let rowTds = row.querySelectorAll(".dv-dynamic-width");
             rowTds.forEach((td, ind) => {
-                rowTds[ind].style.width = this._initWidths[ind];
+                rowTds[ind].style.width = tableThs[ind].style.width;
             });
         });
+      }
+    }
+ 
+    handledblclickresizable() {
+      let tableThs = this.template.querySelectorAll("table thead .dv-dynamic-width");
+      let tableBodyRows = this.template.querySelectorAll("table tbody tr");
+      tableThs.forEach((th, ind) => {
+          th.style.width = this._initWidths[ind];
+          th.querySelector(".slds-cell-fixed").style.width = this._initWidths[ind];
+      });
+      tableBodyRows.forEach(row => {
+          let rowTds = row.querySelectorAll(".dv-dynamic-width");
+          rowTds.forEach((td, ind) => {
+              rowTds[ind].style.width = this._initWidths[ind];
+          });
+      });
     }
  
     paddingDiff(col) {
- 
-        if (this.getStyleVal(col, 'box-sizing') === 'border-box') {
-            return 0;
-        }
- 
-        this._padLeft = this.getStyleVal(col, 'padding-left');
-        this._padRight = this.getStyleVal(col, 'padding-right');
-        return (parseInt(this._padLeft, 10) + parseInt(this._padRight, 10));
- 
+      if (this.getStyleVal(col, 'box-sizing') === 'border-box') {
+          return 0;
+      }
+      this._padLeft = this.getStyleVal(col, 'padding-left');
+      this._padRight = this.getStyleVal(col, 'padding-right');
+      return (parseInt(this._padLeft, 10) + parseInt(this._padRight, 10));
     }
  
     getStyleVal(elm, css) {
-        return (window.getComputedStyle(elm, null).getPropertyValue(css))
+      return (window.getComputedStyle(elm, null).getPropertyValue(css))
     }
    
-    hideAndShow( event ) {
+    toggleView( event ) {
       let tableTd= this.template.querySelectorAll("td[data-id="+JSON.stringify(event.target.getAttribute("data-viewid"))+"]");
       let viewMoreOrLess = this.template.querySelector("td[data-viewid="+JSON.stringify(event.target.getAttribute("data-viewid"))+"]");
       if(viewMoreOrLess.getAttribute("data-label") === this.labels.RD2_ViewMoreDetails){
@@ -289,4 +291,5 @@ export default class RecurringDonationTable extends LightningElement {
         }
       });
     }
+
 }

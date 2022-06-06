@@ -140,15 +140,17 @@
                                 {recurringDonation.mostRecentDonation}</div>
                         </td>
                         <td key={recurringDonation.nextDonation} data-id={recurringDonation.id} class={tdClasses}  data-label={labels.nextDonation}>
-                            <lightning-formatted-rich-text class="slds-truncate" value={recurringDonation.nextDonation}>
-                            </lightning-formatted-rich-text>
+                            <div class={rowClasses} style={fixedWidth}> 
+                                {recurringDonation.nexDonationFormatFirstElement} </br>
+                                {recurringDonation.nexDonationFormatSecondElement}
+                            </div>
                         </td>
                         <td key={recurringDonation.lastModified} data-id={recurringDonation.id} class={tdClasses}  data-label={labels.lastModified}>
                             <div class={rowClasses} style={fixedWidth} title="Last Modified">
                                 {recurringDonation.lastModified}</div>
                         </td>
                         <td data-label="Actions">
-                            <lightning-button-menu class="dv-dynamic-mobile" menu-alignment="right" alternative-text="Action menu" onclick={handleActionStyleChange}>
+                            <lightning-button-menu class="dv-dynamic-mobile" menu-alignment="auto" alternative-text="Action menu" onclick={handleActionStyleChange}>
                                 <template for:each={actions} for:item="action">
                                     <p key={action.name} data-recid={action.name}>
                                         <lightning-menu-item label={action.label}>
@@ -157,7 +159,7 @@
                                 </template>
                             </lightning-button-menu>
                         </td>
-                        <td class="viewMore" data-label={labels.RD2_ViewMoreDetails} data-viewid={recurringDonation.id} onclick={hideAndShow}>
+                        <td class="viewMore" data-label={labels.RD2_ViewMoreDetails} data-viewid={recurringDonation.id} onclick={toggleView}>
                         </td>
                     </tr>
                 </template>
