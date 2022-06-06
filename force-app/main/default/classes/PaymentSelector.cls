@@ -44,9 +44,9 @@ public with sharing class PaymentSelector {
         set;
     }
     
-    public List<npe01__OppPayment__c> getPaymentRecordForRefund(Set<Id> paymentId) {
+    public List<npe01__OppPayment__c> getPaymentRecordForRefund(Set<Id> paymentIds) {
         Set<String> queryFields = new Set<String>{
-            'Id', 'Elevate_Payment_ID__c', 'npe01__Payment_Amount__c', 'npe01__Opportunity__c', 'npe01__Opprtuniy__r.Amount'
+            'Id', 'Elevate_Payment_ID__c', 'npe01__Payment_Amount__c', 'npe01__Opportunity__c', 'npe01__Opportunity__r.Amount'
         };
 
         if (isMultiCurrencyEnabled) {

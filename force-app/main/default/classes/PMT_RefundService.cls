@@ -212,9 +212,17 @@ public with sharing class PMT_RefundService {
         if (isMultiCurrencyEnabled) {
             refund.put(UTIL_Currency.CURRENCY_ISO_CODE_FIELD, originalPayment.get(UTIL_Currency.CURRENCY_ISO_CODE_FIELD));
         }
+
+        if (this.refundRecords == null) {
+            this.refundRecords = new List<npe01__OppPayment__c>();
+        }
+        this.refundRecords.add(refund);
     }
 
     private void updateParentOpportunity(npe01__OppPayment__c originalPayment) {
+        if (this.opportunities == null) {
+            this.opportunities = new List<Opportunity>();
+        }
         this.opportunities.add(
             new Opportunity(
                 Id = originalPayment.npe01__Opportunity__c,
