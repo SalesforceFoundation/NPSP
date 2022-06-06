@@ -46,7 +46,12 @@ public with sharing class PaymentSelector {
     
     public List<npe01__OppPayment__c> getPaymentRecordForRefund(Set<Id> paymentIds) {
         Set<String> queryFields = new Set<String>{
-            'Id', 'Elevate_Payment_ID__c', 'npe01__Payment_Amount__c', 'npe01__Opportunity__c', 'npe01__Opportunity__r.Amount'
+            'Id',
+            'Elevate_Payment_ID__c',
+            'npe01__Payment_Amount__c',
+            'npe01__Opportunity__c',
+            'npe01__Opportunity__r.Amount',
+            String.valueOf(npe01__OppPayment__c.RefundType__c)
         };
 
         if (isMultiCurrencyEnabled) {

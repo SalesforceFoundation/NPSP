@@ -1,5 +1,6 @@
 import { LightningElement, api, wire } from 'lwc';
 import { CloseActionScreenEvent } from 'lightning/actions';
+import { NavigationMixin } from 'lightning/navigation';
 import { getRecord, getFieldValue } from "lightning/uiRecordApi";
 import { constructErrorMessage, showToast} from "c/utilCommon";
 import refundPaymentTitle from "@salesforce/label/c.pmtRefundPaymentTitle";
@@ -12,6 +13,8 @@ import noRefundPermissionMessage from "@salesforce/label/c.pmtNoRefundPermission
 import refundPaymentErrorMessage from "@salesforce/label/c.pmtRefundPaymentErrorMessage";
 import refundPaymentMessage from "@salesforce/label/c.pmtRefundPaymentMessage";
 import refundProcessing from "@salesforce/label/c.pmtRefundProcessing";
+import loadingMessage from "@salesforce/label/c.labelMessageLoading";
+import spinnerAltText from "@salesforce/label/c.geAssistiveSpinner";
 
 import processRefund from "@salesforce/apex/PMT_RefundController.processRefund";
 import getPermissionData from "@salesforce/apex/PMT_RefundController.getPermissionData";
@@ -19,9 +22,10 @@ import getPermissionData from "@salesforce/apex/PMT_RefundController.getPermissi
 import PAYMENT_AMOUNT_FIELD from '@salesforce/schema/npe01__oppPayment__c.npe01__Payment_Amount__c';
 import PAYMENT_DATE_FIELD from '@salesforce/schema/npe01__oppPayment__c.npe01__Payment_Date__c';
 
-export default class refundPayment extends LightningElement {
+export default class refundPayment extends NavigationMixin(LightningElement) {
     @api recordId;
     hasError = false;
+    isLoading = false;
     errorMessage;
     labels = Object.freeze({
         refundPaymentTitle,
@@ -33,7 +37,9 @@ export default class refundPayment extends LightningElement {
         refundAmount,
         refundPaymentDate,
         refundProcessing,
-        refundPaymentErrorMessage
+        refundPaymentErrorMessage,
+        loadingMessage,
+        spinnerAltText
     });
     refundView;
     paymentAmount;
@@ -65,15 +71,20 @@ export default class refundPayment extends LightningElement {
     }
 
     handleRefund() {
+        this.isLoading = true;
         processRefund({
             paymentId: this.recordId
         }) 
             .then((response) => {
                 this.processResponse(response);
+                this.isLoading = false;
         })
         .catch((error) => {
             this.displayErrorMessage(constructErrorMessage(error).detail);
+            this.isLoading = false;
         });
+
+
 
     }
 
@@ -87,12 +98,16 @@ export default class refundPayment extends LightningElement {
             return;
 
         } else if (response.isSuccess === true) {
-            showToast('', this.labels.refundProcessing + ' {0}', 'info', '', [
-                {
-                    url: '/' + response.redirectToPaymentId,
-                    label: this.labels.commonRefreshPage,
-                }]
-            );
+            if (this.recordId === response.redirectToPaymentId) {
+                showToast('', this.labels.refundProcessing + ' {0}', 'info', '', [
+                    {
+                        url: '/' + response.redirectToPaymentId,
+                        label: this.labels.commonRefreshPage,
+                    }]
+                );
+            } else {
+                this.navigateToRecordPage(response.redirectToPaymentId);
+            }
 
         } else if (response.isSuccess === false) {
             showToast(this.labels.refundPaymentErrorMessage, response.errorMessage, 'error');
@@ -100,6 +115,16 @@ export default class refundPayment extends LightningElement {
         
         this.handleClose();
     }
+
+    navigateToRecordPage(rediectToId) {
+        this[NavigationMixin.Navigate]({
+            type: 'standard__recordPage',
+            attributes: {
+                recordId: rediectToId,
+                actionName: 'view'
+            }
+        });
+}
 
     displayErrorMessage(errorMessage) {
         this.hasError = true;

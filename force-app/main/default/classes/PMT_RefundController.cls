@@ -63,7 +63,8 @@ public with sharing class PMT_RefundController {
 
         npe01__OppPayment__c originalPayment = paymentSelector.getPaymentRecordForRefund(new Set<Id>{paymentId})[0];
 
-        if (originalPayment.npe01__Payment_Amount__c <= 0) {
+        if (originalPAyment.RefundType__c == PMT_RefundService.FULL_REFUND || originalPayment.npe01__Payment_Amount__c <= 0) {
+            refundView.isSuccess = false;
             refundView.errorMessage = System.Label.pmtPaymentNotRefundable;
             return refundView;
         }
