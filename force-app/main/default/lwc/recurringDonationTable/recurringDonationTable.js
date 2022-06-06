@@ -23,6 +23,8 @@ export default class RecurringDonationTable extends LightningElement {
 
     openStopRecurringDonation = false;
 
+    currentRecord;
+
     @api 
     allowACHPaymentMethod;
     paymentMethod = '';
@@ -67,11 +69,14 @@ export default class RecurringDonationTable extends LightningElement {
         ];
         }
       }
+
       handleRowAction(e) {
         const action = e.detail.action;
         switch (action.name) {
             case 'updatePaymentMethod':
+                this.currentRecord = e.detail.row;
                 this.openUpdatePaymentMethod = true;
+                console.log('e.detail.row: ' + JSON.stringify(e.detail.row));
                 break;
             case 'changeAmountOrFrequency':
                 this.openChangeAmountOrFrequency = true;
@@ -83,6 +88,7 @@ export default class RecurringDonationTable extends LightningElement {
                 break;
       }
     }
+
     handleClose(event){ 
       switch (event.detail) {
         case 'updatePaymentMethod':
