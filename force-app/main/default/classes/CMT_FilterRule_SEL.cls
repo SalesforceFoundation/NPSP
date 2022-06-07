@@ -33,6 +33,7 @@
 * @group CMT Filter Rules
 * @description Selector class for FilterGroups and FilterRule Custom Metadata Type objects
 */
+/* sfge-disable ApexFlsViolationRule */
 public without sharing class CMT_FilterRule_SEL {
 
     /**
