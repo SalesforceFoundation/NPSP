@@ -80,9 +80,6 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
             this.displayErrorMessage(constructErrorMessage(error).detail);
             this.isLoading = false;
         });
-
-
-
     }
 
     handleClose(){
