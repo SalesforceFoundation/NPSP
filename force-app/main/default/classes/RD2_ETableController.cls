@@ -133,7 +133,7 @@ public with sharing class RD2_ETableController {
     * @author Salesforce.org
     * @date 2022
     * @description process Recurring Donation record to build the frequency string.
-    * @param recurringDonation recurring dontation record
+    * @param recurringDonation recurring donation record
     * @return String returns the frequency string.
     */
     private String getFrequency(npe03__Recurring_Donation__c recurringDonation) {
@@ -188,7 +188,7 @@ public with sharing class RD2_ETableController {
     /** 
     * @author Salesforce.org
     * @date 2022
-    * @description process Recurring Donation record to build the status string.
+    * @description process Recurring Donaion record to build the status string.
     * @param recurringDonation recurring dontation record
     * @return String returns the Status string.
     */
@@ -216,7 +216,7 @@ public with sharing class RD2_ETableController {
     * @author Salesforce.org
     * @date 2022
     * @description process Recurring Donation record to build the status string.
-    * @param recurringDonation recurring dontation record
+    * @param recurringDonation recurring donation record
     * @return String returns the PaymentMethod string.
     */
     private String getPaymentMethod(npe03__Recurring_Donation__c recurringDonation) {
