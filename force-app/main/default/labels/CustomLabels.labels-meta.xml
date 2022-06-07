@@ -5973,7 +5973,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Recurring Donations</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Used to show the Payment Method when it is an Elevate Recurring Donation and it was used Credit Card payment.</shortDescription>
+        <shortDescription>Used to show the Payment Method using Elevate RD and Credit Card payment.</shortDescription>
         <value>{0}, *{1} Exp.{2}/{3}</value>
     </labels>
     <labels>
@@ -5981,7 +5981,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Recurring Donations</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Used to show the Payment Method when it is an Elevate Recurring Donation and it was used ACH payment.</shortDescription>
+        <shortDescription>Used to show the Payment Method using Elevate RD and ACH payment.</shortDescription>
         <value>{0}, *{1}</value>
     </labels>
     <labels>
