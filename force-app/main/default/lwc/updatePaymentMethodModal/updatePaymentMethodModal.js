@@ -9,8 +9,6 @@ const TAB_KEY_STRING = "Tab";
 
 export default class UpdatePaymentMethodModal extends LightningElement {
     
-    @api currentRecord;
-    
     @api openUpdatePaymentMethod;
 
     labels = {
@@ -19,7 +17,6 @@ export default class UpdatePaymentMethodModal extends LightningElement {
 
     renderedCallback() {
       this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
-      console.log('child: ', JSON.stringify(this.currentRecord));
     }
 
     handleKeyUp(e) {

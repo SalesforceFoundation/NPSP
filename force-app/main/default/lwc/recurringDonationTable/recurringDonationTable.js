@@ -74,12 +74,12 @@ export default class RecurringDonationTable extends LightningElement {
         const action = e.detail.action;
         switch (action.name) {
             case 'updatePaymentMethod':
-                this.currentRecord = e.detail.row;
                 this.openUpdatePaymentMethod = true;
-                console.log('e.detail.row: ' + JSON.stringify(e.detail.row));
                 break;
             case 'changeAmountOrFrequency':
+                this.currentRecord = e.detail.row;
                 this.openChangeAmountOrFrequency = true;
+                console.log('e.detail.row: ' + JSON.stringify(e.detail.row));
                 break;
             case 'stopRecurringDonation':
                 this.openStopRecurringDonation = true;
