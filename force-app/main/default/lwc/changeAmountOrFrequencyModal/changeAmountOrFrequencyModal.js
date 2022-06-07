@@ -1,6 +1,10 @@
 import { LightningElement, api } from 'lwc';
 import changeAmountOrFrequency from '@salesforce/label/c.changeAmountOrFrequency';
 import updateRecurringDonation from '@salesforce/label/c.updateRecurringDonation';
+import every from "@salesforce/label/c.RD2_EntryFormScheduleEveryLabel";
+import commonAmount from "@salesforce/label/c.commonAmount";
+import installmentPeriod from "@salesforce/label/c.installmentPeriod";
+import recurringDonationSchedule from "@salesforce/label/c.recurringDonationSchedule";
 
 const ESC_KEY_CODE = 27;
 const ESC_KEY_STRING = "Escape";
@@ -15,7 +19,11 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
 
     labels = {
         changeAmountOrFrequency,
-        updateRecurringDonation
+        updateRecurringDonation,
+        every,
+        commonAmount,
+        recurringDonationSchedule,
+        installmentPeriod
     }
 
     renderedCallback() {
