@@ -53,7 +53,7 @@
                             </div>
                         </div>
                     </th>
-                    <th aria-label={labels.firstDonation} class={headClasses} scope="col" style={fixedWidth}>
+                    <!-- <th aria-label={labels.firstDonation} class={headClasses} scope="col" style={fixedWidth}>
                         <div class="slds-cell-fixed" style={fixedWidth}>
                             <a class="slds-th__action slds-text-link--reset">
                                 <span class="slds-truncate" title={labels.firstDonation}>{labels.firstDonation}</span>
@@ -101,7 +101,7 @@
                                 </span>
                             </div>
                         </div>
-                    </th>
+                    </th> -->
                     <th scope="col">
                         <div class="slds-cell-fixed">
                             <div class="slds-truncate slds-assistive-text" title="Actions">Actions</div>
@@ -114,7 +114,7 @@
                     <tr key={recurringDonation.id} aria-selected="false" class="slds-hint-parent" scope="row">
                         <td key={recurringDonation.amount} data-label={labels.commonAmount}>
                             <div class={rowClasses} style={fixedWidth} title={labels.commonAmount}>
-                                <lightning-formatted-number value={recurringDonation.amount} format-style="currency"
+                                <lightning-formatted-number value={recurringDonation.npe03__Amount__c} format-style="currency"
                                     currency-code="USD"></lightning-formatted-number>
                             </div>
                         </td>
@@ -130,7 +130,7 @@
                             <div class={rowClasses} style={fixedWidth} title={labels.lblStatus}>
                                 {recurringDonation.status}</div>
                         </td>
-                        <td key={recurringDonation.firstDonation} data-id={recurringDonation.id} class={tdClasses} data-label={labels.firstDonation}>
+                        <!-- <td key={recurringDonation.firstDonation} data-id={recurringDonation.id} class={tdClasses} data-label={labels.firstDonation}>
                             <div class={rowClasses} style={fixedWidth} title={labels.firstDonation}>
                                 {recurringDonation.firstDonation}
                             </div>
@@ -148,7 +148,7 @@
                         <td key={recurringDonation.lastModified} data-id={recurringDonation.id} class={tdClasses}  data-label={labels.lastModified}>
                             <div class={rowClasses} style={fixedWidth} title="Last Modified">
                                 {recurringDonation.lastModified}</div>
-                        </td>
+                        </td> -->
                         <td data-label="Actions">
                             <lightning-button-menu class="dv-dynamic-mobile" menu-alignment="auto" alternative-text="Action menu" onclick={handleActionStyleChange}>
                                 <template for:each={actions} for:item="action">
@@ -166,4 +166,7 @@
             </tbody>
         </table>
     </div>
+    <c-update-payment-method-modal open-update-payment-method={openUpdatePaymentMethod} onclose={handleClose}></c-update-payment-method-modal>
+    <c-change-amount-or-frequency-modal open-change-amount-or-frequency={openChangeAmountOrFrequency} onclose={handleClose}></c-change-amount-or-frequency-modal>
+    <c-stop-recurring-donation-modal open-stop-recurring-donation={openStopRecurringDonation} onclose={handleClose}></c-stop-recurring-donation-modal>
 </template>

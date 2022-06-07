@@ -22,5 +22,5 @@ const MOCK_DATA = require('./data/recurringDonationTableData.json');
         expect(element).toBeDefined();
       });
     });
-    
-  });
+
+});
