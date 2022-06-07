@@ -215,7 +215,7 @@ public with sharing class RD2_ETableController {
     /** 
     * @author Salesforce.org
     * @date 2022
-    * @description process Recurring Donation record to build the status string.
+    * @description process Recurring Donation record to build the payment method string.
     * @param recurringDonation recurring donation record
     * @return String returns the PaymentMethod string.
     */
