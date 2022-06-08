@@ -113,20 +113,23 @@ public with sharing class RD2_ETableController {
     * @return List<RD2_ETableController.TableView> returns processed Recurring Donations.
     */
     private List<RD2_ETableController.TableView> getTableViews() {
-        if(controller.hasAccessToRecurringDonation()) {
-            List<RD2_ETableController.TableView> recurringDonations = new List<RD2_ETableController.TableView>();
-            for(npe03__Recurring_Donation__c recDonation : selector.getRecurringDonations()) {
-                recurringDonations.add( new RD2_ETableController.TableView( recDonation,
-                                                                            controller.getFrequency(recDonation),
-                                                                            controller.getStatus(recDonation),
-                                                                            controller.getPaymentMethod(recDonation)));
-
+        List<RD2_ETableController.TableView> recurringDonations = new List<RD2_ETableController.TableView>();
+        if(RD2_EnablementService.isRecurringDonations2Enabled) {
+            if(controller.hasAccessToRecurringDonation()) {
+                for(npe03__Recurring_Donation__c recDonation : selector.getRecurringDonations()) {
+                    recurringDonations.add( new RD2_ETableController.TableView( recDonation,
+                                                                                controller.getFrequency(recDonation),
+                                                                                controller.getStatus(recDonation),
+                                                                                controller.getPaymentMethod(recDonation)));
+    
+                }
+            } else {
+                throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
             }
-
-            return recurringDonations;
-        } else {
-            throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
         }
+
+        return recurringDonations;
+        
     }
 
     /** 
