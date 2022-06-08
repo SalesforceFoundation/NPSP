@@ -216,7 +216,6 @@ public inherited sharing class PMT_RefundService {
             this.opportunityMap = new Map<Id,Opportunity>();
         }
         Opportunity opportunity = this.opportunityMap.get(originalPayment.npe01__Opportunity__c);
-        //System.assert(false, opportunity + originalPayment);
         if (opportunity == null) {
             opportunity = new Opportunity(
                 Id = originalPayment.npe01__Opportunity__c,
