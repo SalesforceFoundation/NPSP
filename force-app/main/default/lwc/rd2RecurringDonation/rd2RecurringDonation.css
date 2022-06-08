@@ -18,12 +18,13 @@
 .hide-td{
     display: none;
 }
-.slds-table_header-fixed tbody tr:first-child td{
+.slds-table_header-fixed tbody tr:first-child td, .table_top{
     border-top: var(--lwc-borderWidthThin,1px) solid var(--lwc-colorBorder,rgb(229, 229, 229));
 }
 .viewMore{
     cursor: pointer;
     text-align: center;
+    border-bottom: var(--lwc-borderWidthThin,1px) solid var(--lwc-colorBorder,rgb(229, 229, 229));
 }
 .viewMore::before{
     color: #0070D2;

@@ -29,8 +29,16 @@ const MOBILE_CLASSES_HEAD = 'slds-is-resizable dv-dynamic-width dv-dynamic-mobil
 const DESKTOP_CLASSES_HEAD = 'slds-is-resizable dv-dynamic-width';
 const MOBILE_VIEW_MORE = 'viewMore';
 const DESKTOP_VIEW_MORE = 'slds-hide';
+const MOBILE_HEADER_CLASS = 'slds-border_right slds-border_left';
+const DESKTOP_HEADER_CLASS = 'slds-table_header-fixed_container slds-border_right slds-border_left table_top';
 
 export default class RecurringDonationTable extends LightningElement {
+    
+    openUpdatePaymentMethod = false;
+    openChangeAmountOrFrequency = false;
+    openStopRecurringDonation = false;
+    currentRecord;
+  
     @api
     donationTypeFilter = 'Show all Recurring Donations';
     
@@ -109,6 +117,16 @@ export default class RecurringDonationTable extends LightningElement {
           return MOBILE_VIEW_MORE;
       }
       return DESKTOP_VIEW_MORE;
+    }
+
+    /**
+     * @description Returns the classes to be applied to the rows according if it is mobile or desktop
+     */
+     get headerClass() {
+      if (this.isMobile) {
+          return MOBILE_HEADER_CLASS;
+      }
+      return DESKTOP_HEADER_CLASS;
     }
 
     /**
@@ -249,8 +267,9 @@ export default class RecurringDonationTable extends LightningElement {
     }
 
     handleRowAction(e) {
-      const action = e.detail.action;
-      switch (action.name) {
+      const action = e.target.getAttribute("data-action");
+      this.currentRecord = this.data.find(row => {return row.recurringDonation.Id === e.target.getAttribute("data-recordid")});
+      switch (action) {
           case 'updatePaymentMethod':
               this.openUpdatePaymentMethod = true;
               break;
@@ -265,7 +284,8 @@ export default class RecurringDonationTable extends LightningElement {
       }
     }
     
-    handleClose(event){ 
+    handleClose(event){
+      this.currentRecord = {};
       switch (event.detail) {
         case 'updatePaymentMethod':
             this.openUpdatePaymentMethod = false;
@@ -285,8 +305,7 @@ export default class RecurringDonationTable extends LightningElement {
       getData()
         .then((data) => {
             if (data) {
-              console.log(JSON.stringify(data));
-                this.data = data.map((d) => { return {...d.recurringDonation, frequency: d.frequency, status: d.status}});
+                this.data = data;
                 this.data.forEach(element => {
                   if(element.nextDonation){
                     element.nexDonationFormatFirstElement = element.nextDonation.split('.')[0] || element.nextDonation;

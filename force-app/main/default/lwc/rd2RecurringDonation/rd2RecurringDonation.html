@@ -1,9 +1,8 @@
 <template>
-    <div id="containerDiv" onmousemove={handlemousemove} onmouseup={handlemouseup} ondblclick={handledblclickresizable}
-        class="slds-table_header-fixed_container slds-border_right slds-border_left " onscroll={tableOuterDivScrolled}>
+    <div id="containerDiv" onmousemove={handlemousemove} onmouseup={handlemouseup} ondblclick={handledblclickresizable} class={headerClass} onscroll={tableOuterDivScrolled}>
         <table
             class="slds-table slds-table_bordered slds-table_header-fixed slds-table_resizable-cols slds-max-medium-table_stacked">
-            <thead>
+            <thead >
                 <tr>
                     <th aria-label={labels.commonAmount} class={headClasses} scope="col" style={fixedWidth}>
                         <div class="slds-cell-fixed" style={fixedWidth}>
@@ -110,56 +109,56 @@
                 </tr>
             </thead>
             <tbody>
-                <template for:each={data} for:item="recurringDonation">
-                    <tr key={recurringDonation.Id} aria-selected="false" class="slds-hint-parent" scope="row">
-                        <td key={recurringDonation.amount} data-label={labels.commonAmount}>
+                <template for:each={data} for:item="item">
+                    <tr key={item.recurringDonation.Id} aria-selected="false" class="slds-hint-parent" scope="row">
+                        <td key={item.recurringDonation.npe03__Amount__c} data-label={labels.commonAmount}>
                             <div class={rowClasses} style={fixedWidth} title={labels.commonAmount}>
-                                <lightning-formatted-number value={recurringDonation.npe03__Amount__c} format-style="currency"
+                                <lightning-formatted-number value={item.recurringDonation.npe03__Amount__c} format-style="currency"
                                     currency-code="USD"></lightning-formatted-number>
                             </div>
                         </td>
-                        <td key={recurringDonation.frequency} data-label={labels.RDCL_Frequency}>
+                        <td key={item.frequency} data-label={labels.RDCL_Frequency}>
                             <div class={rowClasses} style={fixedWidth} title={labels.RDCL_Frequency}>
-                                {recurringDonation.frequency}</div>
+                                {item.frequency}</div>
                         </td>
-                        <td key={recurringDonation.paymentMethod} data-label={paymentMethod}>
+                        <td key={item.paymentMethod} data-label={paymentMethod}>
                             <div class={rowClasses} style={fixedWidth} title={paymentMethod}>
-                                {recurringDonation.paymentMethod}</div>
+                                {item.paymentMethod}</div>
                         </td>
-                        <td key={recurringDonation.status} data-label={labels.lblStatus}>
+                        <td key={item.status} data-label={labels.lblStatus}>
                             <div class={rowClasses} style={fixedWidth} title={labels.lblStatus}>
-                                {recurringDonation.status}</div>
+                                {item.status}</div>
                         </td>
-                        <td key={recurringDonation.firstDonation} data-id={recurringDonation.id} class={tdClasses} data-label={labels.firstDonation}>
+                        <td key={item.firstDonation} data-id={item.id} class={tdClasses} data-label={labels.firstDonation}>
                             <div class={rowClasses} style={fixedWidth} title={labels.firstDonation}>
-                                {recurringDonation.firstDonation}
+                                {item.firstDonation}
                             </div>
                         </td>
-                        <td key={recurringDonation.mostRecentDonation} data-id={recurringDonation.id} class={tdClasses} data-label={labels.mostRecentDonation}>
+                        <td key={item.mostRecentDonation} data-id={item.id} class={tdClasses} data-label={labels.mostRecentDonation}>
                             <div class={rowClasses} style={fixedWidth} title={labels.mostRecentDonation}>
-                                {recurringDonation.mostRecentDonation}</div>
+                                {item.mostRecentDonation}</div>
                         </td>
-                        <td key={recurringDonation.nextDonation} data-id={recurringDonation.id} class={tdClasses}  data-label={labels.nextDonation}>
+                        <td key={item.nextDonation} data-id={item.id} class={tdClasses}  data-label={labels.nextDonation}>
                             <div class={rowClasses} style={fixedWidth}> 
-                                {recurringDonation.nexDonationFormatFirstElement} </br>
-                                {recurringDonation.nexDonationFormatSecondElement}
+                                {item.nexDonationFormatFirstElement} </br>
+                                {item.nexDonationFormatSecondElement}
                             </div>
                         </td>
-                        <td key={recurringDonation.lastModified} data-id={recurringDonation.id} class={tdClasses}  data-label={labels.lastModified}>
+                        <td key={item.lastModified} data-id={item.id} class={tdClasses}  data-label={labels.lastModified}>
                             <div class={rowClasses} style={fixedWidth} title="Last Modified">
-                                {recurringDonation.lastModified}</div>
+                                {item.lastModified}</div>
                         </td>
                         <td data-label="Actions">
-                            <lightning-button-menu class="dv-dynamic-mobile" menu-alignment="auto" alternative-text="Action menu" onclick={handleActionStyleChange}>
+                            <lightning-button-menu class="dv-dynamic-mobile" menu-alignment="auto" alternative-text="Action menu">
                                 <template for:each={actions} for:item="action">
                                     <p key={action.name} data-recid={action.name}>
-                                        <lightning-menu-item label={action.label}>
+                                        <lightning-menu-item label={action.label} onclick={handleRowAction} data-action={action.name} data-recordid={item.recurringDonation.Id}>
                                         </lightning-menu-item>
                                     </p>
                                 </template>
                             </lightning-button-menu>
                         </td>
-                        <td class={viewMore} data-label={labels.RD2_ViewMoreDetails} data-viewid={recurringDonation.id} onclick={toggleView}>
+                        <td class={viewMore} data-label={labels.RD2_ViewMoreDetails} data-viewid={item.id} onclick={toggleView}>
                         </td>
                     </tr>
                 </template>
