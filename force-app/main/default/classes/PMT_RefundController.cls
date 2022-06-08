@@ -68,7 +68,11 @@ public with sharing class PMT_RefundController {
         npe01__OppPayment__c payment = paymentSelector.getPaymentRecordForRefund(paymentId);
         refundView.paymentDate = payment.npe01__Payment_Date__c;
         refundView.paymentAmount = payment.npe01__Payment_Amount__c;
-        refundView.currencyCode = (String) payment.get(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            refundView.currencyCode = (String) payment.get(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
+        } else {
+            refundView.currencyCode = null;
+        }
         return refundView;
     }
 
@@ -84,7 +88,7 @@ public with sharing class PMT_RefundController {
         npe01__OppPayment__c originalPayment = paymentSelector.getPaymentRecordForRefund(paymentId);
         ensurePaymentIsRefundable(originalPayment, refundView);
 
-        if (!refundView.isSuccess) {
+        if (refundView.isSuccess != null && !refundView.isSuccess) {
             return refundView;
         }
 

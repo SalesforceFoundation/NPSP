@@ -93,7 +93,7 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
 
         } else if (response.isSuccess === true) {
             if (this.recordId === response.redirectToPaymentId) {
-                showToast('', this.labels.refundProcessing + ' {0}', 'info', '', [
+                showToast('', this.labels.refundProcessing + ' {0}', 'success', 'sticky', [
                     {
                         url: '/' + response.redirectToPaymentId,
                         label: this.labels.commonRefreshPage,
@@ -104,7 +104,7 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
             }
 
         } else if (response.isSuccess === false) {
-            showToast(this.labels.refundPaymentErrorMessage, response.errorMessage, 'error');
+            showToast(this.labels.refundPaymentErrorMessage, response.errorMessage, 'error', 'sticky');
         }
         
         this.handleClose();
