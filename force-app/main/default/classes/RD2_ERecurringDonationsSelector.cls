@@ -59,9 +59,10 @@ public inherited sharing class RD2_ERecurringDonationsSelector {
 										npe03__Installment_Period__c,
 										InstallmentFrequency__c,
 										Day_of_Month__c,
-                    Status__c
+										Status__c
 									FROM npe03__Recurring_Donation__c
 									WHERE npe03__Contact__c = :currentContactId
+                  					AND RecurringType__c IN (:RD2_Constants.RECURRING_TYPE_OPEN, :RD2_Constants.RECURRING_TYPE_FIXED) 
 									WITH SECURITY_ENFORCED ];
 		}
 
