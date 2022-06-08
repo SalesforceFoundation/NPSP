@@ -131,7 +131,7 @@ public with sharing class PMT_RefundService_TEST {
             'The amount on the refund record should match the original payment amont but negative');
         System.assertEquals(originalPayment.Id, refundRecord.originalPayment__c,
             'The refund record should map to the original payment record');
-        System.assertEquals(PMT_RefundService.FULL_REFUND, refundRecord.RefundType__c,
+        System.assertEquals(PMT_RefundService.FULL_REFUND, refundRecord.DebitType__c,
             'The original payment refund type should be set to: ' + PMT_RefundService.FULL_REFUND);
         System.assertNotEquals(null, parentOpp, 'The parent opportunity should be proccessed');
         System.assertEquals(0, parentOpp.Amount, 'The opporunity amount should be set to 0 after the refund');
@@ -173,7 +173,7 @@ public with sharing class PMT_RefundService_TEST {
             'The amount on the refund record should match the original payment amont but negative');
         System.assertEquals(originalPayment.Id, refundRecord.originalPayment__c,
             'The refund record should map to the original payment record');
-        System.assertEquals(PMT_RefundService.FULL_REFUND, refundRecord.RefundType__c,
+        System.assertEquals(PMT_RefundService.FULL_REFUND, refundRecord.DebitType__c,
             'The original payment refund type should be set to: ' + PMT_RefundService.FULL_REFUND);
         System.assertNotEquals(null, parentOpp, 'The parent opportunity should be proccessed');
         System.assertEquals(0, parentOpp.Amount, 'The opporunity amount should be set to 0 after the refund');

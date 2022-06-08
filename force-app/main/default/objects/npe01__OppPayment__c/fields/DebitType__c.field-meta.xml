@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>RefundType__c</fullName>
-    <description>Determine if the record is fully or partially refunded</description>
+    <fullName>DebitType__c</fullName>
+    <description>Indicates the type of debit.</description>
     <externalId>false</externalId>
-    <inlineHelpText>Determine if the record is fully or partially refunded</inlineHelpText>
-    <label>Refund Type</label>
+    <inlineHelpText></inlineHelpText>
+    <label>Debit Type</label>
     <required>false</required>
     <trackFeedHistory>false</trackFeedHistory>
     <trackTrending>false</trackTrending>
@@ -21,6 +21,11 @@
                 <fullName>Partial Refund</fullName>
                 <default>false</default>
                 <label>Partial Refund</label>
+            </value>
+            <value>
+                <fullName>Chargeback</fullName>
+                <default>false</default>
+                <label>Chargeback</label>
             </value>
         </valueSetDefinition>
     </valueSet>

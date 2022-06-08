@@ -288,7 +288,7 @@ public class TEST_SObjectGateway {
             'npe01__Opportunity__c',
             'npe01__Opportunity__r.Amount',
             String.valueOf(npe01__OppPayment__c.OriginalPayment__c),
-            String.valueOf(npe01__OppPayment__c.RefundType__c)
+            String.valueOf(npe01__OppPayment__c.DebitType__c)
         };
 
         /***

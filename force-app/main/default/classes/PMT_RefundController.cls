@@ -102,7 +102,7 @@ public with sharing class PMT_RefundController {
     }
 
     private static void ensurePaymentIsRefundable(npe01__OppPayment__c originalPayment, RefundView refundView) {
-        if (originalPayment.RefundType__c == PMT_RefundService.FULL_REFUND || originalPayment.npe01__Payment_Amount__c <= 0) {
+        if (originalPayment.DebitType__c == PMT_RefundService.FULL_REFUND || originalPayment.npe01__Payment_Amount__c <= 0) {
             refundView.isSuccess = false;
             refundView.errorMessage = System.Label.pmtPaymentNotRefundable;
         }
@@ -142,11 +142,9 @@ public with sharing class PMT_RefundController {
     private static Boolean hasRequiredPermission() {
         return UTIL_Permissions.canCreate('npe01__oppPayment__c', false) &&
             UTIL_Permissions.canUpdate('npe01__oppPayment__c', false) &&
-            UTIL_Permissions.canRead('npe01__oppPayment__c', false) &&
-            UTIL_Permissions.canRead('Opportunity', false) &&
             UTIL_Permissions.canUpdate('Opportunity', false) &&
             UTIL_Permissions.canCreate('npe01__oppPayment__c', 'npe01__Payment_Amount__c', false) && 
-            UTIL_Permissions.canCreate('npe01__oppPayment__c', String.valueOf(npe01__oppPayment__c.RefundType__c), false) && 
+            UTIL_Permissions.canCreate('npe01__oppPayment__c', String.valueOf(npe01__oppPayment__c.DebitType__c), false) && 
             UTIL_Permissions.canCreate('npe01__oppPayment__c', String.valueOf(npe01__oppPayment__c.OriginalPayment__c), false);
     }
 

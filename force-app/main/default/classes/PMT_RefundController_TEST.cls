@@ -148,7 +148,9 @@ public with sharing class PMT_RefundController_TEST {
         );
 
         PaymentSelector_TEST.Stub selectorStub = new PaymentSelector_TEST.Stub();
-        selectorStub.paymentRecords = new List<npe01__OppPayment__c>{ getPaymentRecord() };
+        npe01__OppPayment__c refund = getRefundRecord();
+
+        selectorStub.paymentRecords = new List<npe01__OppPayment__c>{ refund };
 
         PMT_RefundController.paymentSelector = (PaymentSelector) Test.createStub(
             PaymentSelector.class,
@@ -168,13 +170,9 @@ public with sharing class PMT_RefundController_TEST {
     }
 
     private static npe01__OppPayment__c getElevatePaymentRecord() {
-        return new npe01__OppPayment__c(
-            Id = UTIL_UnitTestData_TEST.mockId(npe01__OppPayment__c.SObjectType),
-            npe01__Paid__c = true,
-            npe01__Payment_Amount__c = 250,
-            npe01__Opportunity__c = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType),
-            Elevate_Payment_ID__c = 'random-id'
-        );
+        npe01__OppPayment__c payment = getPaymentRecord();
+        payment.Elevate_Payment_ID__c = 'random-Id';
+        return payment;
     }
 
     private static npe01__OppPayment__c getPaymentRecord() {
@@ -182,6 +180,15 @@ public with sharing class PMT_RefundController_TEST {
             Id = UTIL_UnitTestData_TEST.mockId(npe01__OppPayment__c.SObjectType),
             npe01__Paid__c = true,
             npe01__Payment_Amount__c = 250,
+            npe01__Opportunity__c = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType)
+        );
+    }
+
+    private static npe01__OppPayment__c getRefundRecord() {
+        return new npe01__OppPayment__c(
+            Id = UTIL_UnitTestData_TEST.mockId(npe01__OppPayment__c.SObjectType),
+            npe01__Payment_Amount__c = -250,
+            DebitType__c = PMT_RefundService.FULL_REFUND,
             npe01__Opportunity__c = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType)
         );
     }

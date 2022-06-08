@@ -188,7 +188,7 @@ public inherited sharing class PMT_RefundService {
             npe01__Payment_Amount__c = -1 * originalPayment.npe01__Payment_Amount__c,
             npe01__Opportunity__c = originalPayment.npe01__Opportunity__c,
             originalPayment__c = originalPayment.Id,
-            RefundType__c = PMT_RefundService.FULL_REFUND
+            DebitType__c = PMT_RefundService.FULL_REFUND
         );
         
         if (isMultiCurrencyEnabled) {
@@ -218,7 +218,7 @@ public inherited sharing class PMT_RefundService {
     }
 
     private void updateOriginalPayment(npe01__OppPayment__c originalPayment) {
-        originalPayment.RefundType__c = FULL_REFUND;
+        originalPayment.DebitType__c = FULL_REFUND;
     }
 
     private HttpRequest buildRefundRequest(String transactionId) {
