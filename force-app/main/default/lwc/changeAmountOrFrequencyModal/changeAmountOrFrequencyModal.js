@@ -9,6 +9,7 @@ const TAB_KEY_CODE = 9;
 const TAB_KEY_STRING = "Tab";
 export default class ChangeAmountOrFrequencyModal extends LightningElement {
     @api openChangeAmountOrFrequency;
+    @api currentRecord;
 
     labels = {
         changeAmountOrFrequency,
