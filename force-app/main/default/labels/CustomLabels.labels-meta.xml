@@ -8,6 +8,30 @@
         <value>You must provide an Auth ID.</value>
     </labels>
     <labels>
+        <fullName>changeAmountOrFrequency</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for change amount and frequency Recurring Donations Action</shortDescription>
+        <value>Change Amount or Frequency</value>
+    </labels>
+    <labels>
+        <fullName>installmentPeriod</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for installment frequency for Recurring Donations Action</shortDescription>
+        <value>Installment Period</value>
+    </labels>
+    <labels>
+        <fullName>recurringDonationSchedule</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for modal title for Recurring Donation table actions</shortDescription>
+        <value>Recurring Donation Schedule</value>
+    </labels>
+    <labels>
         <fullName>Addr_No_Batch</fullName>
         <categories>address, error</categories>
         <language>en_US</language>

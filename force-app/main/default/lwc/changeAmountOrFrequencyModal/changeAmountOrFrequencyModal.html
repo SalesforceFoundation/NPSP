@@ -11,8 +11,29 @@
           <div class="slds-modal__header">
             <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">{labels.changeAmountOrFrequency}</h1>
           </div>
-          <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-            
+          <div class="slds-modal__content slds-grid slds-wrap slds-p-around_medium" id="modal-content-id-1">
+            <h2 class="slds-size_1-of-1 slds-text-heading_small">{labels.recurringDonationSchedule}</h2>
+            <div class="slds-p-around_x-small slds-col slds-size_1-of-1 slds-large-size_1-of-3 slds-form-element">
+                <label class="slds-form-element__label" for="rd-amount">
+                  <abbr class="slds-required" ></abbr>{labels.commonAmount}</label>
+                <div class="slds-form-element__control">
+                  <input type="text" id="rd-amount" value={currentRecord.recurringDonation.npe03__Amount__c} required="" class="slds-input" />
+                </div>
+            </div>
+            <div class="slds-p-around_x-small slds-col slds-size_1-of-1 slds-large-size_1-of-3 slds-form-element">
+                <label class="slds-form-element__label" for="rd-installment_frequency">
+                  <abbr class="slds-required" ></abbr>{labels.every}</label>
+                <div class="slds-form-element__control">
+                  <input type="text" id="rd-installment_frequency" value={currentRecord.recurringDonation.InstallmentFrequency__c} required="" class="slds-input" />
+                </div>
+            </div>
+            <div class="slds-p-around_x-small slds-col slds-size_1-of-1 slds-large-size_1-of-3 slds-form-element">
+                <label class="slds-form-element__label" for="rd-installment_period">
+                  <abbr class="slds-required" ></abbr>{labels.installmentPeriod}</label>
+                <div class="slds-form-element__control">
+                  <input type="text" id="rd-installment_period" value={currentRecord.recurringDonation.npe03__Installment_Period__c} required="" class="slds-input" />
+                </div>
+            </div>
           </div>
           <div class="slds-modal__footer">
             <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick={closeModal}>Cancel</button>
