@@ -33,7 +33,7 @@
 * @group Payment
 * @description Payment Refund Service
 */
-public with sharing class PMT_RefundService {
+public inherited sharing class PMT_RefundService {
     public static final String FULL_REFUND = 'Refund';
 
     private Boolean isMultiCurrencyEnabled {
@@ -57,7 +57,7 @@ public with sharing class PMT_RefundService {
     }
 
     @TestVisible
-    private static PaymentSelector paymentSelector {
+    private PaymentSelector paymentSelector {
         get {
             if (paymentSelector == null) {
                 paymentSelector = new PaymentSelector();
@@ -94,7 +94,7 @@ public with sharing class PMT_RefundService {
 
     private List<npe01__OppPayment__c> refundRecords;
     @TestVisible
-    private List<Opportunity> opportunities;
+    private Map<Id, Opportunity> opportunityMap;
     private ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
 
     @TestVisible
@@ -110,11 +110,6 @@ public with sharing class PMT_RefundService {
 
     public static Boolean isElevateEnabled() {
         return config.isIntegrationEnabled();
-    }
-
-    public PMT_RefundService withOriginalPaymentIds(Set<Id> originalPaymentIds) {
-        this.originalPaymentIds = originalPaymentIds;
-        return this;
     }
 
     public PMT_RefundService withOriginalPayments(List<npe01__OppPayment__c> originalPayments) {
@@ -149,7 +144,7 @@ public with sharing class PMT_RefundService {
         return response;
     }
 
-    public void processRefunds() {
+    public void processNonElevateRefunds() {
         Boolean shouldBuildRefundRecord = this.refundRecords == null;
  
         for (npe01__OppPayment__c originalPayment : this.originalPayments) {
@@ -157,7 +152,6 @@ public with sharing class PMT_RefundService {
                 buildRefundRecord(originalPayment);
             }
             updateParentOpportunity(originalPayment);
-            updateOriginalPayment(originalPayment);
         }
     }
 
@@ -165,21 +159,15 @@ public with sharing class PMT_RefundService {
         Savepoint sp = Database.setSavepoint();
         List<Database.SaveResult> refundRecordSaveResults = new List<Database.SaveResult>();
         List<Database.SaveResult> opportunitySaveResults = new List<Database.SaveResult>();
-        List<Database.SaveResult> originalPaymentSaveResults = new List<Database.SaveResult>();
 
         if (!this.refundRecords.isEmpty()) {
             refundRecordSaveResults = Database.insert(this.refundRecords, false);
             processError(refundRecordSaveResults, this.refundRecords);
         }
 
-        if (!this.opportunities.isEmpty()) {
-            opportunitySaveResults = Database.update(this.opportunities, false);
-            processError(opportunitySaveResults, this.opportunities);
-        }
-
-        if (!this.originalPayments.isEmpty()) {
-            originalPaymentSaveResults = Database.update(this.originalPayments, false);
-            processError(originalPaymentSaveResults, this.originalPayments);
+        if (!this.opportunityMap.isEmpty()) {
+            opportunitySaveResults = Database.update(this.opportunityMap.values(), false);
+            processError(opportunitySaveResults, this.opportunityMap.values());
         }
 
         if (this.errorResult != null && !this.errorResult.errorRecords.isEmpty()) {
@@ -206,7 +194,8 @@ public with sharing class PMT_RefundService {
         npe01__OppPayment__c refund = new npe01__OppPayment__c(
             npe01__Payment_Amount__c = -1 * originalPayment.npe01__Payment_Amount__c,
             npe01__Opportunity__c = originalPayment.npe01__Opportunity__c,
-            originalPayment__c = originalPayment.Id
+            originalPayment__c = originalPayment.Id,
+            RefundType__c = PMT_RefundService.FULL_REFUND
         );
         
         if (isMultiCurrencyEnabled) {
@@ -220,15 +209,20 @@ public with sharing class PMT_RefundService {
     }
 
     private void updateParentOpportunity(npe01__OppPayment__c originalPayment) {
-        if (this.opportunities == null) {
-            this.opportunities = new List<Opportunity>();
+        if (this.opportunityMap == null) {
+            this.opportunityMap = new Map<Id,Opportunity>();
         }
-        this.opportunities.add(
-            new Opportunity(
+        Opportunity opportunity = this.opportunityMap.get(originalPayment.npe01__Opportunity__c);
+        //System.assert(false, opportunity + originalPayment);
+        if (opportunity == null) {
+            opportunity = new Opportunity(
                 Id = originalPayment.npe01__Opportunity__c,
-                Amount = originalPayment.npe01__Opportunity__r.Amount - originalPayment.npe01__Payment_Amount__c
-            )
-        );
+                Amount = originalPayment.npe01__Opportunity__r.Amount
+            );
+        }
+        opportunity.Amount = opportunity.Amount - originalPayment.npe01__Payment_Amount__c;
+
+        this.opportunityMap.put(opportunity.Id, opportunity);
     }
 
     private void updateOriginalPayment(npe01__OppPayment__c originalPayment) {
