@@ -156,23 +156,26 @@ public inherited sharing class PMT_RefundService {
     }
 
     public void processDML() {
-        Savepoint sp = Database.setSavepoint();
         List<Database.SaveResult> refundRecordSaveResults = new List<Database.SaveResult>();
         List<Database.SaveResult> opportunitySaveResults = new List<Database.SaveResult>();
 
         if (!this.refundRecords.isEmpty()) {
             refundRecordSaveResults = Database.insert(this.refundRecords, false);
-            processError(refundRecordSaveResults, this.refundRecords);
+        }
+
+        for (Integer i = 0; i < refundRecordSaveResults.size(); i++) {
+            if (!refundRecordSaveResults[i].isSuccess()) {
+                this.opportunityMap.remove(this.refundRecords[i].npe01__Opportunity__c);
+            }
         }
 
         if (!this.opportunityMap.isEmpty()) {
             opportunitySaveResults = Database.update(this.opportunityMap.values(), false);
-            processError(opportunitySaveResults, this.opportunityMap.values());
+           
         }
 
-        if (this.errorResult != null && !this.errorResult.errorRecords.isEmpty()) {
-            Database.rollback(sp);
-        }
+        processError(refundRecordSaveResults, this.refundRecords);
+        processError(opportunitySaveResults, this.opportunityMap.values());
     }
 
 
