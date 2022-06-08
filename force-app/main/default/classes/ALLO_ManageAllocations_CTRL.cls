@@ -151,7 +151,12 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
     public ALLO_ManageAllocations_CTRL(ApexPages.StandardSetController ssc) {
         parentId = ApexPages.currentPage().getParameters().get('id');
-        hasAccess = canUserRead(parentId.getSobjectType());
+        UTIL_Permissions permissions = UTIL_Permissions.getInstance();
+
+        hasAccess = canUserRead(parentId.getSobjectType())
+            && permissions.canCreate(Allocation__c.SObjectType)
+            && permissions.canUpdate(Allocation__c.SObjectType)
+            && permissions.canDelete(Allocation__c.SObjectType);
 
         if (hasAccess && isSupportedObject()) {
             parent = new AllocationParent(parentId);
