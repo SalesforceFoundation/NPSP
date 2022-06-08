@@ -129,7 +129,7 @@ public with sharing class RD2_ETableController {
         }
 
         return recurringDonations;
-        
+      
     }
 
     /** 
@@ -192,7 +192,7 @@ public with sharing class RD2_ETableController {
     * @author Salesforce.org
     * @date 2022
     * @description process Recurring Donaion record to build the status string.
-    * @param recurringDonation recurring dontation record
+    * @param recurringDonation recurring donation record
     * @return String returns the Status string.
     */
     private String getStatus(npe03__Recurring_Donation__c recurringDonation) {
@@ -248,7 +248,7 @@ public with sharing class RD2_ETableController {
     * @return Boolean returns access to Recurring Donations.
     */
     private Boolean hasAccessToRecurringDonation() {
-        
+
         Set<SObjectField> fields = new Set<SObjectField>{
             npe03__Recurring_Donation__c.npe03__Amount__c,
             npe03__Recurring_Donation__c.npe03__Installment_Period__c,
