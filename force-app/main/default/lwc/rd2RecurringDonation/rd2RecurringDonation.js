@@ -27,6 +27,9 @@ const MOBILE_CLASSES_ROW = 'slds-truncate dv-dynamic-width dv-dynamic-mobile';
 const DESKTOP_CLASSES_ROW = 'slds-truncate dv-dynamic-width';
 const MOBILE_CLASSES_HEAD = 'slds-is-resizable dv-dynamic-width dv-dynamic-mobile';
 const DESKTOP_CLASSES_HEAD = 'slds-is-resizable dv-dynamic-width';
+const MOBILE_VIEW_MORE = 'viewMore';
+const DESKTOP_VIEW_MORE = 'slds-hide';
+
 export default class RecurringDonationTable extends LightningElement {
     @api
     donationTypeFilter = 'Show all Recurring Donations';
@@ -96,6 +99,16 @@ export default class RecurringDonationTable extends LightningElement {
           return MOBILE_CLASSES_ROW;
       }
       return DESKTOP_CLASSES_ROW;
+    }
+
+    /**
+     * @description Returns the classes to be applied to the rows according if it is mobile or desktop
+     */
+     get viewMore() {
+      if (this.isMobile) {
+          return MOBILE_VIEW_MORE;
+      }
+      return DESKTOP_VIEW_MORE;
     }
 
     /**
