@@ -122,7 +122,7 @@ public with sharing class PMT_RefundController {
 
     private static void processNonElevateRefund(npe01__OppPayment__c originalPayment, RefundView refundView) {
         refundService.withOriginalPayments(new List<npe01__OppPayment__c>{originalPayment});
-        refundService.processRefunds();
+        refundService.processNonElevateRefunds();
         refundService.processDML();
 
         ERR_Handler.Errors errors = refundService.getErrors();
