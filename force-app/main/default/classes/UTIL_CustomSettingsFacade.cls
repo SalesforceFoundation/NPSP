@@ -644,9 +644,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             settings.IsRecurringDonations2Enabled__c = false;
             settings.UseFiscalYearForRecurringDonationValue__c = false;
             settings.EnableChangeLog__c = false;
-
-            settings.Enable_Opportunity_Batch_Filter__c = false;
-            settings.Batch_Filter_Date_Range__c = 30;
+            settings.Enable_Opportunity_Batch_Filter__c = true;
 
             List<RecordType> oppRecordTypes = [SELECT Id FROM RecordType WHERE SObjectType = 'Opportunity' AND IsActive = true];
             if (oppRecordTypes.size() > 0) {
@@ -918,7 +916,6 @@ public without sharing class UTIL_CustomSettingsFacade {
         recurringDonationsSettings.StatusAutomationDaysForClosed__c = settings.StatusAutomationDaysForClosed__c;
         recurringDonationsSettings.StatusAutomationLapsedValue__c = settings.StatusAutomationLapsedValue__c;
         recurringDonationsSettings.StatusAutomationClosedValue__c = settings.StatusAutomationClosedValue__c;
-        recurringDonationsSettings.Batch_Filter_Date_Range__c = settings.Batch_Filter_Date_Range__c;
         recurringDonationsSettings.Enable_Opportunity_Batch_Filter__c = settings.Enable_Opportunity_Batch_Filter__c;
 
         orgRecurringDonationsSettings = recurringDonationsSettings;
@@ -1011,6 +1008,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         crs.Disable_Related_Records_Filter__c = false;
         crs.AccountHardCreditNonSkew_Incremental__c = true;
         crs.ContactHardCreditNonSkew_Incremental__c = true;
+        crs.RecurringDonationNonSkew_Incremental__c = true;
     }
 
     /*******************************************************************************************************
@@ -1040,6 +1038,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         customizableRollupSettings.CMT_API_Status__c = mySettings.CMT_API_Status__c;
         customizableRollupSettings.AccountHardCreditNonSkew_Incremental__c = mySettings.AccountHardCreditNonSkew_Incremental__c;
         customizableRollupSettings.ContactHardCreditNonSkew_Incremental__c = mySettings.ContactHardCreditNonSkew_Incremental__c;
+        customizableRollupSettings.RecurringDonationNonSkew_Incremental__c = mySettings.RecurringDonationNonSkew_Incremental__c;
         customizableRollupSettings.Rollups_IncrementalLastNDays_FldOverride__c = mySettings.Rollups_IncrementalLastNDays_FldOverride__c;
         customizableRollupSettings.Rollups_IncrementalLastNDays_ValOverride__c = mySettings.Rollups_IncrementalLastNDays_ValOverride__c;
 

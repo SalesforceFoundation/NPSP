@@ -195,7 +195,10 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
 
         String query = getRDBatchQuery();
 
-        if (isConcurrentBatch) {
+        System.debug(query); 
+        System.debug(isConcurrentBatch); 
+
+        if (isConcurrentBatch) {    
             new UTIL_BatchJobService().logConcurrentBatchError(batchClassName, ERR_Handler_API.Context.RD);
             query += ' LIMIT 0';
         }    
@@ -230,13 +233,8 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     private String getRDBatchQuery() {
         Boolean rdBatchFilterOn = getOpportunityModifiedFilterEnabled();
         String rdFilterWhereClause;
-        String whereClauseDateField = Test.isRunningTest() ? 'CloseDate' : lastModifiedDateField;
         if (rdBatchFilterOn) {
-            Integer dateRange = getOpportunityModifiedDateRange();
-            Date earliestModifiedDate = currentDate.addDays(-dateRange);
-            rdFilterWhereClause = 'Id IN (SELECT npe03__Recurring_Donation__c ' 
-                + 'FROM Opportunity ' 
-                + 'WHERE ' + whereClauseDateField + ' >= ' + getDateForSoql(earliestModifiedDate) + ')';
+            rdFilterWhereClause = 'Status__c != ' + RD2_Constants.STATUS_CLOSED;
         }
 
         return new UTIL_Query()
@@ -286,17 +284,8 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
         return configValue.intValue();
     }
 
-    private Integer getOpportunityModifiedDateRange() {
-        Integer dateRange = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Batch_Filter_Date_Range__c.intValue();
-        if (dateRange == null) {
-            dateRange = 30;
-        }
-        return dateRange;
-    }
-
     private Boolean getOpportunityModifiedFilterEnabled() {
-        Boolean filterEnabled = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Enable_Opportunity_Batch_Filter__c;
-        return filterEnabled;
+        return UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Enable_Opportunity_Batch_Filter__c;
     }
 
     private String getDateForSoql(Date soqlDate) {

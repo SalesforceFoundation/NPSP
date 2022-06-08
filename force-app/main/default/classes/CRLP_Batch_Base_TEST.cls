@@ -36,6 +36,8 @@
 @IsTest(isParallel=true)
 private class CRLP_Batch_Base_TEST {
 
+    private static final Integer rdLastNDaysValue = 15;
+
     /******************************** Incremental Mode Tests *****************************/
 
     @isTest
@@ -297,12 +299,10 @@ private class CRLP_Batch_Base_TEST {
         CRLP_RollupProcessingOptions.RollupType jobType =
                 CRLP_RollupProcessingOptions.RollupType.RecurringDonations;
         String userDefinedLastNDaysFieldOverride = 'LastModifiedDate';
-        Integer userDefinedLastNDaysValueOverride = 20;
-        Integer oppFilterDateRange = RD2_OpportunityEvaluation_TEST.OPP_FILTER_DATE_RANGE;
         configureIncrementalFieldOverrides(
                 jobType,
                 userDefinedLastNDaysFieldOverride,
-                userDefinedLastNDaysValueOverride);
+                null);
 
         CRLP_RollupProcessingOptions.RollupTypeFilter typeFilter =
                 CRLP_RollupProcessingOptions.RollupTypeFilter.All;
@@ -321,8 +321,8 @@ private class CRLP_Batch_Base_TEST {
         System.assert(generatedWhereClause.contains('FROM'));
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
-        System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + oppFilterDateRange), 
-                'Where clause should use Opp Date Range Setting, not Rollup Override value: ' + oppFilterDateRange);
+        System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + rdLastNDaysValue), 
+                'Where clause should use RD N Days Ago: ' + rdLastNDaysValue);
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
                 'The outer query should not contain "ORDER BY" or "LIMIT".');
     }
@@ -731,8 +731,10 @@ private class CRLP_Batch_Base_TEST {
                 settings.ContactHardCreditNonSkew_Incremental__c = isIncrementalMode;
                 CRLP_RollupContact_TEST.mockRollupCMTValues();
             }
-            when RecurringDonations {
-                RD2_OpportunityEvaluation_TEST.configureRecurringDonationsOppFilter();
+            when RecurringDonations {            
+                settings.RecurringDonationNonSkew_Incremental__c = isIncrementalMode;
+                settings.Recurring_Donation_Last_N_Days__c = rdLastNDaysValue;
+                CMT_UnitTestData_TEST.mockRecurringDonationRollupCMTValues();
             }
         }
         return settings;

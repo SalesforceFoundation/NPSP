@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Enable_Opportunity_Batch_Filter__c</fullName>
-    <defaultValue>false</defaultValue>
-    <description>When checked, Recurring Donation nightly batch jobs limit the number of Donations selected for recalculation by looking for recently updated Opportunities on those Recurring Donations. This helps to improve nightly job performance.</description>
+    <defaultValue>true</defaultValue>
+    <description>When checked, the Recurring Donation Opportunity Evaluation batch job limits the number of Donations selected for recalculation by only including Active or Paused Recurring Donations. This helps to improve nightly job performance.</description>
     <externalId>false</externalId>
-    <inlineHelpText>When checked, Recurring Donation nightly batch jobs limit the number of Donations selected for recalculation by looking for recently updated Opportunities on those Recurring Donations. This helps to improve nightly job performance.</inlineHelpText>
-    <label>Enable Opportunity Modified Batch Filter</label>
+    <inlineHelpText>When checked, the Recurring Donation Opportunity Evaluation batch job limits the number of Donations selected for recalculation by only including Active or Paused Recurring Donations. This helps to improve nightly job performance.</inlineHelpText>
+    <label>Enable Opportunity Batch Filter</label>
     <trackTrending>false</trackTrending>
     <type>Checkbox</type>
 </CustomField>

@@ -92,22 +92,6 @@ public abstract class CRLP_Batch_Base {
         private set;
     }
 
-    /** @description Whether Recurring Donation Batch filtering is enabled */
-    protected Boolean isRdBatchFilterEnabled {
-        get {
-            return isRdBatchFilterEnabled;
-        }
-        private set;
-    }
-
-    /** @description When filtering, the number of days since being modified to include */
-    protected Integer rdBatchFilterDateRange {
-        get {
-            return rdBatchFilterDateRange;
-        }
-        private set;
-    }
-
     /** @description The customizable rollup custom settings */
     protected Customizable_Rollup_Settings__c customizableRollupSettings;
 
@@ -156,9 +140,6 @@ public abstract class CRLP_Batch_Base {
         this.statefulCacheOfRollupsToBeProcessed = CRLP_Rollup_SEL.getRollupDefinitionsToUse(this.jobType, this.jobFilter);
         this.isScheduledJob = System.isScheduled();
         this.customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-        this.isRdBatchFilterEnabled = (this.jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) 
-            && UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Enable_Opportunity_Batch_Filter__c;
-        this.rdBatchFilterDateRange = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Batch_Filter_Date_Range__c.intValue();
 
         this.detailObjectType = CRLP_Rollup_SVC.getDetailObjectType(jobType);
         this.keyField = CRLP_Rollup_SVC.getParentFieldNameForQuery(jobType);
@@ -504,7 +485,7 @@ public abstract class CRLP_Batch_Base {
                             return base.customizableRollupSettings.ContactHardCreditNonSkew_Incremental__c;
                         }
                         when RecurringDonations {
-                            return base.isRdBatchFilterEnabled;
+                            return base.customizableRollupSettings.RecurringDonationNonSkew_Incremental__c;
                         }
                         when else {
                             return false;
@@ -524,8 +505,8 @@ public abstract class CRLP_Batch_Base {
         Integer maxDaysAgo {
             get {
                 if (maxDaysAgo == null) {
-                    if (base.isRdBatchFilterEnabled) {
-                        maxDaysAgo = base.rdBatchFilterDateRange;
+                    if (base.customizableRollupSettings.RecurringDonationNonSkew_Incremental__c) {
+                        maxDaysAgo = (Integer) base.customizableRollupSettings.Recurring_Donation_Last_N_Days__c;
                     } else {
                         maxDaysAgo = getMaxIntegerValueFromRollupsForType(CRLP_Operation.TimeBoundOperationType.Days_Back);
                     }
@@ -586,9 +567,7 @@ public abstract class CRLP_Batch_Base {
         Integer overrideForLastNDaysValue {
             get {
                 if (overrideForLastNDaysValue == null) {
-                    if (base.isRdBatchFilterEnabled) {
-                        overrideForLastNDaysValue = base.rdBatchFilterDateRange;
-                    } else if (base.customizableRollupSettings.Rollups_IncrementalLastNDays_ValOverride__c != null) {
+                    if (base.customizableRollupSettings.Rollups_IncrementalLastNDays_ValOverride__c != null) {
                         overrideForLastNDaysValue = (Integer) base.customizableRollupSettings.Rollups_IncrementalLastNDays_ValOverride__c;
                     }
                 }
