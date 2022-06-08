@@ -68,6 +68,7 @@ public inherited sharing class RD2_ERecurringDonationsSelector {
                     ACH_Last_4__c
 									FROM npe03__Recurring_Donation__c
 									WHERE npe03__Contact__c = :currentContactId
+                  					AND RecurringType__c IN (:RD2_Constants.RECURRING_TYPE_OPEN, :RD2_Constants.RECURRING_TYPE_FIXED) 
 									WITH SECURITY_ENFORCED ];
 		}
 
