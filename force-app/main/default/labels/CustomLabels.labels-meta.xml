@@ -15721,4 +15721,44 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <shortDescription>Label to define aria-label on donation history datatable</shortDescription>
         <value>Donation History</value>
     </labels>
+    <labels>
+        <fullName>updatePaymentMethod</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for update payment method option on Recurring Donations Action</shortDescription>
+        <value>Update Payment Method</value>
+    </labels>
+    <labels>
+        <fullName>changeAmountOrFrequency</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for change amount and frequency Recurring Donations Action</shortDescription>
+        <value>Change Amount or Frequency</value>
+    </labels>
+    <labels>
+        <fullName>stopRecurringDonation</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Stop Recurring Donation Recurring Donations Action</shortDescription>
+        <value>Stop Recurring Donation</value>
+    </labels>
+    <labels>
+        <fullName>stopRecurringDonationModalTitle</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Stop Recurring Donation Recurring Donations Action</shortDescription>
+        <value>Stop this Recurring Donation?</value>
+    </labels>
+    <labels>
+        <fullName>updateRecurringDonation</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for modifications on Recurring Donations</shortDescription>
+        <value>Update Recurring Donation</value>
+    </labels>
 </CustomLabels>
