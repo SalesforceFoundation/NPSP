@@ -156,37 +156,27 @@ public inherited sharing class PMT_RefundService {
     }
 
     public void processDML() {
-        List<Database.SaveResult> refundRecordSaveResults = new List<Database.SaveResult>();
-        List<Database.SaveResult> opportunitySaveResults = new List<Database.SaveResult>();
-
-        if (!this.refundRecords.isEmpty()) {
-            refundRecordSaveResults = Database.insert(this.refundRecords, false);
-        }
-
-        for (Integer i = 0; i < refundRecordSaveResults.size(); i++) {
-            if (!refundRecordSaveResults[i].isSuccess()) {
-                this.opportunityMap.remove(this.refundRecords[i].npe01__Opportunity__c);
+        Savepoint sp = Database.setSavepoint();
+        try {
+            if (!this.refundRecords.isEmpty()) {
+                insert this.refundRecords;
             }
+            
+            if (!this.opportunityMap.isEmpty()) {
+                update this.opportunityMap.values();
+            }
+        } catch (DmlException ex) {
+            processError(ex);
+            Database.rollback(sp);
         }
-
-        if (!this.opportunityMap.isEmpty()) {
-            opportunitySaveResults = Database.update(this.opportunityMap.values(), false);
-           
-        }
-
-        processError(refundRecordSaveResults, this.refundRecords);
-        processError(opportunitySaveResults, this.opportunityMap.values());
     }
 
 
-    private void processError(List<Database.SaveResult> saveResults, List<SObject> records) {
-        if (records == null || records.isEmpty()) {
+    private void processError(DMLException ex) {
+        if (ex == null) {
             return;
         }
-        ERR_Handler.Errors dmlErrors = ERR_Handler.getErrorsOnly(saveResults, records);
-        if (dmlErrors.errorRecords.isEmpty()) {
-            return;
-        }
+        ERR_Handler.Errors dmlErrors = ERR_Handler.getErrorsOnly(ex, ERR_Handler_API.Context.PMT);
 
         errorResult.errorRecords.addAll(
             dmlErrors.errorRecords

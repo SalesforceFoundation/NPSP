@@ -128,7 +128,7 @@ public with sharing class PMT_RefundController {
         ERR_Handler.Errors errors = refundService.getErrors();
         if (!errors.errorRecords.isEmpty()) {
             refundView.isSuccess = false;
-            refundVIew.errorMessage = errors.errorRecords[0].Full_Message__c;
+            refundView.errorMessage = errors.errorRecords[0].Full_Message__c;
         } else {
             refundView.redirectToPaymentId = refundService.getRefundRecords()[0].Id;
             refundView.isSuccess = true;
