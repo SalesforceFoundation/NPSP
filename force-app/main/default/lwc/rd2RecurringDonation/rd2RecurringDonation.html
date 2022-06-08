@@ -111,7 +111,7 @@
             </thead>
             <tbody>
                 <template for:each={data} for:item="recurringDonation">
-                    <tr key={recurringDonation.id} aria-selected="false" class="slds-hint-parent" scope="row">
+                    <tr key={recurringDonation.Id} aria-selected="false" class="slds-hint-parent" scope="row">
                         <td key={recurringDonation.amount} data-label={labels.commonAmount}>
                             <div class={rowClasses} style={fixedWidth} title={labels.commonAmount}>
                                 <lightning-formatted-number value={recurringDonation.npe03__Amount__c} format-style="currency"

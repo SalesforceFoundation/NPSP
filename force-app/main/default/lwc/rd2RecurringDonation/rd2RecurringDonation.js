@@ -74,13 +74,10 @@ export default class RecurringDonationTable extends LightningElement {
     }
 
     connectedCallback() {
+      this.getRecurringDonationFields();
       if(!this.isMobile){
         this.tdClasses = '';
       }
-      this.data.forEach(element => {
-        element.nexDonationFormatFirstElement = element.nextDonation.split('.')[0] || element.nextDonation;
-        element.nexDonationFormatSecondElement = element.nextDonation.split('.')[1] || '';
-      });
     }
   
     /**
@@ -277,6 +274,12 @@ export default class RecurringDonationTable extends LightningElement {
             if (data) {
               console.log(JSON.stringify(data));
                 this.data = data.map((d) => { return {...d.recurringDonation, frequency: d.frequency, status: d.status}});
+                this.data.forEach(element => {
+                  if(element.nextDonation){
+                    element.nexDonationFormatFirstElement = element.nextDonation.split('.')[0] || element.nextDonation;
+                    element.nexDonationFormatSecondElement = element.nextDonation.split('.')[1] || '';
+                  }
+                });
             }
         });
     }
