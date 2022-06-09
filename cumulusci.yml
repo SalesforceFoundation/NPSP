@@ -1672,6 +1672,7 @@ flows:
                             "force-app/main/default/featureParameters/P10_Application_Date.featureParameterDate-meta.xml"]
 
     robot_stable_no_rd2:
+        description: Runs all stable robot tests except those tagged "feature:RD2"
         steps:
             1:
                 task: robot
@@ -1680,6 +1681,7 @@ flows:
                     exclude: unstable,deprecated,feature:RD2
 
     robot_stable_rd2:
+        description: Runs stable robot tests tagged "feature:RD2"
         steps:
             1:
                 task: robot
@@ -1689,6 +1691,7 @@ flows:
                     include: feature:RD2
 
     robot_stable_all:
+        description: Runs all stable robot tests except those tagged "feature:RD2", then enables RD2 and runs those tagged "feature:RD2"
         steps:
             1:
                 task: robot
