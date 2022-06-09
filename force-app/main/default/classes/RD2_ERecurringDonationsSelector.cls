@@ -59,7 +59,7 @@ public inherited sharing class RD2_ERecurringDonationsSelector {
 										npe03__Installment_Period__c,
 										InstallmentFrequency__c,
 										Day_of_Month__c,
-                    Status__c,
+										Status__c,
                     CommitmentId__c,
                     PaymentMethod__c,
                     CardLast4__c,
