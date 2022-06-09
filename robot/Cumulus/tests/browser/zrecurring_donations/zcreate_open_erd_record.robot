@@ -41,7 +41,6 @@ Create Open Recurring Donation With Monthly Installment
 
 
     [tags]                                 W-040346     feature:RD2     unstable
-un`
     Go To Page                             Listing                                   npe03__Recurring_Donation__c
     Reload Page
     Click Link                             New

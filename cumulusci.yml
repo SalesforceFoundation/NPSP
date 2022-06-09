@@ -1671,6 +1671,56 @@ flows:
                     path: ["force-app/main/default/featureParameters/Data_CountGERowsLast30DaysBatch.featureParameterInteger-meta.xml",
                             "force-app/main/default/featureParameters/P10_Application_Date.featureParameterDate-meta.xml"]
 
+    robot_stable_no_rd2:
+        steps:
+            1:
+                task: robot
+                options:
+                    vars: 'BROWSER:headlesschrome,TIMEOUT:180.0'
+                    exclude: unstable,deprecated,feature:RD2
+
+    robot_stable_rd2:
+        steps:
+            1:
+                task: robot
+                options:
+                    vars: 'BROWSER:headlesschrome,TIMEOUT:180.0'
+                    exclude: unstable,deprecated
+                    include: feature:RD2
+
+    robot_stable_all:
+        steps:
+            1:
+                task: robot
+                ignore_failure: true
+                options:
+                    vars: 'BROWSER:headlesschrome,TIMEOUT:180.0'
+                    exclude: unstable,deprecated,feature:RD2
+                    options:
+                        outputdir: robot/Cumulus/results
+                        output: output1.xml
+                        log: log1.html
+                        report: report1.html
+            2:
+                flow: enable_rd2
+            3:
+                task: robot
+                ignore_failure: true
+                options:
+                    vars: 'BROWSER:headlesschrome,TIMEOUT:180.0'
+                    exclude: unstable,deprecated
+                    include: feature:RD2
+                    options:
+                        outputdir: robot/Cumulus/results
+                        output: output2.xml
+                        log: log2.html
+                        report: report2.html
+            4:
+                task: command
+                ignore_failure: true
+                options:
+                    command: python3 -m robot.rebot --outputdir robot/Cumulus/results --output output.xml robot/Cumulus/results/output1.xml robot/Cumulus/results/output2.xml
+
 orgs:
     scratch:
         dev_multicurrency:
