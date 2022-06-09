@@ -59,7 +59,6 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
         })
         .catch((error) => {
             this.displayErrorMessage(constructErrorMessage(error).detail);
-            this.isLoading = false;
         });
     }
 
@@ -78,7 +77,6 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
         })
         .catch((error) => {
             this.displayErrorMessage(constructErrorMessage(error).detail);
-            this.isLoading = false;
         });
     }
 
@@ -123,5 +121,6 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
     displayErrorMessage(errorMessage) {
         this.hasError = true;
         this.errorMessage = errorMessage;
+        this.isLoading = false;
     }
 }

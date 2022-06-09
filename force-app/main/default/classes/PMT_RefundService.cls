@@ -217,10 +217,6 @@ public inherited sharing class PMT_RefundService {
         this.opportunityMap.put(opportunity.Id, opportunity);
     }
 
-    private void updateOriginalPayment(npe01__OppPayment__c originalPayment) {
-        originalPayment.DebitType__c = FULL_REFUND;
-    }
-
     private HttpRequest buildRefundRequest(String transactionId) {
         RequestBody reqBody = new RequestBody(transactionId);
 
