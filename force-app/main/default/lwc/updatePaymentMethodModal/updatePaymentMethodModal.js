@@ -20,16 +20,22 @@ export default class UpdatePaymentMethodModal extends LightningElement {
       updatePaymentMethod
     }   
 
-    get paymentMethodOptions() {
-        return [
-            { label: 'Credit Card', value: 'Credit Card' },
-            { label: 'Bank Account', value: 'ACH' }
-        ];
-    }
+    @track
+    paymentMethodOptions = [
+        { label: 'Credit Card', value: 'Credit Card' }
+    ];
+
 
     renderedCallback() {
         this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
         if(this.currentRecord){
+            if(this.currentRecord.paymentMethod === "ACH"){
+                if( !this.paymentMethodOptions.some( element => element.value === 'ACH') ){
+                    this.paymentMethodOptions.push( { label: 'Bank Account', value: 'ACH' } );
+                }
+            }else if (this.paymentMethodOptions.some( element => element.value === 'ACH')){
+                this.paymentMethodOptions.pop( { label: 'Bank Account', value: 'ACH' } );
+            }
             this.paymentMethodValue = this.currentRecord.paymentMethod;
         }
     }
