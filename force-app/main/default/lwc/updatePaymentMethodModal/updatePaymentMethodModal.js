@@ -1,4 +1,4 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import updatePaymentMethod from '@salesforce/label/c.updatePaymentMethod';
 
 const ESC_KEY_CODE = 27;
@@ -8,15 +8,30 @@ const TAB_KEY_CODE = 9;
 const TAB_KEY_STRING = "Tab";
 
 export default class UpdatePaymentMethodModal extends LightningElement {
+    
     @api openUpdatePaymentMethod;
+    
     @api currentRecord;
+
+    @track
+    paymentMethodValue = "";
 
     labels = {
       updatePaymentMethod
     }   
 
+    get paymentMethodOptions() {
+        return [
+            { label: 'Credit Card', value: 'Credit Card' },
+            { label: 'Bank Account', value: 'ACH' }
+        ];
+    }
+
     renderedCallback() {
-      this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
+        this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
+        if(this.currentRecord){
+            this.paymentMethodValue = this.currentRecord.paymentMethod;
+        }
     }
 
     handleKeyUp(e) {
