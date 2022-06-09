@@ -1,0 +1,8 @@
+{
+    "recurringDonation" : {
+        "Id" : 1,
+        "npe03__Amount__c" : 100
+    },
+    "frequency": "Monthly on the 22nd",
+    "status": ""
+}
