@@ -89,6 +89,7 @@ export default class RecurringDonationTable extends LightningElement {
       if(!this.isMobile){
         this.tdClasses = '';
       }
+      console.log('allowACHPaymentMethod: ', this.allowACHPaymentMethod);
     }
   
     /**

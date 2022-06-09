@@ -9,6 +9,8 @@ const TAB_KEY_STRING = "Tab";
 
 export default class UpdatePaymentMethodModal extends LightningElement {
     
+    @api isBankPaymentAllowed;
+
     @api openUpdatePaymentMethod;
     
     @api currentRecord;
@@ -29,11 +31,15 @@ export default class UpdatePaymentMethodModal extends LightningElement {
     renderedCallback() {
         this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
         if(this.currentRecord){
-            if(this.currentRecord.paymentMethod === "ACH"){
+            if(this.isBankPaymentAllowed){
                 if( !this.paymentMethodOptions.some( element => element.value === 'ACH') ){
                     this.paymentMethodOptions.push( { label: 'Bank Account', value: 'ACH' } );
                 }
-            }else if (this.paymentMethodOptions.some( element => element.value === 'ACH')){
+            } else if(this.currentRecord.paymentMethod === "ACH"){
+                if( !this.paymentMethodOptions.some( element => element.value === 'ACH') ){
+                    this.paymentMethodOptions.push( { label: 'Bank Account', value: 'ACH' } );
+                }
+            } else if (this.paymentMethodOptions.some( element => element.value === 'ACH')){
                 this.paymentMethodOptions.pop( { label: 'Bank Account', value: 'ACH' } );
             }
             this.paymentMethodValue = this.currentRecord.paymentMethod;
