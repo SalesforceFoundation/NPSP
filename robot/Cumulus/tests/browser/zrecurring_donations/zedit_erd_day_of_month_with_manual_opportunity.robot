@@ -89,7 +89,7 @@ Edit Day Of Month For Enhanced Recurring donation record of type open with a man
      ...                          changes.
 
 
-    [tags]                             feature:RD2   unit      unstable
+    [tags]                             feature:RD2      unstable   unit
 
     Go To Page                         Details
     ...                                npe03__Recurring_Donation__c

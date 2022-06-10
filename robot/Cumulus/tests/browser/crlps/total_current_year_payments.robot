@@ -54,7 +54,7 @@ Total Current Year Payments on Prior Year Pledges
     ...                   Enables CRLP settings, creates the custom fields on account and payment objects required for rollup
     ...                   Creates a filter and crlp setting to rollup the amount of current year payments on a previous year opportunity
 
-    [Tags]                unstable  feature:CRLP   api
+    [Tags]                feature:CRLP   unstable  api
 
     # Create a Filter group and CRLP setting after checking prior records do not check if element exists
     Load Page Object                                      Custom                          CustomRollupSettings

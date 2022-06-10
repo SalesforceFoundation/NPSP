@@ -32,7 +32,7 @@ Progress Bar and Totals in Batch
     ...                      Verify I should not be able to process batch until total gift amount and count of gifts matches.
     ...                      Verify the progress bar get updated after deleting one of the saved gifts. 
 
-    [tags]                                 unstable      feature:GE
+    [tags]                                 feature:GE   unstable
     Go To Page                             Landing                         GE_Gift_Entry
     Click Gift Entry Button                New Batch
     Wait Until Modal Is Open

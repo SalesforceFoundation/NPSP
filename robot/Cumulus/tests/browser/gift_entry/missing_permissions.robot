@@ -117,7 +117,7 @@ Verify Target Object Field Without Access Displays Permissions Errors
   ...                      verify that the error messages display for the fields without access. Then, permissions are
   ...                      restored to the field, and then the test navigates back to the GE form, and then to the Template
   ...                      Builder to ensure the permissions error messages no longer display.
-  [tags]                   unstable      feature:GE
+  [tags]                   feature:GE   unstable
   [Teardown]               Run Keywords  Field Permissions Cleanup  ${obj}  ${field}  ${perm_set_name}
   ...                      AND  Delete All Cookies
   ...                      AND  Close All Browsers
