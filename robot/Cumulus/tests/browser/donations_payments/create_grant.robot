@@ -21,7 +21,7 @@ Setup Test Data
 *** Test Cases ***
 Create Grant
     [Documentation]                      Create a Grant from the UI
-    [tags]                             unstable     notonfeaturebranch    unit
+    [tags]                             unstable     unit
 
     Go To Page                         Listing
      ...                               Opportunity

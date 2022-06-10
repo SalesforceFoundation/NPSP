@@ -27,7 +27,7 @@ Create Secondary Affiliation for Contact
     [Documentation]                   Creates a contact, organization account and secondary affiliation via API
     ...                               Open contact and open affiliation record. Edit affiliation record to select Primary checkbox and save.
     ...                               Verify that Affiliation now shows under Primary affiliation field.
-    [tags]                            feature:Affiliations    unstable    notonfeaturebranch  unit
+    [tags]                            feature:Affiliations    unstable    unit
     Go To Page                        Details                      Contact                 object_id=${contact}[Id]
     Select Tab                        Related
     Click Related Table Item Link     Organization Affiliations    ${account}[Name]
