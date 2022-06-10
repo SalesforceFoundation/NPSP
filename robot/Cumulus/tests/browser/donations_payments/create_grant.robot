@@ -21,7 +21,7 @@ Setup Test Data
 *** Test Cases ***
 Create Grant
     [Documentation]                      Create a Grant from the UI
-    [tags]                             unstable     unit
+    [tags]                             feature:Donations and Payments   unstable     unit
 
     Go To Page                         Listing
      ...                               Opportunity

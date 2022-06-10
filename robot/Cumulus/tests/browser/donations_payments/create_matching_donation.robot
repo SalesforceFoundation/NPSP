@@ -22,7 +22,7 @@ Setup Test Data
 
 Create Matching Donation
     [Documentation]                      Create a Matching Gift Donation
-    [tags]                                unstable  unit
+    [tags]                                feature:Donations and Payments   unstable  unit
     Go To Page                            Listing
     ...                                  Opportunity
 
