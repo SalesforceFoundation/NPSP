@@ -47,7 +47,7 @@ Batch Template Default values Setting
     ...                             Change default values in batch template and verify the auto poputale in batch form.
     ...                             Leave default values blank and verify they do not auto popuate in batch form
 
-    [Tags]                           unstable               feature:GE          W-8279550
+    [Tags]                           unstable               feature:GE
 
     Go To Page                       Landing                GE_Gift_Entry
     Click Link                       Templates

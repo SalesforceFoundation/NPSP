@@ -27,7 +27,7 @@ Create ASC for Affiliated Contact
     ...                        Opp contact role as Soft Credit. Create an opportunity amount as 500, stage as closed won, close date as today.
     ...                        Verify contact shows under contact role with Role as soft credit.
     ...                        After running donations batch job verify contact gets soft credits
-    [tags]                     feature:Automated Soft Credits        W-039819       unstable    api
+    [tags]                     feature:Automated Soft Credits        unstable    api
 
     #Create Affiliation
     Go To Page                              Details                              Contact

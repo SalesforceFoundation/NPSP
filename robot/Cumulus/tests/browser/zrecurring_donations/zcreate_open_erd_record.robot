@@ -40,7 +40,7 @@ Create Open Recurring Donation With Monthly Installment
     ...                          Verify the values under donation statistics, upcoming installments sections
 
 
-    [tags]                                 W-040346     feature:RD2     unstable
+    [tags]                                 feature:RD2     unstable
     Go To Page                             Listing                                   npe03__Recurring_Donation__c
     Reload Page
     Click Link                             New

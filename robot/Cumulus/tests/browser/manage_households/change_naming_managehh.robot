@@ -33,7 +33,7 @@ Change Name Display Settings on Manage Household Page
     ...                                  Using Manage Household, add the second contact part of the Contact#1's household
     ...                                  From the manage household page's name display settings, choose the options for both the contacts and save
     ...                                  Verify the selection made is retained and the right display is shown on the Details section
-    [tags]                               unstable   W-038348    feature: Manage Households  api
+    [tags]                               unstable   feature:Manage Households  api
 
     Go To Page                              Details
     ...                                     Account

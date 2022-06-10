@@ -28,7 +28,7 @@ Create Donation and Opportunity and Create Payment Manually
     [Documentation]  Navigate to Opportunities page and open an Opportunity>In the right sections, go to Payments click on drop down Arrow>New
     ...              Create a new payment for the Opportunity.
 
-    [tags]                                  W-038461    unstable    feature:Donations   api
+    [tags]                                  unstable    feature:Donations   api
 
     Go To Page                              Listing
     ...                                     Opportunity

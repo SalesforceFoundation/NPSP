@@ -28,7 +28,7 @@ ${Stage_Type}  Closed Won
 Create Donation from a Contact
     [Documentation]                      Create Opportunity from Contact with closed-won status.
 
-    [tags]                               W-038461   feature:Donations   unstable    notonfeaturebranch  api
+    [tags]                               feature:Donations   unstable    notonfeaturebranch  api
 
     Go To Page                           Details
     ...                                  Contact

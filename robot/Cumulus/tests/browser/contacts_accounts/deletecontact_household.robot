@@ -24,7 +24,7 @@ Delete Contact from Household
     [Documentation]                      Create two contacts with API which inturn creates 2 household accounts.
     ...                                  Navigate to contacts listing page and select second contact. Delete the contact and validate that there is only primary household account
     ...                                  Now try to delete the primary household account and verify that a warning message is displayed.
-    [tags]                               W-037650   feature:Contacts And Accounts   unit
+    [tags]                               feature:Contacts And Accounts   unit
     Go To Page                           Listing               Contact
     Delete Record                        ${Contact2}[FirstName] ${Contact2}[LastName]
     Go To Page                           Details               Account                                object_id=${contact1}[Id]

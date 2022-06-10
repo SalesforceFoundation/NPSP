@@ -19,7 +19,7 @@ User on a RD2 enbaled Org should See Status Mappings Option along with default m
      ...                          Vefiy that the edit button is disabled
 
 
-    [tags]                       W-8211315  feature:RD2     unstable
+    [tags]                       feature:RD2     unstable
     Open NPSP Settings           Recurring Donations                Status to State Mapping
     Verify Status To State Mappings
     ...                          Active=Active

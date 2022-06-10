@@ -36,7 +36,7 @@ Create ASC Test for Primary and Affiliations
     ...                        Contact2 as Solicitor  via API.Create Opportunity for org acct with contact1 as primary and
     ...                        verify contact roles. Verify opportunity shows under both contact records
     ...                        After running donations batch job verify contact1 gets soft credits and contact2 doesn't
-    [tags]                                  feature:Automated Soft Credits  W-039819    unstable    notonfeaturebranch  api
+    [tags]                                  feature:Automated Soft Credits  unstable    notonfeaturebranch  api
 
     #Check opportunity contact roles
     Go To Page                              Details                              Opportunity

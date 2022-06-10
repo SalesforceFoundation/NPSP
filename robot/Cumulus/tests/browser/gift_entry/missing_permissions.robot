@@ -34,7 +34,7 @@ Verify Permissions Error When Missing Form Template Object Access
   [Documentation]          Disables object permissions for the Form Template Object in the Gift_Entry_Perms permission set,
   ...                      navigates to the Gift Entry app to verify the permissions error message, then re-adds the object
   ...                      permissions and reloads the Gift Entry app to verify the permissions error no longer displays.
-  [tags]                   feature:GE        W-8279499
+  [tags]                   feature:GE
   [Teardown]               Run Keywords  Object Permissions Cleanup  ${NS}${form_temp}  ${perm_set_name}
   ...                      AND  Delete All Cookies
   ...                      AND  Close All Browsers
@@ -53,7 +53,7 @@ Verify Permissions Error When Missing NPSP DI Batch Object Access
   [Documentation]          Disables object permissions for the NPSP Data Import Batch Object in the Gift_Entry_Perms permission set,
   ...                      navigates to the Gift Entry app to verify the permissions error message, then re-adds the object
   ...                      permissions and reloads the Gift Entry app to verify the permissions error no longer displays.
-  [tags]                   feature:GE        W-8279499
+  [tags]                   feature:GE
   [Teardown]               Run Keywords  Object Permissions Cleanup  ${NS}${di_batch}  ${perm_set_name}
   ...                      AND  Delete All Cookies
   ...                      AND  Close All Browsers
@@ -72,7 +72,7 @@ Verify Permissions Error When DI Batch Description Field Access is Revoked
   [Documentation]          Disables field permissions for the Data Import Batch Description field in the Gift_Entry_Perms permission set,
   ...                      navigates to the Gift Entry app to verify the permissions error message, then re-adds the object
   ...                      permissions and reloads the Gift Entry app to verify the permissions error no longer displays.
-  [tags]                   feature:GE        W-8279499
+  [tags]                   feature:GE
   [Teardown]               Run Keywords  Field Permissions Cleanup  ${NS}${di_batch}  ${NS}${field}  ${perm_set_name}
   ...                      AND  Delete All Cookies
   ...                      AND  Close All Browsers
@@ -92,7 +92,7 @@ Verify Permissions Error When Form Template Description Field Access is Revoked
   [Documentation]          Disables field permissions for the Description field of the Form Template Object in the Gift_Entry_Perms permission set,
   ...                      navigates to the Gift Entry app to verify the permissions error message, then re-adds the object
   ...                      permissions and reloads the Gift Entry app to verify the permissions error no longer displays.
-  [tags]                   feature:GE        W-8279499      unstable
+  [tags]                   feature:GE        unstable
   [Teardown]               Run Keywords  Field Permissions Cleanup  ${NS}${form_temp}  ${NS}${field}  ${perm_set_name}
   ...                      AND  Delete All Cookies
   ...                      AND  Close All Browsers
@@ -117,7 +117,7 @@ Verify Target Object Field Without Access Displays Permissions Errors
   ...                      verify that the error messages display for the fields without access. Then, permissions are
   ...                      restored to the field, and then the test navigates back to the GE form, and then to the Template
   ...                      Builder to ensure the permissions error messages no longer display.
-  [tags]                   unstable      feature:GE        W-8279499
+  [tags]                   unstable      feature:GE
   [Teardown]               Run Keywords  Field Permissions Cleanup  ${obj}  ${field}  ${perm_set_name}
   ...                      AND  Delete All Cookies
   ...                      AND  Close All Browsers

@@ -33,7 +33,7 @@ Setup Test Data
 Create and Close a Recurring Donation and Refresh Opportunities
     [Documentation]              This test verifies that Opportunities for a Recurring Donation are properly closed when the recurring
     ...                          donation is closed.
-    [tags]                       unstable   W-039820    feature:Recurring Donations     unit
+    [tags]                       unstable   feature:Recurring Donations     unit
 
     #Find 1st Opportunity for Recurring Donation and Close It
     @{opportunity1} =            API Query Installment          ${data}[contact_rd][Id]    (1)

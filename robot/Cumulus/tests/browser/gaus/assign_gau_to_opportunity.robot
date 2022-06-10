@@ -29,7 +29,7 @@ Assign GAU to Opportunity
     [Documentation]                      Create an opportunity associated to a contatct. Create two GAUs Set
     ...                                  Set GAU Unit Allocations and assign them to the opportunity.
 
-    [tags]                               W-039818   feature:GAU     unstable    notonfeaturebranch  api
+    [tags]                               feature:GAU     unstable    notonfeaturebranch  api
 
     Go To Page                           Detail
     ...                                  Opportunity

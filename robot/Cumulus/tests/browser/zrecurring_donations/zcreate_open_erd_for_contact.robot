@@ -30,7 +30,7 @@ ${METHOD}  Credit Card
     ...                          Verifies that all the new fields and sections are getting populated and displayed on UI.
 
 
-    [tags]                                 W-042701     feature:RD2     unstable
+    [tags]                                 feature:RD2     unstable
 
     Go To Page                             Listing                                            npe03__Recurring_Donation__c
 

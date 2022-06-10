@@ -17,7 +17,7 @@ ${TEMPLATE}       GAU Widget Template
 Create Template with GAU Widget
     [Documentation]          Create a template with GAU widget. Create a batch with new template
     ...                      verify GAU widget is added to form
-    [tags]                   feature:GE               W-8158171     unstable
+    [tags]                   feature:GE               unstable
     Go To Page                              Landing                  GE_Gift_Entry
     Click Link                              Templates
     Click Gift Entry Button                 Create Template
