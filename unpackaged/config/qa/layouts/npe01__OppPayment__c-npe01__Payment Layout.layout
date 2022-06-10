@@ -124,12 +124,12 @@
             <sortOrder>2</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>%%%NAMESPACE%%%New_Organization</actionName>
+            <actionName>New_Organization</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>3</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>%%%NAMESPACE%%%New_Household_Account</actionName>
+            <actionName>New_Household_Account</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>4</sortOrder>
         </platformActionListItems>
