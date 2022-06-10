@@ -77,7 +77,7 @@ Create and edit level to verify fields
     ...                                  Edit the smallestAmount value to a value greater than the limit threshold
     ...                                  Run the batch job and verify the correct levels are applied.
 
-    [tags]                                  feature:Level   api
+    [tags]                                  feature:Levels   api
     # --------------------------------
     # update the SmallestGift field value to allow the level to be applied
     # --------------------------------
@@ -131,7 +131,7 @@ Create and edit level to verify fields
 
 3. Delete a Level
     [Documentation]                      Delete the Level from the levels listing page
-    [tags]                                  feature:Level   api
+    [tags]                                  feature:Levels   api
 
     Go To Page                              Details
     ...                                     Level__c
