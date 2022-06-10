@@ -166,8 +166,8 @@ public inherited sharing class PMT_RefundService {
                 update this.opportunityMap.values();
             }
         } catch (DmlException ex) {
-            processError(ex);
             Database.rollback(sp);
+            processError(ex);
         }
     }
 
