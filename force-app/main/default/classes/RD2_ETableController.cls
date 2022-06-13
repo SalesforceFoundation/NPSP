@@ -255,6 +255,7 @@ public with sharing class RD2_ETableController {
             npe03__Recurring_Donation__c.InstallmentFrequency__c,
             npe03__Recurring_Donation__c.Day_of_Month__c,
             npe03__Recurring_Donation__c.Status__c,
+            npe03__Recurring_Donation__c.npe03__Last_Payment_Date__c,
             npe03__Recurring_Donation__c.PaymentMethod__c
         };
 

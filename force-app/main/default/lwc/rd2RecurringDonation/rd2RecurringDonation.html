@@ -134,9 +134,9 @@
                                 {item.firstDonation}
                             </div>
                         </td>
-                        <td key={item.mostRecentDonation} data-id={item.id} class={tdClasses} data-label={labels.mostRecentDonation}>
+                        <td key={item.recurringDonation.npe03__Last_Payment_Date__c} data-id={item.id} class={tdClasses} data-label={labels.mostRecentDonation}>
                             <div class={rowClasses} style={fixedWidth} title={labels.mostRecentDonation}>
-                                {item.mostRecentDonation}</div>
+                                {item.recurringDonation.npe03__Last_Payment_Date__c}</div>
                         </td>
                         <td key={item.nextDonation} data-id={item.id} class={tdClasses}  data-label={labels.nextDonation}>
                             <div class={rowClasses} style={fixedWidth}> 
