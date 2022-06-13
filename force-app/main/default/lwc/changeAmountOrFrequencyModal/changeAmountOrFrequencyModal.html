@@ -34,6 +34,15 @@
                   <input type="text" id="rd-installment_period" value={currentRecord.recurringDonation.npe03__Installment_Period__c} required="" class="slds-input" />
                 </div>
             </div>
+            <template if:true={isMonthlyDonation}>
+                <div class="slds-p-around_x-small slds-col slds-size_1-of-1 slds-large-size_1-of-3 slds-form-element">
+                    <label class="slds-form-element__label" for="rd-installment_period">
+                      <abbr class="slds-required" ></abbr>{labels.installmentPeriod}</label>
+                    <div class="slds-form-element__control">
+                      <input type="text" id="rd-day_of_month" value={currentRecord.recurringDonation.Day_of_Month__c} required="" class="slds-input" />
+                    </div>
+                </div>
+            </template>
           </div>
           <div class="slds-modal__footer">
             <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick={closeModal}>Cancel</button>

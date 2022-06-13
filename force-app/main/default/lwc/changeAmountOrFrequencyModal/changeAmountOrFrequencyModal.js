@@ -14,6 +14,7 @@ const TAB_KEY_STRING = "Tab";
 export default class ChangeAmountOrFrequencyModal extends LightningElement {
     @api openChangeAmountOrFrequency;
     @api currentRecord;
+    isMonthlyDonation = false;
 
     labels = {
         changeAmountOrFrequency,
@@ -25,37 +26,46 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
     }
 
     renderedCallback() {
+        if(this.currentRecord){
+            console.log(JSON.stringify(this.currentRecord));
+            if( this.currentRecord.recurringDonation.Day_of_Month__c ){
+                this.isMonthlyDonation = true;
+                console.log('isMonthlyDonationTrue');
+            }else{
+                this.isMonthlyDonation = false;
+            }
+        }
         this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
-      }
+    }
   
-      handleKeyUp(e) {
+    handleKeyUp(e) {
           const firstFocusableElement = this._getFocusableElements()[0];
           const focusableContent = this._getFocusableElements();
           const lastFocusableElement = focusableContent[focusableContent.length - 1];
         
-          if (e.shiftKey) {
-            if (this.template.activeElement === firstFocusableElement) {
-              lastFocusableElement.focus();
-              e.preventDefault();
+            if (e.shiftKey) {
+                if (this.template.activeElement === firstFocusableElement) {
+                    lastFocusableElement.focus();
+                    e.preventDefault();
+                }
+            } else if(e.code === ESC_KEY_STRING || e.keyCode === ESC_KEY_CODE) {
+                this.closeModal();
+            } else if(e.code === TAB_KEY_STRING || e.keyCode === TAB_KEY_CODE) {
+                if (this.template.activeElement === lastFocusableElement) {
+                    firstFocusableElement.focus();
+                    e.preventDefault();
+                }
             }
-          } else if(e.code === ESC_KEY_STRING || e.keyCode === ESC_KEY_CODE) {
-            this.closeModal();
-          } else if(e.code === TAB_KEY_STRING || e.keyCode === TAB_KEY_CODE) {
-            if (this.template.activeElement === lastFocusableElement) {
-              firstFocusableElement.focus();
-              e.preventDefault();
-            }
-          }
-      }   
+    }   
   
-      _getFocusableElements() {
+    _getFocusableElements() {
         const potentialElems = [
           ...this.template.querySelectorAll(FOCUSABLE_ELEMENTS),
         ];
         return potentialElems;
-      }
+    }
   
-      closeModal() {
+    closeModal() {
         this.template.removeEventListener("keydown", (e) => this.handleKeyUp(e));
         this.dispatchEvent(new CustomEvent('close', {detail: 'changeAmountOrFrequency'}));
     } 
