@@ -11926,6 +11926,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>There was an error processing the refund.</value>
     </labels>
     <labels>
+        <fullName>pmtRefundPaymentSuccessMessage</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Success message for refund</shortDescription>
+        <value>Refund was successful</value>
+    </labels>
+    <labels>
         <fullName>pmtPaymentNotFund</fullName>
         <categories>Payment</categories>
         <language>en_US</language>

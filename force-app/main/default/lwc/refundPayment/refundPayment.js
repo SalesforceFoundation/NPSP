@@ -10,6 +10,7 @@ import cancelButtonLabel from "@salesforce/label/c.stgBtnCancel";
 import commonRefreshPage from "@salesforce/label/c.commonRefreshPage";
 import noRefundPermissionMessage from "@salesforce/label/c.pmtNoRefundPermissionMessage";
 import refundPaymentErrorMessage from "@salesforce/label/c.pmtRefundPaymentErrorMessage";
+import refundPaymentSuccessMessage from "@salesforce/label/c.pmtRefundPaymentSuccessMessage";
 import refundPaymentMessage from "@salesforce/label/c.pmtRefundPaymentMessage";
 import refundProcessing from "@salesforce/label/c.pmtRefundProcessing";
 import loadingMessage from "@salesforce/label/c.labelMessageLoading";
@@ -33,6 +34,7 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
         refundPaymentDate,
         refundProcessing,
         refundPaymentErrorMessage,
+        refundPaymentSuccessMessage,
         loadingMessage,
         spinnerAltText
     });
@@ -91,13 +93,9 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
 
         } else if (response.isSuccess === true) {
             if (this.recordId === response.redirectToPaymentId) {
-                showToast('', this.labels.refundProcessing + ' {0}', 'success', 'sticky', [
-                    {
-                        url: '/' + response.redirectToPaymentId,
-                        label: this.labels.commonRefreshPage,
-                    }]
-                );
+                showToast('', this.labels.refundProcessing, 'success', 'sticky');
             } else {
+                showToast('', this.labels.refundPaymentSuccessMessage, 'success', 'dismissible');
                 this.navigateToRecordPage(response.redirectToPaymentId);
             }
 
