@@ -1042,16 +1042,17 @@ export default class GeFormRenderer extends LightningElement{
      */
     getDonationDonorErrorLabel(dataImportHelper) {
 
+        if (this._isInvalidDonorSelected) {
+            return accountDonorSelectionMismatch;
+        }
         // init array replacement for custom label
         let validationErrorLabelReplacements = [dataImportHelper.donationDonorValue, dataImportHelper.donationDonorLabel];
 
         if (dataImportHelper.donationDonorValue === DONATION_DONOR.isAccount1) {
-            if (dataImportHelper.isAccount1ImportedPresent && !this._isInvalidDonorSelected)
+            if (dataImportHelper.isAccount1ImportedPresent)
                 validationErrorLabelReplacements.push(GeFormService.getFieldLabelByDevNameFromTemplate(DONATION_DONOR_FIELDS.account1ImportedField));
-            if (dataImportHelper.isAccount1NamePresent && !this._isInvalidDonorSelected)
+            if (dataImportHelper.isAccount1NamePresent)
                 validationErrorLabelReplacements.push(GeFormService.getFieldLabelBySourceFromTemplate(DONATION_DONOR_FIELDS.account1NameField));
-            if (this._isInvalidDonorSelected)
-                return accountDonorSelectionMismatch;
         } else {
             if (dataImportHelper.isContact1ImportedPresent)
                 validationErrorLabelReplacements.push(GeFormService.getFieldLabelByDevNameFromTemplate(DONATION_DONOR_FIELDS.contact1ImportedField));
