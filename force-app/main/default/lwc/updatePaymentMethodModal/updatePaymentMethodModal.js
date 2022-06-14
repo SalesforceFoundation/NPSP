@@ -15,7 +15,6 @@ export default class UpdatePaymentMethodModal extends LightningElement {
     
     @api currentRecord;
 
-    @track
     paymentMethodValue = "";
 
     labels = {
