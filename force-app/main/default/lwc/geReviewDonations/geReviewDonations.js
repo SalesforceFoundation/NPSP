@@ -53,7 +53,7 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
         if (!donation) {
             this._donationType = null;
             return;
-        };
+        }
 
         this._selectedDonation = donation.fields || donation;
         const objectType = donation?.attributes?.type || donation?.fields?.attributes?.type;
@@ -96,22 +96,22 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
 
     get isUpdatingOpportunity() {
         return this._donationType === OPPORTUNITY.objectApiName &&
-            !this.selectedDonation.hasOwnProperty('applyPayment') &&
-            !this.selectedDonation.hasOwnProperty('new');
+            !this._selectedDonation.hasOwnProperty('applyPayment') &&
+            !this._selectedDonation.hasOwnProperty('new');
     }
 
     get isApplyingNewPayment() {
         return this._donationType === OPPORTUNITY.objectApiName &&
-            this.selectedDonation.hasOwnProperty('applyPayment');
+            this._selectedDonation.hasOwnProperty('applyPayment');
     }
 
     get isCreatingNewOpportunity() {
         return this._donationType === OPPORTUNITY.objectApiName &&
-            this.selectedDonation.hasOwnProperty('new');
+            this._selectedDonation.hasOwnProperty('new');
     }
 
     get hasSelectedDonation() {
-        return !!this.selectedDonation;
+        return !!this._selectedDonation;
     }
 
     get reviewDonationsMessage() {
@@ -197,7 +197,8 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
     * @description Resets properties for the currently selected donation and type.
     */
     handleResetReviewDonationsComponent() {
-        this.selectedDonation = null;
+        this._selectedDonation = null;
+        this._donor = null;
         this._donationType = null;
         if (!this.donorId) {
             this.opportunities = [];

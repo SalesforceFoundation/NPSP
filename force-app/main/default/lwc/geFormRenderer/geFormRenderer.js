@@ -1378,6 +1378,7 @@ export default class GeFormRenderer extends LightningElement{
 
     @track selectedDonationCopyForReviewDonationsModal;
     handleChangeSelectedDonation(event) {
+        console.log(JSON.stringify(event.detail.payment));
         this.selectedDonationCopyForReviewDonationsModal =
             event.detail.payment || event.detail.opportunity;
 
@@ -2133,6 +2134,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     get donorType() {
+
         return this.getFieldValueFromFormState(
             apiNameFor(DATA_IMPORT_DONATION_DONOR_FIELD));
     }
