@@ -105,6 +105,21 @@ public with sharing class RD2_ETableController {
             throw new AuraHandledException(ex.getMessage());
         }
     }
+
+    /**
+     * @description returns a list of processed recurring donations
+     * @return List<TableView> List of processed recurring donation records
+     */
+    @AuraEnabled
+    public static void cancelDonation(String recurringDonationId) {
+        try {
+            npe03__Recurring_Donation__c recurringDonations = selector.getRecurringDonation(recurringDonationId);
+            recurringDonations.Status__c = 'Closed';
+            upsert recurringDonations;
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
     
     /** 
     * @author Salesforce.org
