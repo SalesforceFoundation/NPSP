@@ -197,8 +197,7 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
     * @description Resets properties for the currently selected donation and type.
     */
     handleResetReviewDonationsComponent() {
-        this._selectedDonation = null;
-        this._donor = null;
+        this.selectedDonation = null;
         this._donationType = null;
         if (!this.donorId) {
             this.opportunities = [];
