@@ -114,8 +114,10 @@ public with sharing class RD2_ETableController {
     public static void cancelDonation(String recurringDonationId) {
         try {
             npe03__Recurring_Donation__c recurringDonations = selector.getRecurringDonation(recurringDonationId);
-            recurringDonations.Status__c = 'Closed';
-            upsert recurringDonations;
+            if (recurringDonations != NULL) {
+                recurringDonations.Status__c = RD2_Constants.STATUS_CLOSED;
+                upsert recurringDonations;
+            }
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }

@@ -76,18 +76,14 @@ public inherited sharing class RD2_ERecurringDonationsSelector {
     }
     /**
      * @description Returns the Recurring Donation records related to the Experience Site user.
-     * @return List<npe03__Recurring_Donation__c>
+     * @return npe03__Recurring_Donation__c
      */
     public npe03__Recurring_Donation__c getRecurringDonation(String id) {
-        npe03__Recurring_Donation__c recurringDonations = new npe03__Recurring_Donation__c();
-        if(id != NULL) {
-          recurringDonations = [ SELECT Status__c
-                      FROM npe03__Recurring_Donation__c
-                      WHERE Id = :id
-                                AND RecurringType__c IN (:RD2_Constants.RECURRING_TYPE_OPEN, :RD2_Constants.RECURRING_TYPE_FIXED) 
-                      WITH SECURITY_ENFORCED
-                      LIMIT 1][0];
-        }
+        npe03__Recurring_Donation__c recurringDonations = [SELECT Status__c
+                                                            FROM npe03__Recurring_Donation__c
+                                                            WHERE Id = :id
+                                                                  AND RecurringType__c IN (:RD2_Constants.RECURRING_TYPE_OPEN, :RD2_Constants.RECURRING_TYPE_FIXED) 
+                                                            WITH SECURITY_ENFORCED];
         return recurringDonations;
       }
 }

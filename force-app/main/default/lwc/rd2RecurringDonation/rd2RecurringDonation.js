@@ -31,6 +31,7 @@ const MOBILE_VIEW_MORE = 'viewMore';
 const DESKTOP_VIEW_MORE = 'slds-hide';
 const MOBILE_HEADER_CLASS = 'slds-border_right slds-border_left';
 const DESKTOP_HEADER_CLASS = 'slds-table_header-fixed_container slds-border_right slds-border_left table_top';
+const CLOSED_STATUS  = 'Canceled'
 
 export default class RecurringDonationTable extends LightningElement {
     
@@ -70,9 +71,9 @@ export default class RecurringDonationTable extends LightningElement {
     data;
 
     actions = [
-      { label: updatePaymentMethod, name: 'updatePaymentMethod' },
-      { label: changeAmountOrFrequency, name: 'changeAmountOrFrequency' },
-      { label: stopRecurringDonation, name: 'stopRecurringDonation' }
+      { label: updatePaymentMethod, name: 'updatePaymentMethod', disabled: false },
+      { label: changeAmountOrFrequency, name: 'changeAmountOrFrequency', disabled: false },
+      { label: stopRecurringDonation, name: 'stopRecurringDonation', disabled: false }
     ];
 
     columns = [];
@@ -299,18 +300,30 @@ export default class RecurringDonationTable extends LightningElement {
         default:
             break;
       }
+      this.getRecurringDonationFields()
     }
 
     getRecurringDonationFields() {
       getData()
         .then((data) => {
-            if (data) {
-                this.data = data;
-                this.data.forEach(element => {
-                  if(element.nextDonation){
-                    element.nexDonationFormatFirstElement = element.nextDonation.split('.')[0] || element.nextDonation;
-                    element.nexDonationFormatSecondElement = element.nextDonation.split('.')[1] || '';
+          if (data) {
+            this.data = data.map((el) => {
+                  let actions = this.actions.map(a => {return {...a}});
+                  let nexDonationFormatFirstElement = '';
+                  let nexDonationFormatSecondElement = '';
+                  if(el.nextDonation){
+                    nexDonationFormatFirstElement = el.nextDonation.split('.')[0] || el.nextDonation;
+                    nexDonationFormatSecondElement = el.nextDonation.split('.')[1] || '';  
                   }
+                  if(el.status === CLOSED_STATUS){
+                    actions.map((action) => {
+                      if(action.name === 'stopRecurringDonation'){
+                        action.disabled = true;
+                      }
+                      return action;
+                    })
+                  }
+                  return {actions, ...el, nexDonationFormatFirstElement, nexDonationFormatSecondElement};
                 });
             }
         });

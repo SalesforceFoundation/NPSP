@@ -20,7 +20,7 @@ export default class StopRecurringDonationModal extends LightningElement {
         stopRecurringDonationModalTitle,
         commonClose
     }
-    isElevate = true;
+    isElevate;
     @api openStopRecurringDonation;
     @api currentRecord;
 
@@ -78,6 +78,7 @@ export default class StopRecurringDonationModal extends LightningElement {
       handleCancelDonation(){
         cancelDonation({ recurringDonationId: this.currentRecord.recurringDonation.Id})
           .then(() => {
+            this.isElevate = this.currentRecord.recurringDonation.CommitmentId__c ? true : false;
             const event = new ShowToastEvent({
                 title: this.title,
                 message: this.message
