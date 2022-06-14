@@ -1378,7 +1378,6 @@ export default class GeFormRenderer extends LightningElement{
 
     @track selectedDonationCopyForReviewDonationsModal;
     handleChangeSelectedDonation(event) {
-        console.log(JSON.stringify(event.detail.payment));
         this.selectedDonationCopyForReviewDonationsModal =
             event.detail.payment || event.detail.opportunity;
 
