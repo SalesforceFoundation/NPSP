@@ -5,6 +5,7 @@ import cancelDonation from '@salesforce/apex/RD2_ETableController.cancelDonation
 import RD2_ElevateRDCancellingTitle from '@salesforce/label/c.RD2_ElevateRDCancellingTitle';
 import RD2_ElevateRDCancellingMessage from '@salesforce/label/c.RD2_ElevateRDCancellingMessage';
 import RD2_NonElevateRDCancellingTitle from '@salesforce/label/c.RD2_NonElevateRDCancellingTitle';
+import commonClose from '@salesforce/label/c.commonClose';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 const ESC_KEY_CODE = 27;
@@ -16,7 +17,8 @@ export default class StopRecurringDonationModal extends LightningElement {
 
     labels = {
         stopRecurringDonation,
-        stopRecurringDonationModalTitle
+        stopRecurringDonationModalTitle,
+        commonClose
     }
     isElevate = true;
     @api openStopRecurringDonation;
