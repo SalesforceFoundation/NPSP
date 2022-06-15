@@ -15826,6 +15826,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Donation History</value>
     </labels>
     <labels>
+        <fullName>RD2_Actions</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Recurring Donation Actions</shortDescription>
+        <value>Actions</value>
+    </labels>
+    <labels>
         <fullName>updatePaymentMethod</fullName>
         <categories>RDAction</categories>
         <language>en_US</language>
