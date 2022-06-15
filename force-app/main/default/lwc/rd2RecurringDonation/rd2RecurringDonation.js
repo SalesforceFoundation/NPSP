@@ -306,7 +306,6 @@ export default class RecurringDonationTable extends LightningElement {
     getRecurringDonationFields() {
       getData()
         .then((data) => {
-          console.log(JSON.parse(JSON.stringify(data)));
           if (data) {
             this.data = data.map((el) => {
                   let actions = this.actions.map(a => {return {...a}});
