@@ -18,6 +18,8 @@ const TAB_KEY_STRING = "Tab";
 export default class ChangeAmountOrFrequencyModal extends LightningElement {
     @api openChangeAmountOrFrequency;
     @api currentRecord;
+    isRenderCallbackActionExecuted = false;
+
     recurringDonationApiName = RECURRING_DONATION;
     amountFieldName = AMOUNT_FIELD;
     installmentFrequencyFieldName = INSTALLMENT_FREQUENCY_FIELD;
@@ -33,10 +35,11 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
     }
 
     renderedCallback() {
-        this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
-        if(this.currentRecord){
-            console.log(JSON.stringify(this.currentRecord));
+        if (this.isRenderCallbackActionExecuted) {
+            return;
         }
+        this.isRenderCallbackActionExecuted = true;
+        this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
       }
   
       handleKeyUp(e) {
@@ -69,5 +72,6 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
       closeModal() {
         this.template.removeEventListener("keydown", (e) => this.handleKeyUp(e));
         this.dispatchEvent(new CustomEvent('close', {detail: 'changeAmountOrFrequency'}));
+        this.isRenderCallbackActionExecuted = false;
     } 
 }
