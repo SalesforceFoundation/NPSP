@@ -38,8 +38,16 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
         if (this.isRenderCallbackActionExecuted) {
             return;
         }
-        this.isRenderCallbackActionExecuted = true;
-        this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
+        if(this.currentRecord){
+            this.isRenderCallbackActionExecuted = true;
+            this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
+    
+            const style = document.createElement('style');
+            style.innerText = `lightning-helptext {
+                display:none;
+            }`;
+            this.template.querySelector('lightning-record-edit-form').appendChild(style);
+        }
       }
   
       handleKeyUp(e) {
