@@ -285,7 +285,7 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     }
 
     private Boolean getOpportunityModifiedFilterEnabled() {
-        return UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Enable_Opportunity_Batch_Filter__c;
+        return UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Exclude_Closed_Recurring_Donations__c;
     }
 
     private String getDateForSoql(Date soqlDate) {

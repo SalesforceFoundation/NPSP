@@ -732,7 +732,7 @@ private class CRLP_Batch_Base_TEST {
                 CRLP_RollupContact_TEST.mockRollupCMTValues();
             }
             when RecurringDonations {            
-                settings.RecurringDonationNonSkew_Incremental__c = isIncrementalMode;
+                settings.Limit_Recalculated_Recurring_Donations__c = isIncrementalMode;
                 settings.Recurring_Donation_Last_N_Days__c = rdLastNDaysValue;
                 CMT_UnitTestData_TEST.mockRecurringDonationRollupCMTValues();
             }

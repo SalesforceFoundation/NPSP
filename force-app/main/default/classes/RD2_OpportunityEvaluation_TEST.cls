@@ -97,7 +97,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
     @IsTest
     private static void shouldNotProcessClosedRDs() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-        configureRecurringDonationsOppFilter();
+        configureRecurringDonationsClosedFilter();
         final Date batchRunDate = Date.today();
         RD2_ScheduleService.currentDate = batchRunDate;
 
@@ -123,6 +123,34 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(2, opps.size(), 'No new Opp should be created: ' + opps);
+    }
+
+    /**
+     * @description Verifies Closed Recurring Donations are not processed when Batch Filtering is enabled
+     */
+    @IsTest
+    private static void shouldNotProcessClosedRDsWithOpenOpps() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        // configureRecurringDonationsClosedFilter();
+        final Date batchRunDate = Date.today();
+        RD2_ScheduleService.currentDate = batchRunDate;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withStatusClosed()
+            .build();
+        insert rd;
+
+        insert TEST_OpportunityBuilder.getOpportunityBuilder(rd)
+            .withOpenStage()
+            .withCloseDate(batchRunDate)
+            .build();
+
+        runBatch(new RD2_OpportunityEvaluation_BATCH(batchRunDate));
+
+        assertBatchJobIteration(0);
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'No new Opp should be created: ' + opps);
     }
 
     /**
@@ -1477,12 +1505,12 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
     * @description Stubs custom settings configuration to enable Filtered Recurring Donations Batch
     * @return none
     */
-    public static void configureRecurringDonationsOppFilter() {
+    public static void configureRecurringDonationsClosedFilter() {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
             new npe03__Recurring_Donations_Settings__c(
                 IsRecurringDonations2Enabled__c = true,
                 npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name(),
-                Enable_Opportunity_Batch_Filter__c = true
+                Exclude_Closed_Recurring_Donations__c = true
             )
         );
     }
