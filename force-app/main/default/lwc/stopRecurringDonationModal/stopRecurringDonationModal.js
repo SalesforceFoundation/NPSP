@@ -1,7 +1,7 @@
 import { LightningElement, api } from 'lwc';
 import stopRecurringDonation from '@salesforce/label/c.stopRecurringDonation';
 import stopRecurringDonationModalTitle from '@salesforce/label/c.stopRecurringDonationModalTitle';
-import cancelDonation from '@salesforce/apex/RD2_ETableController.cancelDonation';
+import upsertDonation from '@salesforce/apex/RD2_ETableController.upsertDonation';
 import RD2_ElevateRDCancellingTitle from '@salesforce/label/c.RD2_ElevateRDCancellingTitle';
 import RD2_ElevateRDCancellingMessage from '@salesforce/label/c.RD2_ElevateRDCancellingMessage';
 import RD2_NonElevateRDCancellingTitle from '@salesforce/label/c.RD2_NonElevateRDCancellingTitle';
@@ -13,6 +13,7 @@ const ESC_KEY_STRING = "Escape";
 const FOCUSABLE_ELEMENTS = "button";
 const TAB_KEY_CODE = 9;
 const TAB_KEY_STRING = "Tab";
+const STATUS_CLOSED = "Closed";
 export default class StopRecurringDonationModal extends LightningElement {
 
     labels = {
@@ -76,9 +77,11 @@ export default class StopRecurringDonationModal extends LightningElement {
       }
       
       handleCancelDonation(){
-        cancelDonation({ recurringDonationId: this.currentRecord.recurringDonation.Id})
+        let record = Object.assign({}, this.currentRecord.recurringDonation);
+        record.Status__c = STATUS_CLOSED;
+        upsertDonation({ recurringDonation: record })
           .then(() => {
-            this.isElevate = this.currentRecord.recurringDonation.CommitmentId__c ? true : false;
+            this.isElevate = record.CommitmentId__c ? true : false;
             const event = new ShowToastEvent({
                 title: this.title,
                 message: this.message

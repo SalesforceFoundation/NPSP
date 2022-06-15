@@ -111,12 +111,10 @@ public with sharing class RD2_ETableController {
      * @return List<TableView> List of processed recurring donation records
      */
     @AuraEnabled
-    public static void cancelDonation(String recurringDonationId) {
+    public static void upsertDonation(npe03__Recurring_Donation__c recurringDonation) {
         try {
-            npe03__Recurring_Donation__c recurringDonations = selector.getRecurringDonation(recurringDonationId);
-            if (recurringDonations != NULL) {
-                recurringDonations.Status__c = RD2_Constants.STATUS_CLOSED;
-                upsert recurringDonations;
+            if(controller.hasAccessToRecurringDonation()) {
+                upsert recurringDonation; 
             }
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
