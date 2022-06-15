@@ -107,8 +107,7 @@ public with sharing class RD2_ETableController {
     }
 
     /**
-     * @description returns a list of processed recurring donations
-     * @return List<TableView> List of processed recurring donation records
+     * @description upsert a recurring donations record.
      */
     @AuraEnabled
     public static void upsertDonation(npe03__Recurring_Donation__c recurringDonation) {
