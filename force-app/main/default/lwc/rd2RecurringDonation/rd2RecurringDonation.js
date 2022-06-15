@@ -318,9 +318,7 @@ export default class RecurringDonationTable extends LightningElement {
                   }
                   if(el.recurringDonation.Status__c === CLOSED_STATUS){
                     actions.map((action) => {
-                      if(action.name === 'stopRecurringDonation'){
-                        action.disabled = true;
-                      }
+                      action.disabled = true;
                       return action;
                     })
                   }
