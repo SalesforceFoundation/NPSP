@@ -250,7 +250,7 @@ export default class RecurringDonationTable extends LightningElement {
       return (window.getComputedStyle(elm, null).getPropertyValue(css))
     }
    
-    toggleView( event ) {
+    toggleView(event) {
       let tableTd= this.template.querySelectorAll("td[data-id="+JSON.stringify(event.target.getAttribute("data-viewid"))+"]");
       let viewMoreOrLess = this.template.querySelector("td[data-viewid="+JSON.stringify(event.target.getAttribute("data-viewid"))+"]");
       if(viewMoreOrLess.getAttribute("data-label") === this.labels.RD2_ViewMoreDetails){
@@ -306,6 +306,7 @@ export default class RecurringDonationTable extends LightningElement {
     getRecurringDonationFields() {
       getData()
         .then((data) => {
+          console.log(JSON.parse(JSON.stringify(data)));
           if (data) {
             this.data = data.map((el) => {
                   let actions = this.actions.map(a => {return {...a}});
