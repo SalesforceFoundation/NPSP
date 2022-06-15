@@ -6,6 +6,7 @@ const ESC_KEY_STRING = "Escape";
 const FOCUSABLE_ELEMENTS = "button";
 const TAB_KEY_CODE = 9;
 const TAB_KEY_STRING = "Tab";
+const ACH_PAYMENT_METHOD = 'ACH';
 
 export default class UpdatePaymentMethodModal extends LightningElement {
     
@@ -38,14 +39,14 @@ export default class UpdatePaymentMethodModal extends LightningElement {
     determineACHpaymentMethodAndAddAsOption(){
         if(this.isBankPaymentAllowed){
             if( !this.paymentMethodOptions.some( element => element.value === 'ACH') ){
-                this.paymentMethodOptions.push( { label: 'Bank Account', value: 'ACH' } );
+                this.paymentMethodOptions.push( { label: 'Bank Account', value: ACH_PAYMENT_METHOD } );
             }
         } else if(this.currentRecord.paymentMethod === "ACH"){
             if( !this.paymentMethodOptions.some( element => element.value === 'ACH') ){
-                this.paymentMethodOptions.push( { label: 'Bank Account', value: 'ACH' } );
+                this.paymentMethodOptions.push( { label: 'Bank Account', value: ACH_PAYMENT_METHOD } );
             }
         } else if (this.paymentMethodOptions.some( element => element.value === 'ACH')){
-            this.paymentMethodOptions.pop( { label: 'Bank Account', value: 'ACH' } );
+            this.paymentMethodOptions.pop( { label: 'Bank Account', value: ACH_PAYMENT_METHOD } );
         }
     }
 
