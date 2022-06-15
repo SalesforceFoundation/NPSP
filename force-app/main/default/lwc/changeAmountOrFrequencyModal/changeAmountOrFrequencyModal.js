@@ -5,6 +5,10 @@ import every from "@salesforce/label/c.RD2_EntryFormScheduleEveryLabel";
 import commonAmount from "@salesforce/label/c.commonAmount";
 import installmentPeriod from "@salesforce/label/c.installmentPeriod";
 import recurringDonationSchedule from "@salesforce/label/c.recurringDonationSchedule";
+import RECURRING_DONATION from '@salesforce/schema/npe03__Recurring_Donation__c';
+import AMOUNT_FIELD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Amount__c';
+import INSTALLMENT_FREQUENCY_FIELD from '@salesforce/schema/npe03__Recurring_Donation__c.InstallmentFrequency__c';
+import INSTALLMENT_PERIOD_FIELD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
 
 const ESC_KEY_CODE = 27;
 const ESC_KEY_STRING = "Escape";
@@ -14,6 +18,10 @@ const TAB_KEY_STRING = "Tab";
 export default class ChangeAmountOrFrequencyModal extends LightningElement {
     @api openChangeAmountOrFrequency;
     @api currentRecord;
+    recurringDonationApiName = RECURRING_DONATION;
+    amountFieldName = AMOUNT_FIELD;
+    installmentFrequencyFieldName = INSTALLMENT_FREQUENCY_FIELD;
+    installmentPeriodFieldName = INSTALLMENT_PERIOD_FIELD;
 
     labels = {
         changeAmountOrFrequency,
@@ -26,6 +34,9 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
 
     renderedCallback() {
         this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
+        if(this.currentRecord){
+            console.log(JSON.stringify(this.currentRecord));
+        }
       }
   
       handleKeyUp(e) {
