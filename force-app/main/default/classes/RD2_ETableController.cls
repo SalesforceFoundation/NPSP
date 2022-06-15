@@ -115,6 +115,8 @@ public with sharing class RD2_ETableController {
         try {
             if(controller.hasAccessToRecurringDonation()) {
                 upsert recurringDonation; 
+            } else {
+                throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
             }
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
