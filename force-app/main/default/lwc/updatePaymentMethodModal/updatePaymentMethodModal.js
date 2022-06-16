@@ -1,12 +1,14 @@
 import { LightningElement, api, track } from 'lwc';
 import updatePaymentMethod from '@salesforce/label/c.updatePaymentMethod';
+import ACHPaymentMethod from '@salesforce/label/c.RD2_ACH_Payment_Method';
+import CreditCardPaymentMethod from '@salesforce/label/c.RD2_Credit_Card_Payment_Method_Label';
+import ACHPaymentMethodLabel from '@salesforce/label/c.RD2_ACH_Payment_Method_Label';
 
 const ESC_KEY_CODE = 27;
 const ESC_KEY_STRING = "Escape";
 const FOCUSABLE_ELEMENTS = "button";
 const TAB_KEY_CODE = 9;
 const TAB_KEY_STRING = "Tab";
-const ACH_PAYMENT_METHOD = 'ACH';
 
 export default class UpdatePaymentMethodModal extends LightningElement {
     
@@ -19,12 +21,15 @@ export default class UpdatePaymentMethodModal extends LightningElement {
     paymentMethodValue = "";
 
     labels = {
-      updatePaymentMethod
+      updatePaymentMethod,
+      ACHPaymentMethod,
+      ACHPaymentMethodLabel,
+      CreditCardPaymentMethod
     }   
 
     @track
     paymentMethodOptions = [
-        { label: 'Credit Card', value: 'Credit Card' }
+        { label: CreditCardPaymentMethod, value: CreditCardPaymentMethod }
     ];
 
 
@@ -42,12 +47,12 @@ export default class UpdatePaymentMethodModal extends LightningElement {
     }
 
     determineACHpaymentMethodAndAddAsOption(){
-        if(this.isBankPaymentAllowed || this.currentRecord.paymentMethod === "ACH"){
-            if( !this.paymentMethodOptions.some( element => element.value === 'ACH') ){
-                this.paymentMethodOptions.push( { label: 'Bank Account', value: ACH_PAYMENT_METHOD } );
+        if(this.isBankPaymentAllowed || this.currentRecord.paymentMethod === ACHPaymentMethod){
+            if( !this.paymentMethodOptions.some( element => element.value === ACHPaymentMethod) ){
+                this.paymentMethodOptions.push( { label: ACHPaymentMethodLabel, value: ACHPaymentMethod } );
             }
-        } else if (this.paymentMethodOptions.some( element => element.value === 'ACH')){
-            this.paymentMethodOptions.pop( { label: 'Bank Account', value: ACH_PAYMENT_METHOD } );
+        } else if (this.paymentMethodOptions.some( element => element.value === ACHPaymentMethod)){
+            this.paymentMethodOptions.pop( { label: ACHPaymentMethodLabel, value: ACHPaymentMethod } );
         }
     }
 

@@ -2389,6 +2389,30 @@
         <value>Sending ACH information to Elevate...</value>
     </labels>
     <labels>
+        <fullName>RD2_ACH_Payment_Method</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ACH Payment Method text</shortDescription>
+        <value>ACH</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ACH_Payment_Method_Label</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ACH Payment Method label</shortDescription>
+        <value>Bank Account</value>
+    </labels>
+    <labels>
+        <fullName>RD2_Credit_Card_Payment_Method_Label</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Credit Card Payment Method label</shortDescription>
+        <value>Credit Card</value>
+    </labels>
+    <labels>
         <fullName>RD2_EntryFormSaveCreditCardValidationMessage</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>
