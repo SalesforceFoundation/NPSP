@@ -1,6 +1,8 @@
 import { LightningElement, api } from 'lwc';
 import changeAmountOrFrequency from '@salesforce/label/c.changeAmountOrFrequency';
 import updateRecurringDonation from '@salesforce/label/c.updateRecurringDonation';
+import commonCancelAndClose from '@salesforce/label/c.commonCancelAndClose';
+import commonCancel from '@salesforce/label/c.commonCancel';
 
 const ESC_KEY_CODE = 27;
 const ESC_KEY_STRING = "Escape";
@@ -13,7 +15,9 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
 
     labels = {
         changeAmountOrFrequency,
-        updateRecurringDonation
+        updateRecurringDonation,
+        commonCancelAndClose,
+        commonCancel
     }
 
     renderedCallback() {

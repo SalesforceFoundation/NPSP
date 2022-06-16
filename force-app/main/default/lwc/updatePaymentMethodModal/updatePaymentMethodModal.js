@@ -1,5 +1,7 @@
 import { LightningElement, api } from 'lwc';
 import updatePaymentMethod from '@salesforce/label/c.updatePaymentMethod';
+import commonCancelAndClose from '@salesforce/label/c.commonCancelAndClose';
+import commonCancel from '@salesforce/label/c.commonCancel';
 
 const ESC_KEY_CODE = 27;
 const ESC_KEY_STRING = "Escape";
@@ -12,7 +14,9 @@ export default class UpdatePaymentMethodModal extends LightningElement {
     @api currentRecord;
 
     labels = {
-      updatePaymentMethod
+      updatePaymentMethod,
+      commonCancelAndClose,
+      commonCancel
     }   
 
     renderedCallback() {

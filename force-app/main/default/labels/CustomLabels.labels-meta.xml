@@ -6129,6 +6129,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Close</value>
     </labels>
     <labels>
+        <fullName>commonCancelAndClose</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cancel and close label</shortDescription>
+        <value>Cancel and close</value>
+    </labels>
+    <labels>
         <fullName>commonConcurrentBatchError</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

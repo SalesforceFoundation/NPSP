@@ -7,7 +7,7 @@
               <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
                 <use link:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
               </svg>
-              <span class="slds-assistive-text">Cancel and close</span>
+              <span class="slds-assistive-text">{labels.commonCancelAndClose}</span>
             </button>
             <div class="slds-modal__header">
               <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">{labels.updatePaymentMethod}</h1>
@@ -16,11 +16,11 @@
               
             </div>
             <div class="slds-modal__footer">
-              <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick={closeModal}>Cancel</button>
+              <button class="slds-button slds-button_neutral" aria-label={labels.commonCancelAndClose} onclick={closeModal}>{labels.commonCancel}</button>
               <button class="slds-button slds-button_brand" onclick={closeModal}>{labels.updatePaymentMethod}</button>
             </div>
           </div>
         </section>
-        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+        <div class="slds-backdrop slds-backdrop_open"></div>
   </template>
 </template>
