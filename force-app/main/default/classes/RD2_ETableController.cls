@@ -100,7 +100,7 @@ public with sharing class RD2_ETableController {
      * @return List<TableView> List of processed recurring donation records
      */
     @AuraEnabled(cacheable=true)
-    public static List<TableView> getData() {
+    public static List<TableView> retrieveTableView() {
         try {
             return controller.getTableViews();
         } catch (Exception ex) {
@@ -296,7 +296,8 @@ public with sharing class RD2_ETableController {
             npe03__Recurring_Donation__c.PaymentMethod__c,
             npe03__Recurring_Donation__c.npe03__Date_Established__c,
             npe03__Recurring_Donation__c.RecurringType__c,
-            npe03__Recurring_Donation__c.npe03__Contact__c
+            npe03__Recurring_Donation__c.npe03__Contact__c,
+            npe03__Recurring_Donation__c.npe03__Last_Payment_Date__c
         };
 
         if(GE_GiftEntryController.isElevateCustomer()) {

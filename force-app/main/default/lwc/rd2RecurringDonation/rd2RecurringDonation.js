@@ -12,7 +12,8 @@ import RD2_ViewLessDetails from '@salesforce/label/c.RD2_ViewLessDetails';
 import updatePaymentMethod from '@salesforce/label/c.updatePaymentMethod';
 import changeAmountOrFrequency from '@salesforce/label/c.changeAmountOrFrequency';
 import stopRecurringDonation from '@salesforce/label/c.stopRecurringDonation';
-import getData from '@salesforce/apex/RD2_ETableController.getData';
+import RD2_Actions from '@salesforce/label/c.RD2_Actions';
+import retrieveTableView from '@salesforce/apex/RD2_ETableController.retrieveTableView';
 
 import RECURRING_DONATION from '@salesforce/schema/npe03__Recurring_Donation__c';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
@@ -41,7 +42,7 @@ export default class RecurringDonationTable extends LightningElement {
     currentRecord;
   
     @api
-    donationTypeFilter = 'Show all Recurring Donations';
+    donationTypeFilter;
     
     @api 
     allowACHPaymentMethod;
@@ -66,7 +67,8 @@ export default class RecurringDonationTable extends LightningElement {
       nextDonation,
       lastModified,
       RD2_ViewMoreDetails,
-      RD2_ViewLessDetails
+      RD2_ViewLessDetails,
+      RD2_Actions
     }
 
     data;
@@ -304,7 +306,7 @@ export default class RecurringDonationTable extends LightningElement {
     }
 
     getRecurringDonationFields() {
-      getData()
+      retrieveTableView()
         .then((data) => {
             if (data) {
                 this.data = data;
