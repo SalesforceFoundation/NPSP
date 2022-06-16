@@ -52,13 +52,13 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
                 }`;
                 if(this.template.querySelector('lightning-record-edit-form')){
                     this.template.querySelector('lightning-record-edit-form').appendChild(this.style);
+                    if( this.currentRecord.recurringDonation.Day_of_Month__c ){
+                        this.isMonthlyDonation = true;
+                    }else{
+                        this.isMonthlyDonation = false;
+                    }
+                    this.isRenderCallbackActionExecuted=true;
                 }
-                if( this.currentRecord.recurringDonation.Day_of_Month__c ){
-                    this.isMonthlyDonation = true;
-                }else{
-                    this.isMonthlyDonation = false;
-                }
-                this.isRenderCallbackActionExecuted=true;
             }
         }
       }
