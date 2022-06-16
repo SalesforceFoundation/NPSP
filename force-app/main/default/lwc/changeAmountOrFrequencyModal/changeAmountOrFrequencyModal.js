@@ -40,6 +40,7 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
     }
 
     renderedCallback() {
+        
         if (this.isRenderCallbackActionExecuted) {
             return;
         }
@@ -86,6 +87,8 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
         console.log(event.target.value);
         if((event.target.value) === "Monthly"){
             this.isMonthlyDonation = true;
+        }else{
+            this.isMonthlyDonation = false;
         }
       }
   
