@@ -11,7 +11,7 @@ const ACH_PAYMENT_METHOD = 'ACH';
 export default class UpdatePaymentMethodModal extends LightningElement {
     
     @api isBankPaymentAllowed;
-
+    isRenderCallbackActionExecuted = false;
     @api openUpdatePaymentMethod;
     
     @api currentRecord;
@@ -29,19 +29,20 @@ export default class UpdatePaymentMethodModal extends LightningElement {
 
 
     renderedCallback() {
-        this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
+        if (this.isRenderCallbackActionExecuted) {
+            return;
+        }
         if(this.currentRecord){
-            this.determineACHpaymentMethodAndAddAsOption();
-            this.paymentMethodValue = this.currentRecord.paymentMethod;
+            if(this.currentRecord !== {}){
+                this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
+                this.determineACHpaymentMethodAndAddAsOption();
+                this.paymentMethodValue = this.currentRecord.paymentMethod;
+            }
         }
     }
 
     determineACHpaymentMethodAndAddAsOption(){
-        if(this.isBankPaymentAllowed){
-            if( !this.paymentMethodOptions.some( element => element.value === 'ACH') ){
-                this.paymentMethodOptions.push( { label: 'Bank Account', value: ACH_PAYMENT_METHOD } );
-            }
-        } else if(this.currentRecord.paymentMethod === "ACH"){
+        if(this.isBankPaymentAllowed || this.currentRecord.paymentMethod === "ACH"){
             if( !this.paymentMethodOptions.some( element => element.value === 'ACH') ){
                 this.paymentMethodOptions.push( { label: 'Bank Account', value: ACH_PAYMENT_METHOD } );
             }
@@ -79,6 +80,7 @@ export default class UpdatePaymentMethodModal extends LightningElement {
 
     closeModal() {
       this.template.removeEventListener("keydown", (e) => this.handleKeyUp(e));
+      this.isRenderCallbackActionExecuted = false;
       this.dispatchEvent(new CustomEvent('close', {detail: 'updatePaymentMethod'}));
     }
 }
