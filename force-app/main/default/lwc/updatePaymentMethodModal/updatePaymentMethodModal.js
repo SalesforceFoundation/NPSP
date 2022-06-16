@@ -1,8 +1,9 @@
 import { LightningElement, api, track } from 'lwc';
 import updatePaymentMethod from '@salesforce/label/c.updatePaymentMethod';
-import ACHPaymentMethod from '@salesforce/label/c.RD2_ACH_Payment_Method';
 import CreditCardPaymentMethod from '@salesforce/label/c.RD2_Credit_Card_Payment_Method_Label';
 import ACHPaymentMethodLabel from '@salesforce/label/c.RD2_ACH_Payment_Method_Label';
+import commonCancelAndClose from '@salesforce/label/c.commonCancelAndClose';
+import commonCancel from '@salesforce/label/c.commonCancel';
 
 const ESC_KEY_CODE = 27;
 const ESC_KEY_STRING = "Escape";
@@ -25,7 +26,9 @@ export default class UpdatePaymentMethodModal extends LightningElement {
     labels = {
       updatePaymentMethod,
       ACHPaymentMethodLabel,
-      CreditCardPaymentMethod
+      CreditCardPaymentMethod,
+      commonCancelAndClose,
+      commonCancel
     }   
 
     @track
