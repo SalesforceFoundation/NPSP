@@ -9,6 +9,8 @@ const ESC_KEY_STRING = "Escape";
 const FOCUSABLE_ELEMENTS = "button";
 const TAB_KEY_CODE = 9;
 const TAB_KEY_STRING = "Tab";
+const CREDIT_CARD = "Credit Card";
+const ACH = "ACH";
 
 export default class UpdatePaymentMethodModal extends LightningElement {
     
@@ -22,14 +24,13 @@ export default class UpdatePaymentMethodModal extends LightningElement {
 
     labels = {
       updatePaymentMethod,
-      ACHPaymentMethod,
       ACHPaymentMethodLabel,
       CreditCardPaymentMethod
     }   
 
     @track
     paymentMethodOptions = [
-        { label: CreditCardPaymentMethod, value: CreditCardPaymentMethod }
+        { label: CreditCardPaymentMethod, value: CREDIT_CARD }
     ];
 
 
@@ -47,12 +48,12 @@ export default class UpdatePaymentMethodModal extends LightningElement {
     }
 
     determineACHpaymentMethodAndAddAsOption(){
-        if(this.isBankPaymentAllowed || this.currentRecord.paymentMethod === ACHPaymentMethod){
-            if( !this.paymentMethodOptions.some( element => element.value === ACHPaymentMethod) ){
-                this.paymentMethodOptions.push( { label: ACHPaymentMethodLabel, value: ACHPaymentMethod } );
+        if(this.isBankPaymentAllowed || this.currentRecord.paymentMethod === ACH){
+            if( !this.paymentMethodOptions.some( element => element.value === ACH) ){
+                this.paymentMethodOptions.push( { label: ACHPaymentMethodLabel, value: ACH } );
             }
-        } else if (this.paymentMethodOptions.some( element => element.value === ACHPaymentMethod)){
-            this.paymentMethodOptions.pop( { label: ACHPaymentMethodLabel, value: ACHPaymentMethod } );
+        } else if (this.paymentMethodOptions.some( element => element.value === ACH)){
+            this.paymentMethodOptions.pop( { label: ACHPaymentMethodLabel, value: ACH } );
         }
     }
 
