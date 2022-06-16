@@ -24,6 +24,7 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
     amountFieldName = AMOUNT_FIELD;
     installmentFrequencyFieldName = INSTALLMENT_FREQUENCY_FIELD;
     installmentPeriodFieldName = INSTALLMENT_PERIOD_FIELD;
+    style = document.createElement('style');
 
     labels = {
         changeAmountOrFrequency,
@@ -38,15 +39,17 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
         if (this.isRenderCallbackActionExecuted) {
             return;
         }
-        if(this.currentRecord){
-            this.isRenderCallbackActionExecuted = true;
-            this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
-    
-            const style = document.createElement('style');
-            style.innerText = `lightning-helptext {
-                display:none;
-            }`;
-            this.template.querySelector('lightning-record-edit-form').appendChild(style);
+        if(this.currentRecord ){
+            if(this.currentRecord !== {}){
+                this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
+                this.style.innerText = `lightning-helptext {
+                    display:none;
+                }`;
+                if(this.template.querySelector('lightning-record-edit-form')){
+                    this.template.querySelector('lightning-record-edit-form').appendChild(this.style);
+                }
+            }
+
         }
       }
   
@@ -78,8 +81,14 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
       }
   
       closeModal() {
-        this.template.removeEventListener("keydown", (e) => this.handleKeyUp(e));
-        this.dispatchEvent(new CustomEvent('close', {detail: 'changeAmountOrFrequency'}));
+        this.template.removeEventListener("keydown", (e) => this.handleKeyUp(e));       
+        if(this.template.querySelector('lightning-record-edit-form')){
+            this.style.innerText = `lightning-helptext {
+                display:none;
+            }`;
+            this.template.querySelector('lightning-record-edit-form').removeChild(this.style);
+        }
         this.isRenderCallbackActionExecuted = false;
+        this.dispatchEvent(new CustomEvent('close', {detail: 'changeAmountOrFrequency'}));
     } 
 }
