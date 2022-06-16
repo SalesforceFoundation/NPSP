@@ -2413,6 +2413,14 @@
         <value>Bank Account</value>
     </labels>
     <labels>
+        <fullName>RD2_Payment_Method</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Payment Method label</shortDescription>
+        <value>Payment Method</value>
+    </labels>
+    <labels>
         <fullName>RD2_Credit_Card_Payment_Method_Label</fullName>
         <categories>Recurring-Donations</categories>
         <language>en_US</language>

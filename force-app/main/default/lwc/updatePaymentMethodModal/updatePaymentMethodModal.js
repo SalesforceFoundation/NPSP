@@ -2,6 +2,7 @@ import { LightningElement, api, track } from 'lwc';
 import updatePaymentMethod from '@salesforce/label/c.updatePaymentMethod';
 import CreditCardPaymentMethod from '@salesforce/label/c.RD2_Credit_Card_Payment_Method_Label';
 import ACHPaymentMethodLabel from '@salesforce/label/c.RD2_ACH_Payment_Method_Label';
+import paymentMethod from '@salesforce/label/c.RD2_Payment_Method';
 import commonCancelAndClose from '@salesforce/label/c.commonCancelAndClose';
 import commonCancel from '@salesforce/label/c.commonCancel';
 
@@ -28,7 +29,8 @@ export default class UpdatePaymentMethodModal extends LightningElement {
       ACHPaymentMethodLabel,
       CreditCardPaymentMethod,
       commonCancelAndClose,
-      commonCancel
+      commonCancel,
+      paymentMethod
     }   
 
     @track
