@@ -12,7 +12,7 @@ import updatePaymentMethod from '@salesforce/label/c.updatePaymentMethod';
 import changeAmountOrFrequency from '@salesforce/label/c.changeAmountOrFrequency';
 import stopRecurringDonation from '@salesforce/label/c.stopRecurringDonation';
 import RD2_Actions from '@salesforce/label/c.RD2_Actions';
-import getData from '@salesforce/apex/RD2_ETableController.getData';
+import retrieveTableView from '@salesforce/apex/RD2_ETableController.retrieveTableView';
 
 import RECURRING_DONATION from '@salesforce/schema/npe03__Recurring_Donation__c';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
@@ -304,7 +304,7 @@ export default class RecurringDonationTable extends LightningElement {
     }
 
     getRecurringDonationFields() {
-      getData()
+      retrieveTableView()
         .then((data) => {
             if (data) {
                 this.data = data;
