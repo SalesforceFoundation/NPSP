@@ -293,16 +293,88 @@ private class CRLP_Batch_Base_TEST {
     }
 
     /**
+     * @description Confirms RD NonSkew query with Batch Filter enabled uses Field Override
+     */
+    @isTest
+    private static void recurringDonationRollupIncrementalModeQueryUsesFieldOverride() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.RecurringDonations;
+        String userDefinedLastNDaysFieldOverride = 'LastModifiedDate';
+        Integer overrideDays = 20;
+        configureIncrementalFieldOverrides(
+                jobType,
+                userDefinedLastNDaysFieldOverride,
+                overrideDays);
+
+        CRLP_RollupProcessingOptions.RollupTypeFilter typeFilter =
+                CRLP_RollupProcessingOptions.RollupTypeFilter.All;
+        CRLP_Batch_Base_NonSkew rdBatchJob = new CRLP_RD_BATCH(typeFilter);
+        rdBatchJob.isScheduledJob = true;
+
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(rdBatchJob, null, null, null);
+        
+        String query = queryBuilder.buildQuery();
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
+
+        System.assertEquals(2, query.countMatches('SELECT'),
+            'Recurring Donation Filtered query should include inner join');
+
+        System.assert(generatedWhereClause.contains('FROM'));
+        System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
+                'where clause for the inner join should contain a where filter on the Opportunities.');
+        System.assert(generatedWhereClause.contains(userDefinedLastNDaysFieldOverride));
+        System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + overrideDays), 
+                'Where clause should use Last N Days Override: ' + overrideDays);
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
+                'The outer query should not contain "ORDER BY" or "LIMIT".');
+    }
+
+    /**
      * @description Confirms RD NonSkew query with Batch Filter enabled includes an inner join
      */
     @isTest
     private static void recurringDonationRollupGeneratesIncrementalModeJoinQuery() {
         CRLP_RollupProcessingOptions.RollupType jobType =
                 CRLP_RollupProcessingOptions.RollupType.RecurringDonations;
-        String userDefinedLastNDaysFieldOverride = 'LastModifiedDate';
         configureIncrementalFieldOverrides(
                 jobType,
-                userDefinedLastNDaysFieldOverride,
+                null,
+                null);
+
+        CRLP_RollupProcessingOptions.RollupTypeFilter typeFilter =
+                CRLP_RollupProcessingOptions.RollupTypeFilter.All;
+        CRLP_Batch_Base_NonSkew rdBatchJob = new CRLP_RD_BATCH(typeFilter);
+        rdBatchJob.isScheduledJob = true;
+
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(rdBatchJob, null, null, null);
+        
+        String query = queryBuilder.buildQuery();
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
+
+        System.assertEquals(2, query.countMatches('SELECT'),
+            'Recurring Donation Filtered query should include inner join');
+
+        System.assert(generatedWhereClause.contains('FROM'));
+        System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
+                'where clause for the inner join should contain a where filter on the Opportunities.');        
+        System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + rdLastNDaysValue), 
+                'Where clause should use RD Last N Days Setting: ' + rdLastNDaysValue);
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
+                'The outer query should not contain "ORDER BY" or "LIMIT".');
+    }
+
+    /**
+     * @description Confirms RD NonSkew query with Batch Filter enabled uses Time Bound Last N Days
+     */
+    @isTest
+    private static void recurringDonationIncrementalModeQueryUsesTimeBountInt() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.RecurringDonations;
+        configureIncrementalFieldOverrides(
+                jobType,
+                null,
                 null);
         addTimeBoundRdRollup();
 
@@ -936,6 +1008,7 @@ private class CRLP_Batch_Base_TEST {
 
     private static void addTimeBoundRdRollup() {
         String filterGroupId = CMT_UnitTestData_TEST.getNewRecordId();
+        // String filterGroupId = CMT_UnitTestData_TEST.rdClosedFilterGroupId;
         String timeBoundRollup = CMT_UnitTestData_TEST.createRollupRecord('RD Paid Amount Last N Days', 
                 filterGroupId, CMT_UnitTestData_TEST.RollupRecordType.OppToRD,
                 'npe03__Paid_Amount__c', CRLP_Operation.RollupType.Sum, 'Amount', 
