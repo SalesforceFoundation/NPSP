@@ -85,11 +85,13 @@ public with sharing class RD2_ETableController {
         @AuraEnabled public String frequency;
         @AuraEnabled public String status;
         @AuraEnabled public String paymentMethod;
-        public TableView(npe03__Recurring_Donation__c recurringDonation, String frequency, String status, String paymentMethod) {
+        @AuraEnabled public Date finalDonation;
+        public TableView(npe03__Recurring_Donation__c recurringDonation, String frequency, String status, String paymentMethod, Date finalDonation) {
             this.recurringDonation = recurringDonation;
             this.frequency = frequency;
             this.status = status;
             this.paymentMethod = paymentMethod;
+            this.finalDonation = finalDonation;
         }
     }
 
@@ -113,22 +115,38 @@ public with sharing class RD2_ETableController {
     * @return List<RD2_ETableController.TableView> returns processed Recurring Donations.
     */
     private List<RD2_ETableController.TableView> getTableViews() {
-        List<RD2_ETableController.TableView> recurringDonations = new List<RD2_ETableController.TableView>();
+        Map<Id, RD2_ETableController.TableView> recurringDonations = new Map<Id,RD2_ETableController.TableView>();
         if(RD2_EnablementService.isRecurringDonations2Enabled) {
             if(controller.hasAccessToRecurringDonation()) {
+                Set<Id> fixedRecurringDonationIds = new Set<Id>();
+
                 for(npe03__Recurring_Donation__c recDonation : selector.getRecurringDonations()) {
-                    recurringDonations.add( new RD2_ETableController.TableView( recDonation,
+                    recurringDonations.put( recDonation.Id, new RD2_ETableController.TableView( recDonation,
                                                                                 controller.getFrequency(recDonation),
                                                                                 controller.getStatus(recDonation),
-                                                                                controller.getPaymentMethod(recDonation)));
+                                                                                controller.getPaymentMethod(recDonation),
+                                                                                null));
     
+                    if(recDonation.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED) {
+                        fixedRecurringDonationIds.add(recDonation.Id);
+                    }
                 }
+
+                if(!fixedRecurringDonationIds.isEmpty()) {
+                    Map<ID, Date> mapRDFinalDate = getFinalDonations(fixedRecurringDonationIds);
+                    for(Id rdID : mapRDFinalDate.keySet()) {
+                        RD2_ETableController.TableView tableView = recurringDonations.get(rdID);
+                        tableView.finalDonation = mapRDFinalDate.get(rdID);
+                        recurringDonations.put(rdID, tableView);
+                    }
+                }
+
             } else {
                 throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
             }
         }
 
-        return recurringDonations;
+        return recurringDonations.values();
       
     }
 
@@ -244,6 +262,26 @@ public with sharing class RD2_ETableController {
     /** 
     * @author Salesforce.org
     * @date 2022
+    * @description process Recurring Donation record to build the payment method string.
+    * @param fixedRecurringDonationIds Fixed recurring donation IDs
+    * @return Map<Id, Date> Map Recurring Donation Ids with the related final date
+    */
+    private Map<Id, Date> getFinalDonations(Set<Id> fixedRecurringDonationIds) {
+        Map<Id, Date> mapRDLastDonation = new Map<Id, Date>();
+        for(Id rdID : fixedRecurringDonationIds) {
+            Map<String, Object> mapInstallments = RD2_VisualizeScheduleController.getInstallments(rdID, 100);
+            Map<String, Object> mapDataTable = (Map<String, Object>)JSON.deserializeUntyped(JSON.Serialize(mapInstallments.get('dataTable')));
+            List<Object> listRecords = (List<Object>)JSON.deserializeUntyped(JSON.Serialize(mapDataTable.get('records')));
+            Object lastRecord = listRecords.get(listRecords.size()-1);
+            Map<String, Object> lastInstallment = (Map<String, Object>)JSON.deserializeUntyped(JSON.Serialize(lastRecord));
+            mapRDLastDonation.put(rdID, Date.valueOf(JSON.Serialize(lastInstallment.get('donationDate')).replace('"', '')));
+        }
+        return mapRDLastDonation;
+    }
+
+    /** 
+    * @author Salesforce.org
+    * @date 2022
     * @description method to check recurring donation permissions.
     * @return Boolean returns access to Recurring Donations.
     */
@@ -255,7 +293,10 @@ public with sharing class RD2_ETableController {
             npe03__Recurring_Donation__c.InstallmentFrequency__c,
             npe03__Recurring_Donation__c.Day_of_Month__c,
             npe03__Recurring_Donation__c.Status__c,
-            npe03__Recurring_Donation__c.PaymentMethod__c
+            npe03__Recurring_Donation__c.PaymentMethod__c,
+            npe03__Recurring_Donation__c.npe03__Date_Established__c,
+            npe03__Recurring_Donation__c.RecurringType__c,
+            npe03__Recurring_Donation__c.npe03__Contact__c
         };
 
         if(GE_GiftEntryController.isElevateCustomer()) {
