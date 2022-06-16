@@ -1,6 +1,14 @@
 import { LightningElement, api } from 'lwc';
 import changeAmountOrFrequency from '@salesforce/label/c.changeAmountOrFrequency';
 import updateRecurringDonation from '@salesforce/label/c.updateRecurringDonation';
+import every from "@salesforce/label/c.RD2_EntryFormScheduleEveryLabel";
+import commonAmount from "@salesforce/label/c.commonAmount";
+import installmentPeriod from "@salesforce/label/c.installmentPeriod";
+import recurringDonationSchedule from "@salesforce/label/c.recurringDonationSchedule";
+import RECURRING_DONATION from '@salesforce/schema/npe03__Recurring_Donation__c';
+import AMOUNT_FIELD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Amount__c';
+import INSTALLMENT_FREQUENCY_FIELD from '@salesforce/schema/npe03__Recurring_Donation__c.InstallmentFrequency__c';
+import INSTALLMENT_PERIOD_FIELD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
 import commonCancelAndClose from '@salesforce/label/c.commonCancelAndClose';
 import commonCancel from '@salesforce/label/c.commonCancel';
 
@@ -12,16 +20,41 @@ const TAB_KEY_STRING = "Tab";
 export default class ChangeAmountOrFrequencyModal extends LightningElement {
     @api openChangeAmountOrFrequency;
     @api currentRecord;
+    isRenderCallbackActionExecuted = false;
+
+    recurringDonationApiName = RECURRING_DONATION;
+    amountFieldName = AMOUNT_FIELD;
+    installmentFrequencyFieldName = INSTALLMENT_FREQUENCY_FIELD;
+    installmentPeriodFieldName = INSTALLMENT_PERIOD_FIELD;
+    style = document.createElement('style');
 
     labels = {
         changeAmountOrFrequency,
         updateRecurringDonation,
+        every,
+        commonAmount,
+        recurringDonationSchedule,
+        installmentPeriod,
         commonCancelAndClose,
         commonCancel
     }
 
     renderedCallback() {
-        this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
+        if (this.isRenderCallbackActionExecuted) {
+            return;
+        }
+        if(this.currentRecord ){
+            if(this.currentRecord !== {}){
+                this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
+                this.style.innerText = `lightning-helptext {
+                    display:none;
+                }`;
+                if(this.template.querySelector('lightning-record-edit-form')){
+                    this.template.querySelector('lightning-record-edit-form').appendChild(this.style);
+                }
+            }
+
+        }
       }
   
       handleKeyUp(e) {
@@ -52,7 +85,14 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
       }
   
       closeModal() {
-        this.template.removeEventListener("keydown", (e) => this.handleKeyUp(e));
+        this.template.removeEventListener("keydown", (e) => this.handleKeyUp(e));       
+        if(this.template.querySelector('lightning-record-edit-form')){
+            this.style.innerText = `lightning-helptext {
+                display:none;
+            }`;
+            this.template.querySelector('lightning-record-edit-form').removeChild(this.style);
+        }
+        this.isRenderCallbackActionExecuted = false;
         this.dispatchEvent(new CustomEvent('close', {detail: 'changeAmountOrFrequency'}));
     } 
 }
