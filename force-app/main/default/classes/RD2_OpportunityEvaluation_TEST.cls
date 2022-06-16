@@ -131,7 +131,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
     @IsTest
     private static void shouldNotProcessClosedRDsWithOpenOpps() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-        // configureRecurringDonationsClosedFilter();
+        configureRecurringDonationsClosedFilter();
         final Date batchRunDate = Date.today();
         RD2_ScheduleService.currentDate = batchRunDate;
 

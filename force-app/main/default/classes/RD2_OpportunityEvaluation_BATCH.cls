@@ -51,6 +51,20 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
         private set;
     }
 
+    /**
+    * @description Returns true if the "Exclude Closed Recurring Donations" setting is enabled
+    * Can be manually overwritten for use in Bulk Data Processes
+    */
+    public Boolean closedFilterEnabled {
+        get {
+            if (closedFilterEnabled == null) {
+                closedFilterEnabled = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Exclude_Closed_Recurring_Donations__c;
+            }
+            return closedFilterEnabled;
+        }
+        set;
+    }
+
     /***
     * @description Contains batch Apex class name
     */
@@ -231,9 +245,8 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     */
     @TestVisible
     private String getRDBatchQuery() {
-        Boolean rdBatchFilterOn = getOpportunityModifiedFilterEnabled();
         String rdFilterWhereClause;
-        if (rdBatchFilterOn) {
+        if (closedFilterEnabled) {
             rdFilterWhereClause = 'Status__c != ' + RD2_Constants.STATUS_CLOSED;
         }
 
@@ -282,15 +295,6 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
         }
 
         return configValue.intValue();
-    }
-
-    private Boolean getOpportunityModifiedFilterEnabled() {
-        return UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Exclude_Closed_Recurring_Donations__c;
-    }
-
-    private String getDateForSoql(Date soqlDate) {
-        return DateTime.newInstance(soqlDate.year(), soqlDate.month(), soqlDate.day())
-            .format('YYYY-MM-dd');
     }
 
     /**

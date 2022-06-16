@@ -37,6 +37,7 @@
 private class CRLP_Batch_Base_TEST {
 
     private static final Integer rdLastNDaysValue = 15;
+    private static final Integer rdTimeBoundInt = 60;
 
     /******************************** Incremental Mode Tests *****************************/
 
@@ -303,6 +304,7 @@ private class CRLP_Batch_Base_TEST {
                 jobType,
                 userDefinedLastNDaysFieldOverride,
                 null);
+        addTimeBoundRdRollup();
 
         CRLP_RollupProcessingOptions.RollupTypeFilter typeFilter =
                 CRLP_RollupProcessingOptions.RollupTypeFilter.All;
@@ -321,8 +323,8 @@ private class CRLP_Batch_Base_TEST {
         System.assert(generatedWhereClause.contains('FROM'));
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
-        System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + rdLastNDaysValue), 
-                'Where clause should use RD N Days Ago: ' + rdLastNDaysValue);
+        System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + rdTimeBoundInt), 
+                'Where clause should use Rollup TimeBound Integer: ' + rdTimeBoundInt);
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
                 'The outer query should not contain "ORDER BY" or "LIMIT".');
     }
@@ -930,6 +932,16 @@ private class CRLP_Batch_Base_TEST {
         Integer i = query.lastIndexOf(')');
         String outerQueryOrderByAndLimitString = query.right(query.length() - i - 1);
         return outerQueryOrderByAndLimitString;
+    }
+
+    private static void addTimeBoundRdRollup() {
+        String filterGroupId = CMT_UnitTestData_TEST.getNewRecordId();
+        String timeBoundRollup = CMT_UnitTestData_TEST.createRollupRecord('RD Paid Amount Last N Days', 
+                filterGroupId, CMT_UnitTestData_TEST.RollupRecordType.OppToRD,
+                'npe03__Paid_Amount__c', CRLP_Operation.RollupType.Sum, 'Amount', 
+                CRLP_Operation.TimeBoundOperationType.Days_Back, rdTimeBoundInt);
+        Rollup__mdt timeBoundRdRollup = (Rollup__mdt) JSON.deserialize(timeBoundRollup, Rollup__mdt.class);
+        CRLP_Rollup_SEL.cachedRollups.add(timeBoundRdRollup);
     }
 
     /**
