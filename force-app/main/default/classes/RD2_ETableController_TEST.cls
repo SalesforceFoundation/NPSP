@@ -38,7 +38,8 @@
 public class RD2_ETableController_TEST {
     
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
-    
+    private static final String ALL_RD = 'All Recurring Donations';
+
     /**
     * @author Salesforce.org
     * @date 2022
@@ -57,7 +58,7 @@ public class RD2_ETableController_TEST {
                                                                                 .withAmount(100)
                                                                                 .withDefaultValues()
                                                                                 .withInstallmentPeriodMonthly()
-                                                                                .withDayOfMonth('23')
+                                                                                .withDayOfMonth('21')
                                                                                 .withInstallmentFrequency(1)
                                                                                 .build();
 
@@ -66,7 +67,7 @@ public class RD2_ETableController_TEST {
                                                                                 .withAmount(100)
                                                                                 .withDefaultValues()
                                                                                 .withInstallmentPeriodYearly()
-                                                                                .withDayOfMonth('23')
+                                                                                .withDayOfMonth('22')
                                                                                 .withInstallmentFrequency(1)
                                                                                 .build();
 
@@ -84,8 +85,9 @@ public class RD2_ETableController_TEST {
                                                                                 .withAmount(100)
                                                                                 .withDefaultValues()
                                                                                 .withInstallmentPeriodMonthly()
-                                                                                .withDayOfMonth('23')
+                                                                                .withDayOfMonth('24')
                                                                                 .withInstallmentFrequency(2)
+                                                                                .withStatus(RD2_Constants.STATUS_PAUSED)
                                                                                 .build();
 
         npe03__Recurring_Donation__c rDonation05 = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
@@ -95,6 +97,7 @@ public class RD2_ETableController_TEST {
                                                                                 .withInstallmentPeriodYearly()
                                                                                 .withDayOfMonth('23')
                                                                                 .withInstallmentFrequency(2)
+                                                                                .withStatus(RD2_Constants.STATUS_CLOSED)
                                                                                 .build();
 
         npe03__Recurring_Donation__c rDonation06 = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
@@ -111,7 +114,7 @@ public class RD2_ETableController_TEST {
         RD2_ETableController.selector = (RD2_ERecurringDonationsSelector) Test.createStub(RD2_ERecurringDonationsSelector.class, mock);
        
         Test.startTest();
-        List<RD2_ETableController.TableView> result = RD2_ETableController.retrieveTableView();
+        List<RD2_ETableController.TableView> result = RD2_ETableController.retrieveTableView(RD2_ETableController_TEST.ALL_RD);
         Test.stopTest();
 
         System.assertNotEquals(null, result, 'Recurring Donations should not be null');

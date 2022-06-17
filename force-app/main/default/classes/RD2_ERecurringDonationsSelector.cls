@@ -35,6 +35,10 @@
 */
 public inherited sharing class RD2_ERecurringDonationsSelector {
 
+	private final String ALL_RD = 'All Recurring Donations';
+	private final String ELEVATE_RD = 'Elevate Recurring Donations';
+	private final String NONELEVATE_RD = 'Non-Elevate Recurring Donations';
+
     @TestVisible
     private Id currentContactId {
         get {
@@ -50,27 +54,35 @@ public inherited sharing class RD2_ERecurringDonationsSelector {
      * @description Returns the Recurring Donation records related to the Experience Site user.
      * @return List<npe03__Recurring_Donation__c>
      */
-    public List<npe03__Recurring_Donation__c> getRecurringDonations() {
+    public List<npe03__Recurring_Donation__c> getRecurringDonations(String elevateFilter) {
 
 		Id currentContactId = this.currentContactId;
 		List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>();
 		if(currentContactId != NULL) {
-			recurringDonations = [  SELECT npe03__Amount__c,
-										npe03__Installment_Period__c,
-										InstallmentFrequency__c,
-										Day_of_Month__c,
-										Status__c,
-                    CommitmentId__c,
-                    PaymentMethod__c,
-                    CardLast4__c,
-                    CardExpirationYear__c,
-                    CardExpirationMonth__c,
-                    ACH_Last_4__c,
-                    npe03__Last_Payment_Date__c
-									FROM npe03__Recurring_Donation__c
-									WHERE npe03__Contact__c = :currentContactId
-                  					AND RecurringType__c IN (:RD2_Constants.RECURRING_TYPE_OPEN, :RD2_Constants.RECURRING_TYPE_FIXED) 
-									WITH SECURITY_ENFORCED ];
+			for (npe03__Recurring_Donation__c recurringDonation : [  SELECT npe03__Amount__c,
+																		npe03__Installment_Period__c,
+																		InstallmentFrequency__c,
+																		Day_of_Month__c,
+																		Status__c,
+																		CommitmentId__c,
+																		PaymentMethod__c,
+																		CardLast4__c,
+																		CardExpirationYear__c,
+																		CardExpirationMonth__c,
+																		ACH_Last_4__c,
+																		npe03__Last_Payment_Date__c
+																	FROM npe03__Recurring_Donation__c
+																	WHERE npe03__Contact__c = :currentContactId
+																		AND RecurringType__c IN (:RD2_Constants.RECURRING_TYPE_OPEN, :RD2_Constants.RECURRING_TYPE_FIXED)
+																	WITH SECURITY_ENFORCED ] ) {
+				if(elevateFilter == ALL_RD) {
+					recurringDonations.add(recurringDonation);
+				} else if(elevateFilter == ELEVATE_RD && !String.isEmpty(recurringDonation.CommitmentId__c)) {
+					recurringDonations.add(recurringDonation);
+				} else if (elevateFilter == NONELEVATE_RD && String.isEmpty(recurringDonation.CommitmentId__c)) {
+					recurringDonations.add(recurringDonation);
+				}
+			}
 		}
 
         return recurringDonations;

@@ -304,7 +304,7 @@ export default class RecurringDonationTable extends LightningElement {
     }
 
     getRecurringDonationFields() {
-      retrieveTableView()
+      retrieveTableView({ elevateFilter : this.donationTypeFilter })
         .then((data) => {
             if (data) {
                 this.data = data;
