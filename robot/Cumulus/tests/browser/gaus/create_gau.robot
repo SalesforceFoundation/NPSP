@@ -10,7 +10,7 @@ Suite Teardown  Delete Records and Close Browser
 
 Create GAU and Verify
      [Documentation]                   Create a General Accounting Unit name from  the UI
-     [tags]                            W-039818                 feature:GAU
+     [tags]                            feature:GAU     unit
 
      ${gau_name} =                     Generate Random String
      Go To Page                        Listing
