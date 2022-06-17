@@ -97,7 +97,7 @@ public with sharing class RD2_ETableController {
      * @description returns a list of processed recurring donations
      * @return List<TableView> List of processed recurring donation records
      */
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static List<TableView> retrieveTableView() {
         try {
             return controller.getTableViews();

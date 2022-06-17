@@ -89,8 +89,8 @@ export default class StopRecurringDonationModal extends LightningElement {
                 message: this.message
             });
             this.dispatchEvent(event);
+            this.closeModal();
           })
-        this.closeModal();
       } 
   
       closeModal() {

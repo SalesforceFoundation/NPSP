@@ -302,12 +302,13 @@ export default class RecurringDonationTable extends LightningElement {
         default:
             break;
       }
-      this.getRecurringDonationFields()
+      this.getRecurringDonationFields();
     }
 
     getRecurringDonationFields() {
       retrieveTableView()
         .then((data) => {
+          console.log(data);
           if (data) {
             this.data = data.map((el) => {
                   let actions = this.actions.map(a => {return {...a}});
@@ -317,12 +318,14 @@ export default class RecurringDonationTable extends LightningElement {
                     nexDonationFormatFirstElement = el.nextDonation.split('.')[0] || el.nextDonation;
                     nexDonationFormatSecondElement = el.nextDonation.split('.')[1] || '';  
                   }
+                  console.log(el.recurringDonation.Status__c);
                   if(el.recurringDonation.Status__c === CLOSED_STATUS){
                     actions.map((action) => {
                       action.disabled = true;
                       return action;
                     })
                   }
+                  console.log(actions)
                   return {actions, ...el, nexDonationFormatFirstElement, nexDonationFormatSecondElement};
                 });
             }
