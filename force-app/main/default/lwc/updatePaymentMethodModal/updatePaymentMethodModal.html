@@ -10,14 +10,22 @@
               <span class="slds-assistive-text">{labels.commonCancelAndClose}</span>
             </button>
             <div class="slds-modal__header">
-              <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">{labels.updatePaymentMethod}</h1>
+              <h1 id="modal-heading-01" class="slds-p-around_small slds-modal__title slds-hyphenate">{labels.updatePaymentMethod}</h1>
             </div>
-            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-              
+            <div class="slds-modal__content slds-grid slds-wrap slds-p-around_medium" id="modal-content-id-1">
+                <lightning-radio-group class="slds-p-horizontal_small slds-size_1-of-1 slds-large-size_1-of-3" name="paymentMethodRadioGroup"
+                label={labels.paymentMethod}
+                options={paymentMethodOptions}
+                value={currentRecord.recurringDonation.PaymentMethod__c}
+                type="radio"></lightning-radio-group>
             </div>
-            <div class="slds-modal__footer">
-              <button class="slds-button slds-button_neutral" aria-label={labels.commonCancelAndClose} onclick={closeModal}>{labels.commonCancel}</button>
-              <button class="slds-button slds-button_brand" onclick={closeModal}>{labels.updatePaymentMethod}</button>
+            <div class="slds-modal__footer slds-grid slds-wrap slds-grid_align-end">
+                <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-12">
+                    <button class="slds-button_stretch slds-button slds-button_neutral" aria-label={labels.commonCancelAndClose} onclick={closeModal}>{labels.commonCancel}</button>
+                </div>
+                <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_5-of-12">
+                    <button class="slds-button_stretch slds-button slds-button_brand" onclick={closeModal}>{labels.updatePaymentMethod}</button>
+                </div>
             </div>
           </div>
         </section>
