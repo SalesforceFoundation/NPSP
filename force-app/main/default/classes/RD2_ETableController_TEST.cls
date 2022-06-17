@@ -111,7 +111,7 @@ public class RD2_ETableController_TEST {
         RD2_ETableController.selector = (RD2_ERecurringDonationsSelector) Test.createStub(RD2_ERecurringDonationsSelector.class, mock);
        
         Test.startTest();
-        List<RD2_ETableController.TableView> result = RD2_ETableController.getData();
+        List<RD2_ETableController.TableView> result = RD2_ETableController.retrieveTableView();
         Test.stopTest();
 
         System.assertNotEquals(null, result, 'Recurring Donations should not be null');
