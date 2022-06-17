@@ -46,6 +46,7 @@ export default class UpdatePaymentMethodModal extends LightningElement {
                 this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
                 if(this.template.querySelector('lightning-radio-group')){
                     this.style.innerText = `legend.slds-form-element__legend.slds-form-element__label {
+                        padding-bottom: 2%;
                         font-size: 120%;
                     }
                     span.slds-radio {
