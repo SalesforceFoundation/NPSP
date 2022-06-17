@@ -103,7 +103,7 @@
                     </th>
                     <th scope="col">
                         <div class="slds-cell-fixed">
-                            <div class="slds-truncate slds-assistive-text" title={labels.RD2_Actions}>{labels.RD2_Actions}</div>
+                            <div class="slds-truncate slds-assistive-text" title="Actions">Actions</div>
                         </div>
                     </th>
                 </tr>
@@ -144,12 +144,12 @@
                                 {item.nexDonationFormatSecondElement}
                             </div>
                         </td>
-                        <td key={item.lastModified} data-id={item.id} class={tdClasses}  data-label={labels.lastModified}>
-                            <div class={rowClasses} style={fixedWidth} title={labels.lastModified}>
+                        <td key={item.lastModified} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.lastModified}>
+                            <div class={rowClasses} style={fixedWidth} title="Last Modified">
                                 {item.lastModified}</div>
                         </td>
-                        <td data-label={labels.RD2_Actions}>
-                            <lightning-button-menu class="dv-dynamic-mobile" menu-alignment="auto" alternative-text={labels.RD2_Actions}>
+                        <td data-label="Actions">
+                            <lightning-button-menu class="dv-dynamic-mobile" menu-alignment="auto" alternative-text="Action menu">
                                 <template for:each={actions} for:item="action">
                                     <p key={action.name} data-recid={action.name}>
                                         <lightning-menu-item label={action.label} onclick={handleRowAction} data-action={action.name} data-recordid={item.recurringDonation.Id} disabled={action.disabled}>
