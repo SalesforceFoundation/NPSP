@@ -15,6 +15,7 @@ export default class StopRecurringDonationModal extends LightningElement {
     }
 
     @api openStopRecurringDonation;
+    @api currentRecord;
 
     renderedCallback() {
         this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
