@@ -22,8 +22,6 @@ export default class UpdatePaymentMethodModal extends LightningElement {
     
     @api currentRecord;
 
-    paymentMethodValue = "";
-
     labels = {
       updatePaymentMethod,
       ACHPaymentMethodLabel,
@@ -46,13 +44,15 @@ export default class UpdatePaymentMethodModal extends LightningElement {
         if(this.currentRecord){
             if(this.currentRecord !== {}){
                 this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
-                this.determineACHpaymentMethodAndAddAsOption();
+                if(this.template.querySelector('lightning-radio-group')){
+                    this.determineACHpaymentMethodAndAddAsOption();
+                }
             }
         }
     }
 
     determineACHpaymentMethodAndAddAsOption(){
-        if(this.isBankPaymentAllowed || this.currentRecord.paymentMethod === ACH){
+        if(this.isBankPaymentAllowed || this.currentRecord.recurringDonation.PaymentMethod__c === ACH){
             if( !this.paymentMethodOptions.some( element => element.value === ACH) ){
                 this.paymentMethodOptions.push( { label: ACHPaymentMethodLabel, value: ACH } );
             }
