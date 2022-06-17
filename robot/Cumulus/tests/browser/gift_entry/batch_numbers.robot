@@ -29,7 +29,7 @@ Test Add and Delete Batch Number Formats
     ...                     carry the batch number in the specified format and starting number. Deactivate the active number format,
     ...                     Activate the other format and verify the new batch carries correct format.Deactivate the number format
     ...                     Verify new batch does not have a batch number assigned.
-    [tags]                                  unstable      feature:GE    W-8246942
+    [tags]                                  feature:GE  unstable
     #Create Batch Number Formats and activate second format
     Load Page Object                        Template      GE_Gift_Entry
     Enter Value In Field
