@@ -129,22 +129,22 @@
                             <div class={rowClasses} style={fixedWidth} title={labels.lblStatus}>
                                 {item.status}</div>
                         </td>
-                        <td key={item.firstDonation} data-id={item.id} class={tdClasses} data-label={labels.firstDonation}>
+                        <td key={item.firstDonation} data-id={item.recurringDonation.Id} class={tdClasses} data-label={labels.firstDonation}>
                             <div class={rowClasses} style={fixedWidth} title={labels.firstDonation}>
                                 {item.firstDonation}
                             </div>
                         </td>
-                        <td key={item.mostRecentDonation} data-id={item.id} class={tdClasses} data-label={labels.mostRecentDonation}>
+                        <td key={item.mostRecentDonation} data-id={item.recurringDonation.Id} class={tdClasses} data-label={labels.mostRecentDonation}>
                             <div class={rowClasses} style={fixedWidth} title={labels.mostRecentDonation}>
-                                {item.mostRecentDonation}</div>
+                                {item.recurringDonation.npe03__Last_Payment_Date__c}</div>
                         </td>
-                        <td key={item.nextDonation} data-id={item.id} class={tdClasses}  data-label={labels.nextDonation}>
+                        <td key={item.nextDonation} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.nextDonation}>
                             <div class={rowClasses} style={fixedWidth}> 
                                 {item.nexDonationFormatFirstElement} </br>
                                 {item.nexDonationFormatSecondElement}
                             </div>
                         </td>
-                        <td key={item.lastModified} data-id={item.id} class={tdClasses}  data-label={labels.lastModified}>
+                        <td key={item.lastModified} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.lastModified}>
                             <div class={rowClasses} style={fixedWidth} title="Last Modified">
                                 {item.lastModified}</div>
                         </td>
@@ -158,7 +158,7 @@
                                 </template>
                             </lightning-button-menu>
                         </td>
-                        <td class={viewMore} data-label={labels.RD2_ViewMoreDetails} data-viewid={item.id} onclick={toggleView}>
+                        <td class={viewMore} data-label={labels.RD2_ViewMoreDetails} data-viewid={item.recurringDonation.Id} onclick={toggleView}>
                         </td>
                     </tr>
                 </template>
