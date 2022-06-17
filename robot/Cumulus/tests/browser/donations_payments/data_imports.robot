@@ -9,7 +9,7 @@ Suite Setup     Open Test Browser
 *** Test Cases ***
 
 Data Imports
-    [tags]                     unstable
+    [tags]                     feature:Donations and Payments   unstable
     ${first_name1} =           Generate Random String
     ${last_name1} =            Generate Random String
     ${acc1}=                   Generate Random String

@@ -9,6 +9,7 @@ const TAB_KEY_STRING = "Tab";
 
 export default class UpdatePaymentMethodModal extends LightningElement {
     @api openUpdatePaymentMethod;
+    @api currentRecord;
 
     labels = {
       updatePaymentMethod

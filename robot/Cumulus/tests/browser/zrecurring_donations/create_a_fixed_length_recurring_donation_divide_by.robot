@@ -28,7 +28,7 @@ Setup Test Data
 
 Create Fixed Length Recurring Donation Divide By
     [Documentation]              This test verifies that Opportunities with the proper divided amount are created for a Recurring Donation.
-    [tags]                        unstable           W-039820                            feature:Recurring Donations
+    [tags]                      feature:Recurring Donations     unit
 
     #Find 1st Opportunity for Recurring Donation and Check Amount
     @{opportunity1} =                        API Query Installment      ${data}[contact_rd][Id]     (1 of 12)
