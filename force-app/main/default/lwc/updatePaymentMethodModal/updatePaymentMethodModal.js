@@ -47,7 +47,17 @@ export default class UpdatePaymentMethodModal extends LightningElement {
             if(this.currentRecord !== {}){
                 this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
                 this.determineACHpaymentMethodAndAddAsOption();
-                this.paymentMethodValue = this.currentRecord.paymentMethod;
+                this.determineCurrentPaymentMethod();
+            }
+        }
+    }
+
+    determineCurrentPaymentMethod(){
+        if(this.currentRecord.paymentMethod){
+            if( (this.currentRecord.paymentMethod).includes(ACH) ){
+                this.paymentMethodValue = ACH;
+            } else if( (this.currentRecord.paymentMethod).includes(CREDIT_CARD) ) {
+                this.paymentMethodValue = CREDIT_CARD;
             }
         }
     }
