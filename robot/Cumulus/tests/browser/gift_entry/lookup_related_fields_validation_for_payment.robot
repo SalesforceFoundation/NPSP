@@ -19,7 +19,7 @@ Suite Teardown  Run Keywords
 Setup Test Data
     [Documentation]       Create contact, opportunity, get current date and npsp
     ...                   generate random names for template and batch.
-    [Tags]                unstable       feature:GE
+    [Tags]                feature:GE    unstable
 
     &{CONTACT} =          API Create Contact       FirstName=${faker.first_name()}    LastName=${faker.last_name()}
     Set suite variable    &{CONTACT}
@@ -57,9 +57,9 @@ Lookup Related Fields Validation for Payment
     ...                      Verify  payment related fields are autopopulated in gift entry form.
     ...                      When batch created and contact is selected, select payment from Review Donations and verifies related values are autopopulated correctly.
     ...                      Edit the batch and clear out template values, then verify fields are empty.
-    ...                      When a gift is saved verify that the valus are displayed in table row correctly.
+    ...                      When a gift is saved verify that the values are displayed in table row correctly.
     ...                      When a batch is saved with a gift, open the batch and verify the values are displayed in the form.
-    [tags]                                 feature:GE        W-8523468
+    [tags]                                 feature:GE        unstable
 
     Go To Page                             Landing                         GE_Gift_Entry
     Click Link                             Templates
