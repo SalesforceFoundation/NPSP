@@ -54,7 +54,7 @@ Edit An Enhanced Recurring donation record of type open
      ...                          To pause payment installments. Validation is then made to tally the current and
      ...                          next year payment values.
 
-    [tags]                                                       W-8121044          feature:RD2
+    [tags]                                        feature:RD2
 
     Go To Page                                    Listing                                   npe03__Recurring_Donation__c
 
