@@ -16,7 +16,7 @@
                 <lightning-radio-group class="slds-p-around_small slds-size_1-of-1 slds-large-size_1-of-3" name="paymentMethodRadioGroup"
                 label={labels.paymentMethod}
                 options={paymentMethodOptions}
-                value={paymentMethodValue}
+                value={currentRecord.recurringDonation.PaymentMethod__c}
                 type="radio"></lightning-radio-group>
             </div>
             <div class="slds-modal__footer slds-grid slds-wrap slds-grid_align-end">
