@@ -98,7 +98,7 @@ public with sharing class RD2_ETableController {
      * @return List<TableView> List of processed recurring donation records
      */
     @AuraEnabled(cacheable=true)
-    public static List<TableView> getData() {
+    public static List<TableView> retrieveTableView() {
         try {
             return controller.getTableViews();
         } catch (Exception ex) {
@@ -129,7 +129,7 @@ public with sharing class RD2_ETableController {
         }
 
         return recurringDonations;
-        
+      
     }
 
     /** 
@@ -192,7 +192,7 @@ public with sharing class RD2_ETableController {
     * @author Salesforce.org
     * @date 2022
     * @description process Recurring Donaion record to build the status string.
-    * @param recurringDonation recurring dontation record
+    * @param recurringDonation recurring donation record
     * @return String returns the Status string.
     */
     private String getStatus(npe03__Recurring_Donation__c recurringDonation) {
@@ -225,7 +225,7 @@ public with sharing class RD2_ETableController {
     private String getPaymentMethod(npe03__Recurring_Donation__c recurringDonation) {
         String paymentMethod = '';
 
-        if(String.IsBlank(recurringDonation.CommitmentId__c)) {
+        if(GE_GiftEntryController.isElevateCustomer() && String.IsBlank(recurringDonation.CommitmentId__c) || !GE_GiftEntryController.isElevateCustomer()) {
             //Non-Elevate RD
             paymentMethod = recurringDonation.PaymentMethod__c;
         
@@ -248,18 +248,25 @@ public with sharing class RD2_ETableController {
     * @return Boolean returns access to Recurring Donations.
     */
     private Boolean hasAccessToRecurringDonation() {
-        return permissions.canRead(npe03__Recurring_Donation__c.SObjectType, new Set<SObjectField>{
+
+        Set<SObjectField> fields = new Set<SObjectField>{
             npe03__Recurring_Donation__c.npe03__Amount__c,
             npe03__Recurring_Donation__c.npe03__Installment_Period__c,
             npe03__Recurring_Donation__c.InstallmentFrequency__c,
             npe03__Recurring_Donation__c.Day_of_Month__c,
             npe03__Recurring_Donation__c.Status__c,
-            npe03__Recurring_Donation__c.CommitmentId__c,
-            npe03__Recurring_Donation__c.PaymentMethod__c,
-            npe03__Recurring_Donation__c.CardLast4__c,
-            npe03__Recurring_Donation__c.CardExpirationYear__c,
-            npe03__Recurring_Donation__c.CardExpirationMonth__c,
-            npe03__Recurring_Donation__c.ACH_Last_4__c
-        });
+            npe03__Recurring_Donation__c.npe03__Last_Payment_Date__c,
+            npe03__Recurring_Donation__c.PaymentMethod__c
+        };
+
+        if(GE_GiftEntryController.isElevateCustomer()) {
+            fields.add(npe03__Recurring_Donation__c.CommitmentId__c);
+            fields.add(npe03__Recurring_Donation__c.CardLast4__c);
+            fields.add(npe03__Recurring_Donation__c.CardExpirationYear__c);
+            fields.add(npe03__Recurring_Donation__c.CardExpirationMonth__c);
+            fields.add(npe03__Recurring_Donation__c.ACH_Last_4__c);
+        }
+        
+        return permissions.canRead(npe03__Recurring_Donation__c.SObjectType, fields);
     }
 }

@@ -8,14 +8,6 @@
         <value>You must provide an Auth ID.</value>
     </labels>
     <labels>
-        <fullName>changeAmountOrFrequency</fullName>
-        <categories>RDAction</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Label for change amount and frequency Recurring Donations Action</shortDescription>
-        <value>Change Amount or Frequency</value>
-    </labels>
-    <labels>
         <fullName>installmentPeriod</fullName>
         <categories>RDAction</categories>
         <language>en_US</language>
@@ -15848,6 +15840,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>true</protected>
         <shortDescription>Label to define aria-label on donation history datatable</shortDescription>
         <value>Donation History</value>
+    </labels>
+    <labels>
+        <fullName>RD2_Actions</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Recurring Donation Actions</shortDescription>
+        <value>Actions</value>
     </labels>
     <labels>
         <fullName>updatePaymentMethod</fullName>
