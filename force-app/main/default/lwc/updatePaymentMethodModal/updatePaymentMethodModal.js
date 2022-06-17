@@ -19,7 +19,7 @@ export default class UpdatePaymentMethodModal extends LightningElement {
     @api isBankPaymentAllowed;
     isRenderCallbackActionExecuted = false;
     @api openUpdatePaymentMethod;
-    
+    style = document.createElement('style');
     @api currentRecord;
 
     labels = {
@@ -45,6 +45,15 @@ export default class UpdatePaymentMethodModal extends LightningElement {
             if(this.currentRecord !== {}){
                 this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
                 if(this.template.querySelector('lightning-radio-group')){
+                    this.style.innerText = `legend.slds-form-element__legend.slds-form-element__label {
+                        font-size: 140%;
+                    }
+                    span.slds-radio {
+                        padding-top: 2%;
+                        padding-bottom: 2%;
+                    }
+                    `;
+                    this.template.querySelector('lightning-radio-group').appendChild(this.style);
                     this.determineACHpaymentMethodAndAddAsOption();
                 }
             }
