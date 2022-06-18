@@ -24,6 +24,8 @@ export default class UpdatePaymentMethodModal extends LightningElement {
 
     labels = {
       updatePaymentMethod,
+      commonCancelAndClose,
+      commonCancel,
       ACHPaymentMethodLabel,
       CreditCardPaymentMethod,
       commonCancelAndClose,
