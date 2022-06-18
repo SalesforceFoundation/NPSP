@@ -33,6 +33,7 @@ const MOBILE_VIEW_MORE = 'viewMore';
 const DESKTOP_VIEW_MORE = 'slds-hide';
 const MOBILE_HEADER_CLASS = 'slds-border_right slds-border_left';
 const DESKTOP_HEADER_CLASS = 'slds-table_header-fixed_container slds-border_right slds-border_left table_top';
+const CANCELED_STATUS  = 'Canceled'
 
 export default class RecurringDonationTable extends LightningElement {
     
@@ -74,9 +75,9 @@ export default class RecurringDonationTable extends LightningElement {
     data;
 
     actions = [
-      { label: updatePaymentMethod, name: 'updatePaymentMethod' },
-      { label: changeAmountOrFrequency, name: 'changeAmountOrFrequency' },
-      { label: stopRecurringDonation, name: 'stopRecurringDonation' }
+      { label: updatePaymentMethod, name: 'updatePaymentMethod', disabled: false },
+      { label: changeAmountOrFrequency, name: 'changeAmountOrFrequency', disabled: false },
+      { label: stopRecurringDonation, name: 'stopRecurringDonation', disabled: false }
     ];
 
     columns = [];
@@ -253,7 +254,7 @@ export default class RecurringDonationTable extends LightningElement {
       return (window.getComputedStyle(elm, null).getPropertyValue(css))
     }
    
-    toggleView( event ) {
+    toggleView(event) {
       let tableTd= this.template.querySelectorAll("td[data-id="+JSON.stringify(event.target.getAttribute("data-viewid"))+"]");
       let viewMoreOrLess = this.template.querySelector("td[data-viewid="+JSON.stringify(event.target.getAttribute("data-viewid"))+"]");
       if(viewMoreOrLess.getAttribute("data-label") === this.labels.RD2_ViewMoreDetails){
@@ -303,18 +304,28 @@ export default class RecurringDonationTable extends LightningElement {
         default:
             break;
       }
+      this.getRecurringDonationFields();
     }
 
     getRecurringDonationFields() {
       retrieveTableView()
         .then((data) => {
-            if (data) {
-                this.data = data;
-                this.data.forEach(element => {
-                  if(element.nextDonation){
-                    element.nexDonationFormatFirstElement = element.nextDonation.split('.')[0] || element.nextDonation;
-                    element.nexDonationFormatSecondElement = element.nextDonation.split('.')[1] || '';
+          if (data) {
+            this.data = data.map((el) => {
+                  let actions = this.actions.map(a => {return {...a}});
+                  let nexDonationFormatFirstElement = '';
+                  let nexDonationFormatSecondElement = '';
+                  if(el.nextDonation){
+                    nexDonationFormatFirstElement = el.nextDonation.split('.')[0] || el.nextDonation;
+                    nexDonationFormatSecondElement = el.nextDonation.split('.')[1] || '';  
                   }
+                  if(el.status === CANCELED_STATUS){
+                    actions.map((action) => {
+                      action.disabled = true;
+                      return action;
+                    })
+                  }
+                  return {actions, ...el, nexDonationFormatFirstElement, nexDonationFormatSecondElement};
                 });
             }
         });

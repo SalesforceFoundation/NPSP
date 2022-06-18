@@ -167,9 +167,9 @@
                         </td>
                         <td data-label="Actions">
                             <lightning-button-menu class="dv-dynamic-mobile" menu-alignment="auto" alternative-text="Action menu">
-                                <template for:each={actions} for:item="action">
+                                <template for:each={item.actions} for:item="action">
                                     <p key={action.name} data-recid={action.name}>
-                                        <lightning-menu-item label={action.label} onclick={handleRowAction} data-action={action.name} data-recordid={item.recurringDonation.Id}>
+                                        <lightning-menu-item label={action.label} onclick={handleRowAction} data-action={action.name} data-recordid={item.recurringDonation.Id} disabled={action.disabled}>
                                         </lightning-menu-item>
                                     </p>
                                 </template>

@@ -99,10 +99,26 @@ public with sharing class RD2_ETableController {
      * @description returns a list of processed recurring donations
      * @return List<TableView> List of processed recurring donation records
      */
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static List<TableView> retrieveTableView() {
         try {
             return controller.getTableViews();
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
+
+    /**
+     * @description upsert a recurring donations record.
+     */
+    @AuraEnabled
+    public static void upsertDonation(npe03__Recurring_Donation__c recurringDonation) {
+        try {
+            if(controller.hasAccessToRecurringDonation()) {
+                upsert recurringDonation; 
+            } else {
+                throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
+            }
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
