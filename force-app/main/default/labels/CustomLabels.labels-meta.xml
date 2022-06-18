@@ -1866,6 +1866,30 @@
         <value>An Elevate recurring payment could not be created. Contact your system administrator for assistance.</value>
     </labels>
     <labels>
+        <fullName>RD2_ElevateRDCancellingTitle</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Recurring Donation would be cancelled</shortDescription>
+        <value>Your request to stop your Recurring Donation was submitted.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateRDCancellingMessage</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Recurring Donation would be cancelled</shortDescription>
+        <value>This can take some time. Refresh the page to check the status. Contact us if you need help.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_NonElevateRDCancellingTitle</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Recurring Donation Non Elevat would be cancelled</shortDescription>
+        <value>Your Recurring Donation was stopped.</value>
+    </labels>
+    <labels>
         <fullName>RD2_EnablementDisabledHeader</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -2403,22 +2427,6 @@
         <protected>true</protected>
         <shortDescription>Spinner text when credit card is validated on Recurring Donation save</shortDescription>
         <value>Sending ACH information to Elevate...</value>
-    </labels>
-    <labels>
-        <fullName>commonCancelAndClose</fullName>
-        <categories>Button</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Cancel and close label</shortDescription>
-        <value>Cancel and close</value>
-    </labels>
-        <labels>
-        <fullName>commonCancel</fullName>
-        <categories>Button</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Cancel and close label</shortDescription>
-        <value>Cancel</value>
     </labels>
     <labels>
         <fullName>RD2_ACH_Payment_Method_Label</fullName>
@@ -6159,6 +6167,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Close button label</shortDescription>
         <value>Close</value>
+    </labels>
+    <labels>
+        <fullName>commonCancelAndClose</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cancel and close label</shortDescription>
+        <value>Cancel and close</value>
     </labels>
     <labels>
         <fullName>commonConcurrentBatchError</fullName>
