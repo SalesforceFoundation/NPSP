@@ -32,7 +32,7 @@ const MOBILE_VIEW_MORE = 'viewMore';
 const DESKTOP_VIEW_MORE = 'slds-hide';
 const MOBILE_HEADER_CLASS = 'slds-border_right slds-border_left';
 const DESKTOP_HEADER_CLASS = 'slds-table_header-fixed_container slds-border_right slds-border_left table_top';
-const CLOSED_STATUS  = 'Closed'
+const CANCELED_STATUS  = 'Canceled'
 
 export default class RecurringDonationTable extends LightningElement {
     
@@ -317,7 +317,7 @@ export default class RecurringDonationTable extends LightningElement {
                     nexDonationFormatFirstElement = el.nextDonation.split('.')[0] || el.nextDonation;
                     nexDonationFormatSecondElement = el.nextDonation.split('.')[1] || '';  
                   }
-                  if(el.recurringDonation.Status__c === CLOSED_STATUS){
+                  if(el.status === CANCELED_STATUS){
                     actions.map((action) => {
                       action.disabled = true;
                       return action;
