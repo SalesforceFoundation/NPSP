@@ -41,7 +41,15 @@ public with sharing class OPP_OpportunityNamingBTN_CTRL {
 
     /** @description Standard opportunity controller constructor.*/
     public OPP_OpportunityNamingBTN_CTRL(ApexPages.StandardController oppCtrl) {
-        ctrl = oppCtrl;
+        try {
+            if (!STG_Panel.runningUserIsAdmin()) {
+                throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAdminPermissionErrorMessage);
+            }
+            ctrl = oppCtrl;
+        } catch (Exception ex) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
+        }
+
     }
 
     /** @description Button click method runs opportunity naming for the current opportunity.*/

@@ -84,6 +84,16 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         set;
     }
 
+    private UTIL_Permissions permissions {
+        get {
+            if (permissions == null) {
+                permissions = UTIL_Permissions.getInstance();
+            }
+            return permissions;
+        }
+        set;
+    }
+
     /**
     * @description Determine if the page is loading
     */
@@ -151,7 +161,6 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
     public ALLO_ManageAllocations_CTRL(ApexPages.StandardSetController ssc) {
         parentId = ApexPages.currentPage().getParameters().get('id');
-        UTIL_Permissions permissions = UTIL_Permissions.getInstance();
 
         hasAccess = canUserRead(parentId.getSobjectType())
             && permissions.canCreate(Allocation__c.SObjectType)
@@ -176,7 +185,6 @@ public with sharing class ALLO_ManageAllocations_CTRL {
      * @return Boolean True if the user has Read access to the parent object.
      */
     private Boolean canUserRead(SObjectType parentSObjectType) {
-        UTIL_Permissions permissions = UTIL_Permissions.getInstance();
         return permissions.canRead(parentSObjectType);
     }
 

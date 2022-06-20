@@ -52,33 +52,47 @@ public with sharing class OPP_MatchingDonationsBTN_CTRL {
             Id opptyId = opty.getId();
 
             //multi-currency support - get the schema map to see if we have the CurrencyIsoCode field
-            SObjectField OppCurrencyField = Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode');
+            SObjectField OppCurrencyField = Schema.SObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode');
 
             //query for the current donation to create the matching one
-            Opportunity oppty = Database.query('select id, name,RecordTypeId,accountId,Account.Name,Amount,closedate' + 
+            Opportunity oppty = Database.query('SELECT Id, Name,RecordTypeId,AccountId,Account.Name,Amount,CloseDate' +
             (OppCurrencyField != null ? ',CurrencyIsoCode' : '') + 
-            ' from Opportunity where id = :opptyId');
+            ' FROM Opportunity WHERE Id = :opptyId WITH SECURITY_ENFORCED ');
 
             //start preparing our oppty new record url to redirect to
             PageReference pageRef = new PageReference('/006/e');
 
             //get the URL parameters map to add to it
-            Map<string,string> params = pageRef.getParameters();
+            Map<String,String> params = pageRef.getParameters();
 
             //set record type based on source donation (label.npe01.= "$Source"), or other type
-            if(system.label.npe01.Matching_Donation_Record_Type == '$Source'){
+            if(System.Label.npe01.Matching_Donation_Record_Type == '$Source'){
                 params.put('RecordType', (Id)oppty.get('RecordTypeId'));
             }
             else{
-                List <RecordType> rts = [select Id from RecordType where SobjectType = 'Opportunity' and Name = :system.label.npe01.Matching_Donation_Record_Type limit 1];
-                if (rts.size() > 0)
+                List <RecordType> rts = [
+                    SELECT Id
+                    FROM RecordType
+                    WHERE SobjectType = 'Opportunity'
+                    AND Name = :System.Label.npe01.Matching_Donation_Record_Type
+                    WITH SECURITY_ENFORCED LIMIT 1 ];
+                if (rts.size() > 0) {
                     params.put('RecordType', rts[0].Id);
+                }
             }
 
             //find primary contact
-            List<OpportunityContactRole> ocr = [select id, ContactId from OpportunityContactRole where IsPrimary = true and OpportunityId = :oppty.Id limit 1];
-            if ( ocr.size() > 0 ) 
-                params.put('conid',ocr[0].ContactId);
+            List<OpportunityContactRole> ocr = [
+                SELECT Id, ContactId
+                FROM OpportunityContactRole
+                WHERE IsPrimary = TRUE
+                AND OpportunityId = :oppty.Id
+                WITH SECURITY_ENFORCED
+                LIMIT 1
+            ];
+            if (ocr.size() > 0) {
+                params.put('conid', ocr[0].ContactId);
+            }
                 
             //and the rest of the params
             params.put('retURL','/'+opptyId);

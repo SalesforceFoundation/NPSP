@@ -372,7 +372,8 @@ public with sharing class MTCH_FindGifts_CTRL {
             .withFrom('Opportunity')
             .withSelectFields(queryFields)
             .withOrderBy('Name')
-            .withWhere(whereClauses);
+            .withWhere(whereClauses)
+            .withSecurityEnforced();
 
         String query = queryBuilder.build();
 
