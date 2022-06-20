@@ -1,4 +1,4 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import changeAmountOrFrequency from '@salesforce/label/c.changeAmountOrFrequency';
 import updateRecurringDonation from '@salesforce/label/c.updateRecurringDonation';
 import every from "@salesforce/label/c.RD2_EntryFormScheduleEveryLabel";
@@ -11,6 +11,8 @@ import INSTALLMENT_FREQUENCY_FIELD from '@salesforce/schema/npe03__Recurring_Don
 import INSTALLMENT_PERIOD_FIELD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
 import commonCancelAndClose from '@salesforce/label/c.commonCancelAndClose';
 import commonCancel from '@salesforce/label/c.commonCancel';
+import MONTH_DAY_FIELD from '@salesforce/schema/npe03__Recurring_Donation__c.Day_of_Month__c';
+
 
 const ESC_KEY_CODE = 27;
 const ESC_KEY_STRING = "Escape";
@@ -21,11 +23,13 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
     @api openChangeAmountOrFrequency;
     @api currentRecord;
     isRenderCallbackActionExecuted = false;
+    @track isMonthlyDonation = false;
 
     recurringDonationApiName = RECURRING_DONATION;
     amountFieldName = AMOUNT_FIELD;
     installmentFrequencyFieldName = INSTALLMENT_FREQUENCY_FIELD;
     installmentPeriodFieldName = INSTALLMENT_PERIOD_FIELD;
+    dayOfMonthFieldName = MONTH_DAY_FIELD;
     style = document.createElement('style');
 
     labels = {
@@ -51,6 +55,12 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
                 }`;
                 if(this.template.querySelector('lightning-record-edit-form')){
                     this.template.querySelector('lightning-record-edit-form').appendChild(this.style);
+                    if( this.currentRecord.recurringDonation.Day_of_Month__c ){
+                        this.isMonthlyDonation = true;
+                    }else{
+                        this.isMonthlyDonation = false;
+                    }
+                    this.isRenderCallbackActionExecuted=true;
                 }
             }
 
@@ -76,7 +86,16 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
             }
           }
       }   
-  
+
+      handleInstallmentPeriodChange(event){
+        console.log(event.target.value);
+        if((event.target.value) === "Monthly"){
+            this.isMonthlyDonation = true;
+        }else{
+            this.isMonthlyDonation = false;
+        }
+      }
+
       _getFocusableElements() {
         const potentialElems = [
           ...this.template.querySelectorAll(FOCUSABLE_ELEMENTS),
@@ -85,6 +104,7 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
       }
   
       closeModal() {
+        this.isRenderCallbackActionExecuted = false;
         this.template.removeEventListener("keydown", (e) => this.handleKeyUp(e));       
         if(this.template.querySelector('lightning-record-edit-form')){
             this.style.innerText = `lightning-helptext {
@@ -92,7 +112,6 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
             }`;
             this.template.querySelector('lightning-record-edit-form').removeChild(this.style);
         }
-        this.isRenderCallbackActionExecuted = false;
         this.dispatchEvent(new CustomEvent('close', {detail: 'changeAmountOrFrequency'}));
     } 
 }
