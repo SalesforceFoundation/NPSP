@@ -32,8 +32,7 @@ const MOBILE_VIEW_MORE = 'viewMore';
 const DESKTOP_VIEW_MORE = 'slds-hide';
 const MOBILE_HEADER_CLASS = 'slds-border_right slds-border_left';
 const DESKTOP_HEADER_CLASS = 'slds-table_header-fixed_container slds-border_right slds-border_left table_top';
-const CANCELED_STATUS  = 'Canceled'
-
+const CANCELED_STATUS  = 'Canceled';
 export default class RecurringDonationTable extends LightningElement {
     
     openUpdatePaymentMethod = false;
@@ -93,7 +92,7 @@ export default class RecurringDonationTable extends LightningElement {
         this.tdClasses = '';
       }
     }
-  
+    
     /**
      * @description Returns whether we are running in mobile or desktop
      * @returns True if it is mobile
@@ -309,14 +308,11 @@ export default class RecurringDonationTable extends LightningElement {
       retrieveTableView()
         .then((data) => {
           if (data) {
+            console.log(JSON.parse(JSON.stringify(data)));
             this.data = data.map((el) => {
                   let actions = this.actions.map(a => {return {...a}});
                   let nexDonationFormatFirstElement = '';
                   let nexDonationFormatSecondElement = '';
-                  if(el.nextDonation){
-                    nexDonationFormatFirstElement = el.nextDonation.split('.')[0] || el.nextDonation;
-                    nexDonationFormatSecondElement = el.nextDonation.split('.')[1] || '';  
-                  }
                   if(el.status === CANCELED_STATUS){
                     actions.map((action) => {
                       action.disabled = true;
@@ -326,6 +322,18 @@ export default class RecurringDonationTable extends LightningElement {
                   return {actions, ...el, nexDonationFormatFirstElement, nexDonationFormatSecondElement};
                 });
             }
+        }).finally(() => {
+          this.data.forEach((el) => {
+            let nextDonationHtml = `<div class="${this.rowClasses}" style="${this.fixedWidth}">`;
+            el.nextDonation.split('\r\n').forEach((nd) => {
+              nextDonationHtml += `${nd} </br>`
+            })
+            nextDonationHtml += `</div>`
+            if(el.nextDonation){
+              const container = this.template.querySelector('.next-donation');
+              container.innerHTML = nextDonationHtml;
+            }
+          })
         });
     }
 }

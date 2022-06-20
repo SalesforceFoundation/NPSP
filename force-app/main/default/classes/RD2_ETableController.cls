@@ -85,11 +85,13 @@ public with sharing class RD2_ETableController {
         @AuraEnabled public String frequency;
         @AuraEnabled public String status;
         @AuraEnabled public String paymentMethod;
-        public TableView(npe03__Recurring_Donation__c recurringDonation, String frequency, String status, String paymentMethod) {
+        @AuraEnabled public String nextDonation;
+        public TableView(npe03__Recurring_Donation__c recurringDonation, String frequency, String status, String paymentMethod, String nextDonation) {
             this.recurringDonation = recurringDonation;
             this.frequency = frequency;
             this.status = status;
             this.paymentMethod = paymentMethod;
+            this.nextDonation = nextDonation;
         }
     }
 
@@ -136,7 +138,8 @@ public with sharing class RD2_ETableController {
                     recurringDonations.add( new RD2_ETableController.TableView( recDonation,
                                                                                 controller.getFrequency(recDonation),
                                                                                 controller.getStatus(recDonation),
-                                                                                controller.getPaymentMethod(recDonation)));
+                                                                                controller.getPaymentMethod(recDonation),
+                                                                                controller.getNextDonation(recDonation)));
     
                 }
             } else {
@@ -257,6 +260,24 @@ public with sharing class RD2_ETableController {
         return paymentMethod;
     }
 
+
+    /** 
+    * @author Salesforce.org
+    * @date 2022
+    * @description process Recurring Donation record to build the payment method string.
+    * @param recurringDonation recurring donation record
+    * @return String returns the NextDonation string.
+    */
+    private String getNextDonation(npe03__Recurring_Donation__c recurringDonation) {
+        String nextDonation = '';
+
+        if(recurringDonation.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED) {
+            nextDonation = String.format(System.Label.RD2_nextDonation, new List<String>{String.valueOf(recurringDonation.npe03__Total_Paid_Installments__c), String.valueOf(recurringDonation.npe03__Installments__c), String.valueOf(recurringDonation.npe03__Next_Payment_Date__c)});
+        }
+
+        return nextDonation;
+    }
+
     /** 
     * @author Salesforce.org
     * @date 2022
@@ -272,7 +293,11 @@ public with sharing class RD2_ETableController {
             npe03__Recurring_Donation__c.Day_of_Month__c,
             npe03__Recurring_Donation__c.Status__c,
             npe03__Recurring_Donation__c.npe03__Last_Payment_Date__c,
-            npe03__Recurring_Donation__c.PaymentMethod__c
+            npe03__Recurring_Donation__c.PaymentMethod__c,
+            npe03__Recurring_Donation__c.npe03__Total_Paid_Installments__c,
+            npe03__Recurring_Donation__c.npe03__Installments__c,
+            npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c,
+            npe03__Recurring_Donation__c.RecurringType__c
         };
 
         if(GE_GiftEntryController.isElevateCustomer()) {
