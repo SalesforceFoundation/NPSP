@@ -24,6 +24,8 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
     @api currentRecord;
     isRenderCallbackActionExecuted = false;
     @track isMonthlyDonation = false;
+    @track dayOfMonthValue;
+    today = new Date();
 
     recurringDonationApiName = RECURRING_DONATION;
     amountFieldName = AMOUNT_FIELD;
@@ -57,6 +59,7 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
                     this.template.querySelector('lightning-record-edit-form').appendChild(this.style);
                     if( this.currentRecord.recurringDonation.Day_of_Month__c ){
                         this.isMonthlyDonation = true;
+                        this.dayOfMonthValue = this.currentRecord.recurringDonation.Day_of_Month__c;
                     }else{
                         this.isMonthlyDonation = false;
                     }
@@ -88,9 +91,12 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
       }   
 
       handleInstallmentPeriodChange(event){
-        console.log(event.target.value);
+        var dd = String(this.today.getDate()).padStart(2, '0');
         if((event.target.value) === "Monthly"){
             this.isMonthlyDonation = true;
+            if( !this.currentRecord.recurringDonation.Day_of_Month__c ){
+                this.dayOfMonthValue = dd;
+            }
         }else{
             this.isMonthlyDonation = false;
         }
