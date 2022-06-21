@@ -1,0 +1,30 @@
+{
+  "payment" : {
+    "objectApiName":"npe01__OppPayment__c",
+    "fields":{
+      "attributes":{
+        "type":"npe01__OppPayment__c",
+        "url":"/services/data/v54.0/sobjects/npe01__OppPayment__c/a011700000P9aoUAAR"
+      },
+      "npe01__Opportunity__c":"0061700000SmBcdAAF",
+      "Id":"a011700000P9aoUAAR",
+      "Name":"PMT-00002",
+      "npe01__Scheduled_Date__c":"2022-06-03",
+      "npe01__Payment_Amount__c":700,
+      "npe01__Paid__c":false,
+      "npe01__Written_Off__c":false,
+      "npe01__Opportunity__r":{
+        "attributes":{
+          "type":"Opportunity",
+          "url":"/services/data/v54.0/sobjects/Opportunity/0061700000SmBcdAAF"
+        },
+        "Name":"Daniels Donation",
+        "Primary_Contact__c":"0031700001M9iYjAAJ",
+        "Id":"0061700000SmBcdAAF"
+      }
+    },
+    "softCredits":[
+
+    ]
+  }
+}
