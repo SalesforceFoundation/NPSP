@@ -101,7 +101,7 @@ public with sharing class DonationSelector {
             String.valueOf(npe01__OppPayment__c.Id),
             String.valueOf(npe01__OppPayment__c.Name),
             String.valueOf(npe01__OppPayment__c.npe01__Scheduled_Date__c),
-            'npe01__Opportunity__r.Name',
+            'npe01__Opportunity__r.Name','npe01__Opportunity__r.Primary_Contact__c',
             String.valueOf(npe01__OppPayment__c.npe01__Opportunity__c),
             String.valueOf(npe01__OppPayment__c.npe01__Payment_Amount__c),
             String.valueOf(npe01__OppPayment__c.npe01__Payment_Date__c),
