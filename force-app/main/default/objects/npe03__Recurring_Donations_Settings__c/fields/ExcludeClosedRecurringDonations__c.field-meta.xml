@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Exclude_Closed_Recurring_Donations__c</fullName>
+    <fullName>ExcludeClosedRecurringDonations__c</fullName>
     <defaultValue>false</defaultValue>
     <description>Exclude Closed Recurring Donations from the Recurring Donation Opportunity Evaluation batch job.</description>
     <externalId>false</externalId>

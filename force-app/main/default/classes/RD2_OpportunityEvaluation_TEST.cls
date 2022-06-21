@@ -1510,7 +1510,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
             new npe03__Recurring_Donations_Settings__c(
                 IsRecurringDonations2Enabled__c = true,
                 npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name(),
-                Exclude_Closed_Recurring_Donations__c = true
+                ExcludeClosedRecurringDonations__c = true
             )
         );
     }

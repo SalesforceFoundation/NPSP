@@ -58,9 +58,9 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     public Boolean closedFilterEnabled {
         get {
             if (closedFilterEnabled == null) {
-                closedFilterEnabled = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Exclude_Closed_Recurring_Donations__c;
+                closedFilterEnabled = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().ExcludeClosedRecurringDonations__c;
             }
-            return closedFilterEnabled;
+            return closedFilterEnabled != null ? closedFilterEnabled : false;
         }
         set;
     }
@@ -209,15 +209,11 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
 
         String query = getRDBatchQuery();
 
-        System.debug(query); 
-        System.debug(isConcurrentBatch); 
-
-        if (isConcurrentBatch) {    
+        if (isConcurrentBatch) {
             new UTIL_BatchJobService().logConcurrentBatchError(batchClassName, ERR_Handler_API.Context.RD);
             query += ' LIMIT 0';
-        }    
+        }
         return Database.getQueryLocator(query);
-        
     }
 
     /**
@@ -247,7 +243,8 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     private String getRDBatchQuery() {
         String rdFilterWhereClause;
         if (closedFilterEnabled) {
-            rdFilterWhereClause = 'Status__c != ' + RD2_Constants.STATUS_CLOSED;
+            Set<String> closedStatusValues = RD2_StatusMapper.getInstance().getClosedStatusValues();
+            rdFilterWhereClause = 'Status__c NOT IN:' + closedStatusValues;
         }
 
         return new UTIL_Query()

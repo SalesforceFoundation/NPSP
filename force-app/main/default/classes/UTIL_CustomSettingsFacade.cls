@@ -644,7 +644,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             settings.IsRecurringDonations2Enabled__c = false;
             settings.UseFiscalYearForRecurringDonationValue__c = false;
             settings.EnableChangeLog__c = false;
-            settings.Exclude_Closed_Recurring_Donations__c = false;
+            settings.ExcludeClosedRecurringDonations__c = false;
 
             List<RecordType> oppRecordTypes = [SELECT Id FROM RecordType WHERE SObjectType = 'Opportunity' AND IsActive = true];
             if (oppRecordTypes.size() > 0) {
@@ -916,7 +916,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         recurringDonationsSettings.StatusAutomationDaysForClosed__c = settings.StatusAutomationDaysForClosed__c;
         recurringDonationsSettings.StatusAutomationLapsedValue__c = settings.StatusAutomationLapsedValue__c;
         recurringDonationsSettings.StatusAutomationClosedValue__c = settings.StatusAutomationClosedValue__c;
-        recurringDonationsSettings.Exclude_Closed_Recurring_Donations__c = settings.Exclude_Closed_Recurring_Donations__c;
+        recurringDonationsSettings.ExcludeClosedRecurringDonations__c = settings.ExcludeClosedRecurringDonations__c;
 
         orgRecurringDonationsSettings = recurringDonationsSettings;
 
@@ -1008,8 +1008,8 @@ public without sharing class UTIL_CustomSettingsFacade {
         crs.Disable_Related_Records_Filter__c = false;
         crs.AccountHardCreditNonSkew_Incremental__c = true;
         crs.ContactHardCreditNonSkew_Incremental__c = true;
-        crs.Limit_Recalculated_Recurring_Donations__c = false;
-        crs.Recurring_Donation_Last_N_Days__c = 31;
+        crs.LimitRecalculatedRecurringDonations__c = false;
+        crs.RecurringDonationLastNDays__c = 31;
     }
 
     /*******************************************************************************************************
@@ -1039,8 +1039,8 @@ public without sharing class UTIL_CustomSettingsFacade {
         customizableRollupSettings.CMT_API_Status__c = mySettings.CMT_API_Status__c;
         customizableRollupSettings.AccountHardCreditNonSkew_Incremental__c = mySettings.AccountHardCreditNonSkew_Incremental__c;
         customizableRollupSettings.ContactHardCreditNonSkew_Incremental__c = mySettings.ContactHardCreditNonSkew_Incremental__c;
-        customizableRollupSettings.Limit_Recalculated_Recurring_Donations__c = mySettings.Limit_Recalculated_Recurring_Donations__c;
-        customizableRollupSettings.Recurring_Donation_Last_N_Days__c = mySettings.Recurring_Donation_Last_N_Days__c;
+        customizableRollupSettings.LimitRecalculatedRecurringDonations__c = mySettings.LimitRecalculatedRecurringDonations__c;
+        customizableRollupSettings.RecurringDonationLastNDays__c = mySettings.RecurringDonationLastNDays__c;
         customizableRollupSettings.Rollups_IncrementalLastNDays_FldOverride__c = mySettings.Rollups_IncrementalLastNDays_FldOverride__c;
         customizableRollupSettings.Rollups_IncrementalLastNDays_ValOverride__c = mySettings.Rollups_IncrementalLastNDays_ValOverride__c;
 
