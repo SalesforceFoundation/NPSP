@@ -273,7 +273,8 @@ public with sharing class RD2_ETableController {
             npe03__Recurring_Donation__c.Status__c,
             npe03__Recurring_Donation__c.npe03__Last_Payment_Date__c,
             npe03__Recurring_Donation__c.PaymentMethod__c,
-            npe03__Recurring_Donation__c.Lastmodifieddate
+            npe03__Recurring_Donation__c.Lastmodifieddate,
+            npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c
         };
 
         if(GE_GiftEntryController.isElevateCustomer()) {
