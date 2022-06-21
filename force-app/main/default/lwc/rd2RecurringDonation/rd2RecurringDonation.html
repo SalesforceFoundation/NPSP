@@ -1,10 +1,10 @@
 <template>
     <div id="containerDiv" onmousemove={handlemousemove} onmouseup={handlemouseup} ondblclick={handledblclickresizable} class={headerClass} onscroll={tableOuterDivScrolled}>
         <table
-            class="slds-table slds-table_bordered slds-table_header-fixed slds-table_resizable-cols slds-max-medium-table_stacked" tabindex="0">
+            class="slds-table slds-table_bordered slds-table_header-fixed slds-table_resizable-cols slds-max-medium-table_stacked">
             <thead>
-                <tr scope="row">
-                    <th aria-label={labels.commonAmount} class={headClasses} scope="col" style={fixedWidth} tabindex="0">
+                <tr>
+                    <th aria-label={labels.commonAmount} class={headClasses} scope="col" style={fixedWidth}>
                         <div class="slds-cell-fixed" style={fixedWidth}>
                             <a class="slds-th__action slds-text-link--reset">
                                 <span class="slds-truncate" title={labels.commonAmount}>{labels.commonAmount}</span>
@@ -16,7 +16,7 @@
                             </div>
                         </div>
                     </th>
-                    <th aria-label={labels.RDCL_Frequency} class={headClasses} scope="col" style={fixedWidth} tabindex="0">
+                    <th aria-label={labels.RDCL_Frequency} class={headClasses} scope="col" style={fixedWidth}>
                         <div class="slds-cell-fixed" style={fixedWidth}>
                             <a class="slds-th__action slds-text-link--reset">
                                 <span class="slds-truncate" title={labels.RDCL_Frequency}>{labels.RDCL_Frequency}</span>
@@ -28,7 +28,7 @@
                             </div>
                         </div>
                     </th>
-                    <th aria-label={paymentMethod} class={headClasses} scope="col" style={fixedWidth} tabindex="0">
+                    <th aria-label={paymentMethod} class={headClasses} scope="col" style={fixedWidth}>
                         <div class="slds-cell-fixed" style={fixedWidth}>
                             <a class="slds-th__action slds-text-link--reset">
                                 <span class="slds-truncate" title={paymentMethod}>{paymentMethod}</span>
@@ -117,7 +117,7 @@
                                     currency-code="USD"></lightning-formatted-number>
                             </div>
                         </td>
-                        <td key={item.frequency} data-label={labels.RDCL_Frequency} role="gridcell">
+                        <td key={item.frequency} data-label={labels.RDCL_Frequency}>
                             <div class={rowClasses} style={fixedWidth} title={labels.RDCL_Frequency}>
                                 {item.frequency}</div>
                         </td>
