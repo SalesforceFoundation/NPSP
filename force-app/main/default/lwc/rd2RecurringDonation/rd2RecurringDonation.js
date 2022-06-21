@@ -308,7 +308,6 @@ export default class RecurringDonationTable extends LightningElement {
       retrieveTableView()
         .then((data) => {
           if (data) {
-            console.log(JSON.parse(JSON.stringify(data)));
             this.data = data.map((el) => {
                   let actions = this.actions.map(a => {return {...a}});
                   let nexDonationFormatFirstElement = '';
