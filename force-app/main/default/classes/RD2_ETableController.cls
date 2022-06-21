@@ -86,12 +86,11 @@ public with sharing class RD2_ETableController {
         @AuraEnabled public String status;
         @AuraEnabled public String paymentMethod;
         @AuraEnabled public Date finalDonation;
-        public TableView(npe03__Recurring_Donation__c recurringDonation, String frequency, String status, String paymentMethod, Date finalDonation) {
+        public TableView(npe03__Recurring_Donation__c recurringDonation, String frequency, String status, String paymentMethod) {
             this.recurringDonation = recurringDonation;
             this.frequency = frequency;
             this.status = status;
             this.paymentMethod = paymentMethod;
-            this.finalDonation = finalDonation;
         }
     }
 
@@ -140,8 +139,7 @@ public with sharing class RD2_ETableController {
                     recurringDonations.put( recDonation.Id, new RD2_ETableController.TableView( recDonation,
                                                                                 controller.getFrequency(recDonation),
                                                                                 controller.getStatus(recDonation),
-                                                                                controller.getPaymentMethod(recDonation),
-                                                                                null));
+                                                                                controller.getPaymentMethod(recDonation)));
     
                     if(recDonation.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED) {
                         fixedRecurringDonationIds.add(recDonation.Id);
