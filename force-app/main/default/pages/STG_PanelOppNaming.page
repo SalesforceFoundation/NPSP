@@ -1,4 +1,23 @@
 <apex:page controller="STG_PanelOppNaming_CTRL" docType="html-5.0" standardStylesheets="false">
+    <apex:includeLightning />
+    <script>
+        if ({!NOT(isRunningUserIsAdmin)}) {
+            $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function () {
+                $Lightning.createComponent("{!namespace}" + ":utilIllustration",
+                    {
+                        title: "{!$Label.commonAdminPermissionErrorTitle}",
+                        message: "{!$Label.commonPermissionErrorMessage}",
+                        size: 'small',
+                        variant: 'no-access',
+                        illustrationClass: "slds-p-top_x-large slds-m-top_x-large"
+                    },
+                    "stgPanelErrIllustration",
+                    function () {
+                    }
+                );
+            });
+        }
+    </script>
     <script type="text/javascript">
     (function($) {
         // called when the user changes an option in the selectlist (or it gets the focus)
@@ -41,7 +60,10 @@
         window.setOppNameSpec = setOppNameSpec;
     })(jQuery);
     </script>
-    <apex:form id="form" styleClass="slds-m-around_x-large">
+    <apex:outputPanel rendered="{!NOT(isRunningUserIsAdmin)}">
+        <div id="stgPanelErrIllustration"/>
+    </apex:outputPanel>
+    <apex:form id="form" styleClass="slds-m-around_x-large" rendered="{!isRunningUserIsAdmin}">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgLabelOppNamingSettings}" />
         <div class="slds-grid">
             <div class="slds-col slds-size_1-of-1 slds-m-around_medium">
