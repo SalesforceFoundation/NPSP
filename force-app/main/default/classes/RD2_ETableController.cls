@@ -105,6 +105,22 @@ public with sharing class RD2_ETableController {
             throw new AuraHandledException(ex.getMessage());
         }
     }
+
+    /**
+     * @description upsert a recurring donations record.
+     */
+    @AuraEnabled
+    public static void upsertDonation(npe03__Recurring_Donation__c recurringDonation) {
+        try {
+            if(controller.hasAccessToRecurringDonation()) {
+                upsert recurringDonation; 
+            } else {
+                throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
+            }
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
     
     /** 
     * @author Salesforce.org
