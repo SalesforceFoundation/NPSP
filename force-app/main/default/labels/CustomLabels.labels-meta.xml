@@ -9014,6 +9014,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>This name has been used by another template. Please enter a unique name.</value>
     </labels>
     <labels>
+        <fullName>geErrorDonorMismatch</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error for entering household info in Account1</shortDescription>
+        <value>For a household gift, select Contact1 for Donor Type and complete the Contact fields.</value>
+    </labels>
+    <labels>
         <fullName>geErrorDonorTypeValidation</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
