@@ -28,6 +28,7 @@ import gift from 'c/geGift';
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
 import FAILURE_INFORMATION from '@salesforce/schema/DataImport__c.FailureInformation__c';
+import accountDonorSelectionMismatch from '@salesforce/label/c.geErrorDonorMismatch';
 
 const PROCESSING_BATCH_MESSAGE = 'c.geProcessingBatch';
 
@@ -38,6 +39,7 @@ const dataImportBatchRecord = require('./data/getDataImportBatchRecord.json');
 const selectedContact = require('./data/getSelectedContact.json');
 const selectedAccount = require('./data/getSelectedAccount.json');
 const selectedDonation = require('./data/selectedDonation.json');
+const selectedPayment = require('./data/selectedPayment.json');
 const opportunityObjectDescribeInfo = require('./data/opportunityObjectDescribeInfo.json');
 const getPicklistValuesDonation = require('./data/getPicklistValuesDonation.json');
 const getPicklistValuesMajorGift = require('./data/getPicklistValuesMajorGift.json');
@@ -544,6 +546,72 @@ describe('c-ge-gift-entry-form-app', () => {
 
             expect(opportunityTypeInput.options).toContainOptions(['c.stgLabelNone','Donation Test', 'Major Gift Test']);
         });
+
+
+        it('when selected donation has mismatched donor data' , async () => {
+
+            retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
+            getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
+            getDataImportModel.mockResolvedValue('{"dummyKey":"dummyValue"}');
+            getGiftBatchView.mockResolvedValue({gifts: [], totals: { TOTAL: 1, EXPIRED_PAYMENT: 0, FAILED: 0 }});
+            checkForElevateCustomer.mockResolvedValue(true);
+
+            const formApp = createGeGiftEntryFormApp();
+            formApp.sObjectName = DATA_IMPORT_BATCH_OBJECT.objectApiName;
+            formApp.recordId = 'DUMMY_RECORD_ID';
+
+            document.body.appendChild(formApp);
+            await flushPromises();
+
+            getRecord.emit(dataImportBatchRecord, config => {
+                return config.recordId === formApp.recordId;
+            });
+
+            getObjectInfo.emit({ keyPrefix: 'a01' }, config => {
+                return config.objectApiName?.objectApiName === OPP_PAYMENT_OBJECT.objectApiName;
+            });
+
+            getObjectInfo.emit(opportunityObjectDescribeInfo, config => {
+                return config.objectApiName?.objectApiName === OPPORTUNITY_OBJECT.objectApiName ||
+                    config.objectApiName === OPPORTUNITY_OBJECT.objectApiName;
+            });
+
+            await flushPromises();
+
+            const geFormRenderer = shadowQuerySelector(formApp, 'c-ge-form-renderer');
+            expect(getFormRenderWrapper).toHaveBeenCalled();
+
+            geFormRenderer.giftInView = {
+                fields: {
+                    'Payment_Method__c': 'Credit Card',
+                    'Donation_Amount__c': '0.01',
+                    'Account1_Imported__c': 'DUMMY_CONTACT_ID',
+                    'Donation_Date__c': '2021-02-23',
+                    'Donation_Donor__c': 'Account1',
+                    'Payment_Authorization_Token__c': 'a_dummy_token',
+                    'Account1_Name__c': 'DummyLastName'
+                },
+                softCredits: { all: [] }
+            }
+
+            pubSub.fireEvent({}, 'geModalCloseEvent', { detail: selectedPayment });
+
+
+            const rendererButton = shadowQuerySelector(geFormRenderer, 'lightning-button[data-qa-locator="button c.geButtonSaveNewGift"]');
+            rendererButton.click();
+
+            await flushPromises();
+
+            const pageLevelMessage = shadowQuerySelector(geFormRenderer, 'c-util-page-level-message');
+            expect(pageLevelMessage).toBeTruthy();
+
+            const pElement = pageLevelMessage.querySelector('ul li p');
+            expect(pElement.textContent).toBe(accountDonorSelectionMismatch);
+
+        });
+
+
+
     });
 
     describe('batch processing', () => {
