@@ -19,6 +19,7 @@ const ESC_KEY_STRING = "Escape";
 const FOCUSABLE_ELEMENTS = "button";
 const TAB_KEY_CODE = 9;
 const TAB_KEY_STRING = "Tab";
+const FIRST_AND_FIFTEENTH = "1st and 15th";
 export default class ChangeAmountOrFrequencyModal extends LightningElement {
     @api defaultRecordTypeId;
     @api openChangeAmountOrFrequency;
@@ -47,7 +48,7 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
     @wire(getPicklistValues, { recordTypeId: '$defaultRecordTypeId', fieldApiName: INSTALLMENT_PERIOD_FIELD_VALUES })
         installmentPeriodPicklistValues({ data, error }) {
             if (data){
-                this.installmentPeriodPicklistOptions = (data.values).filter( el => el.value !== "1st and 15th" );
+                this.installmentPeriodPicklistOptions = (data.values).filter( el => el.value !== FIRST_AND_FIFTEENTH );
             }
         }
 
