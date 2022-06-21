@@ -65,7 +65,7 @@ Test Batch Status Adding Removig Gifts
     ...                              Adds the status field. Initiates Batch and adds different
     ...                              Gift entries. Validates the different Status messages.
 
-    [tags]                           unstable               W-043100            feature:GE
+    [tags]                           feature:GE     unstable
 
     Edit Default Template To Add Batch Table Columns
     Go To Page                       Landing                       GE_Gift_Entry

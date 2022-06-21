@@ -84,10 +84,12 @@ public with sharing class RD2_ETableController {
         @AuraEnabled public npe03__Recurring_Donation__c recurringDonation;
         @AuraEnabled public String frequency;
         @AuraEnabled public String status;
-        public TableView(npe03__Recurring_Donation__c recurringDonation, String frequency, String status) {
+        @AuraEnabled public String paymentMethod;
+        public TableView(npe03__Recurring_Donation__c recurringDonation, String frequency, String status, String paymentMethod) {
             this.recurringDonation = recurringDonation;
             this.frequency = frequency;
             this.status = status;
+            this.paymentMethod = paymentMethod;
         }
     }
 
@@ -95,10 +97,26 @@ public with sharing class RD2_ETableController {
      * @description returns a list of processed recurring donations
      * @return List<TableView> List of processed recurring donation records
      */
-    @AuraEnabled(cacheable=true)
-    public static List<TableView> getData() {
+    @AuraEnabled
+    public static List<TableView> retrieveTableView() {
         try {
             return controller.getTableViews();
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
+
+    /**
+     * @description upsert a recurring donations record.
+     */
+    @AuraEnabled
+    public static void upsertDonation(npe03__Recurring_Donation__c recurringDonation) {
+        try {
+            if(controller.hasAccessToRecurringDonation()) {
+                upsert recurringDonation; 
+            } else {
+                throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
+            }
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
@@ -111,25 +129,30 @@ public with sharing class RD2_ETableController {
     * @return List<RD2_ETableController.TableView> returns processed Recurring Donations.
     */
     private List<RD2_ETableController.TableView> getTableViews() {
-        if(controller.hasAccessToRecurringDonation()) {
-            List<RD2_ETableController.TableView> recurringDonations = new List<RD2_ETableController.TableView>();
-            for(npe03__Recurring_Donation__c recDonation : selector.getRecurringDonations()) {
-                recurringDonations.add( new RD2_ETableController.TableView( recDonation,
-                                                                            controller.getFrequency(recDonation),
-                                                                            controller.getStatus(recDonation)));
-
+        List<RD2_ETableController.TableView> recurringDonations = new List<RD2_ETableController.TableView>();
+        if(RD2_EnablementService.isRecurringDonations2Enabled) {
+            if(controller.hasAccessToRecurringDonation()) {
+                for(npe03__Recurring_Donation__c recDonation : selector.getRecurringDonations()) {
+                    recurringDonations.add( new RD2_ETableController.TableView( recDonation,
+                                                                                controller.getFrequency(recDonation),
+                                                                                controller.getStatus(recDonation),
+                                                                                controller.getPaymentMethod(recDonation)));
+    
+                }
+            } else {
+                throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
             }
-
-            return recurringDonations;
-        } else {
-            throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
         }
+
+        return recurringDonations;
+      
     }
 
     /** 
     * @author Salesforce.org
     * @date 2022
     * @description process Recurring Donation record to build the frequency string.
+    * @param recurringDonation recurring donation record
     * @return String returns the frequency string.
     */
     private String getFrequency(npe03__Recurring_Donation__c recurringDonation) {
@@ -184,7 +207,8 @@ public with sharing class RD2_ETableController {
     /** 
     * @author Salesforce.org
     * @date 2022
-    * @description process Recurring Donation record to build the status string.
+    * @description process Recurring Donaion record to build the status string.
+    * @param recurringDonation recurring donation record
     * @return String returns the Status string.
     */
     private String getStatus(npe03__Recurring_Donation__c recurringDonation) {
@@ -210,16 +234,55 @@ public with sharing class RD2_ETableController {
     /** 
     * @author Salesforce.org
     * @date 2022
+    * @description process Recurring Donation record to build the payment method string.
+    * @param recurringDonation recurring donation record
+    * @return String returns the PaymentMethod string.
+    */
+    private String getPaymentMethod(npe03__Recurring_Donation__c recurringDonation) {
+        String paymentMethod = '';
+
+        if(GE_GiftEntryController.isElevateCustomer() && String.IsBlank(recurringDonation.CommitmentId__c) || !GE_GiftEntryController.isElevateCustomer()) {
+            //Non-Elevate RD
+            paymentMethod = recurringDonation.PaymentMethod__c;
+        
+        } else {
+            //Elevate RD
+            if(recurringDonation.PaymentMethod__c == RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD) {
+                paymentMethod = String.format(System.Label.creditCardElevatePayment, new List<String>{recurringDonation.PaymentMethod__c, recurringDonation.CardLast4__c, recurringDonation.CardExpirationMonth__c, recurringDonation.CardExpirationYear__c});
+            } else {
+                paymentMethod = String.format(System.Label.achElevatePayment, new List<String>{recurringDonation.PaymentMethod__c, recurringDonation.ACH_Last_4__c});
+            }
+        }
+
+        return paymentMethod;
+    }
+
+    /** 
+    * @author Salesforce.org
+    * @date 2022
     * @description method to check recurring donation permissions.
     * @return Boolean returns access to Recurring Donations.
     */
     private Boolean hasAccessToRecurringDonation() {
-        return permissions.canRead(npe03__Recurring_Donation__c.SObjectType, new Set<SObjectField>{
+
+        Set<SObjectField> fields = new Set<SObjectField>{
             npe03__Recurring_Donation__c.npe03__Amount__c,
             npe03__Recurring_Donation__c.npe03__Installment_Period__c,
             npe03__Recurring_Donation__c.InstallmentFrequency__c,
             npe03__Recurring_Donation__c.Day_of_Month__c,
-            npe03__Recurring_Donation__c.Status__c
-        });
+            npe03__Recurring_Donation__c.Status__c,
+            npe03__Recurring_Donation__c.npe03__Last_Payment_Date__c,
+            npe03__Recurring_Donation__c.PaymentMethod__c
+        };
+
+        if(GE_GiftEntryController.isElevateCustomer()) {
+            fields.add(npe03__Recurring_Donation__c.CommitmentId__c);
+            fields.add(npe03__Recurring_Donation__c.CardLast4__c);
+            fields.add(npe03__Recurring_Donation__c.CardExpirationYear__c);
+            fields.add(npe03__Recurring_Donation__c.CardExpirationMonth__c);
+            fields.add(npe03__Recurring_Donation__c.ACH_Last_4__c);
+        }
+        
+        return permissions.canRead(npe03__Recurring_Donation__c.SObjectType, fields);
     }
 }

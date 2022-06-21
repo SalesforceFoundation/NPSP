@@ -22,7 +22,7 @@ Setup Test Data
 
 Create Open Recurring Donation With Monthly Installment
     [Documentation]              This test verifies that a Recurring Donation can be created through the UI.
-    [tags]                        unstable         W-039820                            feature:Recurring Donations    unstable
+    [tags]                        feature:Recurring Donations     unstable         api
 
     Go To Page                           Details
     ...                                  Contact
