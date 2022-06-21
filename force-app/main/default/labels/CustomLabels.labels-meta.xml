@@ -2412,14 +2412,6 @@
         <shortDescription>Cancel and close label</shortDescription>
         <value>Cancel and close</value>
     </labels>
-        <labels>
-        <fullName>commonCancel</fullName>
-        <categories>Button</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Cancel and close label</shortDescription>
-        <value>Cancel</value>
-    </labels>
     <labels>
         <fullName>RD2_ACH_Payment_Method_Label</fullName>
         <categories>Recurring-Donations</categories>
