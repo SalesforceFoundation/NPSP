@@ -130,38 +130,50 @@ public with sharing class RD2_ETableController {
     * @return List<RD2_ETableController.TableView> returns processed Recurring Donations.
     */
     private List<RD2_ETableController.TableView> getTableViews() {
-        Map<Id, RD2_ETableController.TableView> recurringDonations = new Map<Id,RD2_ETableController.TableView>();
+        List<RD2_ETableController.TableView> recurringDonations = new List<RD2_ETableController.TableView>();
         if(RD2_EnablementService.isRecurringDonations2Enabled) {
             if(controller.hasAccessToRecurringDonation()) {
-                Set<Id> fixedRecurringDonationIds = new Set<Id>();
-
-                for(npe03__Recurring_Donation__c recDonation : selector.getRecurringDonations()) {
-                    recurringDonations.put( recDonation.Id, new RD2_ETableController.TableView( recDonation,
-                                                                                controller.getFrequency(recDonation),
-                                                                                controller.getStatus(recDonation),
-                                                                                controller.getPaymentMethod(recDonation)));
-    
-                    if(recDonation.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED) {
-                        fixedRecurringDonationIds.add(recDonation.Id);
-                    }
-                }
-
-                if(!fixedRecurringDonationIds.isEmpty()) {
-                    Map<ID, Date> mapRDFinalDate = getFinalDonations(fixedRecurringDonationIds);
-                    for(Id rdID : mapRDFinalDate.keySet()) {
-                        RD2_ETableController.TableView tableView = recurringDonations.get(rdID);
-                        tableView.finalDonation = mapRDFinalDate.get(rdID);
-                        recurringDonations.put(rdID, tableView);
-                    }
-                }
-
+                recurringDonations = controller.getProcessedTableViews(selector.getRecurringDonations());
             } else {
                 throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
             }
         }
 
-        return recurringDonations.values();
+        return recurringDonations;
       
+    }
+
+    /** 
+    * @author Salesforce.org
+    * @date 2022
+    * @description process Recurring Donation records to build the TableViews data.
+    * @param List<recurringDonation> recurring donation records
+    * @return ListRD2_ETableController.TableView> returns TableView data.
+    */
+    private List<RD2_ETableController.TableView> getProcessedTableViews(List<npe03__Recurring_Donation__c> rdRecords) {
+        Map<Id, RD2_ETableController.TableView> recurringDonations = new Map<Id,RD2_ETableController.TableView>();
+        Set<Id> fixedRecurringDonationIds = new Set<Id>(); 
+        for(npe03__Recurring_Donation__c recDonation : rdRecords) {
+            recurringDonations.put( recDonation.Id, new RD2_ETableController.TableView( recDonation,
+                                                                        controller.getFrequency(recDonation),
+                                                                        controller.getStatus(recDonation),
+                                                                        controller.getPaymentMethod(recDonation)));
+
+            if(recDonation.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED) {
+                fixedRecurringDonationIds.add(recDonation.Id);
+            }
+        }
+
+        if(!fixedRecurringDonationIds.isEmpty()) {
+            Map<ID, Date> mapRDFinalDate = getFinalDonations(fixedRecurringDonationIds);
+            for(Id rdID : mapRDFinalDate.keySet()) {
+                RD2_ETableController.TableView tableView = recurringDonations.get(rdID);
+                tableView.finalDonation = mapRDFinalDate.get(rdID);
+                recurringDonations.put(rdID, tableView);
+            }
+        }
+
+        return recurringDonations.values();
     }
 
     /** 
