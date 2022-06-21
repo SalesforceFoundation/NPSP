@@ -11,6 +11,7 @@ import INSTALLMENT_FREQUENCY_FIELD from '@salesforce/schema/npe03__Recurring_Don
 import INSTALLMENT_PERIOD_FIELD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
 import commonCancelAndClose from '@salesforce/label/c.commonCancelAndClose';
 import commonCancel from '@salesforce/label/c.commonCancel';
+import dayOfMonth from '@salesforce/label/c.RD2_DayOfMonth';
 import MONTH_DAY_FIELD from '@salesforce/schema/npe03__Recurring_Donation__c.Day_of_Month__c';
 
 
@@ -42,7 +43,8 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
         recurringDonationSchedule,
         installmentPeriod,
         commonCancelAndClose,
-        commonCancel
+        commonCancel,
+        dayOfMonth
     }
 
     renderedCallback() {

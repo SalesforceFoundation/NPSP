@@ -1786,6 +1786,14 @@
         <value>Pending Elevate Process</value>
     </labels>
     <labels>
+        <fullName>RD2_DayOfMonth</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Day of Month label for field to be shown in rd2RecurringDonation component</shortDescription>
+        <value>Day of Month</value>
+    </labels>
+    <labels>
         <fullName>RD2_ElevatePermissionRequired</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
