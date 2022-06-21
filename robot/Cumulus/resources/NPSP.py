@@ -32,14 +32,14 @@ from cumulusci.core.config import TaskConfig
 
 from tasks.salesforce_robot_library_base import SalesforceRobotLibraryBase
 from BaseObjects import BaseNPSPPage
-from locators_52 import npsp_lex_locators as locators_52
 from locators_53 import npsp_lex_locators as locators_53
 from locators_54 import npsp_lex_locators as locators_54
+from locators_55 import npsp_lex_locators as locators_55
 
 locators_by_api_version = {
-    54.0: locators_54,  # summer '22
-    53.0: locators_53,  # spring '22
-    52.0: locators_52   # winter '21
+    55.0: locators_55,
+    54.0: locators_54,
+    53.0: locators_53 
 }
 # will get populated in _init_locators
 npsp_lex_locators = {}
@@ -220,7 +220,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
     def click_modal_footer_button(self,value):
         """Click the specified lightning button on modal footer"""
-        if self.latest_api_version == 52.0:
+        if self.latest_api_version == 53.0:
             btnlocator = npsp_lex_locators["button-text"].format(value)
             self.salesforce.scroll_element_into_view(btnlocator)
             self.salesforce._jsclick(btnlocator)
@@ -1224,7 +1224,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     @capture_screenshot_on_error
     def select_value_from_dropdown(self,dropdown,value):
         """Select given value in the dropdown field"""
-        if self.latest_api_version == 53.0 or self.latest_api_version == 54.0 and dropdown not in ("Installment Period","Role"):
+        if self.latest_api_version == 54.0 or self.latest_api_version == 55.0 and dropdown not in ("Installment Period","Role"):
             self.click_flexipage_dropdown(dropdown,value)
         else:
             if dropdown in ("Open Ended Status","Payment Method"):
@@ -1237,7 +1237,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                     self.salesforce._jsclick(locator)
                     self.selenium.wait_until_element_is_visible(selection_value)
                     self.selenium.click_element(selection_value)
-            if self.latest_api_version == 53.0 or self.latest_api_version == 54.0 and dropdown in ("Installment Period","Role"):
+            if self.latest_api_version == 54.0 or self.latest_api_version == 55.0 and dropdown in ("Installment Period","Role"):
                 locator =  npsp_lex_locators['record']['select_dropdown']
                 selection_value = npsp_lex_locators["record"]["select_value"].format(value)
                 if self.npsp.check_if_element_exists(locator):
@@ -1662,7 +1662,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         and clicking on screen before performing actual click for next element"""
         actions = ActionChains(self.selenium.driver)
         actions.move_by_offset(0, 20).click().perform()
-        if title=="Schedule Payments" and self.latest_api_version == 52.0:
+        if title=="Schedule Payments" and self.latest_api_version == 53.0:
             locator=npsp_lex_locators['schedule_payments'].format(title)
         else:
             locator=npsp_lex_locators['button-with-text'].format(title)
