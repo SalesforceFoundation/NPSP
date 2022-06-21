@@ -81,10 +81,10 @@ public inherited sharing class RD2_ERecurringDonationsSelector {
 				queryString += 'AND CommitmentId__c = NULL ';
 			}
 			
-			queryString += 'WITH SECURITY_ENFORCED';
+			queryString += 'WITH SECURITY_ENFORCED ';
+      queryString += 'ORDER BY npe03__Next_Payment_Date__c DESC NULLS LAST';
 
 			recurringDonations = Database.query(queryString);
-
 		}
 
         return recurringDonations;
