@@ -1,20 +1,51 @@
 import { LightningElement, api } from 'lwc';
 import stopRecurringDonation from '@salesforce/label/c.stopRecurringDonation';
 import stopRecurringDonationModalTitle from '@salesforce/label/c.stopRecurringDonationModalTitle';
+import upsertDonation from '@salesforce/apex/RD2_ETableController.upsertDonation';
+import RD2_ElevateRDCancellingTitle from '@salesforce/label/c.RD2_ElevateRDCancellingTitle';
+import RD2_ElevateRDCancellingMessage from '@salesforce/label/c.RD2_ElevateRDCancellingMessage';
+import RD2_NonElevateRDCancellingTitle from '@salesforce/label/c.RD2_NonElevateRDCancellingTitle';
+import commonClose from '@salesforce/label/c.commonClose';
+import commonCancelAndClose from '@salesforce/label/c.commonCancelAndClose';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 const ESC_KEY_CODE = 27;
 const ESC_KEY_STRING = "Escape";
 const FOCUSABLE_ELEMENTS = "button";
 const TAB_KEY_CODE = 9;
 const TAB_KEY_STRING = "Tab";
+const STATUS_CLOSED = "Closed";
 export default class StopRecurringDonationModal extends LightningElement {
 
     labels = {
         stopRecurringDonation,
-        stopRecurringDonationModalTitle
+        stopRecurringDonationModalTitle,
+        commonClose,
+        commonCancelAndClose
+    }
+    isElevate;
+    @api openStopRecurringDonation;
+    @api currentRecord;
+
+    /**
+     * @description Returns title label for toast based on elevate or non elevate RD
+     */
+    get title() {
+      if (this.isElevate) {
+          return RD2_ElevateRDCancellingTitle;
+      }
+      return RD2_NonElevateRDCancellingTitle;
     }
 
-    @api openStopRecurringDonation;
+    /**
+     * @description Returns message label for toast based on elevate or non elevate RD
+     */
+    get message() {
+      if (this.isElevate) {
+          return RD2_ElevateRDCancellingMessage;
+      }
+      return '';
+    }
 
     renderedCallback() {
         this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
@@ -46,9 +77,24 @@ export default class StopRecurringDonationModal extends LightningElement {
         ];
         return potentialElems;
       }
+      
+      handleCancelDonation(){
+        let record = Object.assign({}, this.currentRecord.recurringDonation);
+        record.Status__c = STATUS_CLOSED;
+        upsertDonation({ recurringDonation: record })
+          .then(() => {
+            this.isElevate = record.CommitmentId__c ? true : false;
+            const event = new ShowToastEvent({
+                title: this.title,
+                message: this.message
+            });
+            this.dispatchEvent(event);
+            this.closeModal();
+          })
+      } 
   
       closeModal() {
         this.template.removeEventListener("keydown", (e) => this.handleKeyUp(e));
         this.dispatchEvent(new CustomEvent('close', {detail: 'stopRecurringDonation'}));
-    } 
+      } 
 }

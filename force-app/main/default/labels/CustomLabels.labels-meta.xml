@@ -8,6 +8,22 @@
         <value>You must provide an Auth ID.</value>
     </labels>
     <labels>
+        <fullName>installmentPeriod</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for installment frequency for Recurring Donations Action</shortDescription>
+        <value>Installment Period</value>
+    </labels>
+    <labels>
+        <fullName>recurringDonationSchedule</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for modal title for Recurring Donation table actions</shortDescription>
+        <value>Recurring Donation Schedule</value>
+    </labels>
+    <labels>
         <fullName>Addr_No_Batch</fullName>
         <categories>address, error</categories>
         <language>en_US</language>
@@ -1738,6 +1754,22 @@
         <value>No Errors</value>
     </labels>
     <labels>
+        <fullName>RD2_ViewMoreDetails</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for view more info on recurring donation table component</shortDescription>
+        <value>View More Details</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ViewLessDetails</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for view less info on recurring donation table component</shortDescription>
+        <value>View Less Details</value>
+    </labels>
+    <labels>
         <fullName>RD2_ElevateNotSupported</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -1832,6 +1864,30 @@
         <protected>true</protected>
         <shortDescription>Text indicating the Recurring Donation could not be created in Elevate</shortDescription>
         <value>An Elevate recurring payment could not be created. Contact your system administrator for assistance.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateRDCancellingTitle</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Recurring Donation would be cancelled</shortDescription>
+        <value>Your request to stop your Recurring Donation was submitted.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateRDCancellingMessage</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Recurring Donation would be cancelled</shortDescription>
+        <value>This can take some time. Refresh the page to check the status. Contact us if you need help.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_NonElevateRDCancellingTitle</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Recurring Donation Non Elevat would be cancelled</shortDescription>
+        <value>Your Recurring Donation was stopped.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementDisabledHeader</fullName>
@@ -2371,6 +2427,30 @@
         <protected>true</protected>
         <shortDescription>Spinner text when credit card is validated on Recurring Donation save</shortDescription>
         <value>Sending ACH information to Elevate...</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ACH_Payment_Method_Label</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ACH Payment Method label</shortDescription>
+        <value>Bank Account</value>
+    </labels>
+    <labels>
+        <fullName>RD2_Payment_Method</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Payment Method label</shortDescription>
+        <value>Payment Method</value>
+    </labels>
+    <labels>
+        <fullName>RD2_Credit_Card_Payment_Method_Label</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Credit Card Payment Method label</shortDescription>
+        <value>Credit Card</value>
     </labels>
     <labels>
         <fullName>RD2_EntryFormSaveCreditCardValidationMessage</fullName>
@@ -5897,6 +5977,94 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Last Modified</value>
     </labels>
     <labels>
+        <fullName>frequencyOnThePeriod</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>On the {0}</value>
+    </labels>
+    <labels>
+        <fullName>frequencyPeriodOnTheDayOfTheMonth</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>{0} on the {1}</value>
+    </labels>
+    <labels>
+        <fullName>frequencyYearly</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>Every {0} years</value>
+    </labels>
+    <labels>
+        <fullName>frequencyMonthly</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>Every {0} months on the {1}</value>
+    </labels>
+    <labels>
+        <fullName>frequencyWeekly</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>Every {0} weeks</value>
+    </labels>
+    <labels>
+        <fullName>firstOrdinalNumber</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>First ordinal number</shortDescription>
+        <value>st</value>
+    </labels>
+    <labels>
+        <fullName>secondOrdinalNumber</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Second ordinal number</shortDescription>
+        <value>nd</value>
+    </labels>
+    <labels>
+        <fullName>thirdOrdinalNumber</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Third ordinal number</shortDescription>
+        <value>rd</value>
+    </labels>
+    <labels>
+        <fullName>otherOrdinalNumber</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Other ordinal number</shortDescription>
+        <value>th</value>
+    </labels>
+    <labels>
+        <fullName>creditCardElevatePayment</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used to show the Payment Method using Elevate RD and Credit Card payment.</shortDescription>
+        <value>{0}, *{1} Exp.{2}/{3}</value>
+    </labels>
+    <labels>
+        <fullName>achElevatePayment</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used to show the Payment Method using Elevate RD and ACH payment.</shortDescription>
+        <value>{0}, *{1}</value>
+    </labels>
+    <labels>
         <fullName>commonAssistiveError</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5999,6 +6167,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Close button label</shortDescription>
         <value>Close</value>
+    </labels>
+    <labels>
+        <fullName>commonCancelAndClose</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cancel and close label</shortDescription>
+        <value>Cancel and close</value>
     </labels>
     <labels>
         <fullName>commonConcurrentBatchError</fullName>
@@ -8836,6 +9012,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Field-level error message when template name is not unique</shortDescription>
         <value>This name has been used by another template. Please enter a unique name.</value>
+    </labels>
+    <labels>
+        <fullName>geErrorDonorMismatch</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error for entering household info in Account1</shortDescription>
+        <value>For a household gift, select Contact1 for Donor Type and complete the Contact fields.</value>
     </labels>
     <labels>
         <fullName>geErrorDonorTypeValidation</fullName>
@@ -15720,6 +15904,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>true</protected>
         <shortDescription>Label to define aria-label on donation history datatable</shortDescription>
         <value>Donation History</value>
+    </labels>
+    <labels>
+        <fullName>RD2_Actions</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Recurring Donation Actions</shortDescription>
+        <value>Actions</value>
     </labels>
     <labels>
         <fullName>updatePaymentMethod</fullName>

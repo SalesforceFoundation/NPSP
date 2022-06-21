@@ -28,7 +28,7 @@ Validate Errors When Field Is Deleted
     ...                     Verifys that saving the gift throws an error. Creates the field and verifys no errors or warnings are thrown on AM,
     ...                     object group, and template builder. Verifys that gift can be created successfully.
 
-    [tags]                              unstable                      feature:GE          W-8292840
+    [tags]                              feature:GE  unstable
     Load Page Object                    Custom                        ObjectManager
     Delete Object Field                 Account                       custom_acc_text
     Verify Error Message on AM Page And Object Group                  Account 1           custom_acc_text
