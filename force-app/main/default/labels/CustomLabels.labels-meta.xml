@@ -12075,7 +12075,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Refund submitted for processing.</shortDescription>
-        <value>Refund submitted for processing.</value>
+        <value>Refund submitted for processing. Check for the refunded Payment on the Opportunity record.</value>
     </labels>
     <labels>
         <fullName>pmtRefundPaymentConfirmedButton</fullName>
