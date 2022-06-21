@@ -54,7 +54,6 @@ import { registerListener, fireEvent } from 'c/pubsubNoPageRef';
 import {
     getQueryParameters,
     isEmpty,
-    isObject,
     isNotEmpty,
     format,
     isUndefined,
@@ -121,12 +120,15 @@ import ELEVATE_PAYMENT_STATUS_FIELD
 import DATA_IMPORT_OBJECT from '@salesforce/schema/DataImport__c';
 import DATA_IMPORT_ACCOUNT1_NAME
     from '@salesforce/schema/DataImport__c.Account1_Name__c';
+import OPP_PRIMARY_CONTACT
+    from '@salesforce/schema/Opportunity.Primary_Contact__c';
 
 // Labels are used in BDI_MatchDonations class
 import userSelectedMatch from '@salesforce/label/c.bdiMatchedByUser';
 import userSelectedNewOpp from '@salesforce/label/c.bdiMatchedByUserNewOpp';
 import applyNewPayment from '@salesforce/label/c.bdiMatchedApplyNewPayment';
 import bgeGridGiftSaved from '@salesforce/label/c.bgeGridGiftSaved';
+import accountDonorSelectionMismatch from '@salesforce/label/c.geErrorDonorMismatch';
 import CURRENCY from '@salesforce/i18n/currency';
 
 const mode = {
@@ -194,11 +196,13 @@ export default class GeFormRenderer extends LightningElement{
 
     _isFormCollapsed = false;
     _shouldInformParent = true;
+    _isInvalidDonorSelected = false;
 
     set selectedDonationOrPaymentRecord(record) {
         if (record.new === true) {
             this.setCreateNewOpportunityInFormState();
         } else if (this.isAPaymentId(record.fields.Id)) {
+            this.validateDonorSelection(record.fields);
             this.setSelectedPaymentInFormState(record.fields);
             this.loadPaymentAndParentDonationFieldValues(record.fields);
         } else if (this.isAnOpportunityId(record.fields.Id)) {
@@ -211,6 +215,18 @@ export default class GeFormRenderer extends LightningElement{
         const reviewDonationsChangeEvent = new CustomEvent(
             'reviewdonationschange', { detail: { record: record } });
         this.dispatchEvent(reviewDonationsChangeEvent);
+    }
+
+    validateDonorSelection(fields) {
+        if (this.selectedDonationHasPrimaryContact(fields)
+            && this.isDonorTypeAccount()) {
+            this._isInvalidDonorSelected = true;
+        }
+    }
+
+    selectedDonationHasPrimaryContact(fields) {
+        return fields[apiNameFor(PARENT_OPPORTUNITY_FIELD)
+        .replace('__c', '__r')][apiNameFor(OPP_PRIMARY_CONTACT)]
     }
 
     setSelectedPaymentInFormState(record) {
@@ -975,11 +991,13 @@ export default class GeFormRenderer extends LightningElement{
             } ];
         }
 
-        return invalidFields.length === 0;
+
+        return invalidFields.length === 0
     }
 
     /**
      * validates donation donor type on sectionsList
+     * @param dataImportHelper
      * @param sectionsList, list of sections
      * @returns {boolean|*} - true if form invalid, false otherwise
      */
@@ -994,9 +1012,9 @@ export default class GeFormRenderer extends LightningElement{
         const isContactDonor = dataImportHelper.donationDonorValue === DONATION_DONOR.isContact1;
         const areEmptyContactFields = dataImportHelper.isContact1ImportedEmpty && dataImportHelper.isContact1LastNameEmpty;
         // donation donor validation depending on selection and field presence
-        const isError = isAccountDonor ? areEmptyAccountFields : isContactDonor && areEmptyContactFields;
-
-        return isError;
+        return isAccountDonor
+            ? areEmptyAccountFields || this._isInvalidDonorSelected
+            : isContactDonor && areEmptyContactFields;
     }
 
     resetDonorTypeValidations(sectionsList) {
@@ -1024,6 +1042,9 @@ export default class GeFormRenderer extends LightningElement{
      */
     getDonationDonorErrorLabel(dataImportHelper) {
 
+        if (this._isInvalidDonorSelected) {
+            return accountDonorSelectionMismatch;
+        }
         // init array replacement for custom label
         let validationErrorLabelReplacements = [dataImportHelper.donationDonorValue, dataImportHelper.donationDonorLabel];
 
@@ -1641,6 +1662,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleDonationDonorChange() {
+        this._isInvalidDonorSelected = false;
         if (this.hasSelectedDonationOrPayment()) {
             this.resetDonationAndPaymentImportedFields();
             fireEvent(this, 'resetReviewDonationsEvent', {});
@@ -2112,6 +2134,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     get donorType() {
+
         return this.getFieldValueFromFormState(
             apiNameFor(DATA_IMPORT_DONATION_DONOR_FIELD));
     }
