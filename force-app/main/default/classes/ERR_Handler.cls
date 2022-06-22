@@ -270,6 +270,21 @@ public class ERR_Handler {
     }
 
     /*******************************************************************************************************
+    * @description Creates an error record from an exception, and return the error collection
+                   This method should be used from inside the NPSP package, instead of the same one with that same name
+                   that takes a String instead of an Enum as the second parameter.
+    * @param e Exception to construct error record from.
+    * @param context The context the exception was raised on.
+    */
+    public static Errors getErrorsOnly(Exception e, ERR_Handler_API.Context context) {
+        Errors errors = new Errors();
+        errors.errorsExist = true;
+        errors.errorRecords.add(createError(e, context.name()));
+
+        return errors;
+    }
+
+    /*******************************************************************************************************
     * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error
     *              notifications (if enabled).
                    This method should be used from inside the NPSP package, instead of the same one with that same name
