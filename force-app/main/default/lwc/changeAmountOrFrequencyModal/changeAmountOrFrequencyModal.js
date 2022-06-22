@@ -80,11 +80,9 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
       }
       
       handleSaveRecurringDonation(){
-        // eslint-disable-next-line @lwc/lwc/no-document-query
-        let newAmount = document.getElementById('rd-amount').value;
-        console.log(newAmount);
+        let newAmount = this.template.querySelector(".rd-amount-input").value;
         let record = Object.assign({}, this.currentRecord.recurringDonation);
-        console.log(JSON.stringify(this.currentRecord.recurringDonation));
+        record.npe03__Amount__c = newAmount;
         upsertDonation({ recurringDonation: record })
           .then(() => {
             this.isElevate = record.CommitmentId__c ? true : false;
