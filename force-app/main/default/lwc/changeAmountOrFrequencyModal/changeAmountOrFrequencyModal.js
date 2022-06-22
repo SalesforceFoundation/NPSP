@@ -21,6 +21,7 @@ const FOCUSABLE_ELEMENTS = "button";
 const TAB_KEY_CODE = 9;
 const TAB_KEY_STRING = "Tab";
 export default class ChangeAmountOrFrequencyModal extends LightningElement {
+    @api dayOfMonthFieldLabel;
     @api openChangeAmountOrFrequency;
     @api currentRecord;
     isRenderCallbackActionExecuted = false;
