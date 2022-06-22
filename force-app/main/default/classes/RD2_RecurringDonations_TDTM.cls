@@ -400,13 +400,18 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             return;
         }
 
-        if (triggerAction == TDTM_Runnable.Action.AfterInsert && shouldEvaluateOppsSynchronouslyOnInsert(rds.size() > 1)) {
+        if (canRunOpportunityEvaluationServiceSynchronously(triggerAction, rds)) {
             new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIds, rdIdsWhereScheduleChanged, oldRds)
                 .executeOppEvaluationService();
-
         } else {
             RD2_QueueableService.enqueueOppEvalService(rdIds, rdIdsWhereScheduleChanged, oldRds);
         }
+    }
+
+    private Boolean canRunOpportunityEvaluationServiceSynchronously(Action triggerAction,
+        List<npe03__Recurring_Donation__c> rds) {
+        return triggerAction == TDTM_Runnable.Action.AfterInsert
+            && shouldEvaluateOppsSynchronouslyOnInsert(rds.size() > 1);
     }
 
     /***
@@ -416,6 +421,10 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     @TestVisible
     private Boolean shouldEvaluateOppsSynchronouslyOnInsert(Boolean isBulk) {
         RD2_Settings settings = RD2_Settings.getInstance();
+
+        if (settings.isGiftEntryMode) {
+            return true;
+        }
 
         if (settings.firstInstallmentCreateMode == RD2_Constants.FirstInstallmentOppCreateOptions.Synchronous.name()) {
             return true;

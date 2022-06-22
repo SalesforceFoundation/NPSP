@@ -6,6 +6,7 @@ import GeLabelService from 'c/geLabelService';
 import DataImport from '@salesforce/schema/DataImport__c';
 import { registerListener } from 'c/pubsubNoPageRef';
 import { NavigationMixin } from 'lightning/navigation';
+import Settings from 'c/geSettings';
 
 const EVENT_TOGGLE_MODAL = 'togglemodal';
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
@@ -46,6 +47,7 @@ export default class geHome extends NavigationMixin(LightningElement) {
             this.setInitialView();
         }
         this.isLoading = false;
+        await Settings.init();
     }
 
     /*******************************************************************************
@@ -97,11 +99,11 @@ export default class geHome extends NavigationMixin(LightningElement) {
 
     /*******************************************************************************
     * @description Method navigates to the provided View Name
-    * 
+    *
     * @param viewName: String of View Name to navigate to
     * @param formTemplateId: String of Template Id to Edit
     * @param isClone: Boolean set to true if template should be cloned
-    * 
+    *
     */
     goToView(viewName, formTemplateId, isClone) {
         let state = {};
