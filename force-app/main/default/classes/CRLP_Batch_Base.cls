@@ -506,8 +506,9 @@ public abstract class CRLP_Batch_Base {
             get {
                 if (maxDaysAgo == null) {
                     maxDaysAgo = getMaxIntegerValueFromRollupsForType(CRLP_Operation.TimeBoundOperationType.Days_Back);
-                    if (maxDaysAgo == null && base.customizableRollupSettings.LimitRecalculatedRecurringDonations__c) {
-                        maxDaysAgo = (Integer) base.customizableRollupSettings.RecurringDonationLastNDays__c;
+                    if (maxDaysAgo == null && base.customizableRollupSettings.LimitRecalculatedRecurringDonations__c == true) {
+                        Decimal rdLastNDays = base.customizableRollupSettings.RecurringDonationLastNDays__c;
+                        maxDaysAgo = rdLastNDays != null ? (Integer) rdLastNDays : null;
                     }
                 }
                 return maxDaysAgo;
