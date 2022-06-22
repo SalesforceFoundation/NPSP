@@ -21,6 +21,7 @@ const TAB_KEY_STRING = "Tab";
 export default class ChangeAmountOrFrequencyModal extends LightningElement {
     @api openChangeAmountOrFrequency;
     @api currentRecord;
+    @api fixedInstallmentsLabel;
     isRenderCallbackActionExecuted = false;
     isFixedDonation = false;
 
@@ -54,11 +55,9 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
                 }`;
                 if(this.template.querySelector('lightning-record-edit-form')){
                     this.template.querySelector('lightning-record-edit-form').appendChild(this.style);
-                    console.log(JSON.stringify(this.currentRecord))
                     if(this.currentRecord.recurringDonation.RecurringType__c === "Fixed"){
                         this.isFixedDonation = true;
                     }
-                    console.log(this.isFixedDonation);
                 }
             }
 
