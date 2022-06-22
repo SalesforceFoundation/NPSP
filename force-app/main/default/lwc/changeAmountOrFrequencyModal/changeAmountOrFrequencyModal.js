@@ -1,4 +1,6 @@
 import { LightningElement, api } from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import upsertDonation from '@salesforce/apex/RD2_ETableController.upsertDonation';
 import changeAmountOrFrequency from '@salesforce/label/c.changeAmountOrFrequency';
 import updateRecurringDonation from '@salesforce/label/c.updateRecurringDonation';
 import every from "@salesforce/label/c.RD2_EntryFormScheduleEveryLabel";
@@ -75,7 +77,25 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
               e.preventDefault();
             }
           }
-      }   
+      }
+      
+      handleSaveRecurringDonation(){
+        // eslint-disable-next-line @lwc/lwc/no-document-query
+        let newAmount = document.getElementById('rd-amount').value;
+        console.log(newAmount);
+        let record = Object.assign({}, this.currentRecord.recurringDonation);
+        console.log(JSON.stringify(this.currentRecord.recurringDonation));
+        upsertDonation({ recurringDonation: record })
+          .then(() => {
+            this.isElevate = record.CommitmentId__c ? true : false;
+            const event = new ShowToastEvent({
+                title: this.title,
+                message: this.message
+            });
+            this.dispatchEvent(event);
+            this.closeModal();
+          })
+      }
   
       _getFocusableElements() {
         const potentialElems = [
