@@ -148,6 +148,16 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         set;
     }
 
+    public String namespace {
+        get {
+            if (namespace == null) {
+                namespace = UTIL_Namespace.getNamespace();
+            }
+            return namespace;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description Instance of BDI_MigrationMappingUtility
     */
