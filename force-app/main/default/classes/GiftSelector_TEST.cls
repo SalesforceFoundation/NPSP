@@ -31,6 +31,58 @@
 private class GiftSelector_TEST {
 
     @isTest
+    private static void shouldIncludeGiftScheduleFields() {
+        // Arrange: Mock recurring gifts enabled for the org
+        mockRecurringGiftsEnabled(true);
+        GiftSelector selector = new GiftSelector();
+
+        // Act: Retrieve select fields to be used in query
+        List<String> selectFields = selector.fields();
+
+        // Assert: expected gift schedule fields are included
+        System.assert(selectFields.contains(String.valueOf(DataImport__c.Recurring_Donation_Recurring_Type__c)),
+            'Recurring_Donation_Recurring_Type__c should be in list of select fields');
+        System.assert(selectFields.contains(String.valueOf(DataImport__c.Recurring_Donation_Date_Established__c)),
+            'Recurring_Donation_Date_Established__c should be in list of select fields');
+        System.assert(selectFields.contains(String.valueOf(DataImport__c.Recurring_Donation_Day_of_Month__c)),
+            'Recurring_Donation_Day_of_Month__c should be in list of select fields');
+        System.assert(selectFields.contains(String.valueOf(DataImport__c.Recurring_Donation_Planned_Installments__c)),
+            'Recurring_Donation_Planned_Installments__c should be in list of select fields');
+        System.assert(selectFields.contains(String.valueOf(DataImport__c.Recurring_Donation_Installment_Period__c)),
+            'Recurring_Donation_Installment_Period__c should be in list of select fields');
+        System.assert(selectFields.contains(String.valueOf(DataImport__c.Recurring_Donation_Installment_Frequency__c)),
+            'Recurring_Donation_Installment_Frequency__c should be in list of select fields');
+        System.assert(selectFields.contains(String.valueOf(DataImport__c.Recurring_Donation_Effective_Date__c)),
+            'Recurring_Donation_Effective_Date__c should be in list of select fields');
+    }
+
+    @isTest
+    private static void shouldNotIncludeGiftScheduleFields() {
+        // Arrange: Mock recurring gifts disabled for the org
+        mockRecurringGiftsEnabled(false);
+        GiftSelector selector = new GiftSelector();
+
+        // Act: Retrieve select fields to be used in query
+        List<String> selectFields = selector.fields();
+
+        // Assert: expected gift schedule fields are not included
+        System.assert(!selectFields.contains(String.valueOf(DataImport__c.Recurring_Donation_Recurring_Type__c)),
+            'Recurring_Donation_Recurring_Type__c should not be in list of select fields');
+        System.assert(!selectFields.contains(String.valueOf(DataImport__c.Recurring_Donation_Date_Established__c)),
+            'Recurring_Donation_Date_Established__c should not be in list of select fields');
+        System.assert(!selectFields.contains(String.valueOf(DataImport__c.Recurring_Donation_Day_of_Month__c)),
+            'Recurring_Donation_Day_of_Month__c should not be in list of select fields');
+        System.assert(!selectFields.contains(String.valueOf(DataImport__c.Recurring_Donation_Planned_Installments__c)),
+            'Recurring_Donation_Planned_Installments__c should not be in list of select fields');
+        System.assert(!selectFields.contains(String.valueOf(DataImport__c.Recurring_Donation_Installment_Period__c)),
+            'Recurring_Donation_Installment_Period__c should not be in list of select fields');
+        System.assert(!selectFields.contains(String.valueOf(DataImport__c.Recurring_Donation_Installment_Frequency__c)),
+            'Recurring_Donation_Installment_Frequency__c should not be in list of select fields');
+        System.assert(!selectFields.contains(String.valueOf(DataImport__c.Recurring_Donation_Effective_Date__c)),
+            'Recurring_Donation_Effective_Date__c should not be in list of select fields');
+    }
+
+    @isTest
     private static void shouldIncludeElevateFields() {
         mockElevateCustomerStatus(true);
         GiftSelector selector = new GiftSelector();
@@ -62,5 +114,40 @@ private class GiftSelector_TEST {
             mockInstance
         );
         GE_PaymentServices.setInstance(paymentServicesMock);
+    }
+
+    private static void mockRecurringGiftsEnabled(Boolean isEnabled) {
+        GE_SettingsServiceMock mockInstance = new GE_SettingsServiceMock();
+        mockInstance.withRecurringGiftsEnabled(isEnabled);
+        GE_SettingsService settingsServiceMock = (GE_SettingsService) Test.createStub(
+            GE_SettingsService.class,
+            mockInstance
+        );
+        GE_SettingsService.setInstance(settingsServiceMock);
+    }
+
+    public class GE_SettingsServiceMock implements StubProvider {
+        private Boolean isRecurringGiftsEnabled;
+
+        public GE_SettingsServiceMock withRecurringGiftsEnabled(Boolean isRecurringGiftsEnabled) {
+            this.isRecurringGiftsEnabled = isRecurringGiftsEnabled;
+            return this;
+        }
+
+        public Object handleMethodCall(Object stubbedObject,
+                String stubbedMethodName,
+                Type returnType,
+                List<Type> listOfParamTypes,
+                List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'isRecurringGiftsEnabled' {
+                    return isRecurringGiftsEnabled;
+                }
+            }
+
+            return null;
+        }
     }
 }
