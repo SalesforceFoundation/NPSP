@@ -1703,7 +1703,8 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label for next donation mapping.</shortDescription>
-        <value>Paid Installments: {0}/{1},\r\n Next Installment Date: {2}.</value>
+        <value>Paid Installments: {0}/{1},
+Next Installment Date: {2}.</value>
     </labels>
     <labels>
         <fullName>RD2_ElevateCancelInProgress</fullName>
