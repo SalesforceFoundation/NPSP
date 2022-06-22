@@ -1,11 +1,9 @@
 import { createElement } from 'lwc';
 import { CloseScreenEventName } from 'lightning/actions';
 import refundPayment from 'c/refundPayment';
-import { getRecord } from "lightning/uiRecordApi";
 import processRefund from "@salesforce/apex/PMT_RefundController.processRefund";
-import getPermissionData from "@salesforce/apex/PMT_RefundController.getPermissionData";
+import getInitialView from "@salesforce/apex/PMT_RefundController.getInitialView";
 
-const paymentGetRecord = require("./data/paymentGetRecord.json");
 const mockRefundView = require('./data/RefundView.json');
 
 jest.mock('@salesforce/apex/PMT_RefundController.processRefund',
@@ -13,7 +11,7 @@ jest.mock('@salesforce/apex/PMT_RefundController.processRefund',
     { virtual : true}
 );
 
-jest.mock('@salesforce/apex/PMT_RefundController.getPermissionData',
+jest.mock('@salesforce/apex/PMT_RefundController.getInitialView',
     () => ({ default : jest.fn() }),
     { virtual : true}
 );
@@ -26,11 +24,8 @@ describe('c-refund-payment', () => {
 
     it('The UI should load correctly', async () => {
         const component = createElement('c-refund-payment', { is: refundPayment });
-        getRecord.emit(paymentGetRecord, (config) => {
-            return config.recordId === "a01FakePayment00Id";
-        });
 
-        getPermissionData.mockResolvedValue(mockRefundView);
+        getInitialView.mockResolvedValue(mockRefundView);
         processRefund.mockResolvedValue(mockRefundView);
         document.body.appendChild(component);
         await flushPromises();
@@ -43,11 +38,8 @@ describe('c-refund-payment', () => {
 
     it('The screen should be closed on Cancel', async () => {
         const component = createElement('c-refund-payment', { is: refundPayment });
-        getRecord.emit(paymentGetRecord, (config) => {
-            return config.recordId === "a01FakePayment00Id";
-        });
 
-        getPermissionData.mockResolvedValue(mockRefundView);
+        getInitialView.mockResolvedValue(mockRefundView);
         processRefund.mockResolvedValue(mockRefundView);
         document.body.appendChild(component);
         await flushPromises();
@@ -62,11 +54,8 @@ describe('c-refund-payment', () => {
 
     it('The screen should be closed on Successful refund', async () => {
         const component = createElement('c-refund-payment', { is: refundPayment });
-        getRecord.emit(paymentGetRecord, (config) => {
-            return config.recordId === "a01FakePayment00Id";
-        });
 
-        getPermissionData.mockResolvedValue(mockRefundView);
+        getInitialView.mockResolvedValue(mockRefundView);
         processRefund.mockResolvedValue({
             hasRequiredPermissions : true,
             isSuccess : true,

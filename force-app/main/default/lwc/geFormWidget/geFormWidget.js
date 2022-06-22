@@ -43,6 +43,10 @@ export default class GeFormWidget extends LightningElement {
         apiNameFor(DATA_IMPORT_ID)
     ];
 
+    get giftInViewHasSchedule() {
+        return !isEmptyObject(this.giftInView?.schedule);
+    }
+
     get hasPaymentMethodFieldInForm() {
         return this.widgetConfig?.hasPaymentMethodFieldInForm;
     }
