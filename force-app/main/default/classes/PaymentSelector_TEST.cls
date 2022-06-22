@@ -37,7 +37,7 @@
 public with sharing class PaymentSelector_TEST {
 
     public class Stub implements System.StubProvider {
-        public npe01__OppPayment__c elevatePaymentRecord;
+        public List<npe01__OppPayment__c> paymentRecords;
 
         public Object handleMethodCall(
             Object stubbedObject,
@@ -48,8 +48,11 @@ public with sharing class PaymentSelector_TEST {
             List<Object> args
         ) {
             switch on methodName {
-                when 'getPaymentWithElevateId' {
-                    return elevatePaymentRecord;
+                when 'getPaymentRecordForRefund' {
+                    return paymentRecords?.get(0);
+
+                } when 'getPaymentRecordsForRefund' {
+                    return paymentRecords;
 
                 } when else {
                     return null;
