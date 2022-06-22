@@ -32,8 +32,7 @@
 * @date 2022
 * @description Processor Queue Finalizer to act on finalized queueables.
 */
-
-public inherited sharing class GiftEntryProcessorQueueFinalizer implements Finalizer{
+public inherited sharing class GiftEntryProcessorQueueFinalizer implements Finalizer {
 
     @TestVisible
     private GiftBatchService giftBatchService {
@@ -51,9 +50,20 @@ public inherited sharing class GiftEntryProcessorQueueFinalizer implements Final
         this.giftBatchId = giftBatchId;
     }
 
-    public void execute(FinalizerContext finalizerContext) {
-        if (finalizerContext.getResult() != ParentJobResult.SUCCESS) {
-            giftBatchService.validateBatch(this.giftBatchId);
+    public void execute(FinalizerContext context) {
+        switch on context.getResult() {
+            when UNHANDLED_EXCEPTION {
+                unhandledException(context);
+            }
+        }
+    }
+
+    private void unhandledException(FinalizerContext context) {
+        try {
+            giftBatchService.failGiftsInProcessing(giftBatchId);
+            giftBatchService.clearLatestJobIdFrom(giftBatchId);
+        } catch(DMLException dmlException) {
+            ERR_Handler_API.processError(dmlException, ERR_Handler_API.Context.GE.name());
         }
     }
 }
