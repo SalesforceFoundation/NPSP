@@ -10,3 +10,7 @@ class BaseNPSPPage:
     @property
     def pageobjects(self):
         return self.builtin.get_library_instance("cumulusci.robotframework.PageObjects")
+
+    @property
+    def salesforce_api(self):
+        return self.builtin.get_library_instance("cumulusci.robotframework.SalesforceAPI")
