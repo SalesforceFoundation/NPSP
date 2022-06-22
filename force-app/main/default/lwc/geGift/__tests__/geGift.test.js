@@ -103,4 +103,34 @@ describe('ge-gift', () => {
         expect(gift.softCredits().unprocessedSoftCredits().length).toEqual(3);
         expect(gift.softCredits().processedSoftCredits().length).toEqual(2);
     });
+
+    it('should have a schedule', async () => {
+        const gift = new Gift({
+            fields: {
+                Id: 'dummy_gift_id'
+            }
+        });
+        const dummySchedule = {
+            RecurringType__c: 'Open',
+        }
+
+        gift.addSchedule(dummySchedule);
+        const hasSchedule = gift.hasSchedule();
+        const inboundGiftDTO = gift.forSave();
+
+        expect(hasSchedule).toBeTruthy();
+        expect(inboundGiftDTO.schedule).toBe(dummySchedule);
+    });
+
+    it('should not have a schedule', async () => {
+        const gift = new Gift({
+            fields: {
+                Id: 'dummy_gift_id'
+            }
+        });
+
+        const hasSchedule = gift.hasSchedule();
+
+        expect(hasSchedule).toBeFalsy();
+    });
 });
