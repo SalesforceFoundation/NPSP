@@ -3,6 +3,8 @@ import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGif
 import updateGiftBatchWith from '@salesforce/apex/GE_GiftEntryController.updateGiftBatchWith';
 import deleteGiftFromGiftBatch from '@salesforce/apex/GE_GiftEntryController.deleteGiftFromGiftBatch';
 import addGiftTo from '@salesforce/apex/GE_GiftEntryController.addGiftTo';
+import hasQueueableId from '@salesforce/apex/GE_GiftEntryController.hasQueueableId';
+import isGiftBatchAccessible from '@salesforce/apex/GE_GiftEntryController.isGiftBatchAccessible';
 
 // Methods below still need to be replaced/updated to go through service x domain. These were only moved.
 import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
@@ -12,6 +14,7 @@ import Gift from 'c/geGift';
 const DEFAULT_MEMBER_GIFTS_QUERY_LIMIT = 25;
 
 class GiftBatch {
+    _accessible = true;
     _id;
     _name = '';
     _totalDonationsAmount = 0;
@@ -22,6 +25,7 @@ class GiftBatch {
     _currencyIsoCode = '';
     _lastModifiedDate;
     _gifts = [];
+    _isProcessing = false;
     _totals = {
         processedGiftsCount: 0,
         failedGiftsCount: 0,
@@ -36,12 +40,18 @@ class GiftBatch {
 
     async init(dataImportBatchId) {
         this._id = dataImportBatchId;
-        const viewModel = await getGiftBatchViewWithLimitsAndOffsets({
-            dataImportBatchId: this._id,
-            giftsLimit: DEFAULT_MEMBER_GIFTS_QUERY_LIMIT,
-            giftsOffset: 0
-        });
-        this._setPropertiesFrom(viewModel);
+        this._accessible = await isGiftBatchAccessible({ batchId: this._id });
+
+        if (this._accessible) {
+            this._isProcessing = await hasQueueableId({ batchId: this._id });
+            const viewModel = await getGiftBatchViewWithLimitsAndOffsets({
+                dataImportBatchId: this._id,
+                giftsLimit: DEFAULT_MEMBER_GIFTS_QUERY_LIMIT,
+                giftsOffset: 0
+            });
+            this._setPropertiesFrom(viewModel);
+        }
+
         return this.state();
     }
 
@@ -68,6 +78,7 @@ class GiftBatch {
 
     async refreshTotals() {
         this._totals = await getGiftBatchTotalsBy({ batchId: this._id });
+        this._isProcessing = await hasQueueableId({ batchId: this._id });
         return this.state();
     }
 
@@ -115,6 +126,10 @@ class GiftBatch {
         });
         this._setPropertiesFrom(newViewModel);
         return this.state();
+    }
+
+    isAccessible() {
+        return this._accessible;
     }
 
     giftsInViewSize() {
@@ -174,7 +189,7 @@ class GiftBatch {
     }
 
     isProcessingGifts() {
-        return Number(this._totals.PROCESSING) > 0;
+        return Number(this._totals.PROCESSING) > 0 || this._isProcessing;
     }
 
     state() {
@@ -197,7 +212,8 @@ class GiftBatch {
             totalGiftsCount: this.totalGiftsCount(),
             hasValuesGreaterThanZero: this.hasValuesGreaterThanZero(),
             hasPaymentsWithExpiredAuthorizations: this.hasPaymentsWithExpiredAuthorizations(),
-            isProcessingGifts: this.isProcessingGifts()
+            isProcessingGifts: this.isProcessingGifts(),
+            isAccessible: this.isAccessible()
         }
     }
 }
