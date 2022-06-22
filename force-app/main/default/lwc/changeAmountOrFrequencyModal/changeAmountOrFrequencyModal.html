@@ -33,6 +33,14 @@
                             <lightning-input-field variant="label-hidden" id="rd-installment_period" field-name={installmentPeriodFieldName}></lightning-input-field>
                         </div>
                     </div>
+                    <template if:true={isFixedDonation}>
+                        <div class="slds-p-around_x-small slds-col slds-size_1-of-1 slds-large-size_1-of-3 slds-form-element">
+                            <div class="slds-form-element__control">
+                                <label for="rd-recurring_type">Number of Fixed Installments</label>
+                                <lightning-input-field variant="label-hidden" id="rd-recurring_type" field-name={installmentNumberFieldName}></lightning-input-field>
+                            </div>
+                        </div>
+                    </template>
                 </div>
             </lightning-record-edit-form>
         </div>

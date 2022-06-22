@@ -9,6 +9,7 @@ import RECURRING_DONATION from '@salesforce/schema/npe03__Recurring_Donation__c'
 import AMOUNT_FIELD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Amount__c';
 import INSTALLMENT_FREQUENCY_FIELD from '@salesforce/schema/npe03__Recurring_Donation__c.InstallmentFrequency__c';
 import INSTALLMENT_PERIOD_FIELD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
+import INSTALLMENT_NUMBER_FIELD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installments__c';
 import commonCancelAndClose from '@salesforce/label/c.commonCancelAndClose';
 import commonCancel from '@salesforce/label/c.commonCancel';
 
@@ -21,11 +22,13 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
     @api openChangeAmountOrFrequency;
     @api currentRecord;
     isRenderCallbackActionExecuted = false;
+    isFixedDonation = false;
 
     recurringDonationApiName = RECURRING_DONATION;
     amountFieldName = AMOUNT_FIELD;
     installmentFrequencyFieldName = INSTALLMENT_FREQUENCY_FIELD;
     installmentPeriodFieldName = INSTALLMENT_PERIOD_FIELD;
+    installmentNumberFieldName = INSTALLMENT_NUMBER_FIELD;
     style = document.createElement('style');
 
     labels = {
@@ -52,6 +55,10 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
                 if(this.template.querySelector('lightning-record-edit-form')){
                     this.template.querySelector('lightning-record-edit-form').appendChild(this.style);
                     console.log(JSON.stringify(this.currentRecord))
+                    if(this.currentRecord.recurringDonation.RecurringType__c === "Fixed"){
+                        this.isFixedDonation = true;
+                    }
+                    console.log(this.isFixedDonation);
                 }
             }
 
@@ -93,6 +100,7 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
             }`;
             this.template.querySelector('lightning-record-edit-form').removeChild(this.style);
         }
+         this.isFixedDonation = false;
         this.isRenderCallbackActionExecuted = false;
         this.dispatchEvent(new CustomEvent('close', {detail: 'changeAmountOrFrequency'}));
     } 
