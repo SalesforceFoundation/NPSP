@@ -55,8 +55,7 @@ public with sharing class Gifts {
         set;
     }
 
-    @TestVisible
-    private Gifts(List<DataImport__c> dataImports) {
+    public Gifts(List<DataImport__c> dataImports) {
         this.giftSelector = new GiftSelector();
         this.donationSelector = new DonationSelector();
         init(dataImports);
@@ -114,6 +113,10 @@ public with sharing class Gifts {
         return gifts;
     }
 
+    public List<DataImport__c> asDataImports() {
+        return dataImportsById.values();
+    }
+
     public Integer size() {
         return this.dataImportsById.values().size();
     }
@@ -139,6 +142,29 @@ public with sharing class Gifts {
                 Label.gePaymentServicesUnavailableFailureMessage,
                 new List<String> { Label.commonPaymentServices });
             failGiftsWithAuthorizedPaymentsWith(failReason);
+        }
+    }
+
+    public void moveProcessableToProcessingStatus() {
+        prepareForProcessing();
+    }
+
+    public Boolean hasRecurringGifts() {
+        for (DataImport__c dataImport : dataImportsById.values()) {
+            Gift gift = new Gift(dataImport);
+            if (gift.hasPopulatedRecurringFields()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void preprocessRecurringGifts() {
+        for (DataImport__c dataImport : dataImportsById.values()) {
+            Gift gift = new Gift(dataImport);
+            if (gift.hasPopulatedRecurringFields()) {
+                gift.preprocessForRecurringGift();
+            }
         }
     }
 

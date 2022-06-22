@@ -24,6 +24,7 @@ import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation
 import ELEVATE_PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Elevate_Payment_Status__c';
 import DONATION_IMPORTED from '@salesforce/schema/DataImport__c.DonationImported__c';
 import PAYMENT_IMPORTED from '@salesforce/schema/DataImport__c.PaymentImported__c';
+import RECURRING_DONATION_IMPORTED from '@salesforce/schema/DataImport__c.RecurringDonationImported__c';
 import CONTACT_IMPORTED from '@salesforce/schema/DataImport__c.Contact1Imported__c';
 import ORGANIZATION_IMPORTED from '@salesforce/schema/DataImport__c.Account1Imported__c';
 import DONATION_DONOR from '@salesforce/schema/DataImport__c.Donation_Donor__c';
@@ -431,6 +432,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     populateMatchedDonationLink(giftViewAsTableRow) {
         const isMatchedToAPaymentRecord = giftViewAsTableRow[PAYMENT_IMPORTED.fieldApiName];
         const isMatchedToAnOpportunityRecord = giftViewAsTableRow[DONATION_IMPORTED.fieldApiName];
+        const isRecurringGift = giftViewAsTableRow[RECURRING_DONATION_IMPORTED.fieldApiName];
 
         if (isMatchedToAPaymentRecord) {
             giftViewAsTableRow[MATCHED_DONATION_LINK] = giftViewAsTableRow[`${PAYMENT_IMPORTED.fieldApiName}${URL_SUFFIX}`];
@@ -438,6 +440,9 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         } else if (isMatchedToAnOpportunityRecord) {
             giftViewAsTableRow[MATCHED_DONATION_LINK] = giftViewAsTableRow[`${DONATION_IMPORTED.fieldApiName}${URL_SUFFIX}`];
             giftViewAsTableRow[MATCHED_DONATION_LABEL] = giftViewAsTableRow[`${DONATION_IMPORTED.fieldApiName}${URL_LABEL_SUFFIX}`];
+        } else if (isRecurringGift) {
+            giftViewAsTableRow[MATCHED_DONATION_LINK] = giftViewAsTableRow[`${RECURRING_DONATION_IMPORTED.fieldApiName}${URL_SUFFIX}`];
+            giftViewAsTableRow[MATCHED_DONATION_LABEL] = giftViewAsTableRow[`${RECURRING_DONATION_IMPORTED.fieldApiName}${URL_LABEL_SUFFIX}`];
         }
         return giftViewAsTableRow;
     }

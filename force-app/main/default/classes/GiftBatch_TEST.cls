@@ -161,40 +161,6 @@ private class GiftBatch_TEST {
         System.assertEquals(3, dummyGiftBatch.gifts().findBy(new GiftId(dummyGift.id())).softCredits().size());
     }
 
-    @isTest
-    static void shouldNotAttemptToCaptureElevatePaymentsWhenServiceUnavailable() {
-        GiftsMock giftsMock = new GiftsMock();
-        GiftBatch giftBatch = new GiftBatch(stubFor(giftsMock));
-
-        PS_IntegrationServiceConfigMock integrationServiceConfigMock =
-            new PS_IntegrationServiceConfigMock(false);
-        giftBatch.paymentIntegrationServiceConfig = stubFor(integrationServiceConfigMock);
-
-        ElevateBatchServiceMock elevateBatchServiceMock = new ElevateBatchServiceMock();
-        giftBatch.elevateBatchService = stubFor(elevateBatchServiceMock);
-
-        giftBatch.prepareGiftsForProcessing();
-
-        System.assertEquals(false, elevateBatchServiceMock.enqueuePaymentCaptureJobForCalled);
-    }
-
-    @isTest
-    static void shouldAttemptToCaptureElevatePaymentsWhenServiceAvailable() {
-        GiftsMock giftsMock = new GiftsMock();
-        GiftBatch giftBatch = new GiftBatch(stubFor(giftsMock));
-
-        PS_IntegrationServiceConfigMock integrationServiceConfigMock =
-            new PS_IntegrationServiceConfigMock(true);
-        giftBatch.paymentIntegrationServiceConfig = stubFor(integrationServiceConfigMock);
-
-        ElevateBatchServiceMock elevateBatchServiceMock = new ElevateBatchServiceMock();
-        giftBatch.elevateBatchService = stubFor(elevateBatchServiceMock);
-
-        giftBatch.prepareGiftsForProcessing();
-
-        System.assertEquals(true, elevateBatchServiceMock.enqueuePaymentCaptureJobForCalled);
-    }
-
     @IsTest
     static void shouldUpdateProcessingGiftsInAbortedBatchesToFailed() {
         GiftBatch giftBatch = new GiftBatch();
