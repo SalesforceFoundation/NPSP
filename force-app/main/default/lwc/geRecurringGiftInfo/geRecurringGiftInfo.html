@@ -1,0 +1,45 @@
+<template>
+    <article class='slds-box slds-box__extension slds-m-bottom_small'>
+        <lightning-layout
+            vertical-align="center"
+            multiple-rows
+            >
+            <lightning-layout-item size='12' medium-device-size='6' large-device-size='7'>
+                <h2
+                    class='slds-text-title_bold'
+                    data-id='scheduleHeader'
+                >
+                    {labels.geRecurringScheduleInformation}
+                </h2>
+                <p data-id='scheduleInfo'>
+                    {scheduleText}
+                </p>
+            </lightning-layout-item>
+            <lightning-layout-item size='12' medium-device-size='6' large-device-size='5'>
+                <lightning-layout
+                    horizontal-align='end'
+                    vertical-align='center'
+                >
+                    <lightning-layout-item>
+                        <lightning-button
+                            class='slds-m-horizontal_xx-small'
+                            label={labels.commonEdit}
+                            onclick={handleEdit}
+                            data-id='edit'
+                            >
+                        </lightning-button>
+                        <lightning-button
+                            class='slds-m-horizontal_xx-small'
+                            icon-name='utility:delete'
+                            label={labels.geRemoveSchedule}
+                            onclick={handleRemoveSchedule}
+                            data-id='removeSchedule'
+                            variant='destructive-text'
+                            >
+                        </lightning-button>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </lightning-layout-item>
+        </lightning-layout>
+    </article>
+</template>

@@ -9,10 +9,12 @@ import PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Payment_Status__c';
 import PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
 
 import SoftCredits from './geSoftCredits';
+import GiftScheduleService from './geScheduleService';
 import { GIFT_STATUSES, PAYMENT_STATUSES } from 'c/geConstants';
 
 class Gift {
     _softCredits = new SoftCredits();
+    _schedule = {};
     _fields = {};
 
     constructor(giftView) {
@@ -26,11 +28,30 @@ class Gift {
             if (giftView.processedSoftCredits) {
                 this._softCredits.addProcessedSoftCredits(giftView.processedSoftCredits)
             }
+
+            const giftScheduleService = new GiftScheduleService();
+            this._schedule = giftScheduleService.retrieveScheduleFromFields(this._fields);
         }
     }
 
     id() {
         return this._fields.Id;
+    }
+
+    hasSchedule() {
+        return Object.keys(this._schedule).length > 0;
+    }
+
+    addSchedule(scheduleData) {
+        this._schedule = scheduleData;
+        const giftScheduleService = new GiftScheduleService();
+        this._fields = giftScheduleService.addScheduleTo(this._fields, scheduleData);
+    }
+
+    removeSchedule() {
+        const giftScheduleService = new GiftScheduleService();
+        this._fields = giftScheduleService.removeScheduleFromFields(this._fields);
+        this._schedule = {};
     }
 
     isFailed() {
@@ -109,7 +130,8 @@ class Gift {
     forSave() {
         return {
             fields: this.asDataImport(),
-            softCredits: [ ...this._softCredits.forSave() ]
+            softCredits: [ ...this._softCredits.forSave() ],
+            schedule: this._schedule
         }
     }
 
@@ -127,7 +149,8 @@ class Gift {
         return {
             fields: { ...this._fields },
             softCredits: JSON.stringify([ ...this._softCredits.unprocessedSoftCredits() ]),
-            processedSoftCredits: JSON.stringify([ ...this._softCredits.processedSoftCredits() ])
+            processedSoftCredits: JSON.stringify([ ...this._softCredits.processedSoftCredits() ]),
+            schedule: { ...this._schedule }
         }
     }
 
