@@ -137,6 +137,24 @@ public with sharing class GiftSelector {
         return giftEntryFieldApiNames;
     }
 
+    private List<String> giftScheduleFields() {
+        List<String> giftScheduleFieldApiNames = new List<String> {
+            String.valueOf(DataImport__c.Recurring_Donation_Recurring_Type__c),
+            String.valueOf(DataImport__c.Recurring_Donation_Date_Established__c),
+            String.valueOf(DataImport__c.Recurring_Donation_Day_of_Month__c),
+            String.valueOf(DataImport__c.Recurring_Donation_Planned_Installments__c),
+            String.valueOf(DataImport__c.Recurring_Donation_Installment_Period__c),
+            String.valueOf(DataImport__c.Recurring_Donation_Installment_Frequency__c),
+            String.valueOf(DataImport__c.Recurring_Donation_Effective_Date__c),
+            String.valueOf(DataImport__c.Recurring_Donation_Amount__c),
+            String.valueOf(DataImport__c.RecurringDonationImported__c),
+            String.valueOf(DataImport__c.RecurringDonationImportStatus__c),
+            String.valueOf(DataImport__c.Recurring_Donation_Name__c)
+        };
+
+        return giftScheduleFieldApiNames;
+    }
+
     @TestVisible
     private List<String> fields() {
         Set<String> queryFieldAsSet = new Set<String>();
@@ -146,6 +164,10 @@ public with sharing class GiftSelector {
         }
         if (GE_PaymentServices.getInstance().isElevateCustomer()) {
             queryFieldAsSet.addAll(elevateFields());
+        }
+
+        if (GE_SettingsService.getInstance().isRecurringGiftsEnabled()) {
+            queryFieldAsSet.addAll(giftScheduleFields());
         }
 
         List<String> fields = new List<String>();
