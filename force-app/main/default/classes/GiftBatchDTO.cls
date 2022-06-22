@@ -47,6 +47,11 @@ public inherited sharing class GiftBatchDTO {
     public List<GiftDTO> giftDTOs;
 
     public GiftBatchDTO(GiftBatch giftBatch) {
+        populateFields(giftBatch);
+        populateDTOs(giftBatch);
+    }
+
+    private void populateFields(GiftBatch giftBatch) {
         this.giftBatchId = giftBatch.id();
         this.name = giftBatch.name();
         this.totalDonationsAmount = giftBatch.totalDonations().amount();
@@ -57,9 +62,14 @@ public inherited sharing class GiftBatchDTO {
         this.lastModifiedDate = giftBatch.lastModifiedDate();
         this.currencyIsoCode = giftBatch.currencyIsoCode();
         this.totals = giftBatch.totals();
+    }
 
+    private void populateDTOs(GiftBatch giftBatch) {
         giftDTOs = new List<GiftDTO>();
         for (Gift gift : giftBatch.gifts().all()) {
+            if (gift.id() != null && gift.hasPopulatedRecurringFields()) {
+                gift.remapFieldsForView();
+            }
             giftDTOs.add(new GiftDTO(gift));
         }
     }
