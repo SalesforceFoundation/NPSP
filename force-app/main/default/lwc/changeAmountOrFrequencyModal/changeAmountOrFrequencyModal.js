@@ -11,7 +11,6 @@ import INSTALLMENT_FREQUENCY_FIELD from '@salesforce/schema/npe03__Recurring_Don
 import INSTALLMENT_PERIOD_FIELD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
 import commonCancelAndClose from '@salesforce/label/c.commonCancelAndClose';
 import commonCancel from '@salesforce/label/c.commonCancel';
-import dayOfMonth from '@salesforce/label/c.RD2_DayOfMonth';
 import MONTH_DAY_FIELD from '@salesforce/schema/npe03__Recurring_Donation__c.Day_of_Month__c';
 
 
@@ -20,6 +19,7 @@ const ESC_KEY_STRING = "Escape";
 const FOCUSABLE_ELEMENTS = "button";
 const TAB_KEY_CODE = 9;
 const TAB_KEY_STRING = "Tab";
+const MONTHLY = "Monthly";
 export default class ChangeAmountOrFrequencyModal extends LightningElement {
     @api dayOfMonthFieldLabel;
     @api openChangeAmountOrFrequency;
@@ -45,7 +45,6 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
         installmentPeriod,
         commonCancelAndClose,
         commonCancel,
-        dayOfMonth
     }
 
     renderedCallback() {
@@ -95,7 +94,7 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
 
       handleInstallmentPeriodChange(event){
         var dd = String(this.today.getDate()).padStart(2, '0');
-        if((event.target.value) === "Monthly"){
+        if((event.target.value) === MONTHLY){
             this.isMonthlyDonation = true;
             if( !this.currentRecord.recurringDonation.Day_of_Month__c ){
                 this.dayOfMonthValue = dd;
