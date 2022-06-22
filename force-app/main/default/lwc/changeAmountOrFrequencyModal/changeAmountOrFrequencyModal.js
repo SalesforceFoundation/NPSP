@@ -18,6 +18,7 @@ const ESC_KEY_STRING = "Escape";
 const FOCUSABLE_ELEMENTS = "button";
 const TAB_KEY_CODE = 9;
 const TAB_KEY_STRING = "Tab";
+const FIXED_RD2_TYPE = "Fixed";
 export default class ChangeAmountOrFrequencyModal extends LightningElement {
     @api openChangeAmountOrFrequency;
     @api currentRecord;
@@ -55,7 +56,7 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
                 }`;
                 if(this.template.querySelector('lightning-record-edit-form')){
                     this.template.querySelector('lightning-record-edit-form').appendChild(this.style);
-                    if(this.currentRecord.recurringDonation.RecurringType__c === "Fixed"){
+                    if(this.currentRecord.recurringDonation.RecurringType__c === FIXED_RD2_TYPE){
                         this.isFixedDonation = true;
                     }
                 }
