@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Enable_Recurring_Donations_in_Gift_Entry__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates if Recurring Donations are available in Gift Entry.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Indicates if Recurring Donations are available in Gift Entry.</inlineHelpText>
+    <label>Enable Recurring Donations in Gift Entry</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

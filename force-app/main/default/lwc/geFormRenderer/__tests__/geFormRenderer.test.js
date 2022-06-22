@@ -14,16 +14,218 @@ import { mockCheckInputValidity } from 'lightning/input';
 import { mockCheckComboboxValidity } from 'lightning/combobox';
 import { mockGetIframeReply } from 'c/psElevateTokenHandler';
 
+import donationImported from '@salesforce/schema/DataImport__c.DonationImported__c';
+
 const mockWrapperWithNoNames = require('../../../../../../tests/__mocks__/apex/data/retrieveDefaultSGERenderWrapper.json');
 const getRecordContact1Imported = require('./data/getRecordContact1Imported.json');
 const dataImportObjectInfo = require('../../../../../../tests/__mocks__/apex/data/dataImportObjectDescribeInfo.json');
 const allocationsSettingsNoDefaultGAU = require('../../../../../../tests/__mocks__/apex/data/allocationsSettingsNoDefaultGAU.json');
+const dataImportBatchRecord = require('../../../../../../tests/__mocks__/apex/data/getDataImportBatchRecord.json');
 
 describe('c-ge-form-renderer', () => {
 
     afterEach(() => {
         clearDOM();
         jest.clearAllMocks();
+    });
+
+    describe('render behavior', () => {
+        it('renders make recurring button, when in batch mode and feature is enabled', async () => {
+            retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
+            getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
+            const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
+
+            const DUMMY_BATCH_ID = 'a0T11000007F8WQEA0';
+
+            element.batchId = DUMMY_BATCH_ID;
+            document.body.appendChild(element);
+            await flushPromises();
+
+            // simulate getting back data for DUMMY_CONTACT_ID
+            getRecord.emit(dataImportBatchRecord, config => {
+                return config.recordId === DUMMY_BATCH_ID;
+            });
+
+            await flushPromises();
+
+            const button = element.shadowRoot.querySelectorAll('[data-id="recurringButton"]');
+            expect(button).toHaveLength(1);
+        });
+
+        it('does not render make recurring button, when in batch mode and feature is disabled', async () => {
+            retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
+            getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
+            const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
+            const DUMMY_BATCH_ID = 'a0T11000007F8WQEA0';
+
+            element.batchId = DUMMY_BATCH_ID;
+
+            dataImportBatchRecord.fields['Allow_Recurring_Donations__c'].value = 'false';
+
+            await flushPromises();
+
+            // simulate getting back data for DUMMY_CONTACT_ID
+            getRecord.emit(dataImportBatchRecord, config => {
+                return config.recordId === DUMMY_BATCH_ID;
+            });
+
+            await flushPromises();
+
+
+            const button = element.shadowRoot.querySelectorAll('[data-id="recurringButton"]');
+            expect(button).toHaveLength(0);
+        });
+
+        it('does not render make recurring button, when in single mode', async () => {
+            retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
+            getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
+            const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
+
+            document.body.appendChild(element);
+            await flushPromises();
+
+            const button = element.shadowRoot.querySelectorAll('[data-id="recurringButton"]');
+            expect(button).toHaveLength(0);
+        });
+    });
+
+    describe('events', () => {
+        it('dispatches an event to display recurring donation schedule modal', async () => {
+            retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
+            getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
+            const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
+            const DUMMY_BATCH_ID = 'a0T11000007F8WQEA0';
+
+            element.batchId = DUMMY_BATCH_ID;
+
+            document.body.appendChild(element);
+
+            await flushPromises();
+
+            // simulate getting back data for DUMMY_CONTACT_ID
+            getRecord.emit(dataImportBatchRecord, config => {
+                return config.recordId === DUMMY_BATCH_ID;
+            });
+
+            await flushPromises();
+
+            const dispatchEventSpy = jest.spyOn(element, 'dispatchEvent');
+            const button = element.shadowRoot.querySelector('[data-id="recurringButton"]');
+            button.click();
+
+            await flushPromises();
+
+            expect(dispatchEventSpy).toHaveBeenCalledTimes(1);
+            const componentName = dispatchEventSpy.mock.calls[0][0].detail.modalProperties.componentName;
+            expect(componentName).toBe('geModalRecurringDonation');
+        });
+
+        it('dispatches an event to display a warning modal when adding schedule for gift matched to existing opportunity', async () => {
+            retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
+            getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
+            const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
+            const DUMMY_BATCH_ID = 'a0T11000007F8WQEA0';
+
+            element.batchId = DUMMY_BATCH_ID;
+
+            document.body.appendChild(element);
+
+            await flushPromises();
+
+            // simulate getting back data for DUMMY_CONTACT_ID
+            getRecord.emit(dataImportBatchRecord, config => {
+                return config.recordId === DUMMY_BATCH_ID;
+            });
+            element.giftInView = {
+                fields: { [donationImported.fieldApiName]: 'dummy_opportunity_id' }
+            };
+
+            await flushPromises();
+
+            const dispatchEventSpy = jest.spyOn(element, 'dispatchEvent');
+            const button = element.shadowRoot.querySelector('[data-id="recurringButton"]');
+            button.click();
+
+            await flushPromises();
+
+            expect(dispatchEventSpy).toHaveBeenCalledTimes(1);
+            const componentName = dispatchEventSpy.mock.calls[0][0].detail.modalProperties.componentName;
+            expect(componentName).toBe('geModalPrompt');
+        });
+
+        it('dispatches an event to display a warning modal when adding schedule for gift with net new soft credits', async () => {
+            retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
+            getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
+            const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
+            const DUMMY_BATCH_ID = 'a0T11000007F8WQEA0';
+
+            element.batchId = DUMMY_BATCH_ID;
+
+            document.body.appendChild(element);
+
+            await flushPromises();
+
+            // simulate getting back data for DUMMY_CONTACT_ID
+            getRecord.emit(dataImportBatchRecord, config => {
+                return config.recordId === DUMMY_BATCH_ID;
+            });
+            element.giftInView = {
+                fields: {
+                    'Payment_Method__c': 'Credit Card',
+                    'Donation_Amount__c': '0.01'
+                },
+                softCredits: '[{"Role":"", "ContactId":"", "key":0}]'
+            };
+
+            await flushPromises();
+
+            const dispatchEventSpy = jest.spyOn(element, 'dispatchEvent');
+            const button = element.shadowRoot.querySelector('[data-id="recurringButton"]');
+            button.click();
+
+            await flushPromises();
+
+            expect(dispatchEventSpy).toHaveBeenCalledTimes(1);
+            const componentName = dispatchEventSpy.mock.calls[0][0].detail.modalProperties.componentName;
+            expect(componentName).toBe('geModalPrompt');
+        });
+
+        it('dispatches an event to display a warning modal when adding schedule for gift with elevate authorization', async () => {
+            retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
+            getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
+            const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
+            const DUMMY_BATCH_ID = 'a0T11000007F8WQEA0';
+
+            element.batchId = DUMMY_BATCH_ID;
+
+            document.body.appendChild(element);
+
+            await flushPromises();
+
+            // simulate getting back data for DUMMY_CONTACT_ID
+            getRecord.emit(dataImportBatchRecord, config => {
+                return config.recordId === DUMMY_BATCH_ID;
+            });
+            element.giftInView = {
+                fields: {
+                    'Payment_Method__c': 'Credit Card',
+                    'Donation_Amount__c': '0.01',
+                    'Payment_Status__c': 'AUTHORIZED'
+                }
+            };
+
+            await flushPromises();
+
+            const dispatchEventSpy = jest.spyOn(element, 'dispatchEvent');
+            const button = element.shadowRoot.querySelector('[data-id="recurringButton"]');
+            button.click();
+
+            await flushPromises();
+
+            expect(dispatchEventSpy).toHaveBeenCalledTimes(1);
+            const componentName = dispatchEventSpy.mock.calls[0][0].detail.modalProperties.componentName;
+            expect(componentName).toBe('geModalPrompt');
+        });
     });
 
     it('loads a template with four sections', async () => {
@@ -137,7 +339,7 @@ describe('c-ge-form-renderer', () => {
             document.body.appendChild(element);
 
             getObjectInfo.emit(dataImportObjectInfo, config => {
-                return config.objectApiName.objectApiName === 'DataImport__c';
+                return config?.objectApiName?.objectApiName === 'DataImport__c';
             });
 
             await flushPromises();
@@ -209,7 +411,7 @@ describe('c-ge-form-renderer', () => {
             document.body.appendChild(element);
 
             getObjectInfo.emit(dataImportObjectInfo, config => {
-                return config.objectApiName.objectApiName === 'DataImport__c';
+                return config?.objectApiName?.objectApiName === 'DataImport__c';
             });
 
             await flushPromises();
