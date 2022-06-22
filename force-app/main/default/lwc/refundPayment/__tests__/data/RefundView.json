@@ -2,5 +2,8 @@
     "hasRequiredPermissions" : true,
     "isSuccess" : true,
     "redirectToPaymentId" : "a01FakePayment00Id",
-    "errorMessage" : null
+    "errorMessage" : null,
+    "paymentAmount" : "$0.50", 
+    "currencyCode" : "USD",
+    "paymentDate" : "2021-04-26T16:41:53.000Z"
 }

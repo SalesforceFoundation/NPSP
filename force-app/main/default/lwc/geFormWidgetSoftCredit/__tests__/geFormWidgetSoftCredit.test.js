@@ -24,7 +24,7 @@ describe('c-form-widget-soft-credit', () => {
         return element;
     }
 
-    describe('component render', () => {
+    describe('render behavior', () => {
         it('renders the title', async () => {
             const element = createSoftCreditWidget();
             element.giftInView = {
@@ -99,6 +99,39 @@ describe('c-form-widget-soft-credit', () => {
 
             const buttonElement = shadowSelectorAll(element, 'lightning-button');
             expect(buttonElement.length).toBe(0);
+        });
+
+        it('renders a warning message when the gift in view has a schedule', async () => {
+            let element = createSoftCreditWidget();
+            element.giftInView = {
+                fields: {},
+                softCredits: createDummySoftCredits(250),
+                processedSoftCredits: DUMMY_PROCESSED_SOFT_CREDITS,
+                schedule: {
+                    recurringType: 'Open'
+                }
+            };
+            document.body.appendChild(element);
+
+            await flushPromises();
+
+            const warning = element.shadowRoot.querySelector('c-util-inline-text');
+            expect(warning).toBeTruthy();
+        });
+
+        it('does not render a warning message when the gift is standard', async () => {
+            let element = createSoftCreditWidget();
+            element.giftInView = {
+                fields: {},
+                softCredits: createDummySoftCredits(250),
+                processedSoftCredits: DUMMY_PROCESSED_SOFT_CREDITS
+            };
+            document.body.appendChild(element);
+
+            await flushPromises();
+
+            const warning = element.shadowRoot.querySelector('c-util-inline-text');
+            expect(warning).toBeFalsy();
         });
     });
 

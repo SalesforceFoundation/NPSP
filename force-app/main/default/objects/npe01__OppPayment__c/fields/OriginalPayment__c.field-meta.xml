@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>OriginalPayment__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>The original payment transaction associated with this record.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The original payment transaction associated with this record.</inlineHelpText>
+    <label>Original Payment</label>
+    <referenceTo>npe01__OppPayment__c</referenceTo>
+    <relationshipLabel>Refunds</relationshipLabel>
+    <relationshipName>Refunds</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

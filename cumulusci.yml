@@ -849,6 +849,7 @@ flows:
                 task: update_admin_profile
             9:
                 task: test_data_relationships
+                ignore_failure: true
             10:
                 task: deploy_reports
             11:
@@ -1192,6 +1193,7 @@ flows:
                 flow: config_trial
             5:
                 task: test_data_relationships
+                ignore_failure: true
             6:
                 task: deploy_reports
             7:
