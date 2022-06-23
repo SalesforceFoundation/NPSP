@@ -1,9 +1,9 @@
-{
-    "recurringDonation" : {
+[
+    {"recurringDonation" : {
         "Id" : 1,
         "npe03__Amount__c" : 100
     },
     "frequency": "Monthly on the 22nd",
     "status": "",
-    "nextDonation" : "Paid Installments:0/3, Next Installment Date:2022-07-19"
-}
+    "nextDonation" : "Paid Installments:0/3, Next Installment Date:2022-07-19"}
+]
