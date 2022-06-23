@@ -80,10 +80,9 @@ private with sharing class UTIL_DuplicateMgmt_TEST {
             
             // Test storing result
             UTIL_DuplicateMgmt.storeMatchDetail(sObjToMatchResults,contSObjs[i],dupeResult,matchResult,matchRecord);
-            System.debug('sObjToMatchResults first pass:' + sObjToMatchResults);
+
             // Store two match detail results for the first element
             if (i == 0) {
-                System.debug('going a second time');
                 UTIL_DuplicateMgmt.storeMatchDetail(
                     sObjToMatchResults,contSObjs[i],dupeResult,matchResult,matchRecord);
             } 
@@ -91,7 +90,6 @@ private with sharing class UTIL_DuplicateMgmt_TEST {
         
         // Confirm there are the correct number of keys in the results
         System.assertEquals(5,sObjToMatchResults.size());
-        System.debug('sObjResult: ' + sObjToMatchResults);
 
         UTIL_DuplicateMgmt.MatchDetail[] matchDetailsForFirst = sObjToMatchResults.get(contSobjs[0]);
         // Confirm that the first element has two match details

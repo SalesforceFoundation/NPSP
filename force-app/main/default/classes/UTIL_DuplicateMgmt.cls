@@ -59,9 +59,7 @@ public with sharing class UTIL_DuplicateMgmt {
             sObjToDupeResults.put(recordToMatch, null);
 
             for (Datacloud.DuplicateResult dupeResult : findDupeResult.getDuplicateResults()) {      
-                //System.debug('DupeResult: ' + dupeResult);          
                 for (Datacloud.MatchResult matchResult : dupeResult.getMatchResults()) {
-                    //System.debug('MatchResult: ' + matchResult);   
                     for (Datacloud.MatchRecord matchRecord : matchResult.getMatchRecords()) {
                         storeMatchDetail(sObjToDupeResults, recordToMatch, dupeResult, matchResult, matchRecord);
                     }
@@ -85,12 +83,11 @@ public with sharing class UTIL_DuplicateMgmt {
 
         // Continue looping while there are still records remaining to process.
         while (objsRemaining > 0) {
-            //System.debug('Objs remaining at start: ' + objsRemaining);
             SObject[] sObjBatch = new SObject[]{};
 
             // Only process up to 50 records at a time
             Integer objsToProcess = Math.min(objsRemaining,50);
-            //System.debug('objsToProcess is: ' + objsToProcess);
+
             for (Integer i = 0; i < objsToProcess; i++) {
     
                 sObjBatch.add(records[nextObjToProcess]);
@@ -98,17 +95,13 @@ public with sharing class UTIL_DuplicateMgmt {
             }
 
             objsRemaining = objsRemaining - objsToProcess;
-            //System.debug('sObjBatch size is: ' + sObjBatch.size());
             // Call duplicate management logic
             Map<SObject, MatchDetail[]> tempDupeResults = findDuplicates(sObjBatch);
             
             // Put results in main return map
             for (SObject sObj : tempDupeResults.keySet()) {
-                //System.debug('Putting result for ' + sobj);
-                //System.debug('result is: ' + tempDupeResults.get(sObj));
                 dupeResults.put(sObj,tempDupeResults.get(sObj));
             }
-            //System.debug('Objs remaining at end: ' + objsRemaining);
         }
         return dupeResults;
     }
