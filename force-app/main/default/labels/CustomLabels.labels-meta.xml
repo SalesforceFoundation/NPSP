@@ -1698,13 +1698,20 @@
         <value>You must enable Enhanced Recurring Donations before you can process Recurring Donations.</value>
     </labels>
     <labels>
-        <fullName>RD2_nextDonation</fullName>
+        <fullName>RD2_PaidInstallments</fullName>
         <categories>Recurring Donation</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label for next donation mapping.</shortDescription>
-        <value>Paid Installments: {0}/{1},
-Next Installment Date: {2}.</value>
+        <value>Paid Installments: </value>
+    </labels>
+    <labels>
+        <fullName>RD2_NextDonationDate</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for next donation mapping.</shortDescription>
+        <value>Next Installment Date: </value>
     </labels>
     <labels>
         <fullName>RD2_ElevateCancelInProgress</fullName>

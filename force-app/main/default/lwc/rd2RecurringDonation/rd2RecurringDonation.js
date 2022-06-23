@@ -324,7 +324,7 @@ export default class RecurringDonationTable extends LightningElement {
         }).finally(() => {
           this.data.forEach((el) => {
             let nextDonationHtml = `<div class="${this.rowClasses}" style="${this.fixedWidth}">`;
-            el.nextDonation.split('\r\n').forEach((nd) => {
+            el.nextDonation.split(',').forEach((nd) => {
               nextDonationHtml += `${nd} </br>`
             })
             nextDonationHtml += `</div>`
