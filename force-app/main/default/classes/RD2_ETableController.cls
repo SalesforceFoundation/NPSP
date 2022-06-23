@@ -161,7 +161,7 @@ public with sharing class RD2_ETableController {
                                                                         controller.getPaymentMethod(recDonation)));
 
             if(recDonation.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED 
-                && !(recDonation.Status__c == RD2_Constants.STATUS_CLOSED || recDonation.Status__c == STATUS_REJECTED) {
+                && !(recDonation.Status__c == RD2_Constants.STATUS_CLOSED || recDonation.Status__c == STATUS_REJECTED)) {
                 fixedRecurringDonationIds.add(recDonation.Id);
             }
         }
