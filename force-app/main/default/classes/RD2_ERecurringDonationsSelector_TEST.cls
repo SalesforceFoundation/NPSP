@@ -37,10 +37,10 @@
 @IsTest
 public class RD2_ERecurringDonationsSelector_TEST {
     
-	private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
-	private static final String ALL_RD = 'All Recurring Donations';
-	private static final String ELEVATE_RD = 'Elevate Recurring Donations';
-	private static final String NONELEVATE_RD = 'Non-Elevate Recurring Donations';
+    private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
+    private static final String ALL_RD = 'All Recurring Donations';
+    private static final String ELEVATE_RD = 'Elevate Recurring Donations';
+    private static final String NONELEVATE_RD = 'Non-Elevate Recurring Donations';
 
     /**
     * @author Salesforce.org
@@ -49,20 +49,20 @@ public class RD2_ERecurringDonationsSelector_TEST {
     */
     @IsTest
     private static void testGetRecurringDonationsAll() {
-		
-		RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+    
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         
-		Contact con = UTIL_UnitTestData_TEST.getContact();
-		insert con;
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        insert con;
 
         npe03__Recurring_Donation__c rDonation01 = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-																				.withContact(con.Id)
-																				.withAmount(100)
-																				.withDefaultValues()
-																				.withInstallmentPeriodMonthly()
-																				.withDayOfMonth('23')
-																				.withInstallmentFrequency(1)
-																				.build();
+                                                                                .withContact(con.Id)
+                                                                                .withAmount(100)
+                                                                                .withDefaultValues()
+                                                                                .withInstallmentPeriodMonthly()
+                                                                                .withDayOfMonth('23')
+                                                                                .withInstallmentFrequency(1)
+                                                                                .build();
         insert rDonation01;
 
         Test.startTest();
@@ -74,29 +74,29 @@ public class RD2_ERecurringDonationsSelector_TEST {
         System.assertNotEquals(null, result, 'Recurring Donations should not be null');
     }
 
-	/**
+    /**
     * @author Salesforce.org
     * @date 2022
     * @description Method to test that the results are returned correctly
     */
     @IsTest
     private static void testGetRecurringDonationsElevate() {
-		
-		RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+    
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         
-		Contact con = UTIL_UnitTestData_TEST.getContact();
-		insert con;
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        insert con;
 
         npe03__Recurring_Donation__c rDonation01 = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-																				.withContact(con.Id)
-																				.withAmount(100)
-																				.withDefaultValues()
-																				.withInstallmentPeriodMonthly()
-																				.withDayOfMonth('23')
-																				.withInstallmentFrequency(1)
-																				.build();
+                                                                                .withContact(con.Id)
+                                                                                .withAmount(100)
+                                                                                .withDefaultValues()
+                                                                                .withInstallmentPeriodMonthly()
+                                                                                .withDayOfMonth('23')
+                                                                                .withInstallmentFrequency(1)
+                                                                                .build();
         rDonation01.CommitmentId__c = '123';
-		insert rDonation01;
+        insert rDonation01;
 
         Test.startTest();
         RD2_ERecurringDonationsSelector selector = new RD2_ERecurringDonationsSelector();
@@ -107,27 +107,27 @@ public class RD2_ERecurringDonationsSelector_TEST {
         System.assertNotEquals(null, result, 'Recurring Donations should not be null');
     }
 
-	/**
+    /**
     * @author Salesforce.org
     * @date 2022
     * @description Method to test that the results are returned correctly
     */
     @IsTest
     private static void testGetRecurringDonationsNonElevate() {
-		
-		RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-        
-		Contact con = UTIL_UnitTestData_TEST.getContact();
-		insert con;
+    
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+            
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        insert con;
 
         npe03__Recurring_Donation__c rDonation01 = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-																				.withContact(con.Id)
-																				.withAmount(100)
-																				.withDefaultValues()
-																				.withInstallmentPeriodMonthly()
-																				.withDayOfMonth('23')
-																				.withInstallmentFrequency(1)
-																				.build();
+                                                                                .withContact(con.Id)
+                                                                                .withAmount(100)
+                                                                                .withDefaultValues()
+                                                                                .withInstallmentPeriodMonthly()
+                                                                                .withDayOfMonth('23')
+                                                                                .withInstallmentFrequency(1)
+                                                                                .build();
         insert rDonation01;
 
         Test.startTest();

@@ -51,7 +51,7 @@ public class RD2_ETableController_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         
         Contact con = UTIL_UnitTestData_TEST.getContact();
-		insert con;
+        insert con;
 
         npe03__Recurring_Donation__c rDonation01 = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
                                                                                 .withContact(con.Id)
@@ -137,6 +137,5 @@ public class RD2_ETableController_TEST {
             }
             return objectsToReturn;
         }
-
     }
 }
