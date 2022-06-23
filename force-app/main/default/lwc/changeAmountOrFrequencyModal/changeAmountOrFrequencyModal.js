@@ -13,6 +13,9 @@ import INSTALLMENT_FREQUENCY_FIELD from '@salesforce/schema/npe03__Recurring_Don
 import INSTALLMENT_PERIOD_FIELD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
 import commonCancelAndClose from '@salesforce/label/c.commonCancelAndClose';
 import commonCancel from '@salesforce/label/c.commonCancel';
+import RD2_ElevateRDCancellingTitle from '@salesforce/label/c.RD2_ElevateRDCancellingTitle';
+import RD2_ElevateRDCancellingMessage from '@salesforce/label/c.RD2_ElevateRDCancellingMessage';
+import RD2_NonElevateRDCancellingTitle from '@salesforce/label/c.RD2_NonElevateRDCancellingTitle';
 
 const ESC_KEY_CODE = 27;
 const ESC_KEY_STRING = "Escape";
@@ -23,6 +26,7 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
     @api openChangeAmountOrFrequency;
     @api currentRecord;
     isRenderCallbackActionExecuted = false;
+    isElevate;
 
     recurringDonationApiName = RECURRING_DONATION;
     amountFieldName = AMOUNT_FIELD;
@@ -40,6 +44,26 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
         commonCancelAndClose,
         commonCancel
     }
+
+/**
+     * @description Returns title label for toast based on elevate or non elevate RD
+     */
+ get title() {
+    if (this.isElevate) {
+        return RD2_ElevateRDCancellingTitle;
+    }
+    return RD2_NonElevateRDCancellingTitle;
+  }
+
+  /**
+   * @description Returns message label for toast based on elevate or non elevate RD
+   */
+  get message() {
+    if (this.isElevate) {
+        return RD2_ElevateRDCancellingMessage;
+    }
+    return '';
+  }
 
     renderedCallback() {
         if (this.isRenderCallbackActionExecuted) {
@@ -81,8 +105,12 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
       
       handleSaveRecurringDonation(){
         let newAmount = this.template.querySelector(".rd-amount-input").value;
+        let newInstallmentFrequency = this.template.querySelector(".rd-installment_frequency-input").value;
+        let newInstallmentPeriod = this.template.querySelector(".rd-installment_period-input").value;
         let record = Object.assign({}, this.currentRecord.recurringDonation);
         record.npe03__Amount__c = newAmount;
+        record.InstallmentFrequency__c = newInstallmentFrequency;
+        record.npe03__Installment_Period__c = newInstallmentPeriod;
         upsertDonation({ recurringDonation: record })
           .then(() => {
             this.isElevate = record.CommitmentId__c ? true : false;
