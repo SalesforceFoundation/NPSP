@@ -310,7 +310,14 @@ export default class RecurringDonationTable extends LightningElement {
         .then((data) => {
           if (data) {
             this.data = data.map((el) => {
-                  let actions = this.actions.map(a => {return {...a}});
+                  let isElevate = el.recurringDonation.CommitmentId__c ? true : false;
+                  let actions = this.actions.filter((el) => {
+                    if(el.name !== 'updatePaymentMethod' && !isElevate){
+                      return el;
+                    } else if (isElevate) {
+                      return el;
+                    }
+                  }).map(a => {return {...a}});
                   let nexDonationFormatFirstElement = '';
                   let nexDonationFormatSecondElement = '';
                   if(el.nextDonation){
