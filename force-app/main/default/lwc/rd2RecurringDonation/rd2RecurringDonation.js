@@ -25,7 +25,7 @@ const FormFactorType = Object.freeze({
 });
 
 const MOBILE_CLASSES_ROW = 'slds-truncate dv-dynamic-width dv-dynamic-mobile';
-const DESKTOP_CLASSES_ROW = 'slds-truncate dv-dynamic-width';
+const DESKTOP_CLASSES_ROW = 'slds-truncate dv-dynamic-width nonpointer';
 const MOBILE_CLASSES_HEAD = 'slds-is-resizable dv-dynamic-width dv-dynamic-mobile';
 const DESKTOP_CLASSES_HEAD = 'slds-is-resizable dv-dynamic-width';
 const MOBILE_VIEW_MORE = 'viewMore';
@@ -326,6 +326,12 @@ export default class RecurringDonationTable extends LightningElement {
                   return {actions, ...el, nexDonationFormatFirstElement, nexDonationFormatSecondElement};
                 });
             }
+        }).finally(() => {
+          debugger;
+          this.template.addEventListener('click', (element) => {
+            console.log(element);
+            element.target.classList.add('selectedTd');
+          });
         });
     }
 }
