@@ -245,6 +245,15 @@ public class UTIL_Describe {
     }
 
     /*******************************************************************************************************
+    * @description Returns object describe data.
+    * @param objType the SObjectType of the object to lookup
+    * @return Schema.DescribeSObjectResult of the object
+    */
+    public Schema.DescribeSObjectResult getObjectDescribeInstance(SObjectType objType) {
+        return getObjectDescribe(objType);
+    }
+
+    /*******************************************************************************************************
     * @description Compares Id to verify object type
     * @param salesforceId of the object
     * @param objectName name of the sobject to compare with
@@ -359,6 +368,10 @@ public class UTIL_Describe {
         return dfr.getType().name();
     }
 
+    public String getFieldTypeInstance(String objectName, String fieldName) {
+        return getFieldType(objectName, fieldName);
+    }
+
     /*******************************************************************************************************
     * @description Gives field type name - ID, STRING, TEXTAREA, DATE, DATETIME, BOOLEAN, REFERENCE,
     * PICKLIST, MULTIPICKLIST, CURRENCY, DOUBLE, INTEGER, PERCENT, PHONE, EMAIL
@@ -406,6 +419,15 @@ public class UTIL_Describe {
 
         Schema.DescribeFieldResult dfr = fieldDescribes.get(objectName).get(fieldName);
         return dfr;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns object describe data.
+    * @param objType the SObjectType of the object to lookup
+    * @return Schema.DescribeSObjectResult of the object
+    */
+    public Schema.DescribeFieldResult getFieldDescribeInstance(String objectName, String fieldName) {
+        return getFieldDescribe(objectName, fieldName);
     }
 
     /*******************************************************************************************************
