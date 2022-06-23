@@ -145,8 +145,8 @@
                             <div class={rowClasses} style={fixedWidth} title={labels.lastModified}>
                                 {item.lastModified}</div>
                         </td>
-                        <td data-label="Actions">
-                            <lightning-button-menu class="dv-dynamic-mobile" menu-alignment="auto" alternative-text="Action menu">
+                        <td data-label={labels.RD2_Actions}>
+                            <lightning-button-menu class="dv-dynamic-mobile" menu-alignment="auto" alternative-text={labels.RD2_Actions}>
                                 <template for:each={item.actions} for:item="action">
                                     <p key={action.name} data-recid={action.name}>
                                         <lightning-menu-item label={action.label} onclick={handleRowAction} data-action={action.name} data-recordid={item.recurringDonation.Id} disabled={action.disabled}>
