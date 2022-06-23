@@ -5953,6 +5953,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>First Donation</value>
     </labels>
     <labels>
+        <fullName>finalDonation</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Final Donation</shortDescription>
+        <value>Final Donation</value>
+    </labels>
+    <labels>
         <fullName>nextDonation</fullName>
         <categories>Recurring Donations</categories>
         <language>en_US</language>
