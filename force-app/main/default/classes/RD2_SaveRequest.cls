@@ -58,7 +58,49 @@ public with sharing class RD2_SaveRequest {
     @AuraEnabled public String cardExpirationMonth {get; set;}
     @AuraEnabled public String cardExpirationYear {get; set;}
     @AuraEnabled public String changeType {get; set;}
-    @AuraEnabled public Map<String, Object> customFieldValues {get; set;}
+
+    @AuraEnabled public Map<String, Object> customFieldValues {
+        get {
+            if (customFieldValues == null) {
+                customFieldValues = new Map<String, Object>();
+            }
+            return customFieldValues;
+        }
+        set;
+    }
+
+    @TestVisible
+    private UTIL_Permissions permissions {
+        get {
+            if (permissions == null) {
+                permissions = UTIL_Permissions.getInstance();
+            }
+            return permissions;
+        }
+        set;
+    }
+
+    @TestVisible
+    private UTIL_Describe describeUtil {
+        get {
+            if (describeUtil == null) {
+                describeUtil = UTIL_Describe.getInstance();
+            }
+            return describeUtil;
+        }
+        set;
+    }
+
+    @TestVisible
+    private RD2_SaveRequestHelper requestHelper {
+        get {
+            if (requestHelper == null) {
+                requestHelper = new RD2_SaveRequestHelper();
+            }
+            return requestHelper;
+        }
+        set;
+    }
 
     public npe03__Recurring_Donation__c toRecord() {
         npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
@@ -92,17 +134,87 @@ public with sharing class RD2_SaveRequest {
         rd.ACH_Last_4__c = achLastFour;
         rd.ChangeType__c = changeType;
 
-        if (customFieldValues != null) {
-            for (String fieldApiName : customFieldValues.keySet()) {
-                Object fieldValue = customFieldValues.get(fieldApiName);
-                rd.put(fieldApiName, fieldValue);
-            }
+        if (customFieldValues != null && !customFieldValues.isEmpty()) {
+            setCustomFieldValues(rd);
         }
 
         return rd;
     }
 
-    public Set<String> getCustomFieldNames() {
+    public Set<String> getCustomFieldNamesForPermissionCheck() {
         return customFieldValues == null ? new Set<String>{} : customFieldValues.keySet();
+    }
+
+    public RD2_SaveRequest removeNonCreateableCustomFields() {
+        DescribeSObjectResult rdSObjectDescribe = describeUtil.getObjectDescribeInstance(
+                npe03__Recurring_Donation__c.SObjectType);
+
+        for (String fieldApiName : customFieldValues.keySet()) {
+            if (!permissions.canCreateInstanced(
+                    rdSObjectDescribe.getName(),
+                    fieldApiName,
+                    false)) {
+
+                customFieldValues.remove(fieldApiName);
+            }
+        }
+        return this;
+    }
+
+    @TestVisible
+    private void setCustomFieldValues(npe03__Recurring_Donation__c rd) {
+
+        DescribeSObjectResult recurringDonationDescribeResult = describeUtil.getObjectDescribeInstance(
+            npe03__Recurring_Donation__c.SObjectType
+        );
+
+        for (String fieldApiName : customFieldValues.keySet()) {
+            String fieldValue = String.valueOf(customFieldValues.get(fieldApiName));
+
+            switch on describeUtil.getFieldTypeInstance(
+                    recurringDonationDescribeResult.getName(),
+                    fieldApiName) {
+
+                when 'BOOLEAN' {
+                    Boolean booleanFieldValue = String.isBlank(fieldValue) ? null : Boolean.valueOf(fieldValue);
+                    requestHelper.setRecurringDonationField(rd, fieldApiName, booleanFieldValue);
+                }
+                when 'DATE' {
+                    Date dateFieldValue = String.isBlank(fieldValue) ? null : Date.valueOf(fieldValue);
+                    requestHelper.setRecurringDonationField(rd, fieldApiName, dateFieldValue);
+                }
+                when 'DATETIME' {
+                    Datetime dateFieldValue = String.isBlank(fieldValue) ? null : Datetime.valueOf(
+                        fieldValue.replace('T', ' '));
+
+                    requestHelper.setRecurringDonationField(rd, fieldApiName, dateFieldValue);
+                }
+                when 'TIME' {
+                    Time timeFieldValue = String.isBlank(fieldValue) ? null : convertToTime(fieldValue);
+                    requestHelper.setRecurringDonationField(rd, fieldApiName, timeFieldValue);
+                }
+                when 'CURRENCY', 'PERCENT', 'DOUBLE' {
+                    Double doubleFieldValue = String.isBlank(fieldValue) ? null : Double.valueOf(fieldValue);
+                    requestHelper.setRecurringDonationField(rd, fieldApiName, doubleFieldValue);
+                }
+                when 'INTEGER' {
+                    Integer integerFieldValue = String.isBlank(fieldValue) ? null : Integer.valueOf(fieldValue);
+                    requestHelper.setRecurringDonationField(rd, fieldApiName, integerFieldValue);
+                }
+                when else {
+                    requestHelper.setRecurringDonationField(rd, fieldApiName, fieldValue);
+                }
+            }
+        }
+    }
+
+    private Time convertToTime(String fieldValue) {
+        List<String> timeSplitByDelimiter = fieldValue.split(':');
+        Time timeValue = Time.newInstance(
+                Integer.valueOf(timeSplitByDelimiter[0]),
+                Integer.valueOf(timeSplitByDelimiter[1]),
+                0,
+                0);
+        return timeValue;
     }
 }
