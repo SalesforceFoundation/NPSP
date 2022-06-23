@@ -135,22 +135,6 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         gifts.failGiftsByElevateBatchIdWithReason(failReasonByElevateBatchId);
     }
 
-    public void processGifts() {
-        prepareGiftsForProcessing();
-        GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(this.giftBatchId);
-        System.enqueueJob(processorQueue);
-    }
-
-    @TestVisible
-    private void prepareGiftsForProcessing() {
-        gifts.prepareForProcessing();
-
-        if (paymentIntegrationServiceConfig.isIntegrationEnabled()) {
-            captureAuthorizedGifts();
-        }
-        updateRecords();
-    }
-
     private void failGiftsWith(String failReason) {
         gifts.failWith(failReason);
     }

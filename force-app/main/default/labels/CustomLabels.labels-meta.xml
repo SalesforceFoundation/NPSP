@@ -8,6 +8,22 @@
         <value>You must provide an Auth ID.</value>
     </labels>
     <labels>
+        <fullName>installmentPeriod</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for installment frequency for Recurring Donations Action</shortDescription>
+        <value>Installment Period</value>
+    </labels>
+    <labels>
+        <fullName>recurringDonationSchedule</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for modal title for Recurring Donation table actions</shortDescription>
+        <value>Recurring Donation Schedule</value>
+    </labels>
+    <labels>
         <fullName>Addr_No_Batch</fullName>
         <categories>address, error</categories>
         <language>en_US</language>
@@ -1738,6 +1754,22 @@
         <value>No Errors</value>
     </labels>
     <labels>
+        <fullName>RD2_ViewMoreDetails</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for view more info on recurring donation table component</shortDescription>
+        <value>View More Details</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ViewLessDetails</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for view less info on recurring donation table component</shortDescription>
+        <value>View Less Details</value>
+    </labels>
+    <labels>
         <fullName>RD2_ElevateNotSupported</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -1832,6 +1864,30 @@
         <protected>true</protected>
         <shortDescription>Text indicating the Recurring Donation could not be created in Elevate</shortDescription>
         <value>An Elevate recurring payment could not be created. Contact your system administrator for assistance.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateRDCancellingTitle</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Recurring Donation would be cancelled</shortDescription>
+        <value>Your request to stop your Recurring Donation was submitted.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateRDCancellingMessage</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Recurring Donation would be cancelled</shortDescription>
+        <value>This can take some time. Refresh the page to check the status. Contact us if you need help.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_NonElevateRDCancellingTitle</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Recurring Donation Non Elevat would be cancelled</shortDescription>
+        <value>Your Recurring Donation was stopped.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementDisabledHeader</fullName>
@@ -2371,6 +2427,30 @@
         <protected>true</protected>
         <shortDescription>Spinner text when credit card is validated on Recurring Donation save</shortDescription>
         <value>Sending ACH information to Elevate...</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ACH_Payment_Method_Label</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ACH Payment Method label</shortDescription>
+        <value>Bank Account</value>
+    </labels>
+    <labels>
+        <fullName>RD2_Payment_Method</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Payment Method label</shortDescription>
+        <value>Payment Method</value>
+    </labels>
+    <labels>
+        <fullName>RD2_Credit_Card_Payment_Method_Label</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Credit Card Payment Method label</shortDescription>
+        <value>Credit Card</value>
     </labels>
     <labels>
         <fullName>RD2_EntryFormSaveCreditCardValidationMessage</fullName>
@@ -5985,6 +6065,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>th</value>
     </labels>
     <labels>
+        <fullName>creditCardElevatePayment</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used to show the Payment Method using Elevate RD and Credit Card payment.</shortDescription>
+        <value>{0}, *{1} Exp.{2}/{3}</value>
+    </labels>
+    <labels>
+        <fullName>achElevatePayment</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used to show the Payment Method using Elevate RD and ACH payment.</shortDescription>
+        <value>{0}, *{1}</value>
+    </labels>
+    <labels>
         <fullName>commonAssistiveError</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -6087,6 +6183,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Close button label</shortDescription>
         <value>Close</value>
+    </labels>
+    <labels>
+        <fullName>commonCancelAndClose</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cancel and close label</shortDescription>
+        <value>Cancel and close</value>
     </labels>
     <labels>
         <fullName>commonConcurrentBatchError</fullName>
@@ -6871,6 +6975,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Add Soft Credit</value>
     </labels>
     <labels>
+        <fullName>geRecurringGiftModalWarning</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring modal text when adding a schedule is not supported</shortDescription>
+        <value>Applying a Recurring Donation schedule to an existing Opportunity, Payment, or adding soft credits is not supported in Gift Entry.</value>
+    </labels>
+    <labels>
+        <fullName>geSoftCreditsWarning</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning message in the soft credits field bundle when a gift has a schedule</shortDescription>
+        <value>Soft credits in Gift Entry is not supported for Recurring Donations.</value>
+    </labels>
+    <labels>
         <fullName>geA11ySection</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -7651,6 +7771,70 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Message when field/Field Mapping not found and user might not have access to it.</shortDescription>
         <value>This form contains fields that can&apos;t be found. Please check with your administrator.</value>
+    </labels>
+    <labels>
+        <fullName>geAddSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button for adding a schedule to a gift</shortDescription>
+        <value>Add Recurring Schedule</value>
+    </labels>
+    <labels>
+        <fullName>geUpdateSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button for updating a gift&apos;s schedule</shortDescription>
+        <value>Update Recurring Schedule</value>
+    </labels>
+    <labels>
+        <fullName>geMakeRecurring</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to toggle recurring behavior for a gift</shortDescription>
+        <value>Make Recurring</value>
+    </labels>
+    <labels>
+        <fullName>geRemoveSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button for removing a gift&apos;s schedule</shortDescription>
+        <value>Remove Recurring Schedule</value>
+    </labels>
+    <labels>
+        <fullName>geEditSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button for editing a gift&apos;s schedule</shortDescription>
+        <value>Edit Recurring Schedule</value>
+    </labels>
+    <labels>
+        <fullName>geOpenEndedGiftSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Describes open ended recurring gift schedule</shortDescription>
+        <value>{0} {1} donation starting on {2}.</value>
+    </labels>
+    <labels>
+        <fullName>geFixedGiftSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Describes fixed recurring gift schedule</shortDescription>
+        <value>{0} {1} donation starting on {2} and ending after {3} installments.</value>
+    </labels>
+    <labels>
+        <fullName>geRecurringScheduleInformation</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for the recurring gift schedule card</shortDescription>
+        <value>Recurring Schedule Information</value>
     </labels>
     <labels>
         <fullName>gsAdminSetupTitle</fullName>
@@ -8924,6 +9108,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Field-level error message when template name is not unique</shortDescription>
         <value>This name has been used by another template. Please enter a unique name.</value>
+    </labels>
+    <labels>
+        <fullName>geErrorDonorMismatch</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error for entering household info in Account1</shortDescription>
+        <value>For a household gift, select Contact1 for Donor Type and complete the Contact fields.</value>
     </labels>
     <labels>
         <fullName>geErrorDonorTypeValidation</fullName>
@@ -11942,6 +12134,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>There was an error processing the refund.</value>
     </labels>
     <labels>
+        <fullName>pmtRefundPaymentSuccessMessage</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Success message for refund</shortDescription>
+        <value>Refund was successful.</value>
+    </labels>
+    <labels>
         <fullName>pmtPaymentNotFund</fullName>
         <categories>Payment</categories>
         <language>en_US</language>
@@ -11979,7 +12179,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Refund submitted for processing.</shortDescription>
-        <value>Refund submitted for processing.</value>
+        <value>Refund submitted for processing. Check for the refunded Payment on the Opportunity record.</value>
     </labels>
     <labels>
         <fullName>pmtRefundPaymentConfirmedButton</fullName>
@@ -15808,6 +16008,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>true</protected>
         <shortDescription>Label to define aria-label on donation history datatable</shortDescription>
         <value>Donation History</value>
+    </labels>
+    <labels>
+        <fullName>RD2_Actions</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Recurring Donation Actions</shortDescription>
+        <value>Actions</value>
     </labels>
     <labels>
         <fullName>updatePaymentMethod</fullName>
