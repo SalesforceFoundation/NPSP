@@ -37,6 +37,7 @@
 public with sharing class RD2_ETableController {
     
     private final String STATUS_CANCELED = 'Canceled';
+    private final String STATUS_REJECTED = 'Rejected';
 
     @TestVisible
     private UTIL_Permissions permissions {
@@ -159,7 +160,8 @@ public with sharing class RD2_ETableController {
                                                                         controller.getStatus(recDonation),
                                                                         controller.getPaymentMethod(recDonation)));
 
-            if(recDonation.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED && recDonation.Status__c != RD2_Constants.STATUS_CLOSED) {
+            if(recDonation.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED 
+                && !(recDonation.Status__c == RD2_Constants.STATUS_CLOSED || recDonation.Status__c == STATUS_REJECTED) {
                 fixedRecurringDonationIds.add(recDonation.Id);
             }
         }
