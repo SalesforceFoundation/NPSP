@@ -315,25 +315,25 @@ export default class RecurringDonationTable extends LightningElement {
                 this.data = data.map((el) => {
                     let isElevate = el.recurringDonation.CommitmentId__c ? true : false;
                     let actions = this.actions.filter((el) => {
-                    if(el.name !== 'updatePaymentMethod' && !isElevate){
-                        return el;
-                    } else if (isElevate) {
-                        return el;
+                        if(el.name !== 'updatePaymentMethod' && !isElevate){
+                            return el;
+                        } else if (isElevate) {
+                            return el;
+                        }
+                    }).map(a => {return {...a}});
+                    let nexDonationFormatFirstElement = '';
+                    let nexDonationFormatSecondElement = '';
+                    if(el.nextDonation){
+                        nexDonationFormatFirstElement = el.nextDonation.split('.')[0] || el.nextDonation;
+                        nexDonationFormatSecondElement = el.nextDonation.split('.')[1] || '';  
                     }
-                  }).map(a => {return {...a}});
-                  let nexDonationFormatFirstElement = '';
-                  let nexDonationFormatSecondElement = '';
-                  if(el.nextDonation){
-                    nexDonationFormatFirstElement = el.nextDonation.split('.')[0] || el.nextDonation;
-                    nexDonationFormatSecondElement = el.nextDonation.split('.')[1] || '';  
-                  }
-                  if(el.status === CANCELED_STATUS){
-                    actions.map((action) => {
-                      action.disabled = true;
-                      return action;
-                    })
-                  }
-                  return {actions, ...el, nexDonationFormatFirstElement, nexDonationFormatSecondElement};
+                    if(el.status === CANCELED_STATUS){
+                        actions.map((action) => {
+                            action.disabled = true;
+                            return action;
+                        })
+                    }
+                    return {actions, ...el, nexDonationFormatFirstElement, nexDonationFormatSecondElement};
                 });
             }
         });
