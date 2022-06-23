@@ -37,7 +37,6 @@
 public with sharing class RD2_ETableController {
     
     private final String STATUS_CANCELED = 'Canceled';
-    private final String STATUS_REJECTED = 'Rejected';
 
     @TestVisible
     private UTIL_Permissions permissions {
@@ -152,6 +151,8 @@ public with sharing class RD2_ETableController {
     * @return ListRD2_ETableController.TableView> returns TableView data.
     */
     private List<RD2_ETableController.TableView> getProcessedTableViews(List<npe03__Recurring_Donation__c> rdRecords) {
+        RD2_StatusMapper statusMapper = RD2_StatusMapper.getInstance();
+        
         Map<Id, RD2_ETableController.TableView> recurringDonations = new Map<Id,RD2_ETableController.TableView>();
         Set<Id> fixedRecurringDonationIds = new Set<Id>(); 
         for(npe03__Recurring_Donation__c recDonation : rdRecords) {
@@ -161,7 +162,7 @@ public with sharing class RD2_ETableController {
                                                                         controller.getPaymentMethod(recDonation)));
 
             if(recDonation.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED 
-                && !(recDonation.Status__c == RD2_Constants.STATUS_CLOSED || recDonation.Status__c == STATUS_REJECTED)) {
+                && statusMapper.getState(recDonation.Status__c) != RD2_Constants.STATUS_CLOSED) {
                 fixedRecurringDonationIds.add(recDonation.Id);
             }
         }
