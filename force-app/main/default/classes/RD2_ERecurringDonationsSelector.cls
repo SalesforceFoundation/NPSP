@@ -72,8 +72,7 @@ public inherited sharing class RD2_ERecurringDonationsSelector {
                                 + 'npe03__Last_Payment_Date__c, '
                                 + 'npe03__Next_Payment_Date__c '
                                 + 'FROM npe03__Recurring_Donation__c '
-                                + 'WHERE npe03__Contact__c = \'' + currentContactId + '\' '
-                                + 'AND RecurringType__c IN (\''+RD2_Constants.RECURRING_TYPE_OPEN+'\',\''+RD2_Constants.RECURRING_TYPE_FIXED+'\') ';
+                                + 'WHERE npe03__Contact__c = \'' + currentContactId + '\' ';
 
             if(elevateFilter == ELEVATE_RD) {
                 queryString += 'AND CommitmentId__c != NULL ';
