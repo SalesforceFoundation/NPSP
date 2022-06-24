@@ -86,6 +86,7 @@ public with sharing class RD2_ETableController {
         @AuraEnabled public String status;
         @AuraEnabled public String paymentMethod;
         @AuraEnabled public String nextDonation;
+        @AuraEnabled public Date finalDonation;
         public TableView(npe03__Recurring_Donation__c recurringDonation, String frequency, String status, String paymentMethod, String nextDonation) {
             this.recurringDonation = recurringDonation;
             this.frequency = frequency;
