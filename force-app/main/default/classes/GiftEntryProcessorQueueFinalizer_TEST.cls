@@ -37,24 +37,58 @@
 private class GiftEntryProcessorQueueFinalizer_TEST {
     @IsTest
     static void shouldFailGiftsInAFailedQueue() {
+        // Arrange
         Id DUMMY_GIFT_BATCH_ID = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType());
         GiftEntryProcessorQueueFinalizer processorQueueFinalizer =
             new GiftEntryProcessorQueueFinalizer(new GiftBatchId(DUMMY_GIFT_BATCH_ID));
         GiftBatchServiceMock giftBatchServiceMock = new GiftBatchServiceMock();
         processorQueueFinalizer.giftBatchService = stubFor(giftBatchServiceMock);
-        processorQueueFinalizer.execute((FinalizerContext) new MockFinalizerContext(ParentJobResult.UNHANDLED_EXCEPTION));
-        System.assert(giftBatchServiceMock.validateBatchWithWasCalled);
+
+        // Act
+        processorQueueFinalizer.execute((FinalizerContext)
+            new MockFinalizerContext(ParentJobResult.UNHANDLED_EXCEPTION));
+
+        // Assert
+        System.assert(giftBatchServiceMock.failGiftsInProcessingWasCalled);
+        System.assert(giftBatchServiceMock.clearLatestJobIdFromWasCalled);
     }
 
     @IsTest
     static void shouldNotFailGiftsInASuccessfulQueue() {
+        // Arrange
         Id DUMMY_GIFT_BATCH_ID = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType());
         GiftEntryProcessorQueueFinalizer processorQueueFinalizer =
             new GiftEntryProcessorQueueFinalizer(new GiftBatchId(DUMMY_GIFT_BATCH_ID));
         GiftBatchServiceMock giftBatchServiceMock = new GiftBatchServiceMock();
         processorQueueFinalizer.giftBatchService = stubFor(giftBatchServiceMock);
-        processorQueueFinalizer.execute((FinalizerContext) new MockFinalizerContext(ParentJobResult.SUCCESS));
-        System.assert(!giftBatchServiceMock.validateBatchWithWasCalled);
+
+        // Act
+        processorQueueFinalizer.execute((FinalizerContext)
+            new MockFinalizerContext(ParentJobResult.SUCCESS));
+
+        // Assert
+        System.assert(!giftBatchServiceMock.failGiftsInProcessingWasCalled);
+        System.assert(!giftBatchServiceMock.clearLatestJobIdFromWasCalled);
+    }
+
+    @IsTest
+    static void shouldCreateErrorRecordWhenDMLFailsInExceptionHandler() {
+        // Arrange
+        Id DUMMY_GIFT_BATCH_ID = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType());
+        GiftEntryProcessorQueueFinalizer processorQueueFinalizer =
+            new GiftEntryProcessorQueueFinalizer(new GiftBatchId(DUMMY_GIFT_BATCH_ID));
+        GiftBatchServiceMock giftBatchServiceMock = new GiftBatchServiceMock(true);
+        processorQueueFinalizer.giftBatchService = stubFor(giftBatchServiceMock);
+
+        // Act
+        processorQueueFinalizer.execute((FinalizerContext)
+            new MockFinalizerContext(ParentJobResult.UNHANDLED_EXCEPTION));
+
+        // Assert
+        System.assert(!giftBatchServiceMock.failGiftsInProcessingWasCalled);
+        System.assert(!giftBatchServiceMock.clearLatestJobIdFromWasCalled);
+        Integer errors = [SELECT count() FROM Error__c];
+        System.assertEquals(1, errors, 'Should have created an error record');
     }
 
     private class GiftEntryProcessorQueueFinalizerException extends Exception {}
@@ -85,7 +119,16 @@ private class GiftEntryProcessorQueueFinalizer_TEST {
     }
 
     private class GiftBatchServiceMock implements StubProvider {
-        public Boolean validateBatchWithWasCalled = false;
+        public Boolean failGiftsInProcessingWasCalled = false;
+        public Boolean clearLatestJobIdFromWasCalled = false;
+        private Boolean shouldThrowException = false;
+
+        public GiftBatchServiceMock() {}
+
+        public GiftBatchServiceMock(Boolean shouldThrowException) {
+            this.shouldThrowException = shouldThrowException;
+        }
+
         public Object handleMethodCall(Object stubbedObject,
             String stubbedMethodName,
             Type returnType,
@@ -94,8 +137,17 @@ private class GiftEntryProcessorQueueFinalizer_TEST {
             List<Object> listOfArgs) {
 
             switch on (stubbedMethodName) {
-                when 'validateBatch' {
-                    validateBatchWithWasCalled = true;
+                when 'failGiftsInProcessing' {
+                    if (shouldThrowException) {
+                        throw new DMLException('Dummy Exception');
+                    }
+                    failGiftsInProcessingWasCalled = true;
+                }
+                when 'clearLatestJobIdFrom' {
+                    if (shouldThrowException) {
+                        throw new DMLException('Dummy Exception');
+                    }
+                    clearLatestJobIdFromWasCalled = true;
                 }
             }
             return null;
@@ -105,5 +157,4 @@ private class GiftEntryProcessorQueueFinalizer_TEST {
     private static GiftBatchService stubFor(GiftBatchServiceMock giftBatchServiceMock) {
         return (GiftBatchService) Test.createStub(GiftBatchService.class, giftBatchServiceMock);
     }
-
 }

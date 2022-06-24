@@ -3,6 +3,7 @@ import commonAmount from '@salesforce/label/c.commonAmount';
 import RDCL_Frequency from '@salesforce/label/c.RDCL_Frequency';
 import lblStatus from '@salesforce/label/c.lblStatus';
 import firstDonation from '@salesforce/label/c.firstDonation'
+import finalDonation from '@salesforce/label/c.finalDonation';
 import nextDonation from '@salesforce/label/c.nextDonation';
 import mostRecentDonation from '@salesforce/label/c.mostRecentDonation';
 import lastModified from '@salesforce/label/c.lastModified';
@@ -64,6 +65,7 @@ export default class RecurringDonationTable extends LightningElement {
       RDCL_Frequency,
       lblStatus,
       firstDonation,
+      finalDonation,
       mostRecentDonation,
       nextDonation,
       lastModified,
@@ -315,7 +317,14 @@ export default class RecurringDonationTable extends LightningElement {
         .then((data) => {
           if (data) {
             this.data = data.map((el) => {
-                  let actions = this.actions.map(a => {return {...a}});
+                  let isElevate = el.recurringDonation.CommitmentId__c ? true : false;
+                  let actions = this.actions.filter((el) => {
+                    if(el.name !== 'updatePaymentMethod' && !isElevate){
+                      return el;
+                    } else if (isElevate) {
+                      return el;
+                    }
+                  }).map(a => {return {...a}});
                   let nexDonationFormatFirstElement = '';
                   let nexDonationFormatSecondElement = '';
                   if(el.nextDonation){

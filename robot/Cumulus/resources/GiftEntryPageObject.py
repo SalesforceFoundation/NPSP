@@ -115,7 +115,7 @@ class GiftEntryLandingPage(BaseNPSPPage, BasePage):
         """
         id=self.get_template_record_id(template)
         namespace= self.cumulusci.get_namespace_prefix("Nonprofit Success Pack") or self.cumulusci.get_namespace_prefix("Nonprofit Success Pack Managed Feature Test")
-        self.salesforce.store_session_record(namespace + "Form_Template__c",id)
+        self.salesforce_api.store_session_record(namespace + "Form_Template__c",id)
 
 
 @pageobject("Template", "GE_Gift_Entry")

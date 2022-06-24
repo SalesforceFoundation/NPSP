@@ -5953,6 +5953,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>First Donation</value>
     </labels>
     <labels>
+        <fullName>finalDonation</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Final Donation</shortDescription>
+        <value>Final Donation</value>
+    </labels>
+    <labels>
         <fullName>nextDonation</fullName>
         <categories>Recurring Donations</categories>
         <language>en_US</language>
@@ -6959,6 +6967,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Add Soft Credit</value>
     </labels>
     <labels>
+        <fullName>geRecurringGiftModalWarning</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring modal text when adding a schedule is not supported</shortDescription>
+        <value>Applying a Recurring Donation schedule to an existing Opportunity, Payment, or adding soft credits is not supported in Gift Entry.</value>
+    </labels>
+    <labels>
+        <fullName>geSoftCreditsWarning</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning message in the soft credits field bundle when a gift has a schedule</shortDescription>
+        <value>Soft credits in Gift Entry is not supported for Recurring Donations.</value>
+    </labels>
+    <labels>
         <fullName>geA11ySection</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -7739,6 +7763,70 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Message when field/Field Mapping not found and user might not have access to it.</shortDescription>
         <value>This form contains fields that can&apos;t be found. Please check with your administrator.</value>
+    </labels>
+    <labels>
+        <fullName>geAddSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button for adding a schedule to a gift</shortDescription>
+        <value>Add Recurring Schedule</value>
+    </labels>
+    <labels>
+        <fullName>geUpdateSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button for updating a gift&apos;s schedule</shortDescription>
+        <value>Update Recurring Schedule</value>
+    </labels>
+    <labels>
+        <fullName>geMakeRecurring</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to toggle recurring behavior for a gift</shortDescription>
+        <value>Make Recurring</value>
+    </labels>
+    <labels>
+        <fullName>geRemoveSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button for removing a gift&apos;s schedule</shortDescription>
+        <value>Remove Recurring Schedule</value>
+    </labels>
+    <labels>
+        <fullName>geEditSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button for editing a gift&apos;s schedule</shortDescription>
+        <value>Edit Recurring Schedule</value>
+    </labels>
+    <labels>
+        <fullName>geOpenEndedGiftSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Describes open ended recurring gift schedule</shortDescription>
+        <value>{0} {1} donation starting on {2}.</value>
+    </labels>
+    <labels>
+        <fullName>geFixedGiftSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Describes fixed recurring gift schedule</shortDescription>
+        <value>{0} {1} donation starting on {2} and ending after {3} installments.</value>
+    </labels>
+    <labels>
+        <fullName>geRecurringScheduleInformation</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for the recurring gift schedule card</shortDescription>
+        <value>Recurring Schedule Information</value>
     </labels>
     <labels>
         <fullName>gsAdminSetupTitle</fullName>
@@ -12038,6 +12126,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>There was an error processing the refund.</value>
     </labels>
     <labels>
+        <fullName>pmtRefundPaymentSuccessMessage</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Success message for refund</shortDescription>
+        <value>Refund was successful.</value>
+    </labels>
+    <labels>
         <fullName>pmtPaymentNotFund</fullName>
         <categories>Payment</categories>
         <language>en_US</language>
@@ -12075,7 +12171,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Refund submitted for processing.</shortDescription>
-        <value>Refund submitted for processing.</value>
+        <value>Refund submitted for processing. Check for the refunded Payment on the Opportunity record.</value>
     </labels>
     <labels>
         <fullName>pmtRefundPaymentConfirmedButton</fullName>
