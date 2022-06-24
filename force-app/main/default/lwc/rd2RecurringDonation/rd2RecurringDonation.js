@@ -27,7 +27,7 @@ const FormFactorType = Object.freeze({
 const MOBILE_CLASSES_ROW = 'slds-truncate dv-dynamic-width dv-dynamic-mobile';
 const DESKTOP_CLASSES_ROW = 'slds-truncate dv-dynamic-width nonpointer';
 const MOBILE_CLASSES_HEAD = 'slds-is-resizable dv-dynamic-width dv-dynamic-mobile';
-const DESKTOP_CLASSES_HEAD = 'slds-is-resizable dv-dynamic-width';
+const DESKTOP_CLASSES_HEAD = 'slds-is-resizable dv-dynamic-width nonpointer';
 const MOBILE_VIEW_MORE = 'viewMore';
 const DESKTOP_VIEW_MORE = 'slds-hide';
 const MOBILE_HEADER_CLASS = 'slds-border_right slds-border_left';
@@ -90,8 +90,32 @@ export default class RecurringDonationTable extends LightningElement {
     connectedCallback() {
       this.getRecurringDonationFields();
       if(!this.isMobile){
-        this.tdClasses = '';
+        this.tdClasses = 'move';
       }
+      this.template.addEventListener('keydown', (event) => {
+        let cells   = this.template.querySelectorAll("tr td[tabindex='-1']");
+        let active  = Array.prototype.indexOf.call(cells, event.target);
+        let rows    = this.template.querySelectorAll('tr').length;
+        let columns = this.template.querySelectorAll('tr th').length;
+        if (event.keyCode === 37) {
+            active = (active > 0) ? active - 1 : active;
+        }
+        if (event.keyCode === 38) {
+            active = (active - columns >= 0) ? active - columns : active;
+        }
+        if (event.keyCode === 39) {
+            active = (active < cells.length - 1) ? active + 1 : active;
+        }
+        if (event.keyCode === 40) {
+            active = (active + columns <= cells.length - 1) ? active + columns : active;
+        }
+        let activeTDs = this.template.querySelectorAll('slds-has-focus');
+        for (let i = 0; i < activeTDs.length; i++) {
+            activeTDs[i].classList.remove('slds-has-focus');
+        }
+        cells[active].classList.add('slds-has-focus');
+        cells[active].focus();
+      });
     }
   
     /**
@@ -326,12 +350,6 @@ export default class RecurringDonationTable extends LightningElement {
                   return {actions, ...el, nexDonationFormatFirstElement, nexDonationFormatSecondElement};
                 });
             }
-        }).finally(() => {
-          debugger;
-          this.template.addEventListener('click', (element) => {
-            console.log(element);
-            element.target.classList.add('selectedTd');
-          });
         });
     }
 }

@@ -36,7 +36,3 @@
 .nonpointer {
     pointer-events: none;
 }
-
-.selectedTd{
-    background-color: #0070D2;
-}

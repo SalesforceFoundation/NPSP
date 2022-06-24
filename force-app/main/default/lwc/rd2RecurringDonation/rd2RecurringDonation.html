@@ -111,44 +111,44 @@
             <tbody>
                 <template for:each={data} for:item="item">
                     <tr key={item.recurringDonation.Id} aria-selected="false" class="slds-hint-parent" scope="row">
-                        <td key={item.recurringDonation.npe03__Amount__c} data-label={labels.commonAmount}>
+                        <td key={item.recurringDonation.npe03__Amount__c} data-label={labels.commonAmount} tabindex="-1" class="move">
                             <div class={rowClasses} style={fixedWidth} title={labels.commonAmount}>
                                 <lightning-formatted-number value={item.recurringDonation.npe03__Amount__c} format-style="currency"
                                     currency-code="USD"></lightning-formatted-number>
                             </div>
                         </td>
-                        <td key={item.frequency} data-label={labels.RDCL_Frequency}>
+                        <td key={item.frequency} data-label={labels.RDCL_Frequency} tabindex="-1" class="move">
                             <div class={rowClasses} style={fixedWidth} title={labels.RDCL_Frequency}>
                                 {item.frequency}</div>
                         </td>
-                        <td key={item.paymentMethod} data-label={paymentMethod}>
+                        <td key={item.paymentMethod} data-label={paymentMethod} tabindex="-1" class="move">
                             <div class={rowClasses} style={fixedWidth} title={paymentMethod}>
                                 {item.paymentMethod}</div>
                         </td>
-                        <td key={item.status} data-label={labels.lblStatus}>
+                        <td key={item.status} data-label={labels.lblStatus} tabindex="-1" class="move">
                             <div class={rowClasses} style={fixedWidth} title={labels.lblStatus}>
                                 {item.status}</div>
                         </td>
-                        <td key={item.firstDonation} data-id={item.recurringDonation.Id} class={tdClasses} data-label={labels.firstDonation}>
+                        <td key={item.firstDonation} data-id={item.recurringDonation.Id} class={tdClasses} data-label={labels.firstDonation} tabindex="-1">
                             <div class={rowClasses} style={fixedWidth} title={labels.firstDonation}>
                                 {item.firstDonation}
                             </div>
                         </td>
-                        <td key={item.mostRecentDonation} data-id={item.recurringDonation.Id} class={tdClasses} data-label={labels.mostRecentDonation}>
+                        <td key={item.mostRecentDonation} data-id={item.recurringDonation.Id} class={tdClasses} data-label={labels.mostRecentDonation} tabindex="-1">
                             <div class={rowClasses} style={fixedWidth} title={labels.mostRecentDonation}>
                                 {item.recurringDonation.npe03__Last_Payment_Date__c}</div>
                         </td>
-                        <td key={item.nextDonation} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.nextDonation}>
+                        <td key={item.nextDonation} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.nextDonation} tabindex="-1">
                             <div class={rowClasses} style={fixedWidth}> 
                                 {item.nexDonationFormatFirstElement} </br>
                                 {item.nexDonationFormatSecondElement}
                             </div>
                         </td>
-                        <td key={item.lastModified} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.lastModified}>
+                        <td key={item.lastModified} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.lastModified} tabindex="-1">
                             <div class={rowClasses} style={fixedWidth} title="Last Modified">
                                 {item.lastModified}</div>
                         </td>
-                        <td data-label="Actions">
+                        <td data-label="Actions" tabindex="-1" class="move">
                             <lightning-button-menu class="dv-dynamic-mobile" menu-alignment="auto" alternative-text="Action menu">
                                 <template for:each={item.actions} for:item="action">
                                     <p key={action.name} data-recid={action.name}>
