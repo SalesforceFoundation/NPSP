@@ -1,4 +1,5 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
+import { getPicklistValues } from 'lightning/uiObjectInfoApi';
 import changeAmountOrFrequency from '@salesforce/label/c.changeAmountOrFrequency';
 import updateRecurringDonation from '@salesforce/label/c.updateRecurringDonation';
 import every from "@salesforce/label/c.RD2_EntryFormScheduleEveryLabel";
@@ -11,15 +12,20 @@ import INSTALLMENT_FREQUENCY_FIELD from '@salesforce/schema/npe03__Recurring_Don
 import INSTALLMENT_PERIOD_FIELD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
 import commonCancelAndClose from '@salesforce/label/c.commonCancelAndClose';
 import commonCancel from '@salesforce/label/c.commonCancel';
+import INSTALLMENT_PERIOD_FIELD_VALUES from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
 
 const ESC_KEY_CODE = 27;
 const ESC_KEY_STRING = "Escape";
 const FOCUSABLE_ELEMENTS = "button";
 const TAB_KEY_CODE = 9;
 const TAB_KEY_STRING = "Tab";
+const FIRST_AND_FIFTEENTH = "1st and 15th";
 export default class ChangeAmountOrFrequencyModal extends LightningElement {
+    @api defaultRecordTypeId;
     @api openChangeAmountOrFrequency;
     @api currentRecord;
+    installmentPeriodPicklistOptions;
+    
     isRenderCallbackActionExecuted = false;
 
     recurringDonationApiName = RECURRING_DONATION;
@@ -39,6 +45,13 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
         commonCancelAndClose,
         commonCancel
     }
+
+    @wire(getPicklistValues, { recordTypeId: '$defaultRecordTypeId', fieldApiName: INSTALLMENT_PERIOD_FIELD_VALUES })
+        installmentPeriodPicklistValues({ data, error }) {
+            if (data){
+                this.installmentPeriodPicklistOptions = (data.values).filter( el => el.value !== FIRST_AND_FIFTEENTH );
+            }
+        }
 
     renderedCallback() {
         if (this.isRenderCallbackActionExecuted) {
@@ -81,6 +94,10 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
             }
           }
       }   
+
+      handleInstallmentPeriodChange(event){
+        this.currentRecord.recurringDonation.npe03__Installment_Period__c = event.detail.value;
+      }
   
       _getFocusableElements() {
         const potentialElems = [
