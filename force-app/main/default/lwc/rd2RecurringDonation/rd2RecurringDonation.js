@@ -41,8 +41,8 @@ export default class RecurringDonationTable extends LightningElement {
     openChangeAmountOrFrequency = false;
     openStopRecurringDonation = false;
     currentRecord;
-    
     dayOfMonthFieldLabel;
+    defaultRecordTypeId;
 
     @api
     donationTypeFilter;
@@ -89,6 +89,7 @@ export default class RecurringDonationTable extends LightningElement {
         if (data){
           this.paymentMethod = data.fields.PaymentMethod__c.label;
           this.dayOfMonthFieldLabel = data.fields.Day_of_Month__c.label;
+          this.defaultRecordTypeId = data.defaultRecordTypeId;
         }
     }
 
