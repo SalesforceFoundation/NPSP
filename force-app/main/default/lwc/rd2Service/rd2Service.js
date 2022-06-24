@@ -45,6 +45,9 @@ class Rd2Service {
 
     async loadInitialView(state, recordId, parentId) {
         try {
+            console.log('rd2Service state: ', JSON.stringify(state));
+            console.log('rd2Service recordId: ', recordId);
+            console.log('rd2Service parentId: ', parentId);
             const initialView = await getInitialView({ recordId, parentId });
             const action = { type: ACTIONS.INITIAL_VIEW_LOAD, payload: initialView };
             return this.dispatch(state, action);

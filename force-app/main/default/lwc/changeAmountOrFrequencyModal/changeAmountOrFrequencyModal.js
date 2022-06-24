@@ -240,7 +240,8 @@ export default class rd2EntryForm extends LightningElement {
 
     @api openChangeAmountOrFrequency;
     @api parentId;
-    @api recordId;
+    recordId='a091k000008MkGrAAK';
+    //@api recordId;
 
     _contactId;
     _accountId;
@@ -299,7 +300,12 @@ export default class rd2EntryForm extends LightningElement {
      */
     async connectedCallback() {
         try {
+            console.log("rd2EntryForm this.recordId: ",this.recordId);
+            console.log("rd2EntryForm this.parentId: ",this.parentId);
+            console.log("rd2EntryForm this.state: ",this.state);
+            console.log("rd2EntryForm this.rd2State BEFORE: ", JSON.stringify(this.rd2State));
             this.rd2State = await this.rd2Service.loadInitialView(this.state, this.recordId, this.parentId);
+            console.log("rd2EntryForm this.rd2State AFTER: ", JSON.stringify(this.rd2State));
         } catch (ex) {
             this.perform({
                 type: ACTIONS.SET_ERROR,
@@ -308,7 +314,8 @@ export default class rd2EntryForm extends LightningElement {
         }
         this._contactId = this.rd2State.contactId;
         this._accountId = this.rd2State.accountId;
-
+        console.log('rd2EntryForm this._contactId: ',this._contactId);
+        console.log('rd2EntryForm this._accountId: ',this._accountId);
         this.isSaveButtonDisabled = false;
         this.isSettingReady = true;
         this.isLoading = false;

@@ -274,7 +274,7 @@ export default class RecurringDonationTable extends LightningElement {
     handleRowAction(e) {
       const action = e.target.getAttribute("data-action");
       this.currentRecord = this.data.find(row => {return row.recurringDonation.Id === e.target.getAttribute("data-recordid")});
-      this.recordId = e.target.getAttribute("data-recordid");
+      //this.recordId = e.target.getAttribute("data-recordid");
       switch (action) {
           case 'updatePaymentMethod':
               this.openUpdatePaymentMethod = true;
