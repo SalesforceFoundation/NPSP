@@ -133,7 +133,7 @@ public with sharing class RD2_ETableController {
         List<RD2_ETableController.TableView> recurringDonations = new List<RD2_ETableController.TableView>();
         if(RD2_EnablementService.isRecurringDonations2Enabled) {
             if(controller.hasAccessToRecurringDonation()) {
-                recurringDonations = controller.getProcessedTableViews(selector.getRecurringDonations());
+                recurringDonations = controller.getProcessedTableViews(selector.getRecurringDonations(elevateFilter));
             } else {
                 throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
             }
