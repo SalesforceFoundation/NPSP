@@ -1,6 +1,280 @@
 <template>
   <template if:true={openChangeAmountOrFrequency}>
-    <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open">
+    <section
+        role="dialog"
+        tabindex="-1"
+        aria-labelledby="modal-heading-01"
+        aria-modal="true"
+        aria-describedby="modal-content-id-1"
+        class="slds-modal slds-fade-in-open slds-modal_small"
+        onkeyup={handleKeyUp}
+    >
+        <div class="slds-modal__container">
+            <header class="slds-modal__header slds-clearfix">
+                <lightning-button-icon
+                    class="slds-modal__close"
+                    title={customLabels.closeButtonLabel}
+                    icon-name="utility:close"
+                    icon-class="slds-button_icon-inverse"
+                    onclick={handleCancel}
+                    onkeydown={handleClosedButtonTrapFocus}
+                    data-id="closeButton">
+                </lightning-button-icon>
+                <h2
+                    class="slds-text-heading_medium slds-hyphenate header-string slds-p-top_large slds-p-horizontal_medium" id="modal-heading-01">
+                    {headerLabel}
+                </h2>
+            </header>
+
+            <lightning-record-edit-form record-id={recordId}
+                                        object-api-name="npe03__Recurring_Donation__c"
+                                        data-id="outerRecordEditForm">
+                <div class="slds-modal__content slds-p-top_none slds-p-horizontal_medium slds-p-bottom_medium" id="modal-content-id-1">
+                    <template if:true={isLoading}>
+                        <div class="slds-grid slds-grid_align-center">
+                            <div class="slds-is-relative slds-size_1-of-1">
+                                <lightning-spinner alternative-text={customLabels.spinnerAltText} data-text={loadingText}
+                                    class="loading-spinner">
+                                </lightning-spinner>
+                                <c-util-stencil row-count="20" column-count="2"></c-util-stencil>
+                            </div>
+                        </div>
+                    </template>
+                    <div class="error-container">
+                        <template if:true={error.detail}>
+                            <c-util-page-level-message title={error.header}
+                                                       variant="error"
+                                                       icon-name="utility:error"
+                                                       icon-size="x-small"
+                                                       icon-variant="inverse"
+                                                       data-id="error"
+                                                       data-qa-locator="error">
+                                <p slot="body"
+                                   class="slds-p-horizontal_medium slds-p-vertical_xx-small slds-text-color_error">
+                                    <lightning-formatted-text value={error.detail}></lightning-formatted-text>
+                                </p>
+                            </c-util-page-level-message>
+                        </template>
+                    </div>
+                    <div class={cssEditForm}>
+
+                        <div class="slds-section slds-is-open">
+                            <h3 class="slds-section__title slds-theme_shade">
+                                <span class="slds-truncate slds-p-horizontal_small">{customLabels.donorSectionHeader}</span>
+                            </h3>
+                            <div aria-hidden="false" class="slds-section__content">
+                                <c-rd2-entry-form-donor-section
+                                        rd2-state={rd2State}
+                                        data-id="donorComponent"
+                                        onerrorevent={handleChildComponentError}
+                                        oncontactchange={handleContactChange}
+                                        onaccountchange={handleAccountChange}
+                                        ondonortypechange={handleDonorTypeChange}
+                                        ondateestablishedchange={handleDateEstablishedChange}
+                                        if:true={isSettingReady}
+                                >
+                                </c-rd2-entry-form-donor-section>
+                            </div>
+                        </div>
+
+                        <template if:true={isEdit}>
+                            <div class="slds-section slds-is-open">
+                                <h3 class="slds-section__title slds-theme_shade">
+                                    <span
+                                        class="slds-truncate slds-p-horizontal_small">{customLabels.statusSectionHeader}</span>
+                                </h3>
+                                <div aria-hidden="false" class="slds-section__content">
+
+                                    <lightning-layout horizontal-align="spread" multiple-rows="true">
+                                        <lightning-layout-item padding="horizontal-small" size="6" if:true={fields.status}>
+                                            <lightning-input-field
+                                                    data-id="status"
+                                                    value={rd2State.recurringStatus}
+                                                    field-name={fields.status.apiName}
+                                                    onchange={handleStatusChange}
+                                                    required>
+                                            </lightning-input-field>
+                                        </lightning-layout-item>
+
+                                        <lightning-layout-item padding="horizontal-small" size="6"
+                                            if:true={fields.statusReason}>
+                                            <lightning-input-field
+                                                value={rd2State.statusReason}
+                                                onchange={handleStatusReasonChange}
+                                                field-name={fields.statusReason.apiName}>
+                                            </lightning-input-field>
+                                        </lightning-layout-item>
+                                    </lightning-layout>
+
+                                </div>
+                            </div>
+                        </template>
+
+                        <div class="slds-section slds-is-open">
+                            <h3 class="slds-section__title slds-theme_shade">
+                                <span class="slds-truncate slds-p-horizontal_small">{customLabels.scheduleSectionHeader}</span>
+                            </h3>
+                            <div aria-hidden="false" class="slds-section__content">
+
+                                <lightning-layout horizontal-align="spread" multiple-rows="true">
+                                    <lightning-layout-item padding="horizontal-small" size="6" small-device-size="6"
+                                        if:true={fields.amount}>
+                                        <lightning-input-field
+                                                field-name={fields.amount.apiName}
+                                                value={rd2State.donationValue}
+                                                data-id="amountField"
+                                                onchange={handleAmountChange}
+                                                required
+                                        >
+                                        </lightning-input-field>
+                                    </lightning-layout-item>
+
+                                    <template if:true={rd2State.isMultiCurrencyEnabled}>
+                                        <lightning-layout-item padding="horizontal-small" size="6" small-device-size="6"
+                                            if:true={fields.amount}>
+                                            <div class="slds-p-horizontal_xx-small slds-m-bottom_x-small">
+                                                <label for="currencyField"
+                                                    class="slds-form-element__label slds-no-flex">{fields.currency.label}</label>
+                                                <lightning-input-field id="currencyField"
+                                                                       data-id="currencyField"
+                                                                       field-name={fields.currency.apiName}
+                                                                       value={rd2State.currencyIsoCode}
+                                                                       variant="label-hidden"
+                                                                       onchange={handleCurrencyChange}
+                                                                       required
+                                                ></lightning-input-field>
+                                            </div>
+                                        </lightning-layout-item>
+                                    </template>
+
+                                </lightning-layout>
+
+                                <c-rd2-entry-form-schedule-section
+                                        rd2-state={rd2State}
+                                        data-id="scheduleComponent"
+                                        onerrorevent={handleChildComponentError}
+                                        ontypechange={handleRecurringTypeChange}
+                                        ondayofmonthchange={handleDayOfMonthChange}
+                                        onstartdatechange={handleStartDateChange}
+                                        onperiodchange={handleRecurringPeriodChange}
+                                        onperiodtypechange={handleRecurringPeriodTypeChange}
+                                        onfrequencychange={handleFrequencyChange}
+                                        oninstallmentschange={handleInstallmentsChange}
+                                        if:true={isSettingReady}>
+                                </c-rd2-entry-form-schedule-section>
+
+                                <lightning-layout horizontal-align="spread" multiple-rows="true">
+                                    <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6"
+                                        if:true={fields.paymentMethod}>
+                                        <lightning-input-field
+                                            field-name={fields.paymentMethod.apiName}
+                                            onchange={handlePaymentChange}
+                                            value={rd2State.paymentMethod}
+                                            data-id="paymentMethod">
+                                        </lightning-input-field>
+                                    </lightning-layout-item>
+
+                                    <lightning-layout-item size="12" class="slds-p-bottom_small"
+                                        if:true={isElevateWidgetEnabled}>
+                                        <c-rd2-elevate-credit-card-form data-id='elevateWidget'
+                                            rd2-state={rd2State}
+                                            data-qa-locator='widget Elevate'
+                                            is-edit-mode={isCommitmentEdit}
+                                            rd2-record-id={recordId}
+                                            card-last-four-label={cardLastFourLabel}
+                                            ach-last-four-label={achLastFourLabel}
+                                            next-donation-date={nextDonationDate}
+                                            payer-organization-name={rd2State.accountName}
+                                            payer-first-name={rd2State.contactFirstName}
+                                            payer-last-name={rd2State.contactLastName}
+                                            existing-payment-method={originalPaymentMethod}
+                                            payment-method={rd2State.paymentMethod}>
+                                        </c-rd2-elevate-credit-card-form>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+
+                            </div>
+                        </div>
+
+                        <div class="slds-section slds-is-open">
+                            <h3 class="slds-section__title slds-theme_shade">
+                                <span class="slds-truncate slds-p-horizontal_small">{customLabels.otherSectionHeader}</span>
+                            </h3>
+                            <div aria-hidden="false" class="slds-section__content">
+                                <lightning-layout horizontal-align="spread" multiple-rows="true">
+                                    <template if:false={rd2State.isAutoNamingEnabled}>
+                                        <lightning-layout-item padding="horizontal-small" size="12" if:true={fields.name}>
+                                            <lightning-input-field class="name-field-class"
+                                                                   field-name={fields.name.apiName}
+                                                                   onchange={handleNameChange}
+                                                                   value={rd2State.recordName}
+                                                                   data-id="recordName"
+                                                                   required>
+                                            </lightning-input-field>
+                                        </lightning-layout-item>
+                                    </template>
+
+                                    <lightning-layout-item padding="horizontal-small" size="12" if:true={fields.campaign}>
+                                        <lightning-input-field
+                                                data-id="campaignLookup"
+                                                onchange={handleCampaignChange}
+                                                value={rd2State.campaignId}
+                                                field-name={fields.campaign.apiName}>
+                                        </lightning-input-field>
+                                    </lightning-layout-item>
+
+                                    <template if:true={showChangeTypeField}>
+                                        <lightning-layout-item padding="horizontal-small" size="6" if:true={fields.changeType}>
+                                            <lightning-input-field
+                                                data-id="changeType"
+                                                onchange={handleChangeTypeChange}
+                                                field-name={fields.changeType.apiName}
+                                                value={rd2State.changeType}
+                                            >
+                                            </lightning-input-field>
+                                        </lightning-layout-item>
+                                    </template>
+                                </lightning-layout>
+                            </div>
+                            <template if:true={hasCustomFields}>
+                                <div class="slds-section slds-is-open">
+                                    <h3 class="slds-section__title slds-theme_shade">
+                                        <span
+                                            class="slds-truncate slds-p-horizontal_small">{customLabels.customFieldsSectionHeader}</span>
+                                    </h3>
+                                    <div aria-hidden="false" class="slds-section__content">
+
+                                        <c-rd2-entry-form-custom-fields-section
+                                            record-id={recordId}
+                                            fields={rd2State.customFieldSets}
+                                            data-id="customFieldsComponent"
+                                            onchange={handleCustomFieldChange}
+                                        >
+                                        </c-rd2-entry-form-custom-fields-section>
+
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                <footer class="slds-modal__footer slds-clearfix">
+                    <div class="slds-float_right">
+                        <lightning-button label={customLabels.cancelButtonLabel} title={customLabels.cancelButtonLabel}
+                            variant="neutral" class="slds-m-right_small" onclick={handleCancel} disabled={isLoading}>
+                        </lightning-button>
+                        <lightning-button label={customLabels.saveButtonLabel} title={customLabels.saveButtonLabel}
+                            variant="brand" onclick={handleSubmit} onkeydown={handleSaveButtonTrapFocus} data-id="submitButton" disabled={isSaveButtonDisabled}>
+                        </lightning-button>
+                    </div>
+                </footer>
+
+            </lightning-record-edit-form>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+    <!-- <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open">
         <div class="slds-modal__container">
           <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={closeModal}>
             <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
@@ -46,6 +320,6 @@
         </div>
         </div>
       </section>
-      <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+      <div class="slds-backdrop slds-backdrop_open" role="presentation"></div> -->
     </template>
 </template>

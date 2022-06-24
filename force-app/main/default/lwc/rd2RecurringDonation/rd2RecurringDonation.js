@@ -40,6 +40,8 @@ export default class RecurringDonationTable extends LightningElement {
     openChangeAmountOrFrequency = false;
     openStopRecurringDonation = false;
     currentRecord;
+    recordId = null;
+    parentId = null;
   
     @api
     donationTypeFilter;
@@ -272,12 +274,14 @@ export default class RecurringDonationTable extends LightningElement {
     handleRowAction(e) {
       const action = e.target.getAttribute("data-action");
       this.currentRecord = this.data.find(row => {return row.recurringDonation.Id === e.target.getAttribute("data-recordid")});
+      this.recordId = e.target.getAttribute("data-recordid");
       switch (action) {
           case 'updatePaymentMethod':
               this.openUpdatePaymentMethod = true;
               break;
           case 'changeAmountOrFrequency':
               this.openChangeAmountOrFrequency = true;
+              console.log('parent currentRecord.Id: ',this.currentRecord.Id);
               break;
           case 'stopRecurringDonation':
               this.openStopRecurringDonation = true;
@@ -302,6 +306,7 @@ export default class RecurringDonationTable extends LightningElement {
         default:
             break;
       }
+      this.recordId = null;
       this.getRecurringDonationFields();
     }
 

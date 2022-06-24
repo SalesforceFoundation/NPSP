@@ -154,6 +154,9 @@ export default class rd2EntryForm extends LightningElement {
     async connectedCallback() {
         try {
             this.rd2State = await this.rd2Service.loadInitialView(this.state, this.recordId, this.parentId);
+            console.log("this.parentId: ",this.parentId);
+            console.log("this.state: ",this.state);
+            console.log("this.rd2State: ", JSON.stringify(this.rd2State));
         } catch (ex) {
             this.perform({
                 type: ACTIONS.SET_ERROR,
@@ -162,7 +165,8 @@ export default class rd2EntryForm extends LightningElement {
         }
         this._contactId = this.rd2State.contactId;
         this._accountId = this.rd2State.accountId;
-
+        console.log('this._contactId: ',this._contactId);
+        console.log('this._accountId: ',this._accountId);
         this.isSaveButtonDisabled = false;
         this.isSettingReady = true;
         this.isLoading = false;
