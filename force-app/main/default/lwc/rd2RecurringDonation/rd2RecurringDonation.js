@@ -43,6 +43,8 @@ export default class RecurringDonationTable extends LightningElement {
     currentRecord;
     fixedInstallmentsLabel;
   
+    defaultRecordTypeId;
+
     @api
     donationTypeFilter;
     
@@ -88,6 +90,7 @@ export default class RecurringDonationTable extends LightningElement {
         if (data){
           this.paymentMethod = data.fields.PaymentMethod__c.label;
           this.fixedInstallmentsLabel = data.fields.npe03__Installments__c.label;
+          this.defaultRecordTypeId = data.defaultRecordTypeId;
         }
     }
 
