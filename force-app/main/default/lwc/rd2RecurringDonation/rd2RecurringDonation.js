@@ -40,7 +40,8 @@ export default class RecurringDonationTable extends LightningElement {
     openChangeAmountOrFrequency = false;
     openStopRecurringDonation = false;
     currentRecord;
-  
+    defaultRecordTypeId;
+
     @api
     donationTypeFilter;
     
@@ -85,6 +86,7 @@ export default class RecurringDonationTable extends LightningElement {
     oppInfo({ data, error }) {
         if (data){
           this.paymentMethod = data.fields.PaymentMethod__c.label;
+          this.defaultRecordTypeId = data.defaultRecordTypeId;
         }
     }
 
