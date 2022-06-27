@@ -90,6 +90,7 @@ public with sharing class PaymentSelector {
             'npe01__Opportunity__c',
             'npe01__Opportunity__r.Amount',
             'npe01__Payment_Date__c',
+            'npe01__Paid__c',
             String.valueOf(npe01__OppPayment__c.DebitType__c)
         }; 
     }

@@ -171,6 +171,17 @@ public inherited sharing class PMT_RefundService {
         }
     }
 
+    public Map<Id, RefundInfo> calculatePaymentWithRefundableAmount(List<npe01__OppPayment__c> originalPayments) {
+        Map<Id, RefundInfo> paymentIdToRefundabInfo = new Map<Id, RefundInfo>();
+
+        for (npe01__OppPayment__c originalPayment : originalPayments) {
+            RefundInfo refundInfo = new refundInfo(originalPayment);
+
+            paymentIdToRefundabInfo.put(originalPayment.Id, refundInfo);
+        }
+
+        return paymentIdToRefundabInfo;
+    }
 
     private void processError(DMLException ex) {
         if (ex == null) {
@@ -187,7 +198,7 @@ public inherited sharing class PMT_RefundService {
         npe01__OppPayment__c refund = new npe01__OppPayment__c(
             npe01__Payment_Amount__c = -1 * originalPayment.npe01__Payment_Amount__c,
             npe01__Opportunity__c = originalPayment.npe01__Opportunity__c,
-            originalPayment__c = originalPayment.Id,
+            OriginalPayment__c = originalPayment.Id,
             DebitType__c = PMT_RefundService.FULL_REFUND
         );
         
@@ -253,6 +264,22 @@ public inherited sharing class PMT_RefundService {
 
         public RequestBody(String transactionId) {
             this.transactionId = transactionId;
+        }
+    }
+
+    public class RefundInfo {
+        public npe01__OppPayment__c originalPayment;
+        public Decimal refundableAmount;
+
+        public RefundInfo(npe01__OppPayment__c originalPayment) {
+            this.originalPayment = originalPayment;
+            this.refundableAmount = this.originalPayment.npe01__Payment_Amount__c;
+
+            if (this.originalPayment.Refunds__r != null) {
+                for (npe01__OppPayment__c refund : originalPayment.Refunds__r) {
+                    refundableAmount += refund.npe01__Payment_Amount__c;
+                }
+            }
         }
     }
 }

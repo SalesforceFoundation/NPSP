@@ -57,10 +57,10 @@ public inherited sharing class PMT_ValidationService {
         set;
     }
 
-    private Map<Id, npe01__OppPayment__c> originalPaymentWithRefunds {
+    private Map<Id, PMT_RefundService.RefundInfo> originalPaymentWithRefunds {
         get {
             if (originalPaymentWithRefunds == null) {
-                originalPaymentWithRefunds = getPaymentsWithAdjustedRefunds();
+                originalPaymentWithRefunds = getPaymentIdWithAvailableRefunds();
             }
             return originalPaymentWithRefunds;
         }
@@ -70,36 +70,40 @@ public inherited sharing class PMT_ValidationService {
     @TestVisible
     private List<npe01__OppPayment__c> payments = new List<npe01__OppPayment__c>();
     private List<npe01__OppPayment__c> oldPayments = new List<npe01__OppPayment__c>();
-
-
-    public PMT_ValidationService(List<npe01__OppPayment__c> payments) {
-        this.payments = payments;
-    }
+    private TDTM_Runnable.Action currentAction;
 
     /**
     * @description Constructor for the PMT_ValidationService class for Update context
     * @param payments New payments that will be validated
     * @param oldPayments old payments which are available in the database, the size and Id should match payments
+    * @param triggerAction current trigger action
     */
-    public PMT_ValidationService(List<npe01__OppPayment__c> payments, List<npe01__OppPayment__c> oldPayments) {
+    public PMT_ValidationService(List<npe01__OppPayment__c> payments, List<npe01__OppPayment__c> oldPayments, TDTM_Runnable.Action triggerAction) {
         this.payments = payments;
         this.oldPayments = oldPayments;
+        this.currentAction = triggerAction;
     }
 
-    public List<ErrorRecord> validate(TDTM_Runnable.Action triggerAction) {
+    public List<ErrorRecord> validate() {
         List<ErrorRecord> errorRecords = new List<ErrorRecord>();
         Boolean isNew = oldPayments == null || oldPayments.isEmpty();
 
-        for (Integer i = 0; i < payments.size(); i++) {
+        for (Integer i = 0; i < this.payments.size(); i++) {
             npe01__OppPayment__c payment = payments[i];
             npe01__OppPayment__c oldPayment = isNew ? null : oldPayments[i];
             
             ErrorRecord errorCollection = new ErrorRecord(payment);
 
-            validateAccountDataConsistency(payment, errorCollection, triggerAction);
+            if (this.currentAction == TDTM_Runnable.Action.AfterInsert || this.currentAction == TDTM_Runnable.Action.AfterUpdate) {
+                validateAccountDataConsistency(payment, errorCollection);
+            }
 
-            if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            if (this.currentAction == TDTM_Runnable.Action.BeforeInsert || this.currentAction == TDTM_Runnable.Action.BeforeUpdate) {
                 validateRefunds(payment, errorCollection);
+            }
+
+            if (this.currentAction == TDTM_Runnable.Action.BeforeUpdate) {
+                validateElevatePayments(payment, oldPayment, errorCollection);
             }
 
             if (errorCollection.hasError()) {
@@ -110,15 +114,13 @@ public inherited sharing class PMT_ValidationService {
         return errorRecords;
     }
 
-    private void validateAccountDataConsistency(npe01__OppPayment__c payment, ErrorRecord errorCollection, TDTM_Runnable.Action triggerAction) {
-        if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-            if (this.isEnforceAccountingDataConsistency) {
-                enforceAccountingDataConsistency(payment, errorCollection);
-            }
+    private void validateAccountDataConsistency(npe01__OppPayment__c payment, ErrorRecord errorCollection) {    
+        if (this.isEnforceAccountingDataConsistency) {
+            enforceAccountingDataConsistency(payment, errorCollection);
+        }
 
-            if (payment.npe01__Paid__c == true && payment.npe01__Written_Off__c == true) {
-                errorCollection.addError(System.Label.pmtWriteOffPaidPayment);
-            }
+        if (payment.npe01__Paid__c == true && payment.npe01__Written_Off__c == true) {
+            errorCollection.addError(System.Label.pmtWriteOffPaidPayment);
         }
     }
 
@@ -148,35 +150,51 @@ public inherited sharing class PMT_ValidationService {
             return;
         }
 
-        npe01__OppPayment__c originalPayment = originalPaymentWithRefunds.get(payment.originalPayment__c);
+        PMT_RefundService.RefundInfo refundInfo = originalPaymentWithRefunds.get(payment.originalPayment__c);
 
-        if (originalPayment == null) {
-            errorCollection.addError('Missing Original Payment');
+        if (refundInfo.originalPayment == null) {
+            errorCollection.addError(System.Label.pmtOriginalPaymentNotFound);
         }
 
-        originalPayment.npe01__Payment_Amount__c += payment.npe01__Payment_Amount__c;
+        if (refundInfo.originalPayment.npe01__Paid__c != true) {
+            errorCollection.addError(System.Label.pmtOriginalPaymentNotPaid);
+        }
 
-        if (originalPayment.DebitType__c == PMT_RefundService.FULL_REFUND || originalPayment.npe01__Payment_Amount__c != 0) {
+        if (refundInfo.originalPayment.DebitType__c == PMT_RefundService.FULL_REFUND) {
             errorCollection.addError(System.Label.pmtPaymentNotRefundable);
         }
 
+        if (refundInfo.refundableAmount + payment.npe01__Payment_Amount__c != 0) {
+            errorCollection.addError(System.Label.pmtRefundAmountInvalid);
+        }
+
+        refundInfo.refundableAmount += payment.npe01__Payment_Amount__c;
     }
 
-    private Map<Id, npe01__OppPayment__c> getPaymentsWithAdjustedRefunds() {
+    private Map<Id, PMT_RefundService.RefundInfo> getPaymentIdWithAvailableRefunds() {
         Set<Id> originalPaymentIds = UTIL_SObject.extractId(this.payments, npe01__OppPayment__c.originalPayment__c);
         if (originalPaymentIds.isEmpty()) {
-            return new Map<Id, npe01__OppPayment__c>();
+            return new Map<Id, PMT_RefundService.RefundInfo>();
         }
 
         List<npe01__OppPayment__c> originalPayments = paymentSelector.getPaymentsWithRefunds(originalPaymentIds);
-        for (npe01__OppPayment__c originalPayment : originalPayments) {
-            if (originalPayment.Refunds__r != null) {
-                for (npe01__OppPayment__c refund : originalPayment.Refunds__r) {
-                    originalPayment.npe01__Payment_Amount__c += refund.npe01__Payment_Amount__c;
-                }
-            }
-        }
+       return new PMT_RefundService().calculatePaymentWithRefundableAmount(originalPayments);
+    }
 
-        return new Map<Id, npe01__OppPayment__c>(originalPayments);
+    private void validateElevatePayments(npe01__OppPayment__c payment, npe01__OppPayment__c oldPayment, ErrorRecord errorCollection) {
+        PS_IntegrationServiceConfig config = new PS_IntegrationServiceConfig();
+
+        if (String.isBlank(payment.Elevate_Payment_ID__c) || !config.isIntegrationEnabled() || config.hasIntegrationPermissions()) {
+            return;
+        }
+        
+        if (payment.npe01__Payment_Amount__c != oldPayment.npe01__Payment_Amount__c ||
+                payment.Elevate_Payment_ID__c != oldPayment.Elevate_Payment_ID__c ||
+                payment.npe01__Payment_Date__c != oldPayment.npe01__Payment_Date__c ||
+                payment.DebitType__c != oldPayment.DebitType__c ||
+                payment.OriginalPayment__c != oldPayment.OriginalPayment__c
+            ) {
+                errorCollection.addError(System.Label.pmtElevatePermissionRequired);
+        }
     }
 }

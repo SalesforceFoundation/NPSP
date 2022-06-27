@@ -12070,6 +12070,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Organization Donations</value>
     </labels>
     <labels>
+        <fullName>pmtElevatePermissionRequired</fullName>
+        <categories>Payment, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when user does not have a permission to change an RD originated in Elevate</shortDescription>
+        <value>Payment from Elevate Payment Services can&apos;t be modified in NPSP except by the Elevate Payment Services Integration user.</value>
+    </labels>
+    <labels>
         <fullName>pmtModifyCurrency</fullName>
         <categories>Payment, Error</categories>
         <language>en_US</language>
@@ -12094,6 +12102,22 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Payment can&apos;t be refunded because Elevate hasn&apos;t processed the payment yet.</value>
     </labels>
     <labels>
+        <fullName>pmtOriginalPaymentNotPaid</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund rror message when Elevate hasn&apos;t processed the payment yet.</shortDescription>
+        <value>Payment can&apos;t be refunded because the it&apos;s not paid</value>
+    </labels>
+    <labels>
+        <fullName>pmtOriginalPaymentNotFound</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The original Payment does not exist in NPSP for this refund.</shortDescription>
+        <value>The original Payment does not exist in NPSP for this refund.</value>
+    </labels>
+    <labels>
         <fullName>pmtPaidPaymentDateRequired</fullName>
         <categories>Payment, Accounting Data Consistency</categories>
         <language>en_US</language>
@@ -12116,6 +12140,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Error message title for refund</shortDescription>
         <value>There was an error processing the refund.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundAmountInvalid</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund error when the refund amount is invalid</shortDescription>
+        <value>The reunf amount must be a negative amount and cannot be larger than the original payment amount.</value>
     </labels>
     <labels>
         <fullName>pmtRefundPaymentSuccessMessage</fullName>
