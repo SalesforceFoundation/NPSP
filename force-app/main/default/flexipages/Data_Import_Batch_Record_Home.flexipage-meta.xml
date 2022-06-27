@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FlexiPage xmlns="http://soap.sforce.com/2006/04/metadata">
     <flexiPageRegions>
+        <name>header</name>
+        <type>Region</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
         <itemInstances>
             <componentInstance>
                 <componentInstanceProperties>
@@ -20,16 +24,10 @@
                 <componentName>force:detailPanel</componentName>
                 <identifier>force_detailPanel</identifier>
                 <visibilityRule>
-                    <booleanFilter>1 OR 2</booleanFilter>
                     <criteria>
                         <leftValue>{!Record.GiftBatch__c}</leftValue>
                         <operator>EQUAL</operator>
                         <rightValue>false</rightValue>
-                    </criteria>
-                    <criteria>
-                        <leftValue>{!Record.Batch_Gift_Entry_Version__c}</leftValue>
-                        <operator>LT</operator>
-                        <rightValue>2.0</rightValue>
                     </criteria>
                 </visibilityRule>
             </componentInstance>
@@ -85,22 +83,24 @@
                     <value>false</value>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
+                    <name>enableActionsConfiguration</name>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>hideChatterActions</name>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
                     <name>numVisibleActions</name>
                     <value>3</value>
                 </componentInstanceProperties>
                 <componentName>force:highlightsPanel</componentName>
                 <identifier>force_highlightsPanel</identifier>
                 <visibilityRule>
-                    <booleanFilter>1 OR 2</booleanFilter>
                     <criteria>
                         <leftValue>{!Record.GiftBatch__c}</leftValue>
                         <operator>EQUAL</operator>
                         <rightValue>false</rightValue>
-                    </criteria>
-                    <criteria>
-                        <leftValue>{!Record.Batch_Gift_Entry_Version__c}</leftValue>
-                        <operator>LT</operator>
-                        <rightValue>2.0</rightValue>
                     </criteria>
                 </visibilityRule>
             </componentInstance>
@@ -114,16 +114,10 @@
                 <componentName>flexipage:tabset</componentName>
                 <identifier>flexipage_tabset</identifier>
                 <visibilityRule>
-                    <booleanFilter>1 OR 2</booleanFilter>
                     <criteria>
                         <leftValue>{!Record.GiftBatch__c}</leftValue>
                         <operator>EQUAL</operator>
                         <rightValue>false</rightValue>
-                    </criteria>
-                    <criteria>
-                        <leftValue>{!Record.Batch_Gift_Entry_Version__c}</leftValue>
-                        <operator>LT</operator>
-                        <rightValue>2.0</rightValue>
                     </criteria>
                 </visibilityRule>
             </componentInstance>
@@ -133,16 +127,10 @@
                 <componentName>GE_GiftEntryForm</componentName>
                 <identifier>GE_GiftEntryForm</identifier>
                 <visibilityRule>
-                    <booleanFilter>1 AND 2</booleanFilter>
                     <criteria>
                         <leftValue>{!Record.GiftBatch__c}</leftValue>
                         <operator>EQUAL</operator>
                         <rightValue>true</rightValue>
-                    </criteria>
-                    <criteria>
-                        <leftValue>{!Record.Batch_Gift_Entry_Version__c}</leftValue>
-                        <operator>GE</operator>
-                        <rightValue>2.0</rightValue>
                     </criteria>
                 </visibilityRule>
             </componentInstance>
