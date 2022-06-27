@@ -64,6 +64,18 @@
                             </div>
                         </div>
                     </th>
+                    <th aria-label={labels.finalDonation} class={headClasses} scope="col" style={fixedWidth}>
+                        <div class="slds-cell-fixed" style={fixedWidth}>
+                            <a class="slds-th__action slds-text-link--reset">
+                                <span class="slds-truncate" title={labels.finalDonation}>{labels.finalDonation}</span>
+                            </a>
+                            <div class="slds-resizable">
+                                <span class="slds-resizable__handle" onmousedown={handlemousedown}>
+                                    <span class="slds-resizable__divider"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </th>
                     <th aria-label={labels.mostRecentDonation} class={headClasses} scope="col" style={fixedWidth}>
                         <div class="slds-cell-fixed" style={fixedWidth}>
                             <a class="slds-th__action slds-text-link--reset">
@@ -129,9 +141,14 @@
                             <div class={rowClasses} style={fixedWidth} title={labels.lblStatus}>
                                 {item.status}</div>
                         </td>
-                        <td key={item.firstDonation} data-id={item.recurringDonation.Id} class={tdClasses} data-label={labels.firstDonation}>
+                        <td key={item.recurringDonation.npe03__Date_Established__c} data-id={item.id} class={tdClasses} data-label={labels.firstDonation}>
                             <div class={rowClasses} style={fixedWidth} title={labels.firstDonation}>
-                                {item.firstDonation}
+                                {item.recurringDonation.npe03__Date_Established__c}
+                            </div>
+                        </td>
+                        <td key={item.finalDonation} data-id={item.id} class={tdClasses} data-label={labels.finalDonation}>
+                            <div class={rowClasses} style={fixedWidth} title={labels.finalDonation}>
+                                {item.finalDonation}
                             </div>
                         </td>
                         <td key={item.mostRecentDonation} data-id={item.recurringDonation.Id} class={tdClasses} data-label={labels.mostRecentDonation}>
@@ -166,6 +183,6 @@
         </table>
     </div>
     <c-update-payment-method-modal is-bank-payment-allowed={allowACHPaymentMethod} current-record={currentRecord} open-update-payment-method={openUpdatePaymentMethod} onclose={handleClose}></c-update-payment-method-modal>
-    <c-change-amount-or-frequency-modal current-record={currentRecord} open-change-amount-or-frequency={openChangeAmountOrFrequency} onclose={handleClose}></c-change-amount-or-frequency-modal>
+    <c-change-amount-or-frequency-modal fixed-installments-label={fixedInstallmentsLabel} default-record-type-id={defaultRecordTypeId} current-record={currentRecord} open-change-amount-or-frequency={openChangeAmountOrFrequency} onclose={handleClose}></c-change-amount-or-frequency-modal>
     <c-stop-recurring-donation-modal current-record={currentRecord} open-stop-recurring-donation={openStopRecurringDonation} onclose={handleClose}></c-stop-recurring-donation-modal>
 </template>
