@@ -240,7 +240,7 @@ export default class rd2EntryForm extends LightningElement {
 
     @api openChangeAmountOrFrequency;
     @api parentId;
-    recordId='a091k000008MkGrAAK';
+    recordId='a091100000VMgFOAA1';
     //@api recordId;
 
     _contactId;
@@ -839,6 +839,7 @@ export default class rd2EntryForm extends LightningElement {
      */
     handleError(error) {
         this.setError(error);
+        console.log('ERROR: ',error);
         this.disableSaveButton();
     }
 
