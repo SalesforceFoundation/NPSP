@@ -184,6 +184,6 @@
         </table>
     </div>
     <c-update-payment-method-modal is-bank-payment-allowed={allowACHPaymentMethod} current-record={currentRecord} open-update-payment-method={openUpdatePaymentMethod} onclose={handleClose}></c-update-payment-method-modal>
-    <c-change-amount-or-frequency-modal default-record-type-id={defaultRecordTypeId} current-record={currentRecord} open-change-amount-or-frequency={openChangeAmountOrFrequency} onclose={handleClose}></c-change-amount-or-frequency-modal>
+    <c-change-amount-or-frequency-modal fixed-installments-label={fixedInstallmentsLabel} default-record-type-id={defaultRecordTypeId} current-record={currentRecord} open-change-amount-or-frequency={openChangeAmountOrFrequency} onclose={handleClose}></c-change-amount-or-frequency-modal>
     <c-stop-recurring-donation-modal current-record={currentRecord} open-stop-recurring-donation={openStopRecurringDonation} onclose={handleClose}></c-stop-recurring-donation-modal>
 </template>
