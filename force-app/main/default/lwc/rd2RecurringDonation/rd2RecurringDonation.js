@@ -90,7 +90,7 @@ export default class RecurringDonationTable extends LightningElement {
     connectedCallback() {
       this.getRecurringDonationFields();
       if(!this.isMobile){
-        this.tdClasses = 'move';
+        this.tdClasses = '';
       }
       this.template.addEventListener('keydown', (event) => {
         let cells   = this.template.querySelectorAll("tr td[tabindex='-1']");

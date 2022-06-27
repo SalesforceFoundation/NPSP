@@ -111,21 +111,21 @@
             <tbody>
                 <template for:each={data} for:item="item">
                     <tr key={item.recurringDonation.Id} aria-selected="false" class="slds-hint-parent" scope="row">
-                        <td key={item.recurringDonation.npe03__Amount__c} data-label={labels.commonAmount} tabindex="-1" class="move">
+                        <td key={item.recurringDonation.npe03__Amount__c} data-label={labels.commonAmount} tabindex="-1">
                             <div class={rowClasses} style={fixedWidth} title={labels.commonAmount}>
                                 <lightning-formatted-number value={item.recurringDonation.npe03__Amount__c} format-style="currency"
                                     currency-code="USD"></lightning-formatted-number>
                             </div>
                         </td>
-                        <td key={item.frequency} data-label={labels.RDCL_Frequency} tabindex="-1" class="move">
+                        <td key={item.frequency} data-label={labels.RDCL_Frequency} tabindex="-1">
                             <div class={rowClasses} style={fixedWidth} title={labels.RDCL_Frequency}>
                                 {item.frequency}</div>
                         </td>
-                        <td key={item.paymentMethod} data-label={paymentMethod} tabindex="-1" class="move">
+                        <td key={item.paymentMethod} data-label={paymentMethod} tabindex="-1">
                             <div class={rowClasses} style={fixedWidth} title={paymentMethod}>
                                 {item.paymentMethod}</div>
                         </td>
-                        <td key={item.status} data-label={labels.lblStatus} tabindex="-1" class="move">
+                        <td key={item.status} data-label={labels.lblStatus} tabindex="-1">
                             <div class={rowClasses} style={fixedWidth} title={labels.lblStatus}>
                                 {item.status}</div>
                         </td>
@@ -148,7 +148,7 @@
                             <div class={rowClasses} style={fixedWidth} title="Last Modified">
                                 {item.lastModified}</div>
                         </td>
-                        <td data-label="Actions" tabindex="-1" class="move">
+                        <td data-label="Actions" tabindex="-1">
                             <lightning-button-menu class="dv-dynamic-mobile" menu-alignment="auto" alternative-text="Action menu">
                                 <template for:each={item.actions} for:item="action">
                                     <p key={action.name} data-recid={action.name}>
