@@ -49,15 +49,7 @@ public with sharing class PaymentSelector {
     }
 
     public List<npe01__OppPayment__c> getPaymentRecordsForRefund(Set<Id> paymentIds) {
-        Set<String> queryFields = new Set<String>{
-            'Id',
-            String.valueOf(npe01__OppPayment__c.Elevate_Payment_ID__c),
-            'npe01__Payment_Amount__c',
-            'npe01__Opportunity__c',
-            'npe01__Opportunity__r.Amount',
-            'npe01__Payment_Date__c',
-            String.valueOf(npe01__OppPayment__c.DebitType__c)
-        };
+        Set<String> queryFields = getRefundFields();
 
         if (isMultiCurrencyEnabled) {
             queryFields.add(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
@@ -70,5 +62,53 @@ public with sharing class PaymentSelector {
             .build();
 
         return Database.query(soql);
+    }
+
+    public List<npe01__OppPayment__c> getPaymentsWithRefunds(Set<Id> paymentIds) {
+        Set<String> queryFields = getRefundFields();
+        queryFields.add(getRefundSubQuery());
+
+        if (isMultiCurrencyEnabled) {
+            queryFields.add(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
+        }
+        
+    
+        String soql = new UTIL_Query()
+            .withFrom(npe01__OppPayment__c.SObjectType)
+            .withSelectFields(queryFields)
+            .withWhere('Id IN: paymentIds')
+            .build();
+
+        return Database.query(soql);
+    }
+
+    private Set<String> getRefundFields() {
+        return new Set<String>{
+            'Id',
+            String.valueOf(npe01__OppPayment__c.Elevate_Payment_ID__c),
+            'npe01__Payment_Amount__c',
+            'npe01__Opportunity__c',
+            'npe01__Opportunity__r.Amount',
+            'npe01__Payment_Date__c',
+            String.valueOf(npe01__OppPayment__c.DebitType__c)
+        }; 
+    }
+    private String getRefundSubQuery() {
+        Set<String> refundFields = new Set<String>{
+            'Id',
+            'npe01__Payment_Amount__c'
+        };
+
+        if (isMultiCurrencyEnabled) {
+            refundFields.add(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
+        }
+
+    
+        String refundSubquery = new UTIL_Query()
+            .withSelectFields(refundFields)
+            .withFrom('Refunds__r')
+            .build();
+
+        return '(' + refundSubquery + ')';
     }
 }
