@@ -56,23 +56,23 @@ public inherited sharing class RD2_ERecurringDonationsSelector {
 		List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>();
 		if(currentContactId != NULL) {
 			recurringDonations = [  SELECT npe03__Amount__c,
-										npe03__Installment_Period__c,
-										InstallmentFrequency__c,
-										Day_of_Month__c,
-										Status__c,
-                    npe03__Date_Established__c,
-                    CommitmentId__c,
-                    PaymentMethod__c,
-                    CardLast4__c,
-                    CardExpirationYear__c,
-                    CardExpirationMonth__c,
-                    ACH_Last_4__c,
-                    npe03__Last_Payment_Date__c,
-                    npe03__Total_Paid_Installments__c,
-                    npe03__Installments__c,
-                    npe03__Next_Payment_Date__c,
-                    RecurringType__c
-										npe03__Date_Established__c,
+                  npe03__Installment_Period__c,
+                  InstallmentFrequency__c,
+                  Day_of_Month__c,
+                  Status__c,
+                  npe03__Date_Established__c,
+                  CommitmentId__c,
+                  PaymentMethod__c,
+                  CardLast4__c,
+                  CardExpirationYear__c,
+                  CardExpirationMonth__c,
+                  ACH_Last_4__c,
+                  npe03__Last_Payment_Date__c,
+                  npe03__Total_Paid_Installments__c,
+                  npe03__Installments__c,
+                  npe03__Next_Payment_Date__c,
+                  RecurringType__c
+                  npe03__Date_Established__c
 									FROM npe03__Recurring_Donation__c
 									WHERE npe03__Contact__c = :currentContactId
                   					AND RecurringType__c IN (:RD2_Constants.RECURRING_TYPE_OPEN, :RD2_Constants.RECURRING_TYPE_FIXED) 
