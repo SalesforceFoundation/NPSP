@@ -85,7 +85,11 @@ public without sharing class HouseholdNamingService {
     }
 
     public void updateHouseholdNameAndMemberCountAsync(List<Id> hhids) {
-       updateHouseholdNameAndMemberCountAsynchronously(hhids);
+       updateHouseholdNameAndMemberCountAsynchronously(hhids, AccountAdapter.isAllMembersDeceasedUpdateEnabled);
+    }
+
+    public static void updateHouseholdNameAndMemberCountAsynchronously(List<Id> hhids) {
+        updateHouseholdNameAndMemberCountAsynchronously(hhids, AccountAdapter.isAllMembersDeceasedUpdateEnabled);
     }
 
     /*******************************************************************************************************
@@ -94,8 +98,9 @@ public without sharing class HouseholdNamingService {
     * @return void
     */
     @future
-    public static void updateHouseholdNameAndMemberCountAsynchronously(List<Id> hhids) {
+    public static void updateHouseholdNameAndMemberCountAsynchronously(List<Id> hhids, Boolean isDeceasedUpdateEnabled) {
         //set our process control to avoid recursive updating on household records
+        AccountAdapter.enableHouseholdDeceasedUpdate(isDeceasedUpdateEnabled);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
         HouseholdNamingService householdNamingService = new HouseholdNamingService();
         householdNamingService.updateHouseholdNameAndMemberCount(hhids);
@@ -124,9 +129,21 @@ public without sharing class HouseholdNamingService {
             setHouseholdNameFieldValues(householdsOrAccounts, membersByHouseholdId);
         }
         setNumberOfHouseholdMembers(householdsOrAccounts, membersByHouseholdId);
+
+        if (isListOfAccountIds(householdsOrAccounts)) {
+            setAllMembersDeceasedFlag(householdsOrAccounts, membersByHouseholdId);
+        }
+
         unitOfWork.save();
 
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
+    }
+
+    private Boolean isListOfAccountIds(List<SObject> householdsOrAccounts) {
+        if (householdsOrAccounts.isEmpty()) {
+            return false;
+        }
+        return householdsOrAccounts?.get(0).getSObjectType() == Account.SObjectType;
     }
 
     private void save(List<SObject> householdsOrAccounts) {
@@ -164,6 +181,32 @@ public without sharing class HouseholdNamingService {
                 return currentNumberOfHouseholdMembersValue != householdMembers.size();
             } else {
                 return true;
+            }
+        }
+    }
+
+    public void setAllMembersDeceasedFlag(List<Account> accounts, Map<Id, List<Contact>> membersByHouseholdId) {
+        for (Account household : accounts) {
+            Boolean originalDeceased = household.All_Members_Deceased__c;
+            Boolean allMembersDeceased;
+
+            List<Contact> members = membersByHouseholdId?.get(household.Id);
+            if (members == null) {
+                allMembersDeceased = false;
+
+            } else {
+                allMembersDeceased = true;
+                for (Contact member : members) {
+                    if (member.Deceased__c == false) {
+                        allMembersDeceased = false;
+                        break;
+                    }
+                }
+            }
+
+            if (originalDeceased != allMembersDeceased) {
+                household.All_Members_Deceased__c = allMembersDeceased;
+                unitOfWork.registerDirty(new List<SObject>{household});
             }
         }
     }
@@ -219,7 +262,8 @@ public without sharing class HouseholdNamingService {
     private List<SObject> getAccountsFor(List<Id> hhids) {
         return [
                 SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c,
-                        npo02__Informal_Greeting__c, Number_of_Household_Members__c
+                        npo02__Informal_Greeting__c, Number_of_Household_Members__c,
+                        All_Members_Deceased__c
                 FROM Account
                 WHERE Id IN :hhids
         ];

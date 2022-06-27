@@ -1,0 +1,48 @@
+<template>
+    <lightning-quick-action-panel header={labels.refundPaymentTitle}>
+        <div class="slds-m-around_medium" if:true={hasError}>
+            <span class="slds-text-color_error">
+                <lightning-formatted-text value={errorMessage}></lightning-formatted-text>
+            </span>
+        </div>
+        <div if:true={isLoading}>
+            <div class="slds-grid slds-grid_align-center">
+                <div class="slds-is-relative slds-size_1-of-1">
+                    <lightning-spinner alternative-text={labels.spinnerAltText} data-text={labels.loadingMessage}
+                        class="loading-spinner">
+                    </lightning-spinner>
+                    <c-util-stencil column-count="1"></c-util-stencil>
+                </div>
+            </div>
+        </div>
+        <div if:false={isLoading}>
+            <div if:false={hasError}>
+                <span>{labels.refundPaymentMessage}</span>
+                <div class="slds-form slds-p-top_medium" role="list">
+                    <div class="slds-form-element slds-form-element_horizontal slds-p-left_none slds-" role="listitem">
+                        <label class="slds-form-element__label slds-text-title_bold slds-p-top_none" for="refund-amount">{labels.refundAmount}</label>
+                        <div class="slds-form-element__control">
+                            <lightning-formatted-number id="refund-amount" value={paymentAmount} format-style="currency" currency-code={currencyCode} currency-display-as="symbol">
+                            </lightning-formatted-number>
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-form-element_horizontal slds-p-left_none" role="listitem">
+                        <label class="slds-form-element__label slds-text-title_bold slds-p-top_none" for="refund-date">{labels.refundPaymentDate}</label>
+                        <div class="slds-form-element__control">
+                            <lightning-formatted-date-time id="refund-date" value={paymentDate}>
+                            </lightning-formatted-date-time>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div slot="footer">
+            <lightning-button label={labels.cancelButtonLabel} title={labels.cancelButtonLabel}
+            variant="neutral" class="slds-m-right_small" onclick={handleClose} data-id="cancelButton" disabled={isLoading}>
+            </lightning-button>
+            <lightning-button label={labels.refundPaymentConfirmButton} title={labels.refundPaymentConfirmButton}
+                variant="brand" onclick={handleRefund} data-id="refundButton" disabled={isLoading}>
+            </lightning-button>
+        </div>
+    </lightning-quick-action-panel>
+</template>

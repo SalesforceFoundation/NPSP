@@ -17,7 +17,7 @@
             "description": "legal text shown in modal dialog"
         },
         "error_message": {
-            "message": "Si sufre problemas con la instalación, publíquelo en [Power of Us Hub](https://powerofus.force.com/s/topic/0TO80000000DlHzGAK/nonprofit-success-pack-npsp).",
+            "message": "Si sufre problemas con la instalación, publíquelo en el grupo [Nonprofit Success Pack](https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&sort=LAST_MODIFIED_DATE_DESC).",
             "description": "shown after failed installation (markdown)"
         }
     },
@@ -31,7 +31,7 @@
             "description": "shown before user starts installation (markdown)"
         },
         "post_install_message": {
-            "message": "Gracias por instalar NPSP.  Visite el grupo [Nonprofit Success Pack](https://powerofus.force.com/_ui/core/chatter/groups/GroupProfilePage?g=0F980000000CjRe) en Power of Us Hub para realizar cualquier pregunta sobre NPSP.",
+            "message": "Gracias por instalar NPSP. Visite el grupo [Nonprofit Success Pack](https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&sort=LAST_MODIFIED_DATE_DESC) para realizar cualquier pregunta sobre NPSP.",
             "description": "shown after successful installation (markdown)"
         }
     },
@@ -139,7 +139,7 @@
             "description": "shown before user starts installation (markdown)"
         },
         "post_install_message": {
-            "message": "Gracias por instalar NPSP.  Visite el grupo [Nonprofit Success Pack](https://powerofus.force.com/_ui/core/chatter/groups/GroupProfilePage?g=0F980000000CjRe) en Power of Us Hub para realizar cualquier pregunta sobre NPSP.",
+            "message": "Gracias por instalar NPSP. Visite el grupo [Nonprofit Success Pack](https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&sort=LAST_MODIFIED_DATE_DESC) para realizar cualquier pregunta sobre NPSP.",
             "description": "shown after successful installation (markdown)"
         },
         "error_message": {
@@ -174,7 +174,7 @@
             "message": "Nonprofit Success Pack requiere Chatter. Active Chatter en su organización e inténtelo de nuevo.",
             "description": "shown if validation fails"
         },
-        "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation. See the Power of Us Hub for assistance.": {
+        "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation. See NPSP documentation for assistance.": {
             "message": "Gestión de divisas avanzada debe estar desactivada para instalar Nonprofit Success Pack, pero puede activarse después de la instalación.",
             "description": "shown if validation fails"
         },
@@ -201,7 +201,7 @@
             "description": "title of installation plan"
         },
         "preflight_message": {
-            "message": "Los Informes y paneles de NPSP vienen con nuevas pruebas de instalaciones de NPSP que empiezan en la versión 3.90 (Febrero de 2017). Si inició una prueba o instaló NPSP antes de esta versión, utilice este instalador para agregar los Informes y paneles. Para obtener información completa sobre los Informes y paneles de NPSP, consulte [NPSP Reports Workbook](https://powerofus.force.com/articles/Resource/NPSP-Reports-Workbook).\n\nEste instalador requiere 5 tipos de registro de oportunidad incluidos en la plantilla de prueba del Nonprofit Starter Pack, que crearemos si no se encuentran en su organización. El instalador busca tipos de registro por Nombre de desarrollador (no etiqueta), de modo que si cambió los nombres de desarrollador de los tipos de registro originales, el instalador los agregará de nuevo. Los tipos de registro de Nombres de desarrollador son los siguientes:\n \n* Donation\n* MajorGift\n* MatchingDonation\n* Grant\n* Membership",
+            "message": "Los Informes y paneles de NPSP vienen con nuevas pruebas de instalaciones de NPSP que empiezan en la versión 3.90 (Febrero de 2017). Si inició una prueba o instaló NPSP antes de esta versión, utilice este instalador para agregar los Informes y paneles. \n\nEste instalador requiere 5 tipos de registro de oportunidad incluidos en la plantilla de prueba del Nonprofit Starter Pack, que crearemos si no se encuentran en su organización. El instalador busca tipos de registro por Nombre de desarrollador (no etiqueta), de modo que si cambió los nombres de desarrollador de los tipos de registro originales, el instalador los agregará de nuevo. Los tipos de registro de Nombres de desarrollador son los siguientes:\n \n* Donation\n* MajorGift\n* MatchingDonation\n* Grant\n* Membership",
             "description": "shown before user starts installation (markdown)"
         }
     },

@@ -1,0 +1,187 @@
+<template>
+    <lightning-layout multiple-rows="true" vertical-align="start">
+        <template if:true={hasError}>
+            <lightning-layout-item class="slds-p-horizontal_large slds-m-bottom_medium" size="12">
+                <c-util-page-level-message 
+                    title={labels.commonError}
+                    variant="error"
+                    icon-name="utility:error"
+                    icon-size="x-small"
+                    icon-variant="inverse"
+                    data-id="error"
+                    data-qa-locator="error"
+                >
+                    <p slot="body" class="slds-p-horizontal_medium slds-p-vertical_xx-small slds-text-color_error">
+                        <lightning-formatted-text value={errorMessage}></lightning-formatted-text>
+                    </p>
+                </c-util-page-level-message>
+            </lightning-layout-item>
+        </template>
+        <lightning-layout-item class="slds-p-horizontal_large" size="12">
+            <lightning-formatted-rich-text value={labels.statusAutomationIntro}></lightning-formatted-rich-text>
+        </lightning-layout-item>
+        <template if:true={isLoading}>
+            <lightning-layout-item class="slds-p-horizontal_large slds-p-top_medium" size="12">
+                <div class="slds-grid slds-grid_align-center">
+                    <div class="slds-is-relative slds-size_1-of-1">
+                        <lightning-spinner alternative-text={labels.loadingMessage}></lightning-spinner>
+                        <c-util-stencil row-count="5" column-count="1"></c-util-stencil>
+                    </div>
+                </div>
+            </lightning-layout-item>
+        </template>
+        <template if:true={isRd2Disabled}>
+            <lightning-layout-item class="slds-p-left_large slds-p-top_medium" size="12">
+                <div class='slds-m-around_medium'>
+                    <c-util-illustration title={labels.commonError} size='small' message={labels.rd2DisabledError} variant='no-access'></c-util-illustration>
+                </div>
+            </lightning-layout-item>
+        </template>
+        <template if:true={isReady}>
+            <lightning-layout-item class="slds-p-horizontal_large slds-p-top_medium" size="12">
+                <div class="slds-section slds-is-open slds-p-horizontal_small">
+                    <h3 class="slds-section__title slds-theme_shade slds-p-horizontal_small">
+                        <span class="slds-truncate" title={labels.configurationSectionHeader}>
+                            {labels.configurationSectionHeader}
+                        </span>
+                    </h3>
+                    <div aria-hidden="false" class="slds-section__content">
+                    <lightning-layout multiple-rows="true">
+                        <lightning-layout-item size="12">
+                            <lightning-layout>
+                                <template if:false={isEdit}>
+                                    <lightning-layout-item size="4" padding="around-medium">
+                                        <div class="slds-form-element slds-form-element slds-m-bottom_medium">
+                                            <span class="slds-form-element__label" >{labels.daysForLapsed}</span>
+                                            <div class="slds-form-element__control" data-id="daysForLapsed">
+                                                {numberOfDaysForLapsed}
+                                            </div>
+                                        </div>
+                                        <div class="slds-form-element slds-form-element">
+                                            <span class="slds-form-element__label" data-id="lapsedStatus">{labels.setLapsedStatus}</span>
+                                            <div class="slds-form-element__control">
+                                                {lapsedStatus}
+                                            </div>
+                                        </div>
+                                    </lightning-layout-item>
+                                </template>
+                                <template if:true={isEdit}>
+                                    <lightning-layout-item size="4" padding="around-medium">
+                                        <lightning-input 
+                                            type="number"
+                                            name="daysForLapsed"
+                                            min="0"
+                                            max={maximumDaysForLapsed}
+                                            label={labels.daysForLapsed}
+                                            value={inputDaysForLapsed}
+                                            onchange={handleDaysForLapsedChanged}
+                                            message-when-range-overflow={labels.daysForLapsedTooLarge}
+                                            data-id="lapsedDaysInput"
+                                            class="slds-m-bottom_medium"
+                                        >
+                                        </lightning-input>
+                                        <lightning-combobox
+                                            name="lapsedStatus"
+                                            label={labels.setLapsedStatus}
+                                            options={lapsedStatusOption}
+                                            value={inputLapsedStatus}
+                                            onchange={handleLapsedStatusChanged}
+                                        >
+                                        </lightning-combobox>
+                                    </lightning-layout-item>
+                                </template>
+                                <lightning-layout-item size="8" padding="around-medium">
+                                    <lightning-formatted-rich-text value={labels.lapsedDefinition}></lightning-formatted-rich-text>
+                                </lightning-layout-item>
+                            </lightning-layout>
+                        </lightning-layout-item>
+
+                        <lightning-layout-item size="12">
+                            <lightning-layout class="slds-p-top_medium">
+                                <template if:false={isEdit}>
+                                    <template if:false={isEdit}>
+                                        <lightning-layout-item size="4" padding="around-medium">
+                                            <div class="slds-form-element slds-form-element slds-m-bottom_medium">
+                                                <span class="slds-form-element__label" data-id="daysForClosed">{labels.daysForClosed}</span>
+                                                <div class="slds-form-element__control">
+                                                    {numberOfDaysForClosed}
+                                                </div>
+                                            </div>
+                                            <div class="slds-form-element slds-form-element">
+                                                <span class="slds-form-element__label" data-id="closedStatus">{labels.setClosedStatus}</span>
+                                                <div class="slds-form-element__control">
+                                                    {closedStatus}
+                                                </div>
+                                            </div>
+                                        </lightning-layout-item>
+                                    </template>
+                                </template>
+                                <template if:true={isEdit}>
+                                    <lightning-layout-item size="4" padding="around-medium">
+                                        <lightning-input
+                                            type="number"
+                                            name="daysForClosed"
+                                            min={minimumDaysForClosed}
+                                            max={maximumDaysForClosed}
+                                            label={labels.daysForClosed}
+                                            value={inputDaysForClosed}
+                                            onchange={handleDaysForClosedChanged}
+                                            message-when-range-underflow={minimumDaysForClosedErrorMessage}
+                                            data-id="closedDaysInput"
+                                        >
+                                        </lightning-input>
+                                        <lightning-combobox
+                                            name="closedStatus"
+                                            label={labels.setClosedStatus}
+                                            options={closedStatusOption}
+                                            value={inputClosedStatus}
+                                            onchange={handleClosedStatusChanged}
+                                        >
+                                        </lightning-combobox>
+                                    </lightning-layout-item>
+                                </template>
+
+                                <lightning-layout-item size="8" padding="around-medium">
+                                    <lightning-formatted-rich-text value={labels.closedDefinition}></lightning-formatted-rich-text>
+                                </lightning-layout-item>
+                            </lightning-layout>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                    </div>
+                </div>
+            </lightning-layout-item>
+            <lightning-layout-item size="12">
+                <div class="slds-align_absolute-center">
+                    <template if:false={isEdit}>
+                        <lightning-button
+                            label={labels.editButtonLabel}
+                            title={labels.editButtonLabel}
+                            onclick={handleEdit}
+                            data-id="editButton"
+                        >
+                        </lightning-button>
+                    </template>
+                    <template if:true={isEdit}>
+                        <lightning-button
+                            variant="brand"
+                            label={labels.saveButtonLabel}
+                            title={labels.saveButtonLabel}
+                            onclick={handleSave}
+                            disabled={isSaveDisabled}
+                            class="slds-p-right_small"
+                            data-id="saveButton"
+                        >
+                        </lightning-button>
+                        <lightning-button
+                            label={labels.cancelButtonLabel}
+                            title={labels.cancelButtonLabel}
+                            onclick={handleCancel}
+                            data-id="cancelButton"
+                        >
+                        </lightning-button>
+                    </template>
+                </div>
+            </lightning-layout-item>
+        </template>
+    </lightning-layout>
+</template>

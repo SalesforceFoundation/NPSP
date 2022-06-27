@@ -80,6 +80,16 @@ public with sharing class GE_GiftEntryController {
         set;
     }
 
+    private static GE_SettingsService geSettingsService {
+        get {
+            if (geSettingsService == null) {
+                geSettingsService = new GE_SettingsService();
+            }
+            return geSettingsService;
+        }
+        set;
+    }
+
     @AuraEnabled
     public static void addGiftTo(Id dataImportBatchId, InboundGiftDTO inboundGift) {
         try {
@@ -146,8 +156,26 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
+    public static Boolean hasQueueableId(String batchId) {
+        try {
+            return giftBatchService.hasQueueableJob(new GiftBatchId((Id) batchId));
+        } catch (AuraHandledException e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
     public static Map<String, Integer> getGiftBatchTotalsBy(String batchId) {
         return giftBatchService.getGiftBatchTotalsMapFor((Id) batchId);
+    }
+
+    @AuraEnabled
+    public static Boolean isGiftBatchAccessible(Id batchId){
+        try {
+            return giftBatchService.isGiftBatchAccessible(new GiftBatchId(batchId));
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
     }
 
     @AuraEnabled
@@ -180,6 +208,24 @@ public with sharing class GE_GiftEntryController {
     public static Boolean isElevateCustomer() {
         try {
             return new GE_PaymentServices().isElevateCustomer();
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static Boolean isRecurringGiftsEnabled() {
+        try {
+            return GE_SettingsService.getInstance().isRecurringGiftsEnabled();
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static Boolean canMakeGiftsRecurring() {
+        try {
+            return GE_SettingsService.getInstance().canMakeGiftsRecurring();
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
@@ -317,7 +363,7 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled
     public static void processGiftsFor(Id batchId) {
        try {
-           giftBatchService.processGiftsFor(batchId);
+           giftBatchService.processGiftsFor(new GiftBatchId(batchId));
        } catch (Exception ex) {
           throw new AuraHandledException(ex.getMessage());
        }

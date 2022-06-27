@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>View</actionName>
+        <comment>Action override created by Lightning App Builder during activation.</comment>
+        <content>NPSP_Data_Import</content>
+        <formFactor>Large</formFactor>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Flexipage</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Custom object to hold denormalized data records that can be imported into the Nonprofit Success Pack.</description>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <label>NPSP Data Import</label>
+    <nameField>
+        <displayFormat>DI-{000000}</displayFormat>
+        <label>Data Import ID</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>NPSP Data Imports</pluralLabel>
+    <searchLayouts>
+        <customTabListAdditionalFields>%%%NAMESPACE%%%Status__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>%%%NAMESPACE%%%FailureInformation__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>%%%NAMESPACE%%%Contact1_Firstname__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>%%%NAMESPACE%%%Contact1_Lastname__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>%%%NAMESPACE%%%Account1_Name__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>LAST_UPDATE</customTabListAdditionalFields>
+        <excludedStandardButtons>OpenListInQuip</excludedStandardButtons>
+        <excludedStandardButtons>Accept</excludedStandardButtons>
+        <excludedStandardButtons>PrintableListView</excludedStandardButtons>
+        <excludedStandardButtons>MassChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>ChangeOwner</excludedStandardButtons>
+        <excludedStandardButtons>OpenListInQuip</excludedStandardButtons>
+        <listViewButtons>%%%NAMESPACE%%%Import_Selected_Data_Import_Records</listViewButtons>
+        <listViewButtons>%%%NAMESPACE%%%Process_Data_Import</listViewButtons>
+        <listViewButtons>%%%NAMESPACE%%%Delete_All_Data_Import_Records</listViewButtons>
+        <listViewButtons>%%%NAMESPACE%%%Delete_Imported_Data_Import_Records</listViewButtons>
+        <searchFilterFields>OBJECT_ID</searchFilterFields>
+        <searchFilterFields>%%%NAMESPACE%%%Status__c</searchFilterFields>
+        <searchFilterFields>%%%NAMESPACE%%%Contact1_Firstname__c</searchFilterFields>
+        <searchFilterFields>%%%NAMESPACE%%%Contact1_Lastname__c</searchFilterFields>
+        <searchFilterFields>%%%NAMESPACE%%%Account1_Name__c</searchFilterFields>
+        <searchFilterFields>LAST_UPDATE</searchFilterFields>
+        <searchResultsAdditionalFields>%%%NAMESPACE%%%Status__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>%%%NAMESPACE%%%Contact1_Firstname__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>%%%NAMESPACE%%%Contact1_Lastname__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>LAST_UPDATE</searchResultsAdditionalFields>
+        <searchResultsCustomButtons>%%%NAMESPACE%%%Import_Selected_Data_Import_Records</searchResultsCustomButtons>
+        <searchResultsCustomButtons>%%%NAMESPACE%%%Process_Data_Import</searchResultsCustomButtons>
+        <searchResultsCustomButtons>%%%NAMESPACE%%%Delete_All_Data_Import_Records</searchResultsCustomButtons>
+        <searchResultsCustomButtons>%%%NAMESPACE%%%Delete_Imported_Data_Import_Records</searchResultsCustomButtons>
+    </searchLayouts>
+    <sharingModel>ReadWrite</sharingModel>
+    <visibility>Public</visibility>
+</CustomObject>

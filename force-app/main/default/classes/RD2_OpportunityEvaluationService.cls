@@ -201,6 +201,26 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         set;
     }
 
+    private  RD2_StatusAutomationService statusAutomationServce {
+        get {
+            if (statusAutomationServce == null) {
+                statusAutomationServce = new RD2_StatusAutomationService();
+            }
+            return statusAutomationServce;
+        }
+        set;
+    }
+
+    private RD2_UpdateCommitmentBulkService commitmentBulkService {
+        get {
+            if (commitmentBulkService == null) {
+                commitmentBulkService = new RD2_UpdateCommitmentBulkService();
+            }
+            return commitmentBulkService;
+        }
+        set;
+    }
+
     /**
      * @description Recurring Donation Id's to be processed
      */
@@ -377,6 +397,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         List<npe03__Recurring_Donation__c> newOppRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> updateOppRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> closeOppRds = new List<npe03__Recurring_Donation__c>();
+        List<npe03__Recurring_Donation__c> updateElevateRds = new List<npe03__Recurring_Donation__c>();
         List<RD2_RecurringDonation> rdRecords = new List<RD2_RecurringDonation>();
 
         setOldRdListIfNull();
@@ -398,6 +419,25 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 .reviseStatus(currentDate, scheduleService)
                 .reviseNextDonationDate(scheduleService);
 
+            if (isBatchContext) {
+                String statusAutomationStatus;
+                if(statusAutomationServce.shouldMarkRDAsClosed(rdRecord, scheduleService)) {
+                        statusAutomationStatus = rdSettings.statusAutomationClosedValue;
+
+                } else if (statusAutomationServce.shouldMarkRDAsLapsed(rdRecord, scheduleService)) {
+                    statusAutomationStatus = rdSettings.statusAutomationLapsedValue;
+                }
+
+                if (String.isNotBlank(statusAutomationStatus)) {
+                    rdRecord.setStatus(statusAutomationStatus);
+                    if (rdRecord.isElevateRecord()) {
+                        updateElevateRds.add(rd);
+                    } else {
+                        rdRecord.addChangeField(npe03__Recurring_Donation__c.Status__c);
+                    }
+                }
+            }
+
             //evaluate Opportunities
             if (rdRecord.isClosed()
                 || rdRecord.isElevateRecord() && RD2_ElevateIntegrationService.isIntegrationEnabled()) {
@@ -416,7 +456,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
 
         toggleTriggerState(false);
-
+        commitmentBulkService
+            .withCommitments(updateElevateRds)
+            .processCommitments();
+    
         oppService
             .createOpportunities(newOppRDs)
             .updateOpportunities(updateOppRDs, rdIdsWhereScheduleChanged)
@@ -426,6 +469,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         createChangeLog(rdRecords);
 
         toggleTriggerState(true);
+
+        evaluateSustainers();
 
         dbService.processErrors();
 
@@ -480,6 +525,21 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
 
         changeLogService.insertChangeLogRecords();
+    }
+    
+    private void evaluateSustainers() {
+        RD2_SustainerEvaluationService sustainerService = new RD2_SustainerEvaluationService()
+            .withBatchContext(isBatchContext)
+            .withRecurringDonations(rds)
+            .withRecurringDonations(oldRds);
+    
+        if (isBatchContext) {
+            TDTM_Config_API.disableAllTriggers();
+        }
+        RD2_SustainerEvaluationService.setSustainerUpdateEnabled(true);
+        dbService.updateRecords(sustainerService.getContactsWithSustainerChanged());
+        dbService.updateRecords(sustainerService.getAccountsWithSustainerChanged());
+        RD2_SustainerEvaluationService.setSustainerUpdateEnabled(false);
     }
 
     /**

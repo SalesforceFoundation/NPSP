@@ -5,7 +5,7 @@ project:
     package:
         name: Nonprofit Success Pack
         namespace: npsp
-        api_version: 48.0
+        api_version: 53.0
         install_class: STG_InstallScript
         uninstall_class: STG_UninstallScript
     git:
@@ -98,6 +98,14 @@ tasks:
             path: unpackaged/config/trial
             namespace_inject: $project_config.project__package__namespace
 
+    deploy_tso_config:
+        description: Deploys the post-install configuration for a trial/new org.
+        class_path: cumulusci.tasks.salesforce.Deploy
+        group: Salesforce Metadata
+        options:
+            path: unpackaged/config/trial_tso
+            namespace_inject: $project_config.project__package__namespace
+
     deploy_pmm_trial_config:
         description: Deploys the PMM customizations for the trial metadata. PMM must be installed.
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -112,6 +120,14 @@ tasks:
         group: Salesforce Metadata
         options:
             path: unpackaged/config/qa
+            namespace_inject: $project_config.project__package__namespace
+
+    deploy_gift_entry_unmanaged:
+        description: Deploys additional metadata for use with Gift Entry
+        class_path: cumulusci.tasks.salesforce.Deploy
+        group: Salesforce Metadata
+        options:
+            path: unpackaged/gift_entry
             namespace_inject: $project_config.project__package__namespace
 
     retrieve_qa_config:
@@ -247,7 +263,7 @@ tasks:
                 outputdir: robot/Cumulus/results
 
     test_insert_performance:
-        description: Runs Robot Framework performance tests for BDI Complex Objects
+        description: Runs Robot Framework performance tests for Record Insertion
         class_path: cumulusci.tasks.robotframework.Robot
         group: Performance Tests
         options:
@@ -582,6 +598,8 @@ tasks:
                     - NPSP_Engagement_Plan_Record_Page
                     - NPSP_GAU_Allocation
                     - NPSP_General_Accounting_Unit
+                Class:
+                    - SfdoLogUtils
 
     enable_pilot_in_scratch_org:
         description: Initialize the PilotEnabled Feature Parameter override in a Scratch Org environment
@@ -592,6 +610,13 @@ tasks:
                 %%%NAMESPACE%%%Error_Settings__c errSettings = %%%NAMESPACE%%%Error_Settings__c.getOrgDefaults();
                 errSettings.%%%NAMESPACE%%%OverrideFeature_PilotEnabled__c = true;
                 upsert errSettings;
+
+    deploy_core_mock_classes:
+        description: Deploy mock apex class(9)es) that will prevent compilation errors when the packaged code references file-based apex in the core stack for instrumentation purposes
+        class_path: cumulusci.tasks.salesforce.Deploy
+        group: Salesforce Metadata
+        options:
+            path: unpackaged/config/core_instrumentation_mock_classes
 
     run_tests:
         options:
@@ -736,8 +761,30 @@ tasks:
         description: Set the BDI Mapping mode to 'Help Text' or 'Data Import Field Mapping'
         class_path: tasks.set_BDI_mapping_mode.SetBDIMappingMode
 
+    prepare_unlocked_package_source:
+        description: Munge source code to be buildable as an Unlocked Package
+        class_path: cumulusci.tasks.util.FindReplace
+        options:
+            find: SfdoLogUtils
+            replace: SfdoLogUtilsUnlocked
+            path: force-app/main
+            file_pattern:
+                - "*.cls"
 
 flows:
+    build_unlocked_test_package:
+        steps:
+            0:
+                task: command
+                options:
+                    command: |
+                        cp unpackaged/config/core_instrumentation_mock_classes/classes/SfdoLogUtils.cls \
+                        force-app/main/default/classes/SfdoLogUtilsUnlocked.cls && \
+                        cp unpackaged/config/core_instrumentation_mock_classes/classes/SfdoLogUtils.cls-meta.xml \
+                        force-app/main/default/classes/SfdoLogUtilsUnlocked.cls-meta.xml
+            0.1:
+                task: prepare_unlocked_package_source
+
     install_regression:
         steps:
             1:
@@ -824,6 +871,7 @@ flows:
                 task: update_admin_profile
             9:
                 task: test_data_relationships
+                ignore_failure: true
             10:
                 task: deploy_reports
             11:
@@ -835,6 +883,12 @@ flows:
                 options:
                     api_names: QA,Gift_Entry
 
+    deploy_unmanaged:
+        description: Override to the deploy_unmanaged flow to force a mock apex class to be deployed that will prevent compilation errors when the packaged code references file-based apex in the core stack for instrumentation purposes.
+        steps:
+            2.1:
+                when: not org_config.namespace
+                task: deploy_core_mock_classes
 
     qa_org_namespaced:
         description: Execute the qa_org flow against a namespaced scratch org and patch help text.
@@ -855,6 +909,51 @@ flows:
             2:
                 flow: config_regression
             3:
+                task: update_admin_profile
+
+    qa_org_unlocked:
+        steps:
+            2:
+                flow: config_regression
+
+    ci_feature_2gp_trial:
+        steps:
+            1:
+                flow: install_2gp_commit
+            2:
+                flow: config_apextest
+            3:
+                flow: config_trial
+            4:
+                task: run_tests
+
+    config_trial_org:
+        steps:
+            1:
+                flow: dependencies
+            2:
+                task: install_managed
+            3:
+                task: deploy_post
+            4:
+                task: deploy_tso_config
+            5:
+                task: test_data_relationships
+                ignore_failure: true
+            6:
+                task: deploy_trial_translations
+            7:
+                task: deploy_reports
+            8:
+                flow: enable_rd2
+            9:
+                flow: enable_gift_entry
+            10:
+                task: execute_anon
+                options:
+                    path: scripts/trial/TrialCustomSettingsDefaults.cls
+                    apex: updateCustomSettingsDefaults();
+            11:
                 task: update_admin_profile
 
     config_trial:
@@ -919,6 +1018,45 @@ flows:
             2:
                 task: update_admin_profile
 
+    enable_gift_entry:
+        description: Enable the Gift Entry feature.
+        group: NPSP
+        steps:
+            1:
+                flow: enable_advanced_mapping
+            2:
+                task: execute_anon
+                options:
+                    apex: >
+                        String namespace = ('%%%NAMESPACE%%%').replace('__','');
+                        Type t = Type.forName(namespace, 'Callable_Api');
+                        Callable apiClass = (Callable)t.newInstance();
+                        apiClass.call('settings.enablegiftentry', null);
+
+    enable_advanced_mapping:
+        description: Enable the BDI Advanced Mapping feature.
+        group: NPSP
+        steps:
+            1:
+                task: execute_anon
+                options:
+                    apex: >
+                        String namespace = ('%%%NAMESPACE%%%').replace('__','');
+                        Type t = Type.forName(namespace, 'Callable_Api');
+                        Callable apiClass = (Callable)t.newInstance();
+                        apiClass.call('settings.enableadvancedmapping', null);
+            2:
+                task: custom_settings_value_wait
+                options:
+                    object: "%%%NAMESPACE%%%Data_Import_Settings__c"
+                    field: "%%%NAMESPACE%%%Field_Mapping_Method__c"
+                    value: "Data Import Field Mapping"
+
+    enable_rd2_managed:
+        steps:
+            1: 
+                flow: enable_rd2
+
     enable_rd2:
         description: 'Fully configures and enables a Scratch org with Enhanced Recurring Donations (unmanaged code only)'
         group: NPSP
@@ -973,25 +1111,6 @@ flows:
                 # Wait until after the data migration job has completed
                 options:
                     class_name: RD2_DataMigration_BATCH
-
-    enable_rd2_managed:
-        description: 'Fully configures and enables a Scratch org with Enhanced Recurring Donations (managed package only)'
-        group: NPSP
-        steps:
-            1:
-                flow: enable_rd2
-                options:
-                    enable_crlp:
-                        managed: true
-                        param1: false
-                    custom_settings_value_wait:
-                        managed: true
-                    execute_anon:
-                        managed: true
-                        unmanaged: false
-                    deploy_rd2_config:
-                        managed: true
-                        unmanaged: false
 
     config_managed:
         steps:
@@ -1101,6 +1220,7 @@ flows:
                 flow: config_trial
             5:
                 task: test_data_relationships
+                ignore_failure: true
             6:
                 task: deploy_reports
             7:
@@ -1282,6 +1402,8 @@ flows:
                                 - Error__c.All
                                 - Grant_Deadline__c.All
                                 - Trigger_Handler__c.All_Triggers
+                            Class:
+                                - SfdoLogUtils
             2.7:
                 task: deploy_rd2_config
                 ## It's necessary to redeploy the RD2 config after deploying the "packaged" unmanaged code to
@@ -1577,6 +1699,59 @@ flows:
                 options:
                     path: ["force-app/main/default/featureParameters/Data_CountGERowsLast30DaysBatch.featureParameterInteger-meta.xml",
                             "force-app/main/default/featureParameters/P10_Application_Date.featureParameterDate-meta.xml"]
+
+    robot_stable_no_rd2:
+        description: Runs all stable robot tests except those tagged "feature:RD2"
+        steps:
+            1:
+                task: robot
+                options:
+                    vars: 'BROWSER:headlesschrome,TIMEOUT:180.0'
+                    exclude: unstable,deprecated,feature:RD2
+
+    robot_stable_rd2:
+        description: Runs stable robot tests tagged "feature:RD2"
+        steps:
+            1:
+                task: robot
+                options:
+                    vars: 'BROWSER:headlesschrome,TIMEOUT:180.0'
+                    exclude: unstable,deprecated
+                    include: feature:RD2
+
+    robot_stable_all:
+        description: Runs all stable robot tests except those tagged "feature:RD2", then enables RD2 and runs those tagged "feature:RD2"
+        steps:
+            1:
+                task: robot
+                ignore_failure: true
+                options:
+                    vars: 'BROWSER:headlesschrome,TIMEOUT:180.0'
+                    exclude: unstable,deprecated,feature:RD2
+                    options:
+                        outputdir: robot/Cumulus/results
+                        output: output1.xml
+                        log: log1.html
+                        report: report1.html
+            2:
+                flow: enable_rd2
+            3:
+                task: robot
+                ignore_failure: true
+                options:
+                    vars: 'BROWSER:headlesschrome,TIMEOUT:180.0'
+                    exclude: unstable,deprecated
+                    include: feature:RD2
+                    options:
+                        outputdir: robot/Cumulus/results
+                        output: output2.xml
+                        log: log2.html
+                        report: report2.html
+            4:
+                task: command
+                ignore_failure: true
+                options:
+                    command: python3 -m robot.rebot --outputdir robot/Cumulus/results --output output.xml robot/Cumulus/results/output1.xml robot/Cumulus/results/output2.xml
 
 orgs:
     scratch:

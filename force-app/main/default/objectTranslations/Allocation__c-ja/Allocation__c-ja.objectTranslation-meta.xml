@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label>割り当ての追加項目の管理</label>
+        <name>ManageAllocationsAdditionalFields</name>
+    </fieldSets>
     <webLinks>
         <name>Manage_Allocations</name>
         <label>割り当ての管理</label>

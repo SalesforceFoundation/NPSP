@@ -38,6 +38,7 @@ public with sharing class UTIL_Http_TEST {
     public static final String BAD_REQUEST_MESSAGE = 'Unauthorized endpoint, please check Setup->Security->Remote site settings.';
     public static final String MESSAGE_DATA_CONFLICT = 'Conflict';
     public static final String MESSAGE_NOT_FOUND = '404 /external/objects';
+    public static final String MESSAGE_UNPROCESSABLE = '422 Unprocessable Entity';
 
     /**
     * @description Verifies response is correctly formatted based on HttpResponse
@@ -159,6 +160,9 @@ public with sharing class UTIL_Http_TEST {
         Integer statusCode;
         String status;
         String body;
+        String requestBody;
+        Integer calloutCounter = 0;
+        HttpRequest request;
 
         /**
         * @description Constructor
@@ -205,6 +209,8 @@ public with sharing class UTIL_Http_TEST {
         * @return HttpResponse
         */
         public HttpResponse respond(HttpRequest request) {
+            this.request = request;
+            this.calloutCounter++;
             HttpResponse response = new HttpResponse();
             response.setHeader('Content-Type', 'application/json');
             response.setStatusCode(statusCode);
@@ -216,6 +222,14 @@ public with sharing class UTIL_Http_TEST {
 
             return response;
         }
+
+        public String getRequestBody() {
+            return this.request.getBody();
+        }
+
+        public Integer getCalloutCounter() {
+            return calloutCounter;
+        }
     }
 
     // Helpers
@@ -225,11 +239,12 @@ public with sharing class UTIL_Http_TEST {
      * @description Simulates a success callout response
      * @return void
      */
-    public static void mockSuccessCalloutResponse(String responseBody) {
+    public static CalloutMock mockSuccessCalloutResponse(String responseBody) {
         CalloutMock callout = new CalloutMock()
             .withBody(responseBody);
 
         Test.setMock(HttpCalloutMock.class, callout);
+        return callout;
     }
 
     /****
@@ -270,40 +285,51 @@ public with sharing class UTIL_Http_TEST {
      * @description Stubs a "not found" callout response
      * @return void
      */
-    public static void mockNotFoundCalloutResponse() {
+    public static CalloutMock mockNotFoundCalloutResponse() {
         String responseBody = '{"errors":[{'
             + '"message":"' + MESSAGE_NOT_FOUND
             + '","localizedPaymentsMessage":"' + MESSAGE_NOT_FOUND
             + '"}]}';
 
-        mockErrorCalloutResponse(UTIL_Http.STATUS_CODE_NOT_FOUND, UTIL_Http.STATUS_NOT_FOUND, responseBody);
+        return mockErrorCalloutResponse(UTIL_Http.STATUS_CODE_NOT_FOUND, UTIL_Http.STATUS_NOT_FOUND, responseBody);
     }
 
     /**
      * @description Stubs a "not found" callout response
      * @return void
      */
-    public static void mockDataConflictCalloutResponse() {
+    public static CalloutMock mockDataConflictCalloutResponse() {
         String responseBody = '{"errors":[{'
             + '"message":"' + MESSAGE_DATA_CONFLICT
             + '","localizedPaymentsMessage":"' + MESSAGE_DATA_CONFLICT
             + '","detailedMessage":"' + MESSAGE_DATA_CONFLICT
             + '"}]}';
 
-        mockErrorCalloutResponse(UTIL_Http.STATUS_CODE_CONFLICT, UTIL_Http.STATUS_CONFLICT, responseBody);
+        return mockErrorCalloutResponse(UTIL_Http.STATUS_CODE_CONFLICT, UTIL_Http.STATUS_CONFLICT, responseBody);
+    }
+
+    public static CalloutMock mockDataUnprocessableResponse() {
+        String responseBody = '{"errors":[{'
+            + '"message":"' + MESSAGE_UNPROCESSABLE
+            + '","localizedPaymentsMessage":"' + MESSAGE_UNPROCESSABLE
+            + '","detailedMessage":"' + MESSAGE_UNPROCESSABLE
+            + '"}]}';
+
+        return mockErrorCalloutResponse(UTIL_Http.STATUS_CODE_UNPROCESSABLE_ENTITY, UTIL_Http.STATUS_UNPROCESSABLE_ENTITY, responseBody);
     }
 
     /**
      * @description Simulates an error callout response
      * @return void
      */
-    public static void mockErrorCalloutResponse(Integer statusCode, String status, String responseBody) {
+    public static CalloutMock mockErrorCalloutResponse(Integer statusCode, String status, String responseBody) {
         CalloutMock callout = new CalloutMock()
             .withStatusCode(statusCode)
             .withStatus(status)
             .withBody(responseBody);
 
         Test.setMock(HttpCalloutMock.class, callout);
+        return callout;
     }
 
 }

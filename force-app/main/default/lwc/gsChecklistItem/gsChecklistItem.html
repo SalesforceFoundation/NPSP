@@ -3,6 +3,7 @@
         <lightning-input type="checkbox" 
             class="item-checkbox"
             label="" 
+            aria-label={item.title}
             data-id={item.id} 
             onchange={onChange} checked={item.checked}>
         </lightning-input>
@@ -11,7 +12,7 @@
         </div>
         <div class="card-content">
             <p class="content-time">{item.extraInfo}</p>
-            <h1 class="content-title">{item.title}</h1>
+            <h3 class="content-title">{item.title}</h3>
             <div  class="content-text">
                {item.description}
             </div>
@@ -19,7 +20,8 @@
                 <a if:true={hasLink} 
                    class="slds-m-right_x-small"
                    href={item.link.href} 
-                   target="_blank">
+                   target="_blank"
+                   aria-label={linkLabel}>
                     {item.link.label}
                 </a>
                 <div class="content-footer-aux"
@@ -28,14 +30,16 @@
                         variant="brand-outline"
                         onclick={onClickSecondaryBtn}
                         title={item.secondaryBtn.label}
-                        label={item.secondaryBtn.label}>
+                        label={item.secondaryBtn.label}
+                        aria-label={secondaryBtnLabel}>
                     </lightning-button>
                     <lightning-button if:true={hasPrimaryBtn}
                         variant="brand"
                         class="slds-m-left_x-small"
                         onclick={onClickPrimaryBtn}
                         title={item.primaryBtn.label}
-                        label={item.primaryBtn.label}>
+                        label={item.primaryBtn.label}
+                        aria-label={primaryBtnLabel}>
                     </lightning-button>
                 </div>
             </div>

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label>EP-Vorlagenverwaltung-FS</label>
+        <name>ManageEPTemplateFS</name>
+    </fieldSets>
     <webLinks>
         <name>Manage_Template</name>
         <label>Vorlage verwalten</label>

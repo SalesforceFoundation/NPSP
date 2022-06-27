@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Sustainer__c</name>
+    <help>Geeft aan of deze contactpersoon een actieve, verstreken of voormalige terugkerende donateur was. De waarde wordt gebaseerd op de status van de gerelateerde terugkerende donaties.</help>
+    <label>Toegewijd</label>
+    <picklistValues>
+        <masterLabel>Active</masterLabel>
+        <translation>Actief</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Lapsed</masterLabel>
+        <translation>Verstreken</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Former</masterLabel>
+        <translation>Voormalig</translation>
+    </picklistValues>
+</CustomFieldTranslation>

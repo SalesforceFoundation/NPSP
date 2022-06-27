@@ -37,6 +37,9 @@
 */
 public class BDI_Donations {
 
+    public static final String[] campaignImportedFields = new String[]{'npsp__DonationCampaignImported__c',
+                                                                        'DonationCampaignImported__c'};
+
     /*******************************************************************************************************
     * @description constructor for the BDI Donations helper
     * @param bdi The Batch Data Import Service the helper should use
@@ -62,21 +65,36 @@ public class BDI_Donations {
     private Map<Id, npe01__OppPayment__c> paymentsByDataImportId = new Map<Id, npe01__OppPayment__c>();
     
     /*******************************************************************************************************
+    * @description Contact Settings custom setting
+    */
+    private static npe01__Contacts_And_Orgs_Settings__c contactSettings{
+        get {
+            if (contactSettings == null) {
+                contactSettings = UTIL_CustomSettingsFacade.getContactsSettings();
+            }
+            return contactSettings;
+        }
+        set;
+    }
+    /*******************************************************************************************************
     * @description provides a valid Close Won Opportunity Stage
     */
     private static String defaultClosedWonStage {
-        get {   
-            if (defaultClosedWonStage == null){
-                List<OpportunityStage> stages = [
-                    SELECT MasterLabel
-                    FROM OpportunityStage
-                    WHERE IsActive = true
-                        AND IsWon = true
-                ];
-                if (stages.size() > 0) {
-                    defaultClosedWonStage = stages[0].MasterLabel;
+        get {
+            if (defaultClosedWonStage == null) {
+                // contact setting value takes priority
+                if (contactSettings.Payments_Auto_Close_Stage_Name__c != null) {
+                    defaultClosedWonStage = contactSettings.Payments_Auto_Close_Stage_Name__c;
                 } else {
-                    defaultClosedWonStage = '';
+                    // if no stage name is specified in Contact Setting
+                    // then query for the active isWon value and use that
+                    List<OpportunityStage> stages = [
+                            SELECT MasterLabel
+                            FROM OpportunityStage
+                            WHERE IsActive = TRUE
+                            AND IsWon = TRUE
+                    ];
+                    defaultClosedWonStage = stages.size()>0 ? stages[0].MasterLabel : '';
                 }
             }
             return defaultClosedWonStage;
@@ -255,9 +273,8 @@ public class BDI_Donations {
         }
 
         // when we mark Payments paid, ensure they will close our Opp.
-        npe01__Contacts_And_Orgs_Settings__c cs = UTIL_CustomSettingsFacade.getContactsSettings();
-        if (cs.Payments_Auto_Close_Stage_Name__c == null) {
-            cs.Payments_Auto_Close_Stage_Name__c = defaultClosedWonStage;
+        if (contactSettings.Payments_Auto_Close_Stage_Name__c == null) {
+            contactSettings.Payments_Auto_Close_Stage_Name__c = defaultClosedWonStage;
         }
 
         if (elevateDIs.size() > 0) {
@@ -311,10 +328,12 @@ public class BDI_Donations {
     */
     private List<DataImport__c> validateDonationsToProcess(String matchBehavior) {
         List<DataImport__c> dataImportDonations = new List<DataImport__c>();
+
         for (DataImport__c dataImport : bdi.listDI) {
-            Boolean anyDonationFieldsPopulated =
+
+            Boolean anyNonCampaignDonationFieldsPopulated =
                     BDI_DataImportService.anyFieldsPopulatedForObjectMapping(dataImport,
-                            dataImportFieldToOpportunityField);
+                            dataImportFieldToOpportunityField,campaignImportedFields);
             Boolean anyPaymentFieldsPopulated =
                     BDI_DataImportService.anyFieldsPopulatedForObjectMapping(dataImport,dataImportFieldToPaymentField);
 
@@ -323,15 +342,16 @@ public class BDI_Donations {
                continue;
             }
 
-            //If there are no Donation Fields or Payment Fields populated and no donation amount populated then
-            //do not continue with donation processing.
-            if (dataImport.Donation_Amount__c == null && !anyDonationFieldsPopulated && !anyPaymentFieldsPopulated) {
+            // If there are no Donation Fields or Payment Fields populated and no donation amount populated then
+            // do not continue with donation processing. The 'Donation Campaign Imported / Source' field doesn't count since 
+            // that could be populated if a user was just creating a Recurring Donation.
+            if (dataImport.Donation_Amount__c == null && !anyNonCampaignDonationFieldsPopulated && !anyPaymentFieldsPopulated) {
                 continue;
             }
 
             // Skip DIs that have no fields populated for donation and no DonationImported Id, which means they are
             // not new Donations and not in the DI to serve as a parent for a new payment.
-            if (dataImport.DonationImported__c == null && !anyDonationFieldsPopulated) {
+            if (dataImport.DonationImported__c == null && !anyNonCampaignDonationFieldsPopulated) {
                 continue;
             }
 

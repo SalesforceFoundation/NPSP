@@ -1,32 +1,32 @@
-import { LightningElement, api, track, wire } from 'lwc';
-import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
-import { isEmpty, isNull } from 'c/utilCommon';
-import { PERIOD, RECURRING_PERIOD_ADVANCED, RECURRING_TYPE_OPEN, RECURRING_TYPE_FIXED } from 'c/rd2Service';
-import getRecurringSettings from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
-import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
+import { LightningElement, api, track, wire } from "lwc";
+import { getObjectInfo, getPicklistValues } from "lightning/uiObjectInfoApi";
+import { isNull } from "c/utilCommon";
+import { PERIOD, RECURRING_PERIOD_ADVANCED, RECURRING_TYPE_OPEN, RECURRING_TYPE_FIXED } from "c/rd2Service";
 
-import picklistLabelAdvanced from '@salesforce/label/c.RD2_EntryFormPeriodAdvanced';
-import customPeriodHelpText from '@salesforce/label/c.RD2_EntryFormPeriodHelpText';
-import fieldLabelPeriod from '@salesforce/label/c.RD2_EntryFormPeriodLabel';
-import periodPluralDays from '@salesforce/label/c.RD2_EntryFormPeriodPluralDaily';
-import periodPluralMonths from '@salesforce/label/c.RD2_EntryFormPeriodPluralMonthly';
-import periodPluralWeeks from '@salesforce/label/c.RD2_EntryFormPeriodPluralWeekly';
-import periodPluralYears from '@salesforce/label/c.RD2_EntryFormPeriodPluralYearly';
-import fieldLabelEvery from '@salesforce/label/c.RD2_EntryFormScheduleEveryLabel';
+import picklistLabelAdvanced from "@salesforce/label/c.RD2_EntryFormPeriodAdvanced";
+import customPeriodHelpText from "@salesforce/label/c.RD2_EntryFormPeriodHelpText";
+import fieldLabelPeriod from "@salesforce/label/c.RD2_EntryFormPeriodLabel";
+import periodPluralDays from "@salesforce/label/c.RD2_EntryFormPeriodPluralDaily";
+import periodPluralMonths from "@salesforce/label/c.RD2_EntryFormPeriodPluralMonthly";
+import periodPluralWeeks from "@salesforce/label/c.RD2_EntryFormPeriodPluralWeekly";
+import periodPluralYears from "@salesforce/label/c.RD2_EntryFormPeriodPluralYearly";
+import fieldLabelEvery from "@salesforce/label/c.RD2_EntryFormScheduleEveryLabel";
 
-import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
-import FIELD_RECURRING_TYPE from '@salesforce/schema/npe03__Recurring_Donation__c.RecurringType__c';
-import FIELD_PLANNED_INSTALLMENTS from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installments__c';
-import FIELD_INSTALLMENT_PERIOD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
-import FIELD_INSTALLMENT_FREQUENCY from '@salesforce/schema/npe03__Recurring_Donation__c.InstallmentFrequency__c';
-import FIELD_DAY_OF_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.Day_of_Month__c';
-import FIELD_START_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.StartDate__c';
-
+import RECURRING_DONATION_OBJECT from "@salesforce/schema/npe03__Recurring_Donation__c";
+import FIELD_RECURRING_TYPE from "@salesforce/schema/npe03__Recurring_Donation__c.RecurringType__c";
+import FIELD_PLANNED_INSTALLMENTS from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installments__c";
+import FIELD_INSTALLMENT_PERIOD from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c";
+import FIELD_INSTALLMENT_FREQUENCY from "@salesforce/schema/npe03__Recurring_Donation__c.InstallmentFrequency__c";
+import FIELD_DAY_OF_MONTH from "@salesforce/schema/npe03__Recurring_Donation__c.Day_of_Month__c";
+import FIELD_START_DATE from "@salesforce/schema/npe03__Recurring_Donation__c.StartDate__c";
 
 // Constants from RD2_Constants class
-const LAST_DAY_OF_MONTH = 'Last_Day';
+const LAST_DAY_OF_MONTH = "Last_Day";
 
 export default class rd2EntryFormScheduleSection extends LightningElement {
+    @api rd2State;
+
+    @track fields = {};
 
     customLabels = Object.freeze({
         picklistLabelAdvanced,
@@ -36,123 +36,51 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
         periodPluralDays,
         periodPluralMonths,
         periodPluralWeeks,
-        periodPluralYears
+        periodPluralYears,
     });
 
-    isNew = false;
     isRecordReady = false;
     hasError = false;
 
-    @api recordId;
-    @track isLoading = true;
-    @track isAdvancedMode = false;
+    isLoading = true;
 
-    @track showDayOfMonth = true;
-    @track showNumPlannedInstallments = false;
-    @track customPeriod = PERIOD.MONTHLY; // default
-    @track customPeriodAdvancedMode;
-
-    @track fieldInstallmentPeriod = this.customLabels.periodPluralMonths;
-
-    @track fields = {};
-
-    @track inputFieldInstallmentFrequency = 1;
+    customPeriod = PERIOD.MONTHLY; // defaults to monthly, can also be RECURRING_PERIOD_ADVANCED
 
     rdObjectInfo;
-    defaultDayOfMonthValue;
-    defaultInstallmentPeriodValue;
-    recurringType;
 
-    @track disablePeriodPicklistField;
-    @track disableInstallmentFrequencyField;
-    @track hidePeriodPicklistField;
-    @track hideInstallmentFrequencyField;
-
-    @track advancedPeriodPicklistValues;
-
-    @track recurringTypeColumnSize = 6;
-    @track scheduleRowColumnSize = 6;
-
-    /***
-    * @description Init function
-    */
-    connectedCallback() {
-        this.init();
+    get isNew() {
+        return isNull(this.rd2State.recordId);
     }
 
-     /***
-    * @description Get settings required to enable or disable fields and populate their values
-    */
-    init() {
-        if (isNull(this.recordId)) {
-            this.isNew = true;
-            this.updateScheduleFieldVisibility(PERIOD.MONTHLY, PERIOD.MONTHLY);
-            this.updatePlannedInstallmentsVisibility();
-        } else {
-            /**
-             * @description Retrieve the RD Schedule related fields from apex to configure the custom picklist values
-             * and field visibility rules accordingly.
-             */
-            getRecurringData({recordId: this.recordId})
-                .then(response => {
-                    this.customPeriod = response.Period;
-                    this.recurringType = response.RecurringType;
-                    this.inputFieldInstallmentFrequency = response.Frequency;
-                    if (response.Period !== PERIOD.MONTHLY
-                        || (response.Period === PERIOD.MONTHLY && this.inputFieldInstallmentFrequency > 1)
-                    ) {
-                        this.customPeriod = RECURRING_PERIOD_ADVANCED;
-                    }
-                    this.updateScheduleFieldVisibility(this.customPeriod, response.Period);
-                    this.updatePlannedInstallmentsVisibility();
-                })
-                .catch((error) => {
-                    this.hasError = true;
-                    this.dispatchEvent(new CustomEvent('errorevent', { detail: { value: error }}));
-                });
-        }
+    get hidePeriodPicklistField() {
+        return this.shouldHideField(this.rd2State.InstallmentPeriodPermissions);
+    }
 
-        /**
-         * @description Retrieve special RD settings and permissions from Apex that cannot be retrieved effecively here.
-         */
-        getRecurringSettings({ parentId: null })
-            .then(response => {
-                this.disablePeriodPicklistField = this.shouldDisableField(response.InstallmentPeriodPermissions);
-                this.hidePeriodPicklistField = this.shouldHideField(response.InstallmentPeriodPermissions);
+    get disablePeriodPicklistField() {
+        return this.shouldDisableField(this.rd2State.InstallmentPeriodPermissions);
+    }
 
-                this.disableInstallmentFrequencyField = this.shouldDisableField(response.InstallmentFrequencyPermissions);
-                this.hideInstallmentFrequencyField = this.shouldHideField(response.InstallmentFrequencyPermissions);
+    get hideInstallmentFrequencyField() {
+        return this.shouldHideField(this.rd2State.InstallmentFrequencyPermissions);
+    }
 
-                if (isEmpty(this.recurringType)) {
-                    this.recurringType = response.defaultRecurringType;
-                }
-                this.updatePlannedInstallmentsVisibility();
-            })
-            .catch((error) => {
-                // handleError(error);
-            })
-            .finally(() => {
-                this.isLoading = !this.isEverythingLoaded();
-            });
+    get disableInstallmentFrequencyField() {
+        return this.shouldDisableField(this.rd2State.InstallmentFrequencyPermissions);
     }
 
     /**
-    * @description Retrieve Recurring Donation SObject info
-    */
+     * @description Retrieve Recurring Donation SObject info
+     */
     @wire(getObjectInfo, { objectApiName: RECURRING_DONATION_OBJECT.objectApiName })
     wiredRecurringDonationObjectInfo(response) {
         if (response.data) {
             this.rdObjectInfo = response.data;
             this.setFields(this.rdObjectInfo.fields);
-            this.buildFieldDescribes(
-                this.rdObjectInfo.fields,
-                this.rdObjectInfo.apiName
-            );
+            this.buildFieldDescribes();
             this.isLoading = !this.isEverythingLoaded();
-
         } else if (response.error) {
             this.hasError = true;
-            this.dispatchEvent(new CustomEvent('errorevent', { detail: { value: response.error }}));
+            this.dispatchEvent(new CustomEvent("errorevent", { detail: { value: response.error } }));
         }
     }
 
@@ -161,20 +89,26 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      * @returns True (All Done) or False (Still Loading)
      */
     isEverythingLoaded() {
-        return (this.installmentPeriodPicklistValues && this.dayOfMonthPicklistValues && this.isRecordReady
-            && this.rdObjectInfo && !this.hasError);
+        return (
+            this.installmentPeriodPicklistValues &&
+            this.dayOfMonthPicklistValues &&
+            this.isRecordReady &&
+            this.rdObjectInfo &&
+            !this.hasError
+        );
     }
 
     /**
-    * @description Method converts field describe info into objects that the
-    * getRecord method can accept into its 'fields' parameter.
-    */
-    buildFieldDescribes(fields, objectApiName) {
+     * @description Method converts field describe info into objects that the
+     * getRecord method can accept into its 'fields' parameter.
+     */
+    buildFieldDescribes() {
+        const { fields, apiName } = this.rdObjectInfo;
         return Object.keys(fields).map((fieldApiName) => {
             return {
                 fieldApiName: fieldApiName,
-                objectApiName: objectApiName
-            }
+                objectApiName: apiName,
+            };
         });
     }
 
@@ -203,32 +137,9 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
                 apiName: field.apiName,
                 label: field.label,
                 inlineHelpText: field.inlineHelpText,
-                dataType: field.dataType
+                dataType: field.dataType,
             };
-        } catch (error) { }
-    }
-
-    /***
-     * @description Set today's day as default Day of Month value for a new Recurring Donation record, unless
-     * the picklist itself has a default value.
-     */
-    get defaultDayOfMonth() {
-        return (this.isNew && this.dayOfMonthPicklistValues)
-            ? (this.defaultDayOfMonthValue ? this.defaultDayOfMonthValue : this.getCurrentDayOfMonth())
-            : undefined;
-    }
-
-    /**
-     * @description If the default Installment Period is not monthly (the hard-coded default in this UI), then update
-     * the custom picklist field default values accordingly as well as the visibility rules for the fields.
-     */
-    setDefaultInstallmentPeriod() {
-        if (!this.isNew || !this.defaultInstallmentPeriodValue) {
-            return;
-        }
-        if (this.defaultInstallmentPeriodValue !== PERIOD.MONTHLY) {
-            this.updateScheduleFieldVisibility(RECURRING_PERIOD_ADVANCED, this.defaultInstallmentPeriodValue);
-        }
+        } catch (error) {}
     }
 
     /**
@@ -236,7 +147,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      * @returns True to disable entry into the field
      */
     shouldDisableField(fieldPerms) {
-        return (this.isNew ? !fieldPerms.Createable : !fieldPerms.Updateable);
+        return this.isNew ? !fieldPerms.Createable : !fieldPerms.Updateable;
     }
 
     /**
@@ -248,15 +159,12 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     }
 
     /***
-    * @description Retrieve Recurring Donation Day of Month picklist values
-    */
-    @wire(getPicklistValues, { fieldApiName: FIELD_DAY_OF_MONTH, recordTypeId: '$rdObjectInfo.defaultRecordTypeId' })
+     * @description Retrieve Recurring Donation Day of Month picklist values
+     */
+    @wire(getPicklistValues, { fieldApiName: FIELD_DAY_OF_MONTH, recordTypeId: "$rdObjectInfo.defaultRecordTypeId" })
     wiredDayOfMonthPicklistValues({ error, data }) {
         if (data) {
             this.dayOfMonthPicklistValues = data.values;
-            if (data.defaultValue && data.defaultValue.value) {
-                this.defaultDayOfMonthValue = data.defaultValue.value;
-            }
         } else if (error) {
             // Day of Month field likely not visible
             this.dayOfMonthPicklistValues = {};
@@ -265,16 +173,15 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     }
 
     /***
-    * @description Retrieve Recurring Donation Installment Period picklist values
-    */
-    @wire(getPicklistValues, { fieldApiName: FIELD_INSTALLMENT_PERIOD, recordTypeId: '$rdObjectInfo.defaultRecordTypeId' })
+     * @description Retrieve Recurring Donation Installment Period picklist values
+     */
+    @wire(getPicklistValues, {
+        fieldApiName: FIELD_INSTALLMENT_PERIOD,
+        recordTypeId: "$rdObjectInfo.defaultRecordTypeId",
+    })
     wiredInstallmentPeriodPicklistValues({ error, data }) {
         if (data) {
             this.installmentPeriodPicklistValues = data.values;
-            if (data.defaultValue && data.defaultValue.value) {
-                this.defaultInstallmentPeriodValue = data.defaultValue.value;
-                this.setDefaultInstallmentPeriod();
-            }
         } else if (error) {
             // Installment Period field likely not visible
             this.installmentPeriodPicklistValues = {};
@@ -283,20 +190,28 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     }
 
     /***
-    * @description Sets Day of Month to current day for a new Recurring Donation record.
-    * When no match is found, ie today is day 31 in a month, return 'Last_Day' API value.
-    * @return String Current day
-    */
+     * @description Sets Day of Month to current day for a new Recurring Donation record.
+     * When no match is found, ie today is day 31 in a month, return 'Last_Day' API value.
+     * @return String Current day
+     */
     getCurrentDayOfMonth() {
         const currentDay = new Date().getDate().toString();
 
-        const matchingPicklistValue = this.dayOfMonthPicklistValues.find(({value}) => {
+        const matchingPicklistValue = this.dayOfMonthPicklistValues.find(({ value }) => {
             return value === currentDay;
         });
 
-        return (matchingPicklistValue)
-            ? matchingPicklistValue.value
-            : LAST_DAY_OF_MONTH;
+        return matchingPicklistValue ? matchingPicklistValue.value : LAST_DAY_OF_MONTH;
+    }
+
+    handleDayOfMonthChange(event) {
+        const dayOfMonth = event.target.value;
+        this.dispatchEvent(new CustomEvent("dayofmonthchange", { detail: dayOfMonth }));
+    }
+
+    handleStartDateChange(event) {
+        const startDate = event.target.value;
+        this.dispatchEvent(new CustomEvent("startdatechange", { detail: startDate }));
     }
 
     /**
@@ -304,14 +219,9 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      * @param event
      */
     handleRecurringTypeChange(event) {
-        this.recurringType = event.target.value;
-        this.updatePlannedInstallmentsVisibility();
-
+        const recurringType = event.target.value;
         // Notify the main entry form about the Recurring Type value change
-        this.dispatchEvent(new CustomEvent(
-            'typechange', 
-            { detail: { 'recurringType': this.recurringType }}
-        ));
+        this.dispatchEvent(new CustomEvent("typechange", { detail: recurringType }));
     }
 
     /**
@@ -320,12 +230,8 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      * @param event
      */
     handleRecurringPeriodChange(event) {
-        let recurringPeriod = event.target.value;
-        this.updateScheduleFieldVisibility(recurringPeriod, this.customPeriodAdvancedMode);
-        this.dispatchEvent(new CustomEvent(
-            'periodtypechange',
-            { detail: { periodType: recurringPeriod }}
-        ));
+        const recurringPeriod = event.target.value;
+        this.dispatchEvent(new CustomEvent("periodtypechange", { detail: recurringPeriod }));
     }
 
     /**
@@ -335,71 +241,49 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      */
     handleAdvancedPeriodChange(event) {
         const period = event.target.value;
-        this.updateScheduleFieldVisibility(this.customPeriod, period);
-        this.dispatchEvent(new CustomEvent(
-            'periodchange',
-            { detail: { period }}
-        ));
+        this.dispatchEvent(new CustomEvent("periodchange", { detail: period }));
     }
 
     /**
      * @description When the frequency changes, we need to check if the Annual Value changed
      * @param event
      */
-     handleRecurringFrequencyChange(event) {
-        this.dispatchEvent(new CustomEvent('frequencychange'));
+    handleRecurringFrequencyChange(event) {
+        this.dispatchEvent(new CustomEvent("frequencychange", { detail: event.target.value }));
     }
 
     /**
      * @description When the installments change, we need to check if the Annual Value changed
      * @param event
      */
-     onHandlePlannedInstallmentsChange(event) {
-        this.dispatchEvent(new CustomEvent('installmentschange'));
+    handlePlannedInstallmentsChange(event) {
+        this.dispatchEvent(new CustomEvent("installmentschange", { detail: event.target.value }));
     }
 
-    /**
-     * @description Set the various properties to control field visibility, how many fields appear in each row
-     * and other rules based on the selected InstallmentPeriod value.
-     * @param customPeriod Monthly or Advanced
-     * @param advancedPeriod Monthly, Weekly, Daily, Yearly or 1st and 15th
-     */
-    updateScheduleFieldVisibility(customPeriod, advancedPeriod) {
-        this.customPeriod = customPeriod;
-        this.customPeriodAdvancedMode = advancedPeriod;
-
-        if (customPeriod === PERIOD.MONTHLY) {
-            this.isAdvancedMode = false;
-            this.showDayOfMonth = true;
-            this.scheduleRowColumnSize = 6;
-
-        } else if (customPeriod === RECURRING_PERIOD_ADVANCED) {
-            this.isAdvancedMode = true;
-            this.showDayOfMonth = (this.customPeriodAdvancedMode === PERIOD.MONTHLY);
-            this.scheduleRowColumnSize = (this.showDayOfMonth ? 3 : 4);
-
-            if (advancedPeriod === PERIOD.MONTHLY) {
-                this.showDayOfMonth = true;
-                this.scheduleRowColumnSize = 3;
-            } else {
-                this.showDayOfMonth = false;
-                this.scheduleRowColumnSize = 4;
-            }
-        }
+    get _showDayOfMonth() {
+        return this.rd2State.recurringPeriod === PERIOD.MONTHLY;
     }
 
-    /**
-     * @description Update the visibility of the Planned Installments field based on the Recurring Type
-     * @param recurringType
-     */
-    updatePlannedInstallmentsVisibility() {
-        if (this.recurringType === RECURRING_TYPE_FIXED) {
-            this.showNumPlannedInstallments = true;
-            this.recurringTypeColumnSize = 4;
+    get _scheduleRowColumnSize() {
+        if (this.rd2State.periodType === PERIOD.MONTHLY) {
+            return 6;
+        } else if (this.rd2State.recurringPeriod === PERIOD.MONTHLY) {
+            return 3;
         } else {
-            this.showNumPlannedInstallments = false;
-            this.recurringTypeColumnSize = 6;
+            return 4;
         }
+    }
+
+    get _isAdvancedMode() {
+        return this.rd2State.periodType === RECURRING_PERIOD_ADVANCED;
+    }
+
+    get _recurringTypeColumnSize() {
+        return this.rd2State.recurringType === RECURRING_TYPE_FIXED ? 4 : 6;
+    }
+
+    get _showNumPlannedInstallments() {
+        return this.rd2State.recurringType === RECURRING_TYPE_FIXED;
     }
 
     /**
@@ -409,12 +293,11 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
         let monthlyLabel = PERIOD.MONTHLY;
 
         // Get the translated labels for Monthly if there is one
-        this.installmentPeriodPicklistValues
-            .forEach(pl => {
-                if (pl.value === PERIOD.MONTHLY) {
-                    monthlyLabel = pl.label;
-                }
-            });
+        this.installmentPeriodPicklistValues.forEach((pl) => {
+            if (pl.value === PERIOD.MONTHLY) {
+                monthlyLabel = pl.label;
+            }
+        });
 
         return [
             { label: monthlyLabel, value: PERIOD.MONTHLY },
@@ -428,39 +311,20 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      * this Picklist on this UI.
      */
     get advancedPeriodOptions() {
-        let advancedPeriodPicklistValues = [];
-        this.installmentPeriodPicklistValues
-            .forEach(pl => {
-                switch (pl.value) {
-                    case PERIOD.DAILY:
-                        advancedPeriodPicklistValues.push(
-                            {label: this.customLabels.periodPluralDays, value: pl.value}
-                        );
-                        break;
-                    case PERIOD.WEEKLY:
-                        advancedPeriodPicklistValues.push(
-                            {label: this.customLabels.periodPluralWeeks, value: pl.value}
-                        );
-                        break;
-                    case PERIOD.MONTHLY:
-                        advancedPeriodPicklistValues.push(
-                            {label: this.customLabels.periodPluralMonths, value: pl.value}
-                        );
-                        break;
-                    case PERIOD.YEARLY:
-                        advancedPeriodPicklistValues.push(
-                            {label: this.customLabels.periodPluralYears, value: pl.value}
-                        );
-                        break;
-                    case PERIOD.FIRST_AND_FIFTEENTH:
-                        advancedPeriodPicklistValues.push(
-                            {label: pl.label, value: pl.value}
-                        );
-                        break;
-                }
-
-            });
-        return advancedPeriodPicklistValues;
+        return this.installmentPeriodPicklistValues.map(({ label, value }) => {
+            switch (value) {
+                case PERIOD.DAILY:
+                    return { label: this.customLabels.periodPluralDays, value };
+                case PERIOD.WEEKLY:
+                    return { label: this.customLabels.periodPluralWeeks, value };
+                case PERIOD.MONTHLY:
+                    return { label: this.customLabels.periodPluralMonths, value };
+                case PERIOD.YEARLY:
+                    return { label: this.customLabels.periodPluralYears, value };
+                default:
+                    return { label, value };
+            }
+        });
     }
 
     /**
@@ -468,18 +332,9 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      */
     @api
     reset() {
-        this.template.querySelectorAll('lightning-input-field')
-            .forEach(field => {
-                field.reset();
-            });
-    }
-
-    /**
-     * Populates the Schedule form fields based on provided data
-     */
-    @api
-    load(data) {
-        //TODO, what is the format of "data"?
+        this.template.querySelectorAll("lightning-input-field").forEach((field) => {
+            field.reset();
+        });
     }
 
     /**
@@ -490,39 +345,19 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     isValid() {
         let isValid = true;
 
-        this.template.querySelectorAll('lightning-input-field')
-            .forEach(field => {
-                if (!field.reportValidity()) {
-                    isValid = false;
-                }
-            });
+        this.template.querySelectorAll("lightning-input-field").forEach((field) => {
+            if (!field.reportValidity()) {
+                isValid = false;
+            }
+        });
 
-        this.template.querySelectorAll('.advanced-mode-fields')
-            .forEach(field => {
-                if (!field.reportValidity()) {
-                    isValid = false;
-                }
-            });
+        this.template.querySelectorAll(".advanced-mode-fields").forEach((field) => {
+            if (!field.reportValidity()) {
+                isValid = false;
+            }
+        });
 
         return isValid;
-    }
-
-    /***
-     * @description Returns value of the Recurring Type field
-     */
-    @api
-    getRecurringType() {
-        const recurringType = this.template.querySelector(`lightning-input-field[data-id='${FIELD_RECURRING_TYPE.fieldApiName}']`);
-        
-        return recurringType ? recurringType.value : null;
-    }
-
-
-    @api
-    getInstallmentPeriod() {
-        const installmentPeriod = this.template.querySelector(`lightning-combobox[data-id='installmentPeriod']`);
-
-        return installmentPeriod ? installmentPeriod.value : null;
     }
 
     /**
@@ -534,32 +369,30 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
         let data = {};
 
         // Standard Input Fields
-        this.template.querySelectorAll('lightning-input-field')
-            .forEach(field => {
-                data[field.fieldName] = field.value;
-            });
+        this.template.querySelectorAll("lightning-input-field").forEach((field) => {
+            data[field.fieldName] = field.value;
+        });
 
         // Overridden inputs using lighting-input or lightning-combobox
-        this.template.querySelectorAll('.advanced-mode-fields')
-            .forEach(input => {
-                switch (input.name) {
-                    case 'installmentFrequency':
-                        data[this.fields.installmentFrequency.apiName] = input.value;
-                        break;
-                    case 'CustomPeriodSelect':
-                        if (!this.isAdvancedMode) {
-                            data[this.fields.period.apiName] = input.value;
-                        }
-                        break;
-                    case 'advancedPeriodSelect':
-                        if (this.isAdvancedMode) {
-                            data[this.fields.period.apiName] = input.value;
-                        }
-                        break;
-                }
-            });
+        this.template.querySelectorAll(".advanced-mode-fields").forEach((input) => {
+            switch (input.name) {
+                case "installmentFrequency":
+                    data[this.fields.installmentFrequency.apiName] = input.value;
+                    break;
+                case "CustomPeriodSelect":
+                    if (!this._isAdvancedMode) {
+                        data[this.fields.period.apiName] = input.value;
+                    }
+                    break;
+                case "advancedPeriodSelect":
+                    if (this._isAdvancedMode) {
+                        data[this.fields.period.apiName] = input.value;
+                    }
+                    break;
+            }
+        });
 
-        if(data[this.fields.recurringType.apiName] === RECURRING_TYPE_OPEN) {
+        if (data[this.fields.recurringType.apiName] === RECURRING_TYPE_OPEN) {
             data[this.fields.plannedInstallments.apiName] = null;
         }
 
@@ -567,25 +400,32 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     }
 
     /**
-    * @description run init function 
-    */
-    @api
-    forceRefresh() {
-       this.init();
-    }
-
-    /**
-    * @description reset all lighning-input-field value 
-    */
+     * @description reset all lighning-input-field value
+     */
     @api
     resetValues() {
-        this.template.querySelectorAll('lightning-input-field')
-            .forEach(field => {
-                if (field.value) {
-                    field.reset();
-                }
-            });
+        this.template.querySelectorAll("lightning-input-field").forEach((field) => {
+            if (field.value) {
+                field.reset();
+            }
+        });
         this.isLoading = true;
     }
-        
+
+
+    /** Deprecated API properties */
+    @api recordId;
+
+    @api
+    load() {}
+
+    @api
+    getRecurringType() {}
+
+    @api
+    getInstallmentPeriod() {}
+
+    @api
+    forceRefresh() {}
+    
 }

@@ -47,7 +47,7 @@ private class GiftBatch_TEST {
 
         System.assert(elevateBatchServiceMock.enqueuePaymentCaptureJobForCalled);
         System.assert(authorizedGifts.giftsToUpdate.size() == numberOfGifts);
-        for (DataImport__c gift : authorizedGifts.giftsToUpdate) {
+        for (DataImport__c gift : authorizedGifts.giftsToUpdate.values()) {
             System.assertEquals(ElevateTransactionStatus.PAYMENTPROCESSING.name(), gift.Payment_Status__c);
         }
     }
@@ -66,7 +66,7 @@ private class GiftBatch_TEST {
         giftBatch.failGiftsWithReason(buildFailReasonByElevateBatchId(numberOfGifts));
 
         System.assert(authorizedGifts.giftsToUpdate.size() == numberOfGifts);
-        for (DataImport__c gift : authorizedGifts.giftsToUpdate) {
+        for (DataImport__c gift : authorizedGifts.giftsToUpdate.values()) {
             System.assertEquals(ElevateTransactionStatus.RETRYABLEERROR.name(), gift.Payment_Status__c);
             System.assertEquals('DUMMY FAIL REASON', gift.FailureInformation__c);
         }
@@ -148,7 +148,7 @@ private class GiftBatch_TEST {
             .build();
         DataImport__c dummyDataImport = new DataImport__c(
             Donation_Amount__c = 33.33,
-            Additional_Object_JSON__C = additionalObjectStringWithSoftCredits
+            Additional_Object_JSON__c = additionalObjectStringWithSoftCredits
         );
         Gift dummyGift = new Gift(dummyDataImport);
         GiftBatch dummyGiftBatch = new GiftBatch();
@@ -161,41 +161,129 @@ private class GiftBatch_TEST {
         System.assertEquals(3, dummyGiftBatch.gifts().findBy(new GiftId(dummyGift.id())).softCredits().size());
     }
 
-    @isTest
-    static void shouldNotAttemptToCaptureElevatePaymentsWhenServiceUnavailable() {
-        GiftsMock giftsMock = new GiftsMock();
-        GiftBatch giftBatch = new GiftBatch(stubFor(giftsMock));
+    @IsTest
+    static void shouldUpdateProcessingGiftsInAbortedBatchesToFailed() {
+        GiftBatch giftBatch = new GiftBatch();
+        giftBatch.giftBatchId = DUMMY_GIFT_BATCH_ID;
+        giftBatch.gifts = new Gifts();
+        giftBatch.gifts.dataImportsById = buildDataImportsByIds(DUMMY_GIFT_BATCH_ID.value());
+        giftBatch.gifts.giftsToUpdate = new Map<Id, DataImport__c>();
+        giftBatch.asyncApexJob =  new TestAsyncApexJob()
+            .withStatus(UTIL_BatchJobService.ApexJobStatus.ABORTED.name())
+            .build();
 
-        PS_IntegrationServiceConfigMock integrationServiceConfigMock =
-            new PS_IntegrationServiceConfigMock(false);
-        giftBatch.paymentIntegrationServiceConfig = stubFor(integrationServiceConfigMock);
+        System.assert(giftBatch.canBeEnqueued());
+        System.assert(giftBatch.hasStandardGiftsToResolve());
 
-        ElevateBatchServiceMock elevateBatchServiceMock = new ElevateBatchServiceMock();
-        giftBatch.elevateBatchService = stubFor(elevateBatchServiceMock);
+        giftBatch.resolveStandardGiftsRemainingInProcessing();
 
-        giftBatch.processGifts();
+        System.assertEquals(1, giftBatch.gifts.giftsToUpdate.size());
 
-        System.assertEquals(false, elevateBatchServiceMock.enqueuePaymentCaptureJobForCalled);
+        for(DataImport__c gift : giftBatch.gifts.giftsToUpdate.values()) {
+            System.assert(gift.Status__c == BDI_DataImport_API.bdiFailed);
+            System.assertNotEquals(null, gift.FailureInformation__c);
+        }
     }
 
-    @isTest
-    static void shouldAttemptToCaptureElevatePaymentsWhenServiceAvailable() {
-        GiftsMock giftsMock = new GiftsMock();
-        GiftBatch giftBatch = new GiftBatch(stubFor(giftsMock));
+    @IsTest
+    static void shouldUpdateProcessingGiftsInFailedBatchesToFailed() {
+        GiftBatch giftBatch = new GiftBatch();
+        giftBatch.giftBatchId = DUMMY_GIFT_BATCH_ID;
+        giftBatch.gifts = new Gifts();
+        giftBatch.gifts.dataImportsById = buildDataImportsByIds(DUMMY_GIFT_BATCH_ID.value());
+        giftBatch.gifts.giftsToUpdate = new Map<Id, DataImport__c>();
+        giftBatch.asyncApexJob =  new TestAsyncApexJob()
+            .withStatus(UTIL_BatchJobService.ApexJobStatus.FAILED.name())
+            .build();
 
-        PS_IntegrationServiceConfigMock integrationServiceConfigMock =
-            new PS_IntegrationServiceConfigMock(true);
-        giftBatch.paymentIntegrationServiceConfig = stubFor(integrationServiceConfigMock);
+        System.assert(giftBatch.canBeEnqueued());
+        System.assert(giftBatch.hasStandardGiftsToResolve());
 
-        ElevateBatchServiceMock elevateBatchServiceMock = new ElevateBatchServiceMock();
-        giftBatch.elevateBatchService = stubFor(elevateBatchServiceMock);
+        giftBatch.resolveStandardGiftsRemainingInProcessing();
 
-        giftBatch.processGifts();
+        System.assertEquals(1, giftBatch.gifts.giftsToUpdate.size());
 
-        System.assertEquals(true, elevateBatchServiceMock.enqueuePaymentCaptureJobForCalled);
+        for(DataImport__c gift : giftBatch.gifts.giftsToUpdate.values()) {
+            System.assert(gift.Status__c == BDI_DataImport_API.bdiFailed);
+            System.assertNotEquals(null, gift.FailureInformation__c);
+        }
     }
 
-    static String DUMMY_DATA_IMPORT_MODEL = '{"totalRowAmount":300.0,"totalCountOfRows":2}';
+    @IsTest
+    static void shouldUpdateProcessingGiftsInCompletedBatchesToFailed() {
+        GiftBatch giftBatch = new GiftBatch();
+        giftBatch.gifts = new Gifts();
+        giftBatch.giftBatchId = DUMMY_GIFT_BATCH_ID;
+        giftBatch.gifts.dataImportsById = buildDataImportsByIds(DUMMY_GIFT_BATCH_ID.value());
+        giftBatch.gifts.giftsToUpdate = new Map<Id, DataImport__c>();
+        giftBatch.asyncApexJob =  new TestAsyncApexJob()
+            .withStatus(UTIL_BatchJobService.ApexJobStatus.COMPLETED.name())
+            .build();
+
+        System.assert(giftBatch.canBeEnqueued());
+        System.assert(giftBatch.hasStandardGiftsToResolve());
+
+        giftBatch.resolveStandardGiftsRemainingInProcessing();
+
+        System.assertEquals(1, giftBatch.gifts.giftsToUpdate.size());
+
+        for(DataImport__c gift : giftBatch.gifts.giftsToUpdate.values()) {
+            System.assert(gift.Status__c == BDI_DataImport_API.bdiFailed);
+            System.assertNotEquals(null, gift.FailureInformation__c);
+        }
+    }
+
+    @IsTest
+    static void shouldNotUpdateProcessingGiftsInUnfinishedBatchesToFailed() {
+        GiftBatch giftBatch = new GiftBatch();
+        giftBatch.gifts = new Gifts();
+        giftBatch.giftBatchId = DUMMY_GIFT_BATCH_ID;
+        giftBatch.gifts.dataImportsById = buildDataImportsByIds(DUMMY_GIFT_BATCH_ID.value());
+        giftBatch.gifts.giftsToUpdate = new Map<Id, DataImport__c>();
+        giftBatch.asyncApexJob =  new TestAsyncApexJob()
+            .withStatus(UTIL_BatchJobService.ApexJobStatus.PROCESSING.name())
+            .build();
+
+        System.assert(!giftBatch.canBeEnqueued());
+        System.assert(!giftBatch.hasStandardGiftsToResolve());
+    }
+
+
+    private static Map<Id, DataImport__c> buildDataImportsByIds(Id batchId) {
+        Map<Id, DataImport__c> dataImportMap = new Map<Id, DataImport__c>();
+        dataImportMap.put(getDummyDataImportId(),
+            new DataImport__c(Id = getDummyDataImportId(),
+                Status__c = BDI_DataImport_API.bdiProcessing, NPSP_Data_Import_Batch__c = batchId));
+        return dataImportMap;
+    }
+
+    private static Id getDummyDataImportId() {
+        return UTIL_UnitTestData_TEST.mockId(DataImport__c.getSObjectType());
+    }
+
+    /***
+ * @description Builds an AsyncApexJob and sets attributes that are not writable otherwise
+ */
+    public class TestAsyncApexJob {
+        private Map<String, Object> valuesByFieldName;
+
+        public TestAsyncApexJob() {
+            valuesByFieldName = new Map<String, Object>();
+            //defaults
+            valuesByFieldName.put('Status', UTIL_BatchJobService.ApexJobStatus.COMPLETED.name());
+        }
+
+        public TestAsyncApexJob withStatus(String status) {
+            valuesByFieldName.put('Status', status);
+            return this;
+        }
+
+        public AsyncApexJob build() {
+            String jsonString = JSON.serialize(valuesByFieldName);
+
+            return (AsyncApexJob) JSON.deserialize(jsonString, AsyncApexJob.class);
+        }
+    }
 
     private static GiftTemplate createDummyGiftTemplate(Boolean withElevateWidget) {
         GE_Template.Element field =

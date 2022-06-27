@@ -160,7 +160,8 @@ public class TEST_SObjectGateway {
                     PaymentMethod__c,
                     RecurringDonation__c,
                     IsPause__c,
-                    StatusReason__c
+                    StatusReason__c,
+                    Active__c
                 FROM RecurringDonationSchedule__c
                 WHERE RecurringDonation__c IN :rds
             ];
@@ -284,7 +285,10 @@ public class TEST_SObjectGateway {
             'Name',
             'npe01__Payment_Method__c',
             'npe01__Payment_Amount__c',
-            'npe01__Opportunity__c'
+            'npe01__Opportunity__c',
+            'npe01__Opportunity__r.Amount',
+            String.valueOf(npe01__OppPayment__c.OriginalPayment__c),
+            String.valueOf(npe01__OppPayment__c.DebitType__c)
         };
 
         /***
@@ -315,6 +319,32 @@ public class TEST_SObjectGateway {
                 .withFrom(npe01__OppPayment__c.SObjectType)
                 .withSelectFields(fields)
                 .withWhere('npe01__Opportunity__c IN :opps')
+                .build();
+
+            return (List<npe01__OppPayment__c>) Database.query(soql);
+        }
+
+         /***
+        * @description Retrieves Payment for specified Payment Id
+        * @param paymentId An payment Id
+        * @return npe01__OppPayment__c
+        */
+        public npe01__OppPayment__c getRecord(Id paymentId) {
+            List<npe01__OppPayment__c> payments = getRecords(new Set<Id>{ paymentId });
+
+            return payments?.get(0);
+        }
+
+         /***
+        * @description Retrieves payments for specified payment Ids
+        * @param paymentIds payment Ids
+        * @return List<npe01__OppPayment__c>
+        */
+        public List<npe01__OppPayment__c> getRecords(Set<Id> paymentIds) {
+            String soql = new UTIL_Query()
+                .withFrom(npe01__OppPayment__c.SObjectType)
+                .withSelectFields(fields)
+                .withWhere('Id IN :paymentIds')
                 .build();
 
             return (List<npe01__OppPayment__c>) Database.query(soql);

@@ -81,8 +81,6 @@ public inherited sharing class NPSP_Address implements IAddress {
             address.Default_Address__c = !con.is_Address_Override__c;
         }
         address.Undeliverable__c = con.Undeliverable_Address__c;
-        address.Latest_Start_Date__c = System.today();
-        address.Latest_End_Date__c = null;
         if (con.getPopulatedFieldsAsMap().keySet().contains(
                 String.valueOf(Contact.npe01__Primary_Address_Type__c)
         )) {
@@ -312,6 +310,10 @@ public inherited sharing class NPSP_Address implements IAddress {
         return address.Default_Address__c && (address.Default_Address__c != oldAddress.Default_Address__c);
     }
 
+    public Boolean hasDefaultChanged() {
+        return address.Default_Address__c != oldAddress?.Default_Address__c;
+    }
+
     public void setAsDefault() {
         address.Default_Address__c = true;
     }
@@ -428,8 +430,7 @@ public inherited sharing class NPSP_Address implements IAddress {
         }
 
         if (String.isEmpty(address.MailingState__c) || !isMatchingStateCode(stateCode)) {
-
-            // Assume it's a valid statecode
+            // Assume it's a valid statecode since we can't map from Code to State Name
             address.MailingState__c = stateCode;
         }
     }

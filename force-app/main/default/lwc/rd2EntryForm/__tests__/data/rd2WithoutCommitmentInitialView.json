@@ -1,0 +1,55 @@
+{
+  "closedStatusValues": [
+    "Closed"
+  ],
+  "customFieldSets": [],
+  "defaultInstallmentPeriod": "Monthly",
+  "defaultRecurringType": "Open",
+  "hasRequiredPermissions": true,
+  "InstallmentFrequencyPermissions": {
+    "Createable": true,
+    "Updateable": true,
+    "Visible": true
+  },
+  "InstallmentPeriodPermissions": {
+    "Createable": true,
+    "Updateable": true,
+    "Visible": true
+  },
+  "isAutoNamingEnabled": true,
+  "isChangeLogEnabled": false,
+  "isElevateCustomer": true,
+  "isMultiCurrencyEnabled": false,
+  "parentSObjectType": "Contact",
+  "periodToYearlyFrequencyMap": {
+    "Yearly": 1,
+    "Quarterly": 4,
+    "Monthly": 12,
+    "1st and 15th": 24,
+    "Weekly": 52,
+    "Daily": 365
+  },
+  "record": {
+    "startDate": "2021-04-29",
+    "recurringType": "Open",
+    "recurringStatus": "Active",
+    "recurringPeriod": "Monthly",
+    "recurringFrequency": 1,
+    "recordId": "a09S000000HAfRHIA1",
+    "plannedInstallments": null,
+    "paymentToken": null,
+    "nextDonationDate": "2021-05-29",
+    "donorType": "Contact",
+    "donationValue": 0.5,
+    "dayOfMonth": "29",
+    "dateEstablished": "2021-04-29",
+    "customFieldValues": {},
+    "contactId": "001fakeContactId",
+    "commitmentId": null,
+    "cardLastFour": null,
+    "cardExpirationYear": null,
+    "cardExpirationMonth": null,
+    "achLastFour": null,
+    "accountId": "00163000010jyT6AAI"
+  }
+}

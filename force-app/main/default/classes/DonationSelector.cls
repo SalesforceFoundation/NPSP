@@ -41,7 +41,11 @@ public with sharing class DonationSelector {
         return Database.query(openDonationsQueryString(relationshipField, donorId));
     }
 
-    public List<Opportunity> getDonation(Id donationId) {
+    public List<Opportunity> getDonation(Id opportunityId) {
+        return getDonations(new List<Id> { opportunityId });
+    }
+
+    public List<Opportunity> getDonations(List<Id> opportunityIds) {
         List<String> selectFields = new List<String> {
             opportunityContactRoleSubqueryString()
         };
@@ -50,7 +54,7 @@ public with sharing class DonationSelector {
         String soql = new UTIL_Query()
             .withFrom(Opportunity.SObjectType)
             .withSelectFields(selectFields)
-            .withWhere('Id = :donationId')
+            .withWhere('Id IN :opportunityIds')
             .withSecurityEnforced()
             .build();
 
@@ -97,7 +101,7 @@ public with sharing class DonationSelector {
             String.valueOf(npe01__OppPayment__c.Id),
             String.valueOf(npe01__OppPayment__c.Name),
             String.valueOf(npe01__OppPayment__c.npe01__Scheduled_Date__c),
-            'npe01__Opportunity__r.Name',
+            'npe01__Opportunity__r.Name','npe01__Opportunity__r.Primary_Contact__c',
             String.valueOf(npe01__OppPayment__c.npe01__Opportunity__c),
             String.valueOf(npe01__OppPayment__c.npe01__Payment_Amount__c),
             String.valueOf(npe01__OppPayment__c.npe01__Payment_Date__c),

@@ -1,0 +1,40 @@
+{
+  "closedStatusValues": [
+    "Closed"
+  ],
+  "customFieldSets": [],
+  "defaultInstallmentPeriod": "Monthly",
+  "defaultRecurringType": "Open",
+  "hasRequiredPermissions": true,
+  "InstallmentFrequencyPermissions": {
+    "Createable": true,
+    "Updateable": true,
+    "Visible": true
+  },
+  "InstallmentPeriodPermissions": {
+    "Createable": true,
+    "Updateable": true,
+    "Visible": true
+  },
+  "isAutoNamingEnabled": true,
+  "isChangeLogEnabled": false,
+  "isElevateCustomer": false,
+  "isMultiCurrencyEnabled": false,
+  "parentSObjectType": "Contact",
+  "periodToYearlyFrequencyMap": {
+    "Yearly": 1,
+    "Quarterly": 4,
+    "Monthly": 12,
+    "1st and 15th": 24,
+    "Weekly": 52,
+    "Daily": 365
+  },
+  "record": {
+    "contactId": "fake-contact-record-id",
+    "recurringPeriod": "Monthly",
+    "recurringType": "Open",
+    "dayOfMonth": "15",
+    "startDate": "2021-02-03",
+    "dateEstablished": "2021-02-03"
+  }
+}

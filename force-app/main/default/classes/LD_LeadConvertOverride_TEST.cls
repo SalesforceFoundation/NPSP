@@ -999,7 +999,7 @@ private class LD_LeadConvertOverride_TEST {
         l.Company = companyName;
         l.CompanyStreet__c = '112 Company St';
         l.CompanyCity__c = 'Home Town';
-        l.CompanyState__c = 'WA';
+        l.CompanyState__c = 'Washington';
         l.CompanyPostalCode__c = '98122';
         l.CompanyCountry__c = 'United States';
         insert l;
@@ -1067,7 +1067,7 @@ private class LD_LeadConvertOverride_TEST {
         l.PostalCode = '98005';
         l.CompanyStreet__c = '112 Company St';
         l.CompanyCity__c = 'Home Town';
-        l.CompanyState__c = 'WA';
+        l.CompanyState__c = 'Washington';
         l.CompanyPostalCode__c = '98122';
         l.CompanyCountry__c = 'United States';
         insert l;

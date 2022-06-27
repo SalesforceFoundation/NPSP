@@ -573,4 +573,17 @@ public with sharing virtual class STG_Panel {
         }
         return namespace;
     }
+
+    public static void throwAuraExceptionIfRunningUserNotAdmin() {
+        if(!STG_Panel.runningUserIsAdmin()) {
+            throwAuraPermsException();
+        }
+    }
+
+    private static void throwAuraPermsException() {
+        AuraHandledException auraException = new AuraHandledException(Label.stgEditPermissionError);
+        // Set message so that Apex getMessage() can test the correct message is returned
+        auraException.setMessage(Label.stgEditPermissionError);
+        throw auraException;
+    }
 }

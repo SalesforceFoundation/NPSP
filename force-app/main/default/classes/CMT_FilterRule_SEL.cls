@@ -33,6 +33,9 @@
 * @group CMT Filter Rules
 * @description Selector class for FilterGroups and FilterRule Custom Metadata Type objects
 */
+// Adding custom rule to avoid this class being scanned by the SFCA scanner since we will not enforce FLS for
+// customizable rollups.
+/* sfge-disable ApexFlsViolationRule */
 public without sharing class CMT_FilterRule_SEL {
 
     /**
@@ -113,6 +116,19 @@ public without sharing class CMT_FilterRule_SEL {
         }
         return null;
 
+    }
+
+    /**
+     * @description Queries a single Rollup Definition using the specified DeveloperName
+     * @return Record or null
+     */
+    public static Filter_Rule__mdt getFilterRuleByDeveloperName(String developerName) {
+        for (Filter_Rule__mdt fr : cachedFilterRules) {
+            if (developerName == fr.DeveloperName) {
+                return fr;
+            }
+        }
+        return null; 
     }
 
     /**

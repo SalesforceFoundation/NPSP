@@ -61,6 +61,16 @@ public inherited sharing class RD2_RecurringDonation {
         set;
     }
 
+    private RD2_Settings rdSettings{
+        get {
+            if (rdSettings == null) {
+                rdSettings = RD2_Settings.getInstance();
+            }
+            return rdSettings;
+        }
+        set;
+    }
+
     /**
     * @description Recurring Donation record current and future Opportunities
     */
@@ -297,7 +307,7 @@ public inherited sharing class RD2_RecurringDonation {
             }
         } else {
 
-            if (rd.Status__c == RD2_Constants.STATUS_PAUSED) {
+            if (isPaused()) {
                 rd.Status__c = RD2_Constants.STATUS_ACTIVE;
                 rd.ClosedReason__c = null;
                 changedFields.add(npe03__Recurring_Donation__c.Status__c);
@@ -378,6 +388,14 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
+    * @description Indicates if the Recurring Donation is paused
+    * @return Boolean
+    */
+    public Boolean isPaused() {
+        return rd.Status__c == RD2_Constants.STATUS_PAUSED;
+    }
+
+    /**
     * @description Indicates if the Recurring Donation is lapsed
     * @return Boolean
     */
@@ -391,6 +409,14 @@ public inherited sharing class RD2_RecurringDonation {
     */
     public Boolean isClosed() {
         return state == RD2_Constants.STATUS_CLOSED;
+    }
+
+    public void setStatus(String status) {
+        rd.Status__c = status;
+    }
+
+    public void addChangeField(SObjectField rdField) {
+        changedFields.add(rdField);
     }
 
     /**
@@ -492,6 +518,15 @@ public inherited sharing class RD2_RecurringDonation {
 
     public String getInstallmentPeriod() {
         return rd.npe03__Installment_Period__c;
+    }
+
+    public Date getExpectedDonationDate(RD2_ScheduleService scheduleService) {
+        Date baseDate = (rd.npe03__Last_Payment_Date__c == null) ? rd.StartDate__c : rd.npe03__Last_Payment_Date__c;
+        return scheduleService.getVisualizedInstallments(
+            baseDate.addDays(1),
+            1,
+            rd.RecurringDonationSchedules__r
+        )?.get(0)?.nextDonationDate;
     }
 
     /**
@@ -610,5 +645,4 @@ public inherited sharing class RD2_RecurringDonation {
     public Object getValue(SObjectField rdField){
         return rd.get(rdField);
     }
-
 }

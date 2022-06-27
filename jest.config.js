@@ -4,6 +4,7 @@ module.exports = {
     moduleNameMapper: {
         "^c/psElevateTokenHandler$": "<rootDir>/tests/__mocks__/psElevateTokenHandler",
         "^lightning/navigation$": "<rootDir>/tests/__mocks__/lightning/navigation",
+        "^lightning/uiRecordApi": "<rootDir>/tests/__mocks__/lightning/uiRecordApi",
         "^@salesforce/apex/GE_GiftEntryController.getOpenDonations": "<rootDir>/tests/__mocks__/apex/GE_GiftEntryController.getOpenDonations",
         "^@salesforce/apex/GE_GiftEntryController.retrieveDefaultSGERenderWrapper": "<rootDir>/tests/__mocks__/apex/GE_GiftEntryController.retrieveDefaultSGERenderWrapper",
         "^@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest": "<rootDir>/tests/__mocks__/apex/GE_GiftEntryController.sendPurchaseRequest",
@@ -12,11 +13,13 @@ module.exports = {
         "^@salesforce/apex/GE_GiftEntryController.isElevateCustomer": "<rootDir>/tests/__mocks__/apex/GE_GiftEntryController.isElevateCustomer",
         "^@salesforce/apex/GE_GiftEntryController.addGiftTo": "<rootDir>/tests/__mocks__/apex/GE_GiftEntryController.addGiftTo",
         "^@salesforce/apex/GE_GiftEntryController.getGiftBatchView": "<rootDir>/tests/__mocks__/apex/GE_GiftEntryController.getGiftBatchView",
+        "^@salesforce/apex/GE_GiftEntryController.hasQueueableId": "<rootDir>/tests/__mocks__/apex/GE_GiftEntryController.hasQueueableId",
+        "^@salesforce/apex/GE_GiftEntryController.isGiftBatchAccessible": "<rootDir>/tests/__mocks__/apex/GE_GiftEntryController.isGiftBatchAccessible",
         "^@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel": "<rootDir>/tests/__mocks__/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel",
         "^@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues": "<rootDir>/tests/__mocks__/apex/GE_PaymentServices.getPaymentTransactionStatusValues",
-        "^@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo": "<rootDir>/tests/__mocks__/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo",
-        "^@salesforce/apex/RD2_EntryFormController.getRecurringData": "<rootDir>/tests/__mocks__/apex/RD2_EntryFormController.getRecurringData"
+        "^@salesforce/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo": "<rootDir>/tests/__mocks__/apex/UTIL_AuraEnabledCommon.getOrgDomainInfo"
     },
+    testMatch: ['**/__tests__/**/?(*.)+(spec|test).[jt]s?(x)'],
     testPathIgnorePatterns: [
         '<rootDir>/node_modules/',
         '<rootDir>/test/specs/'

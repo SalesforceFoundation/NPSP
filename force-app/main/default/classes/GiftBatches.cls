@@ -32,7 +32,7 @@
 * @date 2021
 * @description Domain class for Gift Batches in NPSP.
 */
-public inherited sharing class GiftBatches extends fflib_SObjects {
+public inherited sharing class GiftBatches extends fflib_SObjects2 {
 
     private GiftBatchSelector selector;
 
@@ -46,7 +46,7 @@ public inherited sharing class GiftBatches extends fflib_SObjects {
     }
 
     public GiftBatchGroupedTotals getGroupedTotals() {
-        Set<Id> ids = getIdFieldValues(DataImportBatch__c.fields.Id);
+        Set<Id> ids = getIdFieldValues(DataImportBatch__c.fields.Id).getIds();
         List<AggregateResultProxy> resultProxies = selector.selectBatchGiftsGroupedByStatusBy(ids);
         return new GiftBatchGroupedTotals(resultProxies);
     }

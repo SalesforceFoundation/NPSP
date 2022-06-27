@@ -32,6 +32,101 @@
 private class Gift_Test {
 
     @isTest
+    static void shouldReturnTrueWhenGiftHasRecurringFieldsPopulated() {
+        // Arrange
+        DataImport__c dataImport = new DataImport__c(
+            Id = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType),
+            Donation_Amount__c = 10.00,
+            Donation_Date__c = Date.today(),
+            Recurring_Donation_Recurring_Type__c = 'Open',
+            Recurring_Donation_Installment_Period__c = 'Monthly',
+            Recurring_Donation_Effective_Date__c = Date.today(),
+            Recurring_Donation_Day_of_Month__c = '5'
+        );
+        Gift gift = new Gift(dataImport);
+
+        // Act
+        Boolean isRecurring = gift.hasPopulatedRecurringFields();
+
+        // Assert
+        System.assertEquals(true, isRecurring,
+            'Should be true when gift has populated recurring fields');
+    }
+
+    @isTest
+    static void shouldReturnFalseWhenGiftDoesNotHaveRecurringFieldsPopulated() {
+        // Arrange
+        DataImport__c dataImport = new DataImport__c(
+            Id = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType),
+            Donation_Amount__c = 10.00,
+            Donation_Date__c = Date.today()
+        );
+        Gift gift = new Gift(dataImport);
+
+        // Act
+        Boolean isRecurring = gift.hasPopulatedRecurringFields();
+
+        // Assert
+        System.assertEquals(false, isRecurring,
+            'Should be false when gift does not have populated recurring fields');
+    }
+
+    @isTest
+    static void shouldPopulatedRecurringDonationFieldsAndNullDonationFields() {
+        // Arrange
+        Date today = Date.today();
+        DataImport__c dataImport = new DataImport__c(
+            Id = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType),
+            Recurring_Donation_Installment_Period__c = 'Monthly',
+            Recurring_Donation_Effective_Date__c = today,
+            Recurring_Donation_Recurring_Type__c = 'Open',
+            Recurring_Donation_Day_of_Month__c = '5',
+            Donation_Amount__c = 25.00,
+            Donation_Date__c = today
+        );
+        Gift gift = new Gift(dataImport);
+
+        // Act
+        gift.preprocessForRecurringGift();
+
+        // Assert
+        System.assert(dataImport.Donation_Amount__c == null);
+        System.assert(dataImport.Donation_Date__c == null);
+        System.assert(dataImport.Recurring_Donation_Amount__c == 25.00);
+        System.assert(dataImport.Recurring_Donation_Date_Established__c == today);
+        System.assert(dataImport.Recurring_Donation_Installment_Period__c == 'Monthly');
+        System.assert(dataImport.Recurring_Donation_Effective_Date__c == today);
+        System.assert(dataImport.Recurring_Donation_Recurring_Type__c == 'Open');
+        System.assert(dataImport.Recurring_Donation_Day_of_Month__c == '5');
+    }
+
+    @isTest
+    static void shouldPopulateDonationInGift(){
+        // Arrange
+        Id dummyDataImportId = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType);
+        Id dummyOpportunityId = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType);
+        DataImport__c dummyDataImport = new DataImport__c(
+            Id = dummyDataImportId,
+            Donation_Amount__c = 3.00,
+            Donation_Date__c = Date.today()
+        );
+        Opportunity dummyOpportunity = new Opportunity(
+            Id = dummyOpportunityId,
+            Amount = 100.00,
+            StageName = UTIL_UnitTestData_TEST.getOpenStage()
+        );
+        Donation dummyDonation = new Donation(dummyOpportunity);
+        Gift gift = new Gift(dummyDataImport, dummyDonation);
+
+        // Act
+        Donation retrievedDonation = gift.donation();
+
+        // Assert
+        System.assertEquals(dummyOpportunityId, retrievedDonation.opportunity().Id,
+            'Should return the donation associated with the gift.');
+    }
+
+    @isTest
     static void validateThatGiftNeedsToBeReauthorized() {
         DataImport__c dataImport = new DataImport__c(
             Payment_Status__c = ElevateTransactionStatus.AUTHORIZED.name(),
@@ -223,6 +318,53 @@ private class Gift_Test {
 
         gift.processThroughBDI();
         System.assertEquals(BDI_DataImport_API.bdiImported, gift.status());
+    }
+
+    @isTest
+    static void shouldRemoveNetNewSoftCredits() {
+        // Arrange
+        String additionalObjectStringWithSoftCredits =
+            new UTIL_AdditionalObjectData_TEST()
+            .withOpportunityContactRoles(2)
+            .build();
+
+        DataImport__c dataImport = new DataImport__c(
+            Donation_Amount__c = 10,
+            Donation_Date__c = Date.today(),
+            Additional_Object_JSON__c = additionalObjectStringWithSoftCredits
+        );
+        Gift gift = new Gift(dataImport);
+
+        // Act
+        gift.preprocessForRecurringGift();
+
+        // Assert
+        System.assertEquals(0, gift.softCredits().size(),
+            'Should not have any soft credits after preprocessing for recurring gift');
+    }
+
+    @isTest
+    static void shouldInstrumentNewSingleGiftProcessedThroughBDIService() {
+        BDI_DataImportService.isFromGiftEntryUI = true;     // simulate the service coming through the UI
+        SfdoInstrumentationMock_TEST.MockService mockService = SfdoInstrumentationMock_TEST.injectMockedInstrumentationService();
+
+        DataImport__c dataImport = new DataImport__c(
+            Account1_Name__c = 'testAcct',
+            Donation_Donor__c = 'Account1',
+            Donation_Amount__c = 100,
+            Donation_Date__c = Date.today()
+        );
+        insert dataImport;
+        Gift gift = new Gift(dataImport);
+        System.assertEquals(null, gift.status());
+
+        gift.dryRunThroughBDI();
+        System.assertEquals(null, mockService.value, 'The instrumentation service should have not been called during DryRun mode');
+
+        gift.processThroughBDI();
+        System.assertEquals(1, mockService.value, 'The instrumentation service should have indicated one new Gift was inserted');
+        System.assertEquals(sfdoInstrumentationEnum.Feature.GiftEntry, mockService.feature,
+            'The instrumentation service should have indicated GiftEntry');
     }
 
     private class GiftSelectorMock implements StubProvider {

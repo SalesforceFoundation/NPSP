@@ -26,11 +26,11 @@ ${METHOD}  Credit Card
 
 1.Create Open Recurring Donation With Monthly Installment Associated For A Contact
     [Documentation]              This test verifies that an enhanced recurring donation of type open can be created
-    ...                          Through the UI by choosing a contact from the dropdown uing the create rd2 modal.
+    ...                          Through the UI by choosing a contact from the dropdown using the create rd2 modal.
     ...                          Verifies that all the new fields and sections are getting populated and displayed on UI.
 
 
-    [tags]                                               W-042701                     feature:RD2
+    [tags]                                 feature:RD2     unstable
 
     Go To Page                             Listing                                            npe03__Recurring_Donation__c
 

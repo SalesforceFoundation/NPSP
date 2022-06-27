@@ -36,6 +36,46 @@
 private class DonationSelector_TEST {
 
     @isTest
+    static void shouldReturn1OpportunityWith3SoftCredits() {
+        // Arrange
+        List<Id> opportunityIds = setupTestOpportunitiesWithOpportunityContactRoles(1, 3);
+        DonationSelector donationSelector = new DonationSelector();
+
+        // Act
+        List<Opportunity> opportunities = DonationSelector.getDonation(opportunityIds[0]);
+
+        // Assert
+        System.assertEquals(1, opportunities.size(),
+            'Should return 1 opportunity');
+        System.assertEquals(3, opportunities.get(0).OpportunityContactRoles.size(),
+            'Should return 3 soft credits for opportunity');
+    }
+
+    @isTest
+    static void shouldReturn5OpportunitiesWith2SoftCreditsEach() {
+        // Arrange
+        List<Id> opportunityIds = setupTestOpportunitiesWithOpportunityContactRoles(5, 2);
+        DonationSelector donationSelector = new DonationSelector();
+
+        // Act
+        List<Opportunity> opportunities = donationSelector.getDonations(opportunityIds);
+
+        // Assert
+        System.assertEquals(5, opportunities.size(),
+            'Should return 5 opportunities');
+        System.assertEquals(2, opportunities.get(0).OpportunityContactRoles.size(),
+            'Should return 2 soft credits for first opportunity');
+        System.assertEquals(2, opportunities.get(1).OpportunityContactRoles.size(),
+            'Should return 2 soft credits for second opportunity');
+        System.assertEquals(2, opportunities.get(2).OpportunityContactRoles.size(),
+            'Should return 2 soft credits for third opportunity');
+        System.assertEquals(2, opportunities.get(3).OpportunityContactRoles.size(),
+            'Should return 2 soft credits for fourth opportunity');
+        System.assertEquals(2, opportunities.get(4).OpportunityContactRoles.size(),
+            'Should return 2 soft credits for fifth opportunity');
+    }
+
+    @isTest
     static void shouldReturnCorrectQueryString() {
         DonationSelector selector = new DonationSelector();
 
@@ -62,6 +102,7 @@ private class DonationSelector_TEST {
                     'Name, ' +
                     'npe01__Scheduled_Date__c, ' +
                     'npe01__Opportunity__r.Name, ' +
+                    'npe01__Opportunity__r.Primary_Contact__c, ' +
                     'npe01__Opportunity__c, ' +
                     'npe01__Payment_Amount__c, ' +
                     'npe01__Payment_Date__c, ' +
@@ -91,5 +132,208 @@ private class DonationSelector_TEST {
             relationshipField = SObjectType.Opportunity.fields.Primary_Contact__c.Name;
         }
         return relationshipField;
+    }
+
+    private static List<Id> setupTestOpportunitiesWithOpportunityContactRoles(
+        Integer opportunityCount, Integer softCreditCount) {
+
+        Contact dummyContact = new Contact(LastName = 'Dummy Last Name', FirstName = 'Dummy First Name');
+        insert dummyContact;
+
+        List<Opportunity> dummyOpportunities = new List<Opportunity>();
+        for (Integer i = 0; i < opportunityCount; i++) {
+            Opportunity dummyOpportunity = new Opportunity(
+                Name = 'Test Opportunity ' + i,
+                StageName = UTIL_UnitTestData_TEST.getOpenStage(),
+                CloseDate = Date.today(),
+                Amount = 100
+            );
+
+            dummyOpportunities.add(dummyOpportunity);
+        }
+        insert dummyOpportunities;
+
+        List<OpportunityContactRole> dummyOpportunityContactRoles = new List<OpportunityContactRole>();
+        for (Integer i = 0; i < opportunityCount; i++) {
+            for (Integer ii = 0; ii < softCreditCount; ii++) {
+                OpportunityContactRole dummyOpportunityContactRole = new OpportunityContactRole(
+                    OpportunityId = dummyOpportunities[i].Id,
+                    ContactId = dummyContact.Id,
+                    Role = 'Soft Credit'
+                );
+                dummyOpportunityContactRoles.add(dummyOpportunityContactRole);
+            }
+        }
+        insert dummyOpportunityContactRoles;
+
+        List<Id> opportunityIds = new List<Id>();
+        for (Integer i = 0; i < opportunityCount; i++) {
+            opportunityIds.add(dummyOpportunities[i].Id);
+        }
+
+        return opportunityIds;
+    }
+
+    @IsTest
+    private static void shouldReturnYearsForFilter() {
+        
+        Date myDateTime = Date.newInstance(2020, 2, 2);
+        Date dateTimeInPast = Date.newInstance(2019, 2, 2);
+        List<Contact> contacts = UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, 1, 3, 1);
+        Account accSrc = UTIL_UnitTestData_TEST.listAccT[0];
+        list<Contact> listConSrc = UTIL_UnitTestData_TEST.listConT;
+
+        Opportunity opportunityHardCreditOfContact0 = new Opportunity(
+            Name='HardCredit1', 
+            AccountId=accSrc.Id, 
+            Primary_Contact__c=listConSrc[0].Id, 
+            Amount=400, 
+            StageName='Closed Won', 
+            CloseDate=myDateTime
+        );
+
+        Opportunity opportunityAnotherHardCreditOfContact0 = new Opportunity(
+            Name='HardCredit2', 
+            AccountId=accSrc.Id, 
+            Primary_Contact__c=listConSrc[0].Id, 
+            Amount=400, 
+            StageName='Closed Won', 
+            CloseDate=dateTimeInPast
+        );
+
+        insert new List<Opportunity> { opportunityHardCreditOfContact0, opportunityAnotherHardCreditOfContact0};
+
+       
+        List<String> donationsYears = new DonationHistorySelector().getYearsWithDonationForContact(contacts[0].id);
+        System.assertNotEquals(null, donationsYears, 'donationsYears should not be null');
+        System.assertEquals(2, donationsYears.size(), 'donationsYears should have 2 elements');
+        System.assertEquals('2020', donationsYears[0], 'donationsYears should be in descendent order');
+
+    }
+
+    @IsTest
+    private static void shouldReturn1asNumberOfRecordFor2019() {
+        Date myDateTime = Date.newInstance(2020, 2, 2);
+        Date dateTimeInPast = Date.newInstance(2019, 2, 2);
+        List<Contact> contacts = UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, 1, 3, 1);
+        Account accSrc = UTIL_UnitTestData_TEST.listAccT[0];
+        list<Contact> listConSrc = UTIL_UnitTestData_TEST.listConT;
+
+        Opportunity opportunityHardCreditOfContact0 = new Opportunity(
+            Name='HardCredit1', 
+            AccountId=accSrc.Id, 
+            Primary_Contact__c=listConSrc[0].Id, 
+            Amount=400, 
+            StageName='Closed Won', 
+            CloseDate=myDateTime
+        );
+
+        Opportunity opportunityAnotherHardCreditOfContact0 = new Opportunity(
+            Name='HardCredit2', 
+            AccountId=accSrc.Id, 
+            Primary_Contact__c=listConSrc[0].Id, 
+            Amount=400, 
+            StageName='Closed Won', 
+            CloseDate=dateTimeInPast
+        );
+
+        insert new List<Opportunity> { opportunityHardCreditOfContact0, opportunityAnotherHardCreditOfContact0};
+
+        Integer donationsYears = new DonationHistorySelector().getTotalNumberOfRecordsWithYear(contacts[0].Id, 2019);
+        System.assertEquals(1, donationsYears, 'Should return only 1 record');
+    }
+
+    @IsTest
+    private static void shouldReturn2AsNumberOfRecords() {
+        Date myDateTime = Date.newInstance(2020, 2, 2);
+        Date dateTimeInPast = Date.newInstance(2019, 2, 2);
+        List<Contact> contacts = UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, 1, 3, 1);
+        Account accSrc = UTIL_UnitTestData_TEST.listAccT[0];
+        list<Contact> listConSrc = UTIL_UnitTestData_TEST.listConT;
+
+        Opportunity opportunityHardCreditOfContact0 = new Opportunity(
+            Name='HardCredit1', 
+            AccountId=accSrc.Id, 
+            Primary_Contact__c=listConSrc[0].Id, 
+            Amount=400, 
+            StageName='Closed Won', 
+            CloseDate=myDateTime
+        );
+
+        Opportunity opportunityAnotherHardCreditOfContact0 = new Opportunity(
+            Name='HardCredit2', 
+            AccountId=accSrc.Id, 
+            Primary_Contact__c=listConSrc[0].Id, 
+            Amount=400, 
+            StageName='Closed Won', 
+            CloseDate=dateTimeInPast
+        );
+
+        insert new List<Opportunity> { opportunityHardCreditOfContact0, opportunityAnotherHardCreditOfContact0};
+
+        Integer donationsYears = new DonationHistorySelector().getTotalNumberOfRecords(contacts[0].Id);
+        System.assertEquals(2, donationsYears, 'Should return only 1 record');
+    }
+
+    @IsTest
+    private static void shouldReturn2Opportunities() {
+        Date myDateTime = Date.newInstance(2020, 2, 2);
+        Date dateTimeInPast = Date.newInstance(2019, 2, 2);
+        List<Contact> contacts = UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, 1, 3, 1);
+        Account accSrc = UTIL_UnitTestData_TEST.listAccT[0];
+        list<Contact> listConSrc = UTIL_UnitTestData_TEST.listConT;
+
+        Opportunity opportunityHardCreditOfContact0 = new Opportunity(
+            Name='HardCredit1', 
+            AccountId=accSrc.Id, 
+            Primary_Contact__c=listConSrc[0].Id, 
+            Amount=400, 
+            StageName='Closed Won', 
+            CloseDate=myDateTime
+        );
+
+        Opportunity opportunityAnotherHardCreditOfContact0 = new Opportunity(
+            Name='HardCredit2', 
+            AccountId=accSrc.Id, 
+            Primary_Contact__c=listConSrc[0].Id, 
+            Amount=400, 
+            StageName='Closed Won', 
+            CloseDate=dateTimeInPast
+        );
+
+        insert new List<Opportunity> { opportunityHardCreditOfContact0, opportunityAnotherHardCreditOfContact0};
+
+        System.assertEquals(2, new DonationHistorySelector().getWonOpportunitiesByContactId(contacts[0].id, 0).size(), 'Should return 2 records of opportunities');
+    }
+
+    @IsTest
+    private static void shouldReturn1OpportunitiesFor2019() {
+        Date myDateTime = Date.newInstance(2020, 2, 2);
+        Date dateTimeInPast = Date.newInstance(2019, 2, 2);
+        List<Contact> contacts = UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, 1, 3, 1);
+        Account accSrc = UTIL_UnitTestData_TEST.listAccT[0];
+        list<Contact> listConSrc = UTIL_UnitTestData_TEST.listConT;
+
+        Opportunity opportunityHardCreditOfContact0 = new Opportunity(
+            Name='HardCredit1', 
+            AccountId=accSrc.Id, 
+            Primary_Contact__c=listConSrc[0].Id, 
+            Amount=400, 
+            StageName='Closed Won', 
+            CloseDate=myDateTime
+        );
+
+        Opportunity opportunityAnotherHardCreditOfContact0 = new Opportunity(
+            Name='HardCredit2', 
+            AccountId=accSrc.Id, 
+            Primary_Contact__c=listConSrc[0].Id, 
+            Amount=400, 
+            StageName='Closed Won', 
+            CloseDate=dateTimeInPast
+        );
+
+        insert new List<Opportunity> { opportunityHardCreditOfContact0, opportunityAnotherHardCreditOfContact0};
+
+        System.assertEquals(1, new DonationHistorySelector().getWonOpportunitiesByContactIdAndYear(contacts[0].id, 0, 2019).size(), 'Should return 1 records of opportunities');
     }
 }

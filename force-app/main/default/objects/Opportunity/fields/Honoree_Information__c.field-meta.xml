@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Honoree_Information__c</fullName>
+    <description>Contact information, such as email, address, or phone the donor provided for the tribute honoree.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Contact information, such as email, address, or phone the donor provided for the tribute honoree.</inlineHelpText>
+    <label>Honoree Information</label>
+    <length>32768</length>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>10</visibleLines>
+</CustomField>

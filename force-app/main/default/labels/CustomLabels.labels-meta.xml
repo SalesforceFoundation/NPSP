@@ -8,6 +8,22 @@
         <value>You must provide an Auth ID.</value>
     </labels>
     <labels>
+        <fullName>installmentPeriod</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for installment frequency for Recurring Donations Action</shortDescription>
+        <value>Installment Period</value>
+    </labels>
+    <labels>
+        <fullName>recurringDonationSchedule</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for modal title for Recurring Donation table actions</shortDescription>
+        <value>Recurring Donation Schedule</value>
+    </labels>
+    <labels>
         <fullName>Addr_No_Batch</fullName>
         <categories>address, error</categories>
         <language>en_US</language>
@@ -933,7 +949,7 @@
         <categories>Error, Delete</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>ConfirmDeleteAccount</shortDescription>
+        <shortDescription>ConfirmDeleteLeaveAccountEmpty</shortDescription>
         <value>{0} is the only Contact in the Account. Deleting this Contact would leave an empty Account.</value>
     </labels>
     <labels>
@@ -1362,6 +1378,38 @@
         <value>Add Dependent Task</value>
     </labels>
     <labels>
+        <fullName>donationHistoryGivingSummaryTitle</fullName>
+        <categories>Donors</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Component title</shortDescription>
+        <value>Giving Summary</value>
+    </labels>
+    <labels>
+        <fullName>donationHistoryLabelLifetime</fullName>
+        <categories>Donors</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>label for lifetime donations</shortDescription>
+        <value>Lifetime</value>
+    </labels>
+    <labels>
+        <fullName>donationHistoryLabelPreviousYear</fullName>
+        <categories>Donors</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>label for previous years donations</shortDescription>
+        <value>Previous Year</value>
+    </labels>
+    <labels>
+        <fullName>donationHistoryLabelThisYear</fullName>
+        <categories>Donors</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>label for this years donations</shortDescription>
+        <value>This Year</value>
+    </labels>
+    <labels>
         <fullName>EPAddTask</fullName>
         <categories>Engagement Plans</categories>
         <language>en_US</language>
@@ -1431,7 +1479,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>ErrorEmailMessage</shortDescription>
-        <value>Salesforce encountered these NPSP errors. To learn more about common errors, see &quot;Troubleshoot the Nonprofit Success Pack&quot; on the Power of Us Hub. If you&apos;re unsure how to resolve the errors, post a message in the Nonprofit Success Pack group: https://powerofus.force.com/HUB_NPSP_Group</value>
+        <value>Salesforce encountered these NPSP errors. If you&apos;re unsure how to resolve the errors, post a message in the Nonprofit Success Pack group: https://powerofus.force.com/HUB_NPSP_Group</value>
     </labels>
     <labels>
         <fullName>FieldSetRelatedFieldError</fullName>
@@ -1455,7 +1503,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>InactiveScheduledJobsOwnerErrMsg</shortDescription>
-        <value>There are Scheduled Jobs owned by an inactive User. Review your Scheduled Jobs and ensure the owner of each one is an active User. See Edit or Reschedule NPSP Scheduled Jobs in the Power of Us Hub for more information: https://powerofus.force.com/articles/Resource/NPSP-Edit-or-Reschedule-NPSP-Scheduled-Jobs</value>
+        <value>There are Scheduled Jobs owned by an inactive User. Review your Scheduled Jobs and ensure the owner of each one is an active User. See Edit or Reschedule NPSP Scheduled Jobs for more information: https://powerofus.force.com/NPSP_Scheduled_Jobs</value>
     </labels>
     <labels>
         <fullName>NameRequired</fullName>
@@ -1706,6 +1754,22 @@
         <value>No Errors</value>
     </labels>
     <labels>
+        <fullName>RD2_ViewMoreDetails</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for view more info on recurring donation table component</shortDescription>
+        <value>View More Details</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ViewLessDetails</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for view less info on recurring donation table component</shortDescription>
+        <value>View Less Details</value>
+    </labels>
+    <labels>
         <fullName>RD2_ElevateNotSupported</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -1754,6 +1818,14 @@
         <value>You can&apos;t edit the Status for an Elevate connected Recurring Donation when Status is Closed.</value>
     </labels>
     <labels>
+        <fullName>RD2_ElevateRDCannotBeFixedLength</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when trying to change an Elevate RD to Recurring Type Fixed</shortDescription>
+        <value>An Elevate-connected Recurring Donation cannot have a Recurring Type of Fixed.</value>
+    </labels>
+    <labels>
         <fullName>RD2_ElevateRDDayOfMonthCannotChange</fullName>
         <categories>Recurring-Donations</categories>
         <language>en_US</language>
@@ -1792,6 +1864,30 @@
         <protected>true</protected>
         <shortDescription>Text indicating the Recurring Donation could not be created in Elevate</shortDescription>
         <value>An Elevate recurring payment could not be created. Contact your system administrator for assistance.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateRDCancellingTitle</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Recurring Donation would be cancelled</shortDescription>
+        <value>Your request to stop your Recurring Donation was submitted.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateRDCancellingMessage</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Recurring Donation would be cancelled</shortDescription>
+        <value>This can take some time. Refresh the page to check the status. Contact us if you need help.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_NonElevateRDCancellingTitle</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Recurring Donation Non Elevat would be cancelled</shortDescription>
+        <value>Your Recurring Donation was stopped.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementDisabledHeader</fullName>
@@ -2333,6 +2429,30 @@
         <value>Sending ACH information to Elevate...</value>
     </labels>
     <labels>
+        <fullName>RD2_ACH_Payment_Method_Label</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ACH Payment Method label</shortDescription>
+        <value>Bank Account</value>
+    </labels>
+    <labels>
+        <fullName>RD2_Payment_Method</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Payment Method label</shortDescription>
+        <value>Payment Method</value>
+    </labels>
+    <labels>
+        <fullName>RD2_Credit_Card_Payment_Method_Label</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Credit Card Payment Method label</shortDescription>
+        <value>Credit Card</value>
+    </labels>
+    <labels>
         <fullName>RD2_EntryFormSaveCreditCardValidationMessage</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>
@@ -2717,6 +2837,118 @@
         <value>Upcoming Installments</value>
     </labels>
     <labels>
+        <fullName>RD2_StatusAutomationConfigurationSection</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Automation configuration section header</shortDescription>
+        <value>Status Automation Settings</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationClosedDefinition</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Automation Closed definition</shortDescription>
+        <value>After the specified number of days, NPSP updates the Recurring Donation Status to the Closed Status Value if donations aren&apos;t being received as expected. This value must be higher than the Number of Days for Lapsed. NPSP does not create installment Opportunities for Closed Recurring Donations.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationDaysForClosed</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Automation Number of Days for Closed</shortDescription>
+        <value>Number of Days for Closed</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationDaysForLapsed</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Automation Number of Days for Lapsed</shortDescription>
+        <value>Number of Days for Lapsed</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationIntro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Automation introduction</shortDescription>
+        <value>These settings automate changing the Recurring Donation Status when donors miss installment payments.&lt;br/&gt;&lt;br/&gt;For example, given a monthly Recurring Donation started on January 1st, and Number of Days for Lapsed is set to 10 days, the Recurring Donation becomes Lapsed on February 12th if no installment payment is received. If Number of Days for Closed is set to 20 days, the Recurring Donation becomes Closed on February 22nd.&lt;br/&gt;&lt;br/&gt;Salesforce begins counting Number of Days for Lapsed and Number of Days for Closed on the day after the expected installment date (February 2nd in our example).</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationInvalidClosedStatus</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Automation Closed Status is not mapped correctly</shortDescription>
+        <value>The Status Automation Closed Status should map to Closed State</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationInvalidLapsedStatus</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Automation Lapsed Status is not mapped correctly</shortDescription>
+        <value>The Status Automation Lapsed Status should map to Lapsed State</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationInvalidNumberOfDays</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Number of Days for Lapsed is smaller than Number of Days For Closed</shortDescription>
+        <value>Number of Days for Closed must be higher than the Number of Days for Lapsed.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationInvalidNumberOfDaysForClosed</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Number of Days for Closed is too small</shortDescription>
+        <value>Must be greater than Number of Days for Lapsed</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationInvalidNumberOfDaysForLapsed</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Number of Days for Lapsed is too large</shortDescription>
+        <value>Must be less than Number of Days for Closed</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationNegativeNumberOfDays</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Number of Days for Lapsed or Number of Days for Closed is negative.</shortDescription>
+        <value>Number of Days for Lapsed and Number of Days for Closed cannot be negative.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationLapsedDefinition</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Automation Lapsed definition</shortDescription>
+        <value>After the specified number of days, NPSP updates the Recurring Donation Status to the Lapsed Status Value if donations aren&apos;t being received as expected. NPSP continues to create installment Opportunities for Lapsed Recurring Donations as defined by the schedule.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationSetClosedStatus</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Automation Closed Status Label</shortDescription>
+        <value>Closed Status Value</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationSetLapsedStatus</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Automation Lapsed Status Label</shortDescription>
+        <value>Lapsed Status Value</value>
+    </labels>
+    <labels>
         <fullName>RD2_StatusMappingColumnState</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -3001,6 +3233,22 @@
         <value>View Contact Record</value>
     </labels>
     <labels>
+        <fullName>REL_ViewerGraphical</fullName>
+        <categories>Relationships, relationship-viewer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header / A11y Text for loading graphical view</shortDescription>
+        <value>Graphical View</value>
+    </labels>
+    <labels>
+        <fullName>REL_ViewerTabular</fullName>
+        <categories>Relationships, relationship-viewer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header / A11y Text for loading tabular view</shortDescription>
+        <value>Tabular View</value>
+    </labels>
+    <labels>
         <fullName>RP_CustomerJourneyLinkLabel</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -3058,23 +3306,26 @@
     </labels>
     <labels>
         <fullName>RP_ReleaseGitHub</fullName>
+        <categories>deprecated</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resources Page - Release GitHub</shortDescription>
+        <shortDescription>DEPRECATED - Resources Page - Release GitHub</shortDescription>
         <value>Released:</value>
     </labels>
     <labels>
         <fullName>RP_ReleaseNotesLink</fullName>
+        <categories>deprecated</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resources Page - Release Notes Link</shortDescription>
+        <shortDescription>DEPRECATED - Resources Page - Release Notes Link</shortDescription>
         <value>Read full release notes &gt;</value>
     </labels>
     <labels>
         <fullName>RP_Remote_Site_Settings_Deactivated</fullName>
+        <categories>deprecated</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RP Remote Site Settings Deactivated</shortDescription>
+        <shortDescription>DEPRECATED - RP Remote Site Settings Deactivated</shortDescription>
         <value>To take advantage of all the new functionality on the Getting Started page, go to Setup, search for Remote Site Settings, and ensure that the SFDOEndpoints site is active. If it isn&apos;t, click Edit, check the Active box, and click Save.</value>
     </labels>
     <labels>
@@ -3123,21 +3374,21 @@
         <fullName>RP_USParagraph</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resources Page - Power of Us Paragraph</shortDescription>
+        <shortDescription>Resources Page - Trailblazer Paragraph</shortDescription>
         <value>Get help from our active community of fellow NPSP users, or reach out to Salesforce.org.</value>
     </labels>
     <labels>
         <fullName>RP_UsHubLinkLabel</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resources Page - Power of Us Hub Link</shortDescription>
-        <value>Power of Us HUB</value>
+        <shortDescription>Resources Page - Trailblazer Link</shortDescription>
+        <value>Trailblazer Community</value>
     </labels>
     <labels>
         <fullName>RP_UsSubtitle</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resources Page - Power of Us Subtitle</shortDescription>
+        <shortDescription>Resources Page - Trailblazer Subtitle</shortDescription>
         <value>2. Join the Community</value>
     </labels>
     <labels>
@@ -3665,7 +3916,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Explanation of Batch Data Entry not being supported &amp; recommendations</shortDescription>
-        <value>As of October 1, 2020, Batch Data Entry is no longer supported. Most capabilities have been replaced with newer features in NPSP. If you have any in-progress batches, you can still access those records, but you can&apos;t process them using Batch Data Entry. Contact support if you need to access in-progress batches. &lt;br/&gt; You may want to explore Gift Entry as an alternative to Batch Data Entry. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt; on the Power of Us Hub.</value>
+        <value>As of October 1, 2020, Batch Data Entry is no longer supported. Most capabilities have been replaced with newer features in NPSP. If you have any in-progress batches, you can still access those records, but you can&apos;t process them using Batch Data Entry. Contact support if you need to access in-progress batches. &lt;br/&gt; You may want to explore Gift Entry as an alternative to Batch Data Entry. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.</value>
     </labels>
     <labels>
         <fullName>bdeRetirementWarningBody</fullName>
@@ -3673,7 +3924,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Explanation of Batch Data Entry retirement &amp; recommendations</shortDescription>
-        <value>On October 1, 2020, Batch Data Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Data Entry. To ensure a smooth transition, enable and use Gift Entry in advance of October 1st. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt; on the Power of Us Hub.</value>
+        <value>On October 1, 2020, Batch Data Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Data Entry. To ensure a smooth transition, enable and use Gift Entry in advance of October 1st. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.</value>
     </labels>
     <labels>
         <fullName>bdeRetirementWarningHeader</fullName>
@@ -3682,6 +3933,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Header for warning about Batch Data Entry retiring</shortDescription>
         <value>Retiring Batch Data Entry</value>
+    </labels>
+    <labels>
+        <fullName>bdiAPIBatchError</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiAPIBatchError</shortDescription>
+        <value>We couldn't process the Data Import records because of the following errors:</value>
+    </labels>
+    <labels>
+        <fullName>bdiAPISelectedError</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiAPISelectedError</shortDescription>
+        <value>We couldn't process the selected Data Import records because of the following errors:</value>
     </labels>
     <labels>
         <fullName>bdiAccountCustomIdError</fullName>
@@ -4848,6 +5115,38 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Begin Data Import Process</value>
     </labels>
     <labels>
+        <fullName>bdiSelectCantProcessImportedRecords</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiSelectCantProcessImportedRecords</shortDescription>
+        <value>You can't import records that have already been imported. Remove records with the Imported status from your selection.</value>
+    </labels>
+    <labels>
+        <fullName>bdiSelectNoDIRecordsSelected</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiSelectNoDIRecordsSelected</shortDescription>
+        <value>Select one or more Data Import records.</value>
+    </labels>
+    <labels>
+        <fullName>bdiSelectReturnToListView</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiSelectReturnToListView</shortDescription>
+        <value>Go Back</value>
+    </labels>
+    <labels>
+        <fullName>bdiSelectTooManyDIRecords</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiSelectTooManyDIRecords</shortDescription>
+        <value>Select up to {0} Data Import records.</value>
+    </labels>
+    <labels>
         <fullName>bdiSettingsSectionContactMatching</fullName>
         <categories>Batch Data Import</categories>
         <language>en_US</language>
@@ -5367,7 +5666,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
             If you have any in-progress batches, you can still access those records, but you can&apos;t process them using Batch Gift Entry.
             Contact support if you need to access in-progress batches.
             You may want to explore Gift Entry as an alternative to Batch Gift Entry.
-            Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt; on the Power of Us Hub.
+            Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.
         </value>
     </labels>
     <labels>
@@ -5614,6 +5913,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Batch Number Settings</value>
     </labels>
     <labels>
+        <fullName>commonAccessErrorMessage</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for database-level security check</shortDescription>
+        <value>You don&apos;t have the required permissions to perform this action. Contact your system administrator for assistance.</value>
+    </labels>
+    <labels>
         <fullName>commonActivate</fullName>
         <categories>Auto Number</categories>
         <language>en_US</language>
@@ -5636,6 +5943,134 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Amount</shortDescription>
         <value>Amount</value>
+    </labels>
+    <labels>
+        <fullName>firstDonation</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>First Donation</shortDescription>
+        <value>First Donation</value>
+    </labels>
+    <labels>
+        <fullName>finalDonation</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Final Donation</shortDescription>
+        <value>Final Donation</value>
+    </labels>
+    <labels>
+        <fullName>nextDonation</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Next Donation</shortDescription>
+        <value>Next Donation</value>
+    </labels>
+    <labels>
+        <fullName>mostRecentDonation</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Most Recent Donation</shortDescription>
+        <value>Most Recent Donation</value>
+    </labels>
+    <labels>
+        <fullName>lastModified</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Last Modified</shortDescription>
+        <value>Last Modified</value>
+    </labels>
+    <labels>
+        <fullName>frequencyOnThePeriod</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>On the {0}</value>
+    </labels>
+    <labels>
+        <fullName>frequencyPeriodOnTheDayOfTheMonth</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>{0} on the {1}</value>
+    </labels>
+    <labels>
+        <fullName>frequencyYearly</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>Every {0} years</value>
+    </labels>
+    <labels>
+        <fullName>frequencyMonthly</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>Every {0} months on the {1}</value>
+    </labels>
+    <labels>
+        <fullName>frequencyWeekly</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>Every {0} weeks</value>
+    </labels>
+    <labels>
+        <fullName>firstOrdinalNumber</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>First ordinal number</shortDescription>
+        <value>st</value>
+    </labels>
+    <labels>
+        <fullName>secondOrdinalNumber</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Second ordinal number</shortDescription>
+        <value>nd</value>
+    </labels>
+    <labels>
+        <fullName>thirdOrdinalNumber</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Third ordinal number</shortDescription>
+        <value>rd</value>
+    </labels>
+    <labels>
+        <fullName>otherOrdinalNumber</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Other ordinal number</shortDescription>
+        <value>th</value>
+    </labels>
+    <labels>
+        <fullName>creditCardElevatePayment</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used to show the Payment Method using Elevate RD and Credit Card payment.</shortDescription>
+        <value>{0}, *{1} Exp.{2}/{3}</value>
+    </labels>
+    <labels>
+        <fullName>achElevatePayment</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used to show the Payment Method using Elevate RD and ACH payment.</shortDescription>
+        <value>{0}, *{1}</value>
     </labels>
     <labels>
         <fullName>commonAssistiveError</fullName>
@@ -5740,6 +6175,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Close button label</shortDescription>
         <value>Close</value>
+    </labels>
+    <labels>
+        <fullName>commonCancelAndClose</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cancel and close label</shortDescription>
+        <value>Cancel and close</value>
     </labels>
     <labels>
         <fullName>commonConcurrentBatchError</fullName>
@@ -5894,6 +6337,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>These required fields must be completed: {0}</value>
     </labels>
     <labels>
+        <fullName>commonNoneSpecified</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>None specified</shortDescription>
+        <value>None specified</value>
+    </labels>
+    <labels>
         <fullName>commonNewGift</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5998,6 +6449,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Records Processed</value>
     </labels>
     <labels>
+        <fullName>commonRefreshPage</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refresh page to show the latest updates.</shortDescription>
+        <value>Refresh page to show the latest updates.</value>
+    </labels>
+    <labels>
         <fullName>commonRequired</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -6084,6 +6543,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Update</shortDescription>
         <value>Update</value>
+    </labels>
+    <labels>
+        <fullName>commonDate</fullName>
+        <categories>Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Date</shortDescription>
+        <value>Date</value>
     </labels>
     <labels>
         <fullName>commonViewAll</fullName>
@@ -6347,7 +6814,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Text to be display before the &apos;See Duplicate Contact&apos; button</shortDescription>
-        <value>See all duplicate Contacts found using matching rules. &lt;a href=&quot; https://powerofus.force.com/s/article/NPSP-Merging-Contacts&quot;&gt;&lt;b&gt; Tell Me More &lt;/b&gt;&lt;/a&gt;</value>
+        <value>See all duplicate Contacts found using matching rules. &lt;a href=&apos;https://powerofus.force.com/IP_Contacts&apos; target=&apos;_blank&apos;&gt;&lt;b&gt; Tell Me More &lt;/b&gt;&lt;/a&gt;</value>
     </labels>
     <labels>
         <fullName>conMergeSeeDupConDRS</fullName>
@@ -6498,6 +6965,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Soft Credit Widget: Add Soft Credit</shortDescription>
         <value>Add Soft Credit</value>
+    </labels>
+    <labels>
+        <fullName>geRecurringGiftModalWarning</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring modal text when adding a schedule is not supported</shortDescription>
+        <value>Applying a Recurring Donation schedule to an existing Opportunity, Payment, or adding soft credits is not supported in Gift Entry.</value>
+    </labels>
+    <labels>
+        <fullName>geSoftCreditsWarning</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning message in the soft credits field bundle when a gift has a schedule</shortDescription>
+        <value>Soft credits in Gift Entry is not supported for Recurring Donations.</value>
     </labels>
     <labels>
         <fullName>geA11ySection</fullName>
@@ -6729,6 +7212,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Label for displaying the total value of the gifts in the batch</shortDescription>
         <value>Total Batch Amount</value>
+    </labels>
+    <labels>
+        <fullName>geBatchProcessingIncomplete</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Batch processing incomplete message</shortDescription>
+        <value>Import process stopped before it could complete. Contact your system administrator for assistance.</value>
     </labels>
     <labels>
         <fullName>geBatchProcessingSuccess</fullName>
@@ -7274,6 +7765,70 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>This form contains fields that can&apos;t be found. Please check with your administrator.</value>
     </labels>
     <labels>
+        <fullName>geAddSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button for adding a schedule to a gift</shortDescription>
+        <value>Add Recurring Schedule</value>
+    </labels>
+    <labels>
+        <fullName>geUpdateSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button for updating a gift&apos;s schedule</shortDescription>
+        <value>Update Recurring Schedule</value>
+    </labels>
+    <labels>
+        <fullName>geMakeRecurring</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to toggle recurring behavior for a gift</shortDescription>
+        <value>Make Recurring</value>
+    </labels>
+    <labels>
+        <fullName>geRemoveSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button for removing a gift&apos;s schedule</shortDescription>
+        <value>Remove Recurring Schedule</value>
+    </labels>
+    <labels>
+        <fullName>geEditSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button for editing a gift&apos;s schedule</shortDescription>
+        <value>Edit Recurring Schedule</value>
+    </labels>
+    <labels>
+        <fullName>geOpenEndedGiftSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Describes open ended recurring gift schedule</shortDescription>
+        <value>{0} {1} donation starting on {2}.</value>
+    </labels>
+    <labels>
+        <fullName>geFixedGiftSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Describes fixed recurring gift schedule</shortDescription>
+        <value>{0} {1} donation starting on {2} and ending after {3} installments.</value>
+    </labels>
+    <labels>
+        <fullName>geRecurringScheduleInformation</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for the recurring gift schedule card</shortDescription>
+        <value>Recurring Schedule Information</value>
+    </labels>
+    <labels>
         <fullName>gsAdminSetupTitle</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
@@ -7448,6 +8003,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Link label of checklist item Go Further in Get Started</shortDescription>
         <value>Discover more about NPSP in Trailhead</value>
+    </labels>
+    <labels>
+        <fullName>donationHistoryFilterSelectAYear</fullName>
+        <categories>Donors</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>label for select a year in donations filter</shortDescription>
+        <value>Select a year</value>
     </labels>
     <labels>
         <fullName>gsChecklistItemGoFurtherTitle</fullName>
@@ -8539,6 +9102,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>This name has been used by another template. Please enter a unique name.</value>
     </labels>
     <labels>
+        <fullName>geErrorDonorMismatch</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error for entering household info in Account1</shortDescription>
+        <value>For a household gift, select Contact1 for Donor Type and complete the Contact fields.</value>
+    </labels>
+    <labels>
         <fullName>geErrorDonorTypeValidation</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -8617,6 +9188,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Page-level error message body when Advanced Mapping and Gift Entry are off</shortDescription>
         <value>This feature requires both Advanced Mapping and Gift Entry. Please enable them in NPSP Settings.</value>
+    </labels>
+    <labels>
+        <fullName>geServiceLevelErrorAdvancedMapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Service-level error message when advanced mapping is not enabled.</shortDescription>
+        <value>You must enable Advanced Mapping before you can enable Gift Entry.</value>
     </labels>
     <labels>
         <fullName>geErrorPageLevelAdvancedMappingHeader</fullName>
@@ -8704,7 +9283,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Failure msg description for system error &amp; uncertain if payment processed - Pt 4</shortDescription>
-        <!-- {0} = custom label commonPaymentServices i.e. Payment Services --><value>For more information, please see {0} troubleshooting documentation on the Power of Us Hub.</value>
+        <!-- {0} = custom label commonPaymentServices i.e. Payment Services --><value>For more information, please see {0} troubleshooting documentation.</value>
     </labels>
     <labels>
         <fullName>commonGauAllocations</fullName>
@@ -9561,6 +10140,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Explore Trailhead</value>
     </labels>
     <labels>
+        <fullName>gseuTrailheadLogoText</fullName>
+        <categories>End User Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text displayed in the trailhead component for logo</shortDescription>
+        <value>Trailhead Logo</value>
+    </labels>
+    <labels>
         <fullName>gseuTrailheadText</fullName>
         <categories>End User Get Started Page</categories>
         <language>en_US</language>
@@ -9583,6 +10170,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Learn more label for the application status component</shortDescription>
         <value>Learn More</value>
+    </labels>
+    <labels>
+        <fullName>opensInNewLink</fullName>
+        <categories>Accessibility</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Aria Label for the links which open in a new window</shortDescription>
+        <value>(opens in a new window)</value>
     </labels>
     <labels>
         <fullName>gsNoApplicationSubmitted</fullName>
@@ -10604,7 +11199,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionNothingScheduled</shortDescription>
-        <value>To reschedule the default NPSP jobs, go to NPSP Settings | Bulk Data Processes | Process Scheduler. Click Edit. Make sure Don&apos;t Enable Auto Schedule Default NPSP Job is not selected. Click Save. See Edit or Reschedule NPSP Jobs in the Power of Us Hub for more information: https://powerofus.force.com/articles/Resource/NPSP-Edit-or-Reschedule-NPSP-Scheduled-Jobs</value>
+        <value>To reschedule the default NPSP jobs, go to NPSP Settings | Bulk Data Processes | Process Scheduler. Click Edit. Make sure Don&apos;t Enable Auto Schedule Default NPSP Job is not selected. Click Save. See Edit or Reschedule NPSP Jobs for more information: https://powerofus.force.com/NPSP_Scheduled_Jobs</value>
     </labels>
     <labels>
         <fullName>healthSolutionOCRDupPrimary</fullName>
@@ -10675,7 +11270,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionTriggerHandlerMismatch</shortDescription>
-        <value>Changes to triggers can affect core NPSP functionality in unexpected ways, and should be thoroughly tested before deployment to production. If these changes were unintentional, you should reset your Trigger Handlers to match the default NPSP configuration. See the Manage Trigger Handlers article in the Power Of Us Hub for more information: https://powerofus.force.com/articles/Resource/NPSP-Manage-Trigger-Handlers</value>
+        <value>Changes to triggers can affect core NPSP functionality in unexpected ways, and should be thoroughly tested before deployment to production. If these changes were unintentional, you should reset your Trigger Handlers to match the default NPSP configuration. See Manage Trigger Handlers for more information: https://powerofus.force.com/NPSP_Manage_Trigger_Handlers</value>
     </labels>
     <labels>
         <fullName>healthSolutionUnsupportedPicklistValue</fullName>
@@ -11491,12 +12086,108 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>You can&apos;t modify Payment currencies directly. Update the parent Opportunity&apos;s currency, and NPSP will automatically update the currency of all related Payment records.</value>
     </labels>
     <labels>
+        <fullName>pmtNoRefundPermissionMessage</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message displayed when the user has no permission to apply the Refund</shortDescription>
+        <value>You don&apos;t have permissions to refund Payments. Contact your Salesforce admin for help.</value>
+    </labels>
+    <labels>
+        <fullName>pmtOriginalPaymentNotCompleted</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund rror message when Elevate hasn&apos;t processed the payment yet.</shortDescription>
+        <value>Payment can&apos;t be refunded because Elevate hasn&apos;t processed the payment yet.</value>
+    </labels>
+    <labels>
         <fullName>pmtPaidPaymentDateRequired</fullName>
         <categories>Payment, Accounting Data Consistency</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>pmtPaidPaymentDateRequired</shortDescription>
         <value>A paid Payment must have a Payment Date.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentDate</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Payment Date</shortDescription>
+        <value>Payment Date</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentErrorMessage</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message title for refund</shortDescription>
+        <value>There was an error processing the refund.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentSuccessMessage</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Success message for refund</shortDescription>
+        <value>Refund was successful.</value>
+    </labels>
+    <labels>
+        <fullName>pmtPaymentNotFund</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message for missing Elevate payment record</shortDescription>
+        <value>The corresponding Elevate payment record couldn&apos;t be found. Contact your Salesforce admin for help.</value>
+    </labels>
+    <labels>
+        <fullName>pmtPaymentNotRefundable</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund error when the payment has already been refund, or is a refund itself</shortDescription>
+        <value>This payment has already been refunded, or is a refund itself.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundAmount</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund Amount</shortDescription>
+        <value>Refund Amount</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentMessage</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund Information</shortDescription>
+        <value>Refund the following payment:</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundProcessing</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund submitted for processing.</shortDescription>
+        <value>Refund submitted for processing. Check for the refunded Payment on the Opportunity record.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentConfirmedButton</fullName>
+        <categories>Payment, Refund</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund Payment Button</shortDescription>
+        <value>Refund Payment</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentTitle</fullName>
+        <categories>Payment, Refund</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund Payment Title</shortDescription>
+        <value>Refund Payment?</value>
     </labels>
     <labels>
         <fullName>pmtUnpaidPaymentScheduledDateRequired</fullName>
@@ -12355,6 +13046,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Run Batch</value>
     </labels>
     <labels>
+        <fullName>stgBtnRunHHDeceasedBatch</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgBtnRunHHDeceasedBatch</shortDescription>
+        <value>Run Household Deceased Batch</value>
+    </labels>
+    <labels>
         <fullName>stgBtnSave</fullName>
         <categories>Settings, UTIL_PageHeader</categories>
         <language>en_US</language>
@@ -12600,6 +13299,14 @@ Selecting Don&apos;t Auto Schedule Default NPSP Jobs tells NPSP not to check for
         <protected>true</protected>
         <shortDescription>stgErrorMissingDefaultGauRecord</shortDescription>
         <value>The previously configured Default General Accounting Unit no longer exists and has been removed. To re-enable Default Allocations, open the GAU Allocations page in NPSP Settings.</value>
+    </labels>
+    <labels>
+        <fullName>stgHHDataRefreshTitle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHHDataRefreshTitle</shortDescription>
+        <value>Refresh Household Data</value>
     </labels>
     <labels>
         <fullName>stgHHNameRefreshTitle</fullName>
@@ -13013,6 +13720,14 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <value>The Account record type you want to use for new Accounts if you&apos;ve selected the Household Account model above. You can select the default Household Account record type, or your own record type. If you select --None--, then Salesforce will use the default Account record type for the user who&apos;s creating the new Contact (and associated Account).</value>
     </labels>
     <labels>
+        <fullName>stgHelpHHData</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpHHData</shortDescription>
+        <value>Use these bulk data processes to refresh Household names and recalculate data for the All Household Members Deceased field. After running one of these processes, refresh your browser to run the other one.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpHHExcludedRT</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -13350,7 +14065,7 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpPowerOfUsHub</shortDescription>
-        <value>Got questions? The Hub has answers! Try the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; group for questions about NPSP and the &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; group for questions about Salesforce administration and cofiguration.&lt;br/&gt;&lt;br/&gt;Keep up with the latest NPSP release notes in the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt; group.</value>
+        <value>Got questions? Try the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; group for questions about NPSP and the &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; group for questions about Salesforce administration and configuration.&lt;br/&gt;&lt;br/&gt;Keep up with the latest NPSP release notes in the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt; group.</value>
     </labels>
     <labels>
         <fullName>stgHelpPrimaryContactBatch</fullName>
@@ -13389,6 +14104,14 @@ This change updates Opportunity Contact Role records. Before starting this proce
 ● Visual Workflows&lt;br/&gt;
 ● Custom Triggers&lt;br/&gt;&lt;br/&gt;
 Once the process is 100% complete, you can safely leave or refresh this page.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpDeceasedBatch</fullName>
+        <categories>NPSP Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Content of the &quot;Recalculate Deceased Household Accounts&quot; page</shortDescription>
+        <value>This utility recalculates the value in the All Household Members Deceased field on Household Accounts. Run this utility to ensure that the value correctly reflects the status of the Deceased field on related Contacts. This process may take some time, but you can safely close this page and the process will continue in the background.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDAddCampaign</fullName>
@@ -14399,6 +15122,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Remove Duplicate Primary OCRs</value>
     </labels>
     <labels>
+        <fullName>stgLabelDeceasedBatch</fullName>
+        <categories>NPSP Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Menu title for the Batch job to recalculate All Members Deceased</shortDescription>
+        <value>Recalculate Deceased Household Accounts</value>
+    </labels>
+    <labels>
         <fullName>stgLabelRDFieldMap</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -14807,6 +15538,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Status to State Mapping</value>
     </labels>
     <labels>
+        <fullName>stgNavRD2StatusAutomation</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Menu name for the Status Automation settings</shortDescription>
+        <value>Status Automation</value>
+    </labels>
+    <labels>
         <fullName>stgNavRDBatch</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -14940,7 +15679,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgPowerOfUsHub</shortDescription>
-        <value>Power of Us Hub</value>
+        <value>Trailblazer Community</value>
     </labels>
     <labels>
         <fullName>stgRDNamingDescription</fullName>
@@ -15116,7 +15855,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Resource Hub label in Get Started Resources section</shortDescription>
-        <value>Power of Us Hub</value>
+        <value>Trailblazer Community</value>
     </labels>
     <labels>
         <fullName>gsResourcesItemHubLinkLabel</fullName>
@@ -15188,7 +15927,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Questions Answered link label in Get Started Resources section for End Users</shortDescription>
-        <value>Power of Us Hub</value>
+        <value>Trailblazer Community</value>
     </labels>
     <labels>
         <fullName>gseuResourcesItemAboutNPSPLabel</fullName>
@@ -15253,5 +15992,61 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>true</protected>
         <shortDescription>Community Group link label in Get Started Resources section for End Users</shortDescription>
         <value>Trailhead Community</value>
+    </labels>
+    <labels>
+        <fullName>donationHistoryDatatableAriaLabel</fullName>
+        <categories>Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to define aria-label on donation history datatable</shortDescription>
+        <value>Donation History</value>
+    </labels>
+    <labels>
+        <fullName>RD2_Actions</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Recurring Donation Actions</shortDescription>
+        <value>Actions</value>
+    </labels>
+    <labels>
+        <fullName>updatePaymentMethod</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for update payment method option on Recurring Donations Action</shortDescription>
+        <value>Update Payment Method</value>
+    </labels>
+    <labels>
+        <fullName>changeAmountOrFrequency</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for change amount and frequency Recurring Donations Action</shortDescription>
+        <value>Change Amount or Frequency</value>
+    </labels>
+    <labels>
+        <fullName>stopRecurringDonation</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Stop Recurring Donation Recurring Donations Action</shortDescription>
+        <value>Stop Recurring Donation</value>
+    </labels>
+    <labels>
+        <fullName>stopRecurringDonationModalTitle</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Stop Recurring Donation Recurring Donations Action</shortDescription>
+        <value>Stop this Recurring Donation?</value>
+    </labels>
+    <labels>
+        <fullName>updateRecurringDonation</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for modifications on Recurring Donations</shortDescription>
+        <value>Update Recurring Donation</value>
     </labels>
 </CustomLabels>

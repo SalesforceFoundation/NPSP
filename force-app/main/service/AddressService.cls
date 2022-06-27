@@ -46,8 +46,9 @@ public inherited sharing class AddressService {
     }
 
     /*******************************************************************************************************
-    * @description Utility to copy Address fields between Contacts and Accounts (or vice-versa).
-    * Handles instances where State and Country picklists are enabled, and multiline street addresses.
+    * Doesn't do anything special when State and Country picklists are enabled (the
+     * platform will fill out State and Country Code values using the values from the
+     * picklist fields), and multiline street addresses.
     * @param sobjSrc the source Contact or Account
     * @param strFieldPrefixSrc the address fields to copy from, ie., Mailing, Other, Shipping, Billing
     * @param sobjDst the destination Contact or Account
@@ -61,7 +62,6 @@ public inherited sharing class AddressService {
         sobjDst.put(strFieldPrefixDst + 'Country', sobjSrc.get(strFieldPrefixSrc + 'Country'));
         sobjDst.put(strFieldPrefixDst + 'Latitude', sobjSrc.get(strFieldPrefixSrc + 'Latitude'));
         sobjDst.put(strFieldPrefixDst + 'Longitude', sobjSrc.get(strFieldPrefixSrc + 'Longitude'));
-
         if (orgConfig.isStateCountryPicklistsEnabled()) {
             sobjDst.put(strFieldPrefixDst + 'StateCode', sobjSrc.get(strFieldPrefixSrc + 'StateCode'));
             sobjDst.put(strFieldPrefixDst + 'CountryCode', sobjSrc.get(strFieldPrefixSrc + 'CountryCode'));
@@ -130,15 +130,23 @@ public inherited sharing class AddressService {
     /*******************************************************************************************************
     * @description Utility to copy Address fields from an Address object to a Contact or Account.
     * Handles instances where State and Country picklists are enabled, and multiline street addresses.
-    * @param addr the Address object to copy from
+    * @param anAddress the Address object to copy from
     * @param sobjDst the destination Contact or Account
     * @param strFieldPrefix the address fields to copy to, ie., Mailing, Other, Shipping, Billing
     * @param strFieldAddrType an optional Address Type field on sobjDst to copy to
-    * @return void
     */
     public void copyOntoSObject(IAddress anAddress, SObject sobjDst,
             String strFieldPrefix, String strFieldAddrType) {
         Address__c addr = (Address__c) anAddress.getRecord();
+
+        String undeliverableField = UTIL_Namespace.StrAllNSPrefix('Undeliverable__c');
+        Set<String> populatedFieldsAsMapKeySet =
+                anAddress.getRecord().getPopulatedFieldsAsMap().keySet();
+        if (populatedFieldsAsMapKeySet.contains(undeliverableField)) {
+            String undeliverableAddressField =
+                    UTIL_Namespace.StrAllNSPrefix('Undeliverable_Address__c');
+            sobjDst.put(undeliverableAddressField, anAddress.isUndeliverable());
+        }
 
         sobjDst.put(strFieldPrefix + 'Street', anAddress.multilineStreet());
         sobjDst.put(strFieldPrefix + 'City', addr.MailingCity__c);
@@ -190,8 +198,8 @@ public inherited sharing class AddressService {
             }
         }
 
-        if (strFieldAddrType != null)
+        if (strFieldAddrType != null) {
             sobjDst.put(strFieldAddrType, addr.Address_Type__c);
-
+        }
     }
 }

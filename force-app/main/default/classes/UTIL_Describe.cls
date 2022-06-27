@@ -107,7 +107,7 @@ public class UTIL_Describe {
     /*******************************************
     * Gets describe maps for a new object
     ********************************************/
-    static void fillMapsForObject(string objectName) {
+    static void fillMapsForObject(String objectName) {
         objectName = objectName.toLowerCase();
 
         // get the object map the first time
@@ -130,7 +130,7 @@ public class UTIL_Describe {
     /*******************************************
     * Gets a field map for a new object/field pair
     ********************************************/
-    private static void fillFieldMapsForObject(string objectName, string fieldName) {
+    private static void fillFieldMapsForObject(String objectName, String fieldName) {
         // get the object map the first time
         fillMapsForObject(objectName);
 
@@ -152,7 +152,7 @@ public class UTIL_Describe {
     /*******************************************
     * Gets all field maps for a new object
     ********************************************/
-    static void fillFieldMapsForObject(string objectName) {
+    static void fillFieldMapsForObject(String objectName) {
         objectName = objectName.toLowerCase();
 
         // get the object map the first time
@@ -166,7 +166,7 @@ public class UTIL_Describe {
 
         //Map<String, Schema.SObjectField> fieldsMap = objectDescribes.get(objectName).fields.getMap();
         if (fieldTokens.get(objectName).size() != fieldDescribes.get(objectName).size()) {
-            for ( string fieldName : fieldTokens.get(objectName).keyset()) {
+            for ( String fieldName : fieldTokens.get(objectName).keySet()) {
                 if (!fieldDescribes.get(objectName).containsKey(fieldName)) {
                     Schema.DescribeFieldResult dfr = fieldTokens.get(objectName).get(fieldName).getDescribe();
                     fieldDescribes.get(objectName).put(fieldName, dfr);
@@ -183,8 +183,9 @@ public class UTIL_Describe {
     public static SObject getPrototypeObject(String objectName) {
         objectName = objectName.toLowerCase();
         // make sure we have this object's schema mapped
-        if (!objectDescribes.containsKey(objectName))
+        if (!objectDescribes.containsKey(objectName)) {
             fillMapsForObject(objectName);
+        }
 
         return gd.get(objectName).newSObject();
     }
@@ -194,13 +195,24 @@ public class UTIL_Describe {
     * @param objectName the name of the object to lookup
     * @return the Label of the object
     */
-    public static string getObjectLabel(String objectName) {
+    public static String getObjectLabel(String objectName) {
         objectName = objectName.toLowerCase();
         // make sure we have this object's schema mapped
-        if (!objectDescribes.containsKey(objectName))
+        if (!objectDescribes.containsKey(objectName)) {
             fillMapsForObject(objectName);
+        }
 
         return objectDescribes.get(objectName).getLabel();
+    }
+
+    public static String getObjectLabelPlural(String objectName) {
+        objectName = objectName.toLowerCase();
+        // make sure we have this object's schema mapped
+        if (!objectDescribes.containsKey(objectName)) {
+            fillMapsForObject(objectName);
+        }
+
+        return objectDescribes.get(objectName).getLabelPlural();
     }
 
     /*******************************************************************************************************
@@ -211,8 +223,9 @@ public class UTIL_Describe {
     public static Schema.DescribeSObjectResult getObjectDescribe(String objectName) {
         objectName = objectName.toLowerCase();
         // make sure we have this object's schema mapped
-        if (!objectDescribes.containsKey(objectName))
+        if (!objectDescribes.containsKey(objectName)) {
             fillMapsForObject(objectName);
+        }
 
         return objectDescribes.get(objectName);
     }
@@ -232,26 +245,41 @@ public class UTIL_Describe {
     }
 
     /*******************************************************************************************************
+    * @description Returns object describe data.
+    * @param objType the SObjectType of the object to lookup
+    * @return Schema.DescribeSObjectResult of the object
+    */
+    public Schema.DescribeSObjectResult getObjectDescribeInstance(SObjectType objType) {
+        return getObjectDescribe(objType);
+    }
+
+    /*******************************************************************************************************
     * @description Compares Id to verify object type
     * @param salesforceId of the object
-    * @param objectName
+    * @param objectName name of the sobject to compare with
     * @return true if the Id is for the given object type, false otherwise.
     */
-    public static boolean isObjectIdThisType(Id salesforceId, String objectName) {
+    public static Boolean isObjectIdThisType(Id salesforceId, String objectName) {
         objectName = objectName.toLowerCase();
 
         // make sure we have this object's schema mapped
-        if (!objectDescribes.containsKey(objectName))
+        if (!objectDescribes.containsKey(objectName)) {
             fillMapsForObject(objectName);
+        }
 
         // now grab the requested id prefix
-        boolean ret = false;
+        Boolean ret = false;
         if (salesforceId != null) {
-            string prefix = objectDescribes.get(objectName).getKeyPrefix();
-            if (prefix != null)
-                ret = ((string)(salesforceId)).startsWith(prefix);
+            String prefix = objectDescribes.get(objectName).getKeyPrefix();
+            if (prefix != null) {
+                ret = ((String) (salesforceId)).startsWith(prefix);
+            }
         }
         return ret;
+    }
+
+    public static String objectNameFromId(Id objectId) {
+        return objectId.getSobjectType().getDescribe().getName();
     }
 
     /*******************************************************************************************************
@@ -327,16 +355,21 @@ public class UTIL_Describe {
     * @param fieldName the name of the field to look up
     * @return string the name of the of the field's type
     */
-    public static string getFieldType(String objectName, String fieldName) {
+    public static String getFieldType(String objectName, String fieldName) {
         objectName = objectName.toLowerCase();
         fieldName = fieldName.toLowerCase();
 
         // make sure we have this field's schema mapped
-        if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName))
+        if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName)) {
             fillFieldMapsForObject(objectName, fieldName);
+        }
 
         Schema.DescribeFieldResult dfr = fieldDescribes.get(objectName).get(fieldName);
         return dfr.getType().name();
+    }
+
+    public String getFieldTypeInstance(String objectName, String fieldName) {
+        return getFieldType(objectName, fieldName);
     }
 
     /*******************************************************************************************************
@@ -344,15 +377,16 @@ public class UTIL_Describe {
     * PICKLIST, MULTIPICKLIST, CURRENCY, DOUBLE, INTEGER, PERCENT, PHONE, EMAIL
     * @param objectName the name of the object to look up
     * @param fieldName the name of the field to look up
-    * @return Displaytype the Displaytype of the field
+    * @return DisplayType the DisplayType of the field
     */
-    public static Schema.Displaytype getFieldDisplaytype(String objectName, String fieldName) {
+    public static Schema.DisplayType getFieldDisplayType(String objectName, String fieldName) {
         objectName = objectName.toLowerCase();
         fieldName = fieldName.toLowerCase();
 
         // make sure we have this field's schema mapped
-        if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName))
+        if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName)) {
             fillFieldMapsForObject(objectName, fieldName);
+        }
 
         Schema.DescribeFieldResult dfr = fieldDescribes.get(objectName).get(fieldName);
         return dfr.getType();
@@ -388,18 +422,28 @@ public class UTIL_Describe {
     }
 
     /*******************************************************************************************************
+    * @description Returns object describe data.
+    * @param objType the SObjectType of the object to lookup
+    * @return Schema.DescribeSObjectResult of the object
+    */
+    public Schema.DescribeFieldResult getFieldDescribeInstance(String objectName, String fieldName) {
+        return getFieldDescribe(objectName, fieldName);
+    }
+
+    /*******************************************************************************************************
     * @description Gives field friendly name
     * @param objectName the name of the object to look up
     * @param fieldName the name of the field to look up
     * @return string the label of the field
     */
-    public static string getFieldLabel(String objectName, String fieldName) {
+    public static String getFieldLabel(String objectName, String fieldName) {
         objectName = objectName.toLowerCase();
         fieldName = fieldName.toLowerCase();
 
         // make sure we have this field's schema mapped
-        if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName))
+        if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName)) {
             fillFieldMapsForObject(objectName, fieldName);
+        }
 
         Schema.DescribeFieldResult dfr = fieldDescribes.get(objectName).get(fieldName);
         return dfr.getLabel();
@@ -407,11 +451,11 @@ public class UTIL_Describe {
 
     /*******************************************************************************************************
     * @description Gives field friendly name without throwing exception if not valid.
-    * @param objectName the name of the object to look up
-    * @param fieldName the name of the field to look up -- LOWERCASE
+    * @param strObj the name of the object to look up
+    * @param strField the name of the field to look up -- LOWERCASE
     * @return string the label of the field
     */
-    public static string getFieldLabelSafe(string strObj, string strField) {
+    public static String getFieldLabelSafe(String strObj, String strField) {
         try {
             return getFieldLabel(strObj, strField);
         } catch (Exception e) {
@@ -457,12 +501,13 @@ public class UTIL_Describe {
             objectName = objectName.toLowerCase();
             fieldName = fieldName.toLowerCase();
 
-            if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName))
+            if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName)) {
                 fillFieldMapsForObject(objectName, fieldName);
+            }
 
             Schema.DescribeFieldResult dfr = fieldDescribes.get(objectName).get(fieldName);
             return dfr != null;
-        } catch (exception ex) {
+        } catch (Exception ex) {
             return false;
         }
     }
@@ -505,30 +550,33 @@ public class UTIL_Describe {
     * @param dtTgt the DisplayType of the target object
     * @return true if the types can be copied between
     */
-    public static boolean canDisplaytypesCopy(Schema.Displaytype dtSrc, Schema.Displaytype dtTgt) {
+    public static Boolean canDisplayTypesCopy(Schema.DisplayType dtSrc, Schema.DisplayType dtTgt) {
 
-        if (dtSrc == dtTgt)
-           return true;
+        if (dtSrc == dtTgt) {
+            return true;
+        }
 
         // date can go to datetime
-        if (dtSrc == Schema.Displaytype.Date && dtTgt == Schema.Displaytype.DateTime)
-           return true;
+        if (dtSrc == Schema.DisplayType.DATE && dtTgt == Schema.DisplayType.DATETIME) {
+            return true;
+        }
 
-        // numbers can implictly cast to other numbers
-        if ((dtSrc == Schema.Displaytype.Currency ||
-            dtSrc == Schema.Displaytype.Double ||
-            dtSrc == Schema.Displaytype.Integer ||
-            dtSrc == Schema.Displaytype.Percent) &&
-           (dtTgt == Schema.Displaytype.Currency ||
-            dtTgt == Schema.Displaytype.Double ||
-            dtTgt == Schema.Displaytype.Integer ||
-            dtTgt == Schema.Displaytype.Percent)) {
+        // numbers can implicitly cast to other numbers
+        if ((dtSrc == Schema.DisplayType.CURRENCY ||
+            dtSrc == Schema.DisplayType.DOUBLE ||
+            dtSrc == Schema.DisplayType.INTEGER ||
+            dtSrc == Schema.DisplayType.PERCENT) &&
+           (dtTgt == Schema.DisplayType.CURRENCY ||
+            dtTgt == Schema.DisplayType.DOUBLE ||
+            dtTgt == Schema.DisplayType.INTEGER ||
+            dtTgt == Schema.DisplayType.PERCENT)) {
             return true;
         }
 
         // text can go to longer text
-        if (dtSrc == Schema.Displaytype.String && dtTgt == Schema.Displaytype.TextArea)
+        if (dtSrc == Schema.DisplayType.STRING && dtTgt == Schema.DisplayType.TEXTAREA) {
             return true;
+        }
 
         return false;
     }
@@ -536,7 +584,7 @@ public class UTIL_Describe {
     /*******************************************************************************************************
     * @description utility to return a list of field names from a field set.
     * @param obj the namespaced name of the object
-    * @param fieldSet the namespaced name of the object's field set
+    * @param fieldSetName the namespaced name of the object's field set
     * @return a list of strings of field names in the field set
     */
     public static List<String> listStrFromFieldSet(String obj, String fieldSetName) {
@@ -546,7 +594,7 @@ public class UTIL_Describe {
     /*******************************************************************************************************
     * @description utility to return a list of field names from a field set.
     * @param obj the namespaced name of the object
-    * @param fieldSet the namespaced name of the object's field set
+    * @param fieldSetName the namespaced name of the object's field set
     * @param onlyRequired if true, only return required fields
     * @return a list of strings of field names in the field set
     */
@@ -565,7 +613,7 @@ public class UTIL_Describe {
                         new List<String>{'\''+fieldSetMember.getFieldPath()+'\'', '\''+fieldSetName+'\'', '\''+obj+'\''});
                     throw (new SchemaDescribeException(errorMessage));
                 }
-                if(!onlyRequired || fieldSetMember.getDBRequired() || fieldSetMember.getRequired()){
+                if(!onlyRequired || fieldSetMember.getDbRequired() || fieldSetMember.getRequired()){
                     fieldNames.add(fieldSetMember.getFieldPath());
                 }
             }
@@ -574,32 +622,20 @@ public class UTIL_Describe {
     }
 
     /*******************************************************************************************************
-    * @description utility to return a comma separated string of field names from a field set
-    * @param strObject the name of the object
-    * @param strFS the name of the object's field set
-    * @return a comma separated string of field names in the field set
-    */
-    public static string strFieldNamesFromFieldSet(string strObject, string strFS) {
-        string strFields = '';
-        for (string str : listStrFromFieldSet(strObject, strFS)) {
-            strFields += str + ',';
-        }
-        return strFields.substring(0, strFields.length()-1);
-    }
-
-    /*******************************************************************************************************
     * @description copies the specified fields, make sure the user has apppropriate permissions
     * @param strObject the name of the object
     * @param src the Source object
     * @param dst the Destination object
     * @param listStrF the list of field names to check FLS and copy data from
-    * @return void
     */
-    public static void copyObjectFLS(string strObject, SObject src, SObject dst, list<String> listStrF) {
+    public static void copyObjectFLS(String strObject, SObject src, SObject dst, List<String> listStrF) {
         for (String strF : listStrF) {
             DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(strObject, strF);
-            if (dfr == null || !dfr.isCreateable() || !dfr.isUpdateable())
-                throw (new permsException(string.format(label.flsError, new string[]{strObject + '.' + strF})));
+            if (dfr == null || !dfr.isCreateable() || !dfr.isUpdateable()) {
+                throw (new PermsException(String.format(Label.flsError, new String[]{
+                        strObject + '.' + strF
+                })));
+            }
 
             // don't copy null for checkbox fields, or they will give an error on update
             if (dfr.isNillable() || src.get(strF)!= null) {
@@ -721,12 +757,14 @@ public class UTIL_Describe {
             fieldName.endsWith('__c')?UTIL_Namespace.StrTokenNSPrefix(fieldName):fieldName
         );
         if (dfr == null || !dfr.isAccessible() || !dfr.isUpdateable()) {
-            throw (new permsException(
-                string.format(
-                    label.flsError,
-                    new string[]{UTIL_Namespace.StrTokenNSPrefix(objectName) + '.' +
-                                 UTIL_Namespace.StrTokenNSPrefix(fieldName)}
-                )
+            throw (new PermsException(
+                    String.format(
+                            Label.flsError,
+                            new String[]{
+                                    UTIL_Namespace.StrTokenNSPrefix(objectName) + '.' +
+                                            UTIL_Namespace.StrTokenNSPrefix(fieldName)
+                            }
+                    )
             ));
         }
     }
@@ -737,7 +775,7 @@ public class UTIL_Describe {
     public static Boolean isMiddleNameEnabled() {
         if (isMiddleNameEnabled == null) {
             if (!fieldTokens.containsKey('Contact')) {
-                fieldTokens.put('Contact', Contact.sObjectType.getDescribe().fields.getMap());
+                fieldTokens.put('Contact', Contact.SObjectType.getDescribe().fields.getMap());
                 fieldDescribes.put('Contact', new Map<String, Schema.DescribeFieldResult>());
             }
             isMiddleNameEnabled = fieldTokens.get('Contact').containsKey('middlename');
@@ -751,7 +789,7 @@ public class UTIL_Describe {
     public static Boolean isNameSuffixEnabled() {
         if (isNameSuffixEnabled == null) {
             if (!fieldTokens.containsKey('Contact')) {
-                fieldTokens.put('Contact', Contact.sObjectType.getDescribe().fields.getMap());
+                fieldTokens.put('Contact', Contact.SObjectType.getDescribe().fields.getMap());
                 fieldDescribes.put('Contact', new Map<String, Schema.DescribeFieldResult>());
             }
             isNameSuffixEnabled = fieldTokens.get('Contact').containsKey('suffix');
@@ -788,8 +826,12 @@ public class UTIL_Describe {
         return objectName;
     }
 
+    public Boolean isFieldSortable(Schema.SObjectField field) {
+        return field.getDescribe().isSortable();
+    }
+
     /** @description our exception object for Field Level & Object Security errors. */
-    private class permsException extends Exception {}
+    private class PermsException extends Exception {}
 
     /** @description Returns a friendlier label name for a given display type
     * @param displayType The all caps version of the display type provided from a field describe

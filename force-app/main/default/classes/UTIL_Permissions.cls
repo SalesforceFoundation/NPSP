@@ -235,6 +235,18 @@ public with sharing class UTIL_Permissions {
     }
 
     /**
+    * @description Determines whether the running user has create permissions on the given object and field
+    * @param objectName the name of the object
+    * @param fieldName the name of the field
+    * @param throwException indicates whether an exception should be thrown if the user doesn't have permission
+    * @return returns boolean to indicate whether the user has permission; conditionally throws an exception not
+    */
+    public Boolean canCreateInstanced(String objectName, String fieldName, Boolean throwException) {
+        DescribeFieldResult fieldResult = UTIL_Describe.getFieldDescribe(objectName, fieldName);
+        return canCreate(fieldResult, throwException);
+    }
+
+    /**
     * @description Determines whether the running user has update permissions on the given object and field
     * @param objectName the name of the object
     * @param fieldName the name of the field
@@ -353,6 +365,7 @@ public with sharing class UTIL_Permissions {
         return canCreate(SObjFields);
     }
 
+
     /*******************************************************************************************************************
     * @description Determines whether the running user has read permissions on the sObject provided
     *
@@ -445,6 +458,16 @@ public with sharing class UTIL_Permissions {
             }
         }
 
+        return true;
+    }
+
+
+    public Boolean canUpdate(Schema.SObjectType sObjectType, Set<String> fieldNames) {
+        for (String fieldName: fieldNames) {
+            if (!canUpdate(String.valueOf(sObjectType), fieldName, false)) {
+                return false;
+            }
+        }
         return true;
     }
 

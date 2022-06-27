@@ -37,25 +37,6 @@
 public with sharing class RD2_EntryFormController {
 
     /**
-    * @description Set of fields that will be excluded from the RD2_EntryForm Custom Field Section
-    */
-    @TestVisible
-    private static Set<String> excludedCustomFields = new Set<String> {
-        'CreatedById',
-        'CreatedDate',
-        'CurrencyIsoCode',
-        'Id',
-        'IsDeleted',
-        'LastModifiedById',
-        'LastModifiedDate',
-        'LastReferencedDate',
-        'LastViewedDate',
-        'Name',
-        'OwnerId',
-        'SystemModStamp'
-    };
-
-    /**
     * @description Handles commitment request creation, response parsing and RD Commitment Id update
     */
     private static CommitmentService commitmentService {
@@ -68,125 +49,36 @@ public with sharing class RD2_EntryFormController {
         set;
     }
 
-    /**
-    * @description  Gather the org, object and environment setting for Recurring Donation Entry/Edit Form
-    * @param parentId The parentId of the new RD
-    * @return Map<String, Object>
-    */
-    @AuraEnabled(cacheable=true)
-    public static Map<String, Object> getRecurringSettings(Id parentId) {
-        String parentSObjectType = (parentId == null)
-            ? null
-            : parentId.getSobjectType().getDescribe().getName();
-
-        String defaultRecurringType = UTIL_Describe.getDefaultSelectOption(
-            'npe03__Recurring_Donation__c', String.valueOf(npe03__Recurring_Donation__c.RecurringType__c)
-        );
-
-        return new Map<String, Object> {
-            'isAutoNamingEnabled' => RD2_NamingService.isAutomaticNamingEnabled,
-            'isMultiCurrencyEnabled' => UserInfo.isMultiCurrencyOrganization(),
-            'parentSObjectType' => parentSObjectType,
-            'InstallmentPeriodPermissions' => getFieldPermissionsMap('npe03__Installment_Period__c'),
-            'InstallmentFrequencyPermissions' => getFieldPermissionsMap(UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c')),
-            'customFieldSets' => getCustomFieldSectionFields(),
-            'isElevateCustomer' => RD2_ElevateIntegrationService.isIntegrationEnabled(),
-            'isChangeLogEnabled' => RD2_ChangeLogService.isChangeLogEnabled,
-            'periodToYearlyFrequencyMap' => RD2_Constants.PERIOD_TO_YEARLY_FREQUENCY,
-            'closedStatusValues' => RD2_StatusMapper.getInstance().getClosedStatusValues(),
-            'defaultRecurringType' => defaultRecurringType
-        };
-    }
-
-    /**
-    * @description Retrieve the donor type for an existing RD record
-    * @param recordId RecurringDonation.RecordId
-    * @return Map<String, Object> of specific type of RD data
-    */
-    @AuraEnabled
-    public static Map<String, Object> getRecurringData(String recordId) {
-        if (recordId == null) {
-            return null;
-        }
-
-        npe03__Recurring_Donation__c rd;
-        Map<String, Object> response = new Map<String, Object>();
-        try {
-            rd = getRecurringDonation(recordId);
-        } catch (Exception ex) {
-            throw new AuraHandledException(ex.getMessage());
-        }
-
-        if (rd.npe03__Organization__r.RecordTypeId == hhRecordTypeId
-            || (rd.npe03__Organization__c == null && rd.npe03__Contact__r.Account.RecordTypeId == hhRecordTypeId)
-        ) {
-            response.put('DonorType', 'Contact');
-        } else {
-            response.put('DonorType', 'Account');
-        }
-
-        response.put('Period', rd.npe03__Installment_Period__c);
-        response.put('Frequency', rd.InstallmentFrequency__c);
-        response.put('RecurringType', rd.RecurringType__c);
-        response.put('NumInstallments', rd.npe03__Installments__c);
-
-        return response;
-    }
-
-    /**
-     * @description Validate that the current user has Read access to a specific set of required fields. If this returns
-     * false, the custom UI will display a warning message at the top of the page.
-     * @return True if the User has Read access to all required fields in the UI
-     */
-    @AuraEnabled(cacheable=true)
-    public static Boolean hasRequiredFieldPermissions() {
-        Set<String> requiredFields = new Set<String>{
-            'npe03__Amount__c',
-            'npe03__Contact__c',
-            'npe03__Installment_Period__c',
-            'npe03__Date_Established__c',
-            UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c'),
-            UTIL_Namespace.StrTokenNSPrefix('Day_of_Month__c'),
-            UTIL_Namespace.StrTokenNSPrefix('StartDate__c')
-        };
-
-        Boolean hasPermissions = true;
-
-        for (String fld : requiredFields) {
-            DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', fld);
-            if (!dfr.isAccessible()) {
-                hasPermissions = false;
-                break;
+    @TestVisible
+    private static RD2_QueryService selector {
+        get {
+            if (selector == null) {
+                selector = new RD2_QueryService();
             }
+            return selector;
         }
-
-        return hasPermissions;
+        set;
     }
 
-    /**
-    * @param recordId RecurringDonation.RecordId
-    * @return Recurring Donation object
-    */
-    private static npe03__Recurring_Donation__c getRecurringDonation(Id recordId) {
-        Set<String> queryFields = new Set<String>{
-            'Id',
-            'RecurringType__c',
-            'npe03__Installment_Period__c',
-            'InstallmentFrequency__c',
-            'npe03__Organization__c',
-            'npe03__Organization__r.RecordTypeId',
-            'npe03__Contact__r.Account.RecordTypeId',
-            'npe03__Installments__c'
-        };
+    private static RD2_Settings settings {
+        get {
+            if (settings == null) {
+                settings = RD2_Settings.getInstance();
+            }
+            return settings;
+        }
+        set;
+    }
 
-        String soql = new UTIL_Query()
-            .withFrom(npe03__Recurring_Donation__c.SObjectType)
-            .withSelectFields(queryFields)
-            .withWhere('Id = :recordId')
-            .withLimit(1)
-            .build();
-
-        return Database.query(soql);
+    @TestVisible
+    private static UTIL_Permissions permissions {
+        get {
+            if (permissions == null) {
+                permissions = UTIL_Permissions.getInstance();
+            }
+            return permissions;
+        }
+        set;
     }
 
     /***
@@ -203,12 +95,131 @@ public with sharing class RD2_EntryFormController {
         private set;
     }
 
+    @AuraEnabled
+    public static RD2_AppView getInitialView(Id parentId, Id recordId) {
+        RD2_AppView view = new RD2_AppView();
+
+        view.hasRequiredPermissions = hasRequiredFieldPermissions();
+        if (!view.hasRequiredPermissions) {
+            return view;
+        }
+
+        view.isAutoNamingEnabled = RD2_NamingService.isAutomaticNamingEnabled;
+        view.isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
+        view.parentSObjectType = (parentId == null) ? null : UTIL_Describe.objectNameFromId(parentId);
+        view.InstallmentPeriodPermissions = getFieldPermissionsMap('npe03__Installment_Period__c');
+        view.InstallmentFrequencyPermissions = getFieldPermissionsMap(String.valueOf(npe03__Recurring_Donation__c.InstallmentFrequency__c));
+        view.customFieldSets = getCustomFieldSectionFields();
+        view.isElevateCustomer = RD2_ElevateIntegrationService.isIntegrationEnabled();
+        view.isChangeLogEnabled = RD2_ChangeLogService.isChangeLogEnabled;
+        view.periodToYearlyFrequencyMap = RD2_Constants.PERIOD_TO_YEARLY_FREQUENCY;
+        view.closedStatusValues = new List<String>(RD2_StatusMapper.getInstance().getClosedStatusValues());
+        view.defaultRecurringType = UTIL_Describe.getDefaultSelectOption(
+                'npe03__Recurring_Donation__c',
+                String.valueOf(npe03__Recurring_Donation__c.RecurringType__c)
+        );
+        view.defaultInstallmentPeriod = UTIL_Describe.getDefaultSelectOption(
+                'npe03__Recurring_Donation__c',
+                String.valueOf(npe03__Recurring_Donation__c.npe03__Installment_Period__c)
+        );
+        view.defaultDayOfMonth = UTIL_Describe.getDefaultSelectOption(
+                'npe03__Recurring_Donation__c',
+                String.valueOf(npe03__Recurring_Donation__c.Day_of_Month__c)
+        );
+
+        if (recordId != null) {
+            npe03__Recurring_Donation__c rd = selector.getRecurringDonationForUI(recordId);
+            view.withRecord(rd);
+            view.record.donorType = getDonorType(rd);
+            if (view.isMultiCurrencyEnabled) {
+                view.record.currencyIsoCode = (String)rd.get('CurrencyIsoCode');
+            }
+        } else if (parentId != null) {
+            view.withParentId(parentId);
+        }
+
+        view.setRecordCreateDefaults();
+
+        return view;
+    }
+
+    public String getDefaultInstallmentPeriod() {
+        return UTIL_Describe.getDefaultSelectOption('npe03__Recurring_Donation__c', 'npe03__Installment_Period__c');
+    }
+
+    public List<Map<String, String>> getInstallmentPeriodPicklistValues() {
+        return UTIL_Describe.getLightningSelectOptions('npe03__Recurring_Donation__c','npe03__Installment_Period__c');
+    }
+
+    private static String getDonorType(npe03__Recurring_Donation__c rd) {
+        String donorType = isContactDonor(rd) ? RD2_Constants.DONOR_TYPE_CONTACT : RD2_Constants.DONOR_TYPE_ACCOUNT;
+        return donorType;
+    }
+
+    private static Boolean isContactDonor(npe03__Recurring_Donation__c rd) {
+        Boolean isContactDonor = rd.npe03__Organization__r.RecordTypeId == hhRecordTypeId
+                || (rd.npe03__Organization__c == null && rd.npe03__Contact__r.Account.RecordTypeId == hhRecordTypeId);
+        return isContactDonor;
+    }
+
+    @TestVisible
+    private static Boolean hasRequiredSavePermissions(RD2_SaveRequest request) {
+        Set<String> requiredFields = new Set<String>{
+                String.valueOf(npe03__Recurring_Donation__c.Status__c),
+                String.valueOf(npe03__Recurring_Donation__c.ClosedReason__c),
+                String.valueOf(npe03__Recurring_Donation__c.npe03__Contact__c),
+                String.valueOf(npe03__Recurring_Donation__c.npe03__Organization__c),
+                String.valueOf(npe03__Recurring_Donation__c.npe03__Date_Established__c),
+                String.valueOf(npe03__Recurring_Donation__c.npe03__Amount__c),
+                String.valueOf(npe03__Recurring_Donation__c.npe03__Installment_Period__c),
+                String.valueOf(npe03__Recurring_Donation__c.InstallmentFrequency__c),
+                String.valueOf(npe03__Recurring_Donation__c.StartDate__c),
+                String.valueOf(npe03__Recurring_Donation__c.Day_of_Month__c),
+                String.valueOf(npe03__Recurring_Donation__c.npe03__Installments__c),
+                String.valueOf(npe03__Recurring_Donation__c.RecurringType__c),
+                String.valueOf(npe03__Recurring_Donation__c.npe03__Recurring_Donation_Campaign__c),
+                String.valueOf(npe03__Recurring_Donation__c.PaymentMethod__c)
+        };
+        requiredFields.addAll(request.getCustomFieldNamesForPermissionCheck());
+        return permissions.canUpdate(npe03__Recurring_Donation__c.SObjectType, requiredFields);
+    }
+
+    /**
+     * @description Validate that the current user has Read access to a specific set of required fields. If this returns
+     * false, the custom UI will display a warning message at the top of the page.
+     * @return True if the User has Read access to all required fields in the UI
+     */
+    @TestVisible
+    private static Boolean hasRequiredFieldPermissions() {
+        Set<String> requiredFields = new Set<String>{
+            String.valueOf(npe03__Recurring_Donation__c.npe03__Amount__c),
+            String.valueOf(npe03__Recurring_Donation__c.npe03__Contact__c),
+            String.valueOf(npe03__Recurring_Donation__c.npe03__Installment_Period__c),
+            String.valueOf(npe03__Recurring_Donation__c.npe03__Date_Established__c),
+            String.valueOf(npe03__Recurring_Donation__c.InstallmentFrequency__c),
+            String.valueOf(npe03__Recurring_Donation__c.Day_of_Month__c),
+            String.valueOf(npe03__Recurring_Donation__c.StartDate__c)
+        };
+
+        Boolean hasPermissions = true;
+
+        for (String fld : requiredFields) {
+            DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', fld);
+            if (!dfr.isAccessible()) {
+                hasPermissions = false;
+                break;
+            }
+        }
+
+        return hasPermissions;
+    }
+
     /**
      * @description Build a map of field permissions for use by LWC so it can validate access permission
      * for custom picklist fields without a return trip to server. Fields using lightning-input-field do not
      * require this additional check.
      * @param fieldApiName Field ApiName
-     * @return Map<String, Object> of field permissions
+     * @return Map<String, Boolean> of field permissions
      */
     private static Map<String, Boolean> getFieldPermissionsMap(String fieldApiName) {
         DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', fieldApiName);
@@ -221,43 +232,39 @@ public with sharing class RD2_EntryFormController {
 
     /***
     * @description Retrieve RD2_Entry_Form_Custom_Fields Fieldset and eliminate any packaged and already displayed fields
-    * @return List<CustomField>
+    * @return List<InputFieldView> of custom fields.
     */
     @TestVisible
-    private static List<CustomField> getCustomFieldSectionFields() {
-        List<CustomField> fields = new List<CustomField>();
-        List<Schema.FieldSetMember> fieldSetFields = Schema.SObjectType.npe03__Recurring_Donation__c.fieldSets.RD2_Entry_Form_Custom_Fields.getFields();
+    private static List<InputFieldView> getCustomFieldSectionFields() {
+        List<InputFieldView> fields = new List<InputFieldView>();
 
-        for (Schema.FieldSetMember field : fieldSetFields) {
-            if (excludedCustomFields.contains(field.getFieldPath())
-                || field.getFieldPath().startsWith('npsp__')
-                || field.getFieldPath().startsWith('npe03__')
-                || !UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', field.getFieldPath()).isAccessible()
-            ) {
-                continue;
-            }
-
-            fields.add(new CustomField(field));
+        for (Schema.FieldSetMember field : settings.getCustomFieldSetMembers()) {
+            fields.add(new InputFieldView(field));
         }
 
         return fields;
     }
 
-    /***
-    * @description Wrapper class for custom field info
-    */
-    public class CustomField {
-        @AuraEnabled public String apiName;
-        @AuraEnabled public Boolean required;
+    @AuraEnabled
+    public static SaveResultView saveRecurringDonation(RD2_SaveRequest saveRequest) {
+        npe03__Recurring_Donation__c rd = saveRequest.removeNonCreateableCustomFields().toRecord();
+        Database.SaveResult sr;
 
-        /***
-        * @description Constructor for the CustomField class
-        * @param apiName Api name of the field
-        * @param required Indicate if the field is required
-        */
-        public CustomField(Schema.FieldSetMember field) {
-            this.apiName = field.getFieldPath();
-            this.required = field.getDbRequired() || field.getRequired();
+        if (!hasRequiredSavePermissions(saveRequest)) {
+            return new SaveResultView(Label.commonAccessErrorMessage);
+        }
+
+        if (rd.Id != null) {
+            sr = Database.update(rd, false);
+        } else {
+            sr = Database.insert(rd, false);
+        }
+
+        if (sr.success) {
+            npe03__Recurring_Donation__c record = selector.getRecurringDonationForUI(rd.Id);
+            return new SaveResultView(sr, record);
+        } else {
+            return new SaveResultView(sr);
         }
     }
 
@@ -271,11 +278,14 @@ public with sharing class RD2_EntryFormController {
     @AuraEnabled
     public static String handleCommitment(String jsonRecord, String paymentMethodToken) {
         try {
-            npe03__Recurring_Donation__c rd =  (npe03__Recurring_Donation__c) JSON.deserialize(
+            npe03__Recurring_Donation__c rd = (npe03__Recurring_Donation__c) JSON.deserialize(
                 jsonRecord, npe03__Recurring_Donation__c.class
             );
 
-            npe03__Recurring_Donation__c oldRd = getOldRecurringDonation(rd.Id);
+            npe03__Recurring_Donation__c oldRd;
+            if (rd.Id != null) {
+                 oldRd = selector.getRecurringDonationForUI(rd.Id);
+            }
 
             commitmentService.adjustAndValidateRD(rd, oldRd);
             UTIL_Http.Response response = commitmentService.handleCommitment(rd, oldRd, paymentMethodToken);
@@ -322,25 +332,6 @@ public with sharing class RD2_EntryFormController {
     @AuraEnabled
     public static void logError(Id recordId, String errorMessage) {
         commitmentService.logError(recordId, errorMessage);
-    }
-
-
-    /**
-    * @description Retrives Recurring Donation from database
-    * @param recordId Recurring Donation Id
-    * @return npe03__Recurring_Donation__c
-    */
-    private static npe03__Recurring_Donation__c getOldRecurringDonation(Id recordId) {
-        npe03__Recurring_Donation__c oldRd = null;
-
-        if (recordId != null) {
-            List<npe03__Recurring_Donation__c> oldRds = new RD2_QueryService().getRecurringDonationsBase(new Set<Id>{ recordId });
-            if (oldRds != null && !oldRds.isEmpty()) {
-                oldRd = oldRds[0];
-            }
-        }
-
-        return oldRd;
     }
 
     /**
@@ -401,7 +392,6 @@ public with sharing class RD2_EntryFormController {
         * validates user entered values for a new or existing RD record.
         * @param rd Modified Recurring Donation record that is not created/updated in DB yet
         * @param oldRd oldRecurring Donation
-        * @return void
         */
         private void adjustAndValidateRD(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
             // Populate defaults otherwise applied by the DML operation and available in the trigger context
@@ -421,7 +411,7 @@ public with sharing class RD2_EntryFormController {
             regulationService.adjust(newRds, oldRds);
             regulationService.markRDsAsElevate(newRds);
             
-            List<RD2_ValidationService.ErrorRecord> errorRds = new RD2_ValidationService(newRds, oldRds)
+            List<ErrorRecord> errorRds = new RD2_ValidationService(newRds, oldRds)
                 .validate();
 
             regulationService.removeElevateMarker(newRds);
@@ -437,6 +427,7 @@ public with sharing class RD2_EntryFormController {
         * @description Checks if the commitment record should be sent to Elevate
         * @param rd Recurring Donation record
         * @param oldRd oldRecurring Donation
+        * @param paymentMethodToken Token for Elevate requests
         * @return Boolean
         */
         private Boolean shouldSendToElevate(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, String paymentMethodToken) {
@@ -478,7 +469,6 @@ public with sharing class RD2_EntryFormController {
         * @description Logs an error record on an commitment error response
         * @param rd Recurring Donation record
         * @param response Payments API response
-        * @return void
         */
         private void processResponse(npe03__Recurring_Donation__c rd, UTIL_Http.Response response) {
             if (isCommitmentSuccess(response)) {
@@ -508,7 +498,6 @@ public with sharing class RD2_EntryFormController {
         * @description Creates an error record for the specified record Id and error message
         * @param recordId A Recurring Donation or a donor (Contact/Account) Id
         * @param errorMessage Error message
-        * @return void
         */
         public void logError(Id recordId, String errorMessage) {
             ERR_LogService.Logger logger = new ERR_LogService.Logger(

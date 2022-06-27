@@ -108,6 +108,9 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         List<SObject> rds, List<SObject> oldRds,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult
     ) {
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            TDTM_TriggerHandler.enableOldListCachingEvaluation();
+        }
 
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             return null;
@@ -127,19 +130,51 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         // Insert/Update any pending RecurringDonationSchedule records before the
         // evaluation service is called so that the full schedule is available to the
         // service to determine what Opportunities to insert or modify
-        TDTM_TriggerHandler.processDML(dmlActions);
+        TDTM_TriggerHandler.processDMLWithErrors(dmlActions);
         dmlActions = null;
 
         findMatchingElevateOpps(rds, triggerAction);
 
-        evaluateOpportunities(rds, oldRds, triggerAction);
+        if (TDTM_TriggerHandler.noErrorInCurrentTransaction(objResult, rds)) {
+            evaluateOpportunities(rds, oldRds, triggerAction);
+        }
 
         dispatchToIntegrationGateway(rds, oldRds, triggerAction);
 
         cancelCommitments(rds, oldRds, triggerAction);
 
+        updateSustainerForDeleteAndUndelete(rds, oldRds, triggerAction);
+
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
+            SfdoInstrumentationService.getInstance().log(
+                SfdoInstrumentationEnum.Feature.EnhancedRecurringDonations,
+                SfdoInstrumentationEnum.Component.TriggerAction,
+                SfdoInstrumentationEnum.Action.Create,
+                rds.size());
+        }
+
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
         return dmlActions;
+    }
+
+    private void updateSustainerForDeleteAndUndelete(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
+        if (triggerAction != TDTM_Runnable.Action.AfterDelete && triggerAction != TDTM_Runnable.Action.AfterUndelete) {
+            return;
+        }
+
+        RD2_SustainerEvaluationService sustainerService = new RD2_SustainerEvaluationService()
+        .withRecurringDonations(rds)
+        .withRecurringDonations(oldRds);
+
+        RD2_SustainerEvaluationService.setSustainerUpdateEnabled(true);
+
+        DmlWrapper sustainerDMLAction = new DmlWrapper();
+        sustainerDMLAction.objectsToUpdate = sustainerService.getContactsWithSustainerChanged();
+        TDTM_TriggerHandler.processDML(sustainerDMLAction);
+
+        sustainerDMLAction.objectsToUpdate = sustainerService.getAccountsWithSustainerChanged();
+        TDTM_TriggerHandler.processDML(sustainerDMLAction);
+        RD2_SustainerEvaluationService.setSustainerUpdateEnabled(false);
     }
 
     /***
@@ -280,12 +315,10 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         new RD2_DataRegulationService(currentDate)
             .adjust(rds, oldRds);
 
-        List<RD2_ValidationService.ErrorRecord> errorRds = new RD2_ValidationService(rds, oldRds)
+        List<ErrorRecord> errorRds = new RD2_ValidationService(rds, oldRds)
             .validate();
 
-        for (RD2_ValidationService.ErrorRecord errorRd : errorRds) {
-            errorRd.getRecord().addError(errorRd.getFirstError());
-        }
+        dmlActions.objectsWithError.addAll(errorRds);
     }
 
     /**
@@ -367,13 +400,18 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             return;
         }
 
-        if (triggerAction == TDTM_Runnable.Action.AfterInsert && shouldEvaluateOppsSynchronouslyOnInsert(rds.size() > 1)) {
+        if (canRunOpportunityEvaluationServiceSynchronously(triggerAction, rds)) {
             new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIds, rdIdsWhereScheduleChanged, oldRds)
                 .executeOppEvaluationService();
-
         } else {
             RD2_QueueableService.enqueueOppEvalService(rdIds, rdIdsWhereScheduleChanged, oldRds);
         }
+    }
+
+    private Boolean canRunOpportunityEvaluationServiceSynchronously(Action triggerAction,
+        List<npe03__Recurring_Donation__c> rds) {
+        return triggerAction == TDTM_Runnable.Action.AfterInsert
+            && shouldEvaluateOppsSynchronouslyOnInsert(rds.size() > 1);
     }
 
     /***
@@ -382,7 +420,11 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     */
     @TestVisible
     private Boolean shouldEvaluateOppsSynchronouslyOnInsert(Boolean isBulk) {
-        RD2_Settings settings = new RD2_Settings();
+        RD2_Settings settings = RD2_Settings.getInstance();
+
+        if (settings.isGiftEntryMode) {
+            return true;
+        }
 
         if (settings.firstInstallmentCreateMode == RD2_Constants.FirstInstallmentOppCreateOptions.Synchronous.name()) {
             return true;
@@ -460,9 +502,9 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     }
 
     /**
-    * @description Cancel Commitments in Elevate for closed Recurring Donations containing a Commitment Id. 
+    * @description Cancel Commitments in Elevate for closed Recurring Donations containing a Commitment Id.
     *   If the Elevate RD is closed and Elevate Service is enabled,
-    *   the RD status will be set to pending process and an async job will be kick off 
+    *   the RD status will be set to pending process and an async job will be kick off
     *   to cancel the mathced commitment in Elevate.
     * @param rds Trigger.new records
     * @param oldRds Trigger.old records

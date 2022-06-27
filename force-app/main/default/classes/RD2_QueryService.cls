@@ -50,6 +50,17 @@ public inherited sharing class RD2_QueryService {
         set;
     }
 
+    @TestVisible
+    private static RD2_StatusMapper statusMapper {
+        get {
+            if (statusMapper == null) {
+                statusMapper = new RD2_StatusMapper();
+            }
+            return statusMapper;
+        }
+        set;
+    }
+
     /***
     * @description Contains the current custom field mappings used to copy specified fields
     * on Recurring Donation to mapped fields onto the Opportunity record
@@ -60,6 +71,16 @@ public inherited sharing class RD2_QueryService {
                 customFieldMapper = new RD2_CustomFieldMapper();
             }
             return customFieldMapper;
+        }
+        set;
+    }
+
+    private RD2_Settings settings {
+        get {
+            if (settings == null) {
+                settings = new RD2_Settings();
+            }
+            return settings;
         }
         set;
     }
@@ -111,13 +132,14 @@ public inherited sharing class RD2_QueryService {
      * @param rdIds Recurring Donation Ids
      * @param startDate offset by the Next Donation Date match days before the year start date
      *      so past Opportunities matching future projected installments are returned.
+     *      See getOpportunitySubQuery() for usage.
      * @return List<RecurringDonation> Recurring Donations with related installment Opportunities and active Schedules
      */
     public List<npe03__Recurring_Donation__c> getRecurringDonationsWithRelatedRecords(Set<Id> rdIds, Date startDate) {
         Set<String> queryFields = new Set<String>();
 
         queryFields.addAll(rdFields);
-        queryFields.addAll((new RD2_CustomFieldMapper()).getRdFieldNames());
+        queryFields.addAll(customFieldMapper.getRdFieldNames());
         queryFields.addAll((new RD2_NamingService()).nameFormatter.fields);
         queryFields.add(getOpportunitySubQuery());
         queryFields.add(getScheduleSubQuery());
@@ -136,17 +158,24 @@ public inherited sharing class RD2_QueryService {
     }
 
     /**
-     * @description Populate the collection of Recurring Donation records, querying ALL fields
-     * without querying Schedule and Opportunity related lists.
-     * @param rdIds Recurring Donation Ids
-     * @return List<RecurringDonation> Recurring Donations
+     * @description Retrieve a recurring donation with fields needed for UI applications
+     * @param recurringDonationId Recurring Donation Id
+     * @return npe03__Recurring_Donation__c The Recurring Donation
      */
-    public List<npe03__Recurring_Donation__c> getRecurringDonationsBase(Set<Id> rdIds) {
+    public npe03__Recurring_Donation__c getRecurringDonationForUI(Id recurringDonationId) {
         Set<String> queryFields = new Set<String>();
 
         queryFields.addAll(rdFields);
-        queryFields.addAll((new RD2_CustomFieldMapper()).getRdFieldNames());
-        queryFields.addAll((new RD2_NamingService()).nameFormatter.fields);
+        queryFields.addAll(new Set<String>{
+                'npe03__Organization__r.RecordTypeId',
+                'npe03__Contact__r.Account.RecordTypeId',
+                String.valueOf(npe03__Recurring_Donation__c.ACH_Last_4__c),
+                String.valueOf(npe03__Recurring_Donation__c.CardLast4__c),
+                String.valueOf(npe03__Recurring_Donation__c.CardExpirationMonth__c),
+                String.valueOf(npe03__Recurring_Donation__c.CardExpirationYear__c)
+        });
+
+        queryFields.addAll(getCustomFieldNames());
 
         if (UserInfo.isMultiCurrencyOrganization()) {
             queryFields.add(CURRENCY_ISO_CODE_FIELD);
@@ -155,10 +184,12 @@ public inherited sharing class RD2_QueryService {
         String soql = new UTIL_Query()
             .withFrom(npe03__Recurring_Donation__c.SObjectType)
             .withSelectFields(queryFields)
-            .withWhere('Id IN :rdIds')
+            .withWhere('Id = :recurringDonationId')
+            .withLimit(1)
             .build();
 
-        return Database.query(soql);
+        List<npe03__Recurring_Donation__c> results = Database.query(soql);
+        return results[0];
     }
 
 
@@ -209,5 +240,56 @@ public inherited sharing class RD2_QueryService {
             .build();
 
         return '(' + oppSubquery + ')';
+    }
+
+    private List<String> getCustomFieldNames() {
+        List<String> fieldNames = new List<String>();
+        for(FieldSetMember field : settings.getCustomFieldSetMembers()) {
+            fieldNames.add(field.fieldPath);
+        }
+        return fieldNames;
+    }
+
+    public List<SObject> getSObjectWithActiveRecurringDonations(String sObjectType, Set<Id> recordIds) {
+        Set<String> statusValues = statusMapper.getActiveStatusValues();
+        String queryString = getSObjectWithRecurringDonationsQuery(sObjectType);
+
+        return Database.query(queryString);
+    }
+
+    public List<SObject> getSObjectWithLapsedRecurringDonations(String sObjectType, Set<Id> recordIds) {
+        Set<String> statusValues = statusMapper.getLapsedStatusValues();
+        String queryString = getSObjectWithRecurringDonationsQuery(sObjectType);
+
+        return Database.query(queryString);
+    }
+
+    public List<SObject> getSObjectWithClosedRecurringDonations(String sObjectType, Set<Id> recordIds) {
+        Set<String> statusValues = statusMapper.getClosedStatusValues();
+        String queryString = getSObjectWithRecurringDonationsQuery(sObjectType);
+
+        return Database.query(queryString);
+    }
+
+    private String getSObjectWithRecurringDonationsQuery(String sObjectType) {
+        Set<String> selectedField = new Set<String>{
+            UTIL_Namespace.StrTokenNSPrefix('Sustainer__c'),
+            getRecurringDonationSubQuery(sObjectType)
+        };
+
+        return new UTIL_Query()
+            .withSelectFields(selectedField)
+            .withFrom(sObjectType)
+            .withWhere(
+                'Id IN: recordIds')
+            .build();
+    }
+
+    private String getRecurringDonationSubQuery(String sObjectType) {
+        String lookupReference = sObjectType == 'Account'
+            ? 'npe03__RecurringDonations__r'
+            : 'npe03__R00N80000002bOmREAU__r';
+
+        return '(SELECT Id FROM ' + lookupReference +' WHERE Status__c IN: statusValues LIMIT 1)';
     }
 }

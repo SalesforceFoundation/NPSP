@@ -35,6 +35,9 @@
 * @description Lightning Component Server Controller for the Rollups UI page CRLP_Setup.
 */
 
+// Adding custom rule to avoid this class being scanned by the SFCA scanner since we will not enforce FLS for
+// customizable rollups.
+/* sfge-disable ApexFlsViolationRule */
 public with sharing class CRLP_RollupUI_SVC {
 
     private static final String SUCCESS_RESPONSE = 'SUCCESS';
@@ -144,6 +147,8 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static String setupRollupGrid() {
+        STG_Panel.throwAuraExceptionIfRunningUserNotAdmin();
+
         RollupGridModel model = new RollupGridModel();
 
         model.labels = getAppLabels();
@@ -173,6 +178,8 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static String setupRollupDetail(String rollupId, List<String> targetObjectNames, List<String> detailObjectNames) {
+        STG_Panel.throwAuraExceptionIfRunningUserNotAdmin();
+
         RollupDetailModel model = new RollupDetailModel();
         String summaryField = '';
 
@@ -197,6 +204,8 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static List<RollupTableItem> getRollupDefinitions() {
+        STG_Panel.throwAuraExceptionIfRunningUserNotAdmin();
+
         List<RollupTableItem> mdtTableList = new List<RollupTableItem>();
 
         List<Rollup__mdt> rollups = CRLP_Rollup_SEL.getRollupDefinitions();
@@ -280,6 +289,7 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static List<FilterGroupTableItem> getFilterGroupDefinitions() {
+        STG_Panel.throwAuraExceptionIfRunningUserNotAdmin();
 
         List<FilterGroupTableItem> mdtTableList = new List<FilterGroupTableItem>();
         List<Filter_Group__mdt> mdtList = CMT_FilterRule_SEL.getFilterGroups();
@@ -307,8 +317,7 @@ public with sharing class CRLP_RollupUI_SVC {
     * @description Queries from the Filter Rule metadata to fetch all operation values.
     * @return a map of picklist options api values to labels
     */
-    @AuraEnabled
-    public static Map<String,String> getFilterRuleOperations() {
+    private static Map<String,String> getFilterRuleOperations() {
 
         Map<String,String> filterRuleOperations = new Map<String,String>();
 
@@ -327,6 +336,7 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static String setupFilterGroupDetail(String filterGroupId, List<String> objectNames) {
+        STG_Panel.throwAuraExceptionIfRunningUserNotAdmin();
 
         Map<String,List<Map<String,String>>> objNameToFieldTypeMap = new Map<String,List<Map<String,String>>>();
         Set<String> excludedTypes = new Set<String>{'TIME', 'TEXTAREA'};
@@ -383,8 +393,7 @@ public with sharing class CRLP_RollupUI_SVC {
     * @description Queries from the Rollup operations to fetch all rollup operation values.
     * @return a map of picklist options api values to labels
     */
-    @AuraEnabled
-    public static Map<String,String> getRollupOperations() {
+    private static Map<String,String> getRollupOperations() {
 
         try {
             Map<String,String> rollupOperations = new Map<String,String>();
@@ -405,8 +414,7 @@ public with sharing class CRLP_RollupUI_SVC {
     * @description Queries from the Rollup yearly operation types to fetch all yearly operation values.
     * @return a map of picklist yearly operations api values to labels
     */
-    @AuraEnabled
-    public static Map<String,String> getTimeBoundOperations() {
+    private static Map<String,String> getTimeBoundOperations() {
         try {
             Map<String, String> timeBoundOperations = new Map<String, String>();
             Schema.DescribeFieldResult field = Rollup__mdt.Time_Bound_Operation_Type__c.getDescribe();
@@ -428,9 +436,8 @@ public with sharing class CRLP_RollupUI_SVC {
     * @param detailObjectNames list of detail or objects to rollup to query
     * @return a map of strings to string-string maps. Map<String,Map<String,String>>
     */
-
-    @AuraEnabled
-    public static Map<String,List<Map<String,String>>> getFieldsByDataType(String summaryField, List<String> targetObjectNames, List<String> detailObjectNames) {
+    private static Map<String,List<Map<String,String>>> getFieldsByDataType(String summaryField, List<String>
+            targetObjectNames, List<String> detailObjectNames) {
 
         try {
 
@@ -715,6 +722,8 @@ public with sharing class CRLP_RollupUI_SVC {
      */
     @AuraEnabled
     public static String saveRollup(String jsonRollup) {
+        STG_Panel.throwAuraExceptionIfRunningUserNotAdmin();
+
         try {
             // For new records, the RecordName property will be null by default. The process of deploying the
             // CMT data will generate a unique RecordName to use for the new record.
@@ -750,6 +759,8 @@ public with sharing class CRLP_RollupUI_SVC {
      */
     @AuraEnabled
     public static String saveFilterGroupAndRules(String jsonFilterGroup) {
+        STG_Panel.throwAuraExceptionIfRunningUserNotAdmin();
+
         try {
             // For new records, the RecordName property will be null by default. The process of deploying the
             // CMT data will generate a unique RecordName to use for the new record.
@@ -792,6 +803,8 @@ public with sharing class CRLP_RollupUI_SVC {
      */
     @AuraEnabled
     public static String getDeploymentStatus(String jobId, String recordName, String objectType, String mode) {
+        STG_Panel.throwAuraExceptionIfRunningUserNotAdmin();
+
         try {
             Customizable_Rollup_Settings__c crs = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
             if (crs.CMT_API_Status__c != null) {
@@ -845,6 +858,7 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static List<Map<String, String>> getFilterRuleConstantPicklistOptions(String objectName, String selectedField) {
+        STG_Panel.throwAuraExceptionIfRunningUserNotAdmin();
 
         try {
             List<Map<String, String>> optionsList = new List<Map<String, String>>();
@@ -871,7 +885,8 @@ public with sharing class CRLP_RollupUI_SVC {
     * @param excludedTypes set of types not included in the returned list
     * @return List<Map<String, String>> an object with field api names, labels and data type.
     */
-    public static List<Map<String, String>> getFilterRuleFieldsExcludingTypes(String objectName, Set<String> excludedTypes) {
+    private static List<Map<String, String>> getFilterRuleFieldsExcludingTypes(String objectName, Set<String>
+            excludedTypes) {
 
         List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
 

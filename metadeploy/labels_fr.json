@@ -17,7 +17,7 @@
             "description": "legal text shown in modal dialog"
         },
         "error_message": {
-            "message": "Si vous rencontrez un problème d’installation, publiez-le dans [Power of Us Hub](https://powerofus.force.com/s/topic/0TO80000000DlHzGAK/nonprofit-success-pack-npsp).",
+            "message": "Si vous rencontrez un problème d’installation, publiez-le sur le groupe [Nonprofit Success Pack](https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&sort=LAST_MODIFIED_DATE_DESC).",
             "description": "shown after failed installation (markdown)"
         }
     },
@@ -31,7 +31,7 @@
             "description": "shown before user starts installation (markdown)"
         },
         "post_install_message": {
-            "message": "Merci d’avoir installé NPSP.  Pour toute question concernant NPSP, consultez le groupe [Nonprofit Success Pack](https://powerofus.force.com/_ui/core/chatter/groups/GroupProfilePage?g=0F980000000CjRe) sur le Hub Power of Us.",
+            "message": "Merci d’avoir installé NPSP. Pour toute question concernant NPSP, consultez le groupe [Nonprofit Success Pack](https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&sort=LAST_MODIFIED_DATE_DESC).",
             "description": "shown after successful installation (markdown)"
         }
     },
@@ -139,7 +139,7 @@
             "description": "shown before user starts installation (markdown)"
         },
         "post_install_message": {
-            "message": "Merci d’avoir installé NPSP.  Pour toute question concernant NPSP, consultez le groupe [Nonprofit Success Pack](https://powerofus.force.com/_ui/core/chatter/groups/GroupProfilePage?g=0F980000000CjRe) sur le Hub Power of Us.",
+            "message": "Merci d’avoir installé NPSP. Pour toute question concernant NPSP, consultez le groupe [Nonprofit Success Pack](https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&sort=LAST_MODIFIED_DATE_DESC).",
             "description": "shown after successful installation (markdown)"
         },
         "error_message": {
@@ -174,7 +174,7 @@
             "message": "Le Nonprofit Success Pack nécessite Chatter. Activez Chatter dans votre organisation, puis réessayez.",
             "description": "shown if validation fails"
         },
-        "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation. See the Power of Us Hub for assistance.": {
+        "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation. See NPSP documentation for assistance.": {
             "message": "La Gestion avancée des devises doit être activée pour installer Nonprofit Success Pack, mais peut être activée après l'installation.",
             "description": "shown if validation fails"
         },
@@ -201,7 +201,7 @@
             "description": "title of installation plan"
         },
         "preflight_message": {
-            "message": "Les rapports et tableaux de bord NPSP sont livrés avec de nouvelles versions d’essai et installations de NPSP depuis la version 3.90 (février 2017). Si vous avez démarré une version d’essai ou installé NPSP avant cette version, utilisez ce programme d’installation pour ajouter les rapports et les tableaux de bord. Pour plus d'informations sur les rapports et tableaux de bord NPSP, consultez le [NPSP Reports Workbook](https://powerofus.force.com/articles/Resource/NPSP-Reports-Workbook).\n\nCe programme d’installation nécessite les 5 types d’enregistrement d’opportunité inclus dans le modèle d’essai standard Nonprofit Starter Pack, et les crée s’ils n’existent pas dans votre organisation. Ce programme d’installation recherche les types d'enregistrement par nom de développeur (pas par étiquette). Par conséquent, si vous avez modifié les noms de développeur des types d'enregistrement d’origine, le programme d'installation les ajoute de nouveau. Les noms de développeur de type d'enregistrement sont les suivants :\n\n* Donation\n* MajorGift\n* MatchingDonation\n* Grant\n* Membership",
+            "message": "Les rapports et tableaux de bord NPSP sont livrés avec de nouvelles versions d’essai et installations de NPSP depuis la version 3.90 (février 2017). Si vous avez démarré une version d’essai ou installé NPSP avant cette version, utilisez ce programme d’installation pour ajouter les rapports et les tableaux de bord. \n\nCe programme d’installation nécessite les 5 types d’enregistrement d’opportunité inclus dans le modèle d’essai standard Nonprofit Starter Pack, et les crée s’ils n’existent pas dans votre organisation. Ce programme d’installation recherche les types d’enregistrement par nom de développeur (pas par étiquette). Par conséquent, si vous avez modifié les noms de développeur des types d’enregistrement d’origine, le programme d’installation les ajoute de nouveau. Les noms de développeur de type d’enregistrement sont les suivants :\n\n* Don\n* DonImportant\n* DonJumelé\n* Subvention\n* Adhésion",
             "description": "shown before user starts installation (markdown)"
         }
     },

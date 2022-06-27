@@ -17,7 +17,7 @@
             "description": "legal text shown in modal dialog"
         },
         "error_message": {
-            "message": "Als u een probleem met de installatie ervaart, plaatst u een bericht in de [Power of Us Hub](https://powerofus.force.com/s/topic/0TO80000000DlHzGAK/nonprofit-success-pack-npsp).",
+            "message": "Als u een probleem met de installatie ervaart, plaatst u een bericht in de [Nonprofit Success Pack-groep](https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&sort=LAST_MODIFIED_DATE_DESC).",
             "description": "shown after failed installation (markdown)"
         }
     },
@@ -31,7 +31,7 @@
             "description": "shown before user starts installation (markdown)"
         },
         "post_install_message": {
-            "message": "Bedankt voor het installeren van NPSP.  Bezoek de groep [Nonprofit Success Pack](https://powerofus.force.com/_ui/core/chatter/groups/GroupProfilePage?g=0F980000000CjRe) op de hub Power of Us voor eventuele vragen over NPSP.",
+            "message": "Bedankt voor het installeren van NPSP. Bezoek de [Nonprofit Success Pack-groep](https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&sort=LAST_MODIFIED_DATE_DESC) voor eventuele vragen over NPSP.",
             "description": "shown after successful installation (markdown)"
         }
     },
@@ -139,7 +139,7 @@
             "description": "shown before user starts installation (markdown)"
         },
         "post_install_message": {
-            "message": "Bedankt voor het installeren van NPSP.  Bezoek de groep [Nonprofit Success Pack](https://powerofus.force.com/_ui/core/chatter/groups/GroupProfilePage?g=0F980000000CjRe) op de hub Power of Us voor eventuele vragen over NPSP.",
+            "message": "Bedankt voor het installeren van NPSP. Bezoek de [Nonprofit Success Pack-groep](https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&sort=LAST_MODIFIED_DATE_DESC) voor eventuele vragen over NPSP.",
             "description": "shown after successful installation (markdown)"
         },
         "error_message": {
@@ -174,7 +174,7 @@
             "message": "Voor het Nonprofit Success Pack is Chatter vereist. Schakel Chatter in uw organisatie in en probeer het opnieuw.",
             "description": "shown if validation fails"
         },
-        "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation. See the Power of Us Hub for assistance.": {
+        "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation. See NPSP documentation for assistance.": {
             "message": "Geavanceerd valutabeheer moet uitgeschakeld zijn wanneer het Nonprofit Success Pack wordt geïnstalleerd, maar kan daarna weer worden ingeschakeld.",
             "description": "shown if validation fails"
         },
@@ -201,7 +201,7 @@
             "description": "title of installation plan"
         },
         "preflight_message": {
-            "message": "NPSP-rapporten en -dashboards omvatten nieuwe proefversies en installaties van NPSP vanaf versie 3.90 (februari 2017). Als u met een proef bent gestart of NPSP hebt geïnstalleerd vóór deze versie, gebruikt u dit installatieprogramma om Rapporten en dashboards toe te voegen. Raadpleeg voor volledige informatie over NPSP-rapporten en -dashboards het [NPSP Reports Workbook](https://powerofus.force.com/articles/Resource/NPSP-Reports-Workbook).\n\nDit installatieprogramma vereist de 5 recordtypen voor Opportunity, die zijn opgenomen in de standaard Nonprofit Starter Pack-proefsjabloon, en maakt deze aan als ze niet voorkomen in uw organisatie. Het installatieprogramma zoekt naar de recordtypen op Naam ontwikkelaar (niet het label); als u de namen van ontwikkelaars van de oorspronkelijke recordtypen hebt gewijzigd, voegt het installatieprogramma ze opnieuw toe. De recordtypen voor Namen van ontwikkelaars zijn als volgt:\n \n* Donation\n* MajorGift\n* MatchingDonation\n* Grant\n* Membership",
+            "message": "NPSP-rapporten en -dashboards omvatten nieuwe proefversies en installaties van NPSP vanaf versie 3.90 (februari 2017). Als u met een proef bent gestart of NPSP hebt geïnstalleerd vóór deze versie, gebruikt u dit installatieprogramma om Rapporten en dashboards toe te voegen.\n\nDit installatieprogramma vereist de 5 recordtypen voor Opportunity, die zijn opgenomen in de standaard Nonprofit Starter Pack-proefsjabloon, en maakt deze aan als ze niet voorkomen in uw organisatie. Het installatieprogramma zoekt naar de recordtypen op Naam ontwikkelaar (niet het label); als u de namen van ontwikkelaars van de oorspronkelijke recordtypen hebt gewijzigd, voegt het installatieprogramma ze opnieuw toe. De recordtypen voor Namen van ontwikkelaars zijn als volgt:\n \n* Donation\n* MajorGift\n* MatchingDonation\n* Grant\n* Membership",
             "description": "shown before user starts installation (markdown)"
         }
     },

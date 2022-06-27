@@ -17,7 +17,7 @@
             "description": "legal text shown in modal dialog"
         },
         "error_message": {
-            "message": "Wenn bei der Installation ein Problem auftritt, melden Sie es bitte beim [Power of Us-Hub](https://powerofus.force.com/s/topic/0TO80000000DlHzGAK/nonprofit-success-pack-npsp).",
+            "message": "Wenn bei der Installation ein Problem auftritt, melden Sie es bitte in der [Nonprofit Success Pack](https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&sort=LAST_MODIFIED_DATE_DESC)-Gruppe.",
             "description": "shown after failed installation (markdown)"
         }
     },
@@ -31,7 +31,7 @@
             "description": "shown before user starts installation (markdown)"
         },
         "post_install_message": {
-            "message": "Vielen Dank für die Installation von NPSP. Bitte besuchen Sie bei Fragen zu NPSP die [Nonprofit Success Pack](https://powerofus.force.com/_ui/core/chatter/groups/GroupProfilePage?g=0F980000000CjRe)-Gruppe auf dem Power of Us-Hub.",
+            "message": "Vielen Dank für die Installation von NPSP. Bitte besuchen Sie bei Fragen zu NPSP die [Nonprofit Success Pack](https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&sort=LAST_MODIFIED_DATE_DESC)-Gruppe.\n",
             "description": "shown after successful installation (markdown)"
         }
     },
@@ -139,7 +139,7 @@
             "description": "shown before user starts installation (markdown)"
         },
         "post_install_message": {
-            "message": "Vielen Dank für die Installation von NPSP. Bitte besuchen Sie bei Fragen zu NPSP die [Nonprofit Success Pack](https://powerofus.force.com/_ui/core/chatter/groups/GroupProfilePage?g=0F980000000CjRe)-Gruppe auf dem Power of Us-Hub.",
+            "message": "Vielen Dank für die Installation von NPSP. Bitte besuchen Sie bei Fragen zu NPSP die [Nonprofit Success Pack](https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&sort=LAST_MODIFIED_DATE_DESC)-Gruppe.",
             "description": "shown after successful installation (markdown)"
         },
         "error_message": {
@@ -174,7 +174,7 @@
             "message": "Für das Nonprofit Success Pack ist Chatter erforderlich. Aktivieren Sie Chatter in Ihrer Organisation, und versuchen Sie es noch einmal.",
             "description": "shown if validation fails"
         },
-        "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation. See the Power of Us Hub for assistance.": {
+        "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation. See NPSP documentation for assistance.": {
             "message": "Für die Installation von Nonprofit Success Pack muss das erweiterte Währungsmanagement deaktiviert sein, Sie können es aber nach der Installation aktivieren.",
             "description": "shown if validation fails"
         },
@@ -201,7 +201,7 @@
             "description": "title of installation plan"
         },
         "preflight_message": {
-            "message": "Die NPSP-Berichte und -Dashboards werden zusammen mit neuen Testversionen und Installationen von NPSP ab Version 3.90 (Februar 2017) geliefert. Wenn Sie eine frühere Testversion gestartet oder NPSP in einer früheren Version installiert haben, verwenden Sie dieses Installationsprogramm, um die Berichte und Dashboards hinzuzufügen. Umfassende Informationen zu den NPSP-Berichten und -Dashboards finden Sie im [NPSP Reports Workbook](https://powerofus.force.com/articles/Resource/NPSP-Reports-Workbook).\n\nDieses Installationsprogramm setzt die 5 Opportunity-Datensatztypen voraus, die in der Testvorlage des standardmäßigen Nonprofit Starter Packs enthalten sind, und erstellt sie, wenn sie in Ihrer Organisation nicht vorhanden sind. Das Installationsprogramm sucht die Datensatztypen anhand des Entwicklernamens (nicht anhand der Bezeichnung). Wenn Sie also die Entwicklernamen der ursprünglichen Datensatztypen geändert haben, fügt das Installationsprogramm sie erneut hinzu. Dies sind die Entwicklernamen der Datensatztypen:\n \n* Donation (Spende)\n* MajorGift (GrößereSpende)\n* MatchingDonation (Spendenverdopplung)\n* Grant (Unterstützung)\n* Membership (Mitgliedschaft)",
+            "message": "Die NPSP-Berichte und -Dashboards werden zusammen mit neuen Testversionen und Installationen von NPSP ab Version 3.90 (Februar 2017) geliefert. Wenn Sie eine frühere Testversion gestartet oder NPSP in einer früheren Version installiert haben, verwenden Sie dieses Installationsprogramm, um die Berichte und Dashboards hinzuzufügen.\n\nDieses Installationsprogramm setzt die 5 Opportunity-Datensatztypen voraus, die in der Testvorlage des standardmäßigen Nonprofit Starter Packs enthalten sind, und erstellt sie, wenn sie in Ihrer Organisation nicht vorhanden sind. Das Installationsprogramm sucht die Datensatztypen anhand des Entwicklernamens (nicht anhand der Bezeichnung). Wenn Sie also die Entwicklernamen der ursprünglichen Datensatztypen geändert haben, fügt das Installationsprogramm sie erneut hinzu. Dies sind die Entwicklernamen der Datensatztypen:\n \n* Donation (Spende)\n* MajorGift (GrößereSpende)\n* MatchingDonation (Spendenverdopplung)\n* Grant (Unterstützung)\n* Membership (Mitgliedschaft)",
             "description": "shown before user starts installation (markdown)"
         }
     },

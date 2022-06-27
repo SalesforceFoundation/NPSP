@@ -52,9 +52,8 @@ public with sharing class ADDR_Contacts_TEST {
         Test.startTest();
             Contact contactToUpdate = [SELECT Current_Address__c FROM Contact WHERE Id = :npspContact.getRecord().Id];
             NPSP_Contact npspContactToUpdate = new NPSP_Contact(contactToUpdate);
-            npspContactToUpdate.setUndeliverableMailingAddress(true);
             npspContactToUpdate.setCurrentAddress(
-                    new NPSP_Address(buildAddresses(1, false)[0]));
+                    new NPSP_Address(buildAddresses(1, true)[0]));
 
             update npspContactToUpdate.getRecord();
         Test.stopTest();
@@ -483,6 +482,212 @@ public with sharing class ADDR_Contacts_TEST {
         System.assertEquals(updatedContact.Undeliverable_Address__c, updatedAccount.Undeliverable_Address__c,
                 'Contact address undeliverable status should match account undeliverable status.');
     }
+
+    /**
+     * @description Validates that the address logic works properly when State and Country Picklsits are enabled in an org
+     * and the OtherAddress fields sync properly from Contact to Account
+     */
+    @IsTest
+    private static void shouldRetainCountyAndStateWhenContactOtherAddressIsUsed() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+
+        OrgConfig orgConfig = new OrgConfig();
+        Boolean isStateCountryEnabled = orgConfig.isStateCountryPicklistsEnabled();
+
+        final String TEST_STREET = '123 Household Street';
+        final String TEST_CITY = 'Seattle';
+        final String TEST_STATE = 'Washington';
+        final String TEST_STATE_CODE = 'WA';
+        final String TEST_POSTAL = '08534';
+        final String TEST_COUNTRY = 'United States';
+        final String TEST_COUNTRY_CODE = 'US';
+
+        final String TEST_OTHER_STREET = '321 Work Street';
+        final String TEST_OTHER_COUNTRY = 'Canada';
+        final String TEST_OTHER_COUNTRY_CODE = 'CA';
+        final String TEST_OTHER_STATE = 'Alberta';
+        final String TEST_OTHER_STATE_CODE = 'AB';
+
+        Contact testContact = new Contact(
+            FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + UTIL_UnitTestData_TEST.getUniqueString()
+        );
+        testContact.MailingStreet = TEST_STREET;
+        testContact.MailingCity = TEST_CITY;
+        testContact.MailingPostalCode = TEST_POSTAL;
+        testContact.OtherStreet = TEST_OTHER_STREET;
+        if (isStateCountryEnabled) {
+            testContact.put('MailingStateCode', TEST_STATE_CODE);
+            testContact.put('MailingCountryCode', TEST_COUNTRY_CODE);
+            testContact.put('OtherStateCode', TEST_OTHER_STATE_CODE);
+            testContact.put('OtherCountryCode', TEST_OTHER_COUNTRY_CODE);
+        } else {
+            testContact.put('MailingState', TEST_STATE);
+            testContact.put('MailingCountry', TEST_COUNTRY);
+            testContact.put('OtherState', TEST_OTHER_STATE);
+            testContact.put('OtherCountry', TEST_OTHER_COUNTRY);
+        }
+
+        Test.startTest();
+        insert testContact;
+        Test.stopTest();
+
+        String contactSOQL = 'SELECT Id, AccountId, Current_Address__c, ' 
+                        + 'MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, '
+                        + 'OtherStreet, OtherCity, OtherState, OtherCountry';
+        if (isStateCountryEnabled) {
+            contactSOQL += ', MailingStateCode, MailingCountryCode, OtherStateCode, OtherCountryCode';
+        }
+        contactSOQL += ' FROM Contact WHERE Id = \'' + testContact.Id +'\'';
+        testContact = Database.query(contactSOQL);
+
+        Address__c addr = [SELECT MailingStreet__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c
+                                    FROM Address__c
+                                    WHERE Id = :testContact.Current_Address__c
+                                    LIMIT 1];
+
+        String accountSOQL = 'SELECT Id, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, '
+                        + 'ShippingStreet, ShippingCity, ShippingState, ShippingCountry';
+        if (isStateCountryEnabled) {
+            accountSOQL += ', BillingStateCode, BillingCountryCode, ShippingStateCode, ShippingCountryCode';
+        }
+        accountSOQL += ' FROM Account WHERE Id = \'' + testContact.AccountId +'\'';
+        Account acct = Database.query(accountSOQL);
+
+        System.assertEquals(testContact.MailingStreet, TEST_STREET);
+        System.assertEquals(testContact.MailingCity, TEST_CITY);
+        System.assertEquals(testContact.MailingPostalCode, TEST_POSTAL);
+        System.assertEquals(testContact.MailingState, TEST_STATE, 'The MailingState field should have a value');
+        System.assertEquals(testContact.MailingCountry, TEST_COUNTRY, 'The MailingCountry field should have a value');
+
+        System.assertEquals(testContact.OtherStreet, TEST_OTHER_STREET);
+        System.assertEquals(testContact.OtherState, TEST_OTHER_STATE);
+        System.assertEquals(testContact.OtherCountry, TEST_OTHER_COUNTRY, 'The MailingCountry field should have a value');
+
+        if (isStateCountryEnabled) {
+            System.assertEquals(testContact.get('MailingStateCode'), TEST_STATE_CODE, 'The MailingStateCode field should have a value');
+            System.assertEquals(testContact.get('MailingCountryCode'), TEST_COUNTRY_CODE, 'The MailingCountryCode field should have a value');
+            System.assertEquals(testContact.get('OtherStateCode'), TEST_OTHER_STATE_CODE, 'The OtherStateCode field should have a value');
+            System.assertEquals(testContact.get('OtherCountryCode'), TEST_OTHER_COUNTRY_CODE, 'The OtherCountryCode field should have a value');
+        }
+
+        System.assertEquals(acct.BillingStreet, TEST_STREET);
+        System.assertEquals(acct.BillingCity, TEST_CITY);
+        System.assertEquals(acct.BillingPostalCode, TEST_POSTAL);
+        System.assertEquals(acct.BillingState, TEST_STATE, 'The BillingState field should have a value');
+        System.assertEquals(acct.BillingCountry, TEST_COUNTRY, 'The BillingCountry field should have a value');
+        
+        System.assertEquals(acct.ShippingStreet, TEST_OTHER_STREET);
+        System.assertEquals(acct.ShippingState, TEST_OTHER_STATE);
+        System.assertEquals(acct.ShippingCountry, TEST_OTHER_COUNTRY, 'The ShippingCountry field should have a value');
+
+        if (isStateCountryEnabled) {
+            System.assertEquals(acct.get('BillingStateCode'), TEST_STATE_CODE, 'The BillingStateCode field should have a value');
+            System.assertEquals(acct.get('BillingCountryCode'), TEST_COUNTRY_CODE, 'The BillingCountryCode field should have a value');
+            System.assertEquals(acct.get('ShippingStateCode'), TEST_OTHER_STATE_CODE, 'The ShippingStateCode field should have a value');
+            System.assertEquals(acct.get('ShippingCountryCode'), TEST_OTHER_COUNTRY_CODE, 'The ShippingCountryCode field should have a value');
+        }
+
+        System.assertEquals(addr.MailingStreet__c, TEST_STREET);
+        System.assertEquals(addr.MailingCity__c, TEST_CITY);
+        System.assertEquals(addr.MailingPostalCode__c, TEST_POSTAL);
+        System.assert(addr.MailingState__c != null, 'The MailingState field should have a value');
+        System.assert(addr.MailingCountry__c != null, 'The MailingCountry field should have a value');
+    }
+
+    /**
+     * @description Validates that the address logic works properly when State and Country Picklsits are enabled in an org
+     */
+    @IsTest
+    private static void shouldCreateAddressForContactWithAllFieldsFilledIn() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+
+        OrgConfig orgConfig = new OrgConfig();
+        Boolean isStateCountryEnabled = orgConfig.isStateCountryPicklistsEnabled();
+
+        final String TEST_STREET = '123 Household Street';
+        final String TEST_CITY = 'Seattle';
+        final String TEST_STATE = 'Washington';
+        final String TEST_STATE_CODE = 'WA';
+        final String TEST_POSTAL = '08534';
+        final String TEST_COUNTRY = 'United States';
+        final String TEST_COUNTRY_CODE = 'US';
+
+        Contact testContact = new Contact(
+            FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + UTIL_UnitTestData_TEST.getUniqueString()
+        );
+        testContact.MailingStreet = TEST_STREET;
+        testContact.MailingCity = TEST_CITY;
+        testContact.MailingPostalCode = TEST_POSTAL;
+        if (isStateCountryEnabled) {
+            testContact.put('MailingStateCode', TEST_STATE_CODE);
+            testContact.put('MailingCountryCode', TEST_COUNTRY_CODE);
+        } else {
+            testContact.put('MailingState', TEST_STATE);
+            testContact.put('MailingCountry', TEST_COUNTRY);
+        }
+
+        Test.startTest();
+        insert testContact;
+        Test.stopTest();
+
+        String contactSOQL = 'SELECT Id, AccountId, Current_Address__c, ' 
+                        + 'MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry';
+        if (isStateCountryEnabled) {
+            contactSOQL += ', MailingStateCode, MailingCountryCode';
+        }
+        contactSOQL += ' FROM Contact WHERE Id = \'' + testContact.Id +'\'';
+        testContact = Database.query(contactSOQL);
+
+        Address__c addr = [SELECT MailingStreet__c, MailingCity__c, MailingState__c, MailingPostalCode__c, MailingCountry__c
+                                    FROM Address__c
+                                    WHERE Id = :testContact.Current_Address__c
+                                    LIMIT 1];
+
+        String accountSOQL = 'SELECT Id, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry';
+        if (isStateCountryEnabled) {
+            accountSOQL += ', BillingStateCode, BillingCountryCode';
+        }
+        accountSOQL += ' FROM Account WHERE Id = \'' + testContact.AccountId +'\'';
+        Account acct = Database.query(accountSOQL);
+
+        System.assertEquals(testContact.MailingStreet, TEST_STREET);
+        System.assertEquals(testContact.MailingCity, TEST_CITY);
+        System.assertEquals(testContact.MailingPostalCode, TEST_POSTAL);
+        System.assertEquals(testContact.MailingState, TEST_STATE, 'The MailingState field should have a value');
+        System.assertEquals(testContact.MailingCountry, TEST_COUNTRY, 'The MailingCountry field should have a value');
+        if (isStateCountryEnabled) {
+            System.assertEquals(testContact.get('MailingStateCode'), TEST_STATE_CODE, 'The MailingStateCode field should have a value');
+            System.assertEquals(testContact.get('MailingCountryCode'), TEST_COUNTRY_CODE, 'The MailingCountryCode field should have a value');
+        }
+
+        System.assertEquals(acct.BillingStreet, TEST_STREET);
+        System.assertEquals(acct.BillingCity, TEST_CITY);
+        System.assertEquals(acct.BillingPostalCode, TEST_POSTAL);
+        System.assertEquals(acct.BillingState, TEST_STATE, 'The BillingState field should have a value');
+        System.assertEquals(acct.BillingCountry, TEST_COUNTRY, 'The BillingCountry field should have a value');
+        if (isStateCountryEnabled) {
+            System.assertEquals(acct.get('BillingStateCode'), TEST_STATE_CODE, 'The BillingStateCode field should have a value');
+            System.assertEquals(acct.get('BillingCountryCode'), TEST_COUNTRY_CODE, 'The BillingCountryCode field should have a value');
+        }
+
+        System.assertEquals(addr.MailingStreet__c, TEST_STREET);
+        System.assertEquals(addr.MailingCity__c, TEST_CITY);
+        System.assertEquals(addr.MailingPostalCode__c, TEST_POSTAL);
+        System.assert(addr.MailingState__c != null, 'The MailingState field should have a value');
+        System.assert(addr.MailingCountry__c != null, 'The MailingCountry field should have a value');
+    }
+
+
+    // ====================================================
+    // Helper Methods
 
     private static List<Account> createTestAccountsWithBillingAddress(Integer numberOfAccountsToCreate) {
         List<Account> testAccounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(

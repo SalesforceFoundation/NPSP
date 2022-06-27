@@ -36,12 +36,37 @@
 */
 public with sharing class CON_ContactMerge_CTRL {
 
+    @TestVisible
+    private ContactMergeSelector mergeSelector {
+        get {
+            if (mergeSelector == null) {
+                mergeSelector = new ContactMergeSelector();
+            }
+            return mergeSelector;
+        }
+        set;
+    }
+
+    /***********************************************************************************************
+    * @description List of DRI fields to be queried
+    */
+    private List<String> driFieldNames {
+        get {
+            if (driFieldNames == null) {
+                driFieldNames = new List<String>();
+                driFieldNames.add('RecordId');
+            }
+            return driFieldNames;
+        }
+        set;
+    }
+
+    @TestVisible
     private static final String MASTER_KEY = '$MASTER$';
 
     /***********************************************************************************************
     * @description To decide whether to show Dupliacate Record Set record list on the page or not
     */ 
-    
     public Boolean showDRS { get; set; }
 
     /***********************************************************************************************
@@ -57,18 +82,13 @@ public with sharing class CON_ContactMerge_CTRL {
     /***********************************************************************************************
     * @description Map of the contacts selected for merge.
     */
+    @TestVisible
     private Map<String, Contact> selectedRecords;
 
     /***********************************************************************************************
     * @description Number of selected records.
     */
     public Integer selectedRecordsCount { get; private set; } { this.selectedRecordsCount = 0; }
-
-    /***********************************************************************************************
-    * @description Max number of Contacts returned by a query.
-    */
-    
-    private final Integer SOSL_LIMIT = 100;
 
     /***********************************************************************************************
     * @description Query limit for DRS records query to be displayed
@@ -133,6 +153,7 @@ public with sharing class CON_ContactMerge_CTRL {
      /**********************************************************************************************
     * @description Duplicate Record Set diplay page size.
     */
+    @TestVisible
     private Integer pageSize = 10;
     
     /***********************************************************************************************
@@ -197,27 +218,6 @@ public with sharing class CON_ContactMerge_CTRL {
             return drsSetController.getPageNumber();
         }
         set;
-    } 
-
-    /***********************************************************************************************
-    * @description The list of contact field names that are used in search and displayed in Found 
-    * Contacts.
-    */
-    private List<String> listStrContactField {
-        get {
-            if (listStrContactField == null) {
-                listStrContactField = UTIL_Describe.listStrFromFieldSet
-                    ('Contact', UTIL_Namespace.StrTokenNSPrefix('ContactMergeFoundFS'));
-                Set<String> setStr = new Set<String>(listStrContactField);
-                // now add additional fields we know we need
-                setStr.add('Id');
-                setStr.add('Name');
-                listStrContactField.clear();
-                listStrContactField.addAll(setStr);
-            }
-            return listStrContactField;
-        }
-        set;
     }
 
     /***********************************************************************************************
@@ -239,20 +239,6 @@ public with sharing class CON_ContactMerge_CTRL {
                 drsFieldNames.addAll(setStr);
             }
             return drsFieldNames;
-        }
-        set;
-    }
-    
-    /***********************************************************************************************
-    * @description List of DRI fields to be queried
-    */
-    private List<String> driFieldNames {
-        get {
-            if (driFieldNames == null) {
-                driFieldNames = new List<String>();
-                driFieldNames.add('RecordId');
-            }
-            return driFieldNames;
         }
         set;
     }
@@ -292,22 +278,23 @@ public with sharing class CON_ContactMerge_CTRL {
         'npo02__LastOppAmount__c',
         'npo02__Best_Gift_Year__c',
         'npo02__Best_Gift_Year_Total__c',
-        'Soft_Credit_Last_N_Days__c',
+        String.valueOf(Contact.Soft_Credit_Last_N_Days__c),
         'npo02__Soft_Credit_Last_Year__c',
         'npo02__Soft_Credit_This_Year__c',
         'npo02__Soft_Credit_Total__c',
         'npo02__Soft_Credit_Two_Years_Ago__c',
-        'First_Soft_Credit_Amount__c',
-        'First_Soft_Credit_Date__c',
-        'Largest_Soft_Credit_Amount__c',
-        'Largest_Soft_Credit_Date__c',
-        'Last_Soft_Credit_Amount__c',
-        'Last_Soft_Credit_Date__c',
-        'Number_of_Soft_Credits__c',
-        'Number_of_Soft_Credits_Last_N_Days__c',
-        'Number_of_Soft_Credits_Last_Year__c',
-        'Number_of_Soft_Credits_This_Year__c',
-        'Number_of_Soft_Credits_Two_Years_Ago__c'
+        String.valueOf(Contact.First_Soft_Credit_Amount__c),
+        String.valueOf(Contact.First_Soft_Credit_Date__c),
+        String.valueOf(Contact.Largest_Soft_Credit_Amount__c),
+        String.valueOf(Contact.Largest_Soft_Credit_Date__c),
+        String.valueOf(Contact.Last_Soft_Credit_Amount__c),
+        String.valueOf(Contact.Last_Soft_Credit_Date__c),
+        String.valueOf(Contact.Number_of_Soft_Credits__c),
+        String.valueOf(Contact.Number_of_Soft_Credits_Last_N_Days__c),
+        String.valueOf(Contact.Number_of_Soft_Credits_Last_Year__c),
+        String.valueOf(Contact.Number_of_Soft_Credits_This_Year__c),
+        String.valueOf(Contact.Number_of_Soft_Credits_Two_Years_Ago__c),
+        String.valueOf(Contact.Sustainer__c)
     };
 
     /***********************************************************************************************
@@ -336,6 +323,7 @@ public with sharing class CON_ContactMerge_CTRL {
     /***********************************************************************************************
     * @description The rows to merge.
     */
+    @TestVisible
     public List<FieldRow> fieldRows { get; private set; }
 
     /***********************************************************************************************
@@ -346,18 +334,22 @@ public with sharing class CON_ContactMerge_CTRL {
         /*******************************************************************************************
         * @description Stores the field Label.
         */
+        @TestVisible
         public String fieldLabel { get; private set; }
         /*******************************************************************************************
         * @description Stores the field api name.
         */
+        @TestVisible
         public String fieldName { get; private set; }
         /*******************************************************************************************
         * @description Property to tell whether UI must should a radio to select the field value.
         */
+        @TestVisible
         public Boolean showRadio { get; private set; }
         /*******************************************************************************************
         * @description  List of values for each contact record.
         */
+        @TestVisible
         public List<Cell> values { get; private set; }
         /*******************************************************************************************
         * @description Selected record.
@@ -521,12 +513,13 @@ public with sharing class CON_ContactMerge_CTRL {
     * @description Shows the next step of the wizard where user can see the diff of the records 
     * before merge.
     */
+    @TestVisible
     private void loadMergeCandidates(Set<Id> mergeCandidates) {
 
         // Check we have atleast 2 and not more than 3 records selected for merge. 
         // If not throw an error.
         if (mergeCandidates.size() <=1) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error,
                 Label.npe01.Contact_Merge_Error_Too_Few_Contacts));
             return;
         }
@@ -850,8 +843,9 @@ public with sharing class CON_ContactMerge_CTRL {
     */
     private Boolean isNPSPReadOnly(String strField) {
         for (String strF : readOnlyFields) {
-            if (strField.equalsIgnoreCase(strF))
+            if (strField.equalsIgnoreCase(strF)) {
                 return true;
+            }
         }
         return false;
     }
@@ -920,29 +914,11 @@ public with sharing class CON_ContactMerge_CTRL {
     public List<SObject> searchRecords() {
         searchResults.clear();
         if(showContactSearch == true && searchText != null && searchText.length() > 0) {
-            //build the SOSL query and execute - NOTE: * wildcard will only have effect at the 
+            //build the SOSL query and execute - NOTE: * wildcard will only have effect at the
             //middle or end of the search term
-            UTIL_Finder finder = new UTIL_Finder(Contact.sObjectType)
-                .withSelectFields(listStrContactField)
-                .withSearchQuery(searchText)
-                .withWildcard()
-                .withOrderBy(Contact.LastName)
-                .withLimit(SOSL_LIMIT);
-
-            return finder.executeSearch();
+            return mergeSelector.selectContactsByName(searchText);
         } else {
-            String whereString = new UTIL_Query()
-                .withFrom('DuplicateRecordItem')
-                .withSelectFields(driFieldNames)
-                .withWhere('DuplicateRecordSetId =:drsRecordId')
-                .build();
-            whereString = 'Id IN ('+ whereString + ')';
-            String queryString = new UTIL_Query()
-                .withFrom('Contact')
-                .withSelectFields(listStrContactField)
-                .withWhere(whereString)
-                .build();
-            return Database.query(queryString);
+            return mergeSelector.selectDuplicateRecordSetById(drsRecordId, driFieldNames);
         }
     }
 
@@ -1000,10 +976,12 @@ public with sharing class CON_ContactMerge_CTRL {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_doNotRunForContacts, true);
             updateAndHandleWinningContact(winningContact);
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_doNotRunForContacts, false);
-            
-            CON_ContactMerge.mergeContacts(winningContact, losingContacts);
 
-            updateContactWithOnlyUniqueFields(winningContact.Id);
+            ContactMergeService contactMerge = new ContactMergeService();
+            contactMerge.mergeContacts(winningContact, losingContacts);
+
+            updateContactAfterMerge(winningContact.Id);
+
 
         } catch (Exception e) {
             Database.rollback(sp);
@@ -1050,14 +1028,41 @@ public with sharing class CON_ContactMerge_CTRL {
         populateContactWithFields(winningContact, false);
     }
 
-    private void updateContactWithOnlyUniqueFields(Id winningContactId) {
+    private void updateContactAfterMerge(Id winningContactId) {
         Contact winningContact = new Contact(Id = winningContactId);
 
-        Boolean hasUniqueFieldChange = populateContactWithFields(winningContact, true);
+        Boolean hasFieldChange = populateContactWithOnlyUniqueFields(winningContact);
+        hasFieldChange = hasFieldChange || evaluateContactForSustainerChange(winningContact);
 
-        if (hasUniqueFieldChange) {
+        if (hasFieldChange) {
             updateAndHandleWinningContact(winningContact);
         }
+        
+    }
+
+    private Boolean populateContactWithOnlyUniqueFields(Contact winningContact) {
+        Boolean hasUniqueFieldChange = populateContactWithFields(winningContact, true);
+        return hasUniqueFieldChange;
+    }
+
+    private Boolean evaluateContactForSustainerChange(Contact winningContact) {
+        DescribeFieldResult sustainerFieldDescribeResult = Contact.Sustainer__c.getDescribe();
+
+        if (!UTIL_Permissions.canRead(sustainerFieldDescribeResult, false)
+            || !UTIL_Permissions.canUpdate(sustainerFieldDescribeResult, false)) {
+            return false;
+        }
+
+        List<Contact> contactWithSustainerChanged = new RD2_SustainerEvaluationService()
+        .withContacts(new List<Contact>{winningContact})
+        .getContactsWithSustainerChanged();
+
+        Boolean needSustainerUpdate = contactWithSustainerChanged.size() != 0;
+        if (needSustainerUpdate) {
+            winningContact.Sustainer__c = contactWithSustainerChanged[0].Sustainer__c;
+        }
+
+        return needSustainerUpdate;
     }
 
     private Boolean populateContactWithFields(Contact winningContact, Boolean isUniqueField) {
@@ -1080,11 +1085,15 @@ public with sharing class CON_ContactMerge_CTRL {
     }
 
     private void updateAndHandleWinningContact(Contact winningContact) {
+        RD2_SustainerEvaluationService.setSustainerUpdateEnabled(true);
+
         Database.DMLOptions dml = new Database.DMLOptions();
         dml.DuplicateRuleHeader.AllowSave = true;
 
         Database.SaveResult saveResult = UTIL_DMLService.updateRecord(winningContact, dml);
         handleDMLError(saveResult);
+
+        RD2_SustainerEvaluationService.setSustainerUpdateEnabled(false);
     }
 
     private void handleDMLError(Database.SaveResult saveResult) {

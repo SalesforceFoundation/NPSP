@@ -42,7 +42,7 @@ Review Donation And Update Payment For Batch Gift
     ...                                  select the donor as account and the account created. Verify review donations modal and select to update payment.
     ...                                  Change date to today and payment amount to be less than opp amount. Verify that same payment record got updated
     ...                                  with new amount and date but opportunity is still prospecting and amount is not updated.
-    [tags]                               unstable      feature:GE                    W-042803
+    [tags]                               feature:GE     unstable
     #verify Review Donations link is available and update a payment
     Go To Page                           Landing                       GE_Gift_Entry
     Current Page Should Be               Landing                       GE_Gift_Entry

@@ -67,6 +67,11 @@ public with sharing class Gift {
     }
 
     public Gift(DataImport__c dataImport) {
+        this(dataImport, null);
+    }
+
+    public Gift(DataImport__c dataImport, Donation donation) {
+        this.donation = donation;
         this.dataImport = dataImport;
         this.populateAvailableFields();
         this.populateSoftCredits();
@@ -85,8 +90,8 @@ public with sharing class Gift {
     }
 
     public Boolean requiresReauthorizationBeforeChange() {
-        if (dataImport.Payment_Status__c != ElevateTransactionStatus.AUTHORIZED.name()) { 
-            return false; 
+        if (dataImport.Payment_Status__c != ElevateTransactionStatus.AUTHORIZED.name()) {
+            return false;
         }
 
         return this.hasPaymentFieldsChanged();
@@ -94,6 +99,10 @@ public with sharing class Gift {
 
     public SoftCredits softCredits() {
         return this.softCredits;
+    }
+
+    public Donation donation() {
+        return this.donation;
     }
 
     public Map<String, Object> fields() {
@@ -125,6 +134,10 @@ public with sharing class Gift {
             dataImportSettings,
             new List<DataImport__c> { this.dataImport },
             false);
+
+        if (this.dataImport.FailureInformation__c == null) {
+            BDI_DataImportService.instrumentGiftEntry(1);
+        }
     }
 
     public void assignSoftCredits(SoftCredits incomingSoftCredits) {
@@ -148,8 +161,60 @@ public with sharing class Gift {
         this.dataImport.Additional_Object_JSON__c = additionalObjectJSONHelper.asJSON();
     }
 
+    public Boolean hasPopulatedRecurringFields() {
+        if (canAccessRecurringFields()) {
+            Map<String, Object> recurringFields = this.dataImport.getPopulatedFieldsAsMap();
+            for (SObjectField field : GIFT_SCHEDULE_FIELDS) {
+                if (recurringFields.get(String.valueOf(field)) != null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private Boolean canAccessRecurringFields() {
+        try {
+            fflib_SecurityUtils.checkRead(DataImportBatch__c.SObjectType, GIFT_SCHEDULE_FIELDS);
+            fflib_SecurityUtils.checkUpdate(DataImportBatch__c.SObjectType, GIFT_SCHEDULE_FIELDS);
+        } catch (fflib_SecurityUtils.SecurityException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public void preprocessForRecurringGift() {
+        this.dataImport.Recurring_Donation_Amount__c = this.dataImport.Donation_Amount__c;
+        this.dataImport.Recurring_Donation_Date_Established__c = this.dataImport.Donation_Date__c;
+        this.dataImport.Donation_Amount__c = null;
+        this.dataImport.Donation_Date__c = null;
+        this.dataImport.DonationImported__c = null;
+        clearNetNewSoftCredits();
+    }
+
+    public void remapFieldsForView() {
+        if (this.dataImport.Recurring_Donation_Amount__c != null) {
+            this.dataImport.Donation_Amount__c = this.dataImport.Recurring_Donation_Amount__c;
+        }
+        if (this.dataImport.Recurring_Donation_Date_Established__c != null) {
+            this.dataImport.Donation_Date__c = this.dataImport.Recurring_Donation_Date_Established__c;
+        }
+    }
+
+    public Boolean isImported() {
+        return this.status() == BDI_DataImport_API.bdiImported;
+    }
+
+    public Boolean isProcessing() {
+        return this.status() == BDI_DataImport_API.bdiProcessing;
+    }
+
     public Boolean hasAuthorizedPayment() {
         return this.dataImport.Payment_Status__c == ElevateTransactionStatus.AUTHORIZED.name();
+    }
+
+    public Boolean isPaymentProcessing() {
+        return this.dataImport.Payment_Status__c == ElevateTransactionStatus.PAYMENTPROCESSING.name();
     }
 
     public Boolean isDryRunValidated() {
@@ -176,8 +241,7 @@ public with sharing class Gift {
 
     private void populateSoftCreditsFromDonation() {
         if (hasDonation()) {
-            donation = new Donation(this.dataImport.DonationImported__c);
-            this.softCredits.addAll(donation.softCredits().all());
+            this.softCredits.addAll(this.donation.softCredits().all());
         }
     }
 
@@ -191,7 +255,7 @@ public with sharing class Gift {
     }
 
     private Boolean hasDonation() {
-        return this.dataImport.DonationImported__c != null;
+        return this.dataImport.DonationImported__c != null && this.donation != null;
     }
 
     private Boolean hasPaymentFieldsChanged() {
@@ -234,6 +298,14 @@ public with sharing class Gift {
             true);
     }
 
+    private void clearNetNewSoftCredits() {
+        AdditionalObjectJSON additionalObjectJSONHelper =
+            new AdditionalObjectJSON(additionalObjectString());
+        additionalObjectJSONHelper.clearSoftCreditsFromDynamicSourceGroup();
+        this.dataImport.Additional_Object_JSON__c = additionalObjectJSONHelper.asJSON();
+        this.softCredits = null;
+    }
+
     @TestVisible
     private UnitOfWork unitOfWork {
         get {
@@ -244,5 +316,18 @@ public with sharing class Gift {
         }
         set;
     }
+
+    private final List<SObjectField> GIFT_SCHEDULE_FIELDS = new List<Schema.SObjectField> {
+        DataImport__c.SObjectType.fields.Recurring_Donation_Recurring_Type__c,
+        DataImport__c.SObjectType.fields.Recurring_Donation_Date_Established__c,
+        DataImport__c.SObjectType.fields.Recurring_Donation_Day_of_Month__c,
+        DataImport__c.SObjectType.fields.Recurring_Donation_Planned_Installments__c,
+        DataImport__c.SObjectType.fields.Recurring_Donation_Installment_Period__c,
+        DataImport__c.SObjectType.fields.Recurring_Donation_Installment_Frequency__c,
+        DataImport__c.SObjectType.fields.Recurring_Donation_Effective_Date__c,
+        DataImport__c.SObjectType.fields.Recurring_Donation_Amount__c,
+        DataImport__c.SObjectType.fields.Recurring_Donation_End_Date__c,
+        DataImport__c.SObjectType.fields.RecurringDonationImportStatus__c
+    };
 
 }

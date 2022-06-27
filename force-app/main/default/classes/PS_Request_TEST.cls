@@ -143,7 +143,8 @@ private with sharing class PS_Request_TEST {
                 roles = PS_Request.ROLE_PAYMENT_PURCHASE;
 
             } else if (endpoint == PS_Request.ElevateEndpoint.COMMITMENT
-                || endpoint == PS_Request.ElevateEndpoint.COMMITMENT_CANCEL) {
+                || endpoint == PS_Request.ElevateEndpoint.COMMITMENT_CANCEL
+                || endpoint == PS_Request.ElevateEndpoint.COMMITMENT_UPDATE_BULK) {
 
                 roles = PS_Request.ROLE_PAYMENT_COMMITMENTS;
             } else if (endpoint == PS_Request.ElevateEndpoint.ADD_TO_ELEVATE_BATCH
@@ -152,6 +153,8 @@ private with sharing class PS_Request_TEST {
                 || endpoint == PS_Request.ElevateEndpoint.REMOVE_FROM_ELEVATE_BATCH) {
 
                 roles = PS_Request.ROLE_PAYMENT_BATCH;
+            } else if (endpoint == PS_Request.ElevateEndpoint.REFUND) {
+                roles = PS_Request.ROLE_PAYMENT_REFUND;
             }
 
             String jwtPayload = new PS_Request.JWTPayload(sfdoId, endpoint).getAsString();
