@@ -761,8 +761,30 @@ tasks:
         description: Set the BDI Mapping mode to 'Help Text' or 'Data Import Field Mapping'
         class_path: tasks.set_BDI_mapping_mode.SetBDIMappingMode
 
+    prepare_unlocked_package_source:
+        description: Munge source code to be buildable as an Unlocked Package
+        class_path: cumulusci.tasks.util.FindReplace
+        options:
+            find: SfdoLogUtils
+            replace: SfdoLogUtilsUnlocked
+            path: force-app/main
+            file_pattern:
+                - "*.cls"
 
 flows:
+    build_unlocked_test_package:
+        steps:
+            0:
+                task: command
+                options:
+                    command: |
+                        cp unpackaged/config/core_instrumentation_mock_classes/classes/SfdoLogUtils.cls \
+                        force-app/main/default/classes/SfdoLogUtilsUnlocked.cls && \
+                        cp unpackaged/config/core_instrumentation_mock_classes/classes/SfdoLogUtils.cls-meta.xml \
+                        force-app/main/default/classes/SfdoLogUtilsUnlocked.cls-meta.xml
+            0.1:
+                task: prepare_unlocked_package_source
+
     install_regression:
         steps:
             1:
@@ -849,6 +871,7 @@ flows:
                 task: update_admin_profile
             9:
                 task: test_data_relationships
+                ignore_failure: true
             10:
                 task: deploy_reports
             11:
@@ -887,6 +910,11 @@ flows:
                 flow: config_regression
             3:
                 task: update_admin_profile
+
+    qa_org_unlocked:
+        steps:
+            2:
+                flow: config_regression
 
     ci_feature_2gp_trial:
         steps:
@@ -1192,6 +1220,7 @@ flows:
                 flow: config_trial
             5:
                 task: test_data_relationships
+                ignore_failure: true
             6:
                 task: deploy_reports
             7:

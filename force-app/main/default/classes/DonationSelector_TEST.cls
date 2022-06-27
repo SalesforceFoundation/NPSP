@@ -102,6 +102,7 @@ private class DonationSelector_TEST {
                     'Name, ' +
                     'npe01__Scheduled_Date__c, ' +
                     'npe01__Opportunity__r.Name, ' +
+                    'npe01__Opportunity__r.Primary_Contact__c, ' +
                     'npe01__Opportunity__c, ' +
                     'npe01__Payment_Amount__c, ' +
                     'npe01__Payment_Date__c, ' +

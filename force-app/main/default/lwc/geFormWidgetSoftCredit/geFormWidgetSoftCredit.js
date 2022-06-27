@@ -1,13 +1,18 @@
 import { LightningElement, api, track } from 'lwc';
 import GeLabelService from 'c/geLabelService';
+import geSoftCreditsWarning from '@salesforce/label/c.geSoftCreditsWarning';
 
 import { fireEvent } from 'c/pubsubNoPageRef';
+import { isEmptyObject } from 'c/utilCommon';
 
 const NET_NEW_SOFT_CREDITS_LIMIT = 250;
 
 export default class GeFormWidgetSoftCredit extends LightningElement {
 
-    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+    CUSTOM_LABELS = {
+        ...GeLabelService.CUSTOM_LABELS,
+        geSoftCreditsWarning
+    }
 
     @api giftInView;
     @track alertBanner = {};
@@ -45,5 +50,9 @@ export default class GeFormWidgetSoftCredit extends LightningElement {
 
     get qaLocatorAddNewSoftCredit() {
         return `button ${this.CUSTOM_LABELS.geAddNewAllocation}`;
+    }
+
+    get giftInViewHasSchedule() {
+        return !isEmptyObject(this.giftInView?.schedule);
     }
 }
