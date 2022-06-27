@@ -86,6 +86,7 @@ public inherited sharing class RD2_ERecurringDonationsSelector {
             queryString += 'WITH SECURITY_ENFORCED ';
             queryString += 'ORDER BY npe03__Next_Payment_Date__c DESC NULLS LAST';
 
-        return recurringDonations;
+            return recurringDonations;
+        }
     }
 }
