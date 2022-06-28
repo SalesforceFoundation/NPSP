@@ -39,8 +39,6 @@ import scheduleSectionHeader from "@salesforce/label/c.RD2_EntryFormDonationSect
 import otherSectionHeader from "@salesforce/label/c.RD2_EntryFormOtherSectionHeader";
 import statusSectionHeader from "@salesforce/label/c.RD2_EntryFormStatusSectionHeader";
 import customFieldsSectionHeader from "@salesforce/label/c.RD2_EntryFormCustomFieldsSectionHeader";
-import insertSuccessMessage from "@salesforce/label/c.RD2_EntryFormInsertSuccessMessage";
-import updateSuccessMessage from "@salesforce/label/c.RD2_EntryFormUpdateSuccessMessage";
 import flsErrorDetail from "@salesforce/label/c.RD2_EntryFormMissingPermissions";
 import flsErrorHeader from "@salesforce/label/c.geErrorFLSHeader";
 import elevateWidgetLabel from "@salesforce/label/c.commonPaymentServices";
@@ -56,6 +54,7 @@ import CreditCardPaymentMethod from '@salesforce/label/c.RD2_Credit_Card_Payment
 import ACHPaymentMethodLabel from '@salesforce/label/c.RD2_ACH_Payment_Method_Label';
 import paymentMethodLabel from '@salesforce/label/c.RD2_Payment_Method';
 import RD2_Payment_Details from '@salesforce/label/c.RD2_Payment_Details';
+import RD2_Payment_method_was_updated from '@salesforce/label/c.RD2_Payment_method_was_updated';
 
 import handleCommitment from "@salesforce/apex/RD2_EntryFormController.handleCommitment";
 import logError from "@salesforce/apex/RD2_EntryFormController.logError";
@@ -101,6 +100,7 @@ export default class UpdatePaymentMethodModal extends LightningElement {
         CreditCardPaymentMethod,
         ACHPaymentMethodLabel,
         RD2_Payment_Details,
+        RD2_Payment_method_was_updated,
         cancelButtonLabel,
         closeButtonLabel,
         saveButtonLabel,
@@ -641,11 +641,8 @@ export default class UpdatePaymentMethodModal extends LightningElement {
      * @description Fires an event to utilDedicatedListener with the success action
      */
     handleSuccess() {
-        const message = this.isEdit
-            ? updateSuccessMessage.replace("{0}", this.rd2State.recordName)
-            : insertSuccessMessage.replace("{0}", this.rd2State.recordName);
 
-        showToast(message, "", "success");
+        showToast(this.customLabels.RD2_Payment_method_was_updated, "", "success");
 
         this.closeModal(this.rd2State.recordId);
     }
