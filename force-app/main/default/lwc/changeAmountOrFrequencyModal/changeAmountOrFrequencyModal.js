@@ -408,7 +408,7 @@ export default class rd2EntryForm extends LightningElement {
      * and a new Recurring Donation is being created.
      * Otherwise, contact data should not be retrieved from database.
      */
-    handleContactChange(event) {
+    /*handleContactChange(event) {
         this._contactId = event.detail;
         this.perform({
             type: ACTIONS.SET_CONTACT_ID,
@@ -436,7 +436,7 @@ export default class rd2EntryForm extends LightningElement {
             type: ACTIONS.SET_DATE_ESTABLISHED,
             payload: event.detail,
         });
-    }
+    }*/
 
     handleNameChange(event) {
         this.perform({
@@ -674,8 +674,9 @@ export default class rd2EntryForm extends LightningElement {
         this.isLoading = true;
         this.loadingText = this.customLabels.waitMessage;
         this.isSaveButtonDisabled = true;
-
+        console.log('handleSubmit');
         if (this.isFormValid()) {
+            console.log('isFormValid');
             const allFields = this.getAllFields();
             if (this.shouldSendToElevate(allFields)) {
                 this.processCommitmentSubmit(allFields);
@@ -695,6 +696,7 @@ export default class rd2EntryForm extends LightningElement {
     async processCommitmentSubmit(allFields) {
         try {
             if (this.isElevateWidgetDisplayed()) {
+                console.log('processCommitmentSubmit isElevateWidgetDisplayed');
                 this.loadingText = this.rd2Service.getPaymentProcessingMessage(this.rd2State.paymentMethod);
 
                 const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
@@ -754,7 +756,9 @@ export default class rd2EntryForm extends LightningElement {
      * @description Determines if new or existing Recurring Donation update should send to Elevate
      */
     shouldSendToElevate() {
+        console.log('shouldSendToElevate');
         if (!this.rd2State.isElevateCustomer) {
+            console.log('shouldSendToElevate false');
             return false;
         }
 
