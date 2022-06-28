@@ -1,34 +1,154 @@
 
 <template>
   <template if:true={openUpdatePaymentMethod}>
-      <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open">
+        <section
+          role="dialog"
+          tabindex="-1"
+          aria-labelledby="modal-heading-01"
+          aria-modal="true"
+          aria-describedby="modal-content-id-1"
+          class="slds-modal slds-fade-in-open slds-modal_small"
+          onkeyup={handleKeyUp}
+      >
           <div class="slds-modal__container">
-            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
-              <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
-                <use link:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
-              </svg>
-              <span class="slds-assistive-text">{labels.commonCancelAndClose}</span>
-            </button>
-            <div class="slds-modal__header">
-              <h1 id="modal-heading-01" class="slds-p-around_small slds-modal__title slds-hyphenate">{labels.updatePaymentMethod}</h1>
-            </div>
-            <div class="slds-modal__content slds-grid slds-wrap slds-p-around_medium" id="modal-content-id-1">
-                <lightning-radio-group class="slds-p-horizontal_small slds-size_1-of-1 slds-large-size_1-of-3" name="paymentMethodRadioGroup"
-                label={labels.paymentMethod}
-                options={paymentMethodOptions}
-                value={currentRecord.recurringDonation.PaymentMethod__c}
-                type="radio"></lightning-radio-group>
-            </div>
-            <div class="slds-modal__footer slds-grid slds-wrap slds-grid_align-end">
-                <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_3-of-12">
-                    <button class="slds-button_stretch slds-button slds-button_neutral" aria-label={labels.commonCancelAndClose} onclick={closeModal}>{labels.commonCancel}</button>
-                </div>
-                <div class="slds-col slds-p-around_x-small slds-size_1-of-1 slds-medium-size_5-of-12">
-                    <button class="slds-button_stretch slds-button slds-button_brand" onclick={closeModal}>{labels.updatePaymentMethod}</button>
-                </div>
-            </div>
+              <header class="slds-modal__header slds-clearfix">
+                  <lightning-button-icon
+                      class="slds-modal__close"
+                      title={customLabels.closeButtonLabel}
+                      icon-name="utility:close"
+                      icon-class="slds-button_icon-inverse"
+                      onclick={handleCancel}
+                      onkeydown={handleClosedButtonTrapFocus}
+                      data-id="closeButton">
+                  </lightning-button-icon>
+                  <h2
+                      class="slds-text-heading_medium slds-hyphenate header-string slds-p-top_large slds-p-horizontal_medium" id="modal-heading-01">
+                      {headerLabel}
+                  </h2>
+              </header>
+  
+              <lightning-record-edit-form record-id={recordId}
+                                          object-api-name="npe03__Recurring_Donation__c"
+                                          data-id="outerRecordEditForm">
+                  <div class="slds-modal__content slds-p-top_none slds-p-horizontal_medium slds-p-bottom_medium" id="modal-content-id-1">
+                      <template if:true={isLoading}>
+                          <div class="slds-grid slds-grid_align-center">
+                              <div class="slds-is-relative slds-size_1-of-1">
+                                  <lightning-spinner alternative-text={customLabels.spinnerAltText} data-text={loadingText}
+                                      class="loading-spinner">
+                                  </lightning-spinner>
+                                  <c-util-stencil row-count="20" column-count="2"></c-util-stencil>
+                              </div>
+                          </div>
+                      </template>
+                      <div class="error-container">
+                          <template if:true={error.detail}>
+                              <c-util-page-level-message title={error.header}
+                                                         variant="error"
+                                                         icon-name="utility:error"
+                                                         icon-size="x-small"
+                                                         icon-variant="inverse"
+                                                         data-id="error"
+                                                         data-qa-locator="error">
+                                  <p slot="body"
+                                     class="slds-p-horizontal_medium slds-p-vertical_xx-small slds-text-color_error">
+                                      <lightning-formatted-text value={error.detail}></lightning-formatted-text>
+                                  </p>
+                              </c-util-page-level-message>
+                          </template>
+                      </div>
+                      <div class={cssEditForm}>
+
+                              <div aria-hidden="true" class="slds-section__content slds-hide">
+                                  <c-rd2-entry-form-donor-section
+                                          rd2-state={rd2State}
+                                          data-id="donorComponent"
+                                          onerrorevent={handleChildComponentError}
+                                          if:true={isSettingReady}
+                                  >
+                                  </c-rd2-entry-form-donor-section>
+                              </div>
+  
+                          <div class="slds-section slds-is-open">
+                              
+                              <div aria-hidden="false" class="slds-section__content">
+  
+                                      <lightning-layout-item aria-hidden="true" class="slds-hide" padding="horizontal-small" size="6" small-device-size="6"
+                                          if:true={fields.amount}>
+                                          <lightning-input-field
+                                                  field-name={fields.amount.apiName}
+                                                  value={rd2State.donationValue}
+                                                  data-id="amountField"
+                                                  required
+                                          >
+                                          </lightning-input-field>
+                                      </lightning-layout-item>
+  
+                                <div aria-hidden="true" class="slds-hide">    
+                                    <c-rd2-entry-form-schedule-section
+                                            rd2-state={rd2State}
+                                            data-id="scheduleComponent"
+                                            onerrorevent={handleChildComponentError}
+                                            if:true={isSettingReady}>
+                                    </c-rd2-entry-form-schedule-section>
+                                </div>  
+  
+                                  <lightning-layout horizontal-align="spread" multiple-rows="true">
+                                      <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6"
+                                          if:true={fields.paymentMethod}>
+                                            <lightning-radio-group class="slds-size_1-of-1 slds-large-size_1-of-3" 
+                                                name="paymentMethodRadioGroup"
+                                                label={customLabels.paymentMethodLabel}
+                                                options={paymentMethodOptions}
+                                                value={rd2State.paymentMethod}
+                                                type="radio"
+                                                onchange={handlePaymentChange}
+                                                data-id="paymentMethod">
+                                            </lightning-radio-group>
+                                      </lightning-layout-item>
+  
+                                      <lightning-layout-item size="12" class="slds-p-bottom_small"
+                                          if:true={isElevateWidgetEnabled}>
+                                            <h3 class="slds-section__title slds-theme_shade">
+                                                <span class="paymentDetails">{customLabels.RD2_Payment_Details}</span>
+                                            </h3>
+                                          <c-rd2-elevate-credit-card-form data-id='elevateWidget'
+                                              rd2-state={rd2State}
+                                              data-qa-locator='widget Elevate'
+                                              is-edit-mode={isCommitmentEdit}
+                                              rd2-record-id={recordId}
+                                              card-last-four-label={cardLastFourLabel}
+                                              ach-last-four-label={achLastFourLabel}
+                                              next-donation-date={nextDonationDate}
+                                              payer-organization-name={rd2State.accountName}
+                                              payer-first-name={rd2State.contactFirstName}
+                                              payer-last-name={rd2State.contactLastName}
+                                              existing-payment-method={originalPaymentMethod}
+                                              payment-method={rd2State.paymentMethod}
+                                              is-digital-experience=true>
+                                          </c-rd2-elevate-credit-card-form>
+                                      </lightning-layout-item>
+                                  </lightning-layout>
+  
+                              </div>
+                          </div>
+                       </div>
+                  </div>
+  
+                  <footer class="slds-modal__footer slds-clearfix">
+                      <div class="slds-float_right">
+                          <lightning-button label={customLabels.cancelButtonLabel} title={customLabels.cancelButtonLabel}
+                              variant="neutral" class="slds-m-right_small" onclick={handleCancel} disabled={isLoading}>
+                          </lightning-button>
+                          <lightning-button label={customLabels.saveButtonLabel} title={customLabels.saveButtonLabel}
+                              variant="brand" onclick={handleSubmit} onkeydown={handleSaveButtonTrapFocus} data-id="submitButton" disabled={isSaveButtonDisabled}>
+                          </lightning-button>
+                      </div>
+                  </footer>
+  
+              </lightning-record-edit-form>
           </div>
-        </section>
-        <div class="slds-backdrop slds-backdrop_open"></div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open"></div>
   </template>
 </template>
