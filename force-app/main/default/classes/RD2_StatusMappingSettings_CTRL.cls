@@ -93,6 +93,20 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
         set;
     }
 
+    /***
+    * @description Verifies the user has Admin permissions for Opportunity naming settings.
+    * @return true when the user has the appropriate access
+    */
+    public Boolean isRunningUserIsAdmin {
+        get {
+            if (isRunningUserIsAdmin == null) {
+                isRunningUserIsAdmin = runningUserIsAdmin();
+            }
+            return isRunningUserIsAdmin;
+        }
+        private set;
+    }
+
     /**
      * @description Returns the state value and label select options
      * @return List<PicklistOptionView>
@@ -109,6 +123,18 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
         }
 
         return options;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns whether the running user is a System Administrator.
+    * @return boolean
+    */
+    public static Boolean runningUserIsAdmin() {
+
+        Id runningUserId = UserInfo.getUserId();
+        Id runningUserProfileId = UserInfo.getProfileId();
+        return USER_UserService.isSysAdmin(new List<User>{(new User(Id = runningUserId, ProfileId = runningUserProfileId))}).get(runningUserId);
+
     }
 
     /***
