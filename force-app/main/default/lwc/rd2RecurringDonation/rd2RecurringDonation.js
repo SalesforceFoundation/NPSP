@@ -351,9 +351,7 @@ export default class RecurringDonationTable extends LightningElement {
     }
 
     getRecurringDonationFields() {
-        console.log('data retrieve');
         retrieveTableView().then((data) => {
-            console.log(data);
             if (data) {
                 this.data = data.map((el) => {
                     let isElevate = el.recurringDonation.CommitmentId__c ? true : false;
