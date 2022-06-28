@@ -28,26 +28,12 @@ ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 -->
 <apex:page controller="STG_PanelPaymentMapping_CTRL" docType="html-5.0" standardStylesheets="false" >
-    <apex:includeLightning />
 
-    <script>
-        if ({!NOT(hasAccess)}) {
-            $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function() {
-                $Lightning.createComponent("{!namespace}" + ":utilIllustration",
-                    {   title : "{!$Label.commonAdminPermissionErrorTitle}",
-                        message : "{!$Label.commonPermissionErrorMessage}",
-                        size: 'small',
-                        variant: 'no-access',
-                        illustrationClass: "slds-p-top_x-large slds-m-top_x-large"
-                    },
-                    "stgPanelPaymentMappingUtilIllustration",
-                    function () { }
-                );
-            });
-        }
-    </script>
+    <apex:outputPanel rendered="{!NOT(isRunningUserIsAdmin)}">
+        <c:InsufficientPermissions />
+    </apex:outputPanel>
 
-    <apex:form id="form" styleClass="slds-m-around_x-large">
+    <apex:form id="form" styleClass="slds-m-around_x-large" rendered="{!isRunningUserIsAdmin}">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavPaymentMappings}" />
 
         <apex:outputPanel rendered="{!NOT(hasAccess)}">

@@ -1,5 +1,11 @@
 <apex:page controller="STG_PanelRel_CTRL" docType="html-5.0" standardStylesheets="false">
-    <apex:form id="form" styleClass="slds-m-around_x-large">
+
+    <apex:outputPanel rendered="{!NOT(isRunningUserIsAdmin)}">
+        <c:InsufficientPermissions />
+    </apex:outputPanel>
+
+
+    <apex:form id="form" styleClass="slds-m-around_x-large" rendered="{!isRunningUserIsAdmin}">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="{!$Label.stgNavRelationships}" />
 
         <apex:outputPanel rendered="{!NOT(hasAccess)}">
