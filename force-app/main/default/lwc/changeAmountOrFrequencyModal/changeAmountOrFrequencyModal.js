@@ -13,6 +13,7 @@ import INSTALLMENT_PERIOD_FIELD from "@salesforce/schema/npe03__Recurring_Donati
 import commonCancelAndClose from "@salesforce/label/c.commonCancelAndClose";
 import commonCancel from "@salesforce/label/c.commonCancel";
 import MONTH_DAY_FIELD from "@salesforce/schema/npe03__Recurring_Donation__c.Day_of_Month__c";
+import INSTALLMENT_NUMBER_FIELD from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installments__c";
 import INSTALLMENT_PERIOD_FIELD_VALUES from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c";
 
 const ESC_KEY_CODE = 27;
@@ -21,6 +22,7 @@ const FOCUSABLE_ELEMENTS = "button";
 const TAB_KEY_CODE = 9;
 const TAB_KEY_STRING = "Tab";
 const MONTHLY = "Monthly";
+const FIXED_RD2_TYPE = "Fixed";
 const FIRST_AND_FIFTEENTH = "1st and 15th";
 
 export default class ChangeAmountOrFrequencyModal extends LightningElement {
@@ -28,18 +30,22 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
     @api defaultRecordTypeId;
     @api openChangeAmountOrFrequency;
     @api currentRecord;
+    @api fixedInstallmentsLabel;
+
     installmentPeriodPicklistOptions;
 
     isRenderCallbackActionExecuted = false;
     @track isMonthlyDonation = false;
     @track dayOfMonthValue;
     today = new Date();
+    isFixedDonation = false;
 
     recurringDonationApiName = RECURRING_DONATION;
     amountFieldName = AMOUNT_FIELD;
     installmentFrequencyFieldName = INSTALLMENT_FREQUENCY_FIELD;
     installmentPeriodFieldName = INSTALLMENT_PERIOD_FIELD;
     dayOfMonthFieldName = MONTH_DAY_FIELD;
+    installmentNumberFieldName = INSTALLMENT_NUMBER_FIELD;
     style = document.createElement("style");
 
     labels = {
@@ -87,6 +93,9 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
                         var dd = String(this.today.getDate()).padStart(2, "0");
                         this.dayOfMonthValue = dd;
                     }
+                    if (this.currentRecord.recurringDonation.RecurringType__c === FIXED_RD2_TYPE) {
+                        this.isFixedDonation = true;
+                    }
                     this.isRenderCallbackActionExecuted = true;
                 }
             }
@@ -114,6 +123,7 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
     }
 
     handleInstallmentPeriodChange(event) {
+        //this.currentRecord.recurringDonation.npe03__Installment_Period__c = event.detail.value;
         if (event.target.value === MONTHLY) {
             /*if(typeof this.currentRecord.recurringDonation.CommitmentId__c === "undefined"){
                 this.isMonthlyDonation = true;
@@ -131,7 +141,6 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
     }
 
     closeModal() {
-        this.isRenderCallbackActionExecuted = false;
         this.template.removeEventListener("keydown", (e) => this.handleKeyUp(e));
         if (this.template.querySelector("lightning-record-edit-form")) {
             this.style.innerText = `lightning-helptext {
@@ -139,6 +148,8 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
             }`;
             this.template.querySelector("lightning-record-edit-form").removeChild(this.style);
         }
+        this.isFixedDonation = false;
+        this.isRenderCallbackActionExecuted = false;
         this.dispatchEvent(new CustomEvent("close", { detail: "changeAmountOrFrequency" }));
     }
 }
