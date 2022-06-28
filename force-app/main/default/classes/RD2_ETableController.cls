@@ -168,7 +168,8 @@ public with sharing class RD2_ETableController {
             recurringDonations.put( recDonation.Id, new RD2_ETableController.TableView( recDonation,
                                                                         controller.getFrequency(recDonation),
                                                                         controller.getStatus(recDonation),
-                                                                        controller.getPaymentMethod(recDonation)));
+                                                                        controller.getPaymentMethod(recDonation),
+                                                                        controller.getNextDonation(recDonation)));
 
             if(recDonation.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED 
                 && statusMapper.getState(recDonation.Status__c) != RD2_Constants.STATUS_CLOSED) {
