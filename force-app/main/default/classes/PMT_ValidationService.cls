@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2019 Salesforce.org
+    Copyright (c) 2022 Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,7 @@
 *
 */
 public inherited sharing class PMT_ValidationService {
-
+    @TestVisible
     private Boolean isEnforceAccountingDataConsistency {
         get {
             if (isEnforceAccountingDataConsistency == null) {
@@ -66,6 +66,18 @@ public inherited sharing class PMT_ValidationService {
         }
         set;
     }
+
+    @TestVisible
+    private static PS_IntegrationServiceConfig config {
+        get {
+            if (config == null) {
+                config = new PS_IntegrationServiceConfig();
+            }
+            return config;
+        }
+        set;
+    }
+
 
     @TestVisible
     private List<npe01__OppPayment__c> payments = new List<npe01__OppPayment__c>();
@@ -150,10 +162,11 @@ public inherited sharing class PMT_ValidationService {
             return;
         }
 
-        PMT_RefundService.RefundInfo refundInfo = originalPaymentWithRefunds.get(payment.originalPayment__c);
+        PMT_RefundService.RefundInfo refundInfo = originalPaymentWithRefunds.get(payment.OriginalPayment__c);
 
-        if (refundInfo.originalPayment == null) {
+        if (payment.OriginalPayment__c == null || refundInfo == null || refundInfo.originalPayment == null) {
             errorCollection.addError(System.Label.pmtOriginalPaymentNotFound);
+            return;
         }
 
         if (refundInfo.originalPayment.npe01__Paid__c != true) {
@@ -171,23 +184,11 @@ public inherited sharing class PMT_ValidationService {
         refundInfo.refundableAmount += payment.npe01__Payment_Amount__c;
     }
 
-    private Map<Id, PMT_RefundService.RefundInfo> getPaymentIdWithAvailableRefunds() {
-        Set<Id> originalPaymentIds = UTIL_SObject.extractId(this.payments, npe01__OppPayment__c.originalPayment__c);
-        if (originalPaymentIds.isEmpty()) {
-            return new Map<Id, PMT_RefundService.RefundInfo>();
-        }
-
-        List<npe01__OppPayment__c> originalPayments = paymentSelector.getPaymentsWithRefunds(originalPaymentIds);
-       return new PMT_RefundService().calculatePaymentWithRefundableAmount(originalPayments);
-    }
-
     private void validateElevatePayments(npe01__OppPayment__c payment, npe01__OppPayment__c oldPayment, ErrorRecord errorCollection) {
-        PS_IntegrationServiceConfig config = new PS_IntegrationServiceConfig();
-
         if (String.isBlank(payment.Elevate_Payment_ID__c) || !config.isIntegrationEnabled() || config.hasIntegrationPermissions()) {
             return;
         }
-        
+
         if (payment.npe01__Payment_Amount__c != oldPayment.npe01__Payment_Amount__c ||
                 payment.Elevate_Payment_ID__c != oldPayment.Elevate_Payment_ID__c ||
                 payment.npe01__Payment_Date__c != oldPayment.npe01__Payment_Date__c ||
@@ -196,5 +197,15 @@ public inherited sharing class PMT_ValidationService {
             ) {
                 errorCollection.addError(System.Label.pmtElevatePermissionRequired);
         }
+    }
+
+    private Map<Id, PMT_RefundService.RefundInfo> getPaymentIdWithAvailableRefunds() {
+        Set<Id> originalPaymentIds = UTIL_SObject.extractId(this.payments, npe01__OppPayment__c.OriginalPayment__c);
+        if (originalPaymentIds.isEmpty()) {
+            return new Map<Id, PMT_RefundService.RefundInfo>();
+        }
+
+        List<npe01__OppPayment__c> originalPayments = paymentSelector.getPaymentsWithRefunds(originalPaymentIds);
+       return new PMT_RefundService().calculatePaymentWithRefundableAmount(originalPayments);
     }
 }

@@ -12155,7 +12155,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Refund error when the refund amount is invalid</shortDescription>
-        <value>The reunf amount must be a negative amount and cannot be larger than the original payment amount.</value>
+        <value>The refund amount must be a negative amount and cannot be larger than the original payment amount.</value>
     </labels>
     <labels>
         <fullName>pmtRefundPaymentSuccessMessage</fullName>

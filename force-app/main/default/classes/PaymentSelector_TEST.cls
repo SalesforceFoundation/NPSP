@@ -54,6 +54,9 @@ public with sharing class PaymentSelector_TEST {
                 } when 'getPaymentRecordsForRefund' {
                     return paymentRecords;
 
+                } when 'getPaymentsWithRefunds' {
+                    return paymentRecords;
+
                 } when else {
                     return null;
                 }
