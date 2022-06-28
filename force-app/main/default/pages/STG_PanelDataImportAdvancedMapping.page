@@ -24,7 +24,12 @@
     </style>
 
     <div class="slds-scope stg-panel-data-import-advanced-mapping">
-        <apex:form id="form" styleClass="slds-m-around_x-large">
+
+        <apex:outputPanel rendered="{!NOT(isAdmin)}">
+            <c:InsufficientPermissions />
+        </apex:outputPanel>
+
+        <apex:form id="form" styleClass="slds-m-around_x-large" rendered="{!isAdmin}">
             <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.bdiAdvancedMapping}" />
 
             <c:UTIL_PageMessages escMsg="false" allowClose="false" id="messages" />
