@@ -4,7 +4,7 @@
             class="slds-table slds-table_bordered slds-table_header-fixed slds-table_resizable-cols slds-max-medium-table_stacked">
             <thead >
                 <tr>
-                    <th aria-label={labels.commonAmount} class={headClasses} scope="col" style={fixedWidth}>
+                    <th aria-label={labels.commonAmount} class={headClasses} scope="col" style={fixedWidth} tabindex="-1">
                         <div class="slds-cell-fixed" style={fixedWidth}>
                             <a class="slds-th__action slds-text-link--reset">
                                 <span class="slds-truncate" title={labels.commonAmount}>{labels.commonAmount}</span>
@@ -16,7 +16,7 @@
                             </div>
                         </div>
                     </th>
-                    <th aria-label={labels.RDCL_Frequency} class={headClasses} scope="col" style={fixedWidth}>
+                    <th aria-label={labels.RDCL_Frequency} class={headClasses} scope="col" style={fixedWidth} tabindex="-1">
                         <div class="slds-cell-fixed" style={fixedWidth}>
                             <a class="slds-th__action slds-text-link--reset">
                                 <span class="slds-truncate" title={labels.RDCL_Frequency}>{labels.RDCL_Frequency}</span>
@@ -28,7 +28,7 @@
                             </div>
                         </div>
                     </th>
-                    <th aria-label={paymentMethod} class={headClasses} scope="col" style={fixedWidth}>
+                    <th aria-label={paymentMethod} class={headClasses} scope="col" style={fixedWidth} tabindex="-1">
                         <div class="slds-cell-fixed" style={fixedWidth}>
                             <a class="slds-th__action slds-text-link--reset">
                                 <span class="slds-truncate" title={paymentMethod}>{paymentMethod}</span>
@@ -40,7 +40,7 @@
                             </div>
                         </div>
                     </th>
-                    <th aria-label={labels.lblStatus} class={headClasses} scope="col" style={fixedWidth}>
+                    <th aria-label={labels.lblStatus} class={headClasses} scope="col" style={fixedWidth} tabindex="-1">
                         <div class="slds-cell-fixed" style={fixedWidth}>
                             <a class="slds-th__action slds-text-link--reset">
                                 <span class="slds-truncate" title={labels.lblStatus}>{labels.lblStatus}</span>
@@ -52,7 +52,7 @@
                             </div>
                         </div>
                     </th>
-                    <th aria-label={labels.firstDonation} class={headClasses} scope="col" style={fixedWidth}>
+                    <th aria-label={labels.firstDonation} class={headClasses} scope="col" style={fixedWidth} tabindex="-1">
                         <div class="slds-cell-fixed" style={fixedWidth}>
                             <a class="slds-th__action slds-text-link--reset">
                                 <span class="slds-truncate" title={labels.firstDonation}>{labels.firstDonation}</span>
@@ -64,7 +64,7 @@
                             </div>
                         </div>
                     </th>
-                    <th aria-label={labels.finalDonation} class={headClasses} scope="col" style={fixedWidth}>
+                    <th aria-label={labels.finalDonation} class={headClasses} scope="col" style={fixedWidth} tabindex="-1">
                         <div class="slds-cell-fixed" style={fixedWidth}>
                             <a class="slds-th__action slds-text-link--reset">
                                 <span class="slds-truncate" title={labels.finalDonation}>{labels.finalDonation}</span>
@@ -76,7 +76,7 @@
                             </div>
                         </div>
                     </th>
-                    <th aria-label={labels.mostRecentDonation} class={headClasses} scope="col" style={fixedWidth}>
+                    <th aria-label={labels.mostRecentDonation} class={headClasses} scope="col" style={fixedWidth} tabindex="-1">
                         <div class="slds-cell-fixed" style={fixedWidth}>
                             <a class="slds-th__action slds-text-link--reset">
                                 <span class="slds-truncate"
@@ -89,7 +89,7 @@
                             </div>
                         </div>
                     </th>
-                    <th aria-label={labels.nextDonation} class={headClasses} scope="col" style={fixedWidth}>
+                    <th aria-label={labels.nextDonation} class={headClasses} scope="col" style={fixedWidth} tabindex="-1">
                         <div class="slds-cell-fixed" style={fixedWidth}>
                             <a class="slds-th__action slds-text-link--reset">
                                 <span class="slds-truncate" title={labels.nextDonation}>{labels.nextDonation}</span>
@@ -101,7 +101,7 @@
                             </div>
                         </div>
                     </th>
-                    <th aria-label={labels.lastModified} class={headClasses} scope="col" style={fixedWidth}>
+                    <th aria-label={labels.lastModified} class={headClasses} scope="col" style={fixedWidth} tabindex="-1">
                         <div class="slds-cell-fixed" style={fixedWidth}>
                             <a class="slds-th__action slds-text-link--reset">
                                 <span class="slds-truncate" title={labels.lastModified}>{labels.lastModified}</span>
@@ -113,7 +113,7 @@
                             </div>
                         </div>
                     </th>
-                    <th scope="col">
+                    <th scope="col" tabindex="-1">
                         <div class="slds-cell-fixed">
                             <div class="slds-truncate slds-assistive-text" title="Actions">Actions</div>
                         </div>
@@ -147,7 +147,7 @@
                                 {item.recurringDonation.npe03__Date_Established__c}
                             </div>
                         </td>
-                        <td key={item.finalDonation} data-id={item.id} class={tdClasses} data-label={labels.finalDonation}>
+                        <td key={item.finalDonation} data-id={item.id} class={tdClasses} data-label={labels.finalDonation} tabindex="-1">
                             <div class={rowClasses} style={fixedWidth} title={labels.finalDonation}>
                                 {item.finalDonation}
                             </div>

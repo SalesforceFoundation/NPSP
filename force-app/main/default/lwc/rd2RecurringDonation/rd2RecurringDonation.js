@@ -99,7 +99,7 @@ export default class RecurringDonationTable extends LightningElement {
         this.tdClasses = '';
       }
       this.template.addEventListener('keydown', (event) => {
-        let cells   = this.template.querySelectorAll("tr td[tabindex='-1']");
+        let cells   = this.template.querySelectorAll("[tabindex='-1']");
         let active  = Array.prototype.indexOf.call(cells, event.target);
         let rows    = this.template.querySelectorAll('tr').length;
         let columns = this.template.querySelectorAll('tr th').length;
@@ -115,7 +115,7 @@ export default class RecurringDonationTable extends LightningElement {
         if (event.keyCode === 40) {
             active = (active + columns <= cells.length - 1) ? active + columns : active;
         }
-        let activeTDs = this.template.querySelectorAll('slds-has-focus');
+        let activeTDs = this.template.querySelectorAll('.slds-has-focus');
         for (let i = 0; i < activeTDs.length; i++) {
             activeTDs[i].classList.remove('slds-has-focus');
         }
@@ -352,6 +352,7 @@ export default class RecurringDonationTable extends LightningElement {
 
     getRecurringDonationFields() {
         retrieveTableView().then((data) => {
+            console.log(data);
             if (data) {
                 this.data = data.map((el) => {
                     let isElevate = el.recurringDonation.CommitmentId__c ? true : false;
