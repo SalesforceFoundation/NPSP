@@ -160,7 +160,6 @@
                                         if:true={fields.paymentMethod}>
                                         <lightning-input-field
                                             field-name={fields.paymentMethod.apiName}
-                                            onchange={handlePaymentChange}
                                             value={rd2State.paymentMethod}
                                             data-id="paymentMethod">
                                         </lightning-input-field>
@@ -208,7 +207,6 @@
                                     <lightning-layout-item padding="horizontal-small" size="12" if:true={fields.campaign}>
                                         <lightning-input-field
                                                 data-id="campaignLookup"
-                                                onchange={handleCampaignChange}
                                                 value={rd2State.campaignId}
                                                 field-name={fields.campaign.apiName}>
                                         </lightning-input-field>
@@ -218,7 +216,6 @@
                                         <lightning-layout-item padding="horizontal-small" size="6" if:true={fields.changeType}>
                                             <lightning-input-field
                                                 data-id="changeType"
-                                                onchange={handleChangeTypeChange}
                                                 field-name={fields.changeType.apiName}
                                                 value={rd2State.changeType}
                                             >
@@ -239,7 +236,6 @@
                                             record-id={recordId}
                                             fields={rd2State.customFieldSets}
                                             data-id="customFieldsComponent"
-                                            onchange={handleCustomFieldChange}
                                         >
                                         </c-rd2-entry-form-custom-fields-section>
 
