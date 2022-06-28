@@ -85,7 +85,6 @@
                                                     data-id="status"
                                                     value={rd2State.recurringStatus}
                                                     field-name={fields.status.apiName}
-                                                    onchange={handleStatusChange}
                                                     required>
                                             </lightning-input-field>
                                         </lightning-layout-item>
@@ -94,7 +93,6 @@
                                             if:true={fields.statusReason}>
                                             <lightning-input-field
                                                 value={rd2State.statusReason}
-                                                onchange={handleStatusReasonChange}
                                                 field-name={fields.statusReason.apiName}>
                                             </lightning-input-field>
                                         </lightning-layout-item>
@@ -190,7 +188,7 @@
                             </div>
                         </div>
 
-                        <div class="slds-section slds-is-open">
+                        <div aria-hidden="true" class="slds-section slds-is-open slds-hide">
                             <h3 class="slds-section__title slds-theme_shade">
                                 <span class="slds-truncate slds-p-horizontal_small">{customLabels.otherSectionHeader}</span>
                             </h3>
@@ -200,7 +198,6 @@
                                         <lightning-layout-item padding="horizontal-small" size="12" if:true={fields.name}>
                                             <lightning-input-field class="name-field-class"
                                                                    field-name={fields.name.apiName}
-                                                                   onchange={handleNameChange}
                                                                    value={rd2State.recordName}
                                                                    data-id="recordName"
                                                                    required>
