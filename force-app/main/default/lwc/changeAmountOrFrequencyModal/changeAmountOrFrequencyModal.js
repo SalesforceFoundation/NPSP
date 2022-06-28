@@ -72,9 +72,15 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
                 }`;
                 if (this.template.querySelector("lightning-record-edit-form")) {
                     this.template.querySelector("lightning-record-edit-form").appendChild(this.style);
+                    console.log(JSON.stringify(this.currentRecord));
+                    console.log('commitmentId: ',JSON.stringify(this.currentRecord.recurringDonation.CommitmentId__c));
                     if (this.currentRecord.recurringDonation.Day_of_Month__c) {
                         this.dayOfMonthValue = this.currentRecord.recurringDonation.Day_of_Month__c;
-                        this.isMonthlyDonation = true;
+                        if(typeof this.currentRecord.recurringDonation.CommitmentId__c === "undefined"){
+                            this.isMonthlyDonation = true;
+                        }else{
+                            this.isMonthlyDonation = false;
+                        }
                     } else {
                         this.isMonthlyDonation = false;
                         // eslint-disable-next-line vars-on-top
@@ -109,7 +115,11 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
 
     handleInstallmentPeriodChange(event) {
         if (event.target.value === MONTHLY) {
-            this.isMonthlyDonation = true;
+            if(typeof this.currentRecord.recurringDonation.CommitmentId__c === "undefined"){
+                this.isMonthlyDonation = true;
+            }else{
+                this.isMonthlyDonation = false;
+            }
         } else {
             this.isMonthlyDonation = false;
         }
