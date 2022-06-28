@@ -237,10 +237,10 @@ export default class rd2EntryForm extends LightningElement {
         contactAdminMessage,
         unknownError,
     });
-
+    @api currentRecord;
     @api openChangeAmountOrFrequency;
     @api parentId;
-    recordId='a091100000VMgFOAA1';
+    recordId;
     //@api recordId;
 
     _contactId;
@@ -300,6 +300,7 @@ export default class rd2EntryForm extends LightningElement {
      */
     async connectedCallback() {
         try {
+            this.recordId = this.currentRecord.recurringDonation.Id;
             console.log("rd2EntryForm this.recordId: ",this.recordId);
             console.log("rd2EntryForm this.parentId: ",this.parentId);
             console.log("rd2EntryForm this.state: ",this.state);
