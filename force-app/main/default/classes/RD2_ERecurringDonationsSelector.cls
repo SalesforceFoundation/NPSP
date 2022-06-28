@@ -71,7 +71,7 @@ public inherited sharing class RD2_ERecurringDonationsSelector {
                   npe03__Total_Paid_Installments__c,
                   npe03__Installments__c,
                   npe03__Next_Payment_Date__c,
-                  RecurringType__c
+                  RecurringType__c,
                   npe03__Date_Established__c
 									FROM npe03__Recurring_Donation__c
 									WHERE npe03__Contact__c = :currentContactId
