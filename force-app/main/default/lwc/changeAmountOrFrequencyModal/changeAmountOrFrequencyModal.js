@@ -1,4 +1,3 @@
-/* eslint-disable @lwc/lwc/no-document-query */
 import { LightningElement, api, wire, track } from "lwc";
 import { getPicklistValues } from "lightning/uiObjectInfoApi";
 import changeAmountOrFrequency from "@salesforce/label/c.changeAmountOrFrequency";
@@ -73,11 +72,9 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
                 }`;
                 if (this.template.querySelector("lightning-record-edit-form")) {
                     this.template.querySelector("lightning-record-edit-form").appendChild(this.style);
-                    console.log('this.currentRecord: ',JSON.stringify(this.currentRecord));
                     if (this.currentRecord.recurringDonation.Day_of_Month__c) {
                         this.dayOfMonthValue = this.currentRecord.recurringDonation.Day_of_Month__c;
                         this.isMonthlyDonation = true;
-                        //this.dayOfMonthValue = this.currentRecord.recurringDonation.Day_of_Month__c;
                     } else {
                         this.isMonthlyDonation = false;
                         // eslint-disable-next-line vars-on-top
@@ -111,24 +108,8 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
     }
 
     handleInstallmentPeriodChange(event) {
-        //this.currentRecord.recurringDonation.npe03__Installment_Period__c = event.detail.value;
-        // eslint-disable-next-line vars-on-top
-        //var dd = String(this.today.getDate()).padStart(2, "0");
-
-        //console.log('dd: ', dd);
-        console.log('handleInstallmentPeriodChange');
-        console.log('event.target.value: ',event.target.value);
         if (event.target.value === MONTHLY) {
             this.isMonthlyDonation = true;
-            
-            // eslint-disable-next-line vars-on-top
-            //var el = document.getElementsByClassName("rd-day_of_month");
-            //console.log('this.currentRecord.recurringDonation.Day_of_Month__c: ',this.currentRecord.recurringDonation.Day_of_Month__c);
-            //el.setAttribute("value", dd);
-            //if (!this.currentRecord.recurringDonation.Day_of_Month__c) {
-                //this.currentRecord.recurringDonation.Day_of_Month__c = dd;
-            //    console.log('falsy dayOfMonths');
-            //}
         } else {
             this.isMonthlyDonation = false;
         }
