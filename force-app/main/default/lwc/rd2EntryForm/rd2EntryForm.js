@@ -362,7 +362,6 @@ export default class rd2EntryForm extends LightningElement {
             type: ACTIONS.SET_PAYMENT_METHOD,
             payload: event.detail.value,
         });
-        this.hasUserDisabledElevateWidget = this.isCommitmentEdit;
         this.isElevateEditWidgetEnabled = false;
         this.evaluateElevateWidget();
     }
