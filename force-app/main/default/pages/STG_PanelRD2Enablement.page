@@ -1,26 +1,24 @@
 <apex:page controller="RD2_EnablementDelegate_CTRL" id="RD2_Enablement" standardStylesheets="false">
 
     <script>
-        if ({!isRunningUserIsAdmin}) {
-            var j$ = jQuery.noConflict();
+        var j$ = jQuery.noConflict();
 
-            function displayListItem(idPanel) {
-                var node = document.getElementById(idPanel);
-                if (node === undefined || node === null) {
-                    return;
-                }
-                node.classList.add('slds-tree__item');
-                node.style.display = 'block';
+        function displayListItem(idPanel) {
+            var node = document.getElementById(idPanel);
+            if (node === undefined || node === null) {
+                return;
+            }
+            node.classList.add('slds-tree__item');
+            node.style.display = 'block';
 
-                var childNodes = node.childNodes;
-                if (childNodes === undefined || childNodes === null) {
-                    return;
-                }
+            var childNodes = node.childNodes;
+            if (childNodes === undefined || childNodes === null) {
+                return;
+            }
 
-                for (var i = 0, size = childNodes.length; i < size; i++) {
-                    if (childNodes[i].nodeName !== '#text') {
-                        childNodes[i].style.display = 'block';
-                    }
+            for (var i = 0, size = childNodes.length; i < size; i++) {
+                if (childNodes[i].nodeName !== '#text') {
+                    childNodes[i].style.display = 'block';
                 }
             }
         }
