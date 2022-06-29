@@ -123,7 +123,7 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
     }
 
     handleInstallmentPeriodChange(event) {
-        if (event.target.value === MONTHLY) {
+        if (event.target.value === MONTHLY && typeof this.currentRecord.recurringDonation.CommitmentId__c === "undefined") {
             this.isMonthlyDonation = true;
         } else {
             this.isMonthlyDonation = false;
