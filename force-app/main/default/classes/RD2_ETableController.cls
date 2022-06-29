@@ -95,21 +95,21 @@ public with sharing class RD2_ETableController {
     }
 
     /**
-     * @description returns a list of processed recurring donations
-     * @return List<TableView> List of processed recurring donation records
-     */
-    @AuraEnabled
-    public static List<TableView> retrieveTableView() {
+    * @description returns a list of processed recurring donations
+    * @return List<TableView> List of processed recurring donation records
+    */
+    @AuraEnabled(cacheable=true)
+    public static List<TableView> retrieveTableView(String elevateFilter) {
         try {
-            return controller.getTableViews();
+            return controller.getTableViews(elevateFilter);
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
     }
 
     /**
-     * @description upsert a recurring donations record.
-     */
+    * @description upsert a recurring donations record.
+    */
     @AuraEnabled
     public static void upsertDonation(npe03__Recurring_Donation__c recurringDonation) {
         try {
@@ -129,11 +129,11 @@ public with sharing class RD2_ETableController {
     * @description method to return Recurring Donation list.
     * @return List<RD2_ETableController.TableView> returns processed Recurring Donations.
     */
-    private List<RD2_ETableController.TableView> getTableViews() {
+    private List<RD2_ETableController.TableView> getTableViews(String elevateFilter) {
         List<RD2_ETableController.TableView> recurringDonations = new List<RD2_ETableController.TableView>();
         if(RD2_EnablementService.isRecurringDonations2Enabled) {
             if(controller.hasAccessToRecurringDonation()) {
-                recurringDonations = controller.getProcessedTableViews(selector.getRecurringDonations());
+                recurringDonations = controller.getProcessedTableViews(selector.getRecurringDonations(elevateFilter));
             } else {
                 throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
             }
