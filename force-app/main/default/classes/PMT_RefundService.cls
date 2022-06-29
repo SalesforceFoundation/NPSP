@@ -281,5 +281,19 @@ public inherited sharing class PMT_RefundService {
                 }
             }
         }
+
+        public void updateRefundAmount(npe01__OppPayment__c currentRefund) {
+            if (currentRefund.Id == null || this.originalPayment.Refunds__r == null) {
+                this.refundableAmount += currentRefund.npe01__Payment_Amount__c;
+            } else {
+                for (npe01__OppPayment__c previousRefund : originalPayment.Refunds__r) {
+                    if (previousRefund.Id == currentRefund.Id) {
+                        this.refundableAmount -= previousRefund.npe01__Payment_Amount__c;
+                        this.refundableAmount += currentRefund.npe01__Payment_Amount__c;
+                        return;
+                    }
+                }
+            }
+        }
     }
 }

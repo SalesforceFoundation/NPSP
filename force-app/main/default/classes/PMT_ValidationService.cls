@@ -157,7 +157,7 @@ public inherited sharing class PMT_ValidationService {
         }
     }
 
-    private void validateRefunds(npe01__OppPayment__c payment, ErrorRecord errorCollection) {
+    public void validateRefunds(npe01__OppPayment__c payment, ErrorRecord errorCollection) {
         if (payment.DebitType__c != PMT_RefundService.FULL_REFUND) {
             return;
         }
@@ -177,11 +177,14 @@ public inherited sharing class PMT_ValidationService {
             errorCollection.addError(System.Label.pmtPaymentNotRefundable);
         }
 
-        if (refundInfo.refundableAmount + payment.npe01__Payment_Amount__c != 0) {
+        if (payment.npe01__Payment_Amount__c + refundInfo.originalPayment.npe01__Payment_Amount__c != 0) {
             errorCollection.addError(System.Label.pmtRefundAmountInvalid);
         }
 
-        refundInfo.refundableAmount += payment.npe01__Payment_Amount__c;
+        refundInfo.updateRefundAmount(payment);
+        if (refundInfo.refundableAmount != 0) {
+            errorCollection.addError(System.Label.pmtPaymentNotRefundable);
+        }
     }
 
     private void validateElevatePayments(npe01__OppPayment__c payment, npe01__OppPayment__c oldPayment, ErrorRecord errorCollection) {

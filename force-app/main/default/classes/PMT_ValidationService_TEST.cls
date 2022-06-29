@@ -255,7 +255,7 @@ public with sharing class PMT_ValidationService_TEST {
 
         System.assertEquals(1, errorRecords.size(),
             'Expecting an error collection to be returned');
-        System.assertEquals(System.Label.pmtRefundAmountInvalid, errorRecords[0].getFirstError(),
+        System.assertEquals(System.Label.pmtPaymentNotRefundable, errorRecords[0].getFirstError(),
             'Refund cannot be processed when the payment is fully refunded');
     }
 

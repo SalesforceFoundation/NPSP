@@ -12082,7 +12082,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Payment, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Error when user does not have a permission to change an RD originated in Elevate</shortDescription>
+        <shortDescription>Error when user does not have a permission to change a Payment originated in Elevate</shortDescription>
         <value>Payment from Elevate Payment Services can&apos;t be modified in NPSP except by the Elevate Payment Services Integration user.</value>
     </labels>
     <labels>
@@ -12103,7 +12103,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </labels>
     <labels>
         <fullName>pmtOriginalPaymentNotCompleted</fullName>
-        <categories>Payment</categories>
+        <categories>Payment, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Refund error message when Elevate hasn&apos;t processed the payment yet.</shortDescription>
@@ -12111,19 +12111,19 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </labels>
     <labels>
         <fullName>pmtOriginalPaymentNotPaid</fullName>
-        <categories>Payment</categories>
+        <categories>Payment, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Refund error message when Elevate hasn&apos;t processed the payment yet.</shortDescription>
-        <value>Payment can&apos;t be refunded because the it&apos;s not paid</value>
+        <shortDescription>Refund error message when the payment hasnt&apos;t processed</shortDescription>
+        <value>This payment&apos;s still processing and can't be refunded yet.</value>
     </labels>
     <labels>
         <fullName>pmtOriginalPaymentNotFound</fullName>
-        <categories>Payment</categories>
+        <categories>Payment, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>The original Payment does not exist in NPSP for this refund.</shortDescription>
-        <value>The original Payment does not exist in NPSP for this refund.</value>
+        <shortDescription>Error message when the original payment is missing.</shortDescription>
+        <value>You can&apos;t issue a refund without an Original Payment.</value>
     </labels>
     <labels>
         <fullName>pmtPaidPaymentDateRequired</fullName>
@@ -12155,7 +12155,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Refund error when the refund amount is invalid</shortDescription>
-        <value>The refund amount must be a negative amount and cannot be larger than the original payment amount.</value>
+        <value>Enter a refund that&apos;s less than or equal to the remaining balance.</value>
     </labels>
     <labels>
         <fullName>pmtRefundPaymentSuccessMessage</fullName>
