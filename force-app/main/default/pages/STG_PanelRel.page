@@ -1,18 +1,14 @@
 <apex:page controller="STG_PanelRel_CTRL" docType="html-5.0" standardStylesheets="false">
 
-    <apex:outputPanel rendered="{!NOT(isRunningUserIsAdmin)}">
+    <apex:outputPanel rendered="{!NOT(hasAccess)}">
         <c:InsufficientPermissions />
     </apex:outputPanel>
 
 
-    <apex:form id="form" styleClass="slds-m-around_x-large" rendered="{!isRunningUserIsAdmin}">
+    <apex:form id="form" styleClass="slds-m-around_x-large" rendered="{!hasAccess}">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="{!$Label.stgNavRelationships}" />
 
-        <apex:outputPanel rendered="{!NOT(hasAccess)}">
-            <div id='stgPanelRelUtilIllustration' />
-        </apex:outputPanel>
-
-        <apex:outputPanel rendered="{!hasAccess}">
+        <apex:outputPanel>
             <p class="slds-text-body_small slds-m-top_x-small">{!$Label.npe4__relationshipssettingsdescription}</p>
             <c:UTIL_PageMessages />
             <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
