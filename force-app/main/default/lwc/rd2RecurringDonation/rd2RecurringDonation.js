@@ -380,8 +380,8 @@ export default class RecurringDonationTable extends LightningElement {
                             return action;
                         });
                     }
-                    el.lastModified = new Date(el.nextDonation.LastModifiedDate).toLocaleDateString();
-                    return { actions, ...el, nexDonationFormatFirstElement, nexDonationFormatSecondElement };
+                    let lastModifiedDate = new Date(el.recurringDonation.LastModifiedDate).toLocaleDateString({ timeZone: this.timeZone });
+                    return { actions, ...el, nexDonationFormatFirstElement, nexDonationFormatSecondElement, lastModifiedDate };
                 });
             }
         });
