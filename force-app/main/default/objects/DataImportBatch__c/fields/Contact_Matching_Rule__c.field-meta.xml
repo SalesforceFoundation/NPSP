@@ -2,9 +2,9 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Contact_Matching_Rule__c</fullName>
     <defaultValue>&quot;Firstname,Lastname,Email&quot;</defaultValue>
-    <description>Specifies which rule to follow when trying to match Contacts in Data Import records against existing Contacts.</description>
+    <description>Specifies how Contacts in Data Import records are matched to existing Contacts. Contact Duplicate Rules runs all active duplicate rules for the Contacts object that are managed in Setup | Duplicate Management.</description>
     <externalId>false</externalId>
-    <inlineHelpText>Specifies which rule to follow when trying to match Contacts in Data Import records against existing Contacts.</inlineHelpText>
+    <inlineHelpText>Specifies how Contacts in Data Import records are matched to existing Contacts. Contact Duplicate Rules runs all active duplicate rules for the Contacts object that are managed in Setup | Duplicate Management.</inlineHelpText>
     <label>Contact Matching Rule</label>
     <length>255</length>
     <required>true</required>

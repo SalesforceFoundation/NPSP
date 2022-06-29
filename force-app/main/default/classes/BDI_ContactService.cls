@@ -72,18 +72,10 @@ public with sharing class BDI_ContactService {
     */
     private BDI_DataImportService bdi;
 
-
-    @TestVisible
-    private OrgConfig orgConfig {
-        get {
-            if (orgConfig == null) {
-                orgConfig = new OrgConfig();
-            }
-            return orgConfig;
-        }
-        set;
-    }
-
+    /*******************************************************************************************************
+    * @description The duplicate management utility that will be used if Contact Duplicate Rules are selected
+    * as the Contact Matching Rule.
+    */
     @TestVisible
     private UTIL_DuplicateMgmt dupeMgmtUtil {
         get { 
@@ -101,7 +93,8 @@ public with sharing class BDI_ContactService {
     private Map<String, String> mapDIFieldToC1Field {
         get {
             if (mapDIFieldToC1Field == null) {
-                mapDIFieldToC1Field = bdi.mapDataImportFields('Contact1', 'Contact', BDI_DataImportService.listStrDataImportFields);
+                mapDIFieldToC1Field = 
+                    bdi.mapDataImportFields('Contact1', 'Contact', BDI_DataImportService.listStrDataImportFields);
             }
             return mapDIFieldToC1Field;
         }
@@ -114,27 +107,28 @@ public with sharing class BDI_ContactService {
     private Map<String, String> mapDIFieldToC2Field {
         get {
             if (mapDIFieldToC2Field == null) {
-                mapDIFieldToC2Field = bdi.mapDataImportFields('Contact2', 'Contact', BDI_DataImportService.listStrDataImportFields);
+                mapDIFieldToC2Field = 
+                    bdi.mapDataImportFields('Contact2', 'Contact', BDI_DataImportService.listStrDataImportFields);
             }
             return mapDIFieldToC2Field;
         }
         set;
     }
 
+    /*******************************************************************************************************
+    * @description Create a mapping of DI Home address to Contact Mailing address mappings
+    */
     private Map<String,String> mapDIHomeAddrToContact {
         get {
-            mapDIHomeAddrToContact = new Map<String,String> {'Home_Street__c' => 'MailingStreet' ,
-                                                            'Home_City__c' => 'MailingCity'  ,
-                                                            'Home_Zip_Postal_Code__c' => 'MailingPostalCode'};
-
-            // Map fields differently based on whether State/Country picklists are enabled
-            if (orgConfig.isStateCountryPicklistsEnabled()) {
-                mapDIHomeAddrToContact.put('Home_State_Province__c','MailingStateCode');
-                mapDIHomeAddrToContact.put('Home_Country__c','MailingCountryCode');
-            } else {
-                mapDIHomeAddrToContact.put('Home_State_Province__c','MailingState');
-                mapDIHomeAddrToContact.put('Home_Country__c','MailingCountry');
+            if (mapDIHomeAddrToContact == null ) {
+                mapDIHomeAddrToContact = new Map<String,String> {
+                UTIL_Namespace.alignSchemaNSWithEnvironment('npsp__Home_Street__c') => 'MailingStreet',
+                UTIL_Namespace.alignSchemaNSWithEnvironment('npsp__Home_City__c') => 'MailingCity',
+                UTIL_Namespace.alignSchemaNSWithEnvironment('npsp__Home_Zip_Postal_Code__c') => 'MailingPostalCode',
+                UTIL_Namespace.alignSchemaNSWithEnvironment('npsp__Home_State_Province__c') => 'MailingState',
+                UTIL_Namespace.alignSchemaNSWithEnvironment('npsp__Home_Country__c') => 'MailingCountry'};
             }
+
             return mapDIHomeAddrToContact;
         }
         set;
@@ -395,22 +389,8 @@ public with sharing class BDI_ContactService {
                 di.put(strCx + 'Imported__c', con.id);
 
                 // Determine correct import status based on the type of matching and whether it matched on an existing
-                // record
-                String importStatus;
-                if (con.id != null) {
-                    importStatus = bdi.statusMatchedExisting();
-                    if (iCx == 1 && diIdToc1MatchRecord.containsKey(di.Id)) {
-                        importStatus += System.Label.bdiDupeMgmtMatchImportStatus + ' ' 
-                            + diIdToc1MatchRecord.get(di.Id).duplicateRuleName;
-                    } else if (iCx == 2 && diIdToc2MatchRecord.containsKey(di.Id)) {
-                        importStatus += System.Label.bdiDupeMgmtMatchImportStatus + ' ' 
-                            + diIdToc2MatchRecord.get(di.Id).duplicateRuleName;
-                    }
-                } else {
-                    importStatus = bdi.statusMatchedNew();
-                }
-
-                di.put(strCx + 'ImportStatus__c', importStatus);
+                // record and update it on the Data Import record.
+                di.put(strCx + 'ImportStatus__c', determineImportStatus(di, con, iCx));
 
                 if (con.AccountId != null && di.HouseholdAccountImported__c == null) {
                         di.HouseholdAccountImported__c = con.AccountId;
@@ -521,7 +501,7 @@ public with sharing class BDI_ContactService {
         if (isDuplicateManagement) {
             performDuplicateManagement();
         }
-    
+
         for (DataImport__c di : bdi.listDI) {
             // skip di's that already have an error
             if (di.Status__c == BDI_DataImport_API.bdiFailed)
@@ -541,7 +521,6 @@ public with sharing class BDI_ContactService {
                     addDoubleToSet((Double)di.get(c2CustomIDField), setCustomIDNumber);
                 }
             }
-
 
             if (filterOnlyByName) {
                 // Names
@@ -654,6 +633,7 @@ public with sharing class BDI_ContactService {
 
         BDI_PerfLogger.PerfLog pl = BDI_DataImportService.perfLogger.newPerfLog('SOQL existing Contacts', BDI_PerfLogger.QUERY);
         List<Contact> listCon = database.query(strSoql);
+        pl.stop();
 
         return listCon;
     }
@@ -1059,10 +1039,15 @@ public with sharing class BDI_ContactService {
         // Map Home Address fields to contact for matching purposes.  Note that we are not checking to see if it copied
         // anything since home address is not part of the normal contact mapping and shouldn't be used to determine if a
         // temp object is created.
-        for(String homeAddrField : mapDIHomeAddrToContact.keySet()) {
-            BDI_DataImportService.copyDIFieldToDestinationRecord(di, homeAddrField, tempCont, mapDIHomeAddrToContact);
+        try {
+            for(String homeAddrField : mapDIHomeAddrToContact.keySet()) {
+                BDI_DataImportService.copyDIFieldToDestinationRecord(di, homeAddrField, tempCont, mapDIHomeAddrToContact);
+            }
+        } catch (Exception e) {
+            System.debug('Exception is: ' + e.getMessage() + ' ' + e.getStackTraceString());
         }
 
+        System.debug('TempContis: ' + tempCont);
         // Only convert to generic sObj if there were actually fields copied 
         if (isModified) {
             sObj = tempCont;
@@ -1263,7 +1248,7 @@ public with sharing class BDI_ContactService {
     */
     private boolean isDuplicateManagement {
         get {
-            return (bdi.diSettings.Contact_Matching_Rule__c == System.Label.bdiContactMatchDupeMgmt ? true : false);
+            return bdi.diSettings.Contact_Matching_Rule__c == System.Label.bdiContactMatchDupeMgmt;
         } private set;
     }
 
@@ -1313,17 +1298,27 @@ public with sharing class BDI_ContactService {
         }
 
         // Return if there were no sObjects added for dupe matching.
-        if (sObjsForDuplicateManagement == null || sObjsForDuplicateManagement.size() == 0) {
-            return;
+        if (sObjsForDuplicateManagement.size() > 0) {
+            sObjToMatchDetails = dupeMgmtUtil.findDuplicatesBulk(new List<SObject>(sObjsForDuplicateManagement));
+
+            // Return if there were no dupe results
+            if (sObjToMatchDetails.size() > 0) {
+                storeMatchResults(sObjToMatchDetails, c1SObjectToDIs, c2SObjectToDIs);
+            }
         }   
+    }
 
-        sObjToMatchDetails = dupeMgmtUtil.findDuplicatesBulk(new List<SObject>(sObjsForDuplicateManagement));
-
-        // Return if there were no dupe results
-        if (sObjToMatchDetails == null || sObjToMatchDetails.size() == 0) {
-            return;
-        }
-        
+    /*******************************************************************************************************
+    * @description Determines if there was a match for a given sObject and updates the corresponding Imported__c
+    * field.  Also stores the match record in a map by DI so that the matching rule can be saved in the import status
+    * later.
+    * @param sObjToMatchDetails a map of Sobject to all match detail records returned for that sObj
+    * @param c1SObjectToDIs contact 1 temp sObjects mapped to all the DIs on which it appears.
+    * @param c2SObjectToDIs contact 2 temp sObjects mapped to all the DIs on which it appears.
+    */
+    private void storeMatchResults (Map<SObject, UTIL_DuplicateMgmt.MatchDetail[]> sObjToMatchDetails,
+                                    Map<SObject,DataImport__c[]> c1SObjectToDIs,
+                                     Map<SObject,DataImport__c[]> c2SObjectToDIs) {
         for (SObject sObj : sObjToMatchDetails.keySet()) {
             // If there was a duplicate detected then update all the DIs for that contact with the 
             // duplicate's record id
@@ -1402,4 +1397,30 @@ public with sharing class BDI_ContactService {
         return bestMatch;
     }
 
+    /*******************************************************************************************************
+    * @description Determines the Contact 1 / 2 Import Status based on whether Duplicate Management matching was
+    * enabled and whether dry run was active.
+    * @param di the data import record from which the contact sobj will be generated
+    * @param con The contact 1/2 in context for updating import results.
+    * @param iCx whether the method should look at Contact 1 fields or Contact 2 fields.
+    * return String
+    */
+    private String determineImportStatus (DataImport__c di, Contact con, Integer iCx) {
+        // Determine correct import status based on the type of matching and whether it matched on an existing
+        // record
+        String importStatus;
+        if (con.id != null) {
+            importStatus = bdi.statusMatchedExisting();
+            if (iCx == 1 && diIdToc1MatchRecord.containsKey(di.Id)) {
+                importStatus += System.Label.bdiDupeMgmtMatchImportStatus + ' ' 
+                    + diIdToc1MatchRecord.get(di.Id).duplicateRuleName;
+            } else if (iCx == 2 && diIdToc2MatchRecord.containsKey(di.Id)) {
+                importStatus += System.Label.bdiDupeMgmtMatchImportStatus + ' ' 
+                    + diIdToc2MatchRecord.get(di.Id).duplicateRuleName;
+            }
+        } else {
+            importStatus = bdi.statusMatchedNew();
+        }
+        return importStatus;
+    }
 }

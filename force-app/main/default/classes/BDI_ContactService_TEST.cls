@@ -154,6 +154,14 @@ private with sharing class BDI_ContactService_TEST {
         Sobject di3c1 = contService.mapContactFromDIToSobj(testDi3,1);
         Sobject di3c2 = contService.mapContactFromDIToSobj(testDi3,2);
 
+        // Verify that the Home address fields were correctly copied to the temporarly contact sObject
+        Contact d1c1cont = (Contact)di1c1;
+        System.assertEquals('100 Fake Blvd',d1c1cont.MailingStreet);
+        System.assertEquals('California',d1c1cont.MailingState);
+        System.assertEquals('94105',d1c1cont.MailingPostalCode);
+        System.assertEquals('Fakeville',d1c1cont.MailingCity);
+        System.assertEquals('United States',d1c1cont.MailingCountry);
+
         // Construct the mock results. We don't need a d2c1 since it will generate the same contact sObj as d1c1.
         Map<Sobject,UTIL_DuplicateMgmt.MatchDetail[]> mockResults = new Map<Sobject,UTIL_DuplicateMgmt.MatchDetail[]>{
             di1c1 => new UTIL_DuplicateMgmt.MatchDetail[]{match1a, match1b, match1c},
@@ -194,7 +202,6 @@ private with sharing class BDI_ContactService_TEST {
     /**
      * @description StubProvider implementation used to create match results from duplicate management in unit tests.
      */
-    
     private class UTILDuplicateMgmtMock implements StubProvider {
         private Map<SObject, UTIL_DuplicateMgmt.MatchDetail[]> sObjToMatchDetails = new
                 Map<SObject, UTIL_DuplicateMgmt.MatchDetail[]>();

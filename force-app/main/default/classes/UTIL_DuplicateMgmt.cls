@@ -41,7 +41,7 @@ public with sharing class UTIL_DuplicateMgmt {
     * @param List<sObject> list of Sobjects that duplicates will be located for
     * @return Map<SObject, BDI_DuplicateService.MatchDetail[]>
     */
-    public static Map<SObject, MatchDetail[]> findDuplicates(List<SObject> records) {
+    private static Map<SObject, MatchDetail[]> findDuplicates(List<SObject> records) {
         // Initiate return map
         Map<SObject, MatchDetail[]> sObjToDupeResults = new Map<SObject, MatchDetail[]>();
 
@@ -49,7 +49,7 @@ public with sharing class UTIL_DuplicateMgmt {
 
         // execute duplicate matching
         results = Datacloud.FindDuplicates.findDuplicates(records);
-        
+
         // Loop through results and create MatchDetail records to store the information.
         for (Integer i = 0; i < records.size(); i++) {
             Datacloud.FindDuplicatesResult findDupeResult = results[i];
@@ -58,13 +58,13 @@ public with sharing class UTIL_DuplicateMgmt {
             // Placing key in map for record to match.  If no matches are found the value will stay null.
             sObjToDupeResults.put(recordToMatch, null);
 
-            for (Datacloud.DuplicateResult dupeResult : findDupeResult.getDuplicateResults()) {      
+            for (Datacloud.DuplicateResult dupeResult : findDupeResult.getDuplicateResults()) {   
                 for (Datacloud.MatchResult matchResult : dupeResult.getMatchResults()) {
                     for (Datacloud.MatchRecord matchRecord : matchResult.getMatchRecords()) {
                         storeMatchDetail(sObjToDupeResults, recordToMatch, dupeResult, matchResult, matchRecord);
                     }
                 }
-            }                        
+            }
         }
 
         return sObjToDupeResults;
@@ -99,9 +99,7 @@ public with sharing class UTIL_DuplicateMgmt {
             Map<SObject, MatchDetail[]> tempDupeResults = findDuplicates(sObjBatch);
             
             // Put results in main return map
-            for (SObject sObj : tempDupeResults.keySet()) {
-                dupeResults.put(sObj,tempDupeResults.get(sObj));
-            }
+            dupeResults.putAll(tempDupeResults);
         }
         return dupeResults;
     }
