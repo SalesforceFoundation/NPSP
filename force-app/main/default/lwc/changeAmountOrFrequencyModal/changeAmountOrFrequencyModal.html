@@ -30,10 +30,13 @@
                                         data-id="outerRecordEditForm">
                 <div class="slds-modal__content slds-p-top_none slds-p-horizontal_medium slds-p-bottom_medium" id="modal-content-id-1">
                     <template if:true={isLoading}>
-                        <div class="slds-grid slds-grid_align-center">
-                            <div class="slds-is-relative slds-size_1-of-1">
-                                <lightning-spinner alternative-text={customLabels.spinnerAltText} data-text={loadingText}
-                                    class="loading-spinner">
+                        <div class="slds-spinner_container">
+                            <div class="slds-is-relative slds-size_1-of-1 clearSpinner">
+                                <lightning-spinner
+                                    alternative-text={customLabels.spinnerAltText}
+                                    data-text={loadingText}
+                                    class="loading-spinner"
+                                >
                                 </lightning-spinner>
                                 <c-util-stencil row-count="20" column-count="2"></c-util-stencil>
                             </div>
