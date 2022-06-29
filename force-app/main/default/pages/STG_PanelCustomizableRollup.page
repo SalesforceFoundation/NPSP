@@ -13,7 +13,6 @@
 
             <c:UTIL_PageMessages allowClose="false" id="messages" />
             <c:UTIL_SingleToastMessage isRendered="{!NOT(showCRLPSettings)}" message="{!$Label.stgCRLPHouseholdAccountError}" />
-            <c:UTIL_SingleToastMessage isRendered="{!NOT(isAdmin)}" message="{!$Label.stgCRLPNonAdminError}" />
 
             <!-- BEGIN INTRO TEXT AND TOGGLE -->
             <div class="slds-grid {!IF(showCRLPSettings, '', 'slds-hide')}">
