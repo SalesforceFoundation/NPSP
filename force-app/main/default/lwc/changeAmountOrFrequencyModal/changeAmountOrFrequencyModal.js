@@ -24,6 +24,7 @@ const TAB_KEY_STRING = "Tab";
 const MONTHLY = "Monthly";
 const FIXED_RD2_TYPE = "Fixed";
 const FIRST_AND_FIFTEENTH = "1st and 15th";
+const LAST_DAY_OF_MONTH_VALUE_FOR_PICKLIST = "Last_Day";
 
 export default class ChangeAmountOrFrequencyModal extends LightningElement {
     @api dayOfMonthFieldLabel;
@@ -35,6 +36,7 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
     @api isInitiallyMonthlyDonation;
 
     installmentPeriodPicklistOptions;
+    lastDayOfMonth;
 
     isRenderCallbackActionExecuted = false;
     @track isMonthlyDonation = false;
@@ -91,7 +93,13 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
                         this.isMonthlyDonation = false;
                         // eslint-disable-next-line vars-on-top
                         var dd = String(this.today.getDate()).padStart(2, "0");
-                        this.dayOfMonthValue = dd;
+                        if(dd===31){
+                            this.dayOfMonthValue = LAST_DAY_OF_MONTH_VALUE_FOR_PICKLIST;
+                        }else{
+                            this.dayOfMonthValue = dd;
+                        }
+
+                        
                     }
                     if (this.currentRecord.recurringDonation.RecurringType__c === FIXED_RD2_TYPE) {
                         this.isFixedDonation = true;
