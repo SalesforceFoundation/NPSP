@@ -2,7 +2,7 @@
     <div id="containerDiv" onmousemove={handlemousemove} onmouseup={handlemouseup} ondblclick={handledblclickresizable} class={headerClass} onscroll={tableOuterDivScrolled}>
         <table
             class="slds-table slds-table_bordered slds-table_header-fixed slds-table_resizable-cols slds-max-medium-table_stacked">
-            <thead >
+            <thead>
                 <tr>
                     <th aria-label={labels.commonAmount} class={headClasses} scope="col" style={fixedWidth}>
                         <div class="slds-cell-fixed" style={fixedWidth}>
@@ -161,12 +161,18 @@
                                 {item.nexDonationFormatSecondElement}
                             </div>
                         </td>
-                        <td key={item.lastModified} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.lastModified}>
-                            <div class={rowClasses} style={fixedWidth} title="Last Modified">
-                                {item.lastModified}</div>
+                        <td key={item.recurringDonation.LastModifiedDate} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.lastModified}>
+                            <div class={rowClasses} style={fixedWidth} title={labels.lastModified}>
+                                <lightning-formatted-date-time 
+                                year="numeric"
+                                month="numeric"
+                                day="numeric"
+                                time-zone={timeZone}
+                                value={item.recurringDonation.LastModifiedDate}>
+                                </lightning-formatted-date-time></div>
                         </td>
-                        <td data-label="Actions">
-                            <lightning-button-menu class="dv-dynamic-mobile" menu-alignment="auto" alternative-text="Action menu">
+                        <td data-label={labels.RD2_Actions}>
+                            <lightning-button-menu class="dv-dynamic-mobile" menu-alignment="auto" alternative-text={labels.RD2_Actions}>
                                 <template for:each={item.actions} for:item="action">
                                     <p key={action.name} data-recid={action.name}>
                                         <lightning-menu-item label={action.label} onclick={handleRowAction} data-action={action.name} data-recordid={item.recurringDonation.Id} disabled={action.disabled}>
