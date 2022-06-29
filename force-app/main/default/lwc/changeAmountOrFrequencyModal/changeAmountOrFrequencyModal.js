@@ -31,6 +31,8 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
     @api openChangeAmountOrFrequency;
     @api currentRecord;
     @api fixedInstallmentsLabel;
+    @api isElevateDonation;
+    @api isInitiallyMonthlyDonation;
 
     installmentPeriodPicklistOptions;
 
@@ -78,11 +80,9 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
                 }`;
                 if (this.template.querySelector("lightning-record-edit-form")) {
                     this.template.querySelector("lightning-record-edit-form").appendChild(this.style);
-                    console.log(JSON.stringify(this.currentRecord));
-                    console.log('commitmentId: ',JSON.stringify(this.currentRecord.recurringDonation.CommitmentId__c));
                     if (this.currentRecord.recurringDonation.Day_of_Month__c) {
                         this.dayOfMonthValue = this.currentRecord.recurringDonation.Day_of_Month__c;
-                        if(typeof this.currentRecord.recurringDonation.CommitmentId__c === "undefined"){
+                        if(!this.isElevateDonation){
                             this.isMonthlyDonation = true;
                         }else{
                             this.isMonthlyDonation = false;
@@ -123,8 +123,16 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
     }
 
     handleInstallmentPeriodChange(event) {
-        if (event.target.value === MONTHLY && typeof this.currentRecord.recurringDonation.CommitmentId__c === "undefined") {
-            this.isMonthlyDonation = true;
+        if (event.target.value === MONTHLY) {
+            if(this.isElevateDonation) {
+                if(this.isInitiallyMonthlyDonation){
+                    this.isMonthlyDonation = false;
+                }else{
+                    this.isMonthlyDonation = true;
+                }
+            }else{
+                this.isMonthlyDonation = true;
+            }
         } else {
             this.isMonthlyDonation = false;
         }
