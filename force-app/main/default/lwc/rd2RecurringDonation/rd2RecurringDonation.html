@@ -164,7 +164,7 @@
                                 {item.nexDonationFormatSecondElement}
                             </div>
                         </td>
-                        <td key={item.recurringDonation.LastModifiedDate} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.lastModified} tabindex="-1">
+                        <td key={item.recurringDonation.LastModifiedDate} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.lastModified} tabindex="-1" aria-label={item.recurringDonation.LastModifiedDate}>
                             <div class={rowClasses} style={fixedWidth} title={labels.lastModified}>
                                 <lightning-formatted-date-time 
                                 year="numeric"
