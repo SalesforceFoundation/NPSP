@@ -43,18 +43,6 @@ public with sharing class STG_PanelRel_CTRL extends STG_Panel {
     }
 
     /*********************************************************************************************************
-    * @description Returns true if user has full CRUD access to Relationship_Sync_Excluded_Fields__c
-    */
-    public Boolean getHasAccess() {
-        String relationshipObjectName = Schema.SObjectType.Relationship_Sync_Excluded_Fields__c.getName();
-        return UTIL_Permissions.canRead(relationshipObjectName, false) &&
-            UTIL_Permissions.canCreate(relationshipObjectName, false) &&
-            UTIL_Permissions.canUpdate(relationshipObjectName, false) &&
-            UTIL_Permissions.canDelete(relationshipObjectName, false) &&
-            isRunningUserIsAdmin;
-    }
-
-    /*********************************************************************************************************
     * @description The list of SelectOptions for the Gender field 
     */
     public list<SelectOption> listSOGenderFieldOptions {
