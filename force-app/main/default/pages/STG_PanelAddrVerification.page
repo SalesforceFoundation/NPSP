@@ -63,15 +63,14 @@
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgLabelAddressVerification}" />
 
         <c:UTIL_PageMessages />
-        <c:UTIL_SingleToastMessage isRendered="{!NOT(hasAccess)}" message="{!$Label.stgAddrPermissionDenied}" />
 
         <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
-            <apex:commandButton id="editAddr" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!AND(hasAccess, isReadOnlyMode)}"
+            <apex:commandButton id="editAddr" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}"
                 immediate="true" rerender="form" oncomplete="hideUnusedElements()" styleClass="slds-button slds-button_small slds-button_neutral"
             />
         </div>
 
-        <apex:outputPanel id="fields" rendered="{!hasAccess}">
+        <apex:outputPanel id="fields">
             <div class="slds-section">
                 <div class="slds-section-title_divider">
                     {!$Label.addrGeneralSettings}
@@ -233,17 +232,17 @@
         </apex:outputPanel>
 
         <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
-            <apex:commandButton id="saveAddr" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!AND(hasAccess, isEditMode)}"
+            <apex:commandButton id="saveAddr" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}"
                 immediate="false" rerender="form" styleClass="slds-button slds-button_small slds-button_brand" oncomplete="hideUnusedElements()"
             />
-            <apex:commandButton id="cancelAddr" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!AND(hasAccess, isEditMode)}"
+            <apex:commandButton id="cancelAddr" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}"
                 immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" oncomplete="hideUnusedElements()"
             />
         </div>
 
         <div style="text-align:center; font-weight:bold; color: red;">
             <apex:outputPanel id="saveApiSettingsFailure">
-                <apex:outputPanel rendered="{!AND(hasAccess, NOT(ISNULL(apiSettingsErrorMessage)))}">
+                <apex:outputPanel rendered="{!NOT(ISNULL(apiSettingsErrorMessage))}">
                     <apex:outputText value="{!apiSettingsErrorMessage}" />
                     <br/>
                 </apex:outputPanel>
@@ -256,7 +255,7 @@
                     <h3 class="slds-text-heading_small">{!$Label.Addr_Verification_Batch_Title}</h3>
                 </div>
                 <div class="slds-card__body slds-text-body_small slds-p-around_medium">
-                    <p><apex:outputText value="{!$Label.Addr_Verification_Batch_Body}" rendered="{!hasAccess}" /></p>
+                    <p><apex:outputText value="{!$Label.Addr_Verification_Batch_Body}" /></p>
                     <div class="slds-form_horizontal slds-m-around_large">
                         <div class="slds-form-element">
                             <apex:outputLabel value="{!$Label.Addr_Skip_Verified}" for="iAddr_Skip_Verified" styleClass="slds-form-element__label" />
@@ -270,11 +269,11 @@
                         </div>
                     </div>
                     <div style="text-align:center; margin-top: 15px;">
-                        <apex:commandButton id="batchVerify" action="{!batchVerify}" rerender="batchVerifyResult" value="Verify All Addresses" rendered="{!hasAccess}"
+                        <apex:commandButton id="batchVerify" action="{!batchVerify}" rerender="batchVerifyResult" value="Verify All Addresses"
                             disabled="{!NOT(batchVerifEnabled && isReadOnlyMode)}" styleClass="slds-button slds-button_small slds-button_neutral"
                         />
                     </div>
-                    <apex:outputPanel id="batchVerifyResult" rendered="{!hasAccess}">
+                    <apex:outputPanel id="batchVerifyResult">
                         <apex:outputPanel rendered="{!NOT(ISNULL(batchVerifyMessage))}">
                             <h4>{!$Label.Addr_Verification_Batch_Status}</h4>
                             <p>

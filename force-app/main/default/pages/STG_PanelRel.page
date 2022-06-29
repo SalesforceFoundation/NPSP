@@ -100,23 +100,4 @@
             </div>
         </apex:outputPanel>
     </apex:form>
-
-    <script>
-        if ({!NOT(hasAccess)}) {
-            $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function () {
-                $Lightning.createComponent(
-                    "{!namespace}" + ":utilIllustration",
-                    {
-                        size: "small",
-                        title: "{!$Label.commonAdminPermissionErrorTitle}",
-                        message: "{!$Label.commonPermissionErrorMessage}",
-                        variant: "no-access",
-                        illustrationClass: "slds-p-top_x-large slds-m-top_x-large"
-                    },
-                    "stgPanelRelUtilIllustration",
-                    function () { }
-                );
-            });
-        }
-    </script>
 </apex:page>
