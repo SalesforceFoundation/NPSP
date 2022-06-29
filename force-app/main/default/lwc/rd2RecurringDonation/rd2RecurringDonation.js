@@ -14,6 +14,7 @@ import changeAmountOrFrequency from "@salesforce/label/c.changeAmountOrFrequency
 import stopRecurringDonation from "@salesforce/label/c.stopRecurringDonation";
 import RD2_Actions from "@salesforce/label/c.RD2_Actions";
 import retrieveTableView from "@salesforce/apex/RD2_ETableController.retrieveTableView";
+import TIME_ZONE from '@salesforce/i18n/timeZone';
 
 import RECURRING_DONATION from "@salesforce/schema/npe03__Recurring_Donation__c";
 import { getObjectInfo } from "lightning/uiObjectInfoApi";
@@ -61,6 +62,7 @@ export default class RecurringDonationTable extends LightningElement {
     lastDonationDate = "";
 
     labels = {
+
         commonAmount,
         RDCL_Frequency,
         lblStatus,
@@ -83,6 +85,7 @@ export default class RecurringDonationTable extends LightningElement {
     ];
 
     columns = [];
+    timeZone = TIME_ZONE;
 
     @wire(getObjectInfo, { objectApiName: RECURRING_DONATION })
     oppInfo({ data, error }) {
@@ -185,8 +188,6 @@ export default class RecurringDonationTable extends LightningElement {
         }
     }
 
-    //************************************* RESIZABLE COLUMNS *************************************/
-
     handlemouseup(e) {
         this._tableThColumn = undefined;
         this._tableThInnerDiv = undefined;
@@ -221,7 +222,6 @@ export default class RecurringDonationTable extends LightningElement {
     handlemousemove(e) {
         if (this._tableThColumn && this._tableThColumn.tagName === "TH") {
             this._diffX = e.pageX - this._pageX;
-
             this.template.querySelector("table").style.width =
                 this.template.querySelector("table") - this._diffX + "px";
 
@@ -327,21 +327,13 @@ export default class RecurringDonationTable extends LightningElement {
     }
 
     getRecurringDonationFields() {
-        retrieveTableView().then((data) => {
+        retrieveTableView({elevateFilter:this.donationTypeFilter}).then((data) => {
             if (data) {
                 this.data = data.map((el) => {
                     let isElevate = el.recurringDonation.CommitmentId__c ? true : false;
                     let actions = this.actions
-                        .filter((el) => {
-                            if (el.name !== "updatePaymentMethod" && !isElevate) {
-                                return el;
-                            } else if (isElevate) {
-                                return el;
-                            }
-                        })
-                        .map((a) => {
-                            return { ...a };
-                        });
+                        .filter((elo) => (elo.name !== "updatePaymentMethod" && !isElevate) || (isElevate))
+                        .map((action) => { return { ...action }; });
                     let nexDonationFormatFirstElement = "";
                     let nexDonationFormatSecondElement = "";
                     if (el.nextDonation) {
