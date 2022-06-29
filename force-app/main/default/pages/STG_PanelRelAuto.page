@@ -7,11 +7,7 @@
     <apex:form id="form" styleClass="slds-m-around_x-large" rendered="{!isRunningUserIsAdmin}">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="{!$Label.stgNavRelAutoCreate}" />
 
-        <apex:outputPanel rendered="{!NOT(hasAccess)}">
-            <div id="stgPanelRelAutoUtilIllustration" />
-        </apex:outputPanel>
-
-        <apex:outputPanel rendered="{!hasAccess}">
+        <apex:outputPanel>
             <div class="slds-grid">
                 <div class="slds-col slds-size_1-of-1 slds-m-around_medium">
                     <p class="slds-text-body_small slds-m-top_x-small"><c:UTIL_HtmlOutput html="{!$Label.npe4__relationshipsautodescription}" hasLink="true" /></p>
