@@ -1,5 +1,4 @@
 <apex:page controller="STG_PanelDataImportAdvancedMapping_CTRL" docType="html-5.0" standardStylesheets="false">
-
     <apex:slds/>
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}" />
 
@@ -23,18 +22,14 @@
         }
     </style>
 
-    <div class="slds-scope stg-panel-data-import-advanced-mapping">
+    <apex:outputPanel rendered="{!NOT(isRunningUserIsAdmin)}">
+        <c:InsufficientPermissions />
+    </apex:outputPanel>
 
-        <apex:outputPanel rendered="{!NOT(isAdmin)}">
-            <c:InsufficientPermissions />
-        </apex:outputPanel>
-
-        <apex:form id="form" styleClass="slds-m-around_x-large" rendered="{!isAdmin}">
+    <apex:outputPanel styleClass="slds-scope stg-panel-data-import-advanced-mapping" rendered="{!isRunningUserIsAdmin}">
+        <apex:form id="form" styleClass="slds-m-around_x-large">
             <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.bdiAdvancedMapping}" />
-
             <c:UTIL_PageMessages escMsg="false" allowClose="false" id="messages" />
-            <c:UTIL_SingleToastMessage isRendered="{!NOT(isAdmin)}" message="{!$Label.stgDIFMNonAdminError}" />
-
             <!-- BEGIN INTRO TEXT AND TOGGLE -->
             <div class="{!IF(isPolling, 'slds-hide', '')}">
                 <div class="slds-grid">
@@ -233,7 +228,7 @@
         </apex:form>
 
         <div id="stgPanelBatchNumberSettings"></div>
-    </div>
+    </apex:outputPanel>
 
     <script type="text/javascript">
         const renderBatchNumberSettingsComponent = function () {
