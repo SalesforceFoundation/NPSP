@@ -4,3 +4,6 @@
     color: var(--lwc-colorTextLabel,#5A5A5A);
     font-family: var(--lwc-fontFamily,Work Sans);
 }
+.clearSpinner {
+    display: -webkit-box;
+}

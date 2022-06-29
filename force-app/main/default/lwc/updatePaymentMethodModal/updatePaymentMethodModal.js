@@ -1,4 +1,3 @@
-
 import { LightningElement, api, track, wire } from "lwc";
 import { registerListener } from "c/pubsubNoPageRef";
 import { Rd2Service, ACTIONS } from "c/rd2Service";
@@ -50,11 +49,11 @@ import savingCommitmentMessage from "@salesforce/label/c.RD2_EntryFormSaveCommit
 import commitmentFailedMessage from "@salesforce/label/c.RD2_EntryFormSaveCommitmentFailedMessage";
 import contactAdminMessage from "@salesforce/label/c.commonContactSystemAdminMessage";
 import unknownError from "@salesforce/label/c.commonUnknownError";
-import CreditCardPaymentMethod from '@salesforce/label/c.RD2_Credit_Card_Payment_Method_Label';
-import ACHPaymentMethodLabel from '@salesforce/label/c.RD2_ACH_Payment_Method_Label';
-import paymentMethodLabel from '@salesforce/label/c.RD2_Payment_Method';
-import RD2_Payment_Details from '@salesforce/label/c.RD2_Payment_Details';
-import RD2_Payment_method_was_updated from '@salesforce/label/c.RD2_Payment_method_was_updated';
+import CreditCardPaymentMethod from "@salesforce/label/c.RD2_Credit_Card_Payment_Method_Label";
+import ACHPaymentMethodLabel from "@salesforce/label/c.RD2_ACH_Payment_Method_Label";
+import paymentMethodLabel from "@salesforce/label/c.RD2_Payment_Method";
+import RD2_Payment_Details from "@salesforce/label/c.RD2_Payment_Details";
+import RD2_Payment_method_was_updated from "@salesforce/label/c.RD2_Payment_method_was_updated";
 
 import handleCommitment from "@salesforce/apex/RD2_EntryFormController.handleCommitment";
 import logError from "@salesforce/apex/RD2_EntryFormController.logError";
@@ -73,25 +72,22 @@ const ELEVATE_WIDGET_EVENT_NAME = "rd2ElevateCreditCardForm";
 const CREDIT_CARD = "Credit Card";
 const ACH = "ACH";
 export default class UpdatePaymentMethodModal extends LightningElement {
-    
     @api isBankPaymentAllowed;
     isRenderCallbackActionExecuted = false;
     @api openUpdatePaymentMethod;
-    style = document.createElement('style');
+    style = document.createElement("style");
     @api currentRecord;
 
     @track
-    paymentMethodOptions = [
-        { label: CreditCardPaymentMethod, value: CREDIT_CARD }
-    ];
+    paymentMethodOptions = [{ label: CreditCardPaymentMethod, value: CREDIT_CARD }];
 
-    determineACHpaymentMethodAndAddAsOption(){
-        if(this.isBankPaymentAllowed || this.rd2State.paymentMethod === ACH){
-            if( !this.paymentMethodOptions.some( element => element.value === ACH) ){
-                this.paymentMethodOptions.push( { label: ACHPaymentMethodLabel, value: ACH } );
+    determineACHpaymentMethodAndAddAsOption() {
+        if (this.isBankPaymentAllowed || this.rd2State.paymentMethod === ACH) {
+            if (!this.paymentMethodOptions.some((element) => element.value === ACH)) {
+                this.paymentMethodOptions.push({ label: ACHPaymentMethodLabel, value: ACH });
             }
-        } else if (this.paymentMethodOptions.some( element => element.value === ACH)){
-            this.paymentMethodOptions.pop( { label: ACHPaymentMethodLabel, value: ACH } );
+        } else if (this.paymentMethodOptions.some((element) => element.value === ACH)) {
+            this.paymentMethodOptions.pop({ label: ACHPaymentMethodLabel, value: ACH });
         }
     }
 
@@ -206,7 +202,7 @@ export default class UpdatePaymentMethodModal extends LightningElement {
         }
 
         registerListener(ELEVATE_WIDGET_EVENT_NAME, this.handleElevateWidgetDisplayState, this);
-        if(this.template.querySelector('lightning-radio-group')){
+        if (this.template.querySelector("lightning-radio-group")) {
             this.style.innerText = `legend.slds-form-element__legend.slds-form-element__label {
                 padding-bottom: 2%;
                 font-size: 120%;
@@ -217,7 +213,7 @@ export default class UpdatePaymentMethodModal extends LightningElement {
                 padding-bottom: 2%;
             }
             `;
-            this.template.querySelector('lightning-radio-group').appendChild(this.style);
+            this.template.querySelector("lightning-radio-group").appendChild(this.style);
 
             this.determineACHpaymentMethodAndAddAsOption();
         }
@@ -603,7 +599,7 @@ export default class UpdatePaymentMethodModal extends LightningElement {
      */
     handleError(error) {
         this.setError(error);
-        console.log('ERROR: ',error);
+        console.log("ERROR: ", error);
         this.disableSaveButton();
     }
 
@@ -634,14 +630,13 @@ export default class UpdatePaymentMethodModal extends LightningElement {
      */
     handleCancel() {
         this.closeModal(this.rd2State.recordId);
-        this.dispatchEvent(new CustomEvent('close', {detail: 'updatePaymentMethod'}));
+        this.dispatchEvent(new CustomEvent("close", { detail: "updatePaymentMethod" }));
     }
 
     /***
      * @description Fires an event to utilDedicatedListener with the success action
      */
     handleSuccess() {
-
         showToast(this.customLabels.RD2_Payment_method_was_updated, "", "success");
 
         this.closeModal(this.rd2State.recordId);
@@ -652,7 +647,7 @@ export default class UpdatePaymentMethodModal extends LightningElement {
      */
     closeModal() {
         this.resetAllValues();
-        this.dispatchEvent(new CustomEvent('close', {detail: 'updatePaymentMethod'}));
+        this.dispatchEvent(new CustomEvent("close", { detail: "updatePaymentMethod" }));
     }
 
     /**
