@@ -337,7 +337,7 @@ public with sharing class PMT_ValidationService_TEST {
         paymentRecord = paymentRecord.left(paymentRecord.length()-1);
 
         String objJson = JSON.serialize(records);
-        paymentRecord += ',"' + 'Refunds__r' + '":{"totalSize":' + records.size() + ',"done":true,"records":' + objJson + '}';
+        paymentRecord += ',"' + UTIL_Namespace.StrTokenNSPrefix('Refunds__r') + '":{"totalSize":' + records.size() + ',"done":true,"records":' + objJson + '}';
 
         paymentRecord += '}';
 
