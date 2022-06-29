@@ -18,7 +18,7 @@
     </apex:outputPanel>
 
     <apex:outputPanel styleClass="slds-scope" rendered="{!isRunningUserIsAdmin}">
-        <div class="slds-m-around_large">0
+        <div class="slds-m-around_large">
             <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRD2StatusMapping}" />
         </div>
 

@@ -227,21 +227,23 @@
 
         </apex:form>
 
-        <div id="stgPanelBatchNumberSettings"></div>
+    <div id="stgPanelBatchNumberSettings"></div>
     </apex:outputPanel>
 
     <script type="text/javascript">
-        const renderBatchNumberSettingsComponent = function () {
-            $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function () {
-                $Lightning.createComponent(
-                    "{!namespace}" + ":bdiBatchNumberSettings",
-                    {},
-                    "stgPanelBatchNumberSettings",
-                    function () { }
-                );
-            });
+        if ({!isRunningUserIsAdmin}) {
+            const renderBatchNumberSettingsComponent = function () {
+                $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function () {
+                    $Lightning.createComponent(
+                        "{!namespace}" + ":bdiBatchNumberSettings",
+                        {},
+                        "stgPanelBatchNumberSettings",
+                        function () { }
+                    );
+                });
+            }
+            renderBatchNumberSettingsComponent();
         }
-        renderBatchNumberSettingsComponent();
 
         function toggle() {
             let advancedMappingToggle = document.getElementById('{!$Component.form.enableDIFMToggle}');

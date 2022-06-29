@@ -35,6 +35,8 @@
         <c:InsufficientPermissions />
     </apex:outputPanel>
 
+    <div id="stgPanelGatewayManagementSettings"></div>
+
     <script>
         if ({!isRunningUserIsAdmin}) {
             $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function () {
