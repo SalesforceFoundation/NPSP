@@ -50,7 +50,8 @@ public with sharing class STG_PanelRel_CTRL extends STG_Panel {
         return UTIL_Permissions.canRead(relationshipObjectName, false) &&
             UTIL_Permissions.canCreate(relationshipObjectName, false) &&
             UTIL_Permissions.canUpdate(relationshipObjectName, false) &&
-            UTIL_Permissions.canDelete(relationshipObjectName, false);
+            UTIL_Permissions.canDelete(relationshipObjectName, false) &&
+            isRunningUserIsAdmin;
     }
 
     /*********************************************************************************************************
