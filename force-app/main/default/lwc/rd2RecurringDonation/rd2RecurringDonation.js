@@ -327,21 +327,13 @@ export default class RecurringDonationTable extends LightningElement {
     }
 
     getRecurringDonationFields() {
-        retrieveTableView().then((data) => {
+        retrieveTableView({elevateFilter:this.donationTypeFilter}).then((data) => {
             if (data) {
                 this.data = data.map((el) => {
                     let isElevate = el.recurringDonation.CommitmentId__c ? true : false;
                     let actions = this.actions
-                        .filter((el) => {
-                            if (el.name !== "updatePaymentMethod" && !isElevate) {
-                                return el;
-                            } else if (isElevate) {
-                                return el;
-                            }
-                        })
-                        .map((a) => {
-                            return { ...a };
-                        });
+                        .filter((elo) => (elo.name !== "updatePaymentMethod" && !isElevate) || (isElevate))
+                        .map((action) => { return { ...action }; });
                     let nexDonationFormatFirstElement = "";
                     let nexDonationFormatSecondElement = "";
                     if (el.nextDonation) {
