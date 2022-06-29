@@ -36,11 +36,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <apex:form id="form" styleClass="slds-m-around_x-large" rendered="{!isRunningUserIsAdmin}">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavPaymentMappings}" />
 
-        <apex:outputPanel rendered="{!NOT(hasAccess)}">
-            <div id="stgPanelPaymentMappingUtilIllustration" />
-        </apex:outputPanel>
-
-        <apex:outputPanel rendered="{!hasAccess}">
+        <apex:outputPanel>
             <p class="slds-text-body_small slds-m-top_x-small">{!$Label.stgHelpPaymentMappings}</p>
             <c:UTIL_PageMessages />
             <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
