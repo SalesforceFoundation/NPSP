@@ -41,18 +41,6 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
     public override string idPanel() { return 'idPanelRelReciprocal'; }
 
     /*********************************************************************************************************
-    * @description Returns true if user has full CRUD access to npe4__Relationship_Lookup__c
-    */
-    public Boolean getHasAccess() {
-        String relationshipObjectName = Schema.SObjectType.npe4__Relationship_Lookup__c.getName();
-        return UTIL_Permissions.canRead(relationshipObjectName, false) &&
-            UTIL_Permissions.canCreate(relationshipObjectName, false) &&
-            UTIL_Permissions.canUpdate(relationshipObjectName, false) &&
-            UTIL_Permissions.canDelete(relationshipObjectName, false) &&
-            isRunningUserIsAdmin;
-    }
-
-    /*********************************************************************************************************
     * @description temporary rl used by the page for creating a new rl.
     */
     public npe4__Relationship_Lookup__c rlNew {
