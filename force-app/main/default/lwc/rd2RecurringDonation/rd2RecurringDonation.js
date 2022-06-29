@@ -14,6 +14,7 @@ import changeAmountOrFrequency from "@salesforce/label/c.changeAmountOrFrequency
 import stopRecurringDonation from "@salesforce/label/c.stopRecurringDonation";
 import RD2_Actions from "@salesforce/label/c.RD2_Actions";
 import retrieveTableView from "@salesforce/apex/RD2_ETableController.retrieveTableView";
+import TIME_ZONE from '@salesforce/i18n/timeZone';
 
 import RECURRING_DONATION from "@salesforce/schema/npe03__Recurring_Donation__c";
 import { getObjectInfo } from "lightning/uiObjectInfoApi";
@@ -83,6 +84,7 @@ export default class RecurringDonationTable extends LightningElement {
     ];
 
     columns = [];
+    timeZone = TIME_ZONE;
 
     @wire(getObjectInfo, { objectApiName: RECURRING_DONATION })
     oppInfo({ data, error }) {
