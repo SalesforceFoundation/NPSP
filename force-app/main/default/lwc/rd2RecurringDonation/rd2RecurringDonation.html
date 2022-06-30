@@ -156,7 +156,7 @@
                                 {item.recurringDonation.npe03__Last_Payment_Date__c}</div>
                         </td>
                         <td key={item.nextDonation} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.nextDonation}>
-                            <div class="next-donation" lwc:dom="manual"></div>
+                            <div class="next-donation" data-ndid={item.recurringDonation.Id} lwc:dom="manual"></div>
                         </td>
 
                         <td key={item.recurringDonation.LastModifiedDate} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.lastModified}>

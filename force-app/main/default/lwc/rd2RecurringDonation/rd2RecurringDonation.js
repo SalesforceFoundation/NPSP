@@ -356,10 +356,8 @@ export default class RecurringDonationTable extends LightningElement {
                 nextDonationHtml += `${item.recurringDonation.npe03__Next_Payment_Date__c}`
             }
             nextDonationHtml += `</div>`
-            if(item.nextDonation){
-              const container = this.template.querySelector('.next-donation');
-              container.innerHTML = nextDonationHtml;
-            }
+            const container = this.template.querySelector(`[data-ndid=${item.recurringDonation.Id}]`);
+            container.innerHTML = nextDonationHtml;
           })
         });
     }
