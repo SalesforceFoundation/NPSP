@@ -33,7 +33,7 @@
 * @group Recurring Donations
 * @description Stores and retrieves Recurring Donation status to status type mapping
 */
-public with sharing class RD2_StatusMappingSettings_CTRL {
+public with sharing class RD2_StatusMappingSettings_CTRL extends STG_Panel {
     /**
     * @description Custom data mapping exception
     */
@@ -93,20 +93,6 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
         set;
     }
 
-    /***
-    * @description Verifies the user has Admin permissions for Opportunity naming settings.
-    * @return true when the user has the appropriate access
-    */
-    public Boolean isRunningUserIsAdmin {
-        get {
-            if (isRunningUserIsAdmin == null) {
-                isRunningUserIsAdmin = runningUserIsAdmin();
-            }
-            return isRunningUserIsAdmin;
-        }
-        private set;
-    }
-
     /**
      * @description Returns the state value and label select options
      * @return List<PicklistOptionView>
@@ -162,14 +148,6 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
         }
 
         return stateLabelByValue;
-    }
-
-    /***
-    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
-    * @return String
-    */
-    public String getNamespace() {
-        return UTIL_Namespace.getNamespace();
     }
 
     /***
