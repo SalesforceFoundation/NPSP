@@ -121,7 +121,7 @@ public with sharing class STG_PanelRDBatch_CTRL extends STG_Panel {
             if (isRD2Enabled) {
                 RD2_OpportunityEvaluation_BATCH rdBatchJob = new RD2_OpportunityEvaluation_BATCH();
                 Integer batchSize = rdBatchJob.batchSize;
-                rdBatchJob.closedFilterEnabled = false;
+//                rdBatchJob.closedFilterEnabled = false;
                 Database.executeBatch(rdBatchJob, batchSize);
             } else {
                 RD_RecurringDonations_BATCH rdBatchJob = new RD_RecurringDonations_BATCH();
