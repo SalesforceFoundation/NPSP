@@ -348,9 +348,13 @@ export default class RecurringDonationTable extends LightningElement {
         }).finally(() => {
           this.data?.forEach((item) => {
             let nextDonationHtml = `<div class="${this.rowClasses}" style="${this.fixedWidth}">`;
-            item.nextDonation.split(',').forEach((nextDonationElement) => {
-              nextDonationHtml += `${nextDonationElement} </br>`
-            })
+            if(item.nextDonation !== ""){
+                item.nextDonation.split(',').forEach((nextDonationElement) => {
+                  nextDonationHtml += `${nextDonationElement} </br>`
+                })
+            } else {
+                nextDonationHtml += `${item.recurringDonation.npe03__Next_Payment_Date__c}`
+            }
             nextDonationHtml += `</div>`
             if(item.nextDonation){
               const container = this.template.querySelector('.next-donation');
