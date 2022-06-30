@@ -105,7 +105,7 @@ export default class RecurringDonationTable extends LightningElement {
             this.tdClasses = "";
         }
     }
-
+  
     /**
      * @description Returns whether we are running in mobile or desktop
      * @returns True if it is mobile
@@ -349,10 +349,6 @@ export default class RecurringDonationTable extends LightningElement {
                         .map((action) => { return { ...action }; });
                     let nexDonationFormatFirstElement = "";
                     let nexDonationFormatSecondElement = "";
-                    if (el.nextDonation) {
-                        nexDonationFormatFirstElement = el.nextDonation.split(".")[0] || el.nextDonation;
-                        nexDonationFormatSecondElement = el.nextDonation.split(".")[1] || "";
-                    }
                     if (el.status === CANCELED_STATUS) {
                         actions.map((action) => {
                             action.disabled = true;
@@ -362,6 +358,22 @@ export default class RecurringDonationTable extends LightningElement {
                     return { actions, ...el, nexDonationFormatFirstElement, nexDonationFormatSecondElement };
                 });
             }
+        }).finally(() => {
+          this.data?.forEach((item) => {
+            let nextDonationHtml = `<div class="${this.rowClasses}" style="${this.fixedWidth}">`;
+            if(item.recurringDonation.npe03__Next_Payment_Date__c){
+                if(item.nextDonation !== ""){
+                    item.nextDonation.split(',').forEach((nextDonationElement) => {
+                      nextDonationHtml += `${nextDonationElement} </br>`
+                    })
+                } else {
+                    nextDonationHtml += `${item.recurringDonation.npe03__Next_Payment_Date__c}`
+                }
+            }
+            nextDonationHtml += `</div>`
+            const container = this.template.querySelector(`[data-ndid=${item.recurringDonation.Id}]`);
+            container.innerHTML = nextDonationHtml;
+          })
         });
     }
 }
