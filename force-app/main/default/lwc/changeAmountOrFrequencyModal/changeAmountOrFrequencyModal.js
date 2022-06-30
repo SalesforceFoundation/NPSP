@@ -70,6 +70,7 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
                     display:none;
                 }`;
                 if (this.template.querySelector("lightning-record-edit-form")) {
+                    console.log('this.currentRecord: ', JSON.stringify(this.currentRecord));
                     this.template.querySelector("lightning-record-edit-form").appendChild(this.style);
                     if (this.currentRecord.recurringDonation.RecurringType__c === FIXED_RD2_TYPE) {
                         this.isFixedDonation = true;
