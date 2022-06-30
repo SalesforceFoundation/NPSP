@@ -12082,7 +12082,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Payment, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Error when user does not have a permission to change a Payment originated in Elevate</shortDescription>
+        <shortDescription>Error when user does not have permission to change a Payment from Elevate</shortDescription>
         <value>Payment from Elevate Payment Services can&apos;t be modified in NPSP except by the Elevate Payment Services Integration user.</value>
     </labels>
     <labels>
