@@ -1,14 +1,14 @@
 <template>
     <div id="containerDiv" onmousemove={handlemousemove} onmouseup={handlemouseup} ondblclick={handledblclickresizable} class={headerClass} onscroll={tableOuterDivScrolled}>
         <table
-            class="slds-table slds-table_bordered slds-table_header-fixed slds-table_resizable-cols slds-max-medium-table_stacked">
+            class="slds-table slds-table_bordered slds-table_header-fixed slds-table_resizable-cols slds-max-medium-table_stacked" tabindex="0">
             <thead>
                 <tr>
-                    <th aria-label={labels.commonAmount} class={headClasses} scope="col" style={fixedWidth}>
+                    <th class={headClasses} scope="col" style={fixedWidth} tabindex="-1">
                         <div class="slds-cell-fixed" style={fixedWidth}>
-                            <a class="slds-th__action slds-text-link--reset">
+                            <div class="slds-th__action slds-text-link--reset">
                                 <span class="slds-truncate" title={labels.commonAmount}>{labels.commonAmount}</span>
-                            </a>
+                            </div>
                             <div class="slds-resizable">
                                 <span class="slds-resizable__handle" onmousedown={handlemousedown}>
                                     <span class="slds-resizable__divider"></span>
@@ -16,11 +16,11 @@
                             </div>
                         </div>
                     </th>
-                    <th aria-label={labels.RDCL_Frequency} class={headClasses} scope="col" style={fixedWidth}>
+                    <th class={headClasses} scope="col" style={fixedWidth} tabindex="-1">
                         <div class="slds-cell-fixed" style={fixedWidth}>
-                            <a class="slds-th__action slds-text-link--reset">
+                            <div class="slds-th__action slds-text-link--reset">
                                 <span class="slds-truncate" title={labels.RDCL_Frequency}>{labels.RDCL_Frequency}</span>
-                            </a>
+                            </div>
                             <div class="slds-resizable">
                                 <span class="slds-resizable__handle" onmousedown={handlemousedown}>
                                     <span class="slds-resizable__divider"></span>
@@ -28,11 +28,11 @@
                             </div>
                         </div>
                     </th>
-                    <th aria-label={paymentMethod} class={headClasses} scope="col" style={fixedWidth}>
+                    <th class={headClasses} scope="col" style={fixedWidth} tabindex="-1">
                         <div class="slds-cell-fixed" style={fixedWidth}>
-                            <a class="slds-th__action slds-text-link--reset">
+                            <div class="slds-th__action slds-text-link--reset">
                                 <span class="slds-truncate" title={paymentMethod}>{paymentMethod}</span>
-                            </a>
+                            </div>
                             <div class="slds-resizable">
                                 <span class="slds-resizable__handle" onmousedown={handlemousedown}>
                                     <span class="slds-resizable__divider"></span>
@@ -40,11 +40,11 @@
                             </div>
                         </div>
                     </th>
-                    <th aria-label={labels.lblStatus} class={headClasses} scope="col" style={fixedWidth}>
+                    <th class={headClasses} scope="col" style={fixedWidth} tabindex="-1">
                         <div class="slds-cell-fixed" style={fixedWidth}>
-                            <a class="slds-th__action slds-text-link--reset">
+                            <div class="slds-th__action slds-text-link--reset">
                                 <span class="slds-truncate" title={labels.lblStatus}>{labels.lblStatus}</span>
-                            </a>
+                            </div>
                             <div class="slds-resizable">
                                 <span class="slds-resizable__handle" onmousedown={handlemousedown}>
                                     <span class="slds-resizable__divider"></span>
@@ -52,11 +52,11 @@
                             </div>
                         </div>
                     </th>
-                    <th aria-label={labels.firstDonation} class={headClasses} scope="col" style={fixedWidth}>
+                    <th class={headClasses} scope="col" style={fixedWidth} tabindex="-1">
                         <div class="slds-cell-fixed" style={fixedWidth}>
-                            <a class="slds-th__action slds-text-link--reset">
+                            <div class="slds-th__action slds-text-link--reset">
                                 <span class="slds-truncate" title={labels.firstDonation}>{labels.firstDonation}</span>
-                            </a>
+                            </div>
                             <div class="slds-resizable">
                                 <span class="slds-resizable__handle" onmousedown={handlemousedown}>
                                     <span class="slds-resizable__divider"></span>
@@ -64,11 +64,11 @@
                             </div>
                         </div>
                     </th>
-                    <th aria-label={labels.finalDonation} class={headClasses} scope="col" style={fixedWidth}>
+                    <th class={headClasses} scope="col" style={fixedWidth} tabindex="-1">
                         <div class="slds-cell-fixed" style={fixedWidth}>
-                            <a class="slds-th__action slds-text-link--reset">
+                            <div class="slds-th__action slds-text-link--reset">
                                 <span class="slds-truncate" title={labels.finalDonation}>{labels.finalDonation}</span>
-                            </a>
+                            </div>
                             <div class="slds-resizable">
                                 <span class="slds-resizable__handle" onmousedown={handlemousedown}>
                                     <span class="slds-resizable__divider"></span>
@@ -76,12 +76,12 @@
                             </div>
                         </div>
                     </th>
-                    <th aria-label={labels.mostRecentDonation} class={headClasses} scope="col" style={fixedWidth}>
+                    <th class={headClasses} scope="col" style={fixedWidth} tabindex="-1">
                         <div class="slds-cell-fixed" style={fixedWidth}>
-                            <a class="slds-th__action slds-text-link--reset">
+                            <div class="slds-th__action slds-text-link--reset">
                                 <span class="slds-truncate"
                                     title={labels.mostRecentDonation}>{labels.mostRecentDonation}</span>
-                            </a>
+                            </div>
                             <div class="slds-resizable">
                                 <span class="slds-resizable__handle" onmousedown={handlemousedown}>
                                     <span class="slds-resizable__divider"></span>
@@ -89,11 +89,11 @@
                             </div>
                         </div>
                     </th>
-                    <th aria-label={labels.nextDonation} class={headClasses} scope="col" style={fixedWidth}>
+                    <th class={headClasses} scope="col" style={fixedWidth} tabindex="-1">
                         <div class="slds-cell-fixed" style={fixedWidth}>
-                            <a class="slds-th__action slds-text-link--reset">
+                            <div class="slds-th__action slds-text-link--reset">
                                 <span class="slds-truncate" title={labels.nextDonation}>{labels.nextDonation}</span>
-                            </a>
+                            </div>
                             <div class="slds-resizable">
                                 <span class="slds-resizable__handle" onmousedown={handlemousedown}>
                                     <span class="slds-resizable__divider"></span>
@@ -101,11 +101,11 @@
                             </div>
                         </div>
                     </th>
-                    <th aria-label={labels.lastModified} class={headClasses} scope="col" style={fixedWidth}>
+                    <th class={headClasses} scope="col" style={fixedWidth} tabindex="-1">
                         <div class="slds-cell-fixed" style={fixedWidth}>
-                            <a class="slds-th__action slds-text-link--reset">
+                            <div class="slds-th__action slds-text-link--reset">
                                 <span class="slds-truncate" title={labels.lastModified}>{labels.lastModified}</span>
-                            </a>
+                            </div>
                             <div class="slds-resizable">
                                 <span class="slds-resizable__handle" onmousedown={handlemousedown}>
                                     <span class="slds-resizable__divider"></span>
@@ -113,8 +113,10 @@
                             </div>
                         </div>
                     </th>
-                    <th scope="col">
+                    <th scope="col" tabindex="-1">
                         <div class="slds-cell-fixed">
+                            <div class="slds-th__action slds-text-link--reset">
+                            </div>
                             <div class="slds-truncate slds-assistive-text" title="Actions">Actions</div>
                         </div>
                     </th>
@@ -123,25 +125,26 @@
             <tbody>
                 <template for:each={data} for:item="item">
                     <tr key={item.recurringDonation.Id} aria-selected="false" class="slds-hint-parent" scope="row">
-                        <td key={item.recurringDonation.npe03__Amount__c} data-label={labels.commonAmount}>
+                        <td key={item.recurringDonation.npe03__Amount__c} data-label={labels.commonAmount} tabindex="-1" aria-label={item.recurringDonation.npe03__Amount__c}>
                             <div class={rowClasses} style={fixedWidth} title={labels.commonAmount}>
                                 <lightning-formatted-number value={item.recurringDonation.npe03__Amount__c} format-style="currency"
                                     currency-code="USD"></lightning-formatted-number>
                             </div>
                         </td>
-                        <td key={item.frequency} data-label={labels.RDCL_Frequency}>
+                        <td key={item.frequency} data-label={labels.RDCL_Frequency} tabindex="-1" aria-label={item.frequency}>
                             <div class={rowClasses} style={fixedWidth} title={labels.RDCL_Frequency}>
                                 {item.frequency}</div>
                         </td>
-                        <td key={item.paymentMethod} data-label={paymentMethod}>
+                        <td key={item.paymentMethod} data-label={paymentMethod} tabindex="-1" aria-label={item.paymentMethod}>
                             <div class={rowClasses} style={fixedWidth} title={paymentMethod}>
                                 {item.paymentMethod}</div>
                         </td>
-                        <td key={item.status} data-label={labels.lblStatus}>
+                        <td key={item.status} data-label={labels.lblStatus} tabindex="-1" aria-label={item.status}>
                             <div class={rowClasses} style={fixedWidth} title={labels.lblStatus}>
                                 {item.status}</div>
                         </td>
-                        <td key={item.recurringDonation.npe03__Date_Established__c} data-id={item.id} class={tdClasses} data-label={labels.firstDonation}>
+
+                        <td key={item.recurringDonation.npe03__Date_Established__c} data-id={item.id} class={tdClasses} data-label={labels.firstDonation} tabindex="-1" aria-label={item.recurringDonation.npe03__Date_Established__c}>
                             <div class={rowClasses} style={fixedWidth} title={labels.firstDonation}>
                                 <lightning-formatted-date-time 
                                 year="numeric"
@@ -152,7 +155,7 @@
                                 </lightning-formatted-date-time>
                             </div>
                         </td>
-                        <td key={item.finalDonation} data-id={item.id} class={tdClasses} data-label={labels.finalDonation}>
+                        <td key={item.finalDonation} data-id={item.id} class={tdClasses} data-label={labels.finalDonation} tabindex="-1" aria-label={item.finalDonation}>
                             <div class={rowClasses} style={fixedWidth} title={labels.finalDonation}>
                                 <lightning-formatted-date-time 
                                 year="numeric"
@@ -163,7 +166,7 @@
                                 </lightning-formatted-date-time>
                             </div>
                         </td>
-                        <td key={item.mostRecentDonation} data-id={item.recurringDonation.Id} class={tdClasses} data-label={labels.mostRecentDonation}>
+                        <td key={item.mostRecentDonation} data-id={item.recurringDonation.Id} class={tdClasses} data-label={labels.mostRecentDonation} tabindex="-1" aria-label={item.recurringDonation.npe03__Last_Payment_Date__c}>
                             <div class={rowClasses} style={fixedWidth} title={labels.mostRecentDonation}>
                                 <lightning-formatted-date-time 
                                 year="numeric"
@@ -174,11 +177,10 @@
                                 </lightning-formatted-date-time>
                             </div>
                         </td>
-                        <td key={item.nextDonation} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.nextDonation}>
+                        <td key={item.nextDonation} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.nextDonation} tabindex="-1" aria-label={item.nextDonation}>
                             <div class="next-donation" data-ndid={item.recurringDonation.Id} lwc:dom="manual"></div>
                         </td>
-
-                        <td key={item.recurringDonation.LastModifiedDate} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.lastModified}>
+                        <td key={item.recurringDonation.LastModifiedDate} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.lastModified} tabindex="-1" aria-label={item.lastModifiedDate}>
                             <div class={rowClasses} style={fixedWidth} title={labels.lastModified}>
                                 <lightning-formatted-date-time 
                                 year="numeric"
@@ -189,7 +191,7 @@
                                 </lightning-formatted-date-time></div>
 
                         </td>
-                        <td data-label={labels.RD2_Actions}>
+                        <td data-label={labels.RD2_Actions} tabindex="-1">
                             <lightning-button-menu class="dv-dynamic-mobile" menu-alignment="auto" alternative-text={labels.RD2_Actions}>
                                 <template for:each={item.actions} for:item="action">
                                     <p key={action.name} data-recid={action.name}>
