@@ -74,6 +74,7 @@ public inherited sharing class RD2_ERecurringDonationsSelector {
                                 + 'RecurringType__c, '
                                 + 'npe03__Date_Established__c, '
                                 + 'npe03__Next_Payment_Date__c, '
+                                + 'npe03__Total_Paid_Installments__c, '
                                 + 'Lastmodifieddate '
                                 + 'FROM npe03__Recurring_Donation__c '
                                 + 'WHERE npe03__Contact__c = \'' + currentContactId + '\' ';
