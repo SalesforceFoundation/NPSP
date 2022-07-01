@@ -44,7 +44,11 @@ export default class RecurringDonationTable extends LightningElement {
     fixedInstallmentsLabel;
     isElevateDonation = false;
     isInitiallyMonthlyDonation = false;
+    dayOfMonthFieldLabel;
     defaultRecordTypeId;
+    fixedInstallmentsLabel;
+    isElevateDonation = false;
+    isInitiallyMonthlyDonation = false;
 
     @api
     donationTypeFilter;
@@ -92,6 +96,7 @@ export default class RecurringDonationTable extends LightningElement {
     oppInfo({ data, error }) {
         if (data) {
             this.paymentMethod = data.fields.PaymentMethod__c.label;
+            this.dayOfMonthFieldLabel = data.fields.Day_of_Month__c.label;
             this.fixedInstallmentsLabel = data.fields.npe03__Installments__c.label;
             this.defaultRecordTypeId = data.defaultRecordTypeId;
         }
@@ -103,7 +108,7 @@ export default class RecurringDonationTable extends LightningElement {
             this.tdClasses = "";
         }
     }
-
+  
     /**
      * @description Returns whether we are running in mobile or desktop
      * @returns True if it is mobile
@@ -294,9 +299,10 @@ export default class RecurringDonationTable extends LightningElement {
         this.currentRecord = this.data.find((row) => {
             return row.recurringDonation.Id === e.target.getAttribute("data-recordid");
         });
+
         this.isElevateDonation = this.currentRecord.recurringDonation.CommitmentId__c ? true : false;
         this.isInitiallyMonthlyDonation = this.currentRecord.recurringDonation.Day_of_Month__c ? true : false;
-        
+
         switch (action) {
             case "updatePaymentMethod":
                 this.openUpdatePaymentMethod = true;
@@ -340,10 +346,6 @@ export default class RecurringDonationTable extends LightningElement {
                         .map((action) => { return { ...action }; });
                     let nexDonationFormatFirstElement = "";
                     let nexDonationFormatSecondElement = "";
-                    if (el.nextDonation) {
-                        nexDonationFormatFirstElement = el.nextDonation.split(".")[0] || el.nextDonation;
-                        nexDonationFormatSecondElement = el.nextDonation.split(".")[1] || "";
-                    }
                     if (el.status === CANCELED_STATUS) {
                         actions.map((action) => {
                             action.disabled = true;
@@ -353,6 +355,22 @@ export default class RecurringDonationTable extends LightningElement {
                     return { actions, ...el, nexDonationFormatFirstElement, nexDonationFormatSecondElement };
                 });
             }
+        }).finally(() => {
+          this.data?.forEach((item) => {
+            let nextDonationHtml = `<div class="${this.rowClasses}" style="${this.fixedWidth}">`;
+            if(item.recurringDonation.npe03__Next_Payment_Date__c){
+                if(item.nextDonation !== ""){
+                    item.nextDonation.split(',').forEach((nextDonationElement) => {
+                      nextDonationHtml += `${nextDonationElement} </br>`
+                    })
+                } else {
+                    nextDonationHtml += `${item.recurringDonation.npe03__Next_Payment_Date__c}`
+                }
+            }
+            nextDonationHtml += `</div>`
+            const container = this.template.querySelector(`[data-ndid=${item.recurringDonation.Id}]`);
+            container.innerHTML = nextDonationHtml;
+          })
         });
     }
 }
