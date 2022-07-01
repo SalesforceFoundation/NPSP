@@ -159,10 +159,7 @@
                                 {item.recurringDonation.npe03__Last_Payment_Date__c}</div>
                         </td>
                         <td key={item.nextDonation} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.nextDonation} tabindex="0" aria-label={item.nextDonation}>
-                            <div class={rowClasses} style={fixedWidth}> 
-                                {item.nexDonationFormatFirstElement} </br>
-                                {item.nexDonationFormatSecondElement}
-                            </div>
+                            <div class="next-donation" data-ndid={item.recurringDonation.Id} lwc:dom="manual"></div>
                         </td>
                         <td key={item.recurringDonation.LastModifiedDate} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.lastModified} tabindex="0" aria-label={item.lastModifiedDate}>
                             <div class={rowClasses} style={fixedWidth} title={labels.lastModified}>
@@ -173,6 +170,7 @@
                                 time-zone={timeZone}
                                 value={item.recurringDonation.LastModifiedDate}>
                                 </lightning-formatted-date-time></div>
+
                         </td>
                         <td data-label={labels.RD2_Actions} tabindex="0">
                             <lightning-button-menu class="dv-dynamic-mobile" menu-alignment="auto" alternative-text={labels.RD2_Actions}>
