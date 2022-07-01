@@ -48,6 +48,7 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
     amountFieldName = AMOUNT_FIELD;
     installmentFrequencyFieldName = INSTALLMENT_FREQUENCY_FIELD;
     installmentPeriodFieldName = INSTALLMENT_PERIOD_FIELD;
+    isFirstRender = true;
     dayOfMonthFieldName = MONTH_DAY_FIELD;
     installmentNumberFieldName = INSTALLMENT_NUMBER_FIELD;
     style = document.createElement("style");
@@ -122,10 +123,14 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
             }
         } else if (e.code === ESC_KEY_STRING || e.keyCode === ESC_KEY_CODE) {
             this.closeModal();
-        } else if (e.code === TAB_KEY_STRING || e.keyCode === TAB_KEY_CODE) {
-            if (this.template.activeElement === lastFocusableElement) {
-                firstFocusableElement.focus();
-                e.preventDefault();
+          } else if(e.code === TAB_KEY_STRING || e.keyCode === TAB_KEY_CODE) {
+            if (this.template.activeElement === lastFocusableElement && !this.isFirstRender) {
+              firstFocusableElement.focus();
+              e.preventDefault();
+            } else if (this.isFirstRender) {
+              e.preventDefault();
+              focusableContent[1].focus();
+              this.isFirstRender = false;
             }
         }
     }
@@ -149,11 +154,12 @@ export default class ChangeAmountOrFrequencyModal extends LightningElement {
     _getFocusableElements() {
         const potentialElems = [...this.template.querySelectorAll(FOCUSABLE_ELEMENTS)];
         return potentialElems;
-    }
-
-    closeModal() {
-        this.template.removeEventListener("keydown", (e) => this.handleKeyUp(e));
-        if (this.template.querySelector("lightning-record-edit-form")) {
+      }
+  
+      closeModal() {
+        this.isFirstRender = true;
+        this.template.removeEventListener("keydown", (e) => this.handleKeyUp(e));       
+        if(this.template.querySelector('lightning-record-edit-form')){
             this.style.innerText = `lightning-helptext {
                 display:none;
             }`;
