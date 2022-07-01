@@ -1,9 +1,0 @@
-.paymentDetails {
-    padding: 10px 0 0 10px;
-    font-weight: var(--lwc-fontWeightBold,700);
-    color: var(--lwc-colorTextLabel,#5A5A5A);
-    font-family: var(--lwc-fontFamily,Work Sans);
-}
-.clearSpinner {
-    display: -webkit-box;
-}
