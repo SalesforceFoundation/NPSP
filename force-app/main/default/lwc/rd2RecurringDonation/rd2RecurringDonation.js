@@ -42,7 +42,8 @@ export default class RecurringDonationTable extends LightningElement {
     openStopRecurringDonation = false;
     currentRecord;
     fixedInstallmentsLabel;
-
+    isElevateDonation = false;
+    isInitiallyMonthlyDonation = false;
     defaultRecordTypeId;
 
     @api
@@ -293,6 +294,9 @@ export default class RecurringDonationTable extends LightningElement {
         this.currentRecord = this.data.find((row) => {
             return row.recurringDonation.Id === e.target.getAttribute("data-recordid");
         });
+        this.isElevateDonation = this.currentRecord.recurringDonation.CommitmentId__c ? true : false;
+        this.isInitiallyMonthlyDonation = this.currentRecord.recurringDonation.Day_of_Month__c ? true : false;
+        
         switch (action) {
             case "updatePaymentMethod":
                 this.openUpdatePaymentMethod = true;

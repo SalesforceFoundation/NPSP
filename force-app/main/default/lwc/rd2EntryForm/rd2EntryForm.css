@@ -21,3 +21,23 @@
 .slds-modal {
     height: auto;
 }
+
+.paymentDetails {
+    padding: 11px 0 0 11px;
+}
+
+.experienceTitle {
+    font-weight: var(--lwc-fontWeightBold,700);
+    color: var(--lwc-colorTextLabel,#5A5A5A);
+    font-family: var(--lwc-fontFamily,Work Sans);
+}
+
+legend.slds-form-element__legend.slds-form-element__label {
+    font-size: 120%;
+    white-space: nowrap;
+}
+
+.experienceCombo {
+    overflow: visible;
+    margin-top: -8px;
+}

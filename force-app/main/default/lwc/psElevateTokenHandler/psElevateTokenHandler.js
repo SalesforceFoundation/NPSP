@@ -62,9 +62,9 @@ class psElevateTokenHandler {
 
         if (!isBlank(domainInfo.communityBaseURL)) {
             return [...originURLs, { value: domainInfo.communityBaseURL }];
-        } else {
-            return originURLs;
         }
+        
+        return originURLs;
     }
 
     /***
