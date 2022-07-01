@@ -26,6 +26,7 @@ export default class StopRecurringDonationModal extends LightningElement {
     isElevate;
     @api openStopRecurringDonation;
     @api currentRecord;
+    isFirstRender = true;
 
     /**
      * @description Returns title label for toast based on elevate or non elevate RD
@@ -64,9 +65,13 @@ export default class StopRecurringDonationModal extends LightningElement {
           } else if(e.code === ESC_KEY_STRING || e.keyCode === ESC_KEY_CODE) {
             this.closeModal();
           } else if(e.code === TAB_KEY_STRING || e.keyCode === TAB_KEY_CODE) {
-            if (this.template.activeElement === lastFocusableElement) {
+            if (this.template.activeElement === lastFocusableElement && !this.isFirstRender) {
               firstFocusableElement.focus();
               e.preventDefault();
+            } else if (this.isFirstRender) {
+              e.preventDefault();
+              focusableContent[1].focus();
+              this.isFirstRender = false;
             }
           }
       }   
@@ -94,6 +99,7 @@ export default class StopRecurringDonationModal extends LightningElement {
       } 
   
       closeModal() {
+        this.isFirstRender = true;
         this.template.removeEventListener("keydown", (e) => this.handleKeyUp(e));
         this.dispatchEvent(new CustomEvent('close', {detail: 'stopRecurringDonation'}));
       } 
