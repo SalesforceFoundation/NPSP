@@ -380,7 +380,6 @@ export default class RecurringDonationTable extends LightningElement {
                         });
                     }
                     let lastModifiedDate = new Date(el.recurringDonation.LastModifiedDate).toLocaleDateString(undefined, { timeZone: this.timeZone });
-                    //aca tengo q encajar timezone y formato para npe03__Next_Payment_Date__c
                     el.recurringDonation.npe03__Next_Payment_Date__c = new Date(el.recurringDonation.npe03__Next_Payment_Date__c).toLocaleDateString(undefined, { timeZone: this.timeZone });
                     return { actions, ...el, nexDonationFormatFirstElement, nexDonationFormatSecondElement, lastModifiedDate };
                 });
@@ -388,19 +387,15 @@ export default class RecurringDonationTable extends LightningElement {
         }).finally(() => {
           this.data?.forEach((item) => {
             let nextDonationHtml = `<div class="${this.rowClasses}" style="${this.fixedWidth}">`;
-            if(item.recurringDonation.npe03__Next_Payment_Date__c){
-                console.log('item: ',item);
                 if(item.nextDonation !== ""){
                     item.nextDonation.split(',').forEach((nextDonationElement) => {
                       nextDonationHtml += `${nextDonationElement} </br>`
                     })
+                    nextDonationHtml += `${item.recurringDonation.npe03__Next_Payment_Date__c}`
                 } else {
                     
                     nextDonationHtml += `${item.recurringDonation.npe03__Next_Payment_Date__c}`
                 }
-            } else {
-                item.nextDonation = "";
-            }
             nextDonationHtml += `</div>`
             const container = this.template.querySelector(`[data-ndid=${item.recurringDonation.Id}]`);
             container.innerHTML = nextDonationHtml;
