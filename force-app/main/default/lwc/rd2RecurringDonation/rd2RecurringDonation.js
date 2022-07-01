@@ -1,3 +1,4 @@
+/* eslint-disable vars-on-top */
 import { LightningElement, api, wire, track } from "lwc";
 import commonAmount from "@salesforce/label/c.commonAmount";
 import RDCL_Frequency from "@salesforce/label/c.RDCL_Frequency";
@@ -379,8 +380,8 @@ export default class RecurringDonationTable extends LightningElement {
                             return action;
                         });
                     }
+                    el.recurringDonation.npe03__Next_Payment_Date__c = new Date(el.recurringDonation.npe03__Next_Payment_Date__c).toLocaleDateString();
                     let lastModifiedDate = new Date(el.recurringDonation.LastModifiedDate).toLocaleDateString(undefined, { timeZone: this.timeZone });
-                    el.recurringDonation.npe03__Next_Payment_Date__c = new Date(el.recurringDonation.npe03__Next_Payment_Date__c).toLocaleDateString(undefined, { timeZone: this.timeZone });
                     return { actions, ...el, nexDonationFormatFirstElement, nexDonationFormatSecondElement, lastModifiedDate };
                 });
             }
@@ -391,9 +392,8 @@ export default class RecurringDonationTable extends LightningElement {
                     item.nextDonation.split(',').forEach((nextDonationElement) => {
                       nextDonationHtml += `${nextDonationElement} </br>`
                     })
-                    nextDonationHtml += `${item.recurringDonation.npe03__Next_Payment_Date__c}`
                 } else {
-                    
+
                     nextDonationHtml += `${item.recurringDonation.npe03__Next_Payment_Date__c}`
                 }
             nextDonationHtml += `</div>`
