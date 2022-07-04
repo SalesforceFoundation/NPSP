@@ -150,7 +150,8 @@
                                 year="numeric"
                                 month="numeric"
                                 day="numeric"
-                                value={item.recurringDonation.npe03__Date_Established__c}>
+                                value={item.recurringDonation.npe03__Date_Established__c}
+                                time-zone="UTC">
                                 </lightning-formatted-date-time>
                             </div>
                         </td>
@@ -160,7 +161,8 @@
                                 year="numeric"
                                 month="numeric"
                                 day="numeric"
-                                value={item.finalDonation}>
+                                value={item.finalDonation}
+                                time-zone="UTC">
                                 </lightning-formatted-date-time>
                             </div>
                         </td>
@@ -170,7 +172,8 @@
                                 year="numeric"
                                 month="numeric"
                                 day="numeric"
-                                value={item.recurringDonation.npe03__Last_Payment_Date__c}>
+                                value={item.recurringDonation.npe03__Last_Payment_Date__c}
+                                time-zone="UTC">
                                 </lightning-formatted-date-time>
                             </div>
                         </td>
@@ -183,6 +186,7 @@
                                 year="numeric"
                                 month="numeric"
                                 day="numeric"
+                                time-zone="UTC"
                                 value={item.recurringDonation.LastModifiedDate}>
                                 </lightning-formatted-date-time></div>
 
