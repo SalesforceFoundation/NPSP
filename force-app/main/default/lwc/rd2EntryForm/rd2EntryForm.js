@@ -564,6 +564,21 @@ export default class rd2EntryForm extends LightningElement {
             payload: event.target.value,
         });
     }
+    
+    experienceAmountValidation(event) {
+
+        if(this.isExperienceSite) {
+            let newValue = event.target.value;
+            if(/^[0-9]+$/.test(String.fromCharCode(event.keyCode))) {
+                newValue += String.fromCharCode(event.keyCode);
+            }
+            if(newValue < 1 || newValue > 99999999) {
+                this.template.querySelector('[data-id="amountField"]').value = event.target.value;
+                event.preventDefault();
+            }
+        }
+        
+    }
 
     get isCommitmentEdit() {
         return !!this.rd2State.commitmentId;

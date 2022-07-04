@@ -125,11 +125,12 @@
                                             if:true={fields.amount}>
                                             <div class={cssHideOnlyPaymentModal}>
                                                 <lightning-input-field
-                                                        field-name={fields.amount.apiName}
-                                                        value={rd2State.donationValue}
-                                                        data-id="amountField"
-                                                        onchange={handleAmountChange}
-                                                        required
+                                                    field-name={fields.amount.apiName}
+                                                    value={rd2State.donationValue}
+                                                    data-id="amountField"
+                                                    onchange={handleAmountChange}
+                                                    onkeydown={experienceAmountValidation}
+                                                    required
                                                 >
                                                 </lightning-input-field>
                                             </div>
