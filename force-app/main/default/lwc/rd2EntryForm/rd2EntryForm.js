@@ -206,6 +206,20 @@ export default class rd2EntryForm extends LightningElement {
             }
             lightning-base-combobox-item[data-value="1st and 15th"] {
                 display: none;
+            }
+            .slds-grid.slds-wrap table {
+                opacity: 0;
+            }
+            .slds-spinner_container {
+                top: -5000px;
+                right: -5000px;
+                bottom: -5000px;
+                left: -5000px;
+            }
+            @media screen and (min-width: 1135px) {
+                .fixExperienceDayOfMonth[c-rd2EntryFormScheduleSection_rd2EntryFormScheduleSection] {
+                    margin-top: -4px;
+                }
             }`;
             this.template.querySelector("lightning-record-edit-form").appendChild(this.style);
         }
@@ -641,7 +655,9 @@ export default class rd2EntryForm extends LightningElement {
             return;
         }
 
-        this.loadingText = this.customLabels.savingCommitmentMessage;
+        if(!this.isExperienceSite) {
+            this.loadingText = this.customLabels.savingCommitmentMessage;
+        }    
 
         try {
             const rd = this.rd2Service
