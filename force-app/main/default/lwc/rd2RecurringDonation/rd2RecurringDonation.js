@@ -381,13 +381,7 @@ export default class RecurringDonationTable extends LightningElement {
                             return action;
                         });
                     }
-                    console.log('el.recurringDonation.npe03__Next_Payment_Date__c BEFORE: ', el.recurringDonation.npe03__Next_Payment_Date__c);
-                    //el.recurringDonation.npe03__Next_Payment_Date__c = new Date(el.recurringDonation.npe03__Next_Payment_Date__c).toLocaleDateString();
                     el.recurringDonation.npe03__Next_Payment_Date__c = new Date(el.recurringDonation.npe03__Next_Payment_Date__c).toLocaleDateString(undefined, { timeZone: this.timeZone });
-                    
-                    //var date = new Date('2010-10-11T00:00:00+05:30');
-                    //alert(((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear());
-                    console.log('el.recurringDonation.npe03__Next_Payment_Date__c AFTER: ', el.recurringDonation.npe03__Next_Payment_Date__c);
                     let lastModifiedDate = new Date(el.recurringDonation.LastModifiedDate).toLocaleDateString(undefined, { timeZone: this.timeZone });
                     return { actions, ...el, nexDonationFormatFirstElement, nexDonationFormatSecondElement, lastModifiedDate };
                 });
