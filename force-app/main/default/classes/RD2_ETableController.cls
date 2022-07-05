@@ -85,12 +85,14 @@ public with sharing class RD2_ETableController {
         @AuraEnabled public String frequency;
         @AuraEnabled public String status;
         @AuraEnabled public String paymentMethod;
+        @AuraEnabled public String nextDonation;
         @AuraEnabled public Date finalDonation;
-        public TableView(npe03__Recurring_Donation__c recurringDonation, String frequency, String status, String paymentMethod) {
+        public TableView(npe03__Recurring_Donation__c recurringDonation, String frequency, String status, String paymentMethod, String nextDonation) {
             this.recurringDonation = recurringDonation;
             this.frequency = frequency;
             this.status = status;
             this.paymentMethod = paymentMethod;
+            this.nextDonation = nextDonation;
         }
     }
 
@@ -98,7 +100,7 @@ public with sharing class RD2_ETableController {
     * @description returns a list of processed recurring donations
     * @return List<TableView> List of processed recurring donation records
     */
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static List<TableView> retrieveTableView(String elevateFilter) {
         try {
             return controller.getTableViews(elevateFilter);
@@ -159,7 +161,8 @@ public with sharing class RD2_ETableController {
             recurringDonations.put( recDonation.Id, new RD2_ETableController.TableView( recDonation,
                                                                         controller.getFrequency(recDonation),
                                                                         controller.getStatus(recDonation),
-                                                                        controller.getPaymentMethod(recDonation)));
+                                                                        controller.getPaymentMethod(recDonation),
+                                                                        controller.getNextDonation(recDonation)));
 
             if(recDonation.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED 
                 && statusMapper.getState(recDonation.Status__c) != RD2_Constants.STATUS_CLOSED) {
@@ -288,6 +291,24 @@ public with sharing class RD2_ETableController {
         return paymentMethod;
     }
 
+
+    /** 
+    * @author Salesforce.org
+    * @date 2022
+    * @description process Recurring Donation record to build the Next Donation string.
+    * @param recurringDonation recurring donation record
+    * @return String returns the NextDonation string.
+    */
+    private String getNextDonation(npe03__Recurring_Donation__c recurringDonation) {
+        String nextDonation = '';
+
+        if(recurringDonation.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED) {
+            nextDonation = System.Label.RD2_PaidInstallments + ' ' + String.valueOf(recurringDonation.npe03__Total_Paid_Installments__c) +'/'+ String.valueOf(recurringDonation.npe03__Installments__c) + ', ' + System.Label.RD2_NextDonationDate + ' ' + String.valueOf(recurringDonation.npe03__Next_Payment_Date__c);
+        }
+
+        return nextDonation;
+    }
+
     /** 
     * @author Salesforce.org
     * @date 2022
@@ -323,6 +344,8 @@ public with sharing class RD2_ETableController {
             npe03__Recurring_Donation__c.Day_of_Month__c,
             npe03__Recurring_Donation__c.Status__c,
             npe03__Recurring_Donation__c.PaymentMethod__c,
+            npe03__Recurring_Donation__c.npe03__Installments__c,
+            npe03__Recurring_Donation__c.npe03__Total_Paid_Installments__c,
             npe03__Recurring_Donation__c.Lastmodifieddate,
             npe03__Recurring_Donation__c.npe03__Date_Established__c,
             npe03__Recurring_Donation__c.RecurringType__c,
