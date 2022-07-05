@@ -111,18 +111,6 @@ public with sharing class RD2_StatusMappingSettings_CTRL extends STG_Panel {
         return options;
     }
 
-    /*******************************************************************************************************
-    * @description Returns whether the running user is a System Administrator.
-    * @return boolean
-    */
-    public static Boolean runningUserIsAdmin() {
-
-        Id runningUserId = UserInfo.getUserId();
-        Id runningUserProfileId = UserInfo.getProfileId();
-        return USER_UserService.isSysAdmin(new List<User>{(new User(Id = runningUserId, ProfileId = runningUserProfileId))}).get(runningUserId);
-
-    }
-
     /***
     * @description Returns the state value (API name) and label mapping.
     * The state values and labels are sourced from the RD Status field picklist field
