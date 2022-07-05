@@ -245,25 +245,22 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     */
     @TestVisible
     private String getRDBatchQuery() {
-        String rdFilterWhereClause;
-        Integer queryLimit;
+        UTIL_Query query = new UTIL_Query()
+            .withFrom(npe03__Recurring_Donation__c.SObjectType)
+            .withSelectFields(
+                new Set<String>{ 'Id' }
+            );
+
         if (closedFilterEnabled) {
-            rdFilterWhereClause = 'Status__c NOT IN :closedStatusValues';
+            query.withWhere('Status__c NOT IN :closedStatusValues');
         }
 
         if (isConcurrentBatch) {
             new UTIL_BatchJobService().logConcurrentBatchError(batchClassName, ERR_Handler_API.Context.RD);
-            queryLimit = 0;
+            query.withLimit(0);
         }
 
-        return new UTIL_Query()
-            .withFrom(npe03__Recurring_Donation__c.SObjectType)
-            .withSelectFields(
-                new Set<String>{ 'Id' }
-            )
-            .withWhere(rdFilterWhereClause)
-            .withLimit(queryLimit)
-            .build();
+        return query.build();
     }
 
     /**
