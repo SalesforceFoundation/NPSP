@@ -1039,15 +1039,10 @@ public with sharing class BDI_ContactService {
         // Map Home Address fields to contact for matching purposes.  Note that we are not checking to see if it copied
         // anything since home address is not part of the normal contact mapping and shouldn't be used to determine if a
         // temp object is created.
-        try {
-            for(String homeAddrField : mapDIHomeAddrToContact.keySet()) {
-                BDI_DataImportService.copyDIFieldToDestinationRecord(di, homeAddrField, tempCont, mapDIHomeAddrToContact);
-            }
-        } catch (Exception e) {
-            System.debug('Exception is: ' + e.getMessage() + ' ' + e.getStackTraceString());
+        for(String homeAddrField : mapDIHomeAddrToContact.keySet()) {
+            BDI_DataImportService.copyDIFieldToDestinationRecord(di, homeAddrField, tempCont, mapDIHomeAddrToContact);
         }
 
-        System.debug('TempContis: ' + tempCont);
         // Only convert to generic sObj if there were actually fields copied 
         if (isModified) {
             sObj = tempCont;
@@ -1408,19 +1403,22 @@ public with sharing class BDI_ContactService {
     private String determineImportStatus (DataImport__c di, Contact con, Integer iCx) {
         // Determine correct import status based on the type of matching and whether it matched on an existing
         // record
-        String importStatus;
+        String importStatus = bdi.statusMatchedNew();
+        String dupeRuleName;
         if (con.id != null) {
             importStatus = bdi.statusMatchedExisting();
+            
             if (iCx == 1 && diIdToc1MatchRecord.containsKey(di.Id)) {
-                importStatus += System.Label.bdiDupeMgmtMatchImportStatus + ' ' 
-                    + diIdToc1MatchRecord.get(di.Id).duplicateRuleName;
+                dupeRuleName = diIdToc1MatchRecord.get(di.Id).duplicateRuleName;
             } else if (iCx == 2 && diIdToc2MatchRecord.containsKey(di.Id)) {
-                importStatus += System.Label.bdiDupeMgmtMatchImportStatus + ' ' 
-                    + diIdToc2MatchRecord.get(di.Id).duplicateRuleName;
+                dupeRuleName = diIdToc2MatchRecord.get(di.Id).duplicateRuleName;
             }
-        } else {
-            importStatus = bdi.statusMatchedNew();
+
+            if (dupeRuleName != null){
+                importStatus += ' ' + System.Label.bdiDupeMgmtMatchImportStatus + ' '  + dupeRuleName;
+            }
         }
+
         return importStatus;
     }
 }
