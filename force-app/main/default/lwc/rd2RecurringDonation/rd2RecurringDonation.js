@@ -100,12 +100,36 @@ export default class RecurringDonationTable extends LightningElement {
     }
 
     connectedCallback() {
-        this.getRecurringDonationFields();
-        if (!this.isMobile) {
-            this.tdClasses = "";
+      this.getRecurringDonationFields();
+      if(!this.isMobile){
+        this.tdClasses = '';
+      }
+      this.template.addEventListener('keydown', (event) => {
+        let cells   = this.template.querySelectorAll("[tabindex='-1']");
+        let active  = Array.prototype.indexOf.call(cells, event.target);
+        let rows    = this.template.querySelectorAll('tr').length;
+        let columns = this.template.querySelectorAll('tr th').length;
+        if (event.keyCode === 37) {
+            active = (active > 0) ? active - 1 : active;
         }
+        if (event.keyCode === 38) {
+            active = (active - columns >= 0) ? active - columns : active;
+        }
+        if (event.keyCode === 39) {
+            active = (active < cells.length - 1) ? active + 1 : active;
+        }
+        if (event.keyCode === 40) {
+            active = (active + columns <= cells.length - 1) ? active + columns : active;
+        }
+        let activeTDs = this.template.querySelectorAll('.slds-has-focus');
+        for (let i = 0; i < activeTDs.length; i++) {
+            activeTDs[i].classList.remove('slds-has-focus');
+        }
+        cells[active].classList.add('slds-has-focus');
+        cells[active].focus();
+      });
     }
-
+  
     /**
      * @description Returns whether we are running in mobile or desktop
      * @returns True if it is mobile
@@ -349,19 +373,34 @@ export default class RecurringDonationTable extends LightningElement {
                         .map((action) => { return { ...action }; });
                     let nexDonationFormatFirstElement = "";
                     let nexDonationFormatSecondElement = "";
-                    if (el.nextDonation) {
-                        nexDonationFormatFirstElement = el.nextDonation.split(".")[0] || el.nextDonation;
-                        nexDonationFormatSecondElement = el.nextDonation.split(".")[1] || "";
-                    }
                     if (el.status === CANCELED_STATUS) {
                         actions.map((action) => {
                             action.disabled = true;
                             return action;
                         });
                     }
-                    return { actions, ...el, nexDonationFormatFirstElement, nexDonationFormatSecondElement };
+                    let lastModifiedDate = new Date(el.recurringDonation.LastModifiedDate).toLocaleDateString(undefined, { timeZone: this.timeZone });
+                    return { actions, ...el, nexDonationFormatFirstElement, nexDonationFormatSecondElement, lastModifiedDate };
                 });
             }
+        }).finally(() => {
+          this.data?.forEach((item) => {
+            let nextDonationHtml = `<div class="${this.rowClasses}" style="${this.fixedWidth}">`;
+            if(item.recurringDonation.npe03__Next_Payment_Date__c){
+                if(item.nextDonation !== ""){
+                    item.nextDonation.split(',').forEach((nextDonationElement) => {
+                      nextDonationHtml += `${nextDonationElement} </br>`
+                    })
+                } else {
+                    nextDonationHtml += `${item.recurringDonation.npe03__Next_Payment_Date__c}`
+                }
+            } else {
+                item.nextDonation = "";
+            }
+            nextDonationHtml += `</div>`
+            const container = this.template.querySelector(`[data-ndid=${item.recurringDonation.Id}]`);
+            container.innerHTML = nextDonationHtml;
+          })
         });
     }
 }
