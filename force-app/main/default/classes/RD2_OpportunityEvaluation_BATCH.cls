@@ -143,6 +143,16 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
         set;
     }
 
+    private Set<String> closedStatusValues {
+        get {
+            if (closedStatusValues == null) {
+                closedStatusValues = RD2_StatusMapper.getInstance().getClosedStatusValues();
+            }
+            return closedStatusValues;
+        }
+        set;
+    }
+
     /**
     * @description Count of RD's processed by the batch
     */
@@ -207,13 +217,7 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
 
         validateStatusField();
 
-        String query = getRDBatchQuery();
-
-        if (isConcurrentBatch) {
-            new UTIL_BatchJobService().logConcurrentBatchError(batchClassName, ERR_Handler_API.Context.RD);
-            query += ' LIMIT 0';
-        }
-        return Database.getQueryLocator(query);
+        return Database.getQueryLocator(getRDBatchQuery());
     }
 
     /**
@@ -242,9 +246,14 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     @TestVisible
     private String getRDBatchQuery() {
         String rdFilterWhereClause;
+        Integer queryLimit;
         if (closedFilterEnabled) {
-            Set<String> closedStatusValues = RD2_StatusMapper.getInstance().getClosedStatusValues();
-            rdFilterWhereClause = 'Status__c NOT IN:' + closedStatusValues;
+            rdFilterWhereClause = 'Status__c NOT IN :closedStatusValues';
+        }
+
+        if (isConcurrentBatch) {
+            new UTIL_BatchJobService().logConcurrentBatchError(batchClassName, ERR_Handler_API.Context.RD);
+            queryLimit = 0;
         }
 
         return new UTIL_Query()
@@ -253,6 +262,7 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
                 new Set<String>{ 'Id' }
             )
             .withWhere(rdFilterWhereClause)
+            .withLimit(queryLimit)
             .build();
     }
 
