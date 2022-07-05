@@ -367,6 +367,7 @@ export default class RecurringDonationTable extends LightningElement {
     getRecurringDonationFields() {
         retrieveTableView({elevateFilter:this.donationTypeFilter}).then((data) => {
             if (data) {
+                console.log('data: ', JSON.stringify(data));
                 this.data = data.map((el) => {
                     let isElevate = el.recurringDonation.CommitmentId__c ? true : false;
                     let actions = this.actions
@@ -388,14 +389,15 @@ export default class RecurringDonationTable extends LightningElement {
         }).finally(() => {
           this.data?.forEach((item) => {
             let nextDonationHtml = `<div class="${this.rowClasses}" style="${this.fixedWidth}">`;
+            if(item.recurringDonation.npe03__Next_Payment_Date__c !== "Invalid Date"){
                 if(item.nextDonation !== ""){
                     item.nextDonation.split(',').forEach((nextDonationElement) => {
                       nextDonationHtml += `${nextDonationElement} </br>`
                     })
                 } else {
-
                     nextDonationHtml += `${item.recurringDonation.npe03__Next_Payment_Date__c}`
                 }
+            }    
             nextDonationHtml += `</div>`
             const container = this.template.querySelector(`[data-ndid=${item.recurringDonation.Id}]`);
             container.innerHTML = nextDonationHtml;
