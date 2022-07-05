@@ -150,12 +150,22 @@ public with sharing class BDI_GAUAllocationsUtil {
                         'Opportunity__c,' +
                         'Payment__c,' +
                         'Payment__r.npe01__Opportunity__c '+
-                        'FROM Allocation__c WHERE Opportunity__c IN: opptIds';
+                        'FROM Allocation__c '+
+                        'WHERE (Opportunity__c IN: opptIds';
 
                 if (alloSettings.Payment_Allocations_Enabled__c) {
-                    queryString += ' OR Payment__r.npe01__Opportunity__c IN: opptIds';
+                    queryString += ' OR Payment__r.npe01__Opportunity__c IN: opptIds)';
+                } else {
+                    queryString += ')';
                 }
 
+                String defaultGAUId = alloSettings.Default__c;
+                
+                // Exclude Default GAUs (if enabled) from the search since they will automatically be overwritten.
+                if (alloSettings.Default_Allocations_Enabled__c && defaultGAUId != null) {
+                    queryString += ' AND General_Accounting_Unit__c !=: defaultGAUId';
+                }
+                
                 Allocation__c[] existingAllos = Database.query(queryString);
 
                 if (existingAllos != null) {
