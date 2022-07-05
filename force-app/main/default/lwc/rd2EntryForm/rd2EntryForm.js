@@ -274,6 +274,10 @@ export default class rd2EntryForm extends LightningElement {
                 this.rd2State.periodType = 'Advanced';
                 this.cssExperienceElevate = 'slds-hide'
             }
+            if(this.isPaymentModal && this.rd2State.recurringStatus === 'Lapsed') {
+                this.rd2State.recurringStatus = 'Active';
+                this.rd2State.initialViewState.recurringStatus = 'Active';
+            }
         }
     }
 
