@@ -216,7 +216,7 @@ public with sharing class RD2_ETableController {
             } else if(recurringDonation.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY) {
                 frequency = String.format(System.Label.frequencyWeekly, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c)});
             } else if(recurringDonation.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH){
-                frequency = String.format(System.Label.frequencyFirstAndFifteenth, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c), String.valueOf(recurringDonation.npe03__Installment_Period__c)});
+                frequency = String.format(System.Label.RD_frequencyFirstAndFifteenth, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c), String.valueOf(recurringDonation.npe03__Installment_Period__c)});
             }
         }
 

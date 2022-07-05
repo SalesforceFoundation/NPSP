@@ -6041,7 +6041,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Every {0} weeks</value>
     </labels>
     <labels>
-        <fullName>frequencyFirstAndFifteenth</fullName>
+        <fullName>RD_frequencyFirstAndFifteenth</fullName>
         <categories>Recurring Donations</categories>
         <language>en_US</language>
         <protected>true</protected>
