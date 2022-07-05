@@ -75,7 +75,8 @@ public inherited sharing class RD2_ERecurringDonationsSelector {
                                 + 'npe03__Date_Established__c, '
                                 + 'npe03__Next_Payment_Date__c, '
                                 + 'npe03__Total_Paid_Installments__c, '
-                                + 'Lastmodifieddate '
+                                + 'Lastmodifieddate, '
+                                + '(SELECT Active__c, Campaign__c, Campaign__r.Name, StartDate__c, EndDate__c, DayOfMonth__c, InstallmentAmount__c, InstallmentFrequency__c, InstallmentPeriod__c, PaymentMethod__c, RecurringDonation__c, IsPause__c, StatusReason__c FROM RecurringDonationSchedules__r) '
                                 + 'FROM npe03__Recurring_Donation__c '
                                 + 'WHERE npe03__Contact__c = \'' + currentContactId + '\' ';
 
