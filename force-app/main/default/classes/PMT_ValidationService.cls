@@ -47,27 +47,6 @@ public inherited sharing class PMT_ValidationService {
     }
 
     @TestVisible
-    private PaymentSelector paymentSelector {
-        get {
-            if (paymentSelector == null) {
-                paymentSelector = new PaymentSelector();
-            }
-            return paymentSelector;
-        }
-        set;
-    }
-
-    private Map<Id, PMT_RefundService.RefundInfo> originalPaymentWithRefunds {
-        get {
-            if (originalPaymentWithRefunds == null) {
-                originalPaymentWithRefunds = getPaymentIdWithAvailableRefunds();
-            }
-            return originalPaymentWithRefunds;
-        }
-        set;
-    }
-
-    @TestVisible
     private static PS_IntegrationServiceConfig config {
         get {
             if (config == null) {
@@ -78,12 +57,25 @@ public inherited sharing class PMT_ValidationService {
         set;
     }
 
+    @TestVisible
+    private PMT_RefundService refundService {
+        get {
+            if (refundService == null) {
+                refundService = new PMT_RefundService();
+            }
+            return refundService;
+        }
+        set;
+    }
 
+    private Map<Id, ErrorRecord> paymentIdToErrorRecord = new Map<Id, ErrorRecord>();
     @TestVisible
     private List<npe01__OppPayment__c> payments = new List<npe01__OppPayment__c>();
     private List<npe01__OppPayment__c> oldPayments = new List<npe01__OppPayment__c>();
     private TDTM_Runnable.Action currentAction;
 
+
+    public PMT_ValidationService(){}
     /**
     * @description Constructor for the PMT_ValidationService class for Update context
     * @param payments New payments that will be validated
@@ -96,43 +88,43 @@ public inherited sharing class PMT_ValidationService {
         this.currentAction = triggerAction;
     }
 
-    public List<ErrorRecord> validate() {
+    public PMT_ValidationService validate() {
         List<ErrorRecord> errorRecords = new List<ErrorRecord>();
         Boolean isNew = oldPayments == null || oldPayments.isEmpty();
 
+        refundService.withOriginalPaymentIds(UTIL_SObject.extractId(payments, npe01__OppPayment__c.OriginalPayment__c));
         for (Integer i = 0; i < this.payments.size(); i++) {
             npe01__OppPayment__c payment = payments[i];
             npe01__OppPayment__c oldPayment = isNew ? null : oldPayments[i];
-            
-            ErrorRecord errorCollection = new ErrorRecord(payment);
 
             if (this.currentAction == TDTM_Runnable.Action.AfterInsert || this.currentAction == TDTM_Runnable.Action.AfterUpdate) {
-                validateAccountDataConsistency(payment, errorCollection);
+                validateAccountDataConsistency(payment);
             }
 
             if (this.currentAction == TDTM_Runnable.Action.BeforeInsert || this.currentAction == TDTM_Runnable.Action.BeforeUpdate) {
-                validateRefunds(payment, errorCollection);
+                validateRefund(payment);
             }
 
             if (this.currentAction == TDTM_Runnable.Action.BeforeUpdate) {
-                validateElevatePayments(payment, oldPayment, errorCollection);
+                validateElevatePayments(payment, oldPayment);
             }
 
-            if (errorCollection.hasError()) {
-                errorRecords.add(errorCollection);
-            }
         }
 
-        return errorRecords;
+        return this;
     }
 
-    private void validateAccountDataConsistency(npe01__OppPayment__c payment, ErrorRecord errorCollection) {    
+    public List<ErrorRecord> getErrors() {
+        return paymentIdToErrorRecord.values();
+    }
+
+    private void validateAccountDataConsistency(npe01__OppPayment__c payment) {    
         if (this.isEnforceAccountingDataConsistency) {
-            enforceAccountingDataConsistency(payment, errorCollection);
+            enforceAccountingDataConsistency(payment);
         }
 
-        if (payment.npe01__Paid__c == true && payment.npe01__Written_Off__c == true) {
-            errorCollection.addError(System.Label.pmtWriteOffPaidPayment);
+        if (payment.npe01__Paid__c && payment.npe01__Written_Off__c) {
+            addError(payment, System.Label.pmtWriteOffPaidPayment);
         }
     }
 
@@ -140,54 +132,58 @@ public inherited sharing class PMT_ValidationService {
     * @description If the custom setting to enforce account rules is enabled, it will validate that paid payments
     * have a payment date and unpaid payments have a scheduled date.
     * @param payment the Payment from trigger new.
-    * @param errorCollection Collection of error
     ********************************************************************************************************/
-    private void enforceAccountingDataConsistency(npe01__OppPayment__c payment, ErrorRecord errorCollection) {
-        if ((payment.npe01__Paid__c == true || payment.npe01__Written_Off__c == true) && payment.npe01__Payment_Date__c == null) {
+    private void enforceAccountingDataConsistency(npe01__OppPayment__c payment) {
+        if ((payment.npe01__Paid__c || payment.npe01__Written_Off__c) && payment.npe01__Payment_Date__c == null) {
 
-            if (payment.npe01__Paid__c == true) {
-                errorCollection.addError(System.Label.pmtPaidPaymentDateRequired);
+            if (payment.npe01__Paid__c) {
+                addError(payment, System.Label.pmtPaidPaymentDateRequired);
 
             } else {
-                errorCollection.addError(System.Label.pmtWrittenOffPaymentDateRequired);
-
+                addError(payment, System.Label.pmtWrittenOffPaymentDateRequired);
             }
-        } else if (payment.npe01__Paid__c == false && payment.npe01__Written_Off__c == false && payment.npe01__Scheduled_Date__c == null) {
-            errorCollection.addError(System.Label.pmtUnpaidPaymentScheduledDateRequired);
+        } else if (!payment.npe01__Paid__c && !payment.npe01__Written_Off__c && payment.npe01__Scheduled_Date__c == null) {
+            addError(payment, System.Label.pmtUnpaidPaymentScheduledDateRequired);
         }
     }
 
-    public void validateRefunds(npe01__OppPayment__c payment, ErrorRecord errorCollection) {
+    private void validateRefund(npe01__OppPayment__c payment) {
         if (payment.DebitType__c != PMT_RefundService.FULL_REFUND) {
             return;
         }
 
-        PMT_RefundService.RefundInfo refundInfo = originalPaymentWithRefunds.get(payment.OriginalPayment__c);
+        PMT_RefundService.RefundInfo refundInfo = refundService.getRefundInfoFor(payment.OriginalPayment__c);
 
+        validateRefund(payment, refundInfo);
+    }
+
+    public PMT_ValidationService validateRefund(npe01__OppPayment__c payment, PMT_RefundService.RefundInfo refundInfo) {
         if (payment.OriginalPayment__c == null || refundInfo == null || refundInfo.originalPayment == null) {
-            errorCollection.addError(System.Label.pmtOriginalPaymentNotFound);
-            return;
+            addError(payment, System.Label.pmtOriginalPaymentNotFound);
+            return this;
         }
 
-        if (refundInfo.originalPayment.npe01__Paid__c != true) {
-            errorCollection.addError(System.Label.pmtOriginalPaymentNotPaid);
+        if (!refundInfo.originalPayment.npe01__Paid__c) {
+            addError(payment, System.Label.pmtOriginalPaymentNotPaid);
         }
 
         if (refundInfo.originalPayment.DebitType__c == PMT_RefundService.FULL_REFUND) {
-            errorCollection.addError(System.Label.pmtPaymentNotRefundable);
+            addError(payment, System.Label.pmtPaymentNotRefundable);
         }
 
         if (payment.npe01__Payment_Amount__c + refundInfo.originalPayment.npe01__Payment_Amount__c != 0) {
-            errorCollection.addError(System.Label.pmtRefundAmountInvalid);
+            addError(payment, System.Label.pmtRefundAmountInvalid);
         }
 
         refundInfo.updateRefundAmount(payment);
         if (refundInfo.refundableAmount != 0) {
-            errorCollection.addError(System.Label.pmtPaymentNotRefundable);
+            addError(payment, System.Label.pmtPaymentNotRefundable);
         }
+
+        return this;
     }
 
-    private void validateElevatePayments(npe01__OppPayment__c payment, npe01__OppPayment__c oldPayment, ErrorRecord errorCollection) {
+    private void validateElevatePayments(npe01__OppPayment__c payment, npe01__OppPayment__c oldPayment) {
         if (String.isBlank(payment.Elevate_Payment_ID__c) || !config.isIntegrationEnabled() || config.hasIntegrationPermissions()) {
             return;
         }
@@ -198,17 +194,17 @@ public inherited sharing class PMT_ValidationService {
                 payment.DebitType__c != oldPayment.DebitType__c ||
                 payment.OriginalPayment__c != oldPayment.OriginalPayment__c
             ) {
-                errorCollection.addError(System.Label.pmtElevatePermissionRequired);
+                addError(payment, System.Label.pmtElevatePermissionRequired);
         }
     }
 
-    private Map<Id, PMT_RefundService.RefundInfo> getPaymentIdWithAvailableRefunds() {
-        Set<Id> originalPaymentIds = UTIL_SObject.extractId(this.payments, npe01__OppPayment__c.OriginalPayment__c);
-        if (originalPaymentIds.isEmpty()) {
-            return new Map<Id, PMT_RefundService.RefundInfo>();
+    private void addError(npe01__OppPayment__c payment, String errorMessage) {
+        ErrorRecord errorRecord = paymentIdToErrorRecord.get(payment.Id);
+        if (errorRecord == null) {
+            errorRecord = new ErrorRecord(payment);
+            paymentIdToErrorRecord.put(payment.Id, errorRecord);
         }
 
-        List<npe01__OppPayment__c> originalPayments = paymentSelector.getPaymentsWithRefunds(originalPaymentIds);
-       return new PMT_RefundService().calculatePaymentWithRefundableAmount(originalPayments);
+        errorRecord.addError(errorMessage);
     }
 }

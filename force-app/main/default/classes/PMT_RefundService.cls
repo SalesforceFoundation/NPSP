@@ -71,7 +71,7 @@ public inherited sharing class PMT_RefundService {
     private List<npe01__OppPayment__c> originalPayments {
         get {
             if (originalPayments == null && originalPaymentIds != null) {
-                originalPayments = paymentSelector.getPaymentRecordsForRefund(originalPaymentIds);
+                originalPayments = paymentSelector.getPaymentsWithRefunds(originalPaymentIds);
             }
             return originalPayments;
         }
@@ -88,6 +88,17 @@ public inherited sharing class PMT_RefundService {
                 }
             }
             return originalPaymentIds;
+        }
+        set;
+    }
+
+    @TestVisible
+    private Map<Id, RefundInfo> originalPaymentWithRefunds {
+        get {
+            if (originalPaymentWithRefunds == null) {
+                originalPaymentWithRefunds = getOriginalPaymentWithRefundInfo(this.originalPayments);
+            }
+            return originalPaymentWithRefunds;
         }
         set;
     }
@@ -117,6 +128,10 @@ public inherited sharing class PMT_RefundService {
         return this;
     }
 
+    public PMT_RefundService withOriginalPaymentIds(Set<Id> originalPaymentIds) {
+        this.originalPaymentIds = originalPaymentIds;
+        return this;
+    }
     public PMT_RefundService withRefundRecords(List<npe01__OppPayment__c> refundRecords) {
         this.refundRecords = refundRecords;
         return this;
@@ -128,6 +143,23 @@ public inherited sharing class PMT_RefundService {
 
     public ERR_Handler.Errors getErrors() {
         return errorResult;
+    }
+
+    public RefundInfo getRefundInfoFor(Id originalPaymentId) {
+        if (originalPaymentId == null) {
+            return null;
+        }
+
+        RefundInfo refundInfo = this.originalPaymentWithRefunds.get(originalPaymentId);
+
+        if (refundInfo == null) {
+            npe01__OppPayment__c payment = paymentSelector.getPaymentRecordForRefund(originalPaymentId);
+            this.originalPayments.add(payment);
+            refundInfo = new RefundInfo(payment);
+            this.originalPaymentWithRefunds.put(payment.Id, refundInfo);
+        }
+
+        return refundInfo;
     }
 
     public UTIL_Http.Response processElevateRefund(String transactionId) {
@@ -171,7 +203,7 @@ public inherited sharing class PMT_RefundService {
         }
     }
 
-    public Map<Id, RefundInfo> calculatePaymentWithRefundableAmount(List<npe01__OppPayment__c> originalPayments) {
+    private Map<Id, RefundInfo> getOriginalPaymentWithRefundInfo(List<npe01__OppPayment__c> originalPayments) {
         Map<Id, RefundInfo> paymentIdToRefundabInfo = new Map<Id, RefundInfo>();
 
         for (npe01__OppPayment__c originalPayment : originalPayments) {
@@ -220,7 +252,9 @@ public inherited sharing class PMT_RefundService {
         if (opportunity == null) {
             opportunity = new Opportunity(
                 Id = originalPayment.npe01__Opportunity__c,
-                Amount = originalPayment.npe01__Opportunity__r.Amount
+                Amount = (originalPayment.npe01__Opportunity__r.Amount == null)
+                    ? 0
+                    : originalPayment.npe01__Opportunity__r.Amount
             );
         }
         opportunity.Amount = opportunity.Amount - originalPayment.npe01__Payment_Amount__c;
@@ -285,14 +319,15 @@ public inherited sharing class PMT_RefundService {
         public void updateRefundAmount(npe01__OppPayment__c currentRefund) {
             if (currentRefund.Id == null || this.originalPayment.Refunds__r == null) {
                 this.refundableAmount += currentRefund.npe01__Payment_Amount__c;
+               
             } else {
                 for (npe01__OppPayment__c previousRefund : originalPayment.Refunds__r) {
                     if (previousRefund.Id == currentRefund.Id) {
                         this.refundableAmount -= previousRefund.npe01__Payment_Amount__c;
-                        this.refundableAmount += currentRefund.npe01__Payment_Amount__c;
-                        return;
+                        break;
                     }
                 }
+                this.refundableAmount += currentRefund.npe01__Payment_Amount__c;
             }
         }
     }

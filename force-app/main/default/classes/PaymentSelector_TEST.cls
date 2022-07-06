@@ -51,9 +51,6 @@ public with sharing class PaymentSelector_TEST {
                 when 'getPaymentRecordForRefund' {
                     return paymentRecords?.get(0);
 
-                } when 'getPaymentRecordsForRefund' {
-                    return paymentRecords;
-
                 } when 'getPaymentsWithRefunds' {
                     return paymentRecords;
 

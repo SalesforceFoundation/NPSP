@@ -213,6 +213,7 @@ public with sharing class PMT_RefundService_TEST {
     public class Stub implements System.StubProvider {
         public List<npe01__OppPayment__c> refundRecords;
         public ERR_Handler.Errors errors = new ERR_Handler.Errors();
+        public PMT_RefundService.RefundInfo refundInfo;
  
         public Object handleMethodCall(
             Object stubbedObject,
@@ -227,7 +228,8 @@ public with sharing class PMT_RefundService_TEST {
                     return refundRecords;
                 } when 'getErrors' {
                     return errors;
-
+                } when 'getRefundInfoFor' {
+                    return refundInfo;
                 } when else {
                     return null;
                 }

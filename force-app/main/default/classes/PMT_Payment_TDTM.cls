@@ -313,9 +313,9 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         DmlWrapper dmlWrapper) {
             
         PMT_ValidationService validationService = new PMT_ValidationService(newlist, oldList, triggerAction);
-        List<ErrorRecord> errorRecords = validationService.validate();
+        List<ErrorRecord> errorRecords = validationService.validate().getErrors();
 
-        for (ErrorRecord error : ErrorRecords) {
+        for (ErrorRecord error : errorRecords) {
             if (error.hasError()) {
                 error.getRecord().addError(error.getFirstError());
             }

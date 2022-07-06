@@ -49,23 +49,24 @@ public with sharing class PMT_ValidationService_TEST {
             DebitType__c = PMT_RefundService.FULL_REFUND,
             OriginalPayment__c = originalPayment.Id
         );
-       
-        PaymentSelector_TEST.Stub selectorStub = new PaymentSelector_TEST.Stub();
-        selectorStub.paymentRecords = new List<npe01__OppPayment__c>{originalPayment};
 
         PMT_ValidationService validationService = new PMT_ValidationService(
             new List<npe01__OppPayment__c>{refund},
             null,
             TDTM_Runnable.Action.BeforeInsert
         );
+
         validationService.isEnforceAccountingDataConsistency = false;
-        validationService.paymentSelector = (PaymentSelector) Test.createStub(
-            PaymentSelector.class,
-            selectorStub
+        PMT_RefundService refundService = new PMT_RefundService()
+            .withOriginalPayments(new List<npe01__OppPayment__c>{originalPayment});
+    
+        refundService.originalPaymentWithRefunds.put(
+            originalPayment.Id, new PMT_RefundService.RefundInfo(originalPayment)
         );
+        validationService.RefundService = refundService;
 
         Test.startTest();
-        List<ErrorRecord> errorRecords = validationService.validate();
+        List<ErrorRecord> errorRecords = validationService.validate().getErrors();
         Test.stopTest();
 
         System.assertEquals(0, errorRecords.size(),
@@ -79,23 +80,16 @@ public with sharing class PMT_ValidationService_TEST {
             DebitType__c = PMT_RefundService.FULL_REFUND,
             OriginalPayment__c = null
             );
-       
-        PaymentSelector_TEST.Stub selectorStub = new PaymentSelector_TEST.Stub();
-        selectorStub.paymentRecords = new List<npe01__OppPayment__c>();
 
         PMT_ValidationService validationService = new PMT_ValidationService(
             new List<npe01__OppPayment__c>{refund},
             null,
             TDTM_Runnable.Action.BeforeInsert
         );
-        validationService.isEnforceAccountingDataConsistency = false;
-        validationService.paymentSelector = (PaymentSelector) Test.createStub(
-            PaymentSelector.class,
-            selectorStub
-        );
-
+        validationService.isEnforceAccountingDataConsistency = false;    
+    
         Test.startTest();
-        List<ErrorRecord> errorRecords = validationService.validate();
+        List<ErrorRecord> errorRecords = validationService.validate().getErrors();
         Test.stopTest();
 
         System.assertEquals(1, errorRecords.size(),
@@ -117,9 +111,6 @@ public with sharing class PMT_ValidationService_TEST {
             DebitType__c = PMT_RefundService.FULL_REFUND,
             OriginalPayment__c = originalPayment.Id
         );
-       
-        PaymentSelector_TEST.Stub selectorStub = new PaymentSelector_TEST.Stub();
-        selectorStub.paymentRecords = new List<npe01__OppPayment__c>{originalPayment};
 
         PMT_ValidationService validationService = new PMT_ValidationService(
             new List<npe01__OppPayment__c>{refund},
@@ -127,13 +118,17 @@ public with sharing class PMT_ValidationService_TEST {
             TDTM_Runnable.Action.BeforeInsert
         );
         validationService.isEnforceAccountingDataConsistency = false;
-        validationService.paymentSelector = (PaymentSelector) Test.createStub(
-            PaymentSelector.class,
-            selectorStub
+
+        PMT_RefundService refundService = new PMT_RefundService()
+            .withOriginalPayments(new List<npe01__OppPayment__c>{originalPayment});
+    
+        refundService.originalPaymentWithRefunds.put(
+            originalPayment.Id, new PMT_RefundService.RefundInfo(originalPayment)
         );
+        validationService.RefundService = refundService;
 
         Test.startTest();
-        List<ErrorRecord> errorRecords = validationService.validate();
+        List<ErrorRecord> errorRecords = validationService.validate().getErrors();
         Test.stopTest();
 
         System.assertEquals(1, errorRecords.size(),
@@ -157,22 +152,23 @@ public with sharing class PMT_ValidationService_TEST {
             OriginalPayment__c = originalPayment.Id
         );
 
-        PaymentSelector_TEST.Stub selectorStub = new PaymentSelector_TEST.Stub();
-        selectorStub.paymentRecords = new List<npe01__OppPayment__c>{originalPayment};
-
         PMT_ValidationService validationService = new PMT_ValidationService(
             new List<npe01__OppPayment__c>{refund},
             null,
             TDTM_Runnable.Action.BeforeInsert
         );
         validationService.isEnforceAccountingDataConsistency = false;
-        validationService.paymentSelector = (PaymentSelector) Test.createStub(
-            PaymentSelector.class,
-            selectorStub
+
+        PMT_RefundService refundService = new PMT_RefundService()
+            .withOriginalPayments(new List<npe01__OppPayment__c>{originalPayment});
+    
+        refundService.originalPaymentWithRefunds.put(
+            originalPayment.Id, new PMT_RefundService.RefundInfo(originalPayment)
         );
+        validationService.RefundService = refundService;
 
         Test.startTest();
-        List<ErrorRecord> errorRecords = validationService.validate();
+        List<ErrorRecord> errorRecords = validationService.validate().getErrors();
         Test.stopTest();
 
         System.assertEquals(1, errorRecords.size(),
@@ -194,23 +190,24 @@ public with sharing class PMT_ValidationService_TEST {
             DebitType__c = PMT_RefundService.FULL_REFUND,
             OriginalPayment__c = originalPayment.Id
         );
-       
-        PaymentSelector_TEST.Stub selectorStub = new PaymentSelector_TEST.Stub();
-        selectorStub.paymentRecords = new List<npe01__OppPayment__c>{originalPayment};
 
         PMT_ValidationService validationService = new PMT_ValidationService(
             new List<npe01__OppPayment__c>{refund},
             null,
             TDTM_Runnable.Action.BeforeInsert
         );
+
         validationService.isEnforceAccountingDataConsistency = false;
-        validationService.paymentSelector = (PaymentSelector) Test.createStub(
-            PaymentSelector.class,
-            selectorStub
+        PMT_RefundService refundService = new PMT_RefundService()
+            .withOriginalPayments(new List<npe01__OppPayment__c>{originalPayment});
+    
+        refundService.originalPaymentWithRefunds.put(
+            originalPayment.Id, new PMT_RefundService.RefundInfo(originalPayment)
         );
+        validationService.RefundService = refundService;
 
         Test.startTest();
-        List<ErrorRecord> errorRecords = validationService.validate();
+        List<ErrorRecord> errorRecords = validationService.validate().getErrors();
         Test.stopTest();
 
         System.assertEquals(1, errorRecords.size(),
@@ -235,22 +232,23 @@ public with sharing class PMT_ValidationService_TEST {
        
         originalPayment = addRefundRelatedList(originalPayment, new List<SObject>{refund});
 
-        PaymentSelector_TEST.Stub selectorStub = new PaymentSelector_TEST.Stub();
-        selectorStub.paymentRecords = new List<npe01__OppPayment__c>{originalPayment};
-
         PMT_ValidationService validationService = new PMT_ValidationService(
             new List<npe01__OppPayment__c>{refund},
             null,
             TDTM_Runnable.Action.BeforeInsert
         );
+
         validationService.isEnforceAccountingDataConsistency = false;
-        validationService.paymentSelector = (PaymentSelector) Test.createStub(
-            PaymentSelector.class,
-            selectorStub
+        PMT_RefundService refundService = new PMT_RefundService()
+            .withOriginalPayments(new List<npe01__OppPayment__c>{originalPayment});
+    
+        refundService.originalPaymentWithRefunds.put(
+            originalPayment.Id, new PMT_RefundService.RefundInfo(originalPayment)
         );
+        validationService.RefundService = refundService;
 
         Test.startTest();
-        List<ErrorRecord> errorRecords = validationService.validate();
+        List<ErrorRecord> errorRecords = validationService.validate().getErrors();
         Test.stopTest();
 
         System.assertEquals(1, errorRecords.size(),
@@ -287,7 +285,7 @@ public with sharing class PMT_ValidationService_TEST {
         );
 
         Test.startTest();
-        List<ErrorRecord> errorRecords = validationService.validate();
+        List<ErrorRecord> errorRecords = validationService.validate().getErrors();
         Test.stopTest();
 
         System.assertEquals(0, errorRecords.size(),
@@ -322,7 +320,7 @@ public with sharing class PMT_ValidationService_TEST {
         );
 
         Test.startTest();
-        List<ErrorRecord> errorRecords = validationService.validate();
+        List<ErrorRecord> errorRecords = validationService.validate().getErrors();
         Test.stopTest();
 
         System.assertEquals(1, errorRecords.size(),

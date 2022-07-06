@@ -45,23 +45,7 @@ public with sharing class PaymentSelector {
     }
     
     public npe01__OppPayment__c getPaymentRecordForRefund(Id paymentId) {
-        return getPaymentRecordsForRefund(new Set<Id>{paymentId})?.get(0);
-    }
-
-    public List<npe01__OppPayment__c> getPaymentRecordsForRefund(Set<Id> paymentIds) {
-        Set<String> queryFields = getRefundFields();
-
-        if (isMultiCurrencyEnabled) {
-            queryFields.add(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
-        }
-
-        String soql = new UTIL_Query()
-            .withFrom(npe01__OppPayment__c.SObjectType)
-            .withSelectFields(queryFields)
-            .withWhere('Id IN: paymentIds')
-            .build();
-
-        return Database.query(soql);
+        return getPaymentsWithRefunds(new Set<Id>{paymentId})?.get(0);
     }
 
     public List<npe01__OppPayment__c> getPaymentsWithRefunds(Set<Id> paymentIds) {
