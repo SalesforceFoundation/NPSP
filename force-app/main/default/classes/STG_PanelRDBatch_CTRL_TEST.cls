@@ -45,7 +45,7 @@ private with sharing class STG_PanelRDBatch_CTRL_TEST {
 
         System.runAs(adminUser) {
             STG_PanelRDBatch_CTRL controller = new STG_PanelRDBatch_CTRL();
-            Boolean hasAccess = controller.getHasAccess();
+            Boolean hasAccess = controller.isRunningUserIsAdmin;
 
             System.assertEquals(true, hasAccess, 'The access check should return true if the user has update ' +
                 'access to Opp and Recurring Donation object');
@@ -61,7 +61,7 @@ private with sharing class STG_PanelRDBatch_CTRL_TEST {
 
         System.runAs(standardUser) {
             STG_PanelRDBatch_CTRL controller = new STG_PanelRDBatch_CTRL();
-            Boolean hasAccess = controller.getHasAccess();
+            Boolean hasAccess = controller.isRunningUserIsAdmin;
 
             System.assertEquals(false, hasAccess, 'The access check should return false if the user does NOT have ' +
                 'update access to the Opp and RD object');
