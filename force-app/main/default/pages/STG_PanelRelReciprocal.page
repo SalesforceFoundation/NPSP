@@ -1,12 +1,12 @@
 <apex:page controller="STG_PanelRelReciprocal_CTRL" docType="html-5.0" standardStylesheets="false">
-    <apex:form id="form" styleClass="slds-m-around_x-large">
+
+    <apex:outputPanel rendered="{!NOT(isRunningUserIsAdmin)}">
+        <c:InsufficientPermissions />
+    </apex:outputPanel>
+
+
+    <apex:form id="form" styleClass="slds-m-around_x-large" rendered="{!isRunningUserIsAdmin}">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="{!$Label.stgNavRelReciprocal}" />
-
-        <apex:outputPanel rendered="{!NOT(hasAccess)}">
-            <div id='stgPanelRelReciprocalUtilIllustration' />
-        </apex:outputPanel>
-
-        <apex:outputPanel rendered="{!hasAccess}">
             <div class="slds-grid">
                 <div class="slds-col slds-size_1-of-1 slds-m-around_medium">
                     <p class="slds-text-body_small slds-m-top_x-small">
@@ -125,25 +125,5 @@
                     </apex:repeat>
                 </tbody>
             </table>
-        </apex:outputPanel>
     </apex:form>
-
-    <script>
-        if ({!NOT(hasAccess)}) {
-            $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function () {
-                $Lightning.createComponent(
-                    "{!namespace}" + ":utilIllustration",
-                    {
-                        size: "small",
-                        title: "{!$Label.commonAdminPermissionErrorTitle}",
-                        message: "{!$Label.commonPermissionErrorMessage}",
-                        variant: "no-access",
-                        illustrationClass: "slds-p-top_x-large slds-m-top_x-large"
-                    },
-                    "stgPanelRelReciprocalUtilIllustration",
-                    function () { }
-                );
-            });
-        }
-    </script>
 </apex:page>
