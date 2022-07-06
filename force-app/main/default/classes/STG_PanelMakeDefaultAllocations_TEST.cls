@@ -45,7 +45,7 @@ private with sharing class STG_PanelMakeDefaultAllocations_TEST {
 
         System.runAs(adminUser) {
             STG_PanelMakeDefaultAllocations_CTRL controller = new STG_PanelMakeDefaultAllocations_CTRL();
-            Boolean hasAccess = controller.getHasAccess();
+            Boolean hasAccess = controller.isRunningUserIsAdmin;
 
             System.assertEquals(true, hasAccess, 'The access check should return true if the user has create ' +
                 'access to Allocation object');
@@ -61,7 +61,7 @@ private with sharing class STG_PanelMakeDefaultAllocations_TEST {
 
         System.runAs(standardUser) {
             STG_PanelMakeDefaultAllocations_CTRL controller = new STG_PanelMakeDefaultAllocations_CTRL();
-            Boolean hasAccess = controller.getHasAccess();
+            Boolean hasAccess = controller.isRunningUserIsAdmin;
 
             System.assertEquals(false, hasAccess, 'The access check should return false if the user does NOT have ' +
                 'create access to the Allocation object');

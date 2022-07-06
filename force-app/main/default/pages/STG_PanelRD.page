@@ -1,5 +1,10 @@
 <apex:page controller="STG_PanelRD_CTRL" action="{!init}" docType="html-5.0" standardStylesheets="false">
-    <apex:form id="form" styleClass="slds-m-around_x-large">
+
+    <apex:outputPanel rendered="{!NOT(isRunningUserIsAdmin)}">
+        <c:InsufficientPermissions />
+    </apex:outputPanel>
+
+    <apex:form id="form" styleClass="slds-m-around_x-large" rendered="{!isRunningUserIsAdmin}">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRecurringDonations}" />
         <p class="slds-text-body_small slds-m-top_x-small">
             <c:UTIL_HtmlOutput html="{!$Label.npe03__recurringdonationsettingsdescription}" hasLink="true" />
