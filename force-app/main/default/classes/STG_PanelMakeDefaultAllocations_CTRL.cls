@@ -62,19 +62,4 @@ public with sharing class STG_PanelMakeDefaultAllocations_CTRL extends STG_Panel
         id batchProcessId = database.executeBatch(new ALLO_MakeDefaultAllocations_BATCH());
         return null;
     }
-
-    /**
-    * @description Check if the running user has update access to the Opportunity sObject, wrtie access to the
-    * Allocation sObject and read access to GAU sObject
-    * @return Boolean
-    */
-    public Boolean getHasAccess() {
-        String oppObject = Schema.SObjectType.Opportunity.getName();
-        String allocationObject = Schema.SObjectType.Allocation__c.getName();
-        String gauObject = Schema.SObjectType.General_Accounting_Unit__c.getName();
-
-        return UTIL_Permissions.canUpdate(oppObject, false) &&
-            UTIL_Permissions.canCreate(allocationObject, false) &&
-            UTIL_Permissions.canRead(gauObject, false);
-    }
 }
