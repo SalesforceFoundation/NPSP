@@ -1729,11 +1729,11 @@ private with sharing class STG_SettingsManager_TEST {
     private static void testPanelCRLP() {
         STG_PanelCustomizableRollup_CTRL panel = new STG_PanelCustomizableRollup_CTRL();
         System.assertEquals('idPanelCustomizableRollup', panel.idPanel());
-        System.assertEquals(true, panel.isAdmin);
+        System.assertEquals(true, panel.isRunningUserIsAdmin);
         System.assertEquals(false, panel.isPolling);
         System.assertEquals(false, ApexPages.hasMessages());
         System.assert(panel.showCRLPSettings);
-        System.assert(panel.isAdmin);
+        System.assert(panel.isRunningUserIsAdmin);
         System.assertEquals(false, ApexPages.hasMessages());
 
         // Clear cache so test passes in orgs that have rollups

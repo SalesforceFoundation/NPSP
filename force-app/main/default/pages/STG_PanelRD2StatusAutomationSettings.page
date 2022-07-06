@@ -13,24 +13,29 @@
         }
     </style>
 
-    <div class="slds-scope">
+    <apex:outputPanel rendered="{!NOT(isRunningUserIsAdmin)}">
+        <c:InsufficientPermissions />
+    </apex:outputPanel>
+
+    <apex:outputPanel styleClass="slds-scope" rendered="{!isRunningUserIsAdmin}">
         <div class="slds-m-around_large">
             <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRD2StatusAutomation}" />
         </div>
 
         <div id="statusAutomationDiv">
         </div>
-    </div>
+    </apex:outputPanel>
 
     <script>
-        $Lightning.use('{!namespace}' + ":RD2_EnablementApp", function () {
-            $Lightning.createComponent(
-                '{!namespace}' + ':rd2StatusAutomationSettings',
-                {},
-                "statusAutomationDiv",
-                function () { }
-            );
-        });
+        if ({!isRunningUserIsAdmin}) {
+            $Lightning.use('{!namespace}' + ":RD2_EnablementApp", function () {
+                $Lightning.createComponent(
+                    '{!namespace}' + ':rd2StatusAutomationSettings',
+                    {},
+                    "statusAutomationDiv",
+                    function () { }
+                );
+            });
+        }
     </script>
-
 </apex:page>
