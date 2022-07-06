@@ -41,7 +41,7 @@ public with sharing class STG_PanelRelReciprocal_CTRL_TEST {
 
         System.runAs(adminUser) {
             STG_PanelRelReciprocal_CTRL controller = new STG_PanelRelReciprocal_CTRL();
-            Boolean hasAccess = controller.getHasAccess();
+            Boolean hasAccess = controller.isRunningUserIsAdmin;
 
             System.assertEquals(true, hasAccess,
                 'The access check should return true if the user has access to the ' +
@@ -55,7 +55,7 @@ public with sharing class STG_PanelRelReciprocal_CTRL_TEST {
 
         System.runAs(standardUser) {
             STG_PanelRelReciprocal_CTRL controller = new STG_PanelRelReciprocal_CTRL();
-            Boolean hasAccess = controller.getHasAccess();
+            Boolean hasAccess = controller.isRunningUserIsAdmin;
 
             System.assertEquals(false, hasAccess,
                 'The access check should return false if the user has access to the ' +
