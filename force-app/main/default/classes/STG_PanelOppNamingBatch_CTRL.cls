@@ -62,20 +62,4 @@ public with sharing class STG_PanelOppNamingBatch_CTRL extends STG_Panel {
         Id batchProcessId = Database.executeBatch(batch, 200);
         return null;
     }
-
-    /*********************************************************************************************************
-    * @description Check if the running user has update access to the Opportunity sObject and Read access to the
-    * Account and Contact objects
-    * @return Boolean
-    */
-    public Boolean getHasAccess() {
-        String oppObject = Schema.SObjectType.Opportunity.getName();
-        String acctObject = Schema.SObjectType.Account.getName();
-        String contactObject = Schema.SObjectType.Contact.getName();
-
-        return UTIL_Permissions.canRead(oppObject, false) &&
-                UTIL_Permissions.canUpdate(oppObject, false) &&
-                UTIL_Permissions.canRead(acctObject, false) &&
-                UTIL_Permissions.canRead(contactObject, false);
-    }
 }

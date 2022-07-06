@@ -35,9 +35,24 @@
 */
 public with sharing class RD2_StatusAutomationSettings_CTRL {
 
+    /***
+   * @description Verifies the user has Admin permissions for Opportunity naming settings.
+   * @return true when the user has the appropriate access
+   */
+    public Boolean isRunningUserIsAdmin {
+        get {
+            if (isRunningUserIsAdmin == null) {
+                isRunningUserIsAdmin = STG_Panel.runningUserIsAdmin();
+            }
+            return isRunningUserIsAdmin;
+        }
+        private set;
+    }
+
     public String getNamespace() {
         return UTIL_Namespace.getComponentNamespace();
     }
+
 
     @AuraEnabled
     public static RD2_StatusAutomationView getAutomationSettings() {
