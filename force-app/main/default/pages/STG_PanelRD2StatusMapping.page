@@ -13,29 +13,34 @@
         }
     </style>
 
-    <div class="slds-scope">
+    <apex:outputPanel rendered="{!NOT(isRunningUserIsAdmin)}">
+        <c:InsufficientPermissions />
+    </apex:outputPanel>
+
+    <apex:outputPanel styleClass="slds-scope" rendered="{!isRunningUserIsAdmin}">
         <div class="slds-m-around_large">
             <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRD2StatusMapping}" />
         </div>
 
         <div id="statusMappingDiv">
         </div>
-    </div>
+    </apex:outputPanel>
 
     <script>
-        var namespace = '{!namespace}';
-        if (!namespace || namespace === '') {
-            namespace = 'c';
+        if ({!isRunningUserIsAdmin}) {
+            var namespace = '{!namespace}';
+            if (!namespace || namespace === '') {
+                namespace = 'c';
+            }
+
+            $Lightning.use(namespace + ":RD2_EnablementApp", function () {
+                $Lightning.createComponent(
+                    namespace + ':rd2StatusMappingSettings',
+                    {},
+                    "statusMappingDiv",
+                    function () { }
+                );
+            });
         }
-
-        $Lightning.use(namespace + ":RD2_EnablementApp", function () {
-            $Lightning.createComponent(
-                namespace + ':rd2StatusMappingSettings',
-                {},
-                "statusMappingDiv",
-                function () { }
-            );
-        });
     </script>
-
 </apex:page>
