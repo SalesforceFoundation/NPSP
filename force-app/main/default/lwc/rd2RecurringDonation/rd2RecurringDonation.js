@@ -41,9 +41,11 @@ export default class RecurringDonationTable extends LightningElement {
     openChangeAmountOrFrequency = false;
     openStopRecurringDonation = false;
     currentRecord;
-    fixedInstallmentsLabel;
-
+    dayOfMonthFieldLabel;
     defaultRecordTypeId;
+    fixedInstallmentsLabel;
+    isElevateDonation = false;
+    isInitiallyMonthlyDonation = false;
 
     @api
     donationTypeFilter;
@@ -91,18 +93,43 @@ export default class RecurringDonationTable extends LightningElement {
     oppInfo({ data, error }) {
         if (data) {
             this.paymentMethod = data.fields.PaymentMethod__c.label;
+            this.dayOfMonthFieldLabel = data.fields.Day_of_Month__c.label;
             this.fixedInstallmentsLabel = data.fields.npe03__Installments__c.label;
             this.defaultRecordTypeId = data.defaultRecordTypeId;
         }
     }
 
     connectedCallback() {
-        this.getRecurringDonationFields();
-        if (!this.isMobile) {
-            this.tdClasses = "";
+      this.getRecurringDonationFields();
+      if(!this.isMobile){
+        this.tdClasses = '';
+      }
+      this.template.addEventListener('keydown', (event) => {
+        let cells   = this.template.querySelectorAll("[tabindex='-1']");
+        let active  = Array.prototype.indexOf.call(cells, event.target);
+        let rows    = this.template.querySelectorAll('tr').length;
+        let columns = this.template.querySelectorAll('tr th').length;
+        if (event.keyCode === 37) {
+            active = (active > 0) ? active - 1 : active;
         }
+        if (event.keyCode === 38) {
+            active = (active - columns >= 0) ? active - columns : active;
+        }
+        if (event.keyCode === 39) {
+            active = (active < cells.length - 1) ? active + 1 : active;
+        }
+        if (event.keyCode === 40) {
+            active = (active + columns <= cells.length - 1) ? active + columns : active;
+        }
+        let activeTDs = this.template.querySelectorAll('.slds-has-focus');
+        for (let i = 0; i < activeTDs.length; i++) {
+            activeTDs[i].classList.remove('slds-has-focus');
+        }
+        cells[active].classList.add('slds-has-focus');
+        cells[active].focus();
+      });
     }
-
+  
     /**
      * @description Returns whether we are running in mobile or desktop
      * @returns True if it is mobile
@@ -293,6 +320,16 @@ export default class RecurringDonationTable extends LightningElement {
         this.currentRecord = this.data.find((row) => {
             return row.recurringDonation.Id === e.target.getAttribute("data-recordid");
         });
+        if(this.currentRecord.recurringDonation.CommitmentId__c){
+            this.isElevateDonation = true;
+        }else{
+            this.isElevateDonation = false;
+        }
+        if(this.currentRecord.recurringDonation.Day_of_Month__c){
+            this.isInitiallyMonthlyDonation = true;
+        }else{
+            this.isInitiallyMonthlyDonation = false;
+        }
         switch (action) {
             case "updatePaymentMethod":
                 this.openUpdatePaymentMethod = true;
@@ -336,19 +373,34 @@ export default class RecurringDonationTable extends LightningElement {
                         .map((action) => { return { ...action }; });
                     let nexDonationFormatFirstElement = "";
                     let nexDonationFormatSecondElement = "";
-                    if (el.nextDonation) {
-                        nexDonationFormatFirstElement = el.nextDonation.split(".")[0] || el.nextDonation;
-                        nexDonationFormatSecondElement = el.nextDonation.split(".")[1] || "";
-                    }
                     if (el.status === CANCELED_STATUS) {
                         actions.map((action) => {
                             action.disabled = true;
                             return action;
                         });
                     }
-                    return { actions, ...el, nexDonationFormatFirstElement, nexDonationFormatSecondElement };
+                    let lastModifiedDate = new Date(el.recurringDonation.LastModifiedDate).toLocaleDateString(undefined, { timeZone: this.timeZone });
+                    return { actions, ...el, nexDonationFormatFirstElement, nexDonationFormatSecondElement, lastModifiedDate };
                 });
             }
+        }).finally(() => {
+          this.data?.forEach((item) => {
+            let nextDonationHtml = `<div class="${this.rowClasses}" style="${this.fixedWidth}">`;
+            if(item.recurringDonation.npe03__Next_Payment_Date__c){
+                if(item.nextDonation !== ""){
+                    item.nextDonation.split(',').forEach((nextDonationElement) => {
+                      nextDonationHtml += `${nextDonationElement} </br>`
+                    })
+                } else {
+                    nextDonationHtml += `${item.recurringDonation.npe03__Next_Payment_Date__c}`
+                }
+            } else {
+                item.nextDonation = "";
+            }
+            nextDonationHtml += `</div>`
+            const container = this.template.querySelector(`[data-ndid=${item.recurringDonation.Id}]`);
+            container.innerHTML = nextDonationHtml;
+          })
         });
     }
 }
