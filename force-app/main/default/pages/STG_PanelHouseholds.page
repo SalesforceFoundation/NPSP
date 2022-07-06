@@ -1,26 +1,5 @@
 <apex:page controller="STG_PanelHouseholds_CTRL" docType="html-5.0" standardStylesheets="false">
-    <apex:includeLightning/>
-    <script>
-        if ({!NOT(isRunningUserIsAdmin)}) {
-            $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function () {
-                $Lightning.createComponent("{!namespace}" + ":utilIllustration",
-                    {
-                        title: "{!$Label.commonAdminPermissionErrorTitle}",
-                        message: "{!$Label.commonPermissionErrorMessage}",
-                        size: 'small',
-                        variant: 'no-access',
-                        illustrationClass: "slds-p-top_x-large slds-m-top_x-large"
-                    },
-                    "stgPanelErrIllustration",
-                    function () {
-                    }
-                );
-            });
-        }
-    </script>
-    <apex:outputPanel rendered="{!NOT(isRunningUserIsAdmin)}">
-        <div id="stgPanelErrIllustration"/>
-    </apex:outputPanel>
+
     <script type="text/javascript">
     var strCurrentFormat = '';
 
@@ -132,6 +111,9 @@
     }
 
 </style>
+    <apex:outputPanel rendered="{!NOT(isRunningUserIsAdmin)}">
+        <c:InsufficientPermissions />
+    </apex:outputPanel>
 
     <apex:form id="form" styleClass="slds-m-around_x-large" rendered="{!isRunningUserIsAdmin}">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgLabelHHSettings}" />
