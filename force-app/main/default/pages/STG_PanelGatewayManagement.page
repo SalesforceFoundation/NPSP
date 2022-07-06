@@ -27,21 +27,27 @@
   -     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
   -     POSSIBILITY OF SUCH DAMAGE.
   -->
-<apex:page id="STG_PanelGatewayManagement" controller="STG_PanelGatewayManagement_CTRL">
+<apex:page id="STG_PanelGatewayManagement" controller="STG_Panel">
     <apex:slds />
     <apex:includeLightning />
 
-    <div id="stgPanelGatewayManagementSettings" class="slds-m-around_x-large"></div>
+    <apex:outputPanel rendered="{!NOT(isRunningUserIsAdmin)}">
+        <c:InsufficientPermissions />
+    </apex:outputPanel>
+
+    <div id="stgPanelGatewayManagementSettings"></div>
 
     <script>
-        $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function () {
-            $Lightning.createComponent(
-                "{!namespace}" + ":gePaymentGatewayManagement",
-                {},
-                "stgPanelGatewayManagementSettings",
-                function () { }
-            );
-        });
+        if ({!isRunningUserIsAdmin}) {
+            $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function () {
+                $Lightning.createComponent(
+                    "{!namespace}" + ":gePaymentGatewayManagement",
+                    {},
+                    "stgPanelGatewayManagementSettings",
+                    function () { }
+                );
+            });
+        }
     </script>
 
 </apex:page>
