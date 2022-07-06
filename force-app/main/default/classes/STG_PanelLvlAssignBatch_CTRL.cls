@@ -69,19 +69,4 @@ public with sharing class STG_PanelLvlAssignBatch_CTRL extends STG_Panel {
     * @description How many Level Assign Batches were kicked off
     */
     public integer cLvlAssignBatch { get; set; }
-
-    /**
-    * @description Check if the running user has update access to the Account sObject and Contact sObject,
-    * and read access to the Level sObject
-    * @return Boolean
-    */
-    public Boolean getHasAccess() {
-        String accountObject = Schema.SObjectType.Account.getName();
-        String contactObject = Schema.SObjectType.Contact.getName();
-        String levelObject = Schema.SObjectType.Level__c.getName();
-
-        return UTIL_Permissions.canUpdate(accountObject, false) &&
-            UTIL_Permissions.canUpdate(contactObject, false) &&
-            UTIL_Permissions.canRead(levelObject, false);
-    }
 }
