@@ -27,42 +27,48 @@
     <apex:slds/>
     <apex:includeLightning/>
 
-    <div class="slds-scope">
-        <div class="slds-m-around_large">
-            <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRD2Enablement}" />
+    <apex:outputPanel rendered="{!NOT(isRunningUserIsAdmin)}">
+        <c:InsufficientPermissions />
+    </apex:outputPanel>
+
+    <apex:outputPanel rendered="{!isRunningUserIsAdmin}">
+        <div class="slds-scope">
+            <div class="slds-m-around_large">
+                <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRD2Enablement}" />
+            </div>
+
+            <div id="enablementDelegateDiv">
+            </div>
         </div>
 
-        <div id="enablementDelegateDiv">
-        </div>
-    </div>
+        <apex:form id="form">
+            <apex:actionFunction name="refreshPanels"
+                action="{!refreshPanels}"
+                oncomplete="displayListItem('idPanelRD2StatusMappingNav');displayListItem('idPanelRD2StatusAutomationNav');return false;"
+                reRender="status, idPanelCustomizableRollup, idPanelRD, idPanelRD2StatusMapping, idPanelRDInstPd, idPanelRDFieldMap, idPanelRD2StatusAutomation"
+                status="statusLoad" />
+        </apex:form>
 
-    <apex:form id="form">
-        <apex:actionFunction name="refreshPanels" 
-            action="{!refreshPanels}" 
-            oncomplete="displayListItem('idPanelRD2StatusMappingNav');displayListItem('idPanelRD2StatusAutomationNav');return false;" 
-            reRender="status, idPanelCustomizableRollup, idPanelRD, idPanelRD2StatusMapping, idPanelRDInstPd, idPanelRDFieldMap, idPanelRD2StatusAutomation"
-            status="statusLoad" />
-    </apex:form>
-
+    </apex:outputPanel>
     <script>
-        var namespace = '{!namespace}';
+        if ({!isRunningUserIsAdmin}) {
+            var namespace = '{!namespace}';
+            var isSimpleVersion = {!isSimpleVersion};
+            var compName = namespace + (isSimpleVersion === true ? ':RD2_EnablementDelegateSimple' : ':RD2_EnablementDelegate');
 
-        var isSimpleVersion = {!isSimpleVersion};
-        var compName = namespace + (isSimpleVersion === true ? ':RD2_EnablementDelegateSimple' : ':RD2_EnablementDelegate');
-
-        $Lightning.use(namespace + ":RD2_EnablementApp", function () {
-            $Lightning.createComponent(
-                compName,
-                {},
-                "enablementDelegateDiv",
-                function () {
-                    $A.eventService.addHandler({
-                        "event": namespace + ":RD2_EnhancementEnabledEvent",
-                        "handler": refreshPanels
-                    });
-                }
-            );
-        });
+            $Lightning.use(namespace + ":RD2_EnablementApp", function () {
+                $Lightning.createComponent(
+                    compName,
+                    {},
+                    "enablementDelegateDiv",
+                    function () {
+                        $A.eventService.addHandler({
+                            "event": namespace + ":RD2_EnhancementEnabledEvent",
+                            "handler": refreshPanels
+                        });
+                    }
+                );
+            });
+        }
     </script>
-
 </apex:page>
