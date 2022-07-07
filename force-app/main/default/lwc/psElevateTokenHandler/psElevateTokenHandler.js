@@ -60,6 +60,8 @@ class psElevateTokenHandler {
             {value: sandboxEnhancedUrl}
         ];
 
+        console.log('domainInfo',domainInfo);
+
         if (!isBlank(domainInfo.communityBaseURL)) {
             return [...originURLs, { value: domainInfo.communityBaseURL }];
         }

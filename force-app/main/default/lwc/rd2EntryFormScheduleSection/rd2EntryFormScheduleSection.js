@@ -269,7 +269,16 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      * @param event
      */
     handleAdvancedPeriodChange(event) {
+        this.toggleLastDayFieldOnExperienceSite(event);
+        const period = event.target.value;
+        this.dispatchEvent(new CustomEvent("periodchange", { detail: period }));
+    }
 
+    /**
+     * @description On Experience Sites, based on the Recurrent Donation data it will show/hide Last Date field.
+     * @param event
+     */
+    toggleLastDayFieldOnExperienceSite(event) {
         if(this.isExperienceSite) {
             if((event.target.value === MONTHLY && this.isElevateDonation && this.isInitiallyMonthlyDonation)||!(event.target.value === MONTHLY)) {
                 this.isMonthlyDonation = false;
@@ -278,9 +287,6 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
             }
             this.cssLastDay = !this.isMonthlyDonation || this.isPaymentModal ? 'slds-hide' : 'slds-p-right_small slds-p-left_small slds-size_12-of-12 slds-large-size_4-of-12 fixExperienceDayOfMonth';
         }
-
-        const period = event.target.value;
-        this.dispatchEvent(new CustomEvent("periodchange", { detail: period }));
     }
 
     /**
