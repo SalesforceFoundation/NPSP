@@ -12139,7 +12139,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error message when the original payment is missing.</shortDescription>
-        <value>You can&apos;t issue a refund without an Original Payment.</value>
+        <value>You can&apos;t edit a refund without an Original Payment.</value>
     </labels>
     <labels>
         <fullName>pmtPaidPaymentDateRequired</fullName>
