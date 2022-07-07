@@ -253,15 +253,7 @@ public with sharing class RD2_ETableController {
         for(Schema.PicklistEntry ple : Schema.SObjectType.npe03__Recurring_Donation__c.fields.Status__c.getPicklistValues()){
             mapStatus.put(ple.getValue(), ple.getLabel());
         }
-
-        if(recurringDonation.Status__c == RD2_Constants.STATUS_PAUSED) {
-            status = mapStatus.get(recurringDonation.Status__c);
-        } else if(recurringDonation.Status__c != RD2_Constants.STATUS_PAUSED && statusMapper.getState(recurringDonation.Status__c) != RD2_Constants.STATUS_CLOSED) {
-            status = statusMapper.getState(recurringDonation.Status__c);
-        } else {
-            status = STATUS_CANCELED;
-        }
-
+        status = mapStatus.get(recurringDonation.Status__c);
         return status;
     }
 
