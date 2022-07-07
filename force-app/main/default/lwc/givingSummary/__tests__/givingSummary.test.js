@@ -1,6 +1,12 @@
 import { createElement } from 'lwc';
 import GivingSummary from '../givingSummary';
 import { getRecord } from 'lightning/uiRecordApi';
+import { extended, full } from "@sa11y/preset-rules";
+import { setup } from "@sa11y/jest";
+
+beforeAll(() => {
+    setup();
+});
 
 const mockGetRecord = require('./data/getRecord.json');
 
@@ -23,4 +29,21 @@ describe('c-giving-summary', () => {
             expect(value).toBe('USD 7000');
         });
     });
+
+    it("checks element is accessible", async () => {
+        const element = createElement("c-giving-summary", {
+            is: GivingSummary,
+        });
+        document.body.appendChild(element);
+        await expect(element).toBeAccessible(extended);
+    });
+
+    it("checks document is fully accessible", async () => {
+        const element = createElement("c-giving-summary", {
+            is: GivingSummary,
+        });
+        document.body.appendChild(element);
+        await expect(element).toBeAccessible(full);
+    });
+
 });
