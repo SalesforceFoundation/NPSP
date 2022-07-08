@@ -36,3 +36,10 @@
 .nonpointer {
     pointer-events: none;
 }
+
+.dynamic-wt{
+    width: 10%;
+}
+.initwidth{
+    width: auto;
+}

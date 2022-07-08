@@ -1,4 +1,4 @@
-import { LightningElement, api, wire, track } from "lwc";
+import { LightningElement, api, wire, track } from "lwc"; 
 import commonAmount from "@salesforce/label/c.commonAmount";
 import RDCL_Frequency from "@salesforce/label/c.RDCL_Frequency";
 import lblStatus from "@salesforce/label/c.lblStatus";
@@ -15,6 +15,7 @@ import stopRecurringDonation from "@salesforce/label/c.stopRecurringDonation";
 import RD2_Actions from "@salesforce/label/c.RD2_Actions";
 import retrieveTableView from "@salesforce/apex/RD2_ETableController.retrieveTableView";
 import TIME_ZONE from '@salesforce/i18n/timeZone';
+import { loadScript } from 'lightning/platformResourceLoader';
 
 import RECURRING_DONATION from "@salesforce/schema/npe03__Recurring_Donation__c";
 import { getObjectInfo } from "lightning/uiObjectInfoApi";
@@ -27,9 +28,9 @@ const FormFactorType = Object.freeze({
 });
 
 const MOBILE_CLASSES_ROW = "slds-truncate dv-dynamic-width dv-dynamic-mobile";
-const DESKTOP_CLASSES_ROW = "slds-truncate dv-dynamic-width";
+const DESKTOP_CLASSES_ROW = "slds-truncate";
 const MOBILE_CLASSES_HEAD = "slds-is-resizable dv-dynamic-width dv-dynamic-mobile";
-const DESKTOP_CLASSES_HEAD = "slds-is-resizable dv-dynamic-width";
+const DESKTOP_CLASSES_HEAD = "slds-is-resizable dv-dynamic-width dynamic-wt";
 const MOBILE_VIEW_MORE = "viewMore";
 const DESKTOP_VIEW_MORE = "slds-hide";
 const MOBILE_HEADER_CLASS = "slds-border_right slds-border_left";
@@ -58,8 +59,6 @@ export default class RecurringDonationTable extends LightningElement {
     formFactor = FORM_FACTOR;
 
     paymentMethod = "";
-
-    fixedWidth = "width:8rem;";
 
     lastDonationDate = "";
 
@@ -107,7 +106,6 @@ export default class RecurringDonationTable extends LightningElement {
       this.template.addEventListener('keydown', (event) => {
         let cells   = this.template.querySelectorAll("[tabindex='-1']");
         let active  = Array.prototype.indexOf.call(cells, event.target);
-        let rows    = this.template.querySelectorAll('tr').length;
         let columns = this.template.querySelectorAll('tr th').length;
         if (event.keyCode === 37) {
             active = (active > 0) ? active - 1 : active;
@@ -178,43 +176,6 @@ export default class RecurringDonationTable extends LightningElement {
         return DESKTOP_CLASSES_HEAD;
     }
 
-    //FOR HANDLING THE HORIZONTAL SCROLL OF TABLE MANUALLY
-    tableOuterDivScrolled(event) {
-        this._tableViewInnerDiv = this.template.querySelector(".tableViewInnerDiv");
-        if (this._tableViewInnerDiv) {
-            if (!this._tableViewInnerDivOffsetWidth || this._tableViewInnerDivOffsetWidth === 0) {
-                this._tableViewInnerDivOffsetWidth = this._tableViewInnerDiv.offsetWidth;
-            }
-            this._tableViewInnerDiv.style =
-                "width:" +
-                (event.currentTarget.scrollLeft + this._tableViewInnerDivOffsetWidth) +
-                "px;" +
-                this.tableBodyStyle;
-        }
-        this.tableScrolled(event);
-    }
-
-    tableScrolled(event) {
-        if (this.enableInfiniteScrolling) {
-            if (event.target.scrollTop + event.target.offsetHeight >= event.target.scrollHeight) {
-                this.dispatchEvent(
-                    new CustomEvent("showmorerecords", {
-                        bubbles: true,
-                    })
-                );
-            }
-        }
-        if (this.enableBatchLoading) {
-            if (event.target.scrollTop + event.target.offsetHeight >= event.target.scrollHeight) {
-                this.dispatchEvent(
-                    new CustomEvent("shownextbatch", {
-                        bubbles: true,
-                    })
-                );
-            }
-        }
-    }
-
     handlemouseup(e) {
         this._tableThColumn = undefined;
         this._tableThInnerDiv = undefined;
@@ -223,9 +184,10 @@ export default class RecurringDonationTable extends LightningElement {
     }
 
     handlemousedown(e) {
+        console.log('asdf');
         if (!this._initWidths) {
             this._initWidths = [];
-            let tableThs = this.template.querySelectorAll("table thead .dv-dynamic-width");
+            let tableThs = this.template.querySelectorAll("th");
             tableThs.forEach((th) => {
                 this._initWidths.push(th.style.width);
             });
@@ -381,11 +343,12 @@ export default class RecurringDonationTable extends LightningElement {
                     }
                     let lastModifiedDate = new Date(el.recurringDonation.LastModifiedDate).toLocaleDateString(undefined, { timeZone: this.timeZone });
                     return { actions, ...el, nexDonationFormatFirstElement, nexDonationFormatSecondElement, lastModifiedDate };
+                    //return {};
                 });
             }
         }).finally(() => {
           this.data?.forEach((item) => {
-            let nextDonationHtml = `<div class="${this.rowClasses}" style="${this.fixedWidth}">`;
+            let nextDonationHtml = `<div class="${this.rowClasses}">`;
             if(item.recurringDonation.npe03__Next_Payment_Date__c){
                 if(item.nextDonation !== ""){
                     item.nextDonation.split(',').forEach((nextDonationElement) => {
@@ -399,8 +362,92 @@ export default class RecurringDonationTable extends LightningElement {
             }
             nextDonationHtml += `</div>`
             const container = this.template.querySelector(`[data-ndid=${item.recurringDonation.Id}]`);
-            container.innerHTML = nextDonationHtml;
-          })
+          });
         });
     }
+/*     dynamicTableColumns() {
+        let tables = this.template.querySelectorAll("table");
+        console.log(JSON.stringify(tables));
+        for (let i=0; i<tables.length;i++) {
+            this.resizableGrid(tables[i]);
+        }
+    }
+
+    resizableGrid(table) {
+        console.log('table ', table)
+        let row = table.querySelector('tr');
+        let cols = this.template.querySelectorAll(".slds-resizable");
+        if (!cols) return;
+        
+        table.style.overflow = 'hidden';
+        
+        let tableHeight = table.offsetHeight;
+
+        console.log(tableHeight);
+        
+        for (let i=0;i<cols.length;i++){
+            cols[i].style.position = 'relative';
+            setListeners(cols[i]);
+        }
+
+        function setListeners(div){
+            let pageX,curCol,nxtCol,curColWidth,nxtColWidth;
+
+            div.addEventListener('mousedown', function (e) {
+            curCol = e.target.parentElement;
+            nxtCol = curCol.nextElementSibling;
+            pageX = e.pageX; 
+            
+            let padding = paddingDiff(curCol);
+            
+            curColWidth = curCol.offsetWidth - padding;
+        if (nxtCol)
+            nxtColWidth = nxtCol.offsetWidth - padding;
+        });
+
+        div.addEventListener('mouseover', function (e) {
+           e.target.style.borderRight = '2px solid #0000ff';
+        })
+
+        div.addEventListener('mouseout', function (e) {
+           e.target.style.borderRight = '';
+        })
+
+        this.template.addEventListener('mousemove', function (e) {
+            if (curCol) {
+                let diffX = e.pageX - pageX;
+                if (nxtCol)
+                nxtCol.style.width = (nxtColWidth - (diffX))+'px';
+                curCol.style.width = (curColWidth + diffX)+'px';
+            }
+        });
+
+        this.template.addEventListener('mouseup', function (e) { 
+                curCol = undefined;
+                nxtCol = undefined;
+                pageX = undefined;
+                nxtColWidth = undefined;
+                curColWidth = undefined
+            });
+        }
+        
+        function createDiv(height){
+            let div = this.template.querySelectorAll(".slds-resizable");
+            div.style.width = height;
+            return div;
+           }
+        
+        function paddingDiff(col){
+            if (getStyleVal(col,'box-sizing') === 'border-box'){
+                return 0;
+            }
+            let padLeft = getStyleVal(col,'padding-left');
+            let padRight = getStyleVal(col,'padding-right');
+            return (parseInt(padLeft, 10) + parseInt(padRight, 10));
+        }
+
+        function getStyleVal(elm,css){
+            return (window.getComputedStyle(elm, null).getPropertyValue(css))
+        }
+    } */
 }
