@@ -4094,6 +4094,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The Contact Custom Unique ID setting field {0} must have matching fields in the NPSP Data Import object whose API Names are {1} and {2}.</value>
     </labels>
     <labels>
+        <fullName>bdiContactMatchDupeMgmt</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiContactMatchDupeMgmt</shortDescription>
+        <value>Contact Duplicate Rules</value>
+    </labels>
+    <labels>
         <fullName>bdiContactMatchEmail</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -4316,6 +4324,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>title on the progress indicator during dry run mode</shortDescription>
         <value>NPSP Data Importer - Dry Run</value>
+    </labels>
+    <labels>
+        <fullName>bdiDupeMgmtMatchImportStatus</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiDupeMgmtMatchImportStatus</shortDescription>
+        <value>- Duplicate Rule:</value>
     </labels>
     <labels>
         <fullName>bdiErrorBatchNameRequired</fullName>
