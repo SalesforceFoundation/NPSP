@@ -101,6 +101,7 @@
                             <apex:selectOption itemLabel="{!$Label.bdiContactMatchFnameLname}" itemValue="Firstname,Lastname" />
                             <apex:selectOption itemLabel="{!$Label.bdiContactMatchEmail}" itemValue="Email" />
                             <apex:selectOption itemLabel="{!$Label.bdiContactMatchFnameLnamePhone}" itemValue="Firstname,Lastname,Phone" />
+                            <apex:selectOption itemLabel="{!$Label.bdiContactMatchDupeMgmt}" itemValue="{!$Label.bdiContactMatchDupeMgmt}"/>
                         </apex:selectList>
                     </apex:outputPanel>
                     <apex:outputField id="fldConMatchRuleRO" value="{!diBatch.Contact_Matching_Rule__c}" styleClass="slds-input" rendered="{!isReadOnlyMode}"/>
