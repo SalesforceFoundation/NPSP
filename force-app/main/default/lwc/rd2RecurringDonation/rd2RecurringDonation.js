@@ -379,7 +379,7 @@ export default class RecurringDonationTable extends LightningElement {
                     
                     actions.map((action) => {
                         action.disabled = false;
-                        if(el.status === CANCELED_STATUS || (action.name !== 'stopRecurringDonation' && (this.currency === "USD" && isElevate))) {
+                        if(el.status === CANCELED_STATUS || (action.name !== 'stopRecurringDonation' && (this.currency !== "USD" && isElevate))) {
                             action.disabled = true;
                         }
                         
