@@ -66,7 +66,7 @@ public with sharing class PMT_RefundService_TEST {
             '1 callout should be made when the refund callout is made');
         System.assertEquals(UTIL_Http.STATUS_CODE_NOT_FOUND, response.statusCode,
             'The status code should return 404 not found when the Elevate record cannot be found');
-        System.assertEquals(System.Label.pmtPaymentNotFund, response.getErrorMessages(),
+        System.assertEquals(System.Label.pmtPaymentNotFound, response.getErrorMessages(),
             'The response body should be convert to original payment not found error message');
     }
 
