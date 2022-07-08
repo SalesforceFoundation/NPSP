@@ -36,7 +36,10 @@
 */
 public with sharing class RD2_ETableController {
     
-    private final String STATUS_CANCELED = 'Canceled';
+    private final String STATUS_FAILING = 'Failing';
+    private final String STATUS_REJECTED = 'Rejected';
+    private final String STATUS_PAYMENT_IN_PROGRESS = 'Payment in Progress';
+    private final String STATUS_CLOSED = 'Closed';
 
     @TestVisible
     private UTIL_Permissions permissions {
@@ -253,7 +256,12 @@ public with sharing class RD2_ETableController {
         for(Schema.PicklistEntry ple : Schema.SObjectType.npe03__Recurring_Donation__c.fields.Status__c.getPicklistValues()){
             mapStatus.put(ple.getValue(), ple.getLabel());
         }
-        status = mapStatus.get(recurringDonation.Status__c);
+
+        if(recurringDonation.Status__c == RD2_Constants.STATUS_PAUSED || recurringDonation.Status__c == STATUS_FAILING || recurringDonation.Status__c == STATUS_REJECTED || recurringDonation.Status__c == STATUS_PAYMENT_IN_PROGRESS) {
+            status = STATUS_CLOSED;
+        } else {
+            status = mapStatus.get(recurringDonation.Status__c);
+        }
         return status;
     }
 
