@@ -12099,7 +12099,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error when user does not have permission to change Elevate Payment.</shortDescription>
-        <value>Manage this payment in Elevate</value>
+        <value>Manage this payment in Elevate.</value>
     </labels>
     <labels>
         <fullName>pmtModifyCurrency</fullName>
