@@ -16,6 +16,7 @@ import stopRecurringDonation from "@salesforce/label/c.stopRecurringDonation";
 import RD2_Actions from "@salesforce/label/c.RD2_Actions";
 import retrieveTableView from "@salesforce/apex/RD2_ETableController.retrieveTableView";
 import TIME_ZONE from '@salesforce/i18n/timeZone';
+import CURRENCY from '@salesforce/i18n/currency';
 
 import RECURRING_DONATION from "@salesforce/schema/npe03__Recurring_Donation__c";
 import { getObjectInfo } from "lightning/uiObjectInfoApi";
@@ -89,6 +90,7 @@ export default class RecurringDonationTable extends LightningElement {
 
     columns = [];
     timeZone = TIME_ZONE;
+    currency = CURRENCY;
 
     @wire(getObjectInfo, { objectApiName: RECURRING_DONATION })
     oppInfo({ data, error }) {
@@ -367,7 +369,6 @@ export default class RecurringDonationTable extends LightningElement {
     getRecurringDonationFields() {
         retrieveTableView({elevateFilter:this.donationTypeFilter}).then((data) => {
             if (data) {
-                console.log('data: ', JSON.stringify(data));
                 this.data = data.map((el) => {
                     let isElevate = el.recurringDonation.CommitmentId__c ? true : false;
                     let actions = this.actions
@@ -375,12 +376,15 @@ export default class RecurringDonationTable extends LightningElement {
                         .map((action) => { return { ...action }; });
                     let nexDonationFormatFirstElement = "";
                     let nexDonationFormatSecondElement = "";
-                    if (el.status === CANCELED_STATUS) {
-                        actions.map((action) => {
+                    
+                    actions.map((action) => {
+                        action.disabled = false;
+                        if(el.status === CANCELED_STATUS || (action.name !== 'stopRecurringDonation' && (this.currency !== "USD" && isElevate))) {
                             action.disabled = true;
-                            return action;
-                        });
-                    }
+                        }
+                        
+                        return action;
+                    });
                     el.recurringDonation.npe03__Next_Payment_Date__c = new Date(el.recurringDonation.npe03__Next_Payment_Date__c).toLocaleDateString(undefined, { timeZone: this.timeZone });
                     let lastModifiedDate = new Date(el.recurringDonation.LastModifiedDate).toLocaleDateString(undefined, { timeZone: this.timeZone });
                     return { actions, ...el, nexDonationFormatFirstElement, nexDonationFormatSecondElement, lastModifiedDate };
