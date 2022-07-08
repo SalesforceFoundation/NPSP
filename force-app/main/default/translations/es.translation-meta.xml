@@ -905,10 +905,6 @@
         <label>Proceso de Elevate pendiente</label>
     </customLabels>
     <customLabels>
-        <name>RD2_ElevatePermissionRequired</name>
-        <label>No se pueden modificar las Donaciones recurrentes procedentes de Servicios de pago de Elevate en NPSP excepto por el usuario de Integración de Servicios de pago de Elevate.</label>
-    </customLabels>
-    <customLabels>
         <name>RD2_ElevateRDAmountMustBeValid</name>
         <label>Introduzca un importe válido. El importe no puede ser inferior a 1.</label>
     </customLabels>

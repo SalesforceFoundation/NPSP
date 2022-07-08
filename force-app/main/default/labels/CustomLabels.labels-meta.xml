@@ -1807,7 +1807,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error when user does not have a permission to change an RD originated in Elevate</shortDescription>
-        <value>Recurring Donations from Elevate Payment Services can&apos;t be modified in NPSP except by the Elevate Payment Services Integration user.</value>
+        <value>Manage this Recurring Donation in Elevate.</value>
     </labels>
     <labels>
         <fullName>RD2_ElevateRDAmountMustBeValid</fullName>
@@ -12099,7 +12099,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error when user does not have permission to change Elevate Payment.</shortDescription>
-        <value>Payment from Elevate Payment Services can&apos;t be modified in NPSP except by the Elevate Payment Services Integration user.</value>
+        <value>Manage this payment in Elevate</value>
     </labels>
     <labels>
         <fullName>pmtModifyCurrency</fullName>
