@@ -276,7 +276,7 @@ public inherited sharing class PMT_RefundService {
     private void processPaymentStatusCode(UTIL_Http.Response response) {
         String paymentErrorMessage;
         if (response.statusCode == UTIL_Http.STATUS_CODE_NOT_FOUND) {
-            paymentErrorMessage = System.Label.pmtPaymentNotFund;
+            paymentErrorMessage = System.Label.pmtPaymentNotFound;
 
         } else if (response.statusCode == UTIL_Http.STATUS_CODE_CONFLICT) {
             paymentErrorMessage = System.Label.pmtPaymentNotRefundable;
@@ -303,31 +303,31 @@ public inherited sharing class PMT_RefundService {
 
     public class RefundInfo {
         public npe01__OppPayment__c originalPayment;
-        public Decimal refundableAmount;
+        public Decimal remainingBalance;
 
         public RefundInfo(npe01__OppPayment__c originalPayment) {
             this.originalPayment = originalPayment;
-            this.refundableAmount = this.originalPayment.npe01__Payment_Amount__c;
+            this.remainingBalance = this.originalPayment.npe01__Payment_Amount__c;
 
             if (this.originalPayment.Refunds__r != null) {
                 for (npe01__OppPayment__c refund : originalPayment.Refunds__r) {
-                    refundableAmount += refund.npe01__Payment_Amount__c;
+                    remainingBalance += refund.npe01__Payment_Amount__c;
                 }
             }
         }
 
         public void updateRefundAmount(npe01__OppPayment__c currentRefund) {
             if (currentRefund.Id == null || this.originalPayment.Refunds__r == null) {
-                this.refundableAmount += currentRefund.npe01__Payment_Amount__c;
+                this.remainingBalance += currentRefund.npe01__Payment_Amount__c;
                
             } else {
                 for (npe01__OppPayment__c previousRefund : originalPayment.Refunds__r) {
                     if (previousRefund.Id == currentRefund.Id) {
-                        this.refundableAmount -= previousRefund.npe01__Payment_Amount__c;
+                        this.remainingBalance -= previousRefund.npe01__Payment_Amount__c;
                         break;
                     }
                 }
-                this.refundableAmount += currentRefund.npe01__Payment_Amount__c;
+                this.remainingBalance += currentRefund.npe01__Payment_Amount__c;
             }
         }
     }

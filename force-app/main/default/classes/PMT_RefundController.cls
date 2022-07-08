@@ -81,7 +81,10 @@ public with sharing class PMT_RefundController {
         refundService.withOriginalPaymentIds(new Set<Id>{paymentId});
         PMT_RefundService.RefundInfo refundInfo = refundService.getRefundInfoFor(paymentId);
 
-        ensurePaymentIsRefundable(refundInfo.originalPayment, refundView);
+        if (!isPaymentRefundable(refundInfo.originalPayment)) {
+            handleError(refundView, System.Label.pmtPaymentNotRefundable);
+            return refundView;
+        }
 
         if (refundView.isSuccess != null && !refundView.isSuccess) {
             return refundView;
@@ -96,11 +99,8 @@ public with sharing class PMT_RefundController {
         return refundView;
     }
 
-    private static void ensurePaymentIsRefundable(npe01__OppPayment__c originalPayment, RefundView refundView) {
-        if (originalPayment.DebitType__c == PMT_RefundService.FULL_REFUND || originalPayment.npe01__Payment_Amount__c <= 0) {
-            refundView.isSuccess = false;
-            refundView.errorMessage = System.Label.pmtPaymentNotRefundable;
-        }
+    private static Boolean isPaymentRefundable(npe01__OppPayment__c originalPayment) {
+        return String.isBlank(originalPayment.DebitType__c) && originalPayment.npe01__Payment_Amount__c > 0;
     }
 
 

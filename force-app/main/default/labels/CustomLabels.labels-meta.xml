@@ -12182,7 +12182,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Refund was successful.</value>
     </labels>
     <labels>
-        <fullName>pmtPaymentNotFund</fullName>
+        <fullName>pmtPaymentNotFound</fullName>
         <categories>Payment</categories>
         <language>en_US</language>
         <protected>true</protected>

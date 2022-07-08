@@ -176,7 +176,7 @@ public inherited sharing class PMT_ValidationService {
         }
 
         refundInfo.updateRefundAmount(payment);
-        if (refundInfo.refundableAmount != 0) {
+        if (refundInfo.remainingBalance != 0) {
             addError(payment, System.Label.pmtPaymentNotRefundable);
         }
 

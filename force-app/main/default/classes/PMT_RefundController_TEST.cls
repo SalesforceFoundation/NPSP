@@ -97,7 +97,7 @@ public with sharing class PMT_RefundController_TEST {
             '1 callout should be made when the refund callout is made');
         System.assertEquals(false, refundView.isSuccess,
             'The Refund View should mark as not success when the callout failed');
-        System.assertEquals(System.Label.pmtPaymentNotFund, refundView.errorMessage,
+        System.assertEquals(System.Label.pmtPaymentNotFound, refundView.errorMessage,
             'The error message should be added to the view when the callout failed');
     }
 
