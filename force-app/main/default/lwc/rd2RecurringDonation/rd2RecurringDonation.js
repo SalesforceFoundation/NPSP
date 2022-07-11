@@ -36,7 +36,7 @@ const MOBILE_VIEW_MORE = "viewMore";
 const DESKTOP_VIEW_MORE = "slds-hide";
 const MOBILE_HEADER_CLASS = "slds-border_right slds-border_left";
 const DESKTOP_HEADER_CLASS = "slds-table_header-fixed_container slds-border_right slds-border_left table_top";
-const CANCELED_STATUS = "Canceled";
+const CLOSED_STATUS = "Closed";
 
 export default class RecurringDonationTable extends LightningElement {
     openUpdatePaymentMethod = false;
@@ -376,7 +376,7 @@ export default class RecurringDonationTable extends LightningElement {
                     
                     actions.map((action) => {
                         action.disabled = false;
-                        if(el.status === CANCELED_STATUS || (action.name !== 'stopRecurringDonation' && (this.currency !== "USD" && isElevate))) {
+                        if(el.status === CLOSED_STATUS || (action.name !== 'stopRecurringDonation' && (this.currency !== "USD" && isElevate))) {
                             action.disabled = true;
                         }
                         
