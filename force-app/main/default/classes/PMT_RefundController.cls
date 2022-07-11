@@ -35,17 +35,6 @@
 */
 public with sharing class PMT_RefundController {
     @TestVisible
-    private static PaymentSelector paymentSelector {
-        get {
-            if (paymentSelector == null) {
-                paymentSelector = new PaymentSelector();
-            }
-            return paymentSelector;
-        }
-        set;
-    }
- 
-    @TestVisible
     private static PMT_RefundService refundService {
         get {
             if (refundService == null) {
@@ -65,11 +54,15 @@ public with sharing class PMT_RefundController {
             return refundView;
         }
 
-        npe01__OppPayment__c payment = paymentSelector.getPaymentRecordForRefund(paymentId);
-        refundView.paymentDate = payment.npe01__Payment_Date__c;
-        refundView.paymentAmount = payment.npe01__Payment_Amount__c;
+        refundService.withOriginalPaymentIds(new Set<Id>{paymentId});
+        PMT_RefundService.RefundInfo refundInfo = refundService.getRefundInfoFor(paymentId);
+
+        refundView.paymentDate = refundInfo.originalPayment.npe01__Payment_Date__c;
+        refundView.paymentAmount = refundInfo.originalPayment.npe01__Payment_Amount__c;
+
         if (UserInfo.isMultiCurrencyOrganization()) {
-            refundView.currencyCode = (String) payment.get(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
+            refundView.currencyCode = (String) refundInfo.originalPayment.get(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
+
         } else {
             refundView.currencyCode = null;
         }
@@ -85,27 +78,29 @@ public with sharing class PMT_RefundController {
             return refundView;
         }
 
-        npe01__OppPayment__c originalPayment = paymentSelector.getPaymentRecordForRefund(paymentId);
-        ensurePaymentIsRefundable(originalPayment, refundView);
+        refundService.withOriginalPaymentIds(new Set<Id>{paymentId});
+        PMT_RefundService.RefundInfo refundInfo = refundService.getRefundInfoFor(paymentId);
+
+        if (!isPaymentRefundable(refundInfo.originalPayment)) {
+            handleError(refundView, System.Label.pmtPaymentNotRefundable);
+            return refundView;
+        }
 
         if (refundView.isSuccess != null && !refundView.isSuccess) {
             return refundView;
         }
 
-        if (isElevatePayment(originalPayment.Elevate_Payment_ID__c)) {
-            processElevateRefund(originalPayment, refundView);
+        if (isElevatePayment(refundInfo.originalPayment.Elevate_Payment_ID__c)) {
+            processElevateRefund(refundInfo.originalPayment, refundView);
         } else {
-            processNonElevateRefund(originalPayment, refundView);
+            processNonElevateRefund(refundInfo.originalPayment, refundView);
         }
 
         return refundView;
     }
 
-    private static void ensurePaymentIsRefundable(npe01__OppPayment__c originalPayment, RefundView refundView) {
-        if (originalPayment.DebitType__c == PMT_RefundService.FULL_REFUND || originalPayment.npe01__Payment_Amount__c <= 0) {
-            refundView.isSuccess = false;
-            refundView.errorMessage = System.Label.pmtPaymentNotRefundable;
-        }
+    private static Boolean isPaymentRefundable(npe01__OppPayment__c originalPayment) {
+        return String.isBlank(originalPayment.DebitType__c) && originalPayment.npe01__Payment_Amount__c > 0;
     }
 
 
@@ -127,16 +122,31 @@ public with sharing class PMT_RefundController {
     private static void processNonElevateRefund(npe01__OppPayment__c originalPayment, RefundView refundView) {
         refundService.withOriginalPayments(new List<npe01__OppPayment__c>{originalPayment});
         refundService.processNonElevateRefunds();
+
+        npe01__OppPayment__c refundRecord = refundService.getRefundRecords()[0];
+
+        List<ErrorRecord> errorRecords = new PMT_ValidationService()
+            .validateRefund(refundRecord, refundService.getRefundInfoFor(refundRecord.OriginalPayment__c))
+            .getErrors();
+        if (errorRecords != null && !errorRecords.isEmpty()) {
+            handleError(refundView, errorRecords[0].getFirstError());
+            return;
+        }
+
         refundService.processDML();
 
         ERR_Handler.Errors errors = refundService.getErrors();
         if (!errors.errorRecords.isEmpty()) {
-            refundView.isSuccess = false;
-            refundView.errorMessage = errors.errorRecords[0].Full_Message__c;
+            handleError(refundView, errors.errorRecords[0].Full_Message__c);
         } else {
             refundView.redirectToPaymentId = refundService.getRefundRecords()[0].Id;
             refundView.isSuccess = true;
         }
+    }
+
+    private static void handleError(RefundView refundView, String errorMessage) {
+        refundView.isSuccess = false;
+        refundView.errorMessage = errorMessage;
     }
 
     private static Boolean hasRequiredPermission() {
@@ -148,15 +158,13 @@ public with sharing class PMT_RefundController {
             UTIL_Permissions.canCreate('npe01__oppPayment__c', String.valueOf(npe01__oppPayment__c.OriginalPayment__c), false);
     }
 
-    private static ReFundView processResponse(RefundView refundView, UTIL_Http.Response response) {
+    private static void processResponse(RefundView refundView, UTIL_Http.Response response) {
         refundView.isSuccess = response.statusCode == UTIL_Http.STATUS_CODE_CREATED
             || response.statusCode == UTIL_Http.STATUS_CODE_OK;
         if (!refundView.isSuccess) {
             refundView.errorMessage = response.getErrorMessages();
 
         }
-
-        return refundView;
     }
 
     public class RefundView {
