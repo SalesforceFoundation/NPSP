@@ -905,10 +905,6 @@
         <label>Processus Elevate en attente</label>
     </customLabels>
     <customLabels>
-        <name>RD2_ElevatePermissionRequired</name>
-        <label>Les Dons récurrents des Services de paiement Elevate ne peuvent pas être modifiés dans NPSP, sauf par l’utilisateur de l’intégration des Services de paiement Elevate.</label>
-    </customLabels>
-    <customLabels>
         <name>RD2_ElevateRDAmountMustBeValid</name>
         <label>Veuillez saisir un montant valide. Le montant ne peut pas être inférieur à 1.</label>
     </customLabels>
