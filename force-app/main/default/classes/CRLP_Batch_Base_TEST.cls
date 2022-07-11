@@ -1008,7 +1008,6 @@ private class CRLP_Batch_Base_TEST {
 
     private static void addTimeBoundRdRollup() {
         String filterGroupId = CMT_UnitTestData_TEST.getNewRecordId();
-        // String filterGroupId = CMT_UnitTestData_TEST.rdClosedFilterGroupId;
         String timeBoundRollup = CMT_UnitTestData_TEST.createRollupRecord('RD Paid Amount Last N Days', 
                 filterGroupId, CMT_UnitTestData_TEST.RollupRecordType.OppToRD,
                 'npe03__Paid_Amount__c', CRLP_Operation.RollupType.Sum, 'Amount', 
