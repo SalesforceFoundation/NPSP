@@ -905,10 +905,6 @@
         <label>Ausstehender Elevate-Prozess</label>
     </customLabels>
     <customLabels>
-        <name>RD2_ElevatePermissionRequired</name>
-        <label>Wiederkehrende Spenden von Elevate-Zahlungsservices können in NPSP nicht geändert werden., außer durch den Benutzer der Elevate-Zahlungsserviceintegration.</label>
-    </customLabels>
-    <customLabels>
         <name>RD2_ElevateRDAmountMustBeValid</name>
         <label>Bitte geben Sie einen gültigen Betrag ein. Der Betrag kann nicht kleiner als 1 sein.</label>
     </customLabels>
