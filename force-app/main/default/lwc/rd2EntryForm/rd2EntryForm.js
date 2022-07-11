@@ -187,6 +187,15 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     renderedCallback() {
+
+        this.applyCSSOnlyOnEperienceSite();
+    }
+
+    /***
+     * @description Applies CSS styles to rendered elements only for Experience Sites.
+     */
+    applyCSSOnlyOnEperienceSite() {
+
         if (this.isExperienceSite && this.template.querySelector("lightning-record-edit-form")) {
             this.style.innerText = `lightning-helptext {
                 display:none;
