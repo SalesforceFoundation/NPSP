@@ -905,10 +905,6 @@
         <label>Elevate-proces in behandeling</label>
     </customLabels>
     <customLabels>
-        <name>RD2_ElevatePermissionRequired</name>
-        <label>Terugkerende donaties uit de Elevate-betaalservices kunnen niet in NPSP worden gewijzigd. Dit kan alleen de integratiegebruiker van de Elevate-betaalservices.</label>
-    </customLabels>
-    <customLabels>
         <name>RD2_ElevateRDAmountMustBeValid</name>
         <label>Geef een geldig bedrag op. Het bedrag mag niet lager zijn dan 1.</label>
     </customLabels>
