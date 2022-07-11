@@ -140,6 +140,7 @@ export default class rd2EntryForm extends LightningElement {
 
     cssComponent = 'slds-section slds-is-open';
     cssModalContent = 'slds-modal__content slds-p-top_none slds-p-horizontal_medium slds-p-bottom_medium';
+    cssCurrencyExperienceSite = '';
     ariaHidden = false;
 
     @api isBankPaymentAllowed;
@@ -223,6 +224,9 @@ export default class rd2EntryForm extends LightningElement {
                 bottom: -5000px;
                 left: -5000px;
             }
+            lightning-input-field[data-id="currencyField"] lightning-picklist lightning-combobox label {
+                display: none;
+            }
             @media screen and (min-width: 1135px) {
                 .fixExperienceDayOfMonth[c-rd2EntryFormScheduleSection_rd2EntryFormScheduleSection] {
                     margin-top: -4px;
@@ -280,6 +284,10 @@ export default class rd2EntryForm extends LightningElement {
             if(this.isAmountFrequencyModal) {
                 this.rd2State.periodType = 'Advanced';
                 this.cssExperienceElevate = 'slds-hide'
+                this.cssCurrencyExperienceSite = 'experienceCurrency';
+            }
+            if(this.isPaymentModal) {
+                this.cssCurrencyExperienceSite = 'slds-hide';
             }
         }
     }
