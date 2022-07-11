@@ -3120,6 +3120,54 @@
         <value>Recurring</value>
     </labels>
     <labels>
+        <fullName>RD_frequencyOnThePeriod</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>On the {0}</value>
+    </labels>
+    <labels>
+    <fullName>RD_frequencyPeriodOnTheDayOfTheMonth</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>{0} on the {1}</value>
+    </labels>
+    <labels>
+        <fullName>RD_frequencyYearly</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>Every {0} years</value>
+    </labels>
+    <labels>
+        <fullName>RD_frequencyMonthly</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>Every {0} months on the {1}</value>
+    </labels>
+    <labels>
+        <fullName>RD_frequencyWeekly</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>Every {0} weeks</value>
+    </labels>
+    <labels>
+        <fullName>RD_frequencyFirstAndFifteenth</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>Every {0} {1}</value>
+    </labels>
+    <labels>
         <fullName>RD_ContactMustBelongToAccount</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -5999,54 +6047,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Last Modified</shortDescription>
         <value>Last Modified</value>
-    </labels>
-    <labels>
-        <fullName>frequencyOnThePeriod</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Frequency processed text</shortDescription>
-        <value>On the {0}</value>
-    </labels>
-    <labels>
-        <fullName>frequencyPeriodOnTheDayOfTheMonth</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Frequency processed text</shortDescription>
-        <value>{0} on the {1}</value>
-    </labels>
-    <labels>
-        <fullName>frequencyYearly</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Frequency processed text</shortDescription>
-        <value>Every {0} years</value>
-    </labels>
-    <labels>
-        <fullName>frequencyMonthly</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Frequency processed text</shortDescription>
-        <value>Every {0} months on the {1}</value>
-    </labels>
-    <labels>
-        <fullName>frequencyWeekly</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Frequency processed text</shortDescription>
-        <value>Every {0} weeks</value>
-    </labels>
-    <labels>
-        <fullName>RD_frequencyFirstAndFifteenth</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Frequency processed text</shortDescription>
-        <value>Every {0} {1}</value>
     </labels>
     <labels>
         <fullName>firstOrdinalNumber</fullName>

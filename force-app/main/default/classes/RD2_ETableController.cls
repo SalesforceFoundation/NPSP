@@ -201,20 +201,20 @@ public with sharing class RD2_ETableController {
         if(recurringDonation.InstallmentFrequency__c == 1) {
             if(recurringDonation.npe03__Installment_Period__c.isAlpha()) {
                 if(recurringDonation.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
-                    frequency = String.format(System.Label.frequencyPeriodOnTheDayOfTheMonth, new List<String>{recurringDonation.npe03__Installment_Period__c, mapDayOfMonth.get(recurringDonation.Day_of_Month__c).ToLowerCase()});
+                    frequency = String.format(System.Label.RD_frequencyPeriodOnTheDayOfTheMonth, new List<String>{recurringDonation.npe03__Installment_Period__c, mapDayOfMonth.get(recurringDonation.Day_of_Month__c).ToLowerCase()});
                 } else {
                     frequency = recurringDonation.npe03__Installment_Period__c;
                 }
             } else {
-                frequency = String.format(System.Label.frequencyOnThePeriod, new List<String>{recurringDonation.npe03__Installment_Period__c});
+                frequency = String.format(System.Label.RD_frequencyOnThePeriod, new List<String>{recurringDonation.npe03__Installment_Period__c});
             }
         } else {
             if(recurringDonation.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
-                frequency = String.format(System.Label.frequencyMonthly, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c), mapDayOfMonth.get(recurringDonation.Day_of_Month__c).ToLowerCase()});
+                frequency = String.format(System.Label.RD_frequencyMonthly, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c), mapDayOfMonth.get(recurringDonation.Day_of_Month__c).ToLowerCase()});
             } else if(recurringDonation.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_YEARLY) {
-                frequency = String.format(System.Label.frequencyYearly, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c)});
+                frequency = String.format(System.Label.RD_frequencyYearly, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c)});
             } else if(recurringDonation.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY) {
-                frequency = String.format(System.Label.frequencyWeekly, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c)});
+                frequency = String.format(System.Label.RD_frequencyWeekly, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c)});
             } else if(recurringDonation.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH){
                 frequency = String.format(System.Label.RD_frequencyFirstAndFifteenth, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c), String.valueOf(recurringDonation.npe03__Installment_Period__c)});
             }
