@@ -910,10 +910,6 @@
         <label>Elevate 処理待機中</label>
     </customLabels>
     <customLabels>
-        <name>RD2_ElevatePermissionRequired</name>
-        <label>Elevate 支払サービスからの継続支援を Elevate 支払サービスインテグレーションユーザ以外のユーザが NPSP で変更することはできません。</label>
-    </customLabels>
-    <customLabels>
         <name>RD2_ElevateRDAmountMustBeValid</name>
         <label>有効な金額を入力してください。金額は 1 未満にできません。</label>
     </customLabels>
