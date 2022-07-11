@@ -35,7 +35,7 @@
 */
 @IsTest
 public with sharing class PMT_RefundController_TEST {
-    @isTest
+    @IsTest
     private static void userWithNoPermissionShouldNotBeAbleToPerformAnyRefundAction() {
         User readOnlyUser = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
 
@@ -48,17 +48,18 @@ public with sharing class PMT_RefundController_TEST {
         }
     }
 
-    @isTest
+    @IsTest
     private static void verifyRefundCalloutIsMadeWhenPaymentIsAnElevateRecord() {
         PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
-        PaymentSelector_TEST.Stub selectorStub = new PaymentSelector_TEST.Stub();
-        npe01__OppPayment__c payment = getElevatePaymentRecord();
-        selectorStub.paymentRecords = new List<npe01__OppPayment__c>{ payment };
 
-        PMT_RefundController.paymentSelector = (PaymentSelector) Test.createStub(
-            PaymentSelector.class,
-            selectorStub
+        npe01__OppPayment__c payment = getElevatePaymentRecord();
+        PMT_RefundService refundService = new PMT_RefundService()
+        .withOriginalPayments(new List<npe01__OppPayment__c>{payment});
+
+        refundService.originalPaymentWithRefunds.put(
+            payment.Id, new PMT_RefundService.RefundInfo(payment)
         );
+        PMT_RefundController.RefundService = refundService;
 
         UTIL_Http_TEST.CalloutMock calloutMock = UTIL_Http_TEST.mockSuccessCalloutResponse(null);
 
@@ -74,19 +75,19 @@ public with sharing class PMT_RefundController_TEST {
             'The redirect Id should set to the original payment Id when the payment is an Elevate record');
     }
 
-    @isTest
+    @IsTest
     private static void verifyTheErrorMessageWillBePopulatedCorrectlyWhenElevateCalloutFail() {
         PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
         UTIL_Http_TEST.CalloutMock calloutMock = UTIL_Http_TEST.mockNotFoundCalloutResponse();
 
-        PaymentSelector_TEST.Stub selectorStub = new PaymentSelector_TEST.Stub();
         npe01__OppPayment__c payment = getElevatePaymentRecord();
-        selectorStub.paymentRecords = new List<npe01__OppPayment__c>{ payment };
+        PMT_RefundService refundService = new PMT_RefundService()
+        .withOriginalPayments(new List<npe01__OppPayment__c>{payment});
 
-        PMT_RefundController.paymentSelector = (PaymentSelector) Test.createStub(
-            PaymentSelector.class,
-            selectorStub
+        refundService.originalPaymentWithRefunds.put(
+            payment.Id, new PMT_RefundService.RefundInfo(payment)
         );
+        PMT_RefundController.RefundService = refundService;
 
         Test.startTest();
         PMT_RefundController.RefundView refundView = PMT_RefundController.processRefund(payment.Id);
@@ -96,69 +97,48 @@ public with sharing class PMT_RefundController_TEST {
             '1 callout should be made when the refund callout is made');
         System.assertEquals(false, refundView.isSuccess,
             'The Refund View should mark as not success when the callout failed');
-        System.assertEquals(System.Label.pmtPaymentNotFund, refundView.errorMessage,
+        System.assertEquals(System.Label.pmtPaymentNotFound, refundView.errorMessage,
             'The error message should be added to the view when the callout failed');
     }
 
-    @isTest
+    @IsTest
     private static void verifyRefundRecordIdShouldBeReturnedOnSuccessfulRefund() {
-        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
-        npe01__OppPayment__c refundRecord = getPaymentRecord();
+        npe01__OppPayment__c payment = getPaymentRecord();
+        npe01__OppPayment__c refund = getFullRefundRecord(payment.Id);
 
         PMT_RefundService_TEST.Stub refundServiceStub = new PMT_RefundService_TEST.Stub();
-        refundServiceStub.refundRecords = new List<npe01__OppPayment__c>{ refundRecord };
-
+        refundServiceStub.refundRecords = new List<npe01__OppPayment__c>{ refund };
+        refundServiceStub.refundInfo = new PMT_RefundService.RefundInfo( payment );
         PMT_RefundController.refundService = (PMT_RefundService) Test.createStub(
             PMT_RefundService.class,
             refundServiceStub
         );
 
-        PaymentSelector_TEST.Stub selectorStub = new PaymentSelector_TEST.Stub();
-        selectorStub.paymentRecords = new List<npe01__OppPayment__c>{ refundRecord };
-
-        PMT_RefundController.paymentSelector = (PaymentSelector) Test.createStub(
-            PaymentSelector.class,
-            selectorStub
-        );
-
         Test.startTest();
-        PMT_RefundController.RefundView refundView = PMT_RefundController.processRefund(UTIL_UnitTestData_TEST.mockId(npe01__OppPayment__c.SObjectType));
+        PMT_RefundController.RefundView refundView = PMT_RefundController.processRefund(payment.Id);
         Test.stopTest();
 
-        System.assertEquals(refundRecord.Id, refundView.redirectToPaymentId,
+        System.assertEquals(refund.Id, refundView.redirectToPaymentId,
             'The refund record should exist when the refund is successful');
     }
 
-    @isTest
+    @IsTest
     private static void verifyDoubleRefundErrorShouldBeReturnWhenRefundProcessFail() {
-        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
-
-        ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
-        errorResult.errorsExist = true;
-        errorResult.errorRecords.add(
-            ERR_Handler.createError(System.Label.pmtPaymentNotRefundable, 'random')
-        );
-
+        npe01__OppPayment__c payment = getPaymentRecord();
+        
+        payment = addRefundRelatedList(payment, new List<npe01__OppPayment__c>{getFullRefundRecord(payment.Id)});
+        npe01__OppPayment__c doubleRefund = getFullRefundRecord(payment.Id);
+        doubleRefund.Id = null;
         PMT_RefundService_TEST.Stub refundServiceStub = new PMT_RefundService_TEST.Stub();
-        refundServiceStub.errors = errorResult;
-
+        refundServiceStub.refundRecords = new List<npe01__OppPayment__c>{ doubleRefund };
+        refundServiceStub.refundInfo = new PMT_RefundService.RefundInfo( payment );
         PMT_RefundController.refundService = (PMT_RefundService) Test.createStub(
             PMT_RefundService.class,
             refundServiceStub
         );
 
-        PaymentSelector_TEST.Stub selectorStub = new PaymentSelector_TEST.Stub();
-        npe01__OppPayment__c refund = getRefundRecord();
-
-        selectorStub.paymentRecords = new List<npe01__OppPayment__c>{ refund };
-
-        PMT_RefundController.paymentSelector = (PaymentSelector) Test.createStub(
-            PaymentSelector.class,
-            selectorStub
-        );
-
         Test.startTest();
-        PMT_RefundController.RefundView refundView = PMT_RefundController.processRefund(UTIL_UnitTestData_TEST.mockId(npe01__OppPayment__c.SObjectType));
+        PMT_RefundController.RefundView refundView = PMT_RefundController.processRefund(payment.Id);
         Test.stopTest();
 
         System.assertEquals(false, refundView.isSuccess,
@@ -176,20 +156,39 @@ public with sharing class PMT_RefundController_TEST {
     }
 
     private static npe01__OppPayment__c getPaymentRecord() {
+
+        Opportunity opportunity = new Opportunity(
+            Id = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType),
+            Amount = 1000
+        );
+
         return new npe01__OppPayment__c(
             Id = UTIL_UnitTestData_TEST.mockId(npe01__OppPayment__c.SObjectType),
             npe01__Paid__c = true,
             npe01__Payment_Amount__c = 250,
-            npe01__Opportunity__c = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType)
+            npe01__Opportunity__c = opportunity.Id
         );
     }
 
-    private static npe01__OppPayment__c getRefundRecord() {
+    private static npe01__OppPayment__c getFullRefundRecord(Id originalPaymentId) {
         return new npe01__OppPayment__c(
             Id = UTIL_UnitTestData_TEST.mockId(npe01__OppPayment__c.SObjectType),
             npe01__Payment_Amount__c = -250,
             DebitType__c = PMT_RefundService.FULL_REFUND,
-            npe01__Opportunity__c = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType)
+            npe01__Opportunity__c = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType),
+            OriginalPayment__c = originalPaymentId
         );
+    }
+
+    private static npe01__OppPayment__c addRefundRelatedList(npe01__OppPayment__c payment, List<SObject> records) {
+        String paymentRecord = JSON.serialize(payment);
+        paymentRecord = paymentRecord.left(paymentRecord.length()-1);
+
+        String objJson = JSON.serialize(records);
+        paymentRecord += ',"' + UTIL_Namespace.StrTokenNSPrefix('Refunds__r') + '":{"totalSize":' + records.size() + ',"done":true,"records":' + objJson + '}';
+
+        paymentRecord += '}';
+
+        return (npe01__OppPayment__c)JSON.deserialize(paymentRecord, npe01__OppPayment__c.class);
     }
 }

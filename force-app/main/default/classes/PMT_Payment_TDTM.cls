@@ -307,39 +307,18 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     * @return void Does not return anything
     ********************************************************************************************************/
     private void validatePayments(
-        List<npe01__OppPayment__c> newlist,
-        List<npe01__OppPayment__c> oldlist,
+        List<npe01__OppPayment__c> newList,
+        List<npe01__OppPayment__c> oldList,
         TDTM_Runnable.Action triggerAction,
         DmlWrapper dmlWrapper) {
-        if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-            for (npe01__OppPayment__c payment : newlist) {
-                if (isEnforceAccountingDataConsistency) {
-                    enforceAccountingDataConsistency(payment);
-                }
+            
+        PMT_ValidationService validationService = new PMT_ValidationService(newlist, oldList, triggerAction);
+        List<ErrorRecord> errorRecords = validationService.validate().getErrors();
 
-                if (payment.npe01__Paid__c == true && payment.npe01__Written_Off__c == true) {
-                    payment.addError(System.Label.pmtWriteOffPaidPayment);
-                }
+        for (ErrorRecord error : errorRecords) {
+            if (error.hasError()) {
+                error.getRecord().addError(error.getFirstError());
             }
-        }
-    }
-
-    /*******************************************************************************************************
-    * @description If the custom setting to enforce account rules is enabled, it will validate that paid payments
-    * have a payment date and unpaid payments have a scheduled date.
-    * @param payment the Payment from trigger new.
-    * @return void Does not return anything
-    ********************************************************************************************************/
-    private void enforceAccountingDataConsistency(npe01__OppPayment__c payment) {
-        if ((payment.npe01__Paid__c == true || payment.npe01__Written_Off__c == true) && payment.npe01__Payment_Date__c == null) {
-
-            if (payment.npe01__Paid__c == true) {
-                payment.addError(System.Label.pmtPaidPaymentDateRequired);
-            } else {
-                payment.addError(System.Label.pmtWrittenOffPaymentDateRequired);
-            }
-        } else if (payment.npe01__Paid__c == false && payment.npe01__Written_Off__c == false && payment.npe01__Scheduled_Date__c == null) {
-            payment.addError(System.Label.pmtUnpaidPaymentScheduledDateRequired);
         }
     }
 }
