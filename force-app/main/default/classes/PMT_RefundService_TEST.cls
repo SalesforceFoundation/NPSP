@@ -66,7 +66,7 @@ public with sharing class PMT_RefundService_TEST {
             '1 callout should be made when the refund callout is made');
         System.assertEquals(UTIL_Http.STATUS_CODE_NOT_FOUND, response.statusCode,
             'The status code should return 404 not found when the Elevate record cannot be found');
-        System.assertEquals(System.Label.pmtPaymentNotFund, response.getErrorMessages(),
+        System.assertEquals(System.Label.pmtPaymentNotFound, response.getErrorMessages(),
             'The response body should be convert to original payment not found error message');
     }
 
@@ -213,6 +213,7 @@ public with sharing class PMT_RefundService_TEST {
     public class Stub implements System.StubProvider {
         public List<npe01__OppPayment__c> refundRecords;
         public ERR_Handler.Errors errors = new ERR_Handler.Errors();
+        public PMT_RefundService.RefundInfo refundInfo;
  
         public Object handleMethodCall(
             Object stubbedObject,
@@ -227,7 +228,8 @@ public with sharing class PMT_RefundService_TEST {
                     return refundRecords;
                 } when 'getErrors' {
                     return errors;
-
+                } when 'getRefundInfoFor' {
+                    return refundInfo;
                 } when else {
                     return null;
                 }
