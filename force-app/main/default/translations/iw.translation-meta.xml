@@ -918,10 +918,6 @@
         <name>RD2_ElevatePendingStatus</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error when user does not have a permission to change an RD originated in Elevate --></label>
-        <name>RD2_ElevatePermissionRequired</name>
-    </customLabels>
-    <customLabels>
         <label><!-- Checks if an Elevate Recurring Donation&apos;s amount is valid or not --></label>
         <name>RD2_ElevateRDAmountMustBeValid</name>
     </customLabels>
