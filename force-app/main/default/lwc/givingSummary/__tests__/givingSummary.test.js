@@ -4,12 +4,13 @@ import { getRecord } from 'lightning/uiRecordApi';
 import { extended, full } from "@sa11y/preset-rules";
 import { setup } from "@sa11y/jest";
 
+setup();
+
 const mockGetRecord = require('./data/getRecord.json');
 
 describe('c-giving-summary', () => {
     afterEach(() => {
         clearDOM();
-        setup();
     });
     it('displays three fields on the component', () => {
         const element = createElement('c-giving-summary', { is: GivingSummary });
