@@ -51,6 +51,20 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
         private set;
     }
 
+    /**
+    * @description Returns true if the "Exclude Closed Recurring Donations" setting is enabled
+    * Can be manually overwritten for use in Bulk Data Processes
+    */
+    public Boolean closedFilterEnabled {
+        get {
+            if (closedFilterEnabled == null) {
+                closedFilterEnabled = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().ExcludeClosedRecurringDonations__c;
+            }
+            return closedFilterEnabled != null ? closedFilterEnabled : false;
+        }
+        set;
+    }
+
     /***
     * @description Contains batch Apex class name
     */
@@ -98,6 +112,43 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
                 rd2Settings = RD2_Settings.getInstance();
             }
             return rd2Settings;
+        }
+        set;
+    }
+
+    private static Customizable_Rollup_Settings__c customizableRollupSettings {
+        get {
+            if (customizableRollupSettings == null) {
+                customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+            }
+            return customizableRollupSettings;
+        }
+        set;
+    }
+
+    /**
+     * @description API name of the date field to use as in the inner join query
+     */
+    private String lastModifiedDateField {
+        get {
+            if (lastModifiedDateField == null) {
+                if (String.isNotBlank(customizableRollupSettings.Rollups_IncrementalLastNDays_FldOverride__c)) {
+                    lastModifiedDateField = customizableRollupSettings.Rollups_IncrementalLastNDays_FldOverride__c;
+                } else {
+                    lastModifiedDateField = 'SystemModstamp';
+                }
+            }
+            return lastModifiedDateField;
+        }
+        set;
+    }
+
+    private Set<String> closedStatusValues {
+        get {
+            if (closedStatusValues == null) {
+                closedStatusValues = RD2_StatusMapper.getInstance().getClosedStatusValues();
+            }
+            return closedStatusValues;
         }
         set;
     }
@@ -166,14 +217,7 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
 
         validateStatusField();
 
-        String query = getRDBatchQuery();
-
-        if (isConcurrentBatch) {
-            new UTIL_BatchJobService().logConcurrentBatchError(batchClassName, ERR_Handler_API.Context.RD);
-            query += ' LIMIT 0';
-        }    
-        return Database.getQueryLocator(query);
-        
+        return Database.getQueryLocator(getRDBatchQuery());
     }
 
     /**
@@ -201,12 +245,22 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     */
     @TestVisible
     private String getRDBatchQuery() {
-        return new UTIL_Query()
+        UTIL_Query query = new UTIL_Query()
             .withFrom(npe03__Recurring_Donation__c.SObjectType)
             .withSelectFields(
                 new Set<String>{ 'Id' }
-            )
-            .build();
+            );
+
+        if (closedFilterEnabled) {
+            query.withWhere('Status__c NOT IN :closedStatusValues');
+        }
+
+        if (isConcurrentBatch) {
+            new UTIL_BatchJobService().logConcurrentBatchError(batchClassName, ERR_Handler_API.Context.RD);
+            query.withLimit(0);
+        }
+
+        return query.build();
     }
 
     /**
