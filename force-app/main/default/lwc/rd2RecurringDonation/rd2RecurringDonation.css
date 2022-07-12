@@ -32,11 +32,9 @@
 .slds-dropdown-mobile div.slds-dropdown {
     position: relative;
 }
-
 .nonpointer {
     pointer-events: none;
 }
-
 .dynamic-wt{
     width: 10%;
 }

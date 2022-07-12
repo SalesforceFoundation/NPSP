@@ -151,14 +151,17 @@
                             </td>
                             <td key={item.finalDonation} data-id={item.id} class={tdClasses} data-label={labels.finalDonation} tabindex="-1" aria-label={item.finalDonation} role="gridcell">
                                 <div class={rowClasses} title={labels.finalDonation}>
-                                    {item.finalDonation}
+                                    <!-- {item.finalDonation} -->
+                                    Every 2 months on the 4th
                                 </div>
                             </td>
                             <td key={item.mostRecentDonation} data-id={item.recurringDonation.Id} class={tdClasses} data-label={labels.mostRecentDonation} tabindex="-1" aria-label={item.recurringDonation.npe03__Last_Payment_Date__c} role="gridcell">
                                 <div class={rowClasses} title={labels.mostRecentDonation}>
-                                    {item.recurringDonation.npe03__Last_Payment_Date__c}</div>
+                                    <!-- {item.recurringDonation.npe03__Last_Payment_Date__c} -->
+                                    Every 2 months on the 4th</div>
                             </td>
                             <td key={item.nextDonation} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.nextDonation} tabindex="-1" aria-label={item.nextDonation} role="gridcell">
+                                Every 2 months on the 4th
                                 <div class="next-donation" data-ndid={item.recurringDonation.Id} lwc:dom="manual"></div>
                             </td>
                             <td key={item.recurringDonation.LastModifiedDate} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.lastModified} tabindex="-1" aria-label={item.lastModifiedDate} role="gridcell">
@@ -169,18 +172,21 @@
                                     day="numeric"
                                     time-zone={timeZone}
                                     value={item.recurringDonation.LastModifiedDate}>
-                                    </lightning-formatted-date-time></div>
+                                    </lightning-formatted-date-time>Every 2 months on the 4th
+                                </div>
     
                             </td>
                             <td data-label={labels.RD2_Actions} tabindex="-1" role="gridcell">
-                                <lightning-button-menu class="dv-dynamic-mobile" menu-alignment="auto" alternative-text={labels.RD2_Actions}>
-                                    <template for:each={item.actions} for:item="action">
-                                        <p key={action.name} data-recid={action.name}>
-                                            <lightning-menu-item label={action.label} onclick={handleRowAction} data-action={action.name} data-recordid={item.recurringDonation.Id} disabled={action.disabled}>
-                                            </lightning-menu-item>
-                                        </p>
-                                    </template>
-                                </lightning-button-menu>
+                                <div class={rowClasses} title={labels.RD2_Actions}>
+                                    <lightning-button-menu class="dv-dynamic-mobile" menu-alignment="auto" alternative-text={labels.RD2_Actions}>
+                                        <template for:each={item.actions} for:item="action">
+                                            <p key={action.name} data-recid={action.name}>
+                                                <lightning-menu-item label={action.label} onclick={handleRowAction} data-action={action.name} data-recordid={item.recurringDonation.Id} disabled={action.disabled}>
+                                                </lightning-menu-item>
+                                            </p>
+                                        </template>
+                                    </lightning-button-menu>
+                                </div>
                             </td>
                             <td class={viewMore} data-label={labels.RD2_ViewMoreDetails} data-viewid={item.recurringDonation.Id} onclick={toggleView}>
                             </td>
