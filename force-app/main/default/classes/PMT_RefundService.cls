@@ -71,7 +71,7 @@ public inherited sharing class PMT_RefundService {
     private List<npe01__OppPayment__c> originalPayments {
         get {
             if (originalPayments == null && originalPaymentIds != null) {
-                originalPayments = paymentSelector.getPaymentRecordsForRefund(originalPaymentIds);
+                originalPayments = paymentSelector.getPaymentsWithRefunds(originalPaymentIds);
             }
             return originalPayments;
         }
@@ -88,6 +88,17 @@ public inherited sharing class PMT_RefundService {
                 }
             }
             return originalPaymentIds;
+        }
+        set;
+    }
+
+    @TestVisible
+    private Map<Id, RefundInfo> originalPaymentWithRefunds {
+        get {
+            if (originalPaymentWithRefunds == null) {
+                originalPaymentWithRefunds = getOriginalPaymentWithRefundInfo(this.originalPayments);
+            }
+            return originalPaymentWithRefunds;
         }
         set;
     }
@@ -117,6 +128,10 @@ public inherited sharing class PMT_RefundService {
         return this;
     }
 
+    public PMT_RefundService withOriginalPaymentIds(Set<Id> originalPaymentIds) {
+        this.originalPaymentIds = originalPaymentIds;
+        return this;
+    }
     public PMT_RefundService withRefundRecords(List<npe01__OppPayment__c> refundRecords) {
         this.refundRecords = refundRecords;
         return this;
@@ -128,6 +143,23 @@ public inherited sharing class PMT_RefundService {
 
     public ERR_Handler.Errors getErrors() {
         return errorResult;
+    }
+
+    public RefundInfo getRefundInfoFor(Id originalPaymentId) {
+        if (originalPaymentId == null) {
+            return null;
+        }
+
+        RefundInfo refundInfo = this.originalPaymentWithRefunds.get(originalPaymentId);
+
+        if (refundInfo == null) {
+            npe01__OppPayment__c payment = paymentSelector.getPaymentRecordForRefund(originalPaymentId);
+            this.originalPayments.add(payment);
+            refundInfo = new RefundInfo(payment);
+            this.originalPaymentWithRefunds.put(payment.Id, refundInfo);
+        }
+
+        return refundInfo;
     }
 
     public UTIL_Http.Response processElevateRefund(String transactionId) {
@@ -171,6 +203,17 @@ public inherited sharing class PMT_RefundService {
         }
     }
 
+    private Map<Id, RefundInfo> getOriginalPaymentWithRefundInfo(List<npe01__OppPayment__c> originalPayments) {
+        Map<Id, RefundInfo> paymentIdToRefundabInfo = new Map<Id, RefundInfo>();
+
+        for (npe01__OppPayment__c originalPayment : originalPayments) {
+            RefundInfo refundInfo = new refundInfo(originalPayment);
+
+            paymentIdToRefundabInfo.put(originalPayment.Id, refundInfo);
+        }
+
+        return paymentIdToRefundabInfo;
+    }
 
     private void processError(DMLException ex) {
         if (ex == null) {
@@ -187,7 +230,7 @@ public inherited sharing class PMT_RefundService {
         npe01__OppPayment__c refund = new npe01__OppPayment__c(
             npe01__Payment_Amount__c = -1 * originalPayment.npe01__Payment_Amount__c,
             npe01__Opportunity__c = originalPayment.npe01__Opportunity__c,
-            originalPayment__c = originalPayment.Id,
+            OriginalPayment__c = originalPayment.Id,
             DebitType__c = PMT_RefundService.FULL_REFUND
         );
         
@@ -209,7 +252,9 @@ public inherited sharing class PMT_RefundService {
         if (opportunity == null) {
             opportunity = new Opportunity(
                 Id = originalPayment.npe01__Opportunity__c,
-                Amount = originalPayment.npe01__Opportunity__r.Amount
+                Amount = (originalPayment.npe01__Opportunity__r.Amount == null)
+                    ? 0
+                    : originalPayment.npe01__Opportunity__r.Amount
             );
         }
         opportunity.Amount = opportunity.Amount - originalPayment.npe01__Payment_Amount__c;
@@ -231,7 +276,7 @@ public inherited sharing class PMT_RefundService {
     private void processPaymentStatusCode(UTIL_Http.Response response) {
         String paymentErrorMessage;
         if (response.statusCode == UTIL_Http.STATUS_CODE_NOT_FOUND) {
-            paymentErrorMessage = System.Label.pmtPaymentNotFund;
+            paymentErrorMessage = System.Label.pmtPaymentNotFound;
 
         } else if (response.statusCode == UTIL_Http.STATUS_CODE_CONFLICT) {
             paymentErrorMessage = System.Label.pmtPaymentNotRefundable;
@@ -253,6 +298,37 @@ public inherited sharing class PMT_RefundService {
 
         public RequestBody(String transactionId) {
             this.transactionId = transactionId;
+        }
+    }
+
+    public class RefundInfo {
+        public npe01__OppPayment__c originalPayment;
+        public Decimal remainingBalance;
+
+        public RefundInfo(npe01__OppPayment__c originalPayment) {
+            this.originalPayment = originalPayment;
+            this.remainingBalance = this.originalPayment.npe01__Payment_Amount__c;
+
+            if (this.originalPayment.Refunds__r != null) {
+                for (npe01__OppPayment__c refund : originalPayment.Refunds__r) {
+                    remainingBalance += refund.npe01__Payment_Amount__c;
+                }
+            }
+        }
+
+        public void updateRefundAmount(npe01__OppPayment__c currentRefund) {
+            if (currentRefund.Id == null || this.originalPayment.Refunds__r == null) {
+                this.remainingBalance += currentRefund.npe01__Payment_Amount__c;
+               
+            } else {
+                for (npe01__OppPayment__c previousRefund : originalPayment.Refunds__r) {
+                    if (previousRefund.Id == currentRefund.Id) {
+                        this.remainingBalance -= previousRefund.npe01__Payment_Amount__c;
+                        break;
+                    }
+                }
+                this.remainingBalance += currentRefund.npe01__Payment_Amount__c;
+            }
         }
     }
 }

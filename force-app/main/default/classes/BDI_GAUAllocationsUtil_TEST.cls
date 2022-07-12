@@ -37,6 +37,22 @@
 @IsTest
 public with sharing class BDI_GAUAllocationsUtil_TEST {
 
+    @TestSetup
+    static void createTestData(){
+        General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name = 'TestGAU1',
+        Active__c = true);
+
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name = 'TestGAU2',
+                Active__c = true);
+
+        General_Accounting_Unit__c gau3 = new General_Accounting_Unit__c(Name = 'TestGAU3',
+                Active__c = true);
+
+        General_Accounting_Unit__c[] testGAUs = new General_Accounting_Unit__c[]{gau1,gau2,gau3};
+        insert testGAUs;
+    }
+
+
     @IsTest
     static void gauValidationsShouldBeEnforcedAndGAUsAssignedCorrectly() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
@@ -47,18 +63,19 @@ public with sharing class BDI_GAUAllocationsUtil_TEST {
                 BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
         UTIL_CustomSettingsFacade.setDataImportSettings(dis);
 
+        General_Accounting_Unit__c gau1;
+        General_Accounting_Unit__c gau2;
+        General_Accounting_Unit__c gau3;
 
-        General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name = 'TestGAU1',
-                Active__c = true);
-
-        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name = 'TestGAU2',
-                Active__c = true);
-
-        General_Accounting_Unit__c gau3 = new General_Accounting_Unit__c(Name = 'TestGAU3',
-                Active__c = true);
-
-        General_Accounting_Unit__c[] testGAUs = new General_Accounting_Unit__c[]{gau1,gau2,gau3};
-        insert testGAUs;
+        for (General_Accounting_Unit__c gau : [SELECT Id, Name FROM General_Accounting_Unit__c LIMIT 10]) {
+            if (gau.Name == 'TestGAU1') {
+                gau1 = gau;
+            } else if (gau.Name == 'TestGAU2') {
+                gau2 = gau;
+            } else if (gau.Name == 'TestGAU3') {
+                gau3 = gau;
+            }
+        }
 
         Allocations_Settings__c alloSettings = new Allocations_Settings__c();
         alloSettings.Payment_Allocations_Enabled__c = true;
@@ -446,7 +463,6 @@ public with sharing class BDI_GAUAllocationsUtil_TEST {
         System.assertNotEquals(null,opptEgau3Alloc);
         System.assertEquals(opptB1Alloc.General_Accounting_Unit__c,gau3.id);
         System.assertEquals(pymtB1Alloc.General_Accounting_Unit__c,gau3.id);
-
         // This test record should trigger errors for both donation and payment allocations existing.
         DataImport__c testDIB2 = new DataImport__c(Account1Imported__c = testDIResultB.Account1Imported__c,
                                                     DonationImported__c = testDIResultB.DonationImported__c,
@@ -454,17 +470,6 @@ public with sharing class BDI_GAUAllocationsUtil_TEST {
                                                     GAU_Allocation_1_GAU__c = gau1.Id,
                                                     GAU_Allocation_1_Percent__c = 100);
 
-        // Modify the existing test Data import C record with a new GAU to simulate trying to update Oppt with
-        testDIB2.GAU_Allocation_1_Import_Status__c = null;
-        testDIB2.GAU_Allocation_1_Imported__c = null;
-        testDIB2.GAU_Allocation_1_Percent__c = 100;
-        testDIB2.GAU_Allocation_1_GAU__c = gau3.Id;
-        testDIB2.Status__c = null;
-        testDIB2.FailureInformation__c = null;
-        testDIB2.GAU_Allocation_2_Import_Status__c = null;
-        testDIB2.GAU_Allocation_2_Imported__c = null;
-        testDIB2.GAU_Allocation_2_Percent__c = null;
-        testDIB2.GAU_Allocation_2_GAU__c = null;
 
         DataImport__c[] testDIs2 = new DataImport__c[]{testDIB2};
         insert testDIs2;
@@ -509,5 +514,138 @@ public with sharing class BDI_GAUAllocationsUtil_TEST {
         // Confirm that both error messages were logged in FailureInformation
         System.assert(testDIResultB2.FailureInformation__c.contains(label.bdiErrorExistingDonationAllocations));
         System.assert(testDIResultB2.FailureInformation__c.contains(label.bdiErrorExistingPaymentAllocations));
+    }
+
+    /**
+     * @description Tests that if Default GAU Allocations are enabled, and Payment Allocations are disabled that it
+     * should be possible to update/overwrite the Default GAU Allocations on a existing Opportunity using
+     * BDI / Gift Entry
+     */
+    @isTest
+    static void defaultGAUAllocsShouldNotThrowError(){
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate; // Force Donation matching / update
+        dis.Default_Data_Import_Field_Mapping_Set__c =
+                BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        UTIL_CustomSettingsFacade.setDataImportSettings(dis);
+
+        General_Accounting_Unit__c gau1;
+        General_Accounting_Unit__c gau2;
+        General_Accounting_Unit__c gau3;
+
+        for (General_Accounting_Unit__c gau : [SELECT Id, Name FROM General_Accounting_Unit__c LIMIT 10]) {
+            if (gau.Name == 'TestGAU1') {
+                gau1 = gau;
+            } else if (gau.Name == 'TestGAU2') {
+                gau2 = gau;
+            } else if (gau.Name == 'TestGAU3') {
+                gau3 = gau;
+            }
+        }
+
+        // Default GAU should be enabled and Payment Allocations should be disabled
+        Allocations_Settings__c alloSettings = new Allocations_Settings__c();
+        alloSettings.Payment_Allocations_Enabled__c = false;
+        alloSettings.Default_Allocations_Enabled__c = true;
+        alloSettings.Default__c = gau3.Id;
+
+        UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(alloSettings);
+
+        // Create an account and an Open opportunity that will be closed by the Data Import record
+        Account acct1 = new Account(Name = 'Test Account 1');
+        insert acct1;
+
+        Opportunity oppt1 = new Opportunity(Name = 'TestOppt1',
+                AccountId = acct1.Id,
+                Amount = 120,
+                StageName = UTIL_UnitTestData_TEST.getOpenStage(),
+                CloseDate = System.date.Today());
+        insert oppt1;
+
+        npe01__OppPayment__c pymt1 = [SELECT Id FROM npe01__OppPayment__c WHERE npe01__Opportunity__c =: oppt1.Id];
+
+        // This test record should not trigger errors for existing Opportunity GAU Allocations because
+        // the only allocation is the default allocation.
+        DataImport__c testDI1 = new DataImport__c(Donation_Donor__c = 'Account1',
+                                                    Donation_Amount__c = 120,
+                                                    Account1Imported__c = acct1.Id,
+                                                    DonationImported__c = oppt1.Id,
+                                                    DonationImportStatus__c = Label.bdiMatchedByUser,
+                                                    PaymentImported__c = pymt1.Id,
+                                                    PaymentImportStatus__c = System.Label.bdiMatchedByUser,
+                                                    GAU_Allocation_1_GAU__c = gau1.Id,
+                                                    GAU_Allocation_1_Percent__c = 50,
+                                                    GAU_Allocation_2_GAU__c = gau2.Id,
+                                                    GAU_Allocation_2_Percent__c = 50);
+        insert testDI1;
+
+        Test.startTest();
+        // Process the Data Import record, this should update the GAU Allocations on the Oppt and 
+        // indirectly update the payment to Paid and Close the Oppt.
+        BDI_DataImport_API.processDataImportRecords(dis,new DataImport__c[]{testDI1}, false);
+        Test.stopTest();
+
+        DataImport__c testDI1Result = [SELECT Id,
+                                            Status__c,
+                                            FailureInformation__c,
+                                            Account1ImportStatus__c,
+                                            Account1Imported__c,
+                                            DonationImportStatus__c,
+                                            DonationImported__c,
+                                            Donation_Donor__c,
+                                            GAU_Allocation_1_Imported__c,
+                                            GAU_Allocation_1_Import_Status__c,
+                                            GAU_Allocation_2_Imported__c,
+                                            GAU_Allocation_2_Import_Status__c,
+                                            PaymentImportStatus__c,
+                                            PaymentImported__c
+                                    FROM DataImport__c
+                                    WHERE Id =: testDI1.Id LIMIT 1];
+
+        System.assertEquals(null,testDI1Result.FailureInformation__c);
+        System.assertEquals(BDI_DataImport_API.bdiImported,testDI1Result.Status__c);
+        System.assertNotEquals(null,testDI1Result.Account1Imported__c);
+        System.assertEquals(System.label.bdiMatched,testDI1Result.Account1ImportStatus__c);
+        System.assertNotEquals(null,testDI1Result.DonationImported__c);
+        System.assertNotEquals(null,testDI1Result.DonationImportStatus__c);
+        System.assertNotEquals(null,testDI1Result.GAU_Allocation_1_Imported__c);
+        System.assertNotEquals(null,testDI1Result.GAU_Allocation_2_Imported__c);
+
+        Allocation__c allocGAU1;
+        Allocation__c allocGAU2;
+        Allocation__c allocGAU3;
+
+        for(Allocation__c alloc : [SELECT Id,
+                Opportunity__c,
+                Recurring_Donation__c,
+                Payment__c,
+                General_Accounting_Unit__c,
+                Amount__c,
+                Percent__c
+        FROM Allocation__c 
+        WHERE Opportunity__c =: oppt1.Id ]) {
+            if (alloc.General_Accounting_Unit__c == gau1.Id) {
+                allocGAU1 = alloc;
+            } else if (alloc.General_Accounting_Unit__c == gau2.Id) {
+                allocGAU2 = alloc;
+            } else if (alloc.General_Accounting_Unit__c == gau3.Id) {
+                allocGAU3 = alloc;
+            }
+        }
+
+        // Confirm that GAU 1 and 2 allocations exist.
+        System.assertNotEquals(null, allocGAU1);
+        System.assertEquals(50, allocGAU1.Percent__c);
+        System.assertNotEquals(null, allocGAU2);
+        System.assertEquals(50, allocGAU2.Percent__c);
+        // There should be no GAU 3 allocation since it is the default and should have been removed.
+        System.assertEquals(null, allocGAU3);
+
+        // Query and confirm that the payment was marked as paid
+        pymt1 = [SELECT Id, npe01__Paid__c FROM npe01__OppPayment__c WHERE npe01__Opportunity__c =: oppt1.Id];
+        System.assertEquals(true, pymt1.npe01__Paid__c);
     }
 }
