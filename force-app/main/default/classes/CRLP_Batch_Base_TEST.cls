@@ -62,7 +62,7 @@ private class CRLP_Batch_Base_TEST {
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + new RollupInfo().maxYearsAgoInteger));
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     @isTest
@@ -86,7 +86,7 @@ private class CRLP_Batch_Base_TEST {
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + new RollupInfo().maxDaysBackInteger));
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     @isTest
@@ -111,7 +111,7 @@ private class CRLP_Batch_Base_TEST {
         Integer lastNYears = new RollupInfo().maxYearsAgoInteger;
         System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + lastNYears));
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     @isTest
@@ -130,7 +130,7 @@ private class CRLP_Batch_Base_TEST {
         System.assert(generatedWhereClause.contains('WHERE') == false, 'The standard where clause should be used ' +
                 'for the inner join when the custom setting is set to false.');
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     @isTest
@@ -156,7 +156,7 @@ private class CRLP_Batch_Base_TEST {
         System.assert(generatedWhereClause.contains(userDefinedLastNDaysFieldOverride));
         System.assert(generatedWhereClause.contains(String.valueOf(userDefinedLastNDaysValueOverride)));
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     @isTest
@@ -174,7 +174,7 @@ private class CRLP_Batch_Base_TEST {
         System.assert(generatedWhereClause.contains('WHERE') == false, 'The standard query for the inner join ' +
                 'should NOT contain a where filter on the Opportunities when not a scheduled job.');
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     @isTest
@@ -195,7 +195,7 @@ private class CRLP_Batch_Base_TEST {
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + new RollupInfo().maxYearsAgoInteger));
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     @isTest
@@ -219,7 +219,7 @@ private class CRLP_Batch_Base_TEST {
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + new RollupInfo().maxDaysBackInteger));
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     @isTest
@@ -244,7 +244,7 @@ private class CRLP_Batch_Base_TEST {
         Integer lastNYears = new RollupInfo().maxYearsAgoInteger;
         System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + lastNYears));
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     @isTest
@@ -263,7 +263,7 @@ private class CRLP_Batch_Base_TEST {
         System.assert(generatedWhereClause.contains('WHERE') == false, 'The standard where clause should be used ' +
                 'for the inner join when the custom setting is set to false.');
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     @isTest
@@ -289,7 +289,7 @@ private class CRLP_Batch_Base_TEST {
         System.assert(generatedWhereClause.contains(userDefinedLastNDaysFieldOverride));
         System.assert(generatedWhereClause.contains(String.valueOf(userDefinedLastNDaysValueOverride)));
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     /**
@@ -327,7 +327,7 @@ private class CRLP_Batch_Base_TEST {
         System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + overrideDays), 
                 'Where clause should use Last N Days Override: ' + overrideDays);
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     /**
@@ -362,7 +362,7 @@ private class CRLP_Batch_Base_TEST {
         System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + rdLastNDaysValue), 
                 'Where clause should use RD Last N Days Setting: ' + rdLastNDaysValue);
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     /**
@@ -398,7 +398,7 @@ private class CRLP_Batch_Base_TEST {
         System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + rdTimeBoundInt), 
                 'Where clause should use Rollup TimeBound Integer: ' + rdTimeBoundInt);
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     /******************************** Chunk Mode Tests *****************************/
