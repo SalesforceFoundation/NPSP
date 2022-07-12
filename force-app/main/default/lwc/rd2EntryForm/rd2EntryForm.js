@@ -56,6 +56,7 @@ import unknownError from "@salesforce/label/c.commonUnknownError";
 import paymentMethodLabel from "@salesforce/label/c.RD2_Payment_Method";
 import RD2_Payment_Details from "@salesforce/label/c.RD2_Payment_Details";
 import RD2_Payment_method_was_updated from "@salesforce/label/c.RD2_Payment_method_was_updated";
+import RD2_Recurring_Donation_was_updated from "@salesforce/label/c.RD2_Recurring_Donation_was_updated";
 import CreditCardPaymentMethod from "@salesforce/label/c.RD2_Credit_Card_Payment_Method_Label";
 import ACHPaymentMethodLabel from "@salesforce/label/c.RD2_ACH_Payment_Method_Label";
 
@@ -81,6 +82,7 @@ export default class rd2EntryForm extends LightningElement {
         paymentMethodLabel,
         RD2_Payment_Details,
         RD2_Payment_method_was_updated,
+        RD2_Recurring_Donation_was_updated,
         cancelButtonLabel,
         closeButtonLabel,
         saveButtonLabel,
@@ -226,6 +228,9 @@ export default class rd2EntryForm extends LightningElement {
             }
             lightning-input-field[data-id="currencyField"] lightning-picklist lightning-combobox label {
                 display: none;
+            }
+            lightning-input-field[data-id="plannedInstallments"] {
+                margin-top: -4px;
             }
             @media screen and (min-width: 1135px) {
                 .fixExperienceDayOfMonth[c-rd2EntryFormScheduleSection_rd2EntryFormScheduleSection] {
@@ -843,6 +848,10 @@ export default class rd2EntryForm extends LightningElement {
 
         if(this.isPaymentModal) {
             message = this.customLabels.RD2_Payment_method_was_updated;
+        }
+
+        if(this.isAmountFrequencyModal) {
+            message = this.customLabels.RD2_Recurring_Donation_was_updated;
         }
         
         showToast(message, "", "success");
