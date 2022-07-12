@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>LimitRecalculatedRecurringDonations__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Limit the number of recurring donations that are recalculated during the nightly Recurring Donation batch job based on recency of the donation.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Limit the number of recurring donations that are recalculated during the nightly Recurring Donation batch job based on recency of the donation.</inlineHelpText>
+    <label>Limit Recalculated Recurring Donations</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>
