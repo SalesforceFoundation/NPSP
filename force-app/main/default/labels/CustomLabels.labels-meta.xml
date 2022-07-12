@@ -3160,54 +3160,6 @@
         <value>st</value>
     </labels>
     <labels>
-        <fullName>RD_lastModified</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Last Modified</shortDescription>
-        <value>Last Modified</value>
-    </labels>
-    <labels>
-        <fullName>RD_mostRecentDonation</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Most Recent Donation</shortDescription>
-        <value>Most Recent Donation</value>
-    </labels>
-    <labels>
-        <fullName>RD_nextDonation</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Next Donation</shortDescription>
-        <value>Next Donation</value>
-    </labels>
-    <labels>
-        <fullName>RD_otherOrdinalNumber</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Other ordinal number</shortDescription>
-        <value>th</value>
-    </labels>
-    <labels>
-        <fullName>RD_secondOrdinalNumber</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Second ordinal number</shortDescription>
-        <value>nd</value>
-    </labels>
-    <labels>
-        <fullName>RD_thirdOrdinalNumber</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Third ordinal number</shortDescription>
-        <value>rd</value>
-    </labels>
-    <labels>
         <fullName>RD_frequencyOnThePeriod</fullName>
         <categories>Recurring Donations</categories>
         <language>en_US</language>
@@ -3254,6 +3206,54 @@
         <protected>true</protected>
         <shortDescription>Frequency processed text</shortDescription>
         <value>Every {0} {1}</value>
+    </labels>
+    <labels>
+        <fullName>RD_lastModified</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Last Modified</shortDescription>
+        <value>Last Modified</value>
+    </labels>
+    <labels>
+        <fullName>RD_mostRecentDonation</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Most Recent Donation</shortDescription>
+        <value>Most Recent Donation</value>
+    </labels>
+    <labels>
+        <fullName>RD_nextDonation</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Next Donation</shortDescription>
+        <value>Next Donation</value>
+    </labels>
+    <labels>
+        <fullName>RD_otherOrdinalNumber</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Other ordinal number</shortDescription>
+        <value>th</value>
+    </labels>
+    <labels>
+        <fullName>RD_secondOrdinalNumber</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Second ordinal number</shortDescription>
+        <value>nd</value>
+    </labels>
+    <labels>
+        <fullName>RD_thirdOrdinalNumber</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Third ordinal number</shortDescription>
+        <value>rd</value>
     </labels>
     <labels>
         <fullName>RD_ContactMustBelongToAccount</fullName>
