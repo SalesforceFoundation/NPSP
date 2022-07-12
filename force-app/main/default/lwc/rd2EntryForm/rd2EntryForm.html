@@ -134,26 +134,24 @@
                                                 </lightning-input-field>
                                             </div>
                                         </lightning-layout-item>
-
-                                        <div class={cssComponent} aria-hidden={ariaHidden}>
-                                            <template if:true={rd2State.isMultiCurrencyEnabled}>
-                                                <lightning-layout-item padding="horizontal-small" size="6" small-device-size="6"
-                                                    if:true={fields.amount}>
-                                                    <div class="slds-p-horizontal_xx-small slds-m-bottom_x-small">
-                                                        <label for="currencyField"
-                                                            class="slds-form-element__label slds-no-flex">{fields.currency.label}</label>
-                                                        <lightning-input-field id="currencyField"
-                                                                            data-id="currencyField"
-                                                                            field-name={fields.currency.apiName}
-                                                                            value={rd2State.currencyIsoCode}
-                                                                            variant="label-hidden"
-                                                                            onchange={handleCurrencyChange}
-                                                                            required
-                                                        ></lightning-input-field>
-                                                    </div>
-                                                </lightning-layout-item>
-                                            </template>
-                                        </div>
+                                      
+                                        <template if:true={rd2State.isMultiCurrencyEnabled}>
+                                            <lightning-layout-item padding="horizontal-small" size="6" small-device-size="6"
+                                                if:true={fields.amount} class={cssCurrencyExperienceSite}>
+                                                <div class="slds-p-horizontal_xx-small slds-m-bottom_x-small">
+                                                    <label for="currencyField"
+                                                        class="slds-form-element__label slds-no-flex">{fields.currency.label}</label>
+                                                    <lightning-input-field id="currencyField"
+                                                                        data-id="currencyField"
+                                                                        field-name={fields.currency.apiName}
+                                                                        value={rd2State.currencyIsoCode}
+                                                                        variant="label-hidden"
+                                                                        onchange={handleCurrencyChange}
+                                                                        required
+                                                    ></lightning-input-field>
+                                                </div>
+                                            </lightning-layout-item>
+                                        </template>
 
                                     </lightning-layout>
                                     

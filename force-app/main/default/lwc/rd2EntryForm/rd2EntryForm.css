@@ -41,3 +41,7 @@ legend.slds-form-element__legend.slds-form-element__label {
     overflow: visible;
     margin-top: -8px;
 }
+
+.experienceCurrency {
+    padding-top: 4px;
+}

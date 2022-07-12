@@ -140,6 +140,7 @@ export default class rd2EntryForm extends LightningElement {
 
     cssComponent = 'slds-section slds-is-open';
     cssModalContent = 'slds-modal__content slds-p-top_none slds-p-horizontal_medium slds-p-bottom_medium';
+    cssCurrencyExperienceSite = '';
     ariaHidden = false;
 
     @api isBankPaymentAllowed;
@@ -187,7 +188,6 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     renderedCallback() {
-
         this.applyCSSOnlyOnEperienceSite();
     }
 
@@ -195,7 +195,6 @@ export default class rd2EntryForm extends LightningElement {
      * @description Applies CSS styles to rendered elements only for Experience Sites.
      */
     applyCSSOnlyOnEperienceSite() {
-
         if (this.isExperienceSite && this.template.querySelector("lightning-record-edit-form")) {
             this.style.innerText = `lightning-helptext {
                 display:none;
@@ -224,6 +223,9 @@ export default class rd2EntryForm extends LightningElement {
                 right: -5000px;
                 bottom: -5000px;
                 left: -5000px;
+            }
+            lightning-input-field[data-id="currencyField"] lightning-picklist lightning-combobox label {
+                display: none;
             }
             @media screen and (min-width: 1135px) {
                 .fixExperienceDayOfMonth[c-rd2EntryFormScheduleSection_rd2EntryFormScheduleSection] {
@@ -281,11 +283,15 @@ export default class rd2EntryForm extends LightningElement {
             this.cssHideOnlyAmountFrequencyModal = this.isAmountFrequencyModal ? 'slds-hide' : '';
             if(this.isAmountFrequencyModal) {
                 this.rd2State.periodType = 'Advanced';
-                this.cssExperienceElevate = 'slds-hide'
+                this.cssExperienceElevate = 'slds-hide';
+                this.cssCurrencyExperienceSite = 'experienceCurrency';
             }
             if(this.isPaymentModal && this.rd2State.recurringStatus === 'Lapsed') {
                 this.rd2State.recurringStatus = 'Active';
                 this.rd2State.initialViewState.recurringStatus = 'Active';
+            }
+            if(this.isPaymentModal) {
+                this.cssCurrencyExperienceSite = 'slds-hide';
             }
         }
     }
