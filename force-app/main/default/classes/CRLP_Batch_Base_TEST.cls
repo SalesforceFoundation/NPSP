@@ -36,6 +36,9 @@
 @IsTest(isParallel=true)
 private class CRLP_Batch_Base_TEST {
 
+    private static final Integer rdLastNDaysValue = 15;
+    private static final Integer rdTimeBoundInt = 60;
+
     /******************************** Incremental Mode Tests *****************************/
 
     @isTest
@@ -59,7 +62,7 @@ private class CRLP_Batch_Base_TEST {
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + new RollupInfo().maxYearsAgoInteger));
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     @isTest
@@ -83,7 +86,7 @@ private class CRLP_Batch_Base_TEST {
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + new RollupInfo().maxDaysBackInteger));
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     @isTest
@@ -108,7 +111,7 @@ private class CRLP_Batch_Base_TEST {
         Integer lastNYears = new RollupInfo().maxYearsAgoInteger;
         System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + lastNYears));
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     @isTest
@@ -127,7 +130,7 @@ private class CRLP_Batch_Base_TEST {
         System.assert(generatedWhereClause.contains('WHERE') == false, 'The standard where clause should be used ' +
                 'for the inner join when the custom setting is set to false.');
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     @isTest
@@ -153,7 +156,7 @@ private class CRLP_Batch_Base_TEST {
         System.assert(generatedWhereClause.contains(userDefinedLastNDaysFieldOverride));
         System.assert(generatedWhereClause.contains(String.valueOf(userDefinedLastNDaysValueOverride)));
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     @isTest
@@ -171,7 +174,7 @@ private class CRLP_Batch_Base_TEST {
         System.assert(generatedWhereClause.contains('WHERE') == false, 'The standard query for the inner join ' +
                 'should NOT contain a where filter on the Opportunities when not a scheduled job.');
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     @isTest
@@ -192,7 +195,7 @@ private class CRLP_Batch_Base_TEST {
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + new RollupInfo().maxYearsAgoInteger));
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     @isTest
@@ -216,7 +219,7 @@ private class CRLP_Batch_Base_TEST {
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + new RollupInfo().maxDaysBackInteger));
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     @isTest
@@ -241,7 +244,7 @@ private class CRLP_Batch_Base_TEST {
         Integer lastNYears = new RollupInfo().maxYearsAgoInteger;
         System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + lastNYears));
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     @isTest
@@ -260,7 +263,7 @@ private class CRLP_Batch_Base_TEST {
         System.assert(generatedWhereClause.contains('WHERE') == false, 'The standard where clause should be used ' +
                 'for the inner join when the custom setting is set to false.');
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     @isTest
@@ -286,7 +289,116 @@ private class CRLP_Batch_Base_TEST {
         System.assert(generatedWhereClause.contains(userDefinedLastNDaysFieldOverride));
         System.assert(generatedWhereClause.contains(String.valueOf(userDefinedLastNDaysValueOverride)));
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
+    }
+
+    /**
+     * @description Confirms RD NonSkew query with Batch Filter enabled uses Field Override
+     */
+    @isTest
+    private static void recurringDonationRollupIncrementalModeQueryUsesFieldOverride() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.RecurringDonations;
+        String userDefinedLastNDaysFieldOverride = 'LastModifiedDate';
+        Integer overrideDays = 20;
+        configureIncrementalFieldOverrides(
+                jobType,
+                userDefinedLastNDaysFieldOverride,
+                overrideDays);
+
+        CRLP_RollupProcessingOptions.RollupTypeFilter typeFilter =
+                CRLP_RollupProcessingOptions.RollupTypeFilter.All;
+        CRLP_Batch_Base_NonSkew rdBatchJob = new CRLP_RD_BATCH(typeFilter);
+        rdBatchJob.isScheduledJob = true;
+
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(rdBatchJob, null, null, null);
+        
+        String query = queryBuilder.buildQuery();
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
+
+        System.assertEquals(2, query.countMatches('SELECT'),
+            'Recurring Donation Filtered query should include inner join');
+
+        System.assert(generatedWhereClause.contains('FROM'));
+        System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
+                'where clause for the inner join should contain a where filter on the Opportunities.');
+        System.assert(generatedWhereClause.contains(userDefinedLastNDaysFieldOverride));
+        System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + overrideDays), 
+                'Where clause should use Last N Days Override: ' + overrideDays);
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
+    }
+
+    /**
+     * @description Confirms RD NonSkew query with Batch Filter enabled includes an inner join
+     */
+    @isTest
+    private static void recurringDonationRollupGeneratesIncrementalModeJoinQuery() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.RecurringDonations;
+        configureIncrementalFieldOverrides(
+                jobType,
+                null,
+                null);
+
+        CRLP_RollupProcessingOptions.RollupTypeFilter typeFilter =
+                CRLP_RollupProcessingOptions.RollupTypeFilter.All;
+        CRLP_Batch_Base_NonSkew rdBatchJob = new CRLP_RD_BATCH(typeFilter);
+        rdBatchJob.isScheduledJob = true;
+
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(rdBatchJob, null, null, null);
+        
+        String query = queryBuilder.buildQuery();
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
+
+        System.assertEquals(2, query.countMatches('SELECT'),
+            'Recurring Donation Filtered query should include inner join');
+
+        System.assert(generatedWhereClause.contains('FROM'));
+        System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
+                'where clause for the inner join should contain a where filter on the Opportunities.');        
+        System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + rdLastNDaysValue), 
+                'Where clause should use RD Last N Days Setting: ' + rdLastNDaysValue);
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
+    }
+
+    /**
+     * @description Confirms RD NonSkew query with Batch Filter enabled uses Time Bound Last N Days
+     */
+    @isTest
+    private static void recurringDonationIncrementalModeQueryUsesTimeBountInt() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.RecurringDonations;
+        configureIncrementalFieldOverrides(
+                jobType,
+                null,
+                null);
+        addTimeBoundRdRollup();
+
+        CRLP_RollupProcessingOptions.RollupTypeFilter typeFilter =
+                CRLP_RollupProcessingOptions.RollupTypeFilter.All;
+        CRLP_Batch_Base_NonSkew rdBatchJob = new CRLP_RD_BATCH(typeFilter);
+        rdBatchJob.isScheduledJob = true;
+
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(rdBatchJob, null, null, null);
+        
+        String query = queryBuilder.buildQuery();
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
+
+        System.assertEquals(2, query.countMatches('SELECT'),
+            'Recurring Donation Filtered query should include inner join');
+
+        System.assert(generatedWhereClause.contains('FROM'));
+        System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
+                'where clause for the inner join should contain a where filter on the Opportunities.');
+        System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + rdTimeBoundInt), 
+                'Where clause should use Rollup TimeBound Integer: ' + rdTimeBoundInt);
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
+                'The outer query should not contain both "ORDER BY" and "LIMIT".');
     }
 
     /******************************** Chunk Mode Tests *****************************/
@@ -553,7 +665,7 @@ private class CRLP_Batch_Base_TEST {
         System.assertEquals(1, query.countMatches('SELECT'),
             'Recurring Donation Nonskew query should not include inner join');
     }
-
+    
     /**
      * @description For Account-Contact-Soft-Credit rollups, validate that the FieldsToCheckForNonZero property
      * returns back a single instance of a numeric field based on the mocked rollups configured for this
@@ -692,6 +804,11 @@ private class CRLP_Batch_Base_TEST {
             when ContactHardCredit {
                 settings.ContactHardCreditNonSkew_Incremental__c = isIncrementalMode;
                 CRLP_RollupContact_TEST.mockRollupCMTValues();
+            }
+            when RecurringDonations {            
+                settings.LimitRecalculatedRecurringDonations__c = isIncrementalMode;
+                settings.RecurringDonationLastNDays__c = rdLastNDaysValue;
+                CMT_UnitTestData_TEST.mockRecurringDonationRollupCMTValues();
             }
         }
         return settings;
@@ -887,6 +1004,16 @@ private class CRLP_Batch_Base_TEST {
         Integer i = query.lastIndexOf(')');
         String outerQueryOrderByAndLimitString = query.right(query.length() - i - 1);
         return outerQueryOrderByAndLimitString;
+    }
+
+    private static void addTimeBoundRdRollup() {
+        String filterGroupId = CMT_UnitTestData_TEST.getNewRecordId();
+        String timeBoundRollup = CMT_UnitTestData_TEST.createRollupRecord('RD Paid Amount Last N Days', 
+                filterGroupId, CMT_UnitTestData_TEST.RollupRecordType.OppToRD,
+                'npe03__Paid_Amount__c', CRLP_Operation.RollupType.Sum, 'Amount', 
+                CRLP_Operation.TimeBoundOperationType.Days_Back, rdTimeBoundInt);
+        Rollup__mdt timeBoundRdRollup = (Rollup__mdt) JSON.deserialize(timeBoundRollup, Rollup__mdt.class);
+        CRLP_Rollup_SEL.cachedRollups.add(timeBoundRdRollup);
     }
 
     /**
