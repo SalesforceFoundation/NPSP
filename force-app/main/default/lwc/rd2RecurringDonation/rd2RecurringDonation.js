@@ -215,11 +215,8 @@ export default class RecurringDonationTable extends LightningElement {
             let tableBodyRows = this.template.querySelectorAll("table tbody tr");
             tableBodyRows.forEach((row) => {
                 let rowTds = row.querySelectorAll(".dv-dynamic-width");
-                console.log("🚀 ~ file: rd2RecurringDonation.js ~ line 224 ~ RecurringDonationTable ~ tableBodyRows.forEach ~ rowTds", rowTds.length)
                 rowTds.forEach((td, ind) => {
                     rowTds[ind].style.width = tableThs[ind].style.width;
-                    console.log("🚀 ~ file: rd2RecurringDonation.js ~ line 231 ~ RecurringDonationTable ~ rowTds.forEach ~ rowTds[ind].style.width", rowTds[ind].style.width)
-
                 });
             });
         }
@@ -227,19 +224,16 @@ export default class RecurringDonationTable extends LightningElement {
 
     handledblclickresizable() {
         let tableThs = this.template.querySelectorAll("th");
-        console.log("🚀 ~ file: rd2RecurringDonation.js ~ line 230 ~ RecurringDonationTable ~ handledblclickresizable ~ tableThs", tableThs.length)
+        console.log("🚀 ~ file: rd2RecurringDonation.js ~ line 227 ~ RecurringDonationTable ~ handledblclickresizable ~ tableThs", tableThs.length)
         let tableBodyRows = this.template.querySelectorAll("table tbody tr");
         console.log(this._initWidths)
         tableThs.forEach((th, ind) => {
-            console.log(JSON.stringify(th))
             th.style.width = this._initWidths[ind] + 'px';
             th.querySelector(".slds-cell-fixed").style.width = this._initWidths[ind] + 'px';
-            console.log(tableThs[ind].style.width);
         });
         tableBodyRows.forEach((row) => {
             let rowTds = row.querySelectorAll(".dv-dynamic-width");
-            console.log("🚀 ~ file: rd2RecurringDonation.js ~ line 241 ~ RecurringDonationTable ~ tableBodyRows.forEach ~ rowTds", rowTds.length);
-            
+            console.log("🚀 ~ file: rd2RecurringDonation.js ~ line 235 ~ RecurringDonationTable ~ tableBodyRows.forEach ~ rowTds", rowTds.length)
             rowTds.forEach((td, ind) => {
                 rowTds[ind].style.width = this._initWidths[ind] + 'px';
             });
@@ -329,13 +323,6 @@ export default class RecurringDonationTable extends LightningElement {
     }
 
     getRecurringDonationFields() {
-        if (!this._initWidths) {
-            this._initWidths = [];
-            let tableThs = this.template.querySelectorAll("th");
-            tableThs.forEach((th) => {
-                this._initWidths.push(th.offsetWidth);
-            });
-        }
         retrieveTableView({elevateFilter:this.donationTypeFilter}).then((data) => {
             if (data) {
                 this.data = data.map((el) => {
@@ -372,93 +359,16 @@ export default class RecurringDonationTable extends LightningElement {
             }
             nextDonationHtml += `</div>`
             const container = this.template.querySelector(`[data-ndid=${item.recurringDonation.Id}]`);
+            container.innerHTML = nextDonationHtml;
+            if (!this._initWidths) {
+                this._initWidths = [];
+                let tableThs = this.template.querySelectorAll(".slds-cell-fixed");
+                tableThs.forEach((th) => {
+                    this._initWidths.push(th.offsetWidth);
+                });
+            }
             this.handledblclickresizable();
           });
         });
     }
-/*     dynamicTableColumns() {
-        let tables = this.template.querySelectorAll("table");
-        console.log(JSON.stringify(tables));
-        for (let i=0; i<tables.length;i++) {
-            this.resizableGrid(tables[i]);
-        }
-    }
-
-    resizableGrid(table) {
-        console.log('table ', table)
-        let row = table.querySelector('tr');
-        let cols = this.template.querySelectorAll(".slds-resizable");
-        if (!cols) return;
-        
-        table.style.overflow = 'hidden';
-        
-        let tableHeight = table.offsetHeight;
-
-        console.log(tableHeight);
-        
-        for (let i=0;i<cols.length;i++){
-            cols[i].style.position = 'relative';
-            setListeners(cols[i]);
-        }
-
-        function setListeners(div){
-            let pageX,curCol,nxtCol,curColWidth,nxtColWidth;
-
-            div.addEventListener('mousedown', function (e) {
-            curCol = e.target.parentElement;
-            nxtCol = curCol.nextElementSibling;
-            pageX = e.pageX; 
-            
-            let padding = paddingDiff(curCol);
-            
-            curColWidth = curCol.offsetWidth - padding;
-        if (nxtCol)
-            nxtColWidth = nxtCol.offsetWidth - padding;
-        });
-
-        div.addEventListener('mouseover', function (e) {
-           e.target.style.borderRight = '2px solid #0000ff';
-        })
-
-        div.addEventListener('mouseout', function (e) {
-           e.target.style.borderRight = '';
-        })
-
-        this.template.addEventListener('mousemove', function (e) {
-            if (curCol) {
-                let diffX = e.pageX - pageX;
-                if (nxtCol)
-                nxtCol.style.width = (nxtColWidth - (diffX))+'px';
-                curCol.style.width = (curColWidth + diffX)+'px';
-            }
-        });
-
-        this.template.addEventListener('mouseup', function (e) { 
-                curCol = undefined;
-                nxtCol = undefined;
-                pageX = undefined;
-                nxtColWidth = undefined;
-                curColWidth = undefined
-            });
-        }
-        
-        function createDiv(height){
-            let div = this.template.querySelectorAll(".slds-resizable");
-            div.style.width = height;
-            return div;
-           }
-        
-        function paddingDiff(col){
-            if (getStyleVal(col,'box-sizing') === 'border-box'){
-                return 0;
-            }
-            let padLeft = getStyleVal(col,'padding-left');
-            let padRight = getStyleVal(col,'padding-right');
-            return (parseInt(padLeft, 10) + parseInt(padRight, 10));
-        }
-
-        function getStyleVal(elm,css){
-            return (window.getComputedStyle(elm, null).getPropertyValue(css))
-        }
-    } */
 }

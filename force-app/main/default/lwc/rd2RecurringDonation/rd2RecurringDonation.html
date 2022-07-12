@@ -125,21 +125,21 @@
                 <tbody>
                     <template for:each={data} for:item="item">
                         <tr key={item.recurringDonation.Id} aria-selected="false" class="slds-hint-parent" scope="row">
-                            <td key={item.recurringDonation.npe03__Amount__c} class="dynamic-wt" data-label={labels.commonAmount} tabindex="-1" aria-label={item.recurringDonation.npe03__Amount__c} role="gridcell">
+                            <td key={item.recurringDonation.npe03__Amount__c} data-label={labels.commonAmount} tabindex="-1" aria-label={item.recurringDonation.npe03__Amount__c} role="gridcell">
                                 <div class={rowClasses} title={labels.commonAmount}>
                                     <lightning-formatted-number value={item.recurringDonation.npe03__Amount__c} format-style="currency"
                                         currency-code="USD"></lightning-formatted-number>
                                 </div>
                             </td>
-                            <td key={item.frequency} data-label={labels.RDCL_Frequency} class="dynamic-wt" tabindex="-1" aria-label={item.frequency} role="gridcell">
+                            <td key={item.frequency} data-label={labels.RDCL_Frequency} tabindex="-1" aria-label={item.frequency} role="gridcell">
                                 <div class={rowClasses} title={labels.RDCL_Frequency}>
                                     {item.frequency}</div>
                             </td>
-                            <td key={item.paymentMethod} data-label={paymentMethod} class="dynamic-wt" tabindex="-1" aria-label={item.paymentMethod} role="gridcell">
+                            <td key={item.paymentMethod} data-label={paymentMethod} tabindex="-1" aria-label={item.paymentMethod} role="gridcell">
                                 <div class={rowClasses} title={paymentMethod}>
                                     {item.paymentMethod}</div>
                             </td>
-                            <td key={item.status} data-label={labels.lblStatus} class="dynamic-wt" tabindex="-1" aria-label={item.status} role="gridcell">
+                            <td key={item.status} data-label={labels.lblStatus} tabindex="-1" aria-label={item.status} role="gridcell">
                                 <div class={rowClasses} title={labels.lblStatus}>
                                     {item.status}</div>
                             </td>
@@ -161,7 +161,6 @@
                                     Every 2 months on the 4th</div>
                             </td>
                             <td key={item.nextDonation} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.nextDonation} tabindex="-1" aria-label={item.nextDonation} role="gridcell">
-                                Every 2 months on the 4th
                                 <div class="next-donation" data-ndid={item.recurringDonation.Id} lwc:dom="manual"></div>
                             </td>
                             <td key={item.recurringDonation.LastModifiedDate} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.lastModified} tabindex="-1" aria-label={item.lastModifiedDate} role="gridcell">
