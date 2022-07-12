@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RecurringDonationLastNDays__c</fullName>
+    <defaultValue>31</defaultValue>
+    <description>Limit Opportunities included in the Recurring Donation Rollup to those modified within a number of days.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Limit Opportunities included in the Recurring Donation Rollup to those modified within a number of days. Time Bound Recurring donation Rollup batch jobs override this setting.</inlineHelpText>
+    <label>RD Modified in Last Number of Days</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>
