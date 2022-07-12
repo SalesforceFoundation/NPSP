@@ -146,14 +146,30 @@ public with sharing class BDI_GAUAllocationsUtil {
                 && utilPerm.canRead(npe01__OppPayment__c.getSObjectType(),paymentFields)) {
 
                 String queryString = ' SELECT Id, ' +
-                        'General_Accounting_Unit__c, ' +
-                        'Opportunity__c,' +
-                        'Payment__c,' +
-                        'Payment__r.npe01__Opportunity__c '+
-                        'FROM Allocation__c WHERE Opportunity__c IN: opptIds';
+                'General_Accounting_Unit__c, ' +
+                'Opportunity__c,' +
+                'Payment__c,' +
+                'Payment__r.npe01__Opportunity__c '+
+                'FROM Allocation__c '+
+                'WHERE (Opportunity__c IN: opptIds';
 
                 if (alloSettings.Payment_Allocations_Enabled__c) {
-                    queryString += ' OR Payment__r.npe01__Opportunity__c IN: opptIds';
+                    queryString += ' OR Payment__r.npe01__Opportunity__c IN: opptIds)';
+                } else {
+                    queryString += ')';
+                }
+
+                String defaultGAUId = alloSettings.Default__c;
+            
+                // If Default GAUs are enabled and Payment Allocations are disabled then exclude Default GAUs from 
+                // the search since they will automatically be overwritten by the new GAU Allocation and we don't
+                // need to throw the error message.  Orgs with Payment Allocations enabled are excluded because it 
+                // would result in a mismatch between Opportunity and Payment Allocations if we ignore Default GAU
+                // Allocations.
+                if (alloSettings.Default_Allocations_Enabled__c 
+                    && defaultGAUId != null
+                    && !alloSettings.Payment_Allocations_Enabled__c) {
+                    queryString += ' AND General_Accounting_Unit__c !=: defaultGAUId';
                 }
 
                 Allocation__c[] existingAllos = Database.query(queryString);
