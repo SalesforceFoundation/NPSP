@@ -4,10 +4,6 @@ import { getRecord } from 'lightning/uiRecordApi';
 import { extended, full } from "@sa11y/preset-rules";
 import { setup } from "@sa11y/jest";
 
-beforeAll(() => {
-    setup();
-});
-
 const mockGetRecord = require('./data/getRecord.json');
 
 describe('c-giving-summary', () => {
@@ -30,6 +26,7 @@ describe('c-giving-summary', () => {
     });
 
     it("checks element is accessible", async () => {
+        await setup();
         const element = createElement("c-giving-summary", {
             is: GivingSummary,
         });
@@ -38,6 +35,7 @@ describe('c-giving-summary', () => {
     });
 
     it("checks document is fully accessible", async () => {
+        await setup();
         const element = createElement("c-giving-summary", {
             is: GivingSummary,
         });
