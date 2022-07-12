@@ -14,7 +14,6 @@ describe('c-giving-summary', () => {
     afterEach(() => {
         clearDOM();
     });
-
     it('displays three fields on the component', () => {
         const element = createElement('c-giving-summary', { is: GivingSummary });
         element.contactId = mockGetRecord.id;

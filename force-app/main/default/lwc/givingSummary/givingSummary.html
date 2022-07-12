@@ -2,9 +2,9 @@
   <lightning-card>
     <lightning-layout multiple-rows="true">
       <lightning-layout-item tabindex="0" size="12">
-        <p id="GivingSummaryTitle" class={summaryTitleClass}>
+        <h2 id="GivingSummaryTitle" class={summaryTitleClass}>
           {labels.donationHistoryGivingSummaryTitle}
-        </p>
+        </h2>
       </lightning-layout-item>
       <template if:true={errorMessage}>
         <lightning-layout-item
