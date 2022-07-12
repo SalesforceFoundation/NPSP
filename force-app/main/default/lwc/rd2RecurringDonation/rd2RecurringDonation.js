@@ -229,17 +229,19 @@ export default class RecurringDonationTable extends LightningElement {
         let tableThs = this.template.querySelectorAll("th");
         console.log("🚀 ~ file: rd2RecurringDonation.js ~ line 230 ~ RecurringDonationTable ~ handledblclickresizable ~ tableThs", tableThs.length)
         let tableBodyRows = this.template.querySelectorAll("table tbody tr");
-        
+        console.log(this._initWidths)
         tableThs.forEach((th, ind) => {
             console.log(JSON.stringify(th))
-            th.style.width = this._initWidths[ind];
-            th.querySelector(".slds-cell-fixed").style.width = this._initWidths[ind];
+            th.style.width = this._initWidths[ind] + 'px';
+            th.querySelector(".slds-cell-fixed").style.width = this._initWidths[ind] + 'px';
             console.log(tableThs[ind].style.width);
         });
         tableBodyRows.forEach((row) => {
             let rowTds = row.querySelectorAll(".dv-dynamic-width");
+            console.log("🚀 ~ file: rd2RecurringDonation.js ~ line 241 ~ RecurringDonationTable ~ tableBodyRows.forEach ~ rowTds", rowTds.length);
+            
             rowTds.forEach((td, ind) => {
-                rowTds[ind].style.width = this._initWidths[ind];
+                rowTds[ind].style.width = this._initWidths[ind] + 'px';
             });
         });
     }
@@ -370,6 +372,7 @@ export default class RecurringDonationTable extends LightningElement {
             }
             nextDonationHtml += `</div>`
             const container = this.template.querySelector(`[data-ndid=${item.recurringDonation.Id}]`);
+            this.handledblclickresizable();
           });
         });
     }
