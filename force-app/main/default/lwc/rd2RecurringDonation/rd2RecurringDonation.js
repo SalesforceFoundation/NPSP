@@ -19,8 +19,6 @@ import TIME_ZONE from '@salesforce/i18n/timeZone';
 import RECURRING_DONATION from "@salesforce/schema/npe03__Recurring_Donation__c";
 import { getObjectInfo } from "lightning/uiObjectInfoApi";
 import FORM_FACTOR from "@salesforce/client/formFactor";
-import CONV_Old_Household_Objects from "@salesforce/label/c.CONV_Old_Household_Objects";
-import commonNoneSpecified from "@salesforce/label/c.commonNoneSpecified";
 
 const FormFactorType = Object.freeze({
     Large: "Large",
