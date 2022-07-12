@@ -223,16 +223,16 @@ public with sharing class RD2_ETableController {
         if(frequency.right(1).isNumeric()) {
             switch on frequency.right(1) {
                 when '1' {
-                    frequency += System.Label.firstOrdinalNumber;
+                    frequency += System.Label.RD_firstOrdinalNumber;
                 }
                 when '2' {
-                    frequency += System.Label.secondOrdinalNumber;
+                    frequency += System.Label.RD_secondOrdinalNumber;
                 }
                 when '3' {
-                    frequency += System.Label.thirdOrdinalNumber;
+                    frequency += System.Label.RD_thirdOrdinalNumber;
                 }
                 when else {
-                    frequency += System.Label.otherOrdinalNumber;
+                    frequency += System.Label.RD_otherOrdinalNumber;
                 }
             }
         }
@@ -284,9 +284,9 @@ public with sharing class RD2_ETableController {
         } else {
             //Elevate RD
             if(recurringDonation.PaymentMethod__c == RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD) {
-                paymentMethod = String.format(System.Label.creditCardElevatePayment, new List<String>{recurringDonation.PaymentMethod__c, recurringDonation.CardLast4__c, recurringDonation.CardExpirationMonth__c, recurringDonation.CardExpirationYear__c});
+                paymentMethod = String.format(System.Label.RD_creditCardElevatePayment, new List<String>{recurringDonation.PaymentMethod__c, recurringDonation.CardLast4__c, recurringDonation.CardExpirationMonth__c, recurringDonation.CardExpirationYear__c});
             } else {
-                paymentMethod = String.format(System.Label.achElevatePayment, new List<String>{recurringDonation.PaymentMethod__c, recurringDonation.ACH_Last_4__c});
+                paymentMethod = String.format(System.Label.RD_achElevatePayment, new List<String>{recurringDonation.PaymentMethod__c, recurringDonation.ACH_Last_4__c});
             }
         }
 

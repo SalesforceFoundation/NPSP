@@ -3,11 +3,11 @@ import { LightningElement, api, wire, track } from "lwc";
 import commonAmount from "@salesforce/label/c.commonAmount";
 import RDCL_Frequency from "@salesforce/label/c.RDCL_Frequency";
 import lblStatus from "@salesforce/label/c.lblStatus";
-import firstDonation from "@salesforce/label/c.firstDonation";
-import finalDonation from "@salesforce/label/c.finalDonation";
-import nextDonation from "@salesforce/label/c.nextDonation";
-import mostRecentDonation from "@salesforce/label/c.mostRecentDonation";
-import lastModified from "@salesforce/label/c.lastModified";
+import RD_firstDonation from "@salesforce/label/c.RD_firstDonation";
+import RD_finalDonation from "@salesforce/label/c.RD_finalDonation";
+import RD_nextDonation from "@salesforce/label/c.RD_nextDonation";
+import RD_mostRecentDonation from "@salesforce/label/c.RD_mostRecentDonation";
+import RD_lastModified from "@salesforce/label/c.RD_lastModified";
 import RD2_ViewMoreDetails from "@salesforce/label/c.RD2_ViewMoreDetails";
 import RD2_ViewLessDetails from "@salesforce/label/c.RD2_ViewLessDetails";
 import updatePaymentMethod from "@salesforce/label/c.updatePaymentMethod";
@@ -70,11 +70,11 @@ export default class RecurringDonationTable extends LightningElement {
         commonAmount,
         RDCL_Frequency,
         lblStatus,
-        firstDonation,
-        finalDonation,
-        mostRecentDonation,
-        nextDonation,
-        lastModified,
+        RD_firstDonation,
+        RD_finalDonation,
+        RD_mostRecentDonation,
+        RD_nextDonation,
+        RD_lastModified,
         RD2_ViewMoreDetails,
         RD2_ViewLessDetails,
         RD2_Actions,
