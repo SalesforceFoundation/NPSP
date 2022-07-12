@@ -3120,6 +3120,22 @@
         <value>Recurring</value>
     </labels>
     <labels>
+        <fullName>RD_achElevatePayment</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used to show the Payment Method using Elevate RD and ACH payment.</shortDescription>
+        <value>{0}, *{1}</value>
+    </labels>
+    <labels>
+        <fullName>RD_creditCardElevatePayment</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used to show the Payment Method using Elevate RD and Credit Card payment.</shortDescription>
+        <value>{0}, *{1} Exp.{2}/{3}</value>
+    </labels>
+    <labels>
         <fullName>RD_firstDonation</fullName>
         <categories>Recurring Donations</categories>
         <language>en_US</language>
@@ -3136,20 +3152,12 @@
         <value>Final Donation</value>
     </labels>
     <labels>
-        <fullName>RD_nextDonation</fullName>
+        <fullName>RD_firstOrdinalNumber</fullName>
         <categories>Recurring Donations</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Next Donation</shortDescription>
-        <value>Next Donation</value>
-    </labels>
-    <labels>
-        <fullName>RD_mostRecentDonation</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Most Recent Donation</shortDescription>
-        <value>Most Recent Donation</value>
+        <shortDescription>First ordinal number</shortDescription>
+        <value>st</value>
     </labels>
     <labels>
         <fullName>RD_lastModified</fullName>
@@ -3160,12 +3168,28 @@
         <value>Last Modified</value>
     </labels>
     <labels>
-        <fullName>RD_firstOrdinalNumber</fullName>
+        <fullName>RD_mostRecentDonation</fullName>
         <categories>Recurring Donations</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>First ordinal number</shortDescription>
-        <value>st</value>
+        <shortDescription>Most Recent Donation</shortDescription>
+        <value>Most Recent Donation</value>
+    </labels>
+    <labels>
+        <fullName>RD_nextDonation</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Next Donation</shortDescription>
+        <value>Next Donation</value>
+    </labels>
+    <labels>
+        <fullName>RD_otherOrdinalNumber</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Other ordinal number</shortDescription>
+        <value>th</value>
     </labels>
     <labels>
         <fullName>RD_secondOrdinalNumber</fullName>
@@ -3182,30 +3206,6 @@
         <protected>true</protected>
         <shortDescription>Third ordinal number</shortDescription>
         <value>rd</value>
-    </labels>
-    <labels>
-        <fullName>RD_otherOrdinalNumber</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Other ordinal number</shortDescription>
-        <value>th</value>
-    </labels>
-    <labels>
-        <fullName>RD_creditCardElevatePayment</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Used to show the Payment Method using Elevate RD and Credit Card payment.</shortDescription>
-        <value>{0}, *{1} Exp.{2}/{3}</value>
-    </labels>
-    <labels>
-        <fullName>RD_achElevatePayment</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Used to show the Payment Method using Elevate RD and ACH payment.</shortDescription>
-        <value>{0}, *{1}</value>
     </labels>
     <labels>
         <fullName>RD_frequencyOnThePeriod</fullName>
