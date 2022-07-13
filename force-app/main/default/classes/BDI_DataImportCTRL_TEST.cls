@@ -390,6 +390,11 @@ private with sharing class BDI_DataImportCTRL_TEST {
     */    
     static testMethod void testSelectedDIButton() {
 
+        String batchNumber = 'BAT-1234';
+        DataImportBatch__c diBatch = Util_UnitTestData_TEST.createGiftBatches(200,2,1)[0];
+        diBatch.Batch_Number__c = batchNumber;
+        insert diBatch;
+
         // This DI will the be passed into the controller and processed
         DataImport__c testDataImportA = new DataImport__c(
                                         Contact1_Firstname__c = 'Susie',
@@ -432,8 +437,9 @@ private with sharing class BDI_DataImportCTRL_TEST {
                                         Payment_Check_Reference_Number__c = '453',
                                         Payment_Method__c = 'Check');
 
-        // This DI will the be passed into the controller and processed
+        // This DI will the be passed into the controller and processed, this also tests DI under a batch processing.
         DataImport__c testDataImportC = new DataImport__c(
+                                        NPSP_Data_Import_Batch__c = diBatch.Id,
                                         Contact1_Firstname__c = 'Tom',
                                         Contact1_Home_Phone__c = '555-321-0003',
                                         Contact1_Lastname__c = 'TestGroupC01',
@@ -491,6 +497,7 @@ private with sharing class BDI_DataImportCTRL_TEST {
                                         DonationCampaignImported__c,
                                         DonationImportStatus__c,
                                         DonationImported__c,
+                                        DonationImported__r.Batch_Number__c,
                                         Donation_Donor__c,
                                         HomeAddressImportStatus__c,
                                         HomeAddressImported__c,
@@ -528,7 +535,7 @@ private with sharing class BDI_DataImportCTRL_TEST {
         System.assertEquals(null,testDIResultB.HomeAddressImported__c);
         System.assertEquals(null,testDIResultB.PaymentImported__c);
 
-        // Data Import record C should have been processed successfully
+        // Data Import record C that was under a batch should have been processed successfully
         System.assertEquals(null,testDIResultC.FailureInformation__c);
         System.assertEquals(BDI_DataImport_API.bdiImported,testDIResultC.Status__c);
         System.assertNotEquals(null,testDIResultC.Contact1Imported__c);
@@ -538,6 +545,8 @@ private with sharing class BDI_DataImportCTRL_TEST {
         System.assertNotEquals(null,testDIResultC.HouseholdAccountImported__c);
         System.assertNotEquals(null,testDIResultC.HomeAddressImported__c);
         System.assertNotEquals(null,testDIResultC.PaymentImported__c);
+        // Confirm batch number was copied.
+        System.assertEquals(batchNumber,testDIResultC.DonationImported__r.Batch_Number__c);
     }
 
     /*********************************************************************************************************

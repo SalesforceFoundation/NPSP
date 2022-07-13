@@ -4,7 +4,7 @@
     <description>The email address for the person receiving the honor/memorial notification.</description>
     <externalId>false</externalId>
     <inlineHelpText>The email address for the person receiving the honor/memorial notification.</inlineHelpText>
-    <label>Notification Receipient Email</label>
+    <label>Notification Recipient Email</label>
     <required>false</required>
     <trackFeedHistory>false</trackFeedHistory>
     <trackTrending>false</trackTrending>

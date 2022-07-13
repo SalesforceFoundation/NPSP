@@ -95,8 +95,12 @@ global with sharing class BDI_DataImportService {
             'Id =: dataImportIds'
         };
 
+        // Add on batch number string if present so that it can be used if processing batch records.
+        List<String> diFieldsPlusBatchInfo = new List<String>(listStrDataImportFields);
+        diFieldsPlusBatchInfo.add('NPSP_Data_Import_Batch__r.Batch_Number__c');
+
         return new UTIL_Query()
-            .withSelectFields(listStrDataImportFields)
+            .withSelectFields(diFieldsPlusBatchInfo)
             .withFrom(DataImport__c.SObjectType)
             .withWhere(whereClauses)
             // this ensures consistency for our test code, but also should
