@@ -383,8 +383,7 @@ public with sharing class RD2_ETableController {
                                                                 IsPause__c, 
                                                                 StatusReason__c 
                                                             FROM RecurringDonationSchedule__c
-                                                            WHERE RecurringDonation__c IN :recordIds
-                                                            LIMIT 50000]) {
+                                                            WHERE RecurringDonation__c IN :recordIds ]) {
                 List<RecurringDonationSchedule__c> schedules = mapRDSchedule.get(schedule.RecurringDonation__c);
                 if(schedules == NULL) {
                     schedules = new List<RecurringDonationSchedule__c>();
