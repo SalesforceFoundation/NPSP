@@ -484,6 +484,9 @@ public abstract class CRLP_Batch_Base {
                         when ContactHardCredit {
                             return base.customizableRollupSettings.ContactHardCreditNonSkew_Incremental__c;
                         }
+                        when RecurringDonations {
+                            return base.customizableRollupSettings.LimitRecalculatedRecurringDonations__c;
+                        }
                         when else {
                             return false;
                         }
@@ -503,6 +506,10 @@ public abstract class CRLP_Batch_Base {
             get {
                 if (maxDaysAgo == null) {
                     maxDaysAgo = getMaxIntegerValueFromRollupsForType(CRLP_Operation.TimeBoundOperationType.Days_Back);
+                    if (maxDaysAgo == null && base.customizableRollupSettings.LimitRecalculatedRecurringDonations__c == true) {
+                        Decimal rdLastNDays = base.customizableRollupSettings.RecurringDonationLastNDays__c;
+                        maxDaysAgo = rdLastNDays != null ? (Integer) rdLastNDays : null;
+                    }
                 }
                 return maxDaysAgo;
             }
