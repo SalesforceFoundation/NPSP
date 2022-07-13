@@ -35,3 +35,12 @@
 .nonpointer {
     pointer-events: none;
 }
+.dynamic-wt{
+    width: 10%;
+}
+.dv-dynamic-width{
+    min-width: 35px;
+}
+.lastColumn{
+    padding-right: 20%;
+}

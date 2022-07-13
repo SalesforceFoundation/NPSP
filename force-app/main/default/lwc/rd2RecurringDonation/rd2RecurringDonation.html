@@ -1,7 +1,7 @@
 <template>
-        <div id="containerDiv" onmousemove={handlemousemove} onmouseup={handlemouseup} ondblclick={handledblclickresizable} class={headerClass} onscroll={tableOuterDivScrolled} >
+        <div id="containerDiv" onmousemove={handlemousemove} onmouseup={handlemouseup} ondblclick={handledblclickresizable} class={headerClass}>
             <table
-                class="slds-table slds-table_bordered slds-table_header-fixed slds-table_resizable-cols slds-max-medium-table_stacked" tabindex="0">
+                class="slds-table slds-table_bordered slds-table_header-fixed slds-table_resizable-cols" tabindex="0" style="table-layout: fixed;">
                 <thead>
                     <tr>
                         <th class={headClasses} scope="col" tabindex="-1">
@@ -113,8 +113,8 @@
                                 </div>
                             </div>
                         </th>
-                        <th scope="col" tabindex="-1">
-                            <div class="slds-cell-fixed">
+                        <th scope="col" class="lastColumn" tabindex="-1">
+                            <div class="slds-cell-fixed lastColumn">
                                 <div class="slds-th__action slds-text-link--reset">
                                 </div>
                                 <div class="slds-truncate slds-assistive-text" title="Actions">Actions</div>
@@ -176,7 +176,7 @@
     
                             </td>
                             <td data-label={labels.RD2_Actions} tabindex="-1" role="gridcell">
-                                <div class={rowClasses} title={labels.RD2_Actions}>
+                                <div class="lastColumn dv-dynamic-width" title={labels.RD2_Actions}>
                                     <lightning-button-menu class="dv-dynamic-mobile" menu-alignment="auto" alternative-text={labels.RD2_Actions}>
                                         <template for:each={item.actions} for:item="action">
                                             <p key={action.name} data-recid={action.name}>

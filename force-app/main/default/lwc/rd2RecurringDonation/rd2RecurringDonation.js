@@ -29,7 +29,7 @@ const FormFactorType = Object.freeze({
 const MOBILE_CLASSES_ROW = "slds-truncate dv-dynamic-width dv-dynamic-mobile";
 const DESKTOP_CLASSES_ROW = "slds-truncate dv-dynamic-width";
 const MOBILE_CLASSES_HEAD = "slds-is-resizable dv-dynamic-width dv-dynamic-mobile";
-const DESKTOP_CLASSES_HEAD = "slds-is-resizable dv-dynamic-width";
+const DESKTOP_CLASSES_HEAD = "slds-is-resizable dv-dynamic-width dynamic-wt";
 const MOBILE_VIEW_MORE = "viewMore";
 const DESKTOP_VIEW_MORE = "slds-hide";
 const MOBILE_HEADER_CLASS = "slds-border_right slds-border_left";
@@ -203,8 +203,8 @@ export default class RecurringDonationTable extends LightningElement {
     handlemousemove(e) {
         if (this._tableThColumn && this._tableThColumn.tagName === "TH") {
             this._diffX = e.pageX - this._pageX;
-            this.template.querySelector("table").style.width =
-                this.template.querySelector("table") - this._diffX + "px";
+            console.log("🚀 ~ file: rd2RecurringDonation.js ~ line 206 ~ RecurringDonationTable ~ handlemousemove ~ this._diffX", this._diffX)
+            this.template.querySelector("table").style.width = this.template.querySelector("table") - this._diffX + "px";
 
             this._tableThColumn.style.width = this._tableThWidth + this._diffX + "px";
             this._tableThInnerDiv.style.width = this._tableThColumn.style.width;
@@ -222,7 +222,6 @@ export default class RecurringDonationTable extends LightningElement {
 
     handledblclickresizable() {
         let tableThs = this.template.querySelectorAll("th");
-        console.log("🚀 ~ file: rd2RecurringDonation.js ~ line 227 ~ RecurringDonationTable ~ handledblclickresizable ~ tableThs", tableThs.length)
         let tableBodyRows = this.template.querySelectorAll("table tbody tr");
         console.log(this._initWidths)
         tableThs.forEach((th, ind) => {
@@ -231,7 +230,6 @@ export default class RecurringDonationTable extends LightningElement {
         });
         tableBodyRows.forEach((row) => {
             let rowTds = row.querySelectorAll(".dv-dynamic-width");
-            console.log("🚀 ~ file: rd2RecurringDonation.js ~ line 235 ~ RecurringDonationTable ~ tableBodyRows.forEach ~ rowTds", rowTds.length)
             rowTds.forEach((td, ind) => {
                 rowTds[ind].style.width = this._initWidths[ind] + 'px';
             });
@@ -321,6 +319,15 @@ export default class RecurringDonationTable extends LightningElement {
     }
 
     getRecurringDonationFields() {
+        if (!this._initWidths) {
+            this._initWidths = [];
+            let tableThs = this.template.querySelectorAll("th");
+            console.log(tableThs.length);
+            tableThs.forEach((th) => {
+                console.log(th.offsetWidth);
+                this._initWidths.push(th.offsetWidth);
+            });
+        }
         retrieveTableView({elevateFilter:this.donationTypeFilter}).then((data) => {
             if (data) {
                 this.data = data.map((el) => {
@@ -358,13 +365,7 @@ export default class RecurringDonationTable extends LightningElement {
             nextDonationHtml += `</div>`
             const container = this.template.querySelector(`[data-ndid=${item.recurringDonation.Id}]`);
             container.innerHTML = nextDonationHtml;
-            if (!this._initWidths) {
-                this._initWidths = [];
-                let tableThs = this.template.querySelectorAll(".slds-cell-fixed");
-                tableThs.forEach((th) => {
-                    this._initWidths.push(th.offsetWidth);
-                });
-            }
+            
             this.handledblclickresizable();
           });
         });
