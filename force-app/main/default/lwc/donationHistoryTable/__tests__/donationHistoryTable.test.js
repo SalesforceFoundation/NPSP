@@ -4,9 +4,7 @@ import { extended, full } from "@sa11y/preset-rules";
 import { setup } from "@sa11y/jest";
 const MOCK_DATA = require('./data/donationHistoryTableData.json');
 
-beforeAll(() => {
-    setup();
-});
+setup();
 
 // Helper function to wait until the microtask queue is empty. This is needed for promise
 // timing when calling imperative Apex.
