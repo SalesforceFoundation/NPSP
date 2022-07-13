@@ -232,9 +232,18 @@ export default class rd2EntryForm extends LightningElement {
             lightning-input-field[data-id="plannedInstallments"] {
                 margin-top: -4px;
             }
+            .slds-form-element_horizontal .slds-form-element__help, .slds-form_horizontal .slds-form-element .slds-form-element__help, .slds-form_stacked .slds-form-element_horizontal .slds-form-element__help {
+                margin-left: initial;
+            }
+            
             @media screen and (min-width: 1135px) {
                 .fixExperienceDayOfMonth[c-rd2EntryFormScheduleSection_rd2EntryFormScheduleSection] {
                     margin-top: -4px;
+                }
+            }
+            @media screen and (max-width: 1024px) {
+                .rd2-entry-custom-field-padding[c-rd2EntryFormScheduleSection_rd2EntryFormScheduleSection] {
+                    padding-top: 5px;
                 }
             }`;
             this.template.querySelector("lightning-record-edit-form").appendChild(this.style);
