@@ -1,4 +1,4 @@
-"""Locators for summer '21"""
+"""Locators for summer '22"""
 
 npsp_lex_locators={
 	'breadcrumb': "//li[contains(@class, 'slds-breadcrumb__item')]/span[text()='{}']",
