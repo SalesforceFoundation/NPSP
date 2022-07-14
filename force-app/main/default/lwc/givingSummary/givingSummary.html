@@ -1,8 +1,8 @@
 <template>
   <lightning-card>
-    <lightning-layout multiple-rows="true">
-      <lightning-layout-item size="12">
-        <h2 class={summaryTitleClass}>
+    <lightning-layout role="tablist" multiple-rows="true">
+      <lightning-layout-item tabindex="0" size="12">
+        <h2 id="GivingSummaryTitle" class={summaryTitleClass}>
           {labels.donationHistoryGivingSummaryTitle}
         </h2>
       </lightning-layout-item>
@@ -16,6 +16,7 @@
       </template>
       <template if:false={errorMessage}>
         <lightning-layout-item
+        tabindex="0" role="tab"
           size="12"
           medium-device-size="4"
           class={rowClasses}
@@ -29,6 +30,7 @@
           </span>
         </lightning-layout-item>
         <lightning-layout-item
+        tabindex="0" role="tab"
           size="12"
           medium-device-size="4"
           class={rowClasses}
@@ -42,6 +44,7 @@
           </span>
         </lightning-layout-item>
         <lightning-layout-item
+        tabindex="0" role="tab"
           size="12"
           medium-device-size="4"
           class="slds-text-heading_small  slds-var-p-around_small slds-text-align_left"
