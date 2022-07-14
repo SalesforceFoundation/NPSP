@@ -42,7 +42,6 @@ public without sharing class UTIL_AuraEnabledCommon {
     @AuraEnabled(cacheable=true)
     public static OrgDomainInfo getOrgDomainInfo() {
         OrgDomainInfo domainInfo;
-
         try {
             String url = System.Url.getOrgDomainUrl().getHost();
             String[] urlParts = url.split('\\.');
@@ -50,7 +49,7 @@ public without sharing class UTIL_AuraEnabledCommon {
             String podName = [SELECT InstanceName FROM Organization].InstanceName.toLowerCase();
 
             domainInfo = new OrgDomainInfo(urlParts[0], podName);
-            
+            domainInfo.communityBaseURL = Site.getBaseUrl();
         } catch (Exception ex) {
             throwAuraHandledException(ex.getMessage());
         }
@@ -87,6 +86,7 @@ public without sharing class UTIL_AuraEnabledCommon {
     public class OrgDomainInfo {
         @AuraEnabled public String orgDomain;
         @AuraEnabled public String podName;
+        @AuraEnabled public String communityBaseURL;
 
         public OrgDomainInfo (String orgDomain, String podName) {
             this.orgDomain = orgDomain;
