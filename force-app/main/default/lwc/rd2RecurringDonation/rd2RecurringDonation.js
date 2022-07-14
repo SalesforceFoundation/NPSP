@@ -27,7 +27,7 @@ const FormFactorType = Object.freeze({
 });
 
 const MOBILE_CLASSES_ROW = "slds-truncate dv-dynamic-width dv-dynamic-mobile";
-const DESKTOP_CLASSES_ROW = "slds-truncate dv-dynamic-width";
+const DESKTOP_CLASSES_ROW = "slds-truncate dv-dynamic-width width-hundred";
 const MOBILE_CLASSES_HEAD = "slds-is-resizable dv-dynamic-width dv-dynamic-mobile";
 const DESKTOP_CLASSES_HEAD = "slds-is-resizable dv-dynamic-width dynamic-wt";
 const MOBILE_VIEW_MORE = "viewMore";
@@ -100,7 +100,7 @@ export default class RecurringDonationTable extends LightningElement {
 
     connectedCallback() {
       if(!this.isMobile){
-        this.tdClasses = '';
+        this.tdClasses = 'width-hundred';
       }
       this.template.addEventListener('keydown', (event) => {
         let cells   = this.template.querySelectorAll("[tabindex='-1']");
@@ -204,7 +204,7 @@ export default class RecurringDonationTable extends LightningElement {
         if (this._tableThColumn && this._tableThColumn.tagName === "TH") {
             this._diffX = e.pageX - this._pageX;
             console.log("🚀 ~ file: rd2RecurringDonation.js ~ line 206 ~ RecurringDonationTable ~ handlemousemove ~ this._diffX", this._diffX)
-            this.template.querySelector("table").style.width = this.template.querySelector("table") - this._diffX + "px";
+            //this.template.querySelector("table").style.width = this.template.querySelector("table") - this._diffX + "px";
 
             this._tableThColumn.style.width = this._tableThWidth + this._diffX + "px";
             this._tableThInnerDiv.style.width = this._tableThColumn.style.width;
@@ -319,7 +319,7 @@ export default class RecurringDonationTable extends LightningElement {
     }
 
     getRecurringDonationFields() {
-        if (!this._initWidths) {
+        /* if (!this._initWidths) {
             this._initWidths = [];
             let tableThs = this.template.querySelectorAll("th");
             console.log(tableThs.length);
@@ -327,7 +327,7 @@ export default class RecurringDonationTable extends LightningElement {
                 console.log(th.offsetWidth);
                 this._initWidths.push(th.offsetWidth);
             });
-        }
+        } */
         retrieveTableView({elevateFilter:this.donationTypeFilter}).then((data) => {
             if (data) {
                 this.data = data.map((el) => {
@@ -345,7 +345,6 @@ export default class RecurringDonationTable extends LightningElement {
                     }
                     let lastModifiedDate = new Date(el.recurringDonation.LastModifiedDate).toLocaleDateString(undefined, { timeZone: this.timeZone });
                     return { actions, ...el, nexDonationFormatFirstElement, nexDonationFormatSecondElement, lastModifiedDate };
-                    //return {};
                 });
             }
         }).finally(() => {
@@ -366,7 +365,7 @@ export default class RecurringDonationTable extends LightningElement {
             const container = this.template.querySelector(`[data-ndid=${item.recurringDonation.Id}]`);
             container.innerHTML = nextDonationHtml;
             
-            this.handledblclickresizable();
+            //this.handledblclickresizable();
           });
         });
     }
