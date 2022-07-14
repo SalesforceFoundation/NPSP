@@ -2,11 +2,11 @@
     <lightning-layout vertical-align='center' multiple-rows='true'>
 
         <lightning-layout-item size='12' padding='horizontal-small'>
-            <article class='credit-card-container slds-var-m-top_small'>
+            <article class={creditCardContainerClass}>
 
                 <lightning-layout vertical-align='center' multiple-rows='true'>
 
-                    <lightning-layout-item size='12'>
+                    <lightning-layout-item size='12' if:false={isDigitalExperience}>
                         <div class='credit-card-header slds-var-p-vertical_small slds-var-p-horizontal_x-small'>
                             <lightning-layout vertical-align='center'>
                                 <lightning-layout-item size='6'>
@@ -54,7 +54,7 @@
                         </div>
                     </lightning-layout-item>
 
-                    <lightning-layout-item size="12" class='slds-var-p-horizontal_small slds-var-p-top_small'>
+                    <lightning-layout-item size="12" class={cardInfoClass}>
                         <template if:true={isDisabled}>
                             <template if:true={showExistingCardInfo}>
                                 <lightning-layout vertical-align='center' multiple-rows='true'>
