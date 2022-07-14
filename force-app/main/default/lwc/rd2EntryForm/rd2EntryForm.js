@@ -59,6 +59,8 @@ import RD2_Payment_method_was_updated from "@salesforce/label/c.RD2_Payment_meth
 import RD2_Recurring_Donation_was_updated from "@salesforce/label/c.RD2_Recurring_Donation_was_updated";
 import CreditCardPaymentMethod from "@salesforce/label/c.RD2_Credit_Card_Payment_Method_Label";
 import ACHPaymentMethodLabel from "@salesforce/label/c.RD2_ACH_Payment_Method_Label";
+import updatePaymentMethod from "@salesforce/label/c.updatePaymentMethod";
+import changeAmountOrFrequency from "@salesforce/label/c.changeAmountOrFrequency";
 
 import handleCommitment from "@salesforce/apex/RD2_EntryFormController.handleCommitment";
 import logError from "@salesforce/apex/RD2_EntryFormController.logError";
@@ -83,6 +85,8 @@ export default class rd2EntryForm extends LightningElement {
         RD2_Payment_Details,
         RD2_Payment_method_was_updated,
         RD2_Recurring_Donation_was_updated,
+        updatePaymentMethod,
+        changeAmountOrFrequency,
         cancelButtonLabel,
         closeButtonLabel,
         saveButtonLabel,
@@ -279,7 +283,6 @@ export default class rd2EntryForm extends LightningElement {
         }
 
         registerListener(ELEVATE_WIDGET_EVENT_NAME, this.handleElevateWidgetDisplayState, this);
-
         this.applyExperienceSiteChanges();
     }
 
