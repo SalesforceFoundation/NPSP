@@ -35,15 +35,26 @@
 .nonpointer {
     pointer-events: none;
 }
-.dynamic-wt{
+.th-dynamic-width{
     width: 10%;
-}
-.dv-dynamic-width{
-    min-width: 35px;
+    min-width: 50px;
 }
 .lastColumn{
     padding-right: 20%;
 }
-.width-hundred{
+.td-dynamic-width{
     width: 100%;
+    min-width: 50px;
+}
+.table-container{
+    position: relative;
+}
+.cell{
+    position: relative;
+    top: 0;
+    min-height: 2rem;
+    min-width: 50px;
+}
+.th-padding-top{
+    padding-top: 0;
 }
