@@ -210,7 +210,13 @@
                 </tbody>
             </table>
         </div>
-        <c-update-payment-method-modal is-bank-payment-allowed={allowACHPaymentMethod} current-record={currentRecord} open-update-payment-method={openUpdatePaymentMethod} onclose={handleClose}></c-update-payment-method-modal>
-        <c-change-amount-or-frequency-modal is-initially-monthly-donation={isInitiallyMonthlyDonation} is-elevate-donation={isElevateDonation} fixed-installments-label={fixedInstallmentsLabel} day-of-month-field-label={dayOfMonthFieldLabel} default-record-type-id={defaultRecordTypeId} current-record={currentRecord} open-change-amount-or-frequency={openChangeAmountOrFrequency} onclose={handleClose}></c-change-amount-or-frequency-modal>
-        <c-stop-recurring-donation-modal current-record={currentRecord} open-stop-recurring-donation={openStopRecurringDonation} onclose={handleClose}></c-stop-recurring-donation-modal>
+        <template if:true={openUpdatePaymentMethod}>
+            <c-rd2-entry-form record-id={currentRecord.recurringDonation.Id} onclose={handleClose} is-payment-modal=true is-bank-payment-allowed={allowACHPaymentMethod} is-experience-site=true></c-rd2-entry-form>
+        </template>
+        <template if:true={openChangeAmountOrFrequency}>
+            <c-rd2-entry-form record-id={currentRecord.recurringDonation.Id} onclose={handleClose} is-amount-frequency-modal=true is-elevate-donation={isElevateDonation} is-initially-monthly-donation={isInitiallyMonthlyDonation} is-experience-site=true></c-rd2-entry-form>
+        </template>
+        <template if:true={openStopRecurringDonation}>
+            <c-stop-recurring-donation-modal current-record={currentRecord} open-stop-recurring-donation={openStopRecurringDonation} onclose={handleClose}></c-stop-recurring-donation-modal>
+        </template>
 </template>
