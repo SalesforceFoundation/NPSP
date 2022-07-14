@@ -37,6 +37,7 @@ const DESKTOP_VIEW_MORE = "slds-hide";
 const MOBILE_HEADER_CLASS = "slds-border_right slds-border_left";
 const DESKTOP_HEADER_CLASS = "slds-table_header-fixed_container slds-border_right slds-border_left table_top";
 const CLOSED_STATUS = "Closed";
+const MONTHLY = "Monthly";
 
 export default class RecurringDonationTable extends LightningElement {
     openUpdatePaymentMethod = false;
@@ -328,7 +329,7 @@ export default class RecurringDonationTable extends LightningElement {
         });
 
         this.isElevateDonation = this.currentRecord.recurringDonation.CommitmentId__c ? true : false;
-        this.isInitiallyMonthlyDonation = this.currentRecord.recurringDonation.npe03__Installment_Period__c === 'Monthly';
+        this.isInitiallyMonthlyDonation = this.currentRecord.recurringDonation.npe03__Installment_Period__c === MONTHLY;
 
         switch (action) {
             case "updatePaymentMethod":
