@@ -51,6 +51,20 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
         private set;
     }
 
+    /**
+    * @description Returns true if the "Exclude Closed Recurring Donations" setting is enabled
+    * Can be manually overwritten for use in Bulk Data Processes
+    */
+    public Boolean closedFilterEnabled {
+        get {
+            if (closedFilterEnabled == null) {
+                closedFilterEnabled = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().ExcludeClosedRecurringDonations__c;
+            }
+            return closedFilterEnabled != null ? closedFilterEnabled : false;
+        }
+        set;
+    }
+
     /***
     * @description Contains batch Apex class name
     */
@@ -129,6 +143,16 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
         set;
     }
 
+    private Set<String> closedStatusValues {
+        get {
+            if (closedStatusValues == null) {
+                closedStatusValues = RD2_StatusMapper.getInstance().getClosedStatusValues();
+            }
+            return closedStatusValues;
+        }
+        set;
+    }
+
     /**
     * @description Count of RD's processed by the batch
     */
@@ -193,17 +217,7 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
 
         validateStatusField();
 
-        String query = getRDBatchQuery();
-
-        System.debug(query); 
-        System.debug(isConcurrentBatch); 
-
-        if (isConcurrentBatch) {    
-            new UTIL_BatchJobService().logConcurrentBatchError(batchClassName, ERR_Handler_API.Context.RD);
-            query += ' LIMIT 0';
-        }    
-        return Database.getQueryLocator(query);
-        
+        return Database.getQueryLocator(getRDBatchQuery());
     }
 
     /**
@@ -231,19 +245,22 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     */
     @TestVisible
     private String getRDBatchQuery() {
-        Boolean rdBatchFilterOn = getOpportunityModifiedFilterEnabled();
-        String rdFilterWhereClause;
-        if (rdBatchFilterOn) {
-            rdFilterWhereClause = 'Status__c != ' + RD2_Constants.STATUS_CLOSED;
-        }
-
-        return new UTIL_Query()
+        UTIL_Query query = new UTIL_Query()
             .withFrom(npe03__Recurring_Donation__c.SObjectType)
             .withSelectFields(
                 new Set<String>{ 'Id' }
-            )
-            .withWhere(rdFilterWhereClause)
-            .build();
+            );
+
+        if (closedFilterEnabled) {
+            query.withWhere('Status__c NOT IN :closedStatusValues');
+        }
+
+        if (isConcurrentBatch) {
+            new UTIL_BatchJobService().logConcurrentBatchError(batchClassName, ERR_Handler_API.Context.RD);
+            query.withLimit(0);
+        }
+
+        return query.build();
     }
 
     /**
@@ -282,15 +299,6 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
         }
 
         return configValue.intValue();
-    }
-
-    private Boolean getOpportunityModifiedFilterEnabled() {
-        return UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Exclude_Closed_Recurring_Donations__c;
-    }
-
-    private String getDateForSoql(Date soqlDate) {
-        return DateTime.newInstance(soqlDate.year(), soqlDate.month(), soqlDate.day())
-            .format('YYYY-MM-dd');
     }
 
     /**

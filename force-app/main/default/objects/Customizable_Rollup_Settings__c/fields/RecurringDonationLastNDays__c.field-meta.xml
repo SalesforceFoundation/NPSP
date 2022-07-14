@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Recurring_Donation_Last_N_Days__c</fullName>
+    <fullName>RecurringDonationLastNDays__c</fullName>
     <defaultValue>31</defaultValue>
     <description>Limit Opportunities included in the Recurring Donation Rollup to those modified within a number of days.</description>
     <externalId>false</externalId>
