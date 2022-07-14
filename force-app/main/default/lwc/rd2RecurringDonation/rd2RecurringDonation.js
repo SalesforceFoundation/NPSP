@@ -328,7 +328,7 @@ export default class RecurringDonationTable extends LightningElement {
         });
 
         this.isElevateDonation = this.currentRecord.recurringDonation.CommitmentId__c ? true : false;
-        this.isInitiallyMonthlyDonation = this.currentRecord.recurringDonation.Day_of_Month__c ? true : false;
+        this.isInitiallyMonthlyDonation = this.currentRecord.recurringDonation.npe03__Installment_Period__c === 'Monthly';
 
         switch (action) {
             case "updatePaymentMethod":

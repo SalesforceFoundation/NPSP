@@ -208,7 +208,7 @@
         </table>
     </div>
     <template if:true={openUpdatePaymentMethod}>
-        <c-rd2-entry-form record-id={currentRecord.recurringDonation.Id} onclose={handleClose} is-payment-modal=true is-bank-payment-allowed={donationTypeFilter} is-experience-site=true></c-rd2-entry-form>
+        <c-rd2-entry-form record-id={currentRecord.recurringDonation.Id} onclose={handleClose} is-payment-modal=true is-bank-payment-allowed={allowACHPaymentMethod} is-experience-site=true></c-rd2-entry-form>
     </template>
     <template if:true={openChangeAmountOrFrequency}>
         <c-rd2-entry-form record-id={currentRecord.recurringDonation.Id} onclose={handleClose} is-amount-frequency-modal=true is-elevate-donation={isElevateDonation} is-initially-monthly-donation={isInitiallyMonthlyDonation} is-experience-site=true></c-rd2-entry-form>

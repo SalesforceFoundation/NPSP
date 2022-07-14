@@ -21,7 +21,9 @@
                 </lightning-button-icon>
                 <h2
                     class="slds-text-heading_medium slds-hyphenate header-string slds-p-top_large slds-p-horizontal_medium" id="modal-heading-01">
-                    {headerLabel}
+                    <template if:false={isExperienceSite}>{headerLabel}</template>
+                    <template if:true={isPaymentModal}>{customLabels.updatePaymentMethod}</template>
+                    <template if:true={isAmountFrequencyModal}>{customLabels.changeAmountOrFrequency}</template>
                 </h2>
             </header>
 
