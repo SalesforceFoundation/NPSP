@@ -28,6 +28,7 @@ import handleUpdatePaymentCommitment from "@salesforce/apex/RD2_EntryFormControl
 import logError from "@salesforce/apex/RD2_EntryFormController.logError";
 import { Rd2Service } from "c/rd2Service";
 
+const ELEVATE = "elevate";
 export default class rd2EditPaymentInformationModal extends LightningElement {
     @api rdRecord;
     @api defaultRecordTypeId;
@@ -131,7 +132,7 @@ export default class rd2EditPaymentInformationModal extends LightningElement {
         this.isSaving = true;
         this.isSaveButtonDisabled = true;
 
-        this.loadingText = this.rd2Service.getPaymentProcessingMessage(this.paymentMethod);
+        this.loadingText = !this.rd2Service.getPaymentProcessingMessage(this.paymentMethod).includes(ELEVATE) ? this.rd2Service.getPaymentProcessingMessage(this.paymentMethod) : '';
 
         try {
             const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
