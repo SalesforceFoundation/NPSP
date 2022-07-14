@@ -50,6 +50,14 @@ const mockDomainInfo = () => {
    }
 }
 
+const mockDomainInfoExperienceSite = () => {
+   return {
+      communityBaseURL: "https://flow-innovation-4700-dev-ed.my.site.com",
+      orgDomain: 'flow-connect-2738-dev-ed',
+      podName: 'CS43'
+   }
+}
+
 describe('c-ps-Elevate-Token-Handler', () => {
 
    afterEach(() => {
@@ -113,6 +121,58 @@ describe('c-ps-Elevate-Token-Handler', () => {
       expect(vfURLS.length).toEqual(4);
       vfURLS.forEach(url => {
          expect(url.value.includes('npsp')).toBe(true);
+      })
+   });
+
+   it('should handle a valid message on Experience Sites', () => {
+      psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfoExperienceSite());
+      const isMessageHandled =
+          psElevateTokenHandler.shouldHandleMessage(
+              createPostMessageEvent('valid'));
+      expect(isMessageHandled).toBe(true);
+   });
+
+   it('should discard an invalid message on Experience Sites', () => {
+      psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfoExperienceSite());
+      const isMessageHandled =
+          psElevateTokenHandler.shouldHandleMessage(
+              createPostMessageEvent('invalid'));
+      expect(isMessageHandled).toBe(false);
+
+   });
+
+   it('should handle a token message on Experience Sites', () => {
+      psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfoExperienceSite());
+      const isMessageHandled =
+          psElevateTokenHandler.shouldHandleMessage(
+              createPostMessageEvent('token'));
+      expect(isMessageHandled).toBe(true);
+
+   });
+
+   it('should discard an error message on Experience Sites', () => {
+      psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfoExperienceSite());
+      const isMessageHandled =
+          psElevateTokenHandler.shouldHandleMessage(
+              createPostMessageEvent('error'));
+      expect(isMessageHandled).toBe(true);
+
+   });
+
+   it('should discard an invalid JSON data from right origin on Experience Sites', () => {
+      psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfoExperienceSite());
+      const isMessageHandled =
+          psElevateTokenHandler.shouldHandleMessage(
+              createPostMessageEvent('invalidJSON'));
+      expect(isMessageHandled).toBe(false);
+
+   });
+
+   it('should create five non-namespaced visualforce origin urls on Experience Sites', () => {
+      const vfURLS = buildVFUrls(mockDomainInfoExperienceSite(), 'c');
+      expect(vfURLS.length).toEqual(5);
+      vfURLS.forEach(url => {
+         expect(url.value.includes('c')).toBe(true);
       })
    });
 
