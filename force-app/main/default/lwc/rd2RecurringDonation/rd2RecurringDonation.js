@@ -36,13 +36,17 @@ const MOBILE_VIEW_MORE = "viewMore";
 const DESKTOP_VIEW_MORE = "slds-hide";
 const MOBILE_HEADER_CLASS = "slds-border_right slds-border_left";
 const DESKTOP_HEADER_CLASS = "slds-table_header-fixed_container slds-border_right slds-border_left table_top";
-const CANCELED_STATUS = "Canceled";
+const CLOSED_STATUS = "Closed";
+const MONTHLY = "Monthly";
 
 export default class RecurringDonationTable extends LightningElement {
     openUpdatePaymentMethod = false;
     openChangeAmountOrFrequency = false;
     openStopRecurringDonation = false;
     currentRecord;
+    fixedInstallmentsLabel;
+    isElevateDonation = false;
+    isInitiallyMonthlyDonation = false;
     dayOfMonthFieldLabel;
     defaultRecordTypeId;
     fixedInstallmentsLabel;
@@ -323,16 +327,10 @@ export default class RecurringDonationTable extends LightningElement {
         this.currentRecord = this.data.find((row) => {
             return row.recurringDonation.Id === e.target.getAttribute("data-recordid");
         });
-        if(this.currentRecord.recurringDonation.CommitmentId__c){
-            this.isElevateDonation = true;
-        }else{
-            this.isElevateDonation = false;
-        }
-        if(this.currentRecord.recurringDonation.Day_of_Month__c){
-            this.isInitiallyMonthlyDonation = true;
-        }else{
-            this.isInitiallyMonthlyDonation = false;
-        }
+
+        this.isElevateDonation = this.currentRecord.recurringDonation.CommitmentId__c ? true : false;
+        this.isInitiallyMonthlyDonation = this.currentRecord.recurringDonation.npe03__Installment_Period__c === MONTHLY;
+
         switch (action) {
             case "updatePaymentMethod":
                 this.openUpdatePaymentMethod = true;
@@ -379,7 +377,7 @@ export default class RecurringDonationTable extends LightningElement {
                     
                     actions.map((action) => {
                         action.disabled = false;
-                        if(el.status === CANCELED_STATUS || (action.name !== 'stopRecurringDonation' && (this.currency !== "USD" && isElevate))) {
+                        if(el.status === CLOSED_STATUS || (action.name !== 'stopRecurringDonation' && (this.currency !== "USD" && isElevate))) {
                             action.disabled = true;
                         }
                         

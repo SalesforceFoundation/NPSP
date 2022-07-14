@@ -476,6 +476,17 @@ global with sharing class BDI_DataImportService {
     }
 
     /*******************************************************************************************************
+    * @description Sets perfLogger based on the input settings. The method is called from tests only
+    * since the variable is global with private set().
+    * @param perfLogger Data Import Settings
+    * @return void
+    */
+    @TestVisible
+    private static void injectPerfLogger(BDI_PerfLogger pl) {
+        perfLogger = pl;
+    }
+
+    /*******************************************************************************************************
     * @description coerces an object to a String value
     * @param obj an Object
     * @return String either the String value or an empty String ''
@@ -1029,7 +1040,7 @@ global with sharing class BDI_DataImportService {
         Map<String, String> mapDIFieldToDstField) {
 
         Object value = dataImport.get(dataImportField);
-
+        
         // explicitly avoid updating unchecked booleans (since we can't tell the difference between null and false)
         if (value != null && value != false) {
             String destinationField = mapDIFieldToDstField.get(dataImportField);

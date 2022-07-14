@@ -36,7 +36,10 @@
 */
 public with sharing class RD2_ETableController {
     
-    private final String STATUS_CANCELED = 'Canceled';
+    private final String STATUS_FAILING = 'Failing';
+    private final String STATUS_REJECTED = 'Rejected';
+    private final String STATUS_PAYMENT_IN_PROGRESS = 'Payment in Progress';
+    private final String STATUS_CLOSED = 'Closed';
 
     @TestVisible
     private UTIL_Permissions permissions {
@@ -100,7 +103,7 @@ public with sharing class RD2_ETableController {
     * @description returns a list of processed recurring donations
     * @return List<TableView> List of processed recurring donation records
     */
-    @AuraEnabled
+    @AuraEnabled(cacheable=false)
     public static List<TableView> retrieveTableView(String elevateFilter) {
         try {
             return controller.getTableViews(elevateFilter);
@@ -254,14 +257,11 @@ public with sharing class RD2_ETableController {
             mapStatus.put(ple.getValue(), ple.getLabel());
         }
 
-        if(recurringDonation.Status__c == RD2_Constants.STATUS_PAUSED) {
-            status = mapStatus.get(recurringDonation.Status__c);
-        } else if(recurringDonation.Status__c != RD2_Constants.STATUS_PAUSED && statusMapper.getState(recurringDonation.Status__c) != RD2_Constants.STATUS_CLOSED) {
-            status = statusMapper.getState(recurringDonation.Status__c);
+        if(recurringDonation.Status__c == RD2_Constants.STATUS_PAUSED || recurringDonation.Status__c == STATUS_FAILING || recurringDonation.Status__c == STATUS_REJECTED || recurringDonation.Status__c == STATUS_PAYMENT_IN_PROGRESS) {
+            status = STATUS_CLOSED;
         } else {
-            status = STATUS_CANCELED;
+            status = mapStatus.get(recurringDonation.Status__c);
         }
-
         return status;
     }
 
