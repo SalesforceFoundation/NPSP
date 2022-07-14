@@ -58,7 +58,7 @@ public inherited sharing class RD2_ERecurringDonationsSelector {
         Id currentContactId = this.currentContactId;
         List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>();
         if(currentContactId != NULL) {
-            String queryString = 'SELECT npe03__Amount__c, '
+            String queryString = 'SELECT npe03__Amount__c, FORMAT(npe03__Amount__c) Amt, '
                                 + 'npe03__Installment_Period__c, '
                                 + 'InstallmentFrequency__c, '
                                 + 'Day_of_Month__c, '
