@@ -171,12 +171,16 @@ public inherited sharing class PMT_ValidationService {
             addError(payment, System.Label.pmtPaymentNotRefundable);
         }
 
-        if (payment.npe01__Payment_Amount__c + refundInfo.originalPayment.npe01__Payment_Amount__c < 0) {
+        if (String.IsNotBlank(payment.Elevate_Payment_ID__c) && PMT_RefundService.isElevateEnabled()) {
+            return this;
+        }
+
+        if (payment.npe01__Payment_Amount__c + refundInfo.originalPayment.npe01__Payment_Amount__c != 0) {
             addError(payment, System.Label.pmtRefundAmountInvalid);
         }
 
         refundInfo.updateRefundAmount(payment);
-        if (refundInfo.remainingBalance < 0) {
+        if (refundInfo.remainingBalance != 0) {
             addError(payment, System.Label.pmtPaymentNotRefundable);
         }
 
