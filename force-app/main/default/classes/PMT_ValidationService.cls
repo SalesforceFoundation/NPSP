@@ -171,10 +171,6 @@ public inherited sharing class PMT_ValidationService {
             addError(refund, System.Label.pmtPaymentNotRefundable);
         }
 
-        if (String.IsNotBlank(refund.Elevate_Payment_ID__c) && PMT_RefundService.isElevateEnabled()) {
-            return this;
-        }
-
         if (refund.npe01__Payment_Amount__c + refundInfo.originalPayment.npe01__Payment_Amount__c < 0) {
             addError(refund, System.Label.pmtRefundAmountInvalid);
         }
