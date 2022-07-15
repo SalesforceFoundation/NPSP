@@ -29,13 +29,13 @@ const FormFactorType = Object.freeze({
 });
 
 const MOBILE_CLASSES_ROW = "slds-truncate dv-dynamic-width dv-dynamic-mobile";
-const DESKTOP_CLASSES_ROW = "slds-truncate dv-dynamic-width";
+const DESKTOP_CLASSES_ROW = "slds-truncate dv-dynamic-width td-dynamic-width";
 const MOBILE_CLASSES_HEAD = "slds-is-resizable dv-dynamic-width dv-dynamic-mobile";
-const DESKTOP_CLASSES_HEAD = "slds-is-resizable dv-dynamic-width";
+const DESKTOP_CLASSES_HEAD = "slds-is-resizable dv-dynamic-width th-dynamic-width";
 const MOBILE_VIEW_MORE = "viewMore";
 const DESKTOP_VIEW_MORE = "slds-hide";
 const MOBILE_HEADER_CLASS = "slds-border_right slds-border_left";
-const DESKTOP_HEADER_CLASS = "slds-table_header-fixed_container slds-border_right slds-border_left table_top";
+const DESKTOP_HEADER_CLASS = "slds-table_header-fixed_container slds-border_right slds-border_left th-padding-top";
 const CLOSED_STATUS = "Closed";
 const MONTHLY = "Monthly";
 
@@ -49,9 +49,6 @@ export default class RecurringDonationTable extends LightningElement {
     isInitiallyMonthlyDonation = false;
     dayOfMonthFieldLabel;
     defaultRecordTypeId;
-    fixedInstallmentsLabel;
-    isElevateDonation = false;
-    isInitiallyMonthlyDonation = false;
 
     @api
     donationTypeFilter;
@@ -60,17 +57,15 @@ export default class RecurringDonationTable extends LightningElement {
     allowACHPaymentMethod;
 
     @track tdClasses = "hide-td";
+    @track actionClasses = "dv-dynamic-width"
 
     formFactor = FORM_FACTOR;
 
     paymentMethod = "";
 
-    fixedWidth = "width:8rem;";
-
     lastDonationDate = "";
 
     labels = {
-
         commonAmount,
         RDCL_Frequency,
         lblStatus,
@@ -103,18 +98,19 @@ export default class RecurringDonationTable extends LightningElement {
             this.dayOfMonthFieldLabel = data.fields.Day_of_Month__c.label;
             this.fixedInstallmentsLabel = data.fields.npe03__Installments__c.label;
             this.defaultRecordTypeId = data.defaultRecordTypeId;
+            this.getRecurringDonationFields();
         }
     }
 
     connectedCallback() {
-      this.getRecurringDonationFields();
       if(!this.isMobile){
-        this.tdClasses = '';
+        console.log('entra');
+        this.tdClasses = "td-dynamic-width";
+        this.actionClasses = "lastColumn dv-dynamic-width";
       }
       this.template.addEventListener('keydown', (event) => {
         let cells   = this.template.querySelectorAll("[tabindex='-1']");
         let active  = Array.prototype.indexOf.call(cells, event.target);
-        let rows    = this.template.querySelectorAll('tr').length;
         let columns = this.template.querySelectorAll('tr th').length;
         if (event.keyCode === 37) {
             active = (active > 0) ? active - 1 : active;
@@ -142,7 +138,7 @@ export default class RecurringDonationTable extends LightningElement {
      * @returns True if it is mobile
      */
     get isMobile() {
-        return this.formFactor === FormFactorType.Small;
+        return this.formFactor === FormFactorType.Small || this.formFactor === FormFactorType.Medium;
     }
 
     /**
@@ -185,43 +181,6 @@ export default class RecurringDonationTable extends LightningElement {
         return DESKTOP_CLASSES_HEAD;
     }
 
-    //FOR HANDLING THE HORIZONTAL SCROLL OF TABLE MANUALLY
-    tableOuterDivScrolled(event) {
-        this._tableViewInnerDiv = this.template.querySelector(".tableViewInnerDiv");
-        if (this._tableViewInnerDiv) {
-            if (!this._tableViewInnerDivOffsetWidth || this._tableViewInnerDivOffsetWidth === 0) {
-                this._tableViewInnerDivOffsetWidth = this._tableViewInnerDiv.offsetWidth;
-            }
-            this._tableViewInnerDiv.style =
-                "width:" +
-                (event.currentTarget.scrollLeft + this._tableViewInnerDivOffsetWidth) +
-                "px;" +
-                this.tableBodyStyle;
-        }
-        this.tableScrolled(event);
-    }
-
-    tableScrolled(event) {
-        if (this.enableInfiniteScrolling) {
-            if (event.target.scrollTop + event.target.offsetHeight >= event.target.scrollHeight) {
-                this.dispatchEvent(
-                    new CustomEvent("showmorerecords", {
-                        bubbles: true,
-                    })
-                );
-            }
-        }
-        if (this.enableBatchLoading) {
-            if (event.target.scrollTop + event.target.offsetHeight >= event.target.scrollHeight) {
-                this.dispatchEvent(
-                    new CustomEvent("shownextbatch", {
-                        bubbles: true,
-                    })
-                );
-            }
-        }
-    }
-
     handlemouseup(e) {
         this._tableThColumn = undefined;
         this._tableThInnerDiv = undefined;
@@ -230,20 +189,13 @@ export default class RecurringDonationTable extends LightningElement {
     }
 
     handlemousedown(e) {
-        if (!this._initWidths) {
-            this._initWidths = [];
-            let tableThs = this.template.querySelectorAll("table thead .dv-dynamic-width");
-            tableThs.forEach((th) => {
-                this._initWidths.push(th.style.width);
-            });
-        }
-
         this._tableThColumn = e.target.parentElement;
         this._tableThInnerDiv = e.target.parentElement;
+        
         while (this._tableThColumn.tagName !== "TH") {
             this._tableThColumn = this._tableThColumn.parentNode;
         }
-        while (!this._tableThInnerDiv.className.includes("slds-cell-fixed")) {
+        while (!this._tableThInnerDiv.className.includes("cell")) {
             this._tableThInnerDiv = this._tableThInnerDiv.parentNode;
         }
         this._pageX = e.pageX;
@@ -256,13 +208,12 @@ export default class RecurringDonationTable extends LightningElement {
     handlemousemove(e) {
         if (this._tableThColumn && this._tableThColumn.tagName === "TH") {
             this._diffX = e.pageX - this._pageX;
-            this.template.querySelector("table").style.width =
-                this.template.querySelector("table") - this._diffX + "px";
+            this.template.querySelector("table").style.width = this.template.querySelector("table") - this._diffX + "px";
 
             this._tableThColumn.style.width = this._tableThWidth + this._diffX + "px";
             this._tableThInnerDiv.style.width = this._tableThColumn.style.width;
 
-            let tableThs = this.template.querySelectorAll("table thead .dv-dynamic-width");
+            let tableThs = this.template.querySelectorAll("th");
             let tableBodyRows = this.template.querySelectorAll("table tbody tr");
             tableBodyRows.forEach((row) => {
                 let rowTds = row.querySelectorAll(".dv-dynamic-width");
@@ -271,21 +222,6 @@ export default class RecurringDonationTable extends LightningElement {
                 });
             });
         }
-    }
-
-    handledblclickresizable() {
-        let tableThs = this.template.querySelectorAll("table thead .dv-dynamic-width");
-        let tableBodyRows = this.template.querySelectorAll("table tbody tr");
-        tableThs.forEach((th, ind) => {
-            th.style.width = this._initWidths[ind];
-            th.querySelector(".slds-cell-fixed").style.width = this._initWidths[ind];
-        });
-        tableBodyRows.forEach((row) => {
-            let rowTds = row.querySelectorAll(".dv-dynamic-width");
-            rowTds.forEach((td, ind) => {
-                rowTds[ind].style.width = this._initWidths[ind];
-            });
-        });
     }
 
     paddingDiff(col) {
@@ -390,7 +326,7 @@ export default class RecurringDonationTable extends LightningElement {
             }
         }).finally(() => {
           this.data?.forEach((item) => {
-            let nextDonationHtml = `<div class="${this.rowClasses}" style="${this.fixedWidth}">`;
+            let nextDonationHtml = `<div class="${this.rowClasses}">`;
             if(item.recurringDonation.npe03__Next_Payment_Date__c !== "Invalid Date"){
                 if(item.nextDonation){
                     item.nextDonation.split(',').forEach((nextDonationElement) => {
@@ -403,7 +339,7 @@ export default class RecurringDonationTable extends LightningElement {
             nextDonationHtml += `</div>`
             const container = this.template.querySelector(`[data-ndid=${item.recurringDonation.Id}]`);
             container.innerHTML = nextDonationHtml;
-          })
+          });
         });
     }
 }
