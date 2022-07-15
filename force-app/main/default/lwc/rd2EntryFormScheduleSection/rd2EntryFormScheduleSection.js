@@ -89,6 +89,24 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
             this.setFields(this.rdObjectInfo.fields);
             this.buildFieldDescribes();
             this.isLoading = !this.isEverythingLoaded();
+            
+
+            this.cssHideExperienceSite = this.isExperienceSite ? 'slds-hide' : '';
+            this.cssHideOnlyPaymentModal = this.isPaymentModal ? 'slds-hide' : '';
+            this.cssHideOnlyAmountFrequencyModal = this.isAmountFrequencyModal ? 'slds-hide' : '';
+            
+            
+            if(this.isExperienceSite) {
+                if(this.rd2State.dayOfMonth) {
+                    this.isMonthlyDonation = !this.isElevateDonation ? true : false;
+                } else {
+                    this.isMonthlyDonation = false;
+                    let dd = String(new Date().getDate()).padStart(2, "0");
+                    this.rd2State.dayOfMonth = dd === 31 ? LAST_DAY_OF_MONTH : dd;
+                }
+                this.cssLastDay = !this.isMonthlyDonation || this.isPaymentModal ? 'slds-hide' : 'slds-p-right_small slds-p-left_small slds-size_12-of-12 slds-large-size_4-of-12 fixExperienceDayOfMonth';
+            }
+
         } else if (response.error) {
             this.hasError = true;
             this.dispatchEvent(new CustomEvent("errorevent", { detail: { value: response.error } }));
