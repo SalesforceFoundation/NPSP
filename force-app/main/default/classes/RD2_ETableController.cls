@@ -261,10 +261,10 @@ public with sharing class RD2_ETableController {
             mapStatus.put(ple.getValue(), ple.getLabel());
         }
 
-        if(recurringDonation.Status__c == RD2_Constants.STATUS_PAUSED || recurringDonation.Status__c == STATUS_FAILING || recurringDonation.Status__c == STATUS_REJECTED || recurringDonation.Status__c == STATUS_PAYMENT_IN_PROGRESS) {
-            status = STATUS_CLOSED;
+        if(recurringDonation.Status__c == RD2_Constants.STATUS_PAUSED) {
+            status = mapStatus.get(RD2_Constants.STATUS_PAUSED);
         } else {
-            status = mapStatus.get(recurringDonation.Status__c);
+            status = statusMapper.getState(recurringDonation.Status__c);
         }
         return status;
     }
