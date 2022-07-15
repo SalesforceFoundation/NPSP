@@ -3144,6 +3144,142 @@
         <value>Recurring</value>
     </labels>
     <labels>
+        <fullName>RD_achElevatePayment</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used to show the Payment Method using Elevate RD and ACH payment.</shortDescription>
+        <value>{0}, *{1}</value>
+    </labels>
+    <labels>
+        <fullName>RD_creditCardElevatePayment</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used to show the Payment Method using Elevate RD and Credit Card payment.</shortDescription>
+        <value>{0}, *{1} Exp.{2}/{3}</value>
+    </labels>
+    <labels>
+        <fullName>RD_firstDonation</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>First Donation</shortDescription>
+        <value>First Donation</value>
+    </labels>
+    <labels>
+        <fullName>RD_finalDonation</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Final Donation</shortDescription>
+        <value>Final Donation</value>
+    </labels>
+    <labels>
+        <fullName>RD_firstOrdinalNumber</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>First ordinal number</shortDescription>
+        <value>st</value>
+    </labels>
+    <labels>
+        <fullName>RD_frequencyOnThePeriod</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>On the {0}</value>
+    </labels>
+    <labels>
+    <fullName>RD_frequencyPeriodOnTheDayOfTheMonth</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>{0} on the {1}</value>
+    </labels>
+    <labels>
+        <fullName>RD_frequencyYearly</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>Every {0} years</value>
+    </labels>
+    <labels>
+        <fullName>RD_frequencyMonthly</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>Every {0} months on the {1}</value>
+    </labels>
+    <labels>
+        <fullName>RD_frequencyWeekly</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>Every {0} weeks</value>
+    </labels>
+    <labels>
+        <fullName>RD_frequencyFirstAndFifteenth</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>Every {0} {1}</value>
+    </labels>
+    <labels>
+        <fullName>RD_lastModified</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Last Modified</shortDescription>
+        <value>Last Modified</value>
+    </labels>
+    <labels>
+        <fullName>RD_mostRecentDonation</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Most Recent Donation</shortDescription>
+        <value>Most Recent Donation</value>
+    </labels>
+    <labels>
+        <fullName>RD_nextDonation</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Next Donation</shortDescription>
+        <value>Next Donation</value>
+    </labels>
+    <labels>
+        <fullName>RD_otherOrdinalNumber</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Other ordinal number</shortDescription>
+        <value>th</value>
+    </labels>
+    <labels>
+        <fullName>RD_secondOrdinalNumber</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Second ordinal number</shortDescription>
+        <value>nd</value>
+    </labels>
+    <labels>
+        <fullName>RD_thirdOrdinalNumber</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Third ordinal number</shortDescription>
+        <value>rd</value>
+    </labels>
+    <labels>
         <fullName>RD_ContactMustBelongToAccount</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -6007,134 +6143,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Amount</shortDescription>
         <value>Amount</value>
-    </labels>
-    <labels>
-        <fullName>firstDonation</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>First Donation</shortDescription>
-        <value>First Donation</value>
-    </labels>
-    <labels>
-        <fullName>finalDonation</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Final Donation</shortDescription>
-        <value>Final Donation</value>
-    </labels>
-    <labels>
-        <fullName>nextDonation</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Next Donation</shortDescription>
-        <value>Next Donation</value>
-    </labels>
-    <labels>
-        <fullName>mostRecentDonation</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Most Recent Donation</shortDescription>
-        <value>Most Recent Donation</value>
-    </labels>
-    <labels>
-        <fullName>lastModified</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Last Modified</shortDescription>
-        <value>Last Modified</value>
-    </labels>
-    <labels>
-        <fullName>frequencyOnThePeriod</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Frequency processed text</shortDescription>
-        <value>On the {0}</value>
-    </labels>
-    <labels>
-        <fullName>frequencyPeriodOnTheDayOfTheMonth</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Frequency processed text</shortDescription>
-        <value>{0} on the {1}</value>
-    </labels>
-    <labels>
-        <fullName>frequencyYearly</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Frequency processed text</shortDescription>
-        <value>Every {0} years</value>
-    </labels>
-    <labels>
-        <fullName>frequencyMonthly</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Frequency processed text</shortDescription>
-        <value>Every {0} months on the {1}</value>
-    </labels>
-    <labels>
-        <fullName>frequencyWeekly</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Frequency processed text</shortDescription>
-        <value>Every {0} weeks</value>
-    </labels>
-    <labels>
-        <fullName>firstOrdinalNumber</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>First ordinal number</shortDescription>
-        <value>st</value>
-    </labels>
-    <labels>
-        <fullName>secondOrdinalNumber</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Second ordinal number</shortDescription>
-        <value>nd</value>
-    </labels>
-    <labels>
-        <fullName>thirdOrdinalNumber</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Third ordinal number</shortDescription>
-        <value>rd</value>
-    </labels>
-    <labels>
-        <fullName>otherOrdinalNumber</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Other ordinal number</shortDescription>
-        <value>th</value>
-    </labels>
-    <labels>
-        <fullName>creditCardElevatePayment</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Used to show the Payment Method using Elevate RD and Credit Card payment.</shortDescription>
-        <value>{0}, *{1} Exp.{2}/{3}</value>
-    </labels>
-    <labels>
-        <fullName>achElevatePayment</fullName>
-        <categories>Recurring Donations</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Used to show the Payment Method using Elevate RD and ACH payment.</shortDescription>
-        <value>{0}, *{1}</value>
     </labels>
     <labels>
         <fullName>commonAssistiveError</fullName>
