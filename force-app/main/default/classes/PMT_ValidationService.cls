@@ -158,7 +158,7 @@ public inherited sharing class PMT_ValidationService {
     }
 
     public PMT_ValidationService validateRefund(npe01__OppPayment__c refund, PMT_RefundService.RefundInfo refundInfo) {
-        if (payment.OriginalPayment__c == null || refundInfo == null || refundInfo.originalPayment == null) {
+        if (refund.OriginalPayment__c == null || refundInfo == null || refundInfo.originalPayment == null) {
             addError(refund, System.Label.pmtOriginalPaymentNotFound);
             return this;
         }
@@ -175,7 +175,7 @@ public inherited sharing class PMT_ValidationService {
             return this;
         }
 
-        if (refund.npe01__Payment_Amount__c + refundInfo.originalPayment.npe01__Payment_Amount__c > 0) {
+        if (refund.npe01__Payment_Amount__c + refundInfo.originalPayment.npe01__Payment_Amount__c < 0) {
             addError(refund, System.Label.pmtRefundAmountInvalid);
         }
 
