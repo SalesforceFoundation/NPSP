@@ -23,4 +23,30 @@ const MOCK_DATA = require('./data/rd2RecurringDonationData.json');
       });
     });
 
+    it('renders table without modal', ()=>{
+        const element = createElement('c-rd2-recurring-donation', { is: rd2RecurringDonation});
+        element.data = MOCK_DATA;
+        element.canBeUpdated = true;
+        element.openStopRecurringDonation = false;
+        document.body.appendChild(element);
+        return flushPromises().then(()=>{
+          const stopRecurringDonationModal = element.shadowRoot.querySelector('c-stop-recurring-donation-modal');
+          expect(stopRecurringDonationModal).toBeNull();
+          expect(element).toBeDefined();
+        });
+      });
+
+      it('renders table with modal', ()=>{
+        const element = createElement('c-rd2-recurring-donation', { is: rd2RecurringDonation});
+        element.data = MOCK_DATA;
+        element.canBeUpdated = true;
+        element.openStopRecurringDonation = true;
+        document.body.appendChild(element);
+        return flushPromises().then(()=>{
+          const stopRecurringDonationModal = element.shadowRoot.querySelector('c-stop-recurring-donation-modal');
+          expect(stopRecurringDonationModal).toBeDefined();
+          expect(element).toBeDefined();
+        });
+      });
+
 });
