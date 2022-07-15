@@ -206,36 +206,38 @@ public with sharing class RD2_ETableController {
         if(recurringDonation.InstallmentFrequency__c == 1) {
             if(recurringDonation.npe03__Installment_Period__c.isAlpha()) {
                 if(recurringDonation.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
-                    frequency = String.format(System.Label.frequencyPeriodOnTheDayOfTheMonth, new List<String>{recurringDonation.npe03__Installment_Period__c, mapDayOfMonth.get(recurringDonation.Day_of_Month__c).ToLowerCase()});
+                    frequency = String.format(System.Label.RD_frequencyPeriodOnTheDayOfTheMonth, new List<String>{recurringDonation.npe03__Installment_Period__c, mapDayOfMonth.get(recurringDonation.Day_of_Month__c).ToLowerCase()});
                 } else {
                     frequency = recurringDonation.npe03__Installment_Period__c;
                 }
             } else {
-                frequency = String.format(System.Label.frequencyOnThePeriod, new List<String>{recurringDonation.npe03__Installment_Period__c});
+                frequency = String.format(System.Label.RD_frequencyOnThePeriod, new List<String>{recurringDonation.npe03__Installment_Period__c});
             }
         } else {
             if(recurringDonation.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
-                frequency = String.format(System.Label.frequencyMonthly, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c), mapDayOfMonth.get(recurringDonation.Day_of_Month__c).ToLowerCase()});
+                frequency = String.format(System.Label.RD_frequencyMonthly, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c), mapDayOfMonth.get(recurringDonation.Day_of_Month__c).ToLowerCase()});
             } else if(recurringDonation.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_YEARLY) {
-                frequency = String.format(System.Label.frequencyYearly, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c)});
+                frequency = String.format(System.Label.RD_frequencyYearly, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c)});
             } else if(recurringDonation.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY) {
-                frequency = String.format(System.Label.frequencyWeekly, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c)});
+                frequency = String.format(System.Label.RD_frequencyWeekly, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c)});
+            } else if(recurringDonation.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH){
+                frequency = String.format(System.Label.RD_frequencyFirstAndFifteenth, new List<String>{String.valueOf(recurringDonation.InstallmentFrequency__c), String.valueOf(recurringDonation.npe03__Installment_Period__c)});
             }
         }
 
         if(frequency.right(1).isNumeric()) {
             switch on frequency.right(1) {
                 when '1' {
-                    frequency += System.Label.firstOrdinalNumber;
+                    frequency += System.Label.RD_firstOrdinalNumber;
                 }
                 when '2' {
-                    frequency += System.Label.secondOrdinalNumber;
+                    frequency += System.Label.RD_secondOrdinalNumber;
                 }
                 when '3' {
-                    frequency += System.Label.thirdOrdinalNumber;
+                    frequency += System.Label.RD_thirdOrdinalNumber;
                 }
                 when else {
-                    frequency += System.Label.otherOrdinalNumber;
+                    frequency += System.Label.RD_otherOrdinalNumber;
                 }
             }
         }
@@ -284,9 +286,9 @@ public with sharing class RD2_ETableController {
         } else {
             //Elevate RD
             if(recurringDonation.PaymentMethod__c == RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD) {
-                paymentMethod = String.format(System.Label.creditCardElevatePayment, new List<String>{recurringDonation.PaymentMethod__c, recurringDonation.CardLast4__c, recurringDonation.CardExpirationMonth__c, recurringDonation.CardExpirationYear__c});
+                paymentMethod = String.format(System.Label.RD_creditCardElevatePayment, new List<String>{recurringDonation.PaymentMethod__c, recurringDonation.CardLast4__c, recurringDonation.CardExpirationMonth__c, recurringDonation.CardExpirationYear__c});
             } else {
-                paymentMethod = String.format(System.Label.achElevatePayment, new List<String>{recurringDonation.PaymentMethod__c, recurringDonation.ACH_Last_4__c});
+                paymentMethod = String.format(System.Label.RD_achElevatePayment, new List<String>{recurringDonation.PaymentMethod__c, recurringDonation.ACH_Last_4__c});
             }
         }
 
