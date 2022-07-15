@@ -260,7 +260,7 @@ public with sharing class RD2_ETableController {
         if(recurringDonation.Status__c == RD2_Constants.STATUS_PAUSED) {
             status = mapStatus.get(RD2_Constants.STATUS_PAUSED);
         } else {
-            status = mapStatus.get(recurringDonation.Status__c);
+            status = statusMapper.get(recurringDonation.Status__c);
         }
         return status;
     }
