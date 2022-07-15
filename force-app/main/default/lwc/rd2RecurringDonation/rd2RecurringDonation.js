@@ -35,7 +35,7 @@ const DESKTOP_CLASSES_HEAD = "slds-is-resizable dv-dynamic-width th-dynamic-widt
 const MOBILE_VIEW_MORE = "viewMore";
 const DESKTOP_VIEW_MORE = "slds-hide";
 const MOBILE_HEADER_CLASS = "slds-border_right slds-border_left";
-const DESKTOP_HEADER_CLASS = "slds-table_header-fixed_container slds-border_right slds-border_left table_top";
+const DESKTOP_HEADER_CLASS = "slds-table_header-fixed_container slds-border_right slds-border_left th-padding-top";
 const CLOSED_STATUS = "Closed";
 const MONTHLY = "Monthly";
 
