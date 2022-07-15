@@ -59,7 +59,6 @@ class psElevateTokenHandler {
             {value: productionEnhancedUrl},
             {value: sandboxEnhancedUrl}
         ];
-
         if (!isBlank(domainInfo.communityBaseURL)) {
             return [...originURLs, { value: domainInfo.communityBaseURL }];
         }
