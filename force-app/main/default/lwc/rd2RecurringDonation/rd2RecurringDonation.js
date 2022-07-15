@@ -49,9 +49,6 @@ export default class RecurringDonationTable extends LightningElement {
     isInitiallyMonthlyDonation = false;
     dayOfMonthFieldLabel;
     defaultRecordTypeId;
-    fixedInstallmentsLabel;
-    isElevateDonation = false;
-    isInitiallyMonthlyDonation = false;
 
     @api
     donationTypeFilter;
@@ -141,7 +138,7 @@ export default class RecurringDonationTable extends LightningElement {
      * @returns True if it is mobile
      */
     get isMobile() {
-        return this.formFactor === FormFactorType.Small;
+        return this.formFactor === FormFactorType.Small || this.formFactor === FormFactorType.Medium;
     }
 
     /**
