@@ -157,31 +157,31 @@ public inherited sharing class PMT_ValidationService {
         validateRefund(payment, refundInfo);
     }
 
-    public PMT_ValidationService validateRefund(npe01__OppPayment__c payment, PMT_RefundService.RefundInfo refundInfo) {
+    public PMT_ValidationService validateRefund(npe01__OppPayment__c refund, PMT_RefundService.RefundInfo refundInfo) {
         if (payment.OriginalPayment__c == null || refundInfo == null || refundInfo.originalPayment == null) {
-            addError(payment, System.Label.pmtOriginalPaymentNotFound);
+            addError(refund, System.Label.pmtOriginalPaymentNotFound);
             return this;
         }
 
         if (!refundInfo.originalPayment.npe01__Paid__c) {
-            addError(payment, System.Label.pmtOriginalPaymentNotPaid);
+            addError(refund, System.Label.pmtOriginalPaymentNotPaid);
         }
 
         if (refundInfo.originalPayment.DebitType__c == PMT_RefundService.FULL_REFUND) {
-            addError(payment, System.Label.pmtPaymentNotRefundable);
+            addError(refund, System.Label.pmtPaymentNotRefundable);
         }
 
-        if (String.IsNotBlank(payment.Elevate_Payment_ID__c) && PMT_RefundService.isElevateEnabled()) {
+        if (String.IsNotBlank(refund.Elevate_Payment_ID__c) && PMT_RefundService.isElevateEnabled()) {
             return this;
         }
 
-        if (payment.npe01__Payment_Amount__c + refundInfo.originalPayment.npe01__Payment_Amount__c != 0) {
-            addError(payment, System.Label.pmtRefundAmountInvalid);
+        if (refund.npe01__Payment_Amount__c + refundInfo.originalPayment.npe01__Payment_Amount__c > 0) {
+            addError(refund, System.Label.pmtRefundAmountInvalid);
         }
 
-        refundInfo.updateRefundAmount(payment);
-        if (refundInfo.remainingBalance != 0) {
-            addError(payment, System.Label.pmtPaymentNotRefundable);
+        refundInfo.updateRefundAmount(refund);
+        if (refundInfo.remainingBalance < 0) {
+            addError(refund, System.Label.pmtPaymentNotRefundable);
         }
 
         return this;
