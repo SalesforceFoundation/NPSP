@@ -116,6 +116,7 @@ export default class rd2EntryForm extends LightningElement {
     @api isElevateDonation = false;
     @api isInitiallyMonthlyDonation = false;
     @api isExperienceSite = false;
+    @api mappedStatus;
     style = document.createElement("style");
     cssExperienceElevate;
     cssHideExperienceSite;
@@ -300,8 +301,12 @@ export default class rd2EntryForm extends LightningElement {
             this.cssHideOnlyAmountFrequencyModal = this.isAmountFrequencyModal ? 'slds-hide' : '';
             if(this.isAmountFrequencyModal) {
                 this.rd2State.periodType = 'Advanced';
-                this.cssExperienceElevate = 'slds-hide'
+                this.cssExperienceElevate = 'slds-hide';
                 this.cssCurrencyExperienceSite = 'experienceCurrency';
+            }
+            if(this.isPaymentModal && this.mappedStatus === 'Lapsed') {
+                this.rd2State.recurringStatus = 'Active';
+                this.rd2State.initialViewState.recurringStatus = 'Active';
             }
             if(this.isPaymentModal) {
                 this.cssCurrencyExperienceSite = 'slds-hide';
