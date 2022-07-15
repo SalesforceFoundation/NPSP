@@ -1898,6 +1898,14 @@
         <value>This can take some time. Refresh the page to check the status. Contact us if you need help.</value>
     </labels>
     <labels>
+        <fullName>RD2_ElevateRDStopDonationMessage</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Recurring Donation is cancelled</shortDescription>
+        <value>The nonprofit won&apos;t process any future donations for this Recurring Donation.</value>
+    </labels>
+    <labels>
         <fullName>RD2_NonElevateRDCancellingTitle</fullName>
         <categories>Recurring Donation</categories>
         <language>en_US</language>
