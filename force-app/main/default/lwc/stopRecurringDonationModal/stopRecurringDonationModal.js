@@ -52,7 +52,7 @@ export default class StopRecurringDonationModal extends LightningElement {
 
     renderedCallback() {
         this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
-        this.template.querySelector('[data-id="cancelButton"]').focus();
+        this.template.querySelector('[data-id="closeButton"]').focus();
     }
   
       handleKeyUp(e) {
