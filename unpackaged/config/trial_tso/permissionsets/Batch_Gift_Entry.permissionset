@@ -57,10 +57,9 @@
         <enabled>true</enabled>
         <name>Custom_Column_Header__c</name>
     </customSettingAccesses>
-    <description>Provides access to the objects and fields required to use NPSP Gift Entry (1 of 2). This permission set is updated by Salesforce.org during push upgrades and cannot be edited by users.</description>
     <fieldPermissions>
         <editable>true</editable>
-        <field>npe03__Recurring_Donation__c.RecurringType__c</field>
+        <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%RecurringType__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -75,12 +74,12 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>npe03__Recurring_Donation__c.Day_of_Month__c</field>
+        <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%Day_of_Month__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>npe03__Recurring_Donation__c.InstallmentFrequency__c</field>
+        <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%InstallmentFrequency__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -95,77 +94,77 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>npe03__Recurring_Donation__c.StartDate__c</field>
+        <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%StartDate__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImportBatch__c.Account_Custom_Unique_ID__c</field>
+        <field>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Account_Custom_Unique_ID__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImportBatch__c.Active_Fields__c</field>
+        <field>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Active_Fields__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImportBatch__c.Allow_Recurring_Donations__c</field>
+        <field>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Allow_Recurring_Donations__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImportBatch__c.Batch_Defaults__c</field>
+        <field>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Batch_Defaults__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImportBatch__c.Batch_Description__c</field>
+        <field>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Batch_Description__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImportBatch__c.Batch_Gift_Entry_Version__c</field>
+        <field>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Batch_Gift_Entry_Version__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImportBatch__c.Batch_Table_Columns__c</field>
+        <field>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Batch_Table_Columns__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImportBatch__c.Contact_Custom_Unique_ID__c</field>
+        <field>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Contact_Custom_Unique_ID__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImportBatch__c.Donation_Matching_Implementing_Class__c</field>
+        <field>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Donation_Matching_Implementing_Class__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImportBatch__c.Expected_Count_of_Gifts__c</field>
+        <field>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Expected_Count_of_Gifts__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImportBatch__c.Expected_Total_Batch_Amount__c</field>
+        <field>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Expected_Total_Batch_Amount__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImportBatch__c.Form_Template__c</field>
+        <field>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Form_Template__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImportBatch__c.GiftBatch__c</field>
+        <field>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%GiftBatch__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImportBatch__c.Last_Processed_On__c</field>
+        <field>%%%NAMESPACE%%%DataImportBatch__c.%%%NAMESPACE%%%Last_Processed_On__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -831,7 +830,6 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Status__c</field>
-        <field>DataImport__c.Payment_Status__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -991,7 +989,7 @@
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
-        <object>Form_Template__c</object>
+        <object>%%%NAMESPACE%%%Form_Template__c</object>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
@@ -1000,6 +998,13 @@
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
         <object>npe03__Recurring_Donation__c</object>
+        <viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <allowCreate>true</allowCreate>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>false</modifyAllRecords>
         <object>%%%NAMESPACE%%%DataImport__c</object>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
