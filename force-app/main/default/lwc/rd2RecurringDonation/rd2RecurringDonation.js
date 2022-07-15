@@ -391,7 +391,7 @@ export default class RecurringDonationTable extends LightningElement {
         }).finally(() => {
           this.data?.forEach((item) => {
             let nextDonationHtml = `<div class="${this.rowClasses}" style="${this.fixedWidth}">`;
-            if(item.recurringDonation.npe03__Next_Payment_Date__c){
+            if(item.recurringDonation.npe03__Next_Payment_Date__c !== "Invalid Date"){
                 if(item.nextDonation){
                     item.nextDonation.split(',').forEach((nextDonationElement) => {
                       nextDonationHtml += `${nextDonationElement} </br>`
