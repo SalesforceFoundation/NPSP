@@ -2461,6 +2461,30 @@
         <value>Payment Method</value>
     </labels>
     <labels>
+        <fullName>RD2_Payment_method_was_updated</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Payment method was updated label</shortDescription>
+        <value>Payment method was updated.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_Recurring_Donation_was_updated</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation was updated label</shortDescription>
+        <value>Recurring Donation was updated.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_Payment_Details</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Payment Details label</shortDescription>
+        <value>Payment Details</value>
+    </labels>
+    <labels>
         <fullName>RD2_Credit_Card_Payment_Method_Label</fullName>
         <categories>Recurring-Donations</categories>
         <language>en_US</language>

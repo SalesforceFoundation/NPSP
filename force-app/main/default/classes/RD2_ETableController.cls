@@ -103,7 +103,7 @@ public with sharing class RD2_ETableController {
     * @description returns a list of processed recurring donations
     * @return List<TableView> List of processed recurring donation records
     */
-    @AuraEnabled
+    @AuraEnabled(cacheable=false)
     public static List<TableView> retrieveTableView(String elevateFilter) {
         try {
             return controller.getTableViews(elevateFilter);
@@ -159,7 +159,7 @@ public with sharing class RD2_ETableController {
         RD2_StatusMapper statusMapper = RD2_StatusMapper.getInstance();
         
         Map<Id, RD2_ETableController.TableView> recurringDonations = new Map<Id,RD2_ETableController.TableView>();
-        Set<Id> fixedRecurringDonationIds = new Set<Id>(); 
+        Map<Id,npe03__Recurring_Donation__c> fixedRecurringDonations = new Map<Id,npe03__Recurring_Donation__c>(); 
         for(npe03__Recurring_Donation__c recDonation : rdRecords) {
             recurringDonations.put( recDonation.Id, new RD2_ETableController.TableView( recDonation,
                                                                         controller.getFrequency(recDonation),
@@ -169,12 +169,14 @@ public with sharing class RD2_ETableController {
 
             if(recDonation.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED 
                 && statusMapper.getState(recDonation.Status__c) != RD2_Constants.STATUS_CLOSED) {
-                fixedRecurringDonationIds.add(recDonation.Id);
+                fixedRecurringDonations.put(recDonation.Id,recDonation);
             }
         }
 
-        if(!fixedRecurringDonationIds.isEmpty()) {
-            Map<ID, Date> mapRDFinalDate = getFinalDonations(fixedRecurringDonationIds);
+        if(!fixedRecurringDonations.isEmpty()) {
+            RDScheduleClass rDSchedule = new RDScheduleClass();
+            Map<Id, List<RecurringDonationSchedule__c>> mapRDSchedule = rDSchedule.queryRows(fixedRecurringDonations.keySet());
+            Map<ID, Date> mapRDFinalDate = getFinalDonations(fixedRecurringDonations.values(), mapRDSchedule);
             for(Id rdID : mapRDFinalDate.keySet()) {
                 RD2_ETableController.TableView tableView = recurringDonations.get(rdID);
                 tableView.finalDonation = mapRDFinalDate.get(rdID);
@@ -303,7 +305,6 @@ public with sharing class RD2_ETableController {
         String nextDonation = '';
 		String nextDonationStringDate = String.valueOf(recurringDonation.npe03__Next_Payment_Date__c);
         if(recurringDonation.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED && !String.isEmpty(nextDonationStringDate) ) {
-            //nextDonation = System.Label.RD2_PaidInstallments + ' ' + String.valueOf(recurringDonation.npe03__Total_Paid_Installments__c) +'/'+ String.valueOf(recurringDonation.npe03__Installments__c) + ', ' + System.Label.RD2_NextDonationDate + ' ' + String.valueOf(recurringDonation.npe03__Next_Payment_Date__c);
 			nextDonation = System.Label.RD2_PaidInstallments + ' ' + String.valueOf(recurringDonation.npe03__Total_Paid_Installments__c) +'/'+ String.valueOf(recurringDonation.npe03__Installments__c) + ', ' + System.Label.RD2_NextDonationDate + ' ' + (recurringDonation.npe03__Next_Payment_Date__c).month() + '/'+ (recurringDonation.npe03__Next_Payment_Date__c).day() + '/' + (recurringDonation.npe03__Next_Payment_Date__c).year();
         }
 
@@ -314,18 +315,17 @@ public with sharing class RD2_ETableController {
     * @author Salesforce.org
     * @date 2022
     * @description process Recurring Donation record to build the payment method string.
-    * @param fixedRecurringDonationIds Fixed recurring donation IDs
+    * @param fixedRecurringDonations Fixed recurring donations
+    * @param mapRDSchedule Map<Id, List<RecurringDonationSchedule__c>> Map recurring donation Ids with the list of recurring donation schedules
     * @return Map<Id, Date> Map Recurring Donation Ids with the related final date
     */
-    private Map<Id, Date> getFinalDonations(Set<Id> fixedRecurringDonationIds) {
+    private Map<Id, Date> getFinalDonations(List<npe03__Recurring_Donation__c> fixedRecurringDonations, Map<Id, List<RecurringDonationSchedule__c>> mapRDSchedule) {
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
         Map<Id, Date> mapRDLastDonation = new Map<Id, Date>();
-        for(Id rdID : fixedRecurringDonationIds) {
-            Map<String, Object> mapInstallments = RD2_VisualizeScheduleController.getInstallments(rdID, 100);
-            Map<String, Object> mapDataTable = (Map<String, Object>)JSON.deserializeUntyped(JSON.Serialize(mapInstallments.get('dataTable')));
-            List<Object> listRecords = (List<Object>)JSON.deserializeUntyped(JSON.Serialize(mapDataTable.get('records')));
-            Object lastRecord = listRecords.get(listRecords.size()-1);
-            Map<String, Object> lastInstallment = (Map<String, Object>)JSON.deserializeUntyped(JSON.Serialize(lastRecord));
-            mapRDLastDonation.put(rdID, Date.valueOf(JSON.Serialize(lastInstallment.get('donationDate')).replace('"', '')));
+        for(npe03__Recurring_Donation__c rds : fixedRecurringDonations) {
+            RD2_RecurringDonation rd = new RD2_RecurringDonation(rds);
+            List<RD2_ScheduleService.Installment> installments = scheduleService.getAllVisualizedInstallments(RD2_ScheduleService.currentDate, 100, mapRDSchedule.get(rds.Id));
+            mapRDLastDonation.put(rds.Id, Date.valueOf(installments[rd.getPlannedInstallments()-rd.getPaidInstallments()-1].nextDonationDate));
         }
         return mapRDLastDonation;
     }
@@ -364,5 +364,34 @@ public with sharing class RD2_ETableController {
         }
         
         return permissions.canRead(npe03__Recurring_Donation__c.SObjectType, fields);
+    }
+
+    private without sharing class RDScheduleClass {
+        public Map<Id, List<RecurringDonationSchedule__c>> queryRows(Set<Id> recordIds) {
+            Map<Id, List<RecurringDonationSchedule__c>> mapRDSchedule = new Map<Id, List<RecurringDonationSchedule__c>>();
+            for(RecurringDonationSchedule__c schedule : [   SELECT Active__c, 
+                                                                Campaign__c, 
+                                                                Campaign__r.Name, 
+                                                                StartDate__c, 
+                                                                EndDate__c, 
+                                                                DayOfMonth__c, 
+                                                                InstallmentAmount__c, 
+                                                                InstallmentFrequency__c, 
+                                                                InstallmentPeriod__c, 
+                                                                PaymentMethod__c, 
+                                                                RecurringDonation__c, 
+                                                                IsPause__c, 
+                                                                StatusReason__c 
+                                                            FROM RecurringDonationSchedule__c
+                                                            WHERE RecurringDonation__c IN :recordIds ]) {
+                List<RecurringDonationSchedule__c> schedules = mapRDSchedule.get(schedule.RecurringDonation__c);
+                if(schedules == NULL) {
+                    schedules = new List<RecurringDonationSchedule__c>();
+                }
+                schedules.add(schedule);
+                mapRDSchedule.put(schedule.RecurringDonation__c, schedules);
+            }
+            return mapRDSchedule;
+        }
     }
 }
