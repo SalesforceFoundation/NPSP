@@ -144,7 +144,7 @@
                                     {item.status}</div>
                             </td>
     
-                            <td key={item.recurringDonation.npe03__Date_Established__c} data-id={item.recurringDonation.id} class={tdClasses} data-label={labels.RD_firstDonation} tabindex="-1" aria-label={item.recurringDonation.npe03__Date_Established__c} role="gridcell">
+                            <td key={item.recurringDonation.npe03__Date_Established__c} data-id={item.recurringDonation.Id} class={tdClasses} data-label={labels.RD_firstDonation} tabindex="-1" aria-label={item.recurringDonation.npe03__Date_Established__c} role="gridcell">
                                 <div class={rowClasses} title={labels.RD_firstDonation}>
                                     <lightning-formatted-date-time 
                                     year="numeric"
@@ -155,7 +155,7 @@
                                     </lightning-formatted-date-time>
                                 </div>
                             </td>
-                            <td key={item.finalDonation} data-id={item.recurringDonation.id} class={tdClasses} data-label={labels.RD_finalDonation} tabindex="-1" aria-label={item.finalDonation} role="gridcell">
+                            <td key={item.finalDonation} data-id={item.recurringDonation.Id} class={tdClasses} data-label={labels.RD_finalDonation} tabindex="-1" aria-label={item.finalDonation} role="gridcell">
                                 <div class={rowClasses} title={labels.RD_finalDonation}>
                                     <lightning-formatted-date-time 
                                     year="numeric"
