@@ -929,10 +929,10 @@ flows:
 
     config_trial_org:
         steps:
-#            1:
-#                flow: dependencies
+            1:
+                flow: dependencies
             2:
-                flow: install_2gp_commit
+                task: install_managed
             3:
                 task: deploy_post
             4:
