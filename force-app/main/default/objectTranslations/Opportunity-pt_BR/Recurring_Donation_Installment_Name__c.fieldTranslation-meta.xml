@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Installment_Name__c</name>
+    <help>O nome do parcelamento para inclusão no nome da Oportunidade. Mostra o número da parcela entre parênteses para Doações recorrentes abertas ou o número da parcela no total para Doações recorrentes com um número definido de parcelas.</help>
+    <label>Nome da parcela de Doação recor.</label>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Target_Field_API_Name__c</name>
+    <help>O nome da API do campo no objeto de destino.</help>
+    <label>Nome da API do campo de destino</label>
+</CustomFieldTranslation>

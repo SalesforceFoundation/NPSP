@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Default_Gift_Entry_Template__c</name>
+    <help>Este é um modelo inicial usado para a Entrada de doações e pode ser usado para inserir doações individuais ou lotes de doações. Este é o modelo padrão para inserir doações individuais.</help>
+    <label>Modelo da Entrada de doação padrão</label>
+</CustomFieldTranslation>

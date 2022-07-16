@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <layouts>
+        <layout>GS Checklist Section Layout</layout>
+        <sections>
+            <label>Links personalizados</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <gender>Feminine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>Seção de lista de verificação da Introdução ao NPSP</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Seções de lista de verificação da Introdução ao NPSP</value>
+    </caseValues>
+</CustomObjectTranslation>

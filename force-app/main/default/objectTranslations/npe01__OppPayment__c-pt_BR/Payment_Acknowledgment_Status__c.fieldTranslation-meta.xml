@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Payment_Acknowledgment_Status__c</name>
+    <help>Status de confirmação deste pagamento.</help>
+    <label>Status de confirmação do pagamento</label>
+    <picklistValues>
+        <masterLabel>To Be Acknowledged</masterLabel>
+        <translation>A ser confirmado</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Acknowledged</masterLabel>
+        <translation>Confirmado</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Do Not Acknowledge</masterLabel>
+        <translation>Não confirmar</translation>
+    </picklistValues>
+</CustomFieldTranslation>

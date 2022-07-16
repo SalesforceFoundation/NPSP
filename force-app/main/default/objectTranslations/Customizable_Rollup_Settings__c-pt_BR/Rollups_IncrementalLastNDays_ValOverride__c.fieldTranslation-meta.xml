@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Rollups_IncrementalLastNDays_ValOverride__c</name>
+    <help>Somente para uso em Substituição de totalizações. Esse valor substitui o número calculado de dias usado para filtrar Oportunidades relacionadas e determinar quais Contas, Contatos, GAUs ou RDs são recalculados durante um trabalho noturno.</help>
+    <label>Incremental: subst. val. Últimos N dias</label>
+</CustomFieldTranslation>

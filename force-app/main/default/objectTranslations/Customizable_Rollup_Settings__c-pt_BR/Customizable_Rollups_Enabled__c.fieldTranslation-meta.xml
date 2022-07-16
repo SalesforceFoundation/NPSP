@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Customizable_Rollups_Enabled__c</name>
+    <help>Marque esta caixa para ativar o novo mecanismo de Totalização personalizável do NPSP</help>
+    <label>Ativar totalizações personalizáveis</label>
+</CustomFieldTranslation>

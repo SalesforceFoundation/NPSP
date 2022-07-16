@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Tribute_Notification_Status__c</name>
+    <label>Status de notificação da homenagem</label>
+    <picklistValues>
+        <masterLabel>To Be Notified</masterLabel>
+        <translation>A ser notificado</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Notified</masterLabel>
+        <translation>Notificado</translation>
+    </picklistValues>
+</CustomFieldTranslation>

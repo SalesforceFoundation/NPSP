@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Campaign_Member_Non_Responded_Status__c</name>
+    <help>O status padrão que o NPSP deve usar com Membros da campanha para Oport. Abertas ou Fechadas/Perdidas que tenham um Contato prim. e uma Fonte de campanha prim. associada a elas. Se você deixar isso em branco, o NPSP usará o primeiro status não respondido.</help>
+    <label>Status não respondido de membro da camp.</label>
+</CustomFieldTranslation>

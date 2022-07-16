@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>IsRecurringDonations2Enabled__c</name>
+    <help>Essa opção ativa as doações recorrentes aprimoradas. IMPORTANTE: você precisa ativar as Doações recorrentes aprimoradas nas configurações do NPSP. A ativação em Configurações personalizadas pode causar inconsistências de dados.</help>
+    <label>Doações recorrentes aprimoradas</label>
+</CustomFieldTranslation>

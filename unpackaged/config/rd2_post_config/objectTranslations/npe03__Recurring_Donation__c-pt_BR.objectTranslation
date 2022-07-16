@@ -1,0 +1,306 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fields>
+    <name>npe03__Amount__c</name>
+    <help>O valor para cada oportunidade de parcelamento.</help>
+    <label>Valor</label>
+  </fields>
+  <fields>
+    <name>npe03__Date_Established__c</name>
+    <help>A data inicial desta doação recorrente. O padrão é a data atual.</help>
+    <label>Data de estabelecimento</label>
+  </fields>
+  <fields>
+    <name>%%%NAMESPACE%%%ClosedReason__c</name>
+    <help>A razão pela qual a Doação Recorrente tem seu valor de Status atual.</help>
+    <label>Motivo do status</label>
+    <picklistValues>
+      <masterLabel>Card Expired</masterLabel>
+      <translation>Cartão vencido</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Commitment Completed</masterLabel>
+      <translation>Compromisso concluído</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Deceased Donor</masterLabel>
+      <translation>Doador falecido</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Financial Difficulty</masterLabel>
+      <translation>Dificuldade financeira</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>No Longer Interested</masterLabel>
+      <translation>Não está mais interessado</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Unknown</masterLabel>
+      <translation>Desconhecido</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>%%%NAMESPACE%%%Day_of_Month__c</name>
+    <help>Define o dia específico do mês para futuras oportunidades de parcelamento quando o Período de parcelamento for Mensal. Se você selecionar 29 ou 30, a data do parcelamento será o último dia do mês nos meses que não têm tantos dias.</help>
+    <label>Dia do mês</label>
+    <picklistValues>
+      <masterLabel>1</masterLabel>
+      <translation>1</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>2</masterLabel>
+      <translation>2</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>3</masterLabel>
+      <translation>3</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>4</masterLabel>
+      <translation>4</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>5</masterLabel>
+      <translation>5</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>6</masterLabel>
+      <translation>6</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>7</masterLabel>
+      <translation>7</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>8</masterLabel>
+      <translation>8</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>9</masterLabel>
+      <translation>9</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>10</masterLabel>
+      <translation>10</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>11</masterLabel>
+      <translation>11</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>12</masterLabel>
+      <translation>12</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>13</masterLabel>
+      <translation>13</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>14</masterLabel>
+      <translation>14</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>15</masterLabel>
+      <translation>15</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>16</masterLabel>
+      <translation>16</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>17</masterLabel>
+      <translation>17</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>18</masterLabel>
+      <translation>18</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>19</masterLabel>
+      <translation>19</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>20</masterLabel>
+      <translation>20</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>21</masterLabel>
+      <translation>21</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>22</masterLabel>
+      <translation>22</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>23</masterLabel>
+      <translation>23</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>24</masterLabel>
+      <translation>24</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>25</masterLabel>
+      <translation>25</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>26</masterLabel>
+      <translation>26</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>27</masterLabel>
+      <translation>27</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>28</masterLabel>
+      <translation>28</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>29</masterLabel>
+      <translation>29</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>30</masterLabel>
+      <translation>30</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Last Day Of Month</masterLabel>
+      <translation>Último dia do mês</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>31</masterLabel>
+      <translation>31</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>%%%NAMESPACE%%%RecurringType__c</name>
+    <help>Selecione Aberto para uma Doação recorrente em andamento. Selecione Fixo para uma Doação recorrente com um número específico de parcelas. Para Fixo, você também precisa preencher o campo Número de parcelas planejadas.</help>
+    <label>Tipo de recorrência</label>
+    <picklistValues>
+      <masterLabel>Open</masterLabel>
+      <translation>Aberto</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Fixed</masterLabel>
+      <translation>Fixo</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>%%%NAMESPACE%%%StartDate__c</name>
+    <help>A data em que as informações de agendamento novas ou atualizadas (Valor, Dia do mês, etc.) entram em vigor para esta Doação recorrente. O padrão é a data atual.</help>
+    <label>Data de vigência</label>
+  </fields>
+  <fields>
+    <name>%%%NAMESPACE%%%EndDate__c</name>
+    <help>A data em que esta Doação recorrente foi encerrada.</help>
+    <label>Data de término</label>
+  </fields>
+  <fields>
+    <name>%%%NAMESPACE%%%Status__c</name>
+    <help>Indica se esta Doação recorrente está ativamente em uso, temporariamente suspensa ou fechada.</help>
+    <label>Status</label>
+    <picklistValues>
+      <masterLabel>Active</masterLabel>
+      <translation>Ativo</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Lapsed</masterLabel>
+      <translation>Vencido</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Closed</masterLabel>
+      <translation>Fechado</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Paused</masterLabel>
+      <translation>Pausado</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>npe03__Installment_Period__c</name>
+    <help>O Período de parcelamento, juntamente com a Frequência de parcelamento, define a agenda de parcelamento desta Doação recorrente. Por exemplo, se o Período de parcelamento for Mensal e a Frequência for 3, a agenda será definida como "a cada 3 meses".</help>
+    <label>Período de parcelamento</label>
+    <picklistValues>
+      <masterLabel>Monthly</masterLabel>
+      <translation>Mensal</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Yearly</masterLabel>
+      <translation>Anualmente</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Weekly</masterLabel>
+      <translation>Semanal</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>1st and 15th</masterLabel>
+      <translation>1º e 15º</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Quarterly</masterLabel>
+      <translation>Trimestral</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>%%%NAMESPACE%%%InstallmentFrequency__c</name>
+    <help>A Frequência de parcelamento, juntamente com o Período de parcelamento, define a agenda de parcelamento desta Doação recorrente. Por exemplo, se o Período de parcelamento for Mensal e a Frequência for 3, a agenda será definida como "a cada 3 meses".</help>
+    <label>Frequência de parcelamento</label>
+  </fields>
+  <fields>
+    <name>npe03__Last_Payment_Date__c</name>
+    <help>O NPSP calcula esse valor automaticamente com base na última vez que uma oportunidade de parcela foi marcada como paga (somente leitura).</help>
+    <label>Data da última doação</label>
+  </fields>
+  <fields>
+    <name>npe03__Paid_Amount__c</name>
+    <help>O valor total pago nesta doação recorrente. Calculado automaticamente como o valor total de todas as Oportunidades de parcela fechada/ganha (somente leitura).</help>
+    <label>Valor total pago</label>
+  </fields>
+  <fields>
+    <name>npe03__Total_Paid_Installments__c</name>
+    <help>Número total de Oportunidades de parcela pagas nesta doação recorrente (somente leitura).</help>
+    <label>Número de parcelas pagas</label>
+  </fields>
+  <fields>
+    <name>npe03__Next_Payment_Date__c</name>
+    <help>Calculado automaticamente usando as agendas recorrentes. Somente leitura.</help>
+    <label>Data da próxima doação</label>
+  </fields>
+  <layouts>
+    <layout>Enhanced Recurring Donations Layout</layout>
+    <sections>
+      <label>Informações sobre doador</label>
+      <section>Donor Information</section>
+    </sections>
+    <sections>
+      <label>Informações sobre a doação</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Outras informações</label>
+      <section>Other Information</section>
+    </sections>
+    <sections>
+      <label>Estatísticas</label>
+      <section>Statistics</section>
+    </sections>
+    <sections>
+      <label>Links personalizados</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Nome da doação recorrente</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nome da doação recorrente</label>
+  </standardFields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Doação recorrente</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Doações recorrentes</value>
+  </caseValues>
+</CustomObjectTranslation>

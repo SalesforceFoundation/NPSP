@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Post_Process_Implementing_Class__c</name>
+    <help>O nome do desenvolvedor de uma classe do Apex que implementa a interface BDI_IPostProcess para registros em lote do NPSP.</help>
+    <label>Classe de implementação pós-processo</label>
+</CustomFieldTranslation>

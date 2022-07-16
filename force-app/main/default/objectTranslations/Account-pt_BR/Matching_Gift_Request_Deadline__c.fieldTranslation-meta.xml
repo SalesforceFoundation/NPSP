@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Matching_Gift_Request_Deadline__c</name>
+    <help>Use este campo para anotar restrições de idade que a empresa tenha sobre a qualificação para doação correspondente.</help>
+    <label>Prazo de pedido de corresp. de doações</label>
+</CustomFieldTranslation>

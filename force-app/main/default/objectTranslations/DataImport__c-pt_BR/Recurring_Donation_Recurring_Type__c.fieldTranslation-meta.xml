@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Recurring_Type__c</name>
+    <help>Aberto indica uma Doação recorrente em andamento. Fixo indica uma Doação recorrente com um número específico de parcelas. Para Fixo, você também precisa preencher o campo Número de parcelas planejadas.</help>
+    <label>Tipo de recorrência da Doação recor.</label>
+</CustomFieldTranslation>

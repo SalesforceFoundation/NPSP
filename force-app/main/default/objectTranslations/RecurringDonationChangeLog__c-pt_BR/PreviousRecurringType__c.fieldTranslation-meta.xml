@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>PreviousRecurringType__c</name>
+    <help>O tipo de recorrência anterior para a doação recorrente relacionada.</help>
+    <label>Tipo de recorrência anterior</label>
+</CustomFieldTranslation>

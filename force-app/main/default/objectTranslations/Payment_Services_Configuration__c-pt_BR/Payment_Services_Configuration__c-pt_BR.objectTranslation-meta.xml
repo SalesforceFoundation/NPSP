@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <layouts>
+        <layout>Payment Configuration Layout</layout>
+        <sections>
+            <label>Links personalizados</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Nome de configuração dos serviços de pagamento</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Nome de configuração dos serviços de pagamento</label>
+    </standardFields>
+    <gender>Feminine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>Configuração de serviços de pagamento</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Configurações de serviços de pagamento</value>
+    </caseValues>
+</CustomObjectTranslation>
