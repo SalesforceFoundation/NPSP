@@ -2,60 +2,60 @@
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
     <description>Provides access to fields, objects, tabs, and Visualforce pages for creating and processing batches related to NPSP&apos;s Batch Gift Entry feature.</description>
     <classAccesses>
-        <apexClass>RD2_EntryFormController</apexClass>
+        <apexClass>%%%NAMESPACE%%%RD2_EntryFormController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>BDI_ManageAdvancedMappingCtrl</apexClass>
+        <apexClass>%%%NAMESPACE%%%BDI_ManageAdvancedMappingCtrl</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>BDI_MappingServiceAdvanced</apexClass>
+        <apexClass>%%%NAMESPACE%%%BDI_MappingServiceAdvanced</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>BGE_BatchGiftEntryTab_CTRL</apexClass>
+        <apexClass>%%%NAMESPACE%%%BGE_BatchGiftEntryTab_CTRL</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>BGE_BatchGiftEntry_UTIL</apexClass>
+        <apexClass>%%%NAMESPACE%%%BGE_BatchGiftEntry_UTIL</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>BGE_ConfigurationWizard_CTRL</apexClass>
+        <apexClass>%%%NAMESPACE%%%BGE_ConfigurationWizard_CTRL</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>BGE_DataImportBatchEntry_CTRL</apexClass>
+        <apexClass>%%%NAMESPACE%%%BGE_DataImportBatchEntry_CTRL</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>BGE_FormTemplate_TDTM</apexClass>
+        <apexClass>%%%NAMESPACE%%%BGE_FormTemplate_TDTM</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>GE_GiftEntryController</apexClass>
+        <apexClass>%%%NAMESPACE%%%GE_GiftEntryController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>GE_LookupController</apexClass>
+        <apexClass>%%%NAMESPACE%%%GE_LookupController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>GE_PaymentServices</apexClass>
+        <apexClass>%%%NAMESPACE%%%GE_PaymentServices</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>UTIL_CustomSettingsFacade</apexClass>
+        <apexClass>%%%NAMESPACE%%%UTIL_CustomSettingsFacade</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>UTIL_CustomSettings_API</apexClass>
+        <apexClass>%%%NAMESPACE%%%UTIL_CustomSettings_API</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <customSettingAccesses>
         <enabled>true</enabled>
-        <name>Custom_Column_Header__c</name>
+        <name>%%%NAMESPACE%%%Custom_Column_Header__c</name>
     </customSettingAccesses>
     <fieldPermissions>
         <editable>true</editable>
@@ -279,7 +279,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImport__c.Account2_State_Province__c</field>
+        <field>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Account2_State_Province__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -834,97 +834,97 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImport__c.Payment_Type__c</field>
+        <field>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Payment_Type__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImport__c.RecurringDonationImportStatus__c</field>
+        <field>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%RecurringDonationImportStatus__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImport__c.RecurringDonationImported__c</field>
+        <field>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%RecurringDonationImported__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImport__c.Recurring_Donation_Amount__c</field>
+        <field>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Amount__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImport__c.Recurring_Donation_Date_Established__c</field>
+        <field>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Date_Established__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImport__c.Recurring_Donation_Day_of_Month__c</field>
+        <field>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Day_of_Month__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImport__c.Recurring_Donation_Effective_Date__c</field>
+        <field>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Effective_Date__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImport__c.Recurring_Donation_End_Date__c</field>
+        <field>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_End_Date__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImport__c.Recurring_Donation_Installment_Frequency__c</field>
+        <field>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Installment_Frequency__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImport__c.Recurring_Donation_Installment_Period__c</field>
+        <field>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Installment_Period__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImport__c.Recurring_Donation_Name__c</field>
+        <field>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Name__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImport__c.Recurring_Donation_Payment_Method__c</field>
+        <field>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Payment_Method__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImport__c.Recurring_Donation_Planned_Installments__c</field>
+        <field>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Planned_Installments__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImport__c.Recurring_Donation_Recurring_Type__c</field>
+        <field>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Recurring_Type__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImport__c.Recurring_Donation_Status_Reason__c</field>
+        <field>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Status_Reason__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImport__c.Recurring_Donation_Status__c</field>
+        <field>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Recurring_Donation_Status__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>DataImport__c.Status__c</field>
+        <field>%%%NAMESPACE%%%DataImport__c.%%%NAMESPACE%%%Status__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Form_Template__c.Description__c</field>
+        <field>%%%NAMESPACE%%%Form_Template__c.%%%NAMESPACE%%%Description__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Form_Template__c.Template_JSON__c</field>
+        <field>%%%NAMESPACE%%%Form_Template__c.%%%NAMESPACE%%%Template_JSON__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
