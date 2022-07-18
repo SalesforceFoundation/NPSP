@@ -13,7 +13,6 @@
     <label>Nonprofit Success Pack</label>
     <navType>Standard</navType>
     <tabs>%%%NAMESPACE%%%GetStartedEndUser</tabs>
-    <tabs>%%%NAMESPACE%%%GetStarted</tabs>
     <tabs>standard-home</tabs>
     <tabs>standard-Account</tabs>
     <tabs>standard-Contact</tabs>
