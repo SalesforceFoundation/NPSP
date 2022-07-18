@@ -32,7 +32,29 @@
 .slds-dropdown-mobile div.slds-dropdown {
     position: relative;
 }
-
 .nonpointer {
     pointer-events: none;
+}
+.th-dynamic-width{
+    width: 10%;
+    min-width: 50px;
+}
+.lastColumn{
+    padding-right: 20%;
+}
+.td-dynamic-width{
+    width: 100%;
+    min-width: 50px;
+}
+.table-container{
+    position: relative;
+}
+.cell{
+    position: relative;
+    top: 0;
+    min-height: 2rem;
+    min-width: 50px;
+}
+.th-padding-top{
+    padding-top: 0;
 }

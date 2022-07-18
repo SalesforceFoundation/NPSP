@@ -6,6 +6,7 @@ import RD2_ElevateRDCancellingTitle from '@salesforce/label/c.RD2_ElevateRDCance
 import RD2_ElevateRDCancellingMessage from '@salesforce/label/c.RD2_ElevateRDCancellingMessage';
 import RD2_NonElevateRDCancellingTitle from '@salesforce/label/c.RD2_NonElevateRDCancellingTitle';
 import commonClose from '@salesforce/label/c.commonClose';
+import stopRecurringDonationMessage from '@salesforce/label/c.RD2_ElevateRDStopDonationMessage';
 import commonCancelAndClose from '@salesforce/label/c.commonCancelAndClose';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
@@ -21,7 +22,8 @@ export default class StopRecurringDonationModal extends LightningElement {
         stopRecurringDonation,
         stopRecurringDonationModalTitle,
         commonClose,
-        commonCancelAndClose
+        commonCancelAndClose,
+        stopRecurringDonationMessage
     }
     isElevate;
     @api openStopRecurringDonation;
@@ -50,7 +52,8 @@ export default class StopRecurringDonationModal extends LightningElement {
 
     renderedCallback() {
         this.template.addEventListener("keydown", (e) => this.handleKeyUp(e));
-      }
+        this.template.querySelector('[data-id="closeButton"]').focus();
+    }
   
       handleKeyUp(e) {
           const firstFocusableElement = this._getFocusableElements()[0];
