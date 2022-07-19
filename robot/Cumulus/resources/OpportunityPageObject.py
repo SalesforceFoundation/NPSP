@@ -28,7 +28,7 @@ class OpportunityPage(BaseNPSPPage, DetailPage):
 
     @capture_screenshot_on_error
     def navigate_to_matching_gifts_page(self):
-        # if self.npsp.latest_api_version == 51.0:
+        # if self.npsp.latest_api_version == 54.0:
         locator = npsp_lex_locators['manage_hh_page']['more_actions_btn']
         time.sleep(1)
         self.selenium.wait_until_element_is_visible(locator,60)
@@ -43,7 +43,7 @@ class OpportunityPage(BaseNPSPPage, DetailPage):
         #     self.npsp.choose_frame("vfFrameId")
 
     def navigate_to_writeoff_payments_page(self):
-        if self.npsp.latest_api_version==51.0 or self.npsp.latest_api_version==52.0:
+        if self.npsp.latest_api_version==54.0 or self.npsp.latest_api_version==55.0:
             self.npsp.click_related_list_dd_button('Payments', 'Show more actions', 'Writeoff_Payments')
         else:
             self.npsp.click_related_list_dd_button('Payments', 'Show one more action', 'Write Off Payments')
