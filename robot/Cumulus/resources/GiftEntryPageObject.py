@@ -373,6 +373,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 except ElementNotInteractableException:
                     self.salesforce._jsclick(option)
             elif 'combobox' in type :
+                field_locator = npsp_lex_locators["gift_entry"]["field_input"].format(key, "button")
                 self.selenium.wait_until_page_contains_element(field_locator)
                 self.selenium.click_element(field_locator)
                 popup=npsp_lex_locators["flexipage-popup"]
