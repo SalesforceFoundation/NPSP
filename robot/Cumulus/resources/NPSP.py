@@ -32,14 +32,14 @@ from cumulusci.core.config import TaskConfig
 
 from tasks.salesforce_robot_library_base import SalesforceRobotLibraryBase
 from BaseObjects import BaseNPSPPage
-from locators_52 import npsp_lex_locators as locators_52
-from locators_51 import npsp_lex_locators as locators_51
-from locators_50 import npsp_lex_locators as locators_50
+from locators_55 import npsp_lex_locators as locators_55
+from locators_54 import npsp_lex_locators as locators_54
+from locators_53 import npsp_lex_locators as locators_53
 
 locators_by_api_version = {
-    52.0: locators_52,  # summer '21
-    51.0: locators_51,  # spring '21
-    50.0: locators_50   # winter '21
+    55.0: locators_55,  # summer '22
+    54.0: locators_54,  # spring '22
+    53.0: locators_53   # winter '22
 }
 # will get populated in _init_locators
 npsp_lex_locators = {}
@@ -220,7 +220,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
     def click_modal_footer_button(self,value):
         """Click the specified lightning button on modal footer"""
-        if self.latest_api_version == 50.0:
+        if self.latest_api_version == 53.0:
             btnlocator = npsp_lex_locators["button-text"].format(value)
             self.salesforce.scroll_element_into_view(btnlocator)
             self.salesforce._jsclick(btnlocator)
@@ -1662,7 +1662,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         and clicking on screen before performing actual click for next element"""
         actions = ActionChains(self.selenium.driver)
         actions.move_by_offset(0, 20).click().perform()
-        if title=="Schedule Payments" and self.latest_api_version == 50.0:
+        if title=="Schedule Payments" and self.latest_api_version == 53.0:
             locator=npsp_lex_locators['schedule_payments'].format(title)
         else:
             locator=npsp_lex_locators['button-with-text'].format(title)
