@@ -5315,6 +5315,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Begin Data Import Process</value>
     </labels>
     <labels>
+        <fullName>bdiSelectCantProcessBatchDIRecords</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiSelectCantProcessBatchDIRecords</shortDescription>
+        <value>You selected records linked to an NPSP Data Import Batch. To import records associated with an NPSP Data Import Batch, open the batch and click Process Batch.</value>
+    </labels>
+    <labels>
         <fullName>bdiSelectCantProcessImportedRecords</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
