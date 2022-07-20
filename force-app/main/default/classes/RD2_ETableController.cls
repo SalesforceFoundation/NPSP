@@ -328,7 +328,7 @@ public with sharing class RD2_ETableController {
         for(npe03__Recurring_Donation__c rds : fixedRecurringDonations) {
             RD2_RecurringDonation rd = new RD2_RecurringDonation(rds);
             List<RD2_ScheduleService.Installment> installments = scheduleService.getAllVisualizedInstallments(RD2_ScheduleService.currentDate, 100, mapRDSchedule.get(rds.Id));
-            mapRDLastDonation.put(rds.Id, Date.valueOf(installments[rd.getPlannedInstallments()-rd.getPaidInstallments()-1].nextDonationDate));
+            mapRDLastDonation.put(rds.Id, Date.valueOf(installments[rd.getPlannedInstallments()-1].nextDonationDate));
         }
         return mapRDLastDonation;
     }
