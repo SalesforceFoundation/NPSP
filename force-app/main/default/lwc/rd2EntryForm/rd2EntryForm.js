@@ -78,6 +78,7 @@ import ACCOUNT_PRIMARY_CONTACT_LAST_NAME from "@salesforce/schema/Account.npe01_
 const ELEVATE_WIDGET_EVENT_NAME = "rd2ElevateCreditCardForm";
 const CREDIT_CARD = "Credit Card";
 const ACH = "ACH";
+const ELEVATE = "elevate";
 
 export default class rd2EntryForm extends LightningElement {
     customLabels = Object.freeze({
@@ -676,8 +677,8 @@ export default class rd2EntryForm extends LightningElement {
     async processCommitmentSubmit(allFields) {
         try {
             if (this.isElevateWidgetDisplayed()) {
-                this.loadingText = this.rd2Service.getPaymentProcessingMessage(this.rd2State.paymentMethod);
-
+                
+                this.loadingText = this.isExperienceSite && this.rd2Service.getPaymentProcessingMessage(this.rd2State.paymentMethod).includes(ELEVATE) ? '' : this.rd2Service.getPaymentProcessingMessage(this.rd2State.paymentMethod);
                 const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
 
                 const paymentToken = await elevateWidget.returnToken().payload;
