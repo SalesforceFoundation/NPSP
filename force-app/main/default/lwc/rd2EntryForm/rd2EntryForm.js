@@ -678,7 +678,7 @@ export default class rd2EntryForm extends LightningElement {
         try {
             if (this.isElevateWidgetDisplayed()) {
                 
-                this.loadingText = this.isExperienceSite && this.rd2Service.getPaymentProcessingMessage(this.rd2State.paymentMethod).includes(ELEVATE) ? '' : this.rd2Service.getPaymentProcessingMessage(this.rd2State.paymentMethod);
+                this.loadingText = this.isExperienceSite && this.rd2Service.getPaymentProcessingMessage(this.rd2State.paymentMethod).toLowerCase().includes(ELEVATE) ? '' : this.rd2Service.getPaymentProcessingMessage(this.rd2State.paymentMethod);
                 const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
 
                 const paymentToken = await elevateWidget.returnToken().payload;
