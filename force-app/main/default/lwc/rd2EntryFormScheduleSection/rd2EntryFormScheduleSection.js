@@ -124,8 +124,8 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
                 this.rd2State.dayOfMonth = dd === 31 ? LAST_DAY_OF_MONTH : dd;
             }
             this.cssLastDay = !this.isMonthlyDonation || this.isPaymentModal ? 'slds-hide' : 'slds-p-right_small slds-p-left_small slds-size_12-of-12 slds-large-size_4-of-12 fixExperienceDayOfMonth';
-            this.firstRendered = false;
         }
+        this.firstRendered = false;
     }
 
     /**
