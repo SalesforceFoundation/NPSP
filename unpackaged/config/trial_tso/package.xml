@@ -222,7 +222,6 @@
     <types>
         <members>Account</members>
         <members>Analytics</members>
-        <members>Case</members>
         <members>Opportunity</members>
         <members>PathAssistant</members>
         <members>Security</members>
@@ -236,6 +235,7 @@
         <members>CampaignStatus</members>
         <members>CampaignType</members>
         <members>ContactRole</members>
+        <members>LeadSource</members>
         <members>OpportunityStage</members>
         <members>OpportunityType</members>
         <name>StandardValueSet</name>
