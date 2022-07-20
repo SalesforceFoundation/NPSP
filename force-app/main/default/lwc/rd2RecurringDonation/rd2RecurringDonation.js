@@ -57,6 +57,7 @@ export default class RecurringDonationTable extends LightningElement {
     allowACHPaymentMethod;
 
     @track tdClasses = "hide-td";
+    @track tdClassesNotHidden= "";
     @track actionClasses = "dv-dynamic-width"
 
     formFactor = FORM_FACTOR;
@@ -105,6 +106,7 @@ export default class RecurringDonationTable extends LightningElement {
     connectedCallback() {
       if(!this.isMobile){
         this.tdClasses = "td-dynamic-width";
+        this.tdClassesNotHidden = "td-dynamic-width";
         this.actionClasses = "lastColumn dv-dynamic-width";
       }
       this.template.addEventListener('keydown', (event) => {
