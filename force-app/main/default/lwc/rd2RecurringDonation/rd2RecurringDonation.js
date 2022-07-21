@@ -104,7 +104,6 @@ export default class RecurringDonationTable extends LightningElement {
 
     connectedCallback() {
       if(!this.isMobile){
-        console.log('entra');
         this.tdClasses = "td-dynamic-width";
         this.actionClasses = "lastColumn dv-dynamic-width";
       }
