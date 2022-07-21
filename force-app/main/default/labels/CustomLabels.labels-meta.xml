@@ -16039,7 +16039,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Questions Answered link label in Get Started Resources section for End Users</shortDescription>
-        <value>Power of Us Hub</value>
+        <value>Trailblazer Community</value>
     </labels>
     <labels>
         <fullName>gseuResourcesItemAboutNPSPLabel</fullName>
