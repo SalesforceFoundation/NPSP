@@ -127,8 +127,7 @@
                         <tr key={item.recurringDonation.Id} aria-selected="false" class="slds-hint-parent" scope="row">
                             <td key={item.recurringDonation.npe03__Amount__c} class="td-dynamic-width" data-label={labels.commonAmount} tabindex="-1" aria-label={item.recurringDonation.npe03__Amount__c} role="gridcell">
                                 <div class={rowClasses} title={labels.commonAmount}>
-                                    <lightning-formatted-number value={item.recurringDonation.npe03__Amount__c} format-style="currency"
-                                        currency-code="USD"></lightning-formatted-number>
+                                    {item.recurringDonation.Amt}
                                 </div>
                             </td>
                             <td key={item.frequency} data-label={labels.RDCL_Frequency} class="td-dynamic-width" tabindex="-1" aria-label={item.frequency} role="gridcell">
