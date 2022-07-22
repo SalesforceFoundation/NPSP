@@ -9,14 +9,9 @@
     overflow-y: hidden;
     height: 10rem;
 }
-.dv-dynamic-mobile{
-    float: right;
-}
+
 .row-label-alignment{
     display: inline;
-}
-.hide-td{
-    display: none;
 }
 .slds-table_header-fixed tbody tr:first-child td, .table_top{
     border-top: var(--lwc-borderWidthThin,1px) solid var(--lwc-colorBorder,rgb(229, 229, 229));
@@ -60,4 +55,17 @@
 }
 .th-padding-top{
     padding-top: 0;
+}
+
+@media (max-width: 48em) {
+    .td-dynamic-width{
+        width: 100%;
+        max-width: 100%;
+    }
+    .hide-td{
+        display: none;
+    }
+    .dv-dynamic-mobile{
+        float: right;
+    }
 }
