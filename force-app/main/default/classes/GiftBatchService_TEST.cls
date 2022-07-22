@@ -35,7 +35,6 @@
 @IsTest
 private class GiftBatchService_TEST {
 
-
     @TestSetup
     static void testSetup() {
         DataImportBatch__c dataImportBatch = UTIL_UnitTestData_TEST.createGiftBatches(10,2,1)[0];
@@ -58,22 +57,23 @@ private class GiftBatchService_TEST {
         insert dataImports;
     }
 
-
     @IsTest
     static void shouldBeAbleToEnqueueGiftBatch() {
-
+        // Arrange
         Id dataImportBatchId = [SELECT Id FROM DataImportBatch__c][0].Id;
         GiftBatchId giftBatchId = new GiftBatchId(dataImportBatchId);
-
-        Test.startTest();
-
         GiftBatchService giftBatchService = new GiftBatchService();
+
+        // Act
+        Test.startTest();
         giftBatchService.processGiftsFor(giftBatchId);
-
         Test.stopTest();
-        DataImportBatch__c batch = [SELECT Latest_Apex_Job_Id__c FROM DataImportBatch__c];
 
-        System.assertNotEquals(null, batch.Latest_Apex_Job_Id__c, 'The queueable\'s execute method was called');
+        // Assert
+        Integer jobsCount = [SELECT count() FROM AsyncApexJob];
+        System.assertEquals(1, jobsCount, 'Should have enqueued a job');
 
+        Integer opportunitiesCount = [SELECT count() FROM Opportunity];
+        System.assertEquals(10, opportunitiesCount, 'Should have created 10 opportunities');
     }
 }

@@ -56,8 +56,21 @@
                         <c-ge-review-donations ontogglemodal={toggleModal}
                                                onchangeselecteddonation={handleChangeSelectedDonation}
                                                donor-id={donorId}
-                                               selected-donation={selectedDonationCopyForReviewDonationsModal}>
+                                               selected-donation={selectedDonationCopyForReviewDonationsModal}
+                                               gift-in-view={giftInView}>
                         </c-ge-review-donations>
+                    </lightning-layout-item>
+                </template>
+
+                <template if:true={hasSchedule}>
+                    <lightning-layout-item size='12'>
+                        <c-ge-recurring-gift-info
+                            data-id='recurringGiftInfo'
+                            gift-in-view={giftInView}
+                            oneditschedule={handleEditSchedule}
+                            onremoveschedule={handleRemoveSchedule}>
+                            >
+                        </c-ge-recurring-gift-info>
                     </lightning-layout-item>
                 </template>
 
@@ -156,6 +169,20 @@
                         </lightning-layout>
                     </template>
                     <template if:false={isSingleGiftEntry}>
+                        <template if:false={hasSchedule}>
+                            <lightning-layout horizontal-align="end">
+                                <lightning-layout-item>
+                                    <lightning-button
+                                        if:true={isRecurringGiftsEnabled}
+                                        icon-name="utility:refresh"
+                                        label={CUSTOM_LABELS.geMakeRecurring}
+                                        data-id='recurringButton'
+                                        onclick={handleMakeGiftRecurring}
+                                        >
+                                    </lightning-button>
+                                </lightning-layout-item>
+                            </lightning-layout>
+                        </template>
                         <c-util-expandable-section class='slds-card slds-card_extension slds-m-bottom_large'
                                                    id={expandableContainerId}
                                                    is-collapsed={isFormCollapsed}

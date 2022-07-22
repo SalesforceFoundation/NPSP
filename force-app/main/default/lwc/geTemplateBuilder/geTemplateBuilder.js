@@ -1342,49 +1342,58 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
         if (isTemplateValid) {
             this.isLoading = true;
-
-            if (this.formSections && this.formSections.length === 0) {
-                this.buildDefaultFormFields();
-            }
-
-            this.formLayout.sections = this.formSections;
-            this.formTemplate.batchHeaderFields = this.batchHeaderFields;
-            this.formTemplate.layout = this.formLayout;
-            if (this.disableBatchTableColumnsSubtab && this.mode === NEW) {
-                this.formTemplate.defaultBatchTableColumns = [];
-            } else {
-                this.formTemplate.defaultBatchTableColumns = this.selectedBatchTableColumnOptions;
-            }
-
-            // TODO: Currently hardcoded as we're not providing a way to
-            // create custom migrated field mapping sets yet.
-            this.formTemplate.layout.fieldMappingSetDevName = DEFAULT_FIELD_MAPPING_SET;
-
-            const preppedFormTemplate = {
-                id: this.formTemplateRecordId || null,
-                templateJSON: JSON.stringify(this.formTemplate),
-                name: this.formTemplate.name,
-                description: this.formTemplate.description,
-                formatVersion: FORMAT_VERSION
-            };
-
             try {
-                const recordId = await storeFormTemplate(preppedFormTemplate);
+                const recordId =
+                    await storeFormTemplate(this.preppedFormTemplate());
                 if (recordId) {
                     const toastLabel = this.mode === NEW ?
                         this.CUSTOM_LABELS.geToastTemplateCreateSuccess :
                         this.CUSTOM_LABELS.geToastTemplateUpdateSuccess;
 
-                    const toastMessage = GeLabelService.format(toastLabel, [this.formTemplate.name]);
+                    const toastMessage = GeLabelService.format(
+                        toastLabel, [this.formTemplate.name]);
                     showToast(toastMessage, '', SUCCESS);
                 }
 
                 this.navigateToLandingPage();
             } catch (error) {
-                showToast(this.CUSTOM_LABELS.commonError, this.CUSTOM_LABELS.geToastSaveFailed, ERROR);
+                showToast(this.CUSTOM_LABELS.commonError,
+                    this.CUSTOM_LABELS.geToastSaveFailed, ERROR);
                 this.isLoading = false;
             }
         }
+    }
+
+    preppedFormTemplate() {
+        this.buildDefaultFormFields();
+        this.formLayout.sections = this.formSections;
+        this.formTemplate.batchHeaderFields = this.batchHeaderFields;
+        this.formTemplate.layout = this.formLayout;
+        if (this.disableBatchTableColumnsSubtab && this.mode === NEW) {
+            this.formTemplate.defaultBatchTableColumns = [];
+        } else {
+            this.formTemplate.defaultBatchTableColumns
+                = this.selectedBatchTableColumnOptions;
+        }
+
+        // TODO: Currently hardcoded as we're not providing a way to
+        // create custom migrated field mapping sets yet.
+        this.formTemplate.layout.fieldMappingSetDevName
+            = DEFAULT_FIELD_MAPPING_SET;
+       this.stripPermissionsData();
+
+        return  {
+            id: this.formTemplateRecordId || null,
+            templateJSON: JSON.stringify(this.formTemplate),
+            name: this.formTemplate.name,
+            description: this.formTemplate.description,
+            formatVersion: FORMAT_VERSION
+        };
+    }
+
+    stripPermissionsData() {
+        delete this.formTemplate.permissionErrors;
+        delete this.formTemplate.permissionErrorType;
     }
 
     /*******************************************************************************

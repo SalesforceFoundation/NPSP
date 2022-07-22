@@ -23,7 +23,7 @@ Create Primary Affiliation for Contact
     [Documentation]                      Creates a contact and organization account via API and open contact
     ...                                  Edit Primary Affiliation field and add affiliation to organization account.
     ...                                  Verifies that affiliation to account shows under organization affiliation related list as current
-    [tags]                               W-037651    feature:Affiliations
+    [tags]                               feature:Affiliations   unstable    unit
     Go To Page                           Details                      Contact                     object_id=${contact}[Id]
     Current Page Should Be               Details                      Contact
     Select Tab                           Details

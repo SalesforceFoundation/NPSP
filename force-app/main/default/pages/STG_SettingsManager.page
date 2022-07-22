@@ -44,6 +44,10 @@
     .hide {
         display: none;
     }
+
+    .slds-scope .slds-button_neutral {
+        border-color: #C9C9C9;
+    }
 </style>
 
 <script>
@@ -109,7 +113,7 @@
     }
 
 </script>
-<apex:form >
+<apex:form rendered="{!isRunningUserIsAdmin}">
     <apex:actionFunction action="{!setPanelCurrent}" name="setPanelCurrent" rerender="nothing!" >
         <apex:param name="idPanel" assignTo="{!idPanelCurrent}" value="" />
     </apex:actionFunction>
@@ -117,8 +121,12 @@
 
 <c:UTIL_PageMessages />
 
-<div style="max-width: 100%;" class="slds-scope">
-    <div class="slds-grid">
+<apex:outputPanel rendered="{!NOT(isRunningUserIsAdmin)}">
+    <c:InsufficientPermissions />
+</apex:outputPanel>
+
+<apex:outputPanel styleClass="slds-scope" rendered="{!isRunningUserIsAdmin}">
+    <div class="slds-grid" style="max-width: 100%;">
         <div class="sidebar slds-col slds-small-size_1-of-1 slds-medium-size_3-of-12 slds-large-size_3-of-12 slds-p-top_large slds-col-rule_right">
             <div class="slds-tree-container" role="application">
                 <div class="slds-text-heading_small slds-tree__item" id="treeheading"><a href="#" onclick="ShowPanel('idPanelHome');return false;" class="slds-grow">{!$Label.stgNPSPSettingsTitle}</a></div>
@@ -476,7 +484,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </apex:outputPanel>
 
     <script type="text/javascript">
         function fireRefreshViewEvent() {

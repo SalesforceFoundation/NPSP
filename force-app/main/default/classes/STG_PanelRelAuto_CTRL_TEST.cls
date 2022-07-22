@@ -36,7 +36,7 @@ private class STG_PanelRelAuto_CTRL_TEST {
 
         System.runAs(adminUser) {
             STG_PanelRelAuto_CTRL controller = new STG_PanelRelAuto_CTRL();
-            Boolean hasAccess = controller.getHasAccess();
+            Boolean hasAccess = controller.isRunningUserIsAdmin;
 
             System.assertEquals(true, hasAccess, 'The access check should return true if the user has ' +
                     'access to the Relationship_Auto_Create__c custom setting object');
@@ -49,7 +49,7 @@ private class STG_PanelRelAuto_CTRL_TEST {
 
         System.runAs(standardUser) {
             STG_PanelRelAuto_CTRL controller = new STG_PanelRelAuto_CTRL();
-            Boolean hasAccess = controller.getHasAccess();
+            Boolean hasAccess = controller.isRunningUserIsAdmin;
 
             System.assertEquals(false, hasAccess, 'The access check should return false if the user does NOT have ' +
                     'access to the Relationship_Auto_Create__c custom setting object');

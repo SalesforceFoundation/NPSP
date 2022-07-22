@@ -905,10 +905,6 @@
         <label>Pending Elevate Process</label>
     </customLabels>
     <customLabels>
-        <name>RD2_ElevatePermissionRequired</name>
-        <label>Recurring Donations from Elevate Payment Services can&apos;t be modified in NPSP except by the Elevate Payment Services Integration user.</label>
-    </customLabels>
-    <customLabels>
         <name>RD2_ElevateRDAmountMustBeValid</name>
         <label>Please enter a valid Amount. The Amount cannot be less than 1.</label>
     </customLabels>

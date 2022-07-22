@@ -44,7 +44,7 @@ Edit Installment Period For An Enhanced Recurring donation record of type open
      ...                          and next year payments.
 
 
-    [tags]                                                 W-042701           feature:RD2
+    [tags]                                  feature:RD2      unstable   api
 
     Go To Page                              Listing                                   npe03__Recurring_Donation__c
     Current Page Should be                  Listing                                   npe03__Recurring_Donation__c

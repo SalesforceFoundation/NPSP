@@ -32,14 +32,14 @@ from cumulusci.core.config import TaskConfig
 
 from tasks.salesforce_robot_library_base import SalesforceRobotLibraryBase
 from BaseObjects import BaseNPSPPage
-from locators_52 import npsp_lex_locators as locators_52
-from locators_51 import npsp_lex_locators as locators_51
-from locators_50 import npsp_lex_locators as locators_50
+from locators_55 import npsp_lex_locators as locators_55
+from locators_54 import npsp_lex_locators as locators_54
+from locators_53 import npsp_lex_locators as locators_53
 
 locators_by_api_version = {
-    52.0: locators_52,  # summer '21
-    51.0: locators_51,  # spring '21
-    50.0: locators_50   # winter '21
+    55.0: locators_55,  # summer '22
+    54.0: locators_54,  # spring '22
+    53.0: locators_53   # winter '22
 }
 # will get populated in _init_locators
 npsp_lex_locators = {}
@@ -220,7 +220,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
     def click_modal_footer_button(self,value):
         """Click the specified lightning button on modal footer"""
-        if self.latest_api_version == 50.0:
+        if self.latest_api_version == 53.0:
             btnlocator = npsp_lex_locators["button-text"].format(value)
             self.salesforce.scroll_element_into_view(btnlocator)
             self.salesforce._jsclick(btnlocator)
@@ -1005,7 +1005,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         """To verify that the data in Data Import Batch matches expected value provide batch_id and the data u want to verify"""
         ns=self.get_npsp_namespace_prefix()
         table=ns + "DataImportBatch__c"
-        bge_batch=self.salesforce.salesforce_get(table,batch_id)
+        bge_batch=self.salesforce_api.salesforce_get(table,batch_id)
         for key, value in kwargs.items():
             label=ns + key
             self.builtin.should_be_equal_as_strings(bge_batch[label], value)
@@ -1086,14 +1086,14 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
        else:
             table=obj_api
        try :
-           rec=self.salesforce.salesforce_get(table,rec_id)
+           rec=self.salesforce_api.salesforce_get(table,rec_id)
            for key, value in kwargs.items():
                print(f"executing {key}, {value} pair")
                self.builtin.should_be_equal_as_strings(rec[key], value)
        except Exception :
            print("Retrying after exception")
            time.sleep(10)
-           rec=self.salesforce.salesforce_get(table,rec_id)
+           rec=self.salesforce_api.salesforce_get(table,rec_id)
            for key, value in kwargs.items():
                print(f"executing {key}, {value} pair")
                self.builtin.should_be_equal_as_strings(rec[key], value)
@@ -1211,13 +1211,13 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
            in order to delete record during suite teardown """
 #         self.pageobjects.current_page_should_be("Details",object_name)
         id=self.salesforce.get_current_record_id()
-        self.salesforce.store_session_record(object_name,id)
+        self.salesforce_api.store_session_record(object_name,id)
         return id
 
     def verify_record_is_created_in_database(self,object_name,id):
         """Verifies that a record with specified id is saved
            in specified object table in database and returns the record"""
-        record=self.salesforce.salesforce_get(object_name,id)
+        record=self.salesforce_api.salesforce_get(object_name,id)
         self.builtin.should_not_be_empty(record, msg="The database object {} with id {} is not in the database".format(object_name,id))
         return record
 
@@ -1299,10 +1299,10 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         if account_data is not None:
             # create the account based on the user input specified account type
             acctname = self.randomString(10)
-            rt_id = self.salesforce.get_record_type_id("Account",account_data["Type"])
+            rt_id = self.salesforce_api.get_record_type_id("Account",account_data["Type"])
             account_data.update( {'Name' : acctname,'RecordTypeId' : rt_id})
-            account_id = self.salesforce.salesforce_insert("Account", **account_data)
-            account = self.salesforce.salesforce_get("Account",account_id)
+            account_id = self.salesforce_api.salesforce_insert("Account", **account_data)
+            account = self.salesforce_api.salesforce_get("Account",account_id)
             # save the account object to data dictionary
             data[name] = account
 
@@ -1311,8 +1311,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             firstname = self.randomString(10)
             lastname = self.randomString(10)
             contact_data.update( {'Firstname' : firstname,'Lastname' : lastname})
-            contact_id = self.salesforce.salesforce_insert("Contact", **contact_data)
-            contact = self.salesforce.salesforce_get("Contact",contact_id)
+            contact_id = self.salesforce_api.salesforce_insert("Contact", **contact_data)
+            contact = self.salesforce_api.salesforce_get("Contact",contact_id)
             # save the contact object to data dictionary
             data[name] = contact
 
@@ -1323,14 +1323,14 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             # Fromatting the objects names with namespace prefix
             formattedengobjname = "{}{}".format(self.get_npsp_namespace_prefix(), engobjname)
             formattedcontactobjname = "{}{}".format(self.cumulusci.get_namespace_prefix(), contactobjname)
-            engagement_id = self.salesforce.salesforce_insert(formattedengobjname, **engagement_data)
-            engagement = self.salesforce.salesforce_get(formattedengobjname,engagement_id)
+            engagement_id = self.salesforce_api.salesforce_insert(formattedengobjname, **engagement_data)
+            engagement = self.salesforce_api.salesforce_get(formattedengobjname,engagement_id)
 
           # If the keyword is contact, link the contact to the engagement plan created
             if name.lower() == 'contact':
                 testdata={}
                 testdata.update( {formattedcontactobjname : data[name]["Id"], formattedengobjname: engagement_id } )
-                self.salesforce.salesforce_insert(formattedengobjname, **testdata)
+                self.salesforce_api.salesforce_insert(formattedengobjname, **testdata)
 
             # save the engagement object to data dictionary
 
@@ -1341,8 +1341,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         # set a recurring donation for a contact
         if recurringdonation_data is not None:
             recurringdonation_data.update( {'npe03__Contact__c' : data[name]["Id"] } )
-            rd_id = self.salesforce.salesforce_insert("npe03__Recurring_Donation__c", **recurringdonation_data)
-            recurringdonation = self.salesforce.salesforce_get("npe03__Recurring_Donation__c",rd_id)
+            rd_id = self.salesforce_api.salesforce_insert("npe03__Recurring_Donation__c", **recurringdonation_data)
+            recurringdonation = self.salesforce_api.salesforce_get("npe03__Recurring_Donation__c",rd_id)
             data[f"{name}_rd"] = recurringdonation
         #set gau data
         if gau_data is not None:
@@ -1350,13 +1350,13 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             gauname = gau_data['Name']
             random = self.randomString(10)
             gau_data.update( {'name' : f"{random}{gauname}"} )
-            gau_id = self.salesforce.salesforce_insert(object_key, **gau_data)
-            gau = self.salesforce.salesforce_get(object_key,gau_id)
+            gau_id = self.salesforce_api.salesforce_insert(object_key, **gau_data)
+            gau = self.salesforce_api.salesforce_get(object_key,gau_id)
             data[name] = gau
         # set opportunity association with a contact or account
         if opportunity_data is not None:
             # create opportunity
-            rt_id = self.salesforce.get_record_type_id("Opportunity",opportunity_data["Type"])
+            rt_id = self.salesforce_api.get_record_type_id("Opportunity",opportunity_data["Type"])
             # if user did not specify any date value add the default value
             if 'CloseDate' not in opportunity_data:
                 date = datetime.now().strftime('%Y-%m-%d')
@@ -1371,8 +1371,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 opportunity_data.update( {'AccountId' : data[name]["AccountId"] } )
 
             opportunity_data.update( {'RecordTypeId': rt_id } )
-            opportunity_id = self.salesforce.salesforce_insert("Opportunity", **opportunity_data)
-            opportunity = self.salesforce.salesforce_get("Opportunity",opportunity_id)
+            opportunity_id = self.salesforce_api.salesforce_insert("Opportunity", **opportunity_data)
+            opportunity = self.salesforce_api.salesforce_get("Opportunity",opportunity_id)
             # save the opportunity
             data[f"{name}_opportunity"] = opportunity
 
@@ -1393,7 +1393,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                     else:
                         scheduled_date =  (datetime.now() + timedelta(days = numdays)).strftime('%Y-%m-%d')
                     payment_schedule_data.update( {'npe01__Opportunity__c' : data[f"{name}_opportunity"]["Id"] , 'npe01__Scheduled_Date__c' : scheduled_date,'npe01__Payment_Amount__c' : payment_data['Amount'] } )
-                    payment_id = self.salesforce.salesforce_insert("npe01__OppPayment__c", **payment_schedule_data)
+                    payment_id = self.salesforce_api.salesforce_insert("npe01__OppPayment__c", **payment_schedule_data)
 
 					# Out of the total number of payments being generated if user paid the payements for n number of payments specified in the field completedPyaments
 					# Mark the payments as paid and populate the payment date
@@ -1404,7 +1404,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                             #Altering Payment date to increment by every month for the set number of installments
                             payment_date =  (datetime.strptime(payment_date , '%Y-%m-%d').date() + relativedelta(months=i*2)).strftime('%Y-%m-%d')
                             payment_update_data.update( {'npe01__Payment_Date__c' : payment_date ,'npe01__Paid__c': "true"} )
-                            payment_id = self.salesforce.salesforce_update("npe01__OppPayment__c",payment_id , **payment_update_data)
+                            payment_id = self.salesforce_api.salesforce_update("npe01__OppPayment__c",payment_id , **payment_update_data)
 
                     i = i+1
 
@@ -1662,7 +1662,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         and clicking on screen before performing actual click for next element"""
         actions = ActionChains(self.selenium.driver)
         actions.move_by_offset(0, 20).click().perform()
-        if title=="Schedule Payments" and self.latest_api_version == 50.0:
+        if title=="Schedule Payments" and self.latest_api_version == 53.0:
             locator=npsp_lex_locators['schedule_payments'].format(title)
         else:
             locator=npsp_lex_locators['button-with-text'].format(title)
@@ -1674,7 +1674,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def verify_record_count_for_object(self,object,count,**kwargs):
         """Queries the given object table by using key,value pair passed and
         verifies that the record count matches with expected count"""
-        records=self.salesforce.salesforce_query(object,**kwargs)
+        records=self.salesforce_api.salesforce_query(object,**kwargs)
         actual_count=len(records)
         if actual_count != int(count):
             raise Exception(f'Expected total count of records to be {count} but found {actual_count}')
@@ -1694,7 +1694,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
     def query_object_and_return_id(self,object_name,**kwargs):
         """Queries the given object table by using key,value pair passed and returns ids of matched records"""
-        list=self.salesforce.salesforce_query(object_name,**kwargs)
+        list=self.salesforce_api.salesforce_query(object_name,**kwargs)
         ids=[sub['Id'] for sub in list]
         print(f"ID's saved are: {ids}")
         return ids
@@ -1705,7 +1705,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         records=self.query_object_and_return_id(object_name,**kwargs)
         if records:
             for i in records:
-                self.salesforce.store_session_record(object_name,i)
+                self.salesforce_api.store_session_record(object_name,i)
 
     @capture_screenshot_on_error
     def verify_table_contains_row(self,table_name,record,**kwargs):

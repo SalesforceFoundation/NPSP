@@ -143,6 +143,23 @@ private class ERR_Handler_TEST {
         }
     }
 
+    @IsTest
+    private static void verifyExceptionErrorIsGeneratedButNotStored() {
+        Test.startTest();
+        ERR_Handler.Errors errors = ERR_Handler.getErrorsOnly(testException, ERR_Handler_API.Context.TDTM);
+        Test.stopTest();
+
+        List<Error__c> errorRecords = errorGateway.getRecords();
+        System.assertEquals(0, errorRecords.size(), 'There should be no error in the database');
+
+        for(Error__c error : errors.errorRecords) {
+            System.assertEquals(ERR_Handler_API.Context.TDTM.name(), error.Context_Type__c,
+                'The error context should be set to the passed in context');
+            System.assertEquals(testException.getMessage(), error.Full_Message__c,
+            'The error full message should be set to exception message');
+        }
+    }
+
     /*******************************************************************************************************
     * @description This is the same test called testErrorRecordCreation in the REL_Relationships_TEST class,
     * but using simple insert instead of Database.insert
