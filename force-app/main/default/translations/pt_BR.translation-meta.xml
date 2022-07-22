@@ -34,7 +34,7 @@
 1. Abra uma conta de verificação de endereço de terceiros. (Alguns são gratuitos para organizações sem fins lucrativos.)&lt;br/&gt;
 2. Em seu serviço de verificação de endereço, crie o ID de autenticação e/ou token necessário.&lt;br/&gt;
 3. Retorne a esta página de configurações, clique no botão Editar acima e cole o ID e/ou token nos campos apropriados.&lt;br/&gt;
-4. Complete os campos restantes e clique em Salvar. O texto de ajuda para cada campo fornece mais informações. Se você ainda precisar de ajuda, consulte a &lt;a href="https://powerofus.force.com/NPSP_Address_Verification"&gt;documentação do NPSP&lt;/a&gt;.</label>
+4. Complete os campos restantes e clique em Salvar. O texto de ajuda para cada campo fornece mais informações. Se você ainda precisar de ajuda, consulte a &lt;a href=&quot;https://powerofus.force.com/NPSP_Address_Verification&quot;&gt;documentação do NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>Addr_Settings_Intro_Title</name>
@@ -138,7 +138,7 @@
     </customLabels>
     <customLabels>
         <name>Address_StateCountry_Invalid_Error</name>
-        <label>'{0}' não está configurado como um País válido em sua Organização.</label>
+        <label>&apos;{0}&apos; não está configurado como um País válido em sua Organização.</label>
     </customLabels>
     <customLabels>
         <name>Address_Verification_Limit</name>
@@ -834,15 +834,15 @@
     </customLabels>
     <customLabels>
         <name>RD2_DataMigrationInvalidCloseAction</name>
-        <label>Em Configurações do NPSP | Doações recorrentes, selecione um valor que não seja "No_Action" para Comportamento de oportunidade aberta no fechamento de uma DR. Após a conclusão da migração de dados, você poderá alterar a configuração para o valor anterior.</label>
+        <label>Em Configurações do NPSP | Doações recorrentes, selecione um valor que não seja &quot;No_Action&quot; para Comportamento de oportunidade aberta no fechamento de uma DR. Após a conclusão da migração de dados, você poderá alterar a configuração para o valor anterior.</label>
     </customLabels>
     <customLabels>
         <name>RD2_DataMigrationInvalidInstallmentPeriod</name>
-        <label>O período de parcelamento da Doação recorrente "{0}" não pode ser convertido no formato de Doações recorrentes aprimoradas. Verifique se o Período de parcelamento está definido nas Configurações do NPSP -&gt; Doações recorrentes -&gt; Períodos de parcelamento personalizado de doações recorrentes.</label>
+        <label>O período de parcelamento da Doação recorrente &quot;{0}&quot; não pode ser convertido no formato de Doações recorrentes aprimoradas. Verifique se o Período de parcelamento está definido nas Configurações do NPSP -&gt; Doações recorrentes -&gt; Períodos de parcelamento personalizado de doações recorrentes.</label>
     </customLabels>
     <customLabels>
         <name>RD2_DataMigrationInvalidOpenEndedStatus</name>
-        <label>O status de prazo indeterminado de doação recorrente "{0}" não pode ser convertido no formato de Doações recorrentes aprimoradas. Você precisa usar um destes valores: Aberto, Fechado ou Nenhum.</label>
+        <label>O status de prazo indeterminado de doação recorrente &quot;{0}&quot; não pode ser convertido no formato de Doações recorrentes aprimoradas. Você precisa usar um destes valores: Aberto, Fechado ou Nenhum.</label>
     </customLabels>
     <customLabels>
         <name>RD2_DataMigrationInvalidPlannedInstallments</name>
@@ -1020,7 +1020,7 @@
         <name>RD2_EnablementIntro</name>
         <label>Olá! Doações recorrentes aprimoradas é nosso recurso de Doações recorrentes repensado e melhorado para o NPSP (Pacote de sucesso para organizações sem fins lucrativos). Agradecemos bastante aos membros da nossa comunidade que deram seu feedback e ajudaram a tornar possíveis as Doações recorrentes aprimoradas.
         &lt;br/&gt;&lt;br/&gt;Como já existe um recurso de Doações recorrentes no NPSP, você precisará executar várias tarefas de upgrade e mover seus dados existentes para o modelo de Doações recorrentes aprimoradas. Nós indicamos as tarefas necessárias abaixo.
-        &lt;br/&gt;&lt;br/&gt;Você provavelmente terá perguntas ao longo do caminho e nós queremos que esteja totalmente preparado a cada passo. Consulte a &lt;a href="https://powerofus.force.com/NPSP_Recurring_Donations" target="_blank"&gt;documentação de Doações recorrentes aprimoradas&lt;/a&gt; enquanto avança no processo de upgrade.</label>
+        &lt;br/&gt;&lt;br/&gt;Você provavelmente terá perguntas ao longo do caminho e nós queremos que esteja totalmente preparado a cada passo. Consulte a &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentação de Doações recorrentes aprimoradas&lt;/a&gt; enquanto avança no processo de upgrade.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMetaDeployConfirm</name>
@@ -1068,7 +1068,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationErrorMessage</name>
-        <label>Sua execução de migração tem erros; eles precisarão ser corrigidos para concluir uma migração bem-sucedida. Veja os erros em Configurações do NPSP &gt; Ferramentas do sistema &gt; Logs de erros. Consulte a &lt;a href="https://powerofus.force.com/NPSP_Recurring_Donations" target="_blank"&gt;documentação&lt;/a&gt; para obter ajuda. Corrija os erros e tente novamente.</label>
+        <label>Sua execução de migração tem erros; eles precisarão ser corrigidos para concluir uma migração bem-sucedida. Veja os erros em Configurações do NPSP &gt; Ferramentas do sistema &gt; Logs de erros. Consulte a &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentação&lt;/a&gt; para obter ajuda. Corrija os erros e tente novamente.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationIntro</name>
@@ -1110,7 +1110,7 @@
         <name>RD2_EnablementPrepTasks</name>
         <label>&lt;ul&gt;&lt;li&gt;Desabilite fluxos de trabalho, processos, regras de validação e acionadores nos objetos Doações recorrentes, Oportunidades e Pagamentos.&lt;/li&gt;
 &lt;li&gt;Faça backup do seu banco de dados, incluindo todas as Doações recorrentes e seus registros relacionados.&lt;/li&gt;
-&lt;li&gt;Leia a &lt;a href="https://powerofus.force.com/NPSP_Recurring_Donations" target="_blank"&gt;documentação&lt;/a&gt; sobre Doações recorrentes aprimoradas.&lt;/li&gt;&lt;/ul&gt;</label>
+&lt;li&gt;Leia a &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentação&lt;/a&gt; sobre Doações recorrentes aprimoradas.&lt;/li&gt;&lt;/ul&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementPrepTitle</name>
@@ -1120,7 +1120,7 @@
         <name>RD2_EnablementSimpleIntro</name>
         <label>A opção Doações recorrentes aprimoradas torna as Doações recorrentes mais flexíveis e mais fáceis de gerenciar do que nunca. Para habilitar as Doações recorrentes aprimoradas, siga os passos abaixo. Você deve completar TODAS as etapas para habilitar totalmente as Doações recorrentes aprimoradas.
         &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Como você não tem registros de Doação recorrente, não precisa validar ou migrar nenhum dado.&lt;/b&gt;
-        &lt;br/&gt;&lt;br/&gt;Para obter mais informações, leia a &lt;a href="https://powerofus.force.com/NPSP_Recurring_Donations" target="_blank"&gt;documentação sobre Doações recorrentes aprimoradas&lt;/a&gt;.</label>
+        &lt;br/&gt;&lt;br/&gt;Para obter mais informações, leia a &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentação sobre Doações recorrentes aprimoradas&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EndDateMustBeLaterThanCloseWonOpp</name>
@@ -1164,7 +1164,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormInsertSuccessMessage</name>
-        <label>A Doação recorrente "{0}” foi criada.</label>
+        <label>A Doação recorrente &quot;{0}” foi criada.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormMissingPermissions</name>
@@ -1237,7 +1237,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormUpdateSuccessMessage</name>
-        <label>A Doação recorrente "{0}” foi salva.</label>
+        <label>A Doação recorrente &quot;{0}” foi salva.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ErrorDataMigrationJobCannotBeRun</name>
@@ -1361,7 +1361,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_PauseStatusMustExist</name>
-        <label>O NPSP não pode atualizar o Motivo do status e o Status em Doações recorrentes pausadas. Você precisa adicionar o valor de lista de opções 'Pausado' ao campo Status.</label>
+        <label>O NPSP não pode atualizar o Motivo do status e o Status em Doações recorrentes pausadas. Você precisa adicionar o valor de lista de opções &apos;Pausado&apos; ao campo Status.</label>
     </customLabels>
     <customLabels>
         <name>RD2_PaymentInformation</name>
@@ -1504,7 +1504,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_StatusMustBeMapped</name>
-        <label>O Status "{0}" não foi mapeado para um Estado.</label>
+        <label>O Status &quot;{0}&quot; não foi mapeado para um Estado.</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusMustBeMappedSolution</name>
@@ -1919,7 +1919,7 @@ Para verificar as configurações de Alocação de GAU, acesse Doações | Aloca
     </customLabels>
     <customLabels>
         <name>alloPaymentOverallocatedError</name>
-        <label>O valor alocado é superior ao valor do Pagamento. Atualize o valor da Alocação de pagamento para que o total seja igual ao Valor de pagamento. Ver Oportunidade "{0}, Id: {1}"</label>
+        <label>O valor alocado é superior ao valor do Pagamento. Atualize o valor da Alocação de pagamento para que o total seja igual ao Valor de pagamento. Ver Oportunidade &quot;{0}, Id: {1}&quot;</label>
     </customLabels>
     <customLabels>
         <name>alloPercentExceed100</name>
@@ -1967,11 +1967,11 @@ Para verificar as configurações de Alocação de GAU, acesse Doações | Aloca
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>A partir de 1º de outubro de 2020, a Entrada de dados em lote não é mais suportada. A maioria dos recursos foram substituídos por recursos mais novos no NPSP. Se você tiver algum lote em andamento, ainda poderá acessar esses registros, mas não poderá processá-los usando a Entrada de dados em lote. Entre em contato com o suporte se precisar acessar lotes em andamento. &lt;br/&gt; Talvez seja melhor explorar a Entrada de doações como uma alternativa à Entrada de dados em lote. Saiba mais sobre a Entrada de doações na &lt;a href='https://powerofus.force.com/NPSP_Documentation' target='_blank'&gt;Documentação do NPSP&lt;/a&gt;.</label>
+        <label>A partir de 1º de outubro de 2020, a Entrada de dados em lote não é mais suportada. A maioria dos recursos foram substituídos por recursos mais novos no NPSP. Se você tiver algum lote em andamento, ainda poderá acessar esses registros, mas não poderá processá-los usando a Entrada de dados em lote. Entre em contato com o suporte se precisar acessar lotes em andamento. &lt;br/&gt; Talvez seja melhor explorar a Entrada de doações como uma alternativa à Entrada de dados em lote. Saiba mais sobre a Entrada de doações na &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentação do NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
-        <label>Em 1º de outubro de 2020, a Entrada de dados em lote será aposentada e não funcionará mais no NPSP. Se você tiver algum lote em andamento no momento, ainda poderá acessar esses registros, mas não poderá processá-los usando a Entrada de dados em lote. Para garantir uma transição suave, ative e use a Entrada de doações antes de 1º de outubro. Saiba mais sobre a Entrada de doações na &lt;a href='https://powerofus.force.com/NPSP_Documentation' target='_blank'&gt;Documentação do NPSP&lt;/a&gt;.</label>
+        <label>Em 1º de outubro de 2020, a Entrada de dados em lote será aposentada e não funcionará mais no NPSP. Se você tiver algum lote em andamento no momento, ainda poderá acessar esses registros, mas não poderá processá-los usando a Entrada de dados em lote. Para garantir uma transição suave, ative e use a Entrada de doações antes de 1º de outubro. Saiba mais sobre a Entrada de doações na &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentação do NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
@@ -2167,7 +2167,7 @@ Para verificar as configurações de Alocação de GAU, acesse Doações | Aloca
     </customLabels>
     <customLabels>
         <name>bdiErrorDeploymentFailedLink</name>
-        <label>&lt;a href="{0}" target="_blank"&gt;Você pode visualizar o status de implantação aqui.&lt;/a&gt;</label>
+        <label>&lt;a href=&quot;{0}&quot; target=&quot;_blank&quot;&gt;Você pode visualizar o status de implantação aqui.&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorDonationLookupMatch</name>
@@ -2508,7 +2508,7 @@ Para verificar as configurações de Alocação de GAU, acesse Doações | Aloca
     </customLabels>
     <customLabels>
         <name>bdiOMUIErrorNoValidThroughThisField</name>
-        <label>Erro: não há campos válidos com base no que você selecionou em "Nome do objeto", "É Filho/Pai" e "Deste Grupo de mapeamento"</label>
+        <label>Erro: não há campos válidos com base no que você selecionou em &quot;Nome do objeto&quot;, &quot;É Filho/Pai&quot; e &quot;Deste Grupo de mapeamento&quot;</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIErrorDupeName</name>
@@ -2836,7 +2836,7 @@ Para verificar as configurações de Alocação de GAU, acesse Doações | Aloca
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>Em 13 de julho de 2021, a Entrada de doações em lote será aposentada e não funcionará mais no NPSP. Se você tiver algum lote em andamento no momento, ainda poderá acessar esses registros, mas não poderá processá-los usando a Entrada de doações em lote. Para garantir uma transição suave, ative e use a Entrada de doações mais recente antes de 13 de julho. Saiba mais sobre a Entrada de doações na &lt;a href='https://powerofus.force.com/NPSP_Documentation' target='_blank'&gt;Documentação do NPSP&lt;/a&gt;.</label>
+        <label>Em 13 de julho de 2021, a Entrada de doações em lote será aposentada e não funcionará mais no NPSP. Se você tiver algum lote em andamento no momento, ainda poderá acessar esses registros, mas não poderá processá-los usando a Entrada de doações em lote. Para garantir uma transição suave, ative e use a Entrada de doações mais recente antes de 13 de julho. Saiba mais sobre a Entrada de doações na &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentação do NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -2852,7 +2852,7 @@ Para verificar as configurações de Alocação de GAU, acesse Doações | Aloca
             Se você tiver algum lote em andamento, ainda poderá acessar esses registros, mas não poderá processá-los usando a Entrada de doações em lote.
             Entre em contato com o suporte se precisar acessar lotes em andamento.
             Talvez seja melhor explorar a Entrada de doações como uma alternativa à Entrada de doações em lote.
-            Saiba mais sobre a Entrada de doações na &lt;a href='https://powerofus.force.com/NPSP_Documentation' target='_blank'&gt;Documentação do NPSP&lt;/a&gt;.</label>
+            Saiba mais sobre a Entrada de doações na &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentação do NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -3350,7 +3350,7 @@ Para verificar as configurações de Alocação de GAU, acesse Doações | Aloca
     </customLabels>
     <customLabels>
         <name>conMergeErrorNoDRSFound</name>
-        <label>&lt;b&gt;Sem conjuntos de registros duplicados.&lt;/b&gt;&lt;/br&gt; Nenhum conjunto de registros duplicados encontrado. Verifique se as regras duplicadas estão ativas. &lt;a href="https://help.salesforce.com/articleView?id=duplicate_rules_map_of_reference.htm&amp;type=5" target="_blank"&gt;Mais informações&lt;/a&gt;.</label>
+        <label>&lt;b&gt;Sem conjuntos de registros duplicados.&lt;/b&gt;&lt;/br&gt; Nenhum conjunto de registros duplicados encontrado. Verifique se as regras duplicadas estão ativas. &lt;a href=&quot;https://help.salesforce.com/articleView?id=duplicate_rules_map_of_reference.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;Mais informações&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>conMergeErrorNoReadDSRObjPermission</name>
@@ -3366,7 +3366,7 @@ Para verificar as configurações de Alocação de GAU, acesse Doações | Aloca
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>Veja todos os Contatos duplicados encontrados usando regras de correspondência. &lt;a href='https://powerofus.force.com/IP_Contacts' target='_blank'&gt;&lt;b&gt; Conte-me mais &lt;/b&gt;&lt;/a&gt;</label>
+        <label>Veja todos os Contatos duplicados encontrados usando regras de correspondência. &lt;a href=&apos;https://powerofus.force.com/IP_Contacts&apos; target=&apos;_blank&apos;&gt;&lt;b&gt; Conte-me mais &lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>
@@ -4045,7 +4045,7 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
     </customLabels>
     <customLabels>
         <name>gsChecklistItemReviewCompanyDesc</name>
-        <label>Dentro do Salesforce, as informações organizacionais são referidas como "Informações da empresa". Aqui, você configurará o fuso horário padrão da sua organização, a moeda e o mês de início do ano fiscal. Você também pode encontrar informações sobre o uso de sua licença.</label>
+        <label>Dentro do Salesforce, as informações organizacionais são referidas como &quot;Informações da empresa&quot;. Aqui, você configurará o fuso horário padrão da sua organização, a moeda e o mês de início do ano fiscal. Você também pode encontrar informações sobre o uso de sua licença.</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemReviewCompanyLinkLabel</name>
@@ -4189,7 +4189,7 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
     </customLabels>
     <customLabels>
         <name>gseuChecklistItemWhatIsNPSPDesc</name>
-        <label>A base do Nonprofit Cloud é o aplicativo NPSP (Nonprofit Success Pack, Pacote de sucesso para organizações sem fins lucrativos). O NPSP ajuda você a gerenciar seus membros e esforços de angariação de fundos. Se alguém diz que está usando a "versão de organização sem fins lucrativos" do Salesforce, geralmente está falando do NPSP.</label>
+        <label>A base do Nonprofit Cloud é o aplicativo NPSP (Nonprofit Success Pack, Pacote de sucesso para organizações sem fins lucrativos). O NPSP ajuda você a gerenciar seus membros e esforços de angariação de fundos. Se alguém diz que está usando a &quot;versão de organização sem fins lucrativos&quot; do Salesforce, geralmente está falando do NPSP.</label>
     </customLabels>
     <customLabels>
         <name>gseuChecklistItemWhatIsNPSPLink</name>
@@ -4775,7 +4775,7 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
     <customLabels>
         <name>gePaymentProcessError</name>
         <label>Houve um erro no processamento do pagamento. Reveja o erro e tente novamente. Como alternativa,
-            selecione "Não digitar informações de pagamento." para inserir uma doação sem processar um pagamento. Erros {0}:
+            selecione &quot;Não digitar informações de pagamento.&quot; para inserir uma doação sem processar um pagamento. Erros {0}:
             0x0A/ {1}</label>
     </customLabels>
     <customLabels>
@@ -4916,7 +4916,7 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
     </customLabels>
     <customLabels>
         <name>geToastTemplateCreateSuccess</name>
-        <label>O modelo "{0}" foi criado.</label>
+        <label>O modelo &quot;{0}&quot; foi criado.</label>
     </customLabels>
     <customLabels>
         <name>geToastTemplateDeleteError</name>
@@ -4924,7 +4924,7 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
     </customLabels>
     <customLabels>
         <name>geToastTemplateDeleteSuccess</name>
-        <label>O modelo "{0}" foi excluído.</label>
+        <label>O modelo &quot;{0}&quot; foi excluído.</label>
     </customLabels>
     <customLabels>
         <name>geToastTemplateTabsError</name>
@@ -4932,7 +4932,7 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
     </customLabels>
     <customLabels>
         <name>geToastTemplateUpdateSuccess</name>
-        <label>O modelo "{0}" foi atualizado.</label>
+        <label>O modelo &quot;{0}&quot; foi atualizado.</label>
     </customLabels>
     <customLabels>
         <name>geUtilJWTTestInvalidKey</name>
@@ -4960,7 +4960,7 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
     </customLabels>
     <customLabels>
         <name>giftProcessingAccountException</name>
-        <label>O processamento de doações não suporta o modelo de conta Individual ("Bucket").</label>
+        <label>O processamento de doações não suporta o modelo de conta Individual (&quot;Bucket&quot;).</label>
     </customLabels>
     <customLabels>
         <name>giftProcessingConfigException</name>
@@ -5088,7 +5088,7 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
     </customLabels>
     <customLabels>
         <name>healthDetailsHHAccountModel</name>
-        <label>Ao usar o Modelo de conta de família, você precisa definir Regras de objeto doméstico para "Sem contatos". Você pode definir o campo Regras de objetos de família na página Configurações do NPSP em Pessoas | Famílias.</label>
+        <label>Ao usar o Modelo de conta de família, você precisa definir Regras de objeto doméstico para &quot;Sem contatos&quot;. Você pode definir o campo Regras de objetos de família na página Configurações do NPSP em Pessoas | Famílias.</label>
     </customLabels>
     <customLabels>
         <name>healthDetailsHHActNoContacts</name>
@@ -5160,7 +5160,7 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
     </customLabels>
     <customLabels>
         <name>healthDetailsInvalidPicklistValue</name>
-        <label>O valor de lista de opções "{0}" não é suportado.</label>
+        <label>O valor de lista de opções &quot;{0}&quot; não é suportado.</label>
     </customLabels>
     <customLabels>
         <name>healthDetailsInvalidRecordtypeId</name>
@@ -5184,7 +5184,7 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
     </customLabels>
     <customLabels>
         <name>healthDetailsMissingRequiredPicklistValue</name>
-        <label>O valor de lista de opções obrigatório "{0}" está ausente.</label>
+        <label>O valor de lista de opções obrigatório &quot;{0}&quot; está ausente.</label>
     </customLabels>
     <customLabels>
         <name>healthDetailsNothingScheduled</name>
@@ -5436,7 +5436,7 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
     </customLabels>
     <customLabels>
         <name>healthSolutionAccountRTIssue</name>
-        <label>Para Contas de família, npe01__SYSTEM_AccountType__c deve ser 'Conta de família'. Para Contas um para um, npe01__SYSTEM_AccountType__c deve ser 'Individual Um para um'. Além disso, para ambos, npe01__SYSTEMISINDIVIDUAL__c deve ser verdadeiro.</label>
+        <label>Para Contas de família, npe01__SYSTEM_AccountType__c deve ser &apos;Conta de família&apos;. Para Contas um para um, npe01__SYSTEM_AccountType__c deve ser &apos;Individual Um para um&apos;. Além disso, para ambos, npe01__SYSTEMISINDIVIDUAL__c deve ser verdadeiro.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionAutoRelFieldsMissing</name>
@@ -5512,7 +5512,7 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
     </customLabels>
     <customLabels>
         <name>healthSolutionMailingListReportMissing</name>
-        <label>Crie um relatório Campanhas com contatos e adicione um filtro a Status do membro não contém "Duplicar". Em seguida, especifique este relatório na guia {0} | {1} em Configurações do NPSP.</label>
+        <label>Crie um relatório Campanhas com contatos e adicione um filtro a Status do membro não contém &quot;Duplicar&quot;. Em seguida, especifique este relatório na guia {0} | {1} em Configurações do NPSP.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionMissingOppPayments</name>
@@ -5520,7 +5520,7 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
     </customLabels>
     <customLabels>
         <name>healthSolutionMissingPicklistValue</name>
-        <label>Adicione o valor de lista de opções obrigatório "{0}" no campo "{1}".</label>
+        <label>Adicione o valor de lista de opções obrigatório &quot;{0}&quot; no campo &quot;{1}&quot;.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionNothingScheduled</name>
@@ -5564,7 +5564,7 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
     </customLabels>
     <customLabels>
         <name>healthSolutionUnsupportedPicklistValue</name>
-        <label>Desative ou exclua o valor de lista de opções obrigatório "{0}" no campo "{1}".</label>
+        <label>Desative ou exclua o valor de lista de opções obrigatório &quot;{0}&quot; no campo &quot;{1}&quot;.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionUDFBadDatatypes</name>
@@ -5592,7 +5592,7 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
     </customLabels>
     <customLabels>
         <name>hhCmpDedupeNoReport</name>
-        <label>Não foi possível encontrar o relatório. Crie um relatório e salve-o com o nome de relatório exclusivo 'NPSP_Campaign_Household_Mailing_List_V2'. Use o tipo de relatório Campanhas com contatos e adicione filtros para CampaignId é igual a em branco e Status do membro não contém 'Duplicado'.</label>
+        <label>Não foi possível encontrar o relatório. Crie um relatório e salve-o com o nome de relatório exclusivo &apos;NPSP_Campaign_Household_Mailing_List_V2&apos;. Use o tipo de relatório Campanhas com contatos e adicione filtros para CampaignId é igual a em branco e Status do membro não contém &apos;Duplicado&apos;.</label>
     </customLabels>
     <customLabels>
         <name>hhCmpDedupeStatus</name>
@@ -6228,7 +6228,7 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
     </customLabels>
     <customLabels>
         <name>sendAcknowledgmentFailureReasons</name>
-        <label>O NPSP não enviou confirmações para os registros a seguir. As confirmações podem falhar quando não há uma regra de fluxo de trabalho (Status de reconhecimento IGUAL A 'Enviar reconhecimento') ativa para enviar a confirmação ou quando os registros não atendem a critérios adicionais para acionar a regra do fluxo de trabalho. Por exemplo, se o Contato primário não estiver definido ou se o campo de email do Contato primário estiver vazio ou for inválido.</label>
+        <label>O NPSP não enviou confirmações para os registros a seguir. As confirmações podem falhar quando não há uma regra de fluxo de trabalho (Status de reconhecimento IGUAL A &apos;Enviar reconhecimento&apos;) ativa para enviar a confirmação ou quando os registros não atendem a critérios adicionais para acionar a regra do fluxo de trabalho. Por exemplo, se o Contato primário não estiver definido ou se o campo de email do Contato primário estiver vazio ou for inválido.</label>
     </customLabels>
     <customLabels>
         <name>sendAcknowledgmentFireStatus</name>
@@ -6559,14 +6559,14 @@ A escolha de Não agendar automaticamente trabalhos do NPSP padrão diz ao NPSP 
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMapping3</name>
-        <label>Encontre a documentação completa da configuração do Mapeamento Avançado &lt;a href="https://powerofus.force.com/NPSP_Advanced_Mapping" target="_blank"&gt;aqui&lt;/a&gt;.</label>
+        <label>Encontre a documentação completa da configuração do Mapeamento Avançado &lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;aqui&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMapping4</name>
         <label>&lt;b&gt;Esta mensagem não será exibida se você sair desta página! Faça uma captura de tela desta página ou copie as informações na tabela abaixo para acompanhar os mapeamentos do Texto de ajuda que você precisa corrigir. &lt;/b&gt;
             &lt;br/&gt;
             &lt;br/&gt;
-            Não pudemos converter alguns dos seus mapeamentos de Texto de ajuda existentes porque eles são inválidos. &lt;a href="https://powerofus.force.com/NPSP_Troubleshoot_Help_Text" target="_blank"&gt;Leia mais sobre problemas comuns de mapeamento de Texto de ajuda&lt;/a&gt;. Recomendamos desativar o Mapeamento avançado, corrigir os mapeamentos inválidos do Texto de ajuda e reativar o Mapeamento avançado. Alternativamente, você pode adicionar esses mapeamentos quando configurar o Mapeamento avançado na próxima tela, mas esses mapeamentos adicionais serão revertidos para o Texto de ajuda original inválido se você desativar o Mapeamento avançado.</label>
+            Não pudemos converter alguns dos seus mapeamentos de Texto de ajuda existentes porque eles são inválidos. &lt;a href=&quot;https://powerofus.force.com/NPSP_Troubleshoot_Help_Text&quot; target=&quot;_blank&quot;&gt;Leia mais sobre problemas comuns de mapeamento de Texto de ajuda&lt;/a&gt;. Recomendamos desativar o Mapeamento avançado, corrigir os mapeamentos inválidos do Texto de ajuda e reativar o Mapeamento avançado. Alternativamente, você pode adicionar esses mapeamentos quando configurar o Mapeamento avançado na próxima tela, mas esses mapeamentos adicionais serão revertidos para o Texto de ajuda original inválido se você desativar o Mapeamento avançado.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMappingInvalidHelpText</name>
@@ -6586,7 +6586,7 @@ A escolha de Não agendar automaticamente trabalhos do NPSP padrão diz ao NPSP 
     </customLabels>
     <customLabels>
         <name>stgHelpAlloNDayValue</name>
-        <label>Define o valor de totalizações 'N dias', em que 'N' é o número de dias retroagindo a partir de hoje. Esse valor tem como padrão totalizar as Alocações de GAU nos últimos 365 dias.</label>
+        <label>Define o valor de totalizações &apos;N dias&apos;, em que &apos;N&apos; é o número de dias retroagindo a partir de hoje. Esse valor tem como padrão totalizar as Alocações de GAU nos últimos 365 dias.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAllocationLevel</name>
@@ -6660,7 +6660,7 @@ Quando o processo estiver 100% concluído, você poderá sair ou atualizar esta 
     </customLabels>
     <customLabels>
         <name>stgHelpBtnOppNaming</name>
-        <label>&lt;b&gt;AVISO:&lt;/b&gt; um clique neste botão ativará a renomeação de oportunidades em lote e atualizará todos os Nomes de oportunidade de acordo com os formatos escolhidos. O Salesforce renomeará todas as oportunidades em sua organização, exceto aquelas cujos formatos de nome de oportunidade você especificou como "Não renomear".&lt;br/&gt;&lt;br/&gt;
+        <label>&lt;b&gt;AVISO:&lt;/b&gt; um clique neste botão ativará a renomeação de oportunidades em lote e atualizará todos os Nomes de oportunidade de acordo com os formatos escolhidos. O Salesforce renomeará todas as oportunidades em sua organização, exceto aquelas cujos formatos de nome de oportunidade você especificou como &quot;Não renomear&quot;.&lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;Este é um processo irreversível.&lt;/b&gt;
 Antes de iniciar o processo, recomendamos fazer o backup dos seus dados. Também recomendamos desativar o seguinte, caso afetem as oportunidades:
@@ -6683,7 +6683,7 @@ Quando o processo estiver 100% concluído, você poderá sair ou atualizar esta 
     </customLabels>
     <customLabels>
         <name>stgHelpContactRTExcluded</name>
-        <label>Os Tipos de registro de contato que você deseja excluir da criação automática da Função de contato de membros da família. Por exemplo, você pode querer criar um tipo de registro "filho" para Contatos filho na Família e inseri-lo aqui. O Salesforce excluiria esses Contatos de receber a Função de contato de membros da família quando a oportunidade fosse criada.</label>
+        <label>Os Tipos de registro de contato que você deseja excluir da criação automática da Função de contato de membros da família. Por exemplo, você pode querer criar um tipo de registro &quot;filho&quot; para Contatos filho na Família e inseri-lo aqui. O Salesforce excluiria esses Contatos de receber a Função de contato de membros da família quando a oportunidade fosse criada.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpCreateMissingPayments</name>
@@ -6710,11 +6710,11 @@ Quando o processo estiver 100% concluído, você poderá sair ou atualizar esta 
     </customLabels>
     <customLabels>
         <name>stgHelpCustomizableRollupsEnable1</name>
-        <label>Você pode encontrar a documentação completa de Totalizações personalizáveis &lt;a href="https://powerofus.force.com/NPSP_Customizable_Rollups_Overview" target="_blank"&gt;aqui&lt;/a&gt;.</label>
+        <label>Você pode encontrar a documentação completa de Totalizações personalizáveis &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;aqui&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpCustomizableRollupsEnable2</name>
-        <label>Quando você habilitar as Totalizações personalizáveis pela primeira vez, converteremos automaticamente suas totalizações existentes e as 87 totalizações do NPSP prontas para usar em Totalizações personalizáveis. Para obter detalhes completos, consulte &lt;a href="https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations" target="_blank"&gt;este documento&lt;/a&gt;.
+        <label>Quando você habilitar as Totalizações personalizáveis pela primeira vez, converteremos automaticamente suas totalizações existentes e as 87 totalizações do NPSP prontas para usar em Totalizações personalizáveis. Para obter detalhes completos, consulte &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;este documento&lt;/a&gt;.
             &lt;br/&gt;&lt;br/&gt;
             Você pode desativar e reverter para totalizações herdadas, mas as novas totalizações ou alterações de totalização/filtro feitas nas Totalizações Personalizáveis não serão aplicadas às configurações da totalização herdada.</label>
     </customLabels>
@@ -6782,7 +6782,7 @@ Quando o processo estiver 100% concluído, você poderá sair ou atualizar esta 
     </customLabels>
     <customLabels>
         <name>stgHelpHHMailingListReport</name>
-        <label>O Relatório da lista de correspondência de família desduplica uma campanha que contém vários contatos da mesma família a fim de evitar o envio de vários emails iguais para o mesmo endereço. O NPSP inclui um relatório que você pode selecionar chamado "Lista de correspondência para famílias da campanha do NPSP V2". Se esse relatório tiver sido renomeado ou excluído, selecione um relatório que utilize o tipo de relatório Campanhas com contatos, com filtros de Status de membro não contém "Duplicado” e ID da campanha = em branco.</label>
+        <label>O Relatório da lista de correspondência de família desduplica uma campanha que contém vários contatos da mesma família a fim de evitar o envio de vários emails iguais para o mesmo endereço. O NPSP inclui um relatório que você pode selecionar chamado &quot;Lista de correspondência para famílias da campanha do NPSP V2&quot;. Se esse relatório tiver sido renomeado ou excluído, selecione um relatório que utilize o tipo de relatório Campanhas com contatos, com filtros de Status de membro não contém &quot;Duplicado” e ID da campanha = em branco.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpHHNameFormat</name>
@@ -6798,7 +6798,7 @@ Quando o processo estiver 100% concluído, você poderá sair ou atualizar esta 
     </customLabels>
     <customLabels>
         <name>stgHelpHHObjectOverview</name>
-        <label>Para saber mais sobre o modelo recomendado Conta de família, consulte a &lt;a href="https://powerofus.force.com/NPSP_Account_Model" target="_blank"&gt;Documentação do NPSP&lt;/a&gt;.</label>
+        <label>Para saber mais sobre o modelo recomendado Conta de família, consulte a &lt;a href=&quot;https://powerofus.force.com/NPSP_Account_Model&quot; target=&quot;_blank&quot;&gt;Documentação do NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpHHRules</name>
@@ -6806,7 +6806,7 @@ Quando o processo estiver 100% concluído, você poderá sair ou atualizar esta 
     </customLabels>
     <customLabels>
         <name>stgHelpHealthCheck</name>
-        <label>Use o &lt;a href="#" onclick="ShowPanel('idPanelHealthCheck');return false;"&gt;Health Check&lt;/a&gt; para verificar sua configuração do NPSP!</label>
+        <label>Use o &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelHealthCheck&apos;);return false;&quot;&gt;Health Check&lt;/a&gt; para verificar sua configuração do NPSP!</label>
     </customLabels>
     <customLabels>
         <name>stgHelpIGFormat</name>
@@ -6818,7 +6818,7 @@ Quando o processo estiver 100% concluído, você poderá sair ou atualizar esta 
     </customLabels>
     <customLabels>
         <name>stgHelpLeadConvert</name>
-        <label>Especifica o comportamento padrão de criação de oportunidades quando você converte um lead em um contato. Se não for marcado, o Salesforce NÃO criará automaticamente uma oportunidade quando você converter Leads em Contatos. Para obter mais informações, consulte a &lt;a href="https://powerofus.force.com/NPSP_Leads" target="_blank"&gt;Documentação do NPSP&lt;/a&gt;.</label>
+        <label>Especifica o comportamento padrão de criação de oportunidades quando você converte um lead em um contato. Se não for marcado, o Salesforce NÃO criará automaticamente uma oportunidade quando você converter Leads em Contatos. Para obter mais informações, consulte a &lt;a href=&quot;https://powerofus.force.com/NPSP_Leads&quot; target=&quot;_blank&quot;&gt;Documentação do NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpLvlAssignBatch</name>
@@ -6829,7 +6829,7 @@ Quando o processo estiver 100% concluído, você poderá sair ou atualizar esta 
     </customLabels>
     <customLabels>
         <name>stgHelpMatchedDonorRole</name>
-        <label>A Função de contato que você deseja usar para doadores com correspondência. Recomendamos usar "Doador com correspondência".</label>
+        <label>A Função de contato que você deseja usar para doadores com correspondência. Recomendamos usar &quot;Doador com correspondência&quot;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpMaxPayments</name>
@@ -6874,7 +6874,7 @@ IMPORTANTE: ambos os campos precisam ter o mesmo tipo de dados.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCR</name>
-        <label>Créditos indiretos, Papéis de contato e Doações correspondentes se relacionam entre si de maneiras importantes. Se você não está familiarizado com esses conceitos e como eles interagem, deve ler a &lt;a href="https://powerofus.force.com/NPSP_SCMG" target="_blank"&gt;Documentação do NPSP&lt;/a&gt; antes de fazer ajustes nessas configurações.</label>
+        <label>Créditos indiretos, Papéis de contato e Doações correspondentes se relacionam entre si de maneiras importantes. Se você não está familiarizado com esses conceitos e como eles interagem, deve ler a &lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;Documentação do NPSP&lt;/a&gt; antes de fazer ajustes nessas configurações.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCRDefaultRole</name>
@@ -6894,19 +6894,19 @@ IMPORTANTE: ambos os campos precisam ter o mesmo tipo de dados.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingAttribution</name>
-        <label>Especifica se você deseja aplicar essas configurações a Doações do contato (ou seja, oportunidades associadas a Contas de família, um para um ou "bucket" individuais), Doações da organização ou doações de contato e organização.</label>
+        <label>Especifica se você deseja aplicar essas configurações a Doações do contato (ou seja, oportunidades associadas a Contas de família, um para um ou &quot;bucket&quot; individuais), Doações da organização ou doações de contato e organização.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingDateFormat</name>
-        <label>O formato de data usado para campos de Data ou DateTime referenciados no Formato de nome de oportunidade. Escolha um formato ou escolha "outro" para criar seu próprio formato personalizado seguindo a especificação Java SimpleDateFormat.</label>
+        <label>O formato de data usado para campos de Data ou DateTime referenciados no Formato de nome de oportunidade. Escolha um formato ou escolha &quot;outro&quot; para criar seu próprio formato personalizado seguindo a especificação Java SimpleDateFormat.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingFormat</name>
-        <label>O formato do nome de oportunidade. Escolha "outro" para criar seu próprio. Consulte a &lt;a href="https://powerofus.force.com/NPSP_Opp_Names" target="_blank"&gt;Documentação do NPSP&lt;/a&gt; para obter detalhes.</label>
+        <label>O formato do nome de oportunidade. Escolha &quot;outro&quot; para criar seu próprio. Consulte a &lt;a href=&quot;https://powerofus.force.com/NPSP_Opp_Names&quot; target=&quot;_blank&quot;&gt;Documentação do NPSP&lt;/a&gt; para obter detalhes.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingRecTypes</name>
-        <label>Os tipos de registro de oportunidade aos quais você deseja aplicar este nome de oportunidade. Pressione Control ou Command+clique para selecionar mais de um tipo de registro. "--Nenhum--" aplica a nova nomenclatura a TODOS os tipos de registros.</label>
+        <label>Os tipos de registro de oportunidade aos quais você deseja aplicar este nome de oportunidade. Pressione Control ou Command+clique para selecionar mais de um tipo de registro. &quot;--Nenhum--&quot; aplica a nova nomenclatura a TODOS os tipos de registros.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppRecTypesNoPayments</name>
@@ -6946,7 +6946,7 @@ IMPORTANTE: ambos os campos precisam ter o mesmo tipo de dados.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPowerOfUsHub</name>
-        <label>Tem dúvidas? Experimente o grupo &lt;a href="https://powerofus.force.com/HUB_NPSP_Group" target="_blank"&gt;Pacote de sucesso para organizações sem fins lucrativos&lt;/a&gt; para  perguntas sobre o NPSP e o grupo &lt;a href="https://powerofus.force.com/HUB_System_Admin_Group" target="_blank"&gt;Administradores do sistema&lt;/a&gt; para perguntas sobre administração e configuração do Salesforce.&lt;br/&gt;&lt;br/&gt;Acompanhe as últimas notas de versão do NPSP no grupo &lt;a href="https://powerofus.force.com/HUB_NPSP_Release_Group" target="_blank"&gt;Anúncios de versão do NPSP&lt;/a&gt;.</label>
+        <label>Tem dúvidas? Experimente o grupo &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Pacote de sucesso para organizações sem fins lucrativos&lt;/a&gt; para  perguntas sobre o NPSP e o grupo &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;Administradores do sistema&lt;/a&gt; para perguntas sobre administração e configuração do Salesforce.&lt;br/&gt;&lt;br/&gt;Acompanhe as últimas notas de versão do NPSP no grupo &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;Anúncios de versão do NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPrimaryContactBatch</name>
@@ -7086,7 +7086,7 @@ Esse processo pode levar algum tempo, mas você pode fechar esta página porque 
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalMethod</name>
-        <label>Especifica o método utilizado para gerar relações recíprocas. Consulte a &lt;a href="https://powerofus.force.com/NPSP_Relationships_Settings" target="_blank"&gt;Documentação do NPSP&lt;/a&gt; para obter mais informações.</label>
+        <label>Especifica o método utilizado para gerar relações recíprocas. Consulte a &lt;a href=&quot;https://powerofus.force.com/NPSP_Relationships_Settings&quot; target=&quot;_blank&quot;&gt;Documentação do NPSP&lt;/a&gt; para obter mais informações.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalName</name>
@@ -7103,11 +7103,11 @@ Esse processo pode levar algum tempo, mas você pode fechar esta página porque 
     <customLabels>
         <name>stgHelpRespectDuplicateRuleSettings</name>
         <label>Respeita as configurações de uma Regra duplicada que controla se os registros duplicados são permitidos.
-Para verificar as configurações existentes, acesse Regras de duplicação em Configuração. Para qualquer regra, quando os campos Ação na criação ou Ação na edição forem definidos como "Permitir", os duplicados serão salvos.</label>
+Para verificar as configurações existentes, acesse Regras de duplicação em Configuração. Para qualquer regra, quando os campos Ação na criação ou Ação na edição forem definidos como &quot;Permitir&quot;, os duplicados serão salvos.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpReviewErrorLog</name>
-        <label>Analise os &lt;a href="#" onclick="ShowPanel('idPanelErrorLog');return false;"&gt;Logs de erros&lt;/a&gt; para ver se há problemas.</label>
+        <label>Analise os &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;Logs de erros&lt;/a&gt; para ver se há problemas.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRollupBatchSize</name>
@@ -7139,7 +7139,7 @@ Para verificar as configurações existentes, acesse Regras de duplicação em C
     </customLabels>
     <customLabels>
         <name>stgHelpRollupNDayValue</name>
-        <label>Define o valor de totalizações 'N dias', em que 'N' é o número de dias retroagindo a partir de hoje. Esse valor tem como padrão totalizar os últimos 365 dias.</label>
+        <label>Define o valor de totalizações &apos;N dias&apos;, em que &apos;N&apos; é o número de dias retroagindo a partir de hoje. Esse valor tem como padrão totalizar os últimos 365 dias.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRollupPrimaryContact</name>
@@ -7151,7 +7151,7 @@ Para verificar as configurações existentes, acesse Regras de duplicação em C
     </customLabels>
     <customLabels>
         <name>stgHelpSalesforceSetup</name>
-        <label>Quer personalizar layouts de página, adicionar campos ou adicionar usuários? Experimente as páginas da &lt;a href="/setup/forcecomHomepage.apexp?setupid=ForceCom" target="_blank"&gt;Configuração do Salesforce&lt;/a&gt; .</label>
+        <label>Quer personalizar layouts de página, adicionar campos ou adicionar usuários? Experimente as páginas da &lt;a href=&quot;/setup/forcecomHomepage.apexp?setupid=ForceCom&quot; target=&quot;_blank&quot;&gt;Configuração do Salesforce&lt;/a&gt; .</label>
     </customLabels>
     <customLabels>
         <name>stgHelpSimpleAddrChangeIsUpdate</name>
@@ -7809,7 +7809,7 @@ Nota: a guia Configurações do NPSP está visível no aplicativo Pacote de suce
     </customLabels>
     <customLabels>
         <name>stgValidationHHAccountHHRules</name>
-        <label>O Modelo de conta é definido como 'Conta de família', que exige que as Regras de família sejam definidas como 'Sem contatos'. Ao usar Contas de família, não haverá a necessidade de ter um objeto de família adicional.</label>
+        <label>O Modelo de conta é definido como &apos;Conta de família&apos;, que exige que as Regras de família sejam definidas como &apos;Sem contatos&apos;. Ao usar Contas de família, não haverá a necessidade de ter um objeto de família adicional.</label>
     </customLabels>
     <customLabels>
         <name>gsResourcesTitle</name>
@@ -7980,10 +7980,6 @@ Nota: a guia Configurações do NPSP está visível no aplicativo Pacote de suce
         <label>Nova campanha</label>
     </quickActions>
     <quickActions>
-        <name>npe03__Recurring_Donation__c.Pause</name>
-        <label>Pausar</label>
-    </quickActions>
-    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>Nova afiliação</label>
     </quickActions>
@@ -7996,28 +7992,8 @@ Nota: a guia Configurações do NPSP está visível no aplicativo Pacote de suce
         <label>Nova doação recorrente</label>
     </quickActions>
     <quickActions>
-        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
-        <label>Nova oportunidade</label>
-    </quickActions>
-    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>Nova doação recorrente</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Quick_Update</name>
-        <label>Atualização rápida</label>
-    </quickActions>
-    <quickActions>
-        <name>npo02__Household__c.Update_Household</name>
-        <label>Atualizar família</label>
-    </quickActions>
-    <quickActions>
-        <name>Address__c.Update_Address</name>
-        <label>Atualizar endereço</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
-        <label>Fechar doação recorrente</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -8038,10 +8014,6 @@ Nota: a guia Configurações do NPSP está visível no aplicativo Pacote de suce
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>Novo relacionamento</label>
-    </quickActions>
-    <quickActions>
-        <name>npe01__OppPayment__c.Quick_Update</name>
-        <label>Atualização rápida</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>
