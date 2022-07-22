@@ -1,5 +1,5 @@
 <template>
-        <div id="containerDiv" onmousemove={handlemousemove} onmouseup={handlemouseup} ondblclick={handledblclickresizable} class="slds-table_header-fixed_container slds-border_right slds-border_left th-padding-top">
+        <div id="containerDiv" onmousemove={handlemousemove} ontouchmove={handlemousemove} onmouseup={handlemouseup} class="slds-table_header-fixed_container slds-border_right slds-border_left th-padding-top">
             <table
                 class="slds-table slds-table_bordered slds-table_header-fixed slds-table_resizable-cols slds-max-medium-table_stacked" tabindex="0" style="table-layout: fixed;">
                 <thead>
@@ -10,7 +10,7 @@
                                     <span class="slds-truncate" title={labels.commonAmount}>{labels.commonAmount}</span>
                                 </div>
                                 <div class="slds-resizable">
-                                    <span class="slds-resizable__handle" onmousedown={handlemousedown}>
+                                    <span class="slds-resizable__handle" onmousedown={handlemousedown} ontouchstart={handlemousedown}>
                                         <span class="slds-resizable__divider"></span>
                                     </span>
                                 </div>
@@ -22,7 +22,7 @@
                                     <span class="slds-truncate" title={labels.RDCL_Frequency}>{labels.RDCL_Frequency}</span>
                                 </div>
                                 <div class="slds-resizable">
-                                    <span class="slds-resizable__handle" onmousedown={handlemousedown}>
+                                    <span class="slds-resizable__handle" onmousedown={handlemousedown} ontouchstart={handlemousedown}>
                                         <span class="slds-resizable__divider"></span>
                                     </span>
                                 </div>
@@ -34,7 +34,7 @@
                                     <span class="slds-truncate" title={paymentMethod}>{paymentMethod}</span>
                                 </div>
                                 <div class="slds-resizable">
-                                    <span class="slds-resizable__handle" onmousedown={handlemousedown}>
+                                    <span class="slds-resizable__handle" onmousedown={handlemousedown} ontouchstart={handlemousedown}>
                                         <span class="slds-resizable__divider"></span>
                                     </span>
                                 </div>
@@ -46,7 +46,7 @@
                                     <span class="slds-truncate" title={labels.lblStatus}>{labels.lblStatus}</span>
                                 </div>
                                 <div class="slds-resizable">
-                                    <span class="slds-resizable__handle" onmousedown={handlemousedown}>
+                                    <span class="slds-resizable__handle" onmousedown={handlemousedown} ontouchstart={handlemousedown}>
                                         <span class="slds-resizable__divider"></span>
                                     </span>
                                 </div>
@@ -58,7 +58,7 @@
                                     <span class="slds-truncate" title={labels.RD_firstDonation}>{labels.RD_firstDonation}</span>
                                 </div>
                                 <div class="slds-resizable">
-                                    <span class="slds-resizable__handle" onmousedown={handlemousedown}>
+                                    <span class="slds-resizable__handle" onmousedown={handlemousedown} ontouchstart={handlemousedown}>
                                         <span class="slds-resizable__divider"></span>
                                     </span>
                                 </div>
@@ -70,7 +70,7 @@
                                     <span class="slds-truncate" title={labels.RD_finalDonation}>{labels.RD_finalDonation}</span>
                                 </div>
                                 <div class="slds-resizable">
-                                    <span class="slds-resizable__handle" onmousedown={handlemousedown}>
+                                    <span class="slds-resizable__handle" onmousedown={handlemousedown} ontouchstart={handlemousedown}>
                                         <span class="slds-resizable__divider"></span>
                                     </span>
                                 </div>
@@ -83,7 +83,7 @@
                                         title={labels.RD_mostRecentDonation}>{labels.RD_mostRecentDonation}</span>
                                 </div>
                                 <div class="slds-resizable">
-                                    <span class="slds-resizable__handle" onmousedown={handlemousedown}>
+                                    <span class="slds-resizable__handle" onmousedown={handlemousedown} ontouchstart={handlemousedown}>
                                         <span class="slds-resizable__divider"></span>
                                     </span>
                                 </div>
@@ -95,7 +95,7 @@
                                     <span class="slds-truncate" title={labels.RD_nextDonation}>{labels.RD_nextDonation}</span>
                                 </div>
                                 <div class="slds-resizable">
-                                    <span class="slds-resizable__handle" onmousedown={handlemousedown}>
+                                    <span class="slds-resizable__handle" onmousedown={handlemousedown} ontouchstart={handlemousedown}>
                                         <span class="slds-resizable__divider"></span>
                                     </span>
                                 </div>
@@ -107,7 +107,7 @@
                                     <span class="slds-truncate" title={labels.RD_lastModified}>{labels.RD_lastModified}</span>
                                 </div>
                                 <div class="slds-resizable">
-                                    <span class="slds-resizable__handle" onmousedown={handlemousedown}>
+                                    <span class="slds-resizable__handle" onmousedown={handlemousedown} ontouchstart={handlemousedown}>
                                         <span class="slds-resizable__divider"></span>
                                     </span>
                                 </div>
