@@ -55,6 +55,25 @@ describe('c-ge-review-donations', () => {
 
     describe('rendering behavior', () => {
 
+        it('should render nothing when gift in view has a schedule', async() => {
+            const element = createReviewDonationsElement();
+            element.donorId = 'DUMMY_DONOR_ID';
+            element.giftInView = {
+                schedule: {
+                    recurringType: 'Open'
+                }
+            };
+            document.body.appendChild(element);
+
+            getRecord.emit({});
+            getOpenDonationsView.emit(DUMMY_OPEN_DONATIONS);
+
+            await flushPromises();
+
+            const elements = element.shadowRoot.querySelectorAll('article');
+            expect(elements.length).toBe(0);
+        });
+
         it('should not render review donations button', async () => {
             const reviewDonationsElement = createReviewDonationsElement();
 

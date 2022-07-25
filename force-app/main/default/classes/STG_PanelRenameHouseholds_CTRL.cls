@@ -84,18 +84,4 @@ public with sharing class STG_PanelRenameHouseholds_CTRL extends STG_Panel {
         Database.executeBatch(new DeceasedBatch(), 200);
         return null;
     }
-
-    /**
-    * @description Check if the running user has update access to the Account sObject and Read access to the
-    * Contact sObject
-    * @return Boolean
-    */
-    public Boolean getHasAccess() {
-        String accountObject = Schema.SObjectType.Account.getName();
-        String contactObject = Schema.SObjectType.Contact.getName();
-
-        return UTIL_Permissions.canUpdate(accountObject, false) &&
-            UTIL_Permissions.canRead(contactObject, false);
-    }
-
 }

@@ -45,7 +45,7 @@ private with sharing class STG_PanelCreatePayments_CTRL_TEST {
 
         System.runAs(adminUser) {
             STG_PanelCreatePayments_CTRL controller = new STG_PanelCreatePayments_CTRL();
-            Boolean hasAccess = controller.getHasAccess();
+            Boolean hasAccess = controller.isRunningUserIsAdmin;
 
             System.assertEquals(true, hasAccess, 'The access check should return true if the user has update ' +
                 'access to the Opportunity object and read access to Payment object');
@@ -61,7 +61,7 @@ private with sharing class STG_PanelCreatePayments_CTRL_TEST {
 
         System.runAs(standardUser) {
             STG_PanelCreatePayments_CTRL controller = new STG_PanelCreatePayments_CTRL();
-            Boolean hasAccess = controller.getHasAccess();
+            Boolean hasAccess = controller.isRunningUserIsAdmin;
 
             System.assertEquals(false, hasAccess, 'The access check should return false if the user does NOT have ' +
                 'update access to the Opportunity object');

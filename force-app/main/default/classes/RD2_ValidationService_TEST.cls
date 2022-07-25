@@ -553,6 +553,40 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
+    * @description Verifies RD that has an Account ID added that is the same as the 
+    * Contact's Account can be updated
+    */
+    @isTest
+    private static void shouldUpdateRdWhenAccountFromContactIsAdded() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        List<Contact> householdContacts = getContacts();
+
+        npe03__Recurring_Donation__c oldRd = getRecurringDonationBuilder()
+            .withContact(householdContacts[0].Id)
+            .build();
+
+        npe03__Recurring_Donation__c rd = oldRd.clone();
+        rd.npe03__Organization__c = householdContacts[0].AccountId;
+
+        RD2_ValidationService validationService = new RD2_ValidationService(
+            new List<npe03__Recurring_Donation__c>{rd},
+            new List<npe03__Recurring_Donation__c>{oldRd}
+        );
+
+        Test.startTest();
+        List<ErrorRecord> errorRecords = validationService.validate();
+        Test.stopTest();
+
+        String errMessage = '';
+        if(errorRecords.size() > 0){
+            errMessage = errorRecords[0].getFirstError();
+        }
+        System.assert(String.isBlank(errMessage),
+            'Update should succeed when RD has Account added that is same as Contact Account: ' + errMessage
+        );
+    }
+
+    /***
     * @description Verifies if it displays error message when a fixed length RD has no value in
     * the NumberOfPlannedInstallments field
     */
@@ -824,6 +858,84 @@ private with sharing class RD2_ValidationService_TEST {
 
         System.assertEquals(System.Label.RD2_ElevateRDDayOfMonthCannotChange, errorRecords[0].getFirstError(),
             'Elevate RD should not be updated when Day of Month changes.');
+    }
+
+    /**
+    * @description Verifies that existing RD that becomes Elevate connected can have Day of Month changed
+    */
+    @isTest
+    private static void shouldAllowNewElevateRDUpdateWhenDayOfMonthChanges() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
+
+        npe03__Recurring_Donation__c oldRd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
+            .build();
+        npe03__Recurring_Donation__c rd = oldRd.clone();
+        rd.CommitmentId__c = RD2_ElevateIntegrationService_TEST.COMMITMENT_ID;
+        rd.Day_of_Month__c = '1';
+
+        RD2_ValidationService validationService = new RD2_ValidationService(
+            new List<npe03__Recurring_Donation__c>{rd},
+            new List<npe03__Recurring_Donation__c>{oldRd}
+        );
+
+        Test.startTest();
+        List<ErrorRecord> errorRecords = validationService.validate();
+        Test.stopTest();
+
+        String errMessage = '';
+        if(errorRecords.size() > 0){
+            errMessage = errorRecords[0].getFirstError();
+        }
+        System.assert(String.isBlank(errMessage),
+            'Update should succeed when existing RD becomes Elevate connected and Day of Month changes: ' + errMessage
+        );
+    }
+
+    /**
+    * @description Verifies that existing RD that becomes Elevate connected can have Campaign cleared
+    */
+    @isTest
+    private static void shouldAllowNewElevateRDUpdateWhenCampaignIsCleared() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
+
+        Campaign campaign = new Campaign(
+            name = 'campaign',
+            isActive = true
+        );
+
+        insert campaign;
+
+        npe03__Recurring_Donation__c oldRd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
+            .withCampaign(campaign.Id)
+            .build();
+        npe03__Recurring_Donation__c rd = oldRd.clone();
+        rd.CommitmentId__c = RD2_ElevateIntegrationService_TEST.COMMITMENT_ID;
+        rd.npe03__Recurring_Donation_Campaign__c = null;
+
+        RD2_ValidationService validationService = new RD2_ValidationService(
+            new List<npe03__Recurring_Donation__c>{rd},
+            new List<npe03__Recurring_Donation__c>{oldRd}
+        );
+
+        Test.startTest();
+        List<ErrorRecord> errorRecords = validationService.validate();
+        Test.stopTest();
+
+        String errMessage = '';
+        if(errorRecords.size() > 0){
+            errMessage = errorRecords[0].getFirstError();
+        }
+        System.assert(String.isBlank(errMessage),
+            'Update should succeed when existing RD becomes Elevate connected and Campaign is cleared: ' + errMessage
+        );
     }
 
     /**

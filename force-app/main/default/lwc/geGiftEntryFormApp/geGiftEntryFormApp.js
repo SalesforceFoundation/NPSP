@@ -21,6 +21,8 @@ import bgeGridGiftDeleted from '@salesforce/label/c.bgeGridGiftDeleted';
 import commonPaymentServices from '@salesforce/label/c.commonPaymentServices';
 import gePaymentServicesUnavailableHeader from '@salesforce/label/c.gePaymentServicesUnavailableHeader';
 import gePaymentServicesUnavailableBody from '@salesforce/label/c.gePaymentServicesUnavailableBody';
+import rdFlsErrorDetail from "@salesforce/label/c.RD2_EntryFormMissingPermissions";
+import rdFlsErrorHeader from "@salesforce/label/c.geErrorFLSHeader";
 
 import Settings from 'c/geSettings';
 
@@ -34,7 +36,11 @@ import { fireEvent } from 'c/pubsubNoPageRef';
 export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement) {
 
     // Expose custom labels to template
-    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+    CUSTOM_LABELS = {
+        ...GeLabelService.CUSTOM_LABELS,
+        rdFlsErrorHeader,
+        rdFlsErrorDetail,
+    };
 
     @api recordId;
     @api sObjectName;
@@ -428,7 +434,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     get isBatchProcessing() {
-        return this._isBatchProcessing;
+        return this._isBatchProcessing || this.giftBatchState.isProcessingGifts;
     }
 
     async processBatch() {
@@ -767,4 +773,15 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         unregisterModalListener();
     }
 
+    handleAddSchedule(event) {
+        const schedule = event.detail;
+        this.gift.addSchedule(schedule);
+        this.giftInView = this.gift.state();
+        fireEvent(this.pageRef, 'geModalCloseEvent', {})
+    }
+
+    handleRemoveSchedule() {
+        this.gift.removeSchedule();
+        this.giftInView = this.gift.state();
+    }
 }

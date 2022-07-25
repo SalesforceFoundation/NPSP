@@ -1,4 +1,4 @@
-"""Locators for summer '21"""
+"""Locators for summer '22"""
 
 npsp_lex_locators={
 	'breadcrumb': "//li[contains(@class, 'slds-breadcrumb__item')]/span[text()='{}']",
@@ -24,11 +24,8 @@ npsp_lex_locators={
 		'select_value':"//li/a[text()='{}']",
 		'select_dropdown':"//a[@class='select']",
 		'footer':"//div[@class='footer active' or contains(@class,'footer-visible')]",
-		# 'datepicker':"//div[contains(@class,'uiDatePickerGrid')]/table[@class='calGrid']//*[text()='{}']",
 		'ltdatepicker':"//td[not(contains(@class,'slds-disabled-text'))]/*[text()='{}']",
-		# 'ltdatepicker':"//table//*[text()='{}']",
 		'lt_date_picker':"//label[./*[text()='{}']]/following-sibling::div//*[contains(@class,'input')]",
-		# 'lt_date_picker':"//*[text()='{}']/following::div//*[contains(@class,'input')]",
 		'month_pick':"//div[@class='dateBar']//a[@title='{}']",
 		'activity-button':'//button[contains(@class,"{}")]',
 		'dd_edit_option': '//div[contains(@class,"branding-actions")]/ul/li/a[@title="{}"]',
@@ -41,7 +38,6 @@ npsp_lex_locators={
 		'dropdown':"//div[@class='select-options']/ul[@class='scrollable']/li[@class='uiMenuItem uiRadioMenuItem']/a[contains(text(),'{}')]",
 		'related': {
 			'button':"//article[contains(@class, 'slds-card slds-card_boundary')][.//img][.//span[@title='{}']]//*[text()='{}']",
-			#'check_occurrence':'//h2/a/span[@title="{}"]/following-sibling::span',
 			'check_occurrence':'//h2/a/span[@title="{}"]/following-sibling::span[@title="{}"]',
 			'drop-down':'//div[contains(@class, "slds-card")]/header[.//span[@title="{}"]]/parent::*/div/div/div/a[contains(@class, "slds-button")]',
 			'title':'//div/h2//a[./span[text()="{}"]]',
@@ -49,10 +45,8 @@ npsp_lex_locators={
 			'item':"//article[contains(@class, 'slds-card_boundary')][.//img][.//span[@title='{}']]//h3//a",
 			'field_value': '//a[text()="{}"]/ancestor::li//div[contains(@class, "slds-item--detail")]//*[text()="{}"]',
 			'link':"//article[contains(@class, 'slds-card slds-card_boundary')][.//span[@title='{}']]//table/tbody/tr[.//td//*[text()='{}']]/th//a",
-			# 'link':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//table[contains(@class,'forceRecordLayout')]/tbody/tr[.//th/div/a[contains(@class,'textUnderline')]][.//td//*[text()='{}']]/th//a",
 			'dd-link':'//a[@name="{}"]',
-			# 'allocations':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//tbody/tr[./td//a[text()='{}']]/td/span[text()='{}']",
-			'allocations':"//article[contains(@class, 'slds-card slds-card_boundary')][.//span[@title='{}']]//tbody/tr[./td//a[text()='{}']]/td//*[text()='{}']",
+			'allocations':"//article[contains(@class, 'slds-card slds-card_boundary')][.//table[@aria-label='{}']]//tbody/tr[.//td//*[text()='{}']]/td//*[text()='{}']",
 			"popup_trigger": "//article[.//span[@title='{}']]//tr[.//*[text()='{}']]//div[contains(@class,'slds-truncate')]//button[./span[text()='Show Actions']]",
 		},
 	},
@@ -284,7 +278,6 @@ npsp_lex_locators={
 		'dropdown':"//tr[./th//*[text()='{}']]/td[.//span[text()='Show actions']]//button",
 		'modal_open':'//div[contains(@class,"slds-backdrop_open")]',
 		'field_mapping':'//input[@name="{}"]',
-		#'combobox':'//div[contains(@class,"slds-is-open") and @role="combobox"]',
 		'combobox':'//div[contains(@class,"slds-listbox") and @role="listbox"]',
 		'footer-btn':"//footer[@class='slds-modal__footer']/button[text()='{}']",
 		'field-label':'//lightning-primitive-cell-factory//*[text()="{}"]',

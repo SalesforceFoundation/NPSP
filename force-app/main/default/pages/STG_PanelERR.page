@@ -1,24 +1,4 @@
 <apex:page controller="STG_PanelERR_CTRL" docType="html-5.0" standardStylesheets="false">
-    <apex:includeLightning/>
-    <script>
-        if ({!NOT(isRunningUserIsAdmin)}) {
-            $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function() {
-                $Lightning.createComponent("{!namespace}" + ":utilIllustration",
-                    {   title : "{!$Label.commonAdminPermissionErrorTitle}",
-                        message : "{!$Label.commonPermissionErrorMessage}",
-                        size: 'small',
-                        variant: 'no-access',
-                        illustrationClass: "slds-p-top_x-large slds-m-top_x-large"
-                    },
-                    "stgPanelErrIllustration",
-                    function () { }
-                );
-            });
-        }
-    </script>
-    <apex:outputPanel rendered="{!NOT(isRunningUserIsAdmin)}">
-        <div id="stgPanelErrIllustration" />
-    </apex:outputPanel>
     <script>
         /*
          * We are using JavaScript instead of the Rerender atrribute of Visualforce components because of the
@@ -117,6 +97,11 @@
             }
         });
     </script>
+
+    <apex:outputPanel rendered="{!NOT(isRunningUserIsAdmin)}">
+        <c:InsufficientPermissions />
+    </apex:outputPanel>
+
     <apex:outputPanel rendered="{!isRunningUserIsAdmin}">
         <apex:form id="form" styleClass="slds-m-around_x-large">
             <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.stgNavErrorNotify}" />

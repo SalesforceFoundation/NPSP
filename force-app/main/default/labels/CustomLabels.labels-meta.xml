@@ -8,6 +8,22 @@
         <value>You must provide an Auth ID.</value>
     </labels>
     <labels>
+        <fullName>installmentPeriod</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for installment frequency for Recurring Donations Action</shortDescription>
+        <value>Installment Period</value>
+    </labels>
+    <labels>
+        <fullName>recurringDonationSchedule</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for modal title for Recurring Donation table actions</shortDescription>
+        <value>Recurring Donation Schedule</value>
+    </labels>
+    <labels>
         <fullName>Addr_No_Batch</fullName>
         <categories>address, error</categories>
         <language>en_US</language>
@@ -1682,6 +1698,22 @@
         <value>You must enable Enhanced Recurring Donations before you can process Recurring Donations.</value>
     </labels>
     <labels>
+        <fullName>RD2_PaidInstallments</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for next donation mapping.</shortDescription>
+        <value>Paid Installments: </value>
+    </labels>
+    <labels>
+        <fullName>RD2_NextDonationDate</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for next donation mapping.</shortDescription>
+        <value>Next Installment Date: </value>
+    </labels>
+    <labels>
         <fullName>RD2_ElevateCancelInProgress</fullName>
         <categories>Recurring-Donations</categories>
         <language>en_US</language>
@@ -1738,6 +1770,22 @@
         <value>No Errors</value>
     </labels>
     <labels>
+        <fullName>RD2_ViewMoreDetails</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for view more info on recurring donation table component</shortDescription>
+        <value>View More Details</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ViewLessDetails</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for view less info on recurring donation table component</shortDescription>
+        <value>View Less Details</value>
+    </labels>
+    <labels>
         <fullName>RD2_ElevateNotSupported</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -1759,7 +1807,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error when user does not have a permission to change an RD originated in Elevate</shortDescription>
-        <value>Recurring Donations from Elevate Payment Services can&apos;t be modified in NPSP except by the Elevate Payment Services Integration user.</value>
+        <value>Manage this Recurring Donation in Elevate.</value>
     </labels>
     <labels>
         <fullName>RD2_ElevateRDAmountMustBeValid</fullName>
@@ -1832,6 +1880,38 @@
         <protected>true</protected>
         <shortDescription>Text indicating the Recurring Donation could not be created in Elevate</shortDescription>
         <value>An Elevate recurring payment could not be created. Contact your system administrator for assistance.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateRDCancellingTitle</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Recurring Donation would be cancelled</shortDescription>
+        <value>Your request to stop your Recurring Donation was submitted.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateRDCancellingMessage</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Recurring Donation would be cancelled</shortDescription>
+        <value>This can take some time. Refresh the page to check the status. Contact us if you need help.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateRDStopDonationMessage</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Recurring Donation is cancelled</shortDescription>
+        <value>The nonprofit won&apos;t process any future donations for this Recurring Donation.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_NonElevateRDCancellingTitle</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Recurring Donation Non Elevat would be cancelled</shortDescription>
+        <value>Your Recurring Donation was stopped.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementDisabledHeader</fullName>
@@ -2371,6 +2451,54 @@
         <protected>true</protected>
         <shortDescription>Spinner text when credit card is validated on Recurring Donation save</shortDescription>
         <value>Sending ACH information to Elevate...</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ACH_Payment_Method_Label</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ACH Payment Method label</shortDescription>
+        <value>Bank Account</value>
+    </labels>
+    <labels>
+        <fullName>RD2_Payment_Method</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Payment Method label</shortDescription>
+        <value>Payment Method</value>
+    </labels>
+    <labels>
+        <fullName>RD2_Payment_method_was_updated</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Payment method was updated label</shortDescription>
+        <value>Payment method was updated.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_Recurring_Donation_was_updated</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation was updated label</shortDescription>
+        <value>Recurring Donation was updated.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_Payment_Details</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Payment Details label</shortDescription>
+        <value>Payment Details</value>
+    </labels>
+    <labels>
+        <fullName>RD2_Credit_Card_Payment_Method_Label</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Credit Card Payment Method label</shortDescription>
+        <value>Credit Card</value>
     </labels>
     <labels>
         <fullName>RD2_EntryFormSaveCreditCardValidationMessage</fullName>
@@ -3022,6 +3150,142 @@
         <protected>true</protected>
         <shortDescription>Recurring Donation Name Suffix</shortDescription>
         <value>Recurring</value>
+    </labels>
+    <labels>
+        <fullName>RD_achElevatePayment</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used to show the Payment Method using Elevate RD and ACH payment.</shortDescription>
+        <value>{0}, *{1}</value>
+    </labels>
+    <labels>
+        <fullName>RD_creditCardElevatePayment</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used to show the Payment Method using Elevate RD and Credit Card payment.</shortDescription>
+        <value>{0}, *{1} Exp.{2}/{3}</value>
+    </labels>
+    <labels>
+        <fullName>RD_firstDonation</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>First Donation</shortDescription>
+        <value>First Donation</value>
+    </labels>
+    <labels>
+        <fullName>RD_finalDonation</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Final Donation</shortDescription>
+        <value>Final Donation</value>
+    </labels>
+    <labels>
+        <fullName>RD_firstOrdinalNumber</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>First ordinal number</shortDescription>
+        <value>st</value>
+    </labels>
+    <labels>
+        <fullName>RD_frequencyOnThePeriod</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>On the {0}</value>
+    </labels>
+    <labels>
+    <fullName>RD_frequencyPeriodOnTheDayOfTheMonth</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>{0} on the {1}</value>
+    </labels>
+    <labels>
+        <fullName>RD_frequencyYearly</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>Every {0} years</value>
+    </labels>
+    <labels>
+        <fullName>RD_frequencyMonthly</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>Every {0} months on the {1}</value>
+    </labels>
+    <labels>
+        <fullName>RD_frequencyWeekly</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>Every {0} weeks</value>
+    </labels>
+    <labels>
+        <fullName>RD_frequencyFirstAndFifteenth</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency processed text</shortDescription>
+        <value>Every {0} {1}</value>
+    </labels>
+    <labels>
+        <fullName>RD_lastModified</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Last Modified</shortDescription>
+        <value>Last Modified</value>
+    </labels>
+    <labels>
+        <fullName>RD_mostRecentDonation</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Most Recent Donation</shortDescription>
+        <value>Most Recent Donation</value>
+    </labels>
+    <labels>
+        <fullName>RD_nextDonation</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Next Donation</shortDescription>
+        <value>Next Donation</value>
+    </labels>
+    <labels>
+        <fullName>RD_otherOrdinalNumber</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Other ordinal number</shortDescription>
+        <value>th</value>
+    </labels>
+    <labels>
+        <fullName>RD_secondOrdinalNumber</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Second ordinal number</shortDescription>
+        <value>nd</value>
+    </labels>
+    <labels>
+        <fullName>RD_thirdOrdinalNumber</fullName>
+        <categories>Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Third ordinal number</shortDescription>
+        <value>rd</value>
     </labels>
     <labels>
         <fullName>RD_ContactMustBelongToAccount</fullName>
@@ -3998,6 +4262,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The Contact Custom Unique ID setting field {0} must have matching fields in the NPSP Data Import object whose API Names are {1} and {2}.</value>
     </labels>
     <labels>
+        <fullName>bdiContactMatchDupeMgmt</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiContactMatchDupeMgmt</shortDescription>
+        <value>Contact Duplicate Rules</value>
+    </labels>
+    <labels>
         <fullName>bdiContactMatchEmail</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -4220,6 +4492,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>title on the progress indicator during dry run mode</shortDescription>
         <value>NPSP Data Importer - Dry Run</value>
+    </labels>
+    <labels>
+        <fullName>bdiDupeMgmtMatchImportStatus</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiDupeMgmtMatchImportStatus</shortDescription>
+        <value>- Duplicate Rule:</value>
     </labels>
     <labels>
         <fullName>bdiErrorBatchNameRequired</fullName>
@@ -5033,6 +5313,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>bdiRunBtn</shortDescription>
         <value>Begin Data Import Process</value>
+    </labels>
+    <labels>
+        <fullName>bdiSelectCantProcessBatchDIRecords</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiSelectCantProcessBatchDIRecords</shortDescription>
+        <value>You selected records linked to an NPSP Data Import Batch. To import records associated with an NPSP Data Import Batch, open the batch and click Process Batch.</value>
     </labels>
     <labels>
         <fullName>bdiSelectCantProcessImportedRecords</fullName>
@@ -5969,6 +6257,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Close</value>
     </labels>
     <labels>
+        <fullName>commonCancelAndClose</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cancel and close label</shortDescription>
+        <value>Cancel and close</value>
+    </labels>
+    <labels>
         <fullName>commonConcurrentBatchError</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -6231,6 +6527,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Records Processed</shortDescription>
         <value>Records Processed</value>
+    </labels>
+    <labels>
+        <fullName>commonRefreshPage</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refresh page to show the latest updates.</shortDescription>
+        <value>Refresh page to show the latest updates.</value>
     </labels>
     <labels>
         <fullName>commonRequired</fullName>
@@ -6589,8 +6893,8 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Contact Merge</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Text to be display before the &apos;See Duplicate Contact&apos; button</shortDescription>
-        <value>See all duplicate Contacts found using matching rules. &lt;a href=&apos;https://powerofus.force.com/IP_Contacts&apos; target=&apos;_blank&apos;&gt;&lt;b&gt; Tell Me More &lt;/b&gt;&lt;/a&gt;</value>
+        <shortDescription>Text to be display before the &quot;See Duplicate Contact&quot; button</shortDescription>
+        <value>See all duplicate Contacts found using matching rules. &lt;a href=&quot;https://powerofus.force.com/IP_Contacts&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; Tell Me More &lt;/b&gt;&lt;/a&gt;</value>
     </labels>
     <labels>
         <fullName>conMergeSeeDupConDRS</fullName>
@@ -6741,6 +7045,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Soft Credit Widget: Add Soft Credit</shortDescription>
         <value>Add Soft Credit</value>
+    </labels>
+    <labels>
+        <fullName>geRecurringGiftModalWarning</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring modal text when adding a schedule is not supported</shortDescription>
+        <value>Applying a Recurring Donation schedule to an existing Opportunity, Payment, or adding soft credits is not supported in Gift Entry.</value>
+    </labels>
+    <labels>
+        <fullName>geSoftCreditsWarning</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning message in the soft credits field bundle when a gift has a schedule</shortDescription>
+        <value>Soft credits in Gift Entry is not supported for Recurring Donations.</value>
     </labels>
     <labels>
         <fullName>geA11ySection</fullName>
@@ -7523,6 +7843,70 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Message when field/Field Mapping not found and user might not have access to it.</shortDescription>
         <value>This form contains fields that can&apos;t be found. Please check with your administrator.</value>
+    </labels>
+    <labels>
+        <fullName>geAddSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button for adding a schedule to a gift</shortDescription>
+        <value>Add Recurring Schedule</value>
+    </labels>
+    <labels>
+        <fullName>geUpdateSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button for updating a gift&apos;s schedule</shortDescription>
+        <value>Update Recurring Schedule</value>
+    </labels>
+    <labels>
+        <fullName>geMakeRecurring</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to toggle recurring behavior for a gift</shortDescription>
+        <value>Make Recurring</value>
+    </labels>
+    <labels>
+        <fullName>geRemoveSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button for removing a gift&apos;s schedule</shortDescription>
+        <value>Remove Recurring Schedule</value>
+    </labels>
+    <labels>
+        <fullName>geEditSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button for editing a gift&apos;s schedule</shortDescription>
+        <value>Edit Recurring Schedule</value>
+    </labels>
+    <labels>
+        <fullName>geOpenEndedGiftSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Describes open ended recurring gift schedule</shortDescription>
+        <value>{0} {1} donation starting on {2}.</value>
+    </labels>
+    <labels>
+        <fullName>geFixedGiftSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Describes fixed recurring gift schedule</shortDescription>
+        <value>{0} {1} donation starting on {2} and ending after {3} installments.</value>
+    </labels>
+    <labels>
+        <fullName>geRecurringScheduleInformation</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for the recurring gift schedule card</shortDescription>
+        <value>Recurring Schedule Information</value>
     </labels>
     <labels>
         <fullName>gsAdminSetupTitle</fullName>
@@ -8796,6 +9180,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Field-level error message when template name is not unique</shortDescription>
         <value>This name has been used by another template. Please enter a unique name.</value>
+    </labels>
+    <labels>
+        <fullName>geErrorDonorMismatch</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error for entering household info in Account1</shortDescription>
+        <value>For a household gift, select Contact1 for Donor Type and complete the Contact fields.</value>
     </labels>
     <labels>
         <fullName>geErrorDonorTypeValidation</fullName>
@@ -11766,6 +12158,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Organization Donations</value>
     </labels>
     <labels>
+        <fullName>pmtElevatePermissionRequired</fullName>
+        <categories>Payment, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when user does not have permission to change Elevate Payment.</shortDescription>
+        <value>Manage this payment in Elevate.</value>
+    </labels>
+    <labels>
         <fullName>pmtModifyCurrency</fullName>
         <categories>Payment, Error</categories>
         <language>en_US</language>
@@ -11774,12 +12174,132 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>You can&apos;t modify Payment currencies directly. Update the parent Opportunity&apos;s currency, and NPSP will automatically update the currency of all related Payment records.</value>
     </labels>
     <labels>
+        <fullName>pmtNoRefundPermissionMessage</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message displayed when the user has no permission to apply the Refund</shortDescription>
+        <value>You don&apos;t have permissions to refund Payments. Contact your Salesforce admin for help.</value>
+    </labels>
+    <labels>
+        <fullName>pmtOriginalPaymentNotCompleted</fullName>
+        <categories>Payment, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund error message when Elevate hasn&apos;t processed the payment yet.</shortDescription>
+        <value>Payment can&apos;t be refunded because Elevate hasn&apos;t processed the payment yet.</value>
+    </labels>
+    <labels>
+        <fullName>pmtOriginalPaymentNotPaid</fullName>
+        <categories>Payment, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund error message when the payment hasnt&apos;t processed</shortDescription>
+        <value>This payment&apos;s still processing and can't be refunded yet.</value>
+    </labels>
+    <labels>
+        <fullName>pmtOriginalPaymentNotFound</fullName>
+        <categories>Payment, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when the original payment is missing.</shortDescription>
+        <value>You can&apos;t edit a refund without an Original Payment.</value>
+    </labels>
+    <labels>
         <fullName>pmtPaidPaymentDateRequired</fullName>
         <categories>Payment, Accounting Data Consistency</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>pmtPaidPaymentDateRequired</shortDescription>
         <value>A paid Payment must have a Payment Date.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentDate</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Payment Date</shortDescription>
+        <value>Payment Date</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentErrorMessage</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message title for refund</shortDescription>
+        <value>There was an error processing the refund.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundAmountInvalid</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund error when the refund amount is invalid</shortDescription>
+        <value>Enter a refund that&apos;s less than or equal to the remaining balance.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentSuccessMessage</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Success message for refund</shortDescription>
+        <value>Refund was successful.</value>
+    </labels>
+    <labels>
+        <fullName>pmtPaymentNotFound</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message for missing Elevate payment record</shortDescription>
+        <value>The corresponding Elevate payment record couldn&apos;t be found. Contact your Salesforce admin for help.</value>
+    </labels>
+    <labels>
+        <fullName>pmtPaymentNotRefundable</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund error when the payment has already been refund, or is a refund itself</shortDescription>
+        <value>This payment has already been refunded, or is a refund itself.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundAmount</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund Amount</shortDescription>
+        <value>Refund Amount</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentMessage</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund Information</shortDescription>
+        <value>Refund the following payment:</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundProcessing</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund submitted for processing.</shortDescription>
+        <value>Refund submitted for processing. Check for the refunded Payment on the Opportunity record.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentConfirmedButton</fullName>
+        <categories>Payment, Refund</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund Payment Button</shortDescription>
+        <value>Refund Payment</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentTitle</fullName>
+        <categories>Payment, Refund</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund Payment Title</shortDescription>
+        <value>Refund Payment?</value>
     </labels>
     <labels>
         <fullName>pmtUnpaidPaymentScheduledDateRequired</fullName>
@@ -15592,5 +16112,53 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>true</protected>
         <shortDescription>Label to define aria-label on donation history datatable</shortDescription>
         <value>Donation History</value>
+    </labels>
+    <labels>
+        <fullName>RD2_Actions</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Recurring Donation Actions</shortDescription>
+        <value>Actions</value>
+    </labels>
+    <labels>
+        <fullName>updatePaymentMethod</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for update payment method option on Recurring Donations Action</shortDescription>
+        <value>Update Payment Method</value>
+    </labels>
+    <labels>
+        <fullName>changeAmountOrFrequency</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for change amount and frequency Recurring Donations Action</shortDescription>
+        <value>Change Amount or Frequency</value>
+    </labels>
+    <labels>
+        <fullName>stopRecurringDonation</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Stop Recurring Donation Recurring Donations Action</shortDescription>
+        <value>Stop Recurring Donation</value>
+    </labels>
+    <labels>
+        <fullName>stopRecurringDonationModalTitle</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Stop Recurring Donation Recurring Donations Action</shortDescription>
+        <value>Stop this Recurring Donation?</value>
+    </labels>
+    <labels>
+        <fullName>updateRecurringDonation</fullName>
+        <categories>RDAction</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for modifications on Recurring Donations</shortDescription>
+        <value>Update Recurring Donation</value>
     </labels>
 </CustomLabels>

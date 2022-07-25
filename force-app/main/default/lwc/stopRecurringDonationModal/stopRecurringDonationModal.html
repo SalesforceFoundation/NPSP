@@ -1,0 +1,48 @@
+<template>
+    <template if:true={openStopRecurringDonation}>
+        <section
+            role="dialog"
+            tabindex="-1"
+            aria-modal="true"
+            aria-labelledby="modal-heading-01"
+            class="slds-modal slds-fade-in-open"
+        >
+            <div class="slds-modal__container">
+                <lightning-button-icon
+                    tabindex="0"
+                    class="slds-modal__close"
+                    title={labels.commonCancelAndClose}
+                    icon-name="utility:close"
+                    icon-class="slds-button_icon-inverse"
+                    onclick={closeModal}
+                    data-id="closeButton"
+                >
+                </lightning-button-icon>
+                <div class="slds-modal__header">
+                    <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">
+                        {labels.stopRecurringDonationModalTitle}
+                    </h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <p class="slds-p-around_xx-large slds-align_absolute-center">
+                        {labels.stopRecurringDonationMessage}
+                    </p>
+                </div>
+                <div class="slds-modal__footer">
+                    <button
+                        class="slds-button slds-button_neutral"
+                        data-id="cancelButton"
+                        aria-label={labels.commonCancelAndClose}
+                        onclick={closeModal}
+                    >
+                        {labels.commonClose}
+                    </button>
+                    <button class="slds-button slds-button_brand" onclick={handleCancelDonation}>
+                        {labels.stopRecurringDonation}
+                    </button>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

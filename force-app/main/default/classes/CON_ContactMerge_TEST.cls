@@ -1009,6 +1009,7 @@ public class CON_ContactMerge_TEST {
         differingContact.HomePhone = '7771232345';
         differingContact.MailingStreet = '123 Test St';
         differingContact.AccountId = testAccounts[0].Id;
+        differingContact.Do_Not_Contact__c = true;
         insert differingContact;
     }
 
@@ -1031,7 +1032,7 @@ public class CON_ContactMerge_TEST {
     private static Contact getUniqueContact() {
         return [SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId
                 FROM Contact
-                WHERE HomePhone = '7771232345'
+                WHERE Do_Not_Contact__c = true
                 LIMIT 1
         ];
     }

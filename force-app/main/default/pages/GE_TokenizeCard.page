@@ -101,11 +101,11 @@
                 sfdo.mount(config)
                     .then(() => {
                         const successMessage = JSON.stringify({ type: postMessageType, success: true });
-                        postMessage(successMessage);
+                        sendPostMessage(successMessage);
                     })
                     .catch((err) => {
                         const errorString = JSON.stringify({ type: postMessageType, ...err });
-                        postMessage(errorString);
+                        sendPostMessage(errorString);
                     });
             }
         }
@@ -115,11 +115,11 @@
                 sfdo.setPaymentMethod(deriveElevatePaymentMethodFrom(paymentMethod))
                     .then(() => {
                         const successMessage = JSON.stringify({ type: postMessageType, success: true });
-                        postMessage(successMessage);
+                        sendPostMessage(successMessage);
                     })
                     .catch((err) => {
                         const errorString = JSON.stringify({ type: postMessageType, ...err });
-                        postMessage(errorString);
+                        sendPostMessage(errorString);
                     });
             }
         }
@@ -143,17 +143,17 @@
                     if (resp.token) {
                         // Send token to lwc
                         const successString = JSON.stringify({ type: postMessageType, token: resp.token });
-                        postMessage(successString);
+                        sendPostMessage(successString);
 
                     } else if (resp.error) {
                         // Response contains the error, send it to lwc
-                        postMessage(JSON.stringify({ type: postMessageType, ...resp }));
+                        sendPostMessage(JSON.stringify({ type: postMessageType, ...resp }));
                     }
                 })
                 .catch((err) => {
                     // Send error to lwc
                     const errorString = JSON.stringify({ type: postMessageType, ...err });
-                    postMessage(errorString);
+                    sendPostMessage(errorString);
                 });
         }
 
@@ -174,17 +174,17 @@
               if (resp.token) {
                  // Send token to lwc
                  const successString = JSON.stringify({ type: postMessageType, token: resp.token });
-                 postMessage(successString);
+                 sendPostMessage(successString);
 
               } else if (resp.error) {
                  // Response contains the error, send it to lwc
-                 postMessage(JSON.stringify({ type: postMessageType, ...resp }));
+                 sendPostMessage(JSON.stringify({ type: postMessageType, ...resp }));
               }
            })
            .catch((err) => {
               // Send error to lwc
               const errorString = JSON.stringify({ type: postMessageType, ...err });
-              postMessage(errorString);
+              sendPostMessage(errorString);
            });
         }
 
@@ -193,7 +193,7 @@
         *
         * @param {string} message: String to pass to the LWC
         */
-        function postMessage(message) {
+        function sendPostMessage(message) {
             window.top.postMessage(message, lightningOrigin);
         }
 
@@ -212,13 +212,17 @@
             const arr = hostname.split(".");
             let domain = arr[0].replace('--npsp', '');
             domain = domain.replace('--c', '');
-
-            return `https://${domain}.lightning.force.com`;
+            const siteBaseURL = '{!$Site.BaseUrl}';
+            if (siteBaseURL.length > 0) {
+                return siteBaseURL;
+            } else {
+                return `https://${domain}.lightning.force.com`;
+            }
         }
 
         function isReadyToMount() {
             const message = JSON.stringify({ isReadyToMount: true });
-            postMessage(message);
+            sendPostMessage(message);
         }
 
         window.onload = isReadyToMount();

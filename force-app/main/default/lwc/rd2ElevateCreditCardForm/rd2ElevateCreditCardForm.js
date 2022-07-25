@@ -76,6 +76,10 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     @api payerFirstName;
     @api payerLastName;
 
+    @api isDigitalExperience = false;
+    creditCardContainerClass = 'credit-card-container slds-var-m-top_small';
+    cardInfoClass = 'slds-var-p-horizontal_small slds-var-p-top_small';
+
     @api
     get paymentMethod() {
         return this._paymentMethod;
@@ -193,6 +197,13 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         });
 
         tokenHandler.setVisualforceOriginURLs(domainInfo);
+        
+        if(this.isDigitalExperience) {
+            this.handleUserEnabledWidget();
+            this.creditCardContainerClass = '';
+            this.cardInfoClass = '';
+        }
+        
     }
 
     shouldLoadInDisabledMode() {
