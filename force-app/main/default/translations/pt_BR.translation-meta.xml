@@ -1164,7 +1164,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormInsertSuccessMessage</name>
-        <label>A Doação recorrente &quot;{0}” foi criada.</label>
+        <label>A Doação recorrente &quot;{0}&quot; foi criada.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormMissingPermissions</name>
@@ -1237,7 +1237,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormUpdateSuccessMessage</name>
-        <label>A Doação recorrente &quot;{0}” foi salva.</label>
+        <label>A Doação recorrente &quot;{0}&quot; foi salva.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ErrorDataMigrationJobCannotBeRun</name>
