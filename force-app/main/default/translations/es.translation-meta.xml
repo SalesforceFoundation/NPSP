@@ -3355,7 +3355,7 @@ Puede explorar Entrada de regalos como una alternativa a Entrada de regalos en l
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>Vea todos los contactos duplicados encontrados empleando reglas de coincidencia. &lt;a href=&apos;https://powerofus.force.com/IP_Contacts&apos; target=&apos;_blank&apos;&gt;&lt;b&gt;Más información &lt;/b&gt;&lt;/a&gt;</label>
+        <label>Vea todos los contactos duplicados encontrados empleando reglas de coincidencia. &lt;a href=&quot;https://powerofus.force.com/IP_Contacts&quot; target=&quot;_blank&quot;&gt;&lt;b&gt;Más información &lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>

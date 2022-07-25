@@ -3362,7 +3362,7 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>Bekijk alle dubbele contactpersonen die zijn gevonden aan de hand van overeenkomstregels. &lt;a href=&apos;https://powerofus.force.com/IP_Contacts&apos; target=&apos;_blank&apos;&gt;&lt;b&gt; Meer informatie &lt;/b&gt;&lt;/a&gt;</label>
+        <label>Bekijk alle dubbele contactpersonen die zijn gevonden aan de hand van overeenkomstregels. &lt;a href=&quot;https://powerofus.force.com/IP_Contacts&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; Meer informatie &lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>

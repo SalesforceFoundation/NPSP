@@ -3358,7 +3358,7 @@
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>一致ルールを使用して、見つかったすべての重複する取引先責任者を表示します。&lt;a href=&apos;https://powerofus.force.com/IP_Contacts&apos; target=&apos;_blank&apos;&gt;&lt;b&gt; 詳細はこちら &lt;/b&gt;&lt;/a&gt;</label>
+        <label>一致ルールを使用して、見つかったすべての重複する取引先責任者を表示します。&lt;a href=&quot;https://powerofus.force.com/IP_Contacts&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; 詳細はこちら &lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>

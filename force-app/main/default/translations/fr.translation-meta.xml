@@ -3363,7 +3363,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>Voir tous les contacts en double trouvés à l’aide de règles de correspondance. &lt;a href=’https://powerofus.force.com/IP_Contacts’ target=’_blank’&gt;&lt;b&gt; En savoir plus&lt;/b&gt;&lt;/a&gt;</label>
+        <label>Voir tous les contacts en double trouvés à l’aide de règles de correspondance. &lt;a href=&quot;https://powerofus.force.com/IP_Contacts&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; En savoir plus&lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>
