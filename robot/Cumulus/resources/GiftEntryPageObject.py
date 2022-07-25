@@ -369,6 +369,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 option=npsp_lex_locators["gift_entry"]["lookup-option"].format(value)
                 self.selenium.wait_until_page_contains_element(option)
                 try:
+                    time.sleep(1)
                     self.selenium.click_element(option)
                 except ElementNotInteractableException:
                     self.salesforce._jsclick(option)

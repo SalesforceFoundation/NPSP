@@ -125,21 +125,20 @@
                 <tbody>
                     <template for:each={data} for:item="item">
                         <tr key={item.recurringDonation.Id} aria-selected="false" class="slds-hint-parent" scope="row">
-                            <td key={item.recurringDonation.npe03__Amount__c} class="td-dynamic-width" data-label={labels.commonAmount} tabindex="-1" aria-label={item.recurringDonation.npe03__Amount__c} role="gridcell">
+                            <td key={item.recurringDonation.npe03__Amount__c} class={tdClassesNotHidden} data-label={labels.commonAmount} tabindex="-1" aria-label={item.recurringDonation.npe03__Amount__c} role="gridcell">
                                 <div class={rowClasses} title={labels.commonAmount}>
-                                    <lightning-formatted-number value={item.recurringDonation.npe03__Amount__c} format-style="currency"
-                                        currency-code="USD"></lightning-formatted-number>
+                                    {item.recurringDonation.Amt}
                                 </div>
                             </td>
-                            <td key={item.frequency} data-label={labels.RDCL_Frequency} class="td-dynamic-width" tabindex="-1" aria-label={item.frequency} role="gridcell">
+                            <td key={item.frequency} data-label={labels.RDCL_Frequency} class={tdClassesNotHidden} tabindex="-1" aria-label={item.frequency} role="gridcell">
                                 <div class={rowClasses} title={labels.RDCL_Frequency}>
                                     {item.frequency}</div>
                             </td>
-                            <td key={item.paymentMethod} data-label={paymentMethod} class="td-dynamic-width" tabindex="-1" aria-label={item.paymentMethod} role="gridcell">
+                            <td key={item.paymentMethod} data-label={paymentMethod} class={tdClassesNotHidden} tabindex="-1" aria-label={item.paymentMethod} role="gridcell">
                                 <div class={rowClasses} title={paymentMethod}>
                                     {item.paymentMethod}</div>
                             </td>
-                            <td key={item.status} data-label={labels.lblStatus} class="td-dynamic-width" tabindex="-1" aria-label={item.status} role="gridcell">
+                            <td key={item.status} data-label={labels.lblStatus} class={tdClassesNotHidden} tabindex="-1" aria-label={item.status} role="gridcell">
                                 <div class={rowClasses} title={labels.lblStatus}>
                                     {item.status}</div>
                             </td>

@@ -57,6 +57,7 @@ export default class RecurringDonationTable extends LightningElement {
     allowACHPaymentMethod;
 
     @track tdClasses = "hide-td";
+    @track tdClassesNotHidden= "";
     @track actionClasses = "dv-dynamic-width"
 
     formFactor = FORM_FACTOR;
@@ -104,8 +105,8 @@ export default class RecurringDonationTable extends LightningElement {
 
     connectedCallback() {
       if(!this.isMobile){
-        console.log('entra');
         this.tdClasses = "td-dynamic-width";
+        this.tdClassesNotHidden = "td-dynamic-width";
         this.actionClasses = "lastColumn dv-dynamic-width";
       }
       this.template.addEventListener('keydown', (event) => {
@@ -208,19 +209,18 @@ export default class RecurringDonationTable extends LightningElement {
     handlemousemove(e) {
         if (this._tableThColumn && this._tableThColumn.tagName === "TH") {
             this._diffX = e.pageX - this._pageX;
-            this.template.querySelector("table").style.width = this.template.querySelector("table") - this._diffX + "px";
-
-            this._tableThColumn.style.width = this._tableThWidth + this._diffX + "px";
-            this._tableThInnerDiv.style.width = this._tableThColumn.style.width;
-
-            let tableThs = this.template.querySelectorAll("th");
-            let tableBodyRows = this.template.querySelectorAll("table tbody tr");
-            tableBodyRows.forEach((row) => {
-                let rowTds = row.querySelectorAll(".dv-dynamic-width");
-                rowTds.forEach((td, ind) => {
-                    rowTds[ind].style.width = tableThs[ind].style.width;
+            if((this._tableThWidth + this._diffX) > 50){
+                this._tableThColumn.style.width = this._tableThWidth + this._diffX + "px";
+                this._tableThInnerDiv.style.width = this._tableThColumn.style.width;
+                let tableThs = this.template.querySelectorAll("th");
+                let tableBodyRows = this.template.querySelectorAll("table tbody tr");
+                tableBodyRows.forEach((row) => {
+                    let rowTds = row.querySelectorAll(".dv-dynamic-width");
+                    rowTds.forEach((td, ind) => {
+                            rowTds[ind].style.width = tableThs[ind].style.width
+                    });
                 });
-            });
+            }
         }
     }
 
