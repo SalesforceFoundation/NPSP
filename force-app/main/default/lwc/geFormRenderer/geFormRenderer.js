@@ -26,6 +26,7 @@ import PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID
     from '@salesforce/schema/DataImport__c.Payment_Elevate_Original_Payment_ID__c';
 import PAYMENT_TYPE from '@salesforce/schema/DataImport__c.Payment_Type__c';
 import PAYMENT_ACH_CONSENT from '@salesforce/schema/DataImport__c.ACH_Consent__c';
+import DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS from '@salesforce/schema/DataImportBatch__c.Allow_Recurring_Donations__c';
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { convertBDIToWidgetJson } from './geFormRendererHelper';
@@ -34,6 +35,10 @@ import GeFormService from 'c/geFormService';
 import Settings from 'c/geSettings';
 import GeLabelService from 'c/geLabelService';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
+import geMakeRecurring from '@salesforce/label/c.geMakeRecurring';
+import btnContinue from '@salesforce/label/c.btnContinue';
+import geRecurringGiftModalWarning from '@salesforce/label/c.geRecurringGiftModalWarning';
+import geRecurringScheduleInformation from '@salesforce/label/c.geRecurringScheduleInformation';
 import { getNumberAsLocalizedCurrency } from 'c/utilNumberFormatter';
 import {
     buildErrorMessage,
@@ -54,7 +59,6 @@ import { registerListener, fireEvent } from 'c/pubsubNoPageRef';
 import {
     getQueryParameters,
     isEmpty,
-    isObject,
     isNotEmpty,
     format,
     isUndefined,
@@ -121,12 +125,15 @@ import ELEVATE_PAYMENT_STATUS_FIELD
 import DATA_IMPORT_OBJECT from '@salesforce/schema/DataImport__c';
 import DATA_IMPORT_ACCOUNT1_NAME
     from '@salesforce/schema/DataImport__c.Account1_Name__c';
+import OPP_PRIMARY_CONTACT
+    from '@salesforce/schema/Opportunity.Primary_Contact__c';
 
 // Labels are used in BDI_MatchDonations class
 import userSelectedMatch from '@salesforce/label/c.bdiMatchedByUser';
 import userSelectedNewOpp from '@salesforce/label/c.bdiMatchedByUserNewOpp';
 import applyNewPayment from '@salesforce/label/c.bdiMatchedApplyNewPayment';
 import bgeGridGiftSaved from '@salesforce/label/c.bgeGridGiftSaved';
+import accountDonorSelectionMismatch from '@salesforce/label/c.geErrorDonorMismatch';
 import CURRENCY from '@salesforce/i18n/currency';
 
 const mode = {
@@ -174,17 +181,20 @@ export default class GeFormRenderer extends LightningElement{
     @track description = '';
     @track mappingSet = '';
     @track version = '';
-    @track formTemplateId;
-    _batchDefaults;
     _isElevateWidgetInDisabledState = false;
     _hasPaymentWidget = false;
     latestElevateBatchId = null;
     cardholderNamesNotInTemplate = {};
     _openedGiftId;
     currentElevateBatch = new ElevateBatch();
+   @track _batch = {};
 
     erroredFields = [];
-    CUSTOM_LABELS = {...GeLabelService.CUSTOM_LABELS, messageLoading};
+    CUSTOM_LABELS = {
+        ...GeLabelService.CUSTOM_LABELS,
+        messageLoading,
+        geMakeRecurring
+    };
 
     @track widgetConfig = {
         hasPaymentMethodFieldInForm: undefined,
@@ -194,11 +204,18 @@ export default class GeFormRenderer extends LightningElement{
 
     _isFormCollapsed = false;
     _shouldInformParent = true;
+    _isInvalidDonorSelected = false;
+
+    get hasSchedule() {
+        const schedule = this._giftInView?.schedule;
+        return schedule ? Object.keys(schedule).length > 0 : false;
+    }
 
     set selectedDonationOrPaymentRecord(record) {
         if (record.new === true) {
             this.setCreateNewOpportunityInFormState();
         } else if (this.isAPaymentId(record.fields.Id)) {
+            this.validateDonorSelection(record.fields);
             this.setSelectedPaymentInFormState(record.fields);
             this.loadPaymentAndParentDonationFieldValues(record.fields);
         } else if (this.isAnOpportunityId(record.fields.Id)) {
@@ -211,6 +228,18 @@ export default class GeFormRenderer extends LightningElement{
         const reviewDonationsChangeEvent = new CustomEvent(
             'reviewdonationschange', { detail: { record: record } });
         this.dispatchEvent(reviewDonationsChangeEvent);
+    }
+
+    validateDonorSelection(fields) {
+        if (this.selectedDonationHasPrimaryContact(fields)
+            && this.isDonorTypeAccount()) {
+            this._isInvalidDonorSelected = true;
+        }
+    }
+
+    selectedDonationHasPrimaryContact(fields) {
+        return fields[apiNameFor(PARENT_OPPORTUNITY_FIELD)
+        .replace('__c', '__r')][apiNameFor(OPP_PRIMARY_CONTACT)]
     }
 
     setSelectedPaymentInFormState(record) {
@@ -281,6 +310,12 @@ export default class GeFormRenderer extends LightningElement{
             this.CUSTOM_LABELS.geButtonCancelAndClear;
     }
 
+    get isRecurringGiftsEnabled() {
+        return this._batch[
+            apiNameFor(DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS)
+        ];
+    }
+
     @wire(getRecord, {recordId: '$donorRecordId', optionalFields: '$fieldNames'})
     wiredGetRecordMethod({error, data}) {
         if (data) {
@@ -344,6 +379,86 @@ export default class GeFormRenderer extends LightningElement{
                 }
             }
         });
+    }
+
+    handleMakeGiftRecurring() {
+        this.openRecurringGiftModal(false);
+    }
+
+    handleEditSchedule() {
+        this.openRecurringGiftModal(true);
+    }
+
+    createRecurrence(scheduleData) {
+        this.dispatchEvent(new CustomEvent('addschedule', { detail: scheduleData }));
+    }
+
+    openRecurringGiftModal(isEdit) {
+        if (this.shouldDisplayWarningForRecurringGiftModal()) {
+            this.displayWarningForRecurringGiftModal();
+            return;
+        }
+
+        const componentProperties = {
+            cancelCallback: () => {
+                fireEvent(this.pageRef, 'geModalCloseEvent', {})
+            },
+            createRecurrenceCallback: (scheduleData) => {
+                this.createRecurrence(scheduleData);
+            },
+            giftInView: this.giftInView
+        };
+
+        if (isEdit) {
+            componentProperties.schedule = this.giftInView.schedule;
+        }
+
+        const detail = {
+            modalProperties: {
+                header: geRecurringScheduleInformation,
+                componentName: 'geModalRecurringDonation',
+                showCloseButton: true,
+            },
+            componentProperties
+        };
+        this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
+    }
+
+    shouldDisplayWarningForRecurringGiftModal() {
+        const isReviewingOpportunity = !isEmptyObject(this.giftInView?.fields[DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName]);
+        const isReviewingPayment = !isEmptyObject(this.giftInView?.fields[DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName]);
+        const hasSoftCredits = this.hasSoftCredits();
+        const isGiftAuthorized = this.isGiftAuthorized();
+
+        return isGiftAuthorized || isReviewingOpportunity || isReviewingPayment || hasSoftCredits;
+    }
+
+    displayWarningForRecurringGiftModal() {
+        this.toggleModalByComponentName('geModalPrompt',
+        {
+            'variant': 'warning',
+            'title': this.CUSTOM_LABELS.commonWarning,
+            // TODO: Update or create a new custom label to include messaging related to
+            // the salesforce.org elevate field bundle not being supported for schedules.
+            'message': geRecurringGiftModalWarning,
+            'buttons':
+                [{
+                    label: btnContinue,
+                    action: () => { fireEvent(this.pageRef, 'geModalCloseEvent', {}) }
+                }]
+        });
+    }
+
+    hasSoftCredits() {
+        if (this.giftInView?.softCredits) {
+            const softCredits = JSON.parse(this.giftInView.softCredits);
+            return softCredits.length > 0;
+        }
+        return false;
+    }
+
+    handleRemoveSchedule() {
+        this.dispatchEvent(new CustomEvent('removeschedule', { detail: {} }));
     }
 
     handleWidgetStateChange(changeEvent) {
@@ -472,13 +587,21 @@ export default class GeFormRenderer extends LightningElement{
 
     @wire(getRecord, {
         recordId: '$batchId',
-        fields: [FORM_TEMPLATE_FIELD, BATCH_DEFAULTS_FIELD]
+        fields: [
+            FORM_TEMPLATE_FIELD,
+            BATCH_DEFAULTS_FIELD
+        ],
+        optionalFields: [DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS]
     })
     wiredBatch({data, error}) {
         if (data) {
-            this.formTemplateId = data.fields[apiNameFor(FORM_TEMPLATE_FIELD)].value;
-            this._batchDefaults = data.fields[apiNameFor(BATCH_DEFAULTS_FIELD)].value;
-            GeFormService.getFormTemplateById(this.formTemplateId)
+            this._batch[apiNameFor(BATCH_DEFAULTS_FIELD)] =
+                data.fields[apiNameFor(BATCH_DEFAULTS_FIELD)].value;
+            this._batch[apiNameFor(DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS)] =
+                data?.fields[apiNameFor(DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS)]?.value;
+
+            GeFormService.getFormTemplateById(
+                data.fields[apiNameFor(FORM_TEMPLATE_FIELD)].value)
                 .then(formTemplate => {
                     this.formTemplate = formTemplate;
 
@@ -975,11 +1098,13 @@ export default class GeFormRenderer extends LightningElement{
             } ];
         }
 
-        return invalidFields.length === 0;
+
+        return invalidFields.length === 0
     }
 
     /**
      * validates donation donor type on sectionsList
+     * @param dataImportHelper
      * @param sectionsList, list of sections
      * @returns {boolean|*} - true if form invalid, false otherwise
      */
@@ -994,9 +1119,9 @@ export default class GeFormRenderer extends LightningElement{
         const isContactDonor = dataImportHelper.donationDonorValue === DONATION_DONOR.isContact1;
         const areEmptyContactFields = dataImportHelper.isContact1ImportedEmpty && dataImportHelper.isContact1LastNameEmpty;
         // donation donor validation depending on selection and field presence
-        const isError = isAccountDonor ? areEmptyAccountFields : isContactDonor && areEmptyContactFields;
-
-        return isError;
+        return isAccountDonor
+            ? areEmptyAccountFields || this._isInvalidDonorSelected
+            : isContactDonor && areEmptyContactFields;
     }
 
     resetDonorTypeValidations(sectionsList) {
@@ -1024,6 +1149,9 @@ export default class GeFormRenderer extends LightningElement{
      */
     getDonationDonorErrorLabel(dataImportHelper) {
 
+        if (this._isInvalidDonorSelected) {
+            return accountDonorSelectionMismatch;
+        }
         // init array replacement for custom label
         let validationErrorLabelReplacements = [dataImportHelper.donationDonorValue, dataImportHelper.donationDonorLabel];
 
@@ -1399,10 +1527,11 @@ export default class GeFormRenderer extends LightningElement{
      */
     prepareFormForBatchMode (templateSections) {
         let sections = deepClone(templateSections);
-        if (isNotEmpty(this._batchDefaults)) {
+        const batchDefaults = this._batch[apiNameFor(BATCH_DEFAULTS_FIELD)];
+        if (isNotEmpty(batchDefaults)) {
             let batchDefaultsObject;
             try {
-                batchDefaultsObject = JSON.parse(this._batchDefaults);
+                batchDefaultsObject = JSON.parse(batchDefaults);
                 sections.forEach(section => {
                     section.elements.forEach(element => {
                         for (let key in batchDefaultsObject) {
@@ -1641,6 +1770,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleDonationDonorChange() {
+        this._isInvalidDonorSelected = false;
         if (this.hasSelectedDonationOrPayment()) {
             this.resetDonationAndPaymentImportedFields();
             fireEvent(this, 'resetReviewDonationsEvent', {});
@@ -2112,6 +2242,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     get donorType() {
+
         return this.getFieldValueFromFormState(
             apiNameFor(DATA_IMPORT_DONATION_DONOR_FIELD));
     }

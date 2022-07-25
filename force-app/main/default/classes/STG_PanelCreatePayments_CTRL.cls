@@ -62,18 +62,4 @@ public with sharing class STG_PanelCreatePayments_CTRL extends STG_Panel {
         id batchProcessId = database.executeBatch(new PMT_PaymentCreator_BATCH(), 200);
         return null;
     }
-
-    /**
-    * @description Check if the running user has update access to the Opportunity sObject and Read access to the
-    * Payment object
-    * @return Boolean
-    */
-    public Boolean getHasAccess() {
-        String oppObject = Schema.SObjectType.Opportunity.getName();
-        String paymentObject = Schema.SObjectType.npe01__OppPayment__c.getName();
-
-        return UTIL_Permissions.canRead(oppObject, false) &&
-            UTIL_Permissions.canUpdate(oppObject, false) &&
-            UTIL_Permissions.canRead(paymentObject, false);
-  }
 }

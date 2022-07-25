@@ -115,7 +115,7 @@ public with sharing class BDI_ProcessSelectedDIs_CTRL {
             // Query the Data import records to see if any of them are imported.  The try/catch is to handle
             // and display any field / object level security error.
             try {
-                for (DataImport__c di: [SELECT Id, Status__c 
+                for (DataImport__c di: [SELECT Id, Status__c, NPSP_Data_Import_Batch__c 
                                         FROM DataImport__c WHERE Id IN: diMap.keySet()                        
                                         WITH SECURITY_ENFORCED]) {
                     diIds += di.Id + ',';
@@ -126,9 +126,16 @@ public with sharing class BDI_ProcessSelectedDIs_CTRL {
                         ApexPages.addmessage(new ApexPages.message(ApexPages.severity.Error, 
                                                 System.label.bdiSelectCantProcessImportedRecords));
                         break;
+
+                    // If a data import record linked to a data import batch is found then throw an error
+                    } else if (!String.isBlank(di.NPSP_Data_Import_Batch__c)) {
+                        error = true;
+                        ApexPages.addmessage(new ApexPages.message(ApexPages.severity.Error, 
+                                                System.label.bdiSelectCantProcessBatchDIRecords));
+                        break;
                     } else {
                         error = false;
-                    } 
+                    }
                 }
             } catch (Exception e) {
                 error = true;

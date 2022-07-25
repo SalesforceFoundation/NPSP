@@ -158,7 +158,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     * @description Provides the name of the selected address verification class.
     * @return String The name of the class that implements the selected address verification service.
     */
-    public String getValidatorSelection() { return validatorSelection; } 
+    public String getValidatorSelection() { return validatorSelection; }
 
     /*******************************************************************************************************
     * @description Sets the appropriate properties according to the selected address verification. 

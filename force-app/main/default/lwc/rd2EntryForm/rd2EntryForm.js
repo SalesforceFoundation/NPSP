@@ -53,6 +53,14 @@ import savingCommitmentMessage from "@salesforce/label/c.RD2_EntryFormSaveCommit
 import commitmentFailedMessage from "@salesforce/label/c.RD2_EntryFormSaveCommitmentFailedMessage";
 import contactAdminMessage from "@salesforce/label/c.commonContactSystemAdminMessage";
 import unknownError from "@salesforce/label/c.commonUnknownError";
+import paymentMethodLabel from "@salesforce/label/c.RD2_Payment_Method";
+import RD2_Payment_Details from "@salesforce/label/c.RD2_Payment_Details";
+import RD2_Payment_method_was_updated from "@salesforce/label/c.RD2_Payment_method_was_updated";
+import RD2_Recurring_Donation_was_updated from "@salesforce/label/c.RD2_Recurring_Donation_was_updated";
+import CreditCardPaymentMethod from "@salesforce/label/c.RD2_Credit_Card_Payment_Method_Label";
+import ACHPaymentMethodLabel from "@salesforce/label/c.RD2_ACH_Payment_Method_Label";
+import updatePaymentMethod from "@salesforce/label/c.updatePaymentMethod";
+import changeAmountOrFrequency from "@salesforce/label/c.changeAmountOrFrequency";
 
 import handleCommitment from "@salesforce/apex/RD2_EntryFormController.handleCommitment";
 import logError from "@salesforce/apex/RD2_EntryFormController.logError";
@@ -68,9 +76,17 @@ import ACCOUNT_PRIMARY_CONTACT_LAST_NAME from "@salesforce/schema/Account.npe01_
  * is displayed or hidden on the RD2 entry form
  */
 const ELEVATE_WIDGET_EVENT_NAME = "rd2ElevateCreditCardForm";
+const CREDIT_CARD = "Credit Card";
+const ACH = "ACH";
 
 export default class rd2EntryForm extends LightningElement {
     customLabels = Object.freeze({
+        paymentMethodLabel,
+        RD2_Payment_Details,
+        RD2_Payment_method_was_updated,
+        RD2_Recurring_Donation_was_updated,
+        updatePaymentMethod,
+        changeAmountOrFrequency,
         cancelButtonLabel,
         closeButtonLabel,
         saveButtonLabel,
@@ -95,6 +111,17 @@ export default class rd2EntryForm extends LightningElement {
 
     @api parentId;
     @api recordId;
+    @api isPaymentModal = false;
+    @api isAmountFrequencyModal = false;
+    @api isElevateDonation = false;
+    @api isInitiallyMonthlyDonation = false;
+    @api isExperienceSite = false;
+    @api mappedStatus;
+    style = document.createElement("style");
+    cssExperienceElevate;
+    cssHideExperienceSite;
+    cssHideOnlyPaymentModal;
+    cssHideOnlyAmountFrequencyModal;
 
     _contactId;
     _accountId;
@@ -117,6 +144,25 @@ export default class rd2EntryForm extends LightningElement {
     @track rd2State = this.rd2Service.init();
 
     @track error = {};
+
+    cssComponent = 'slds-section slds-is-open';
+    cssModalContent = 'slds-modal__content slds-p-top_none slds-p-horizontal_medium slds-p-bottom_medium';
+    cssCurrencyExperienceSite = '';
+    ariaHidden = false;
+
+    @api isBankPaymentAllowed;
+    @track
+    paymentMethodOptions = [{ label: CreditCardPaymentMethod, value: CREDIT_CARD }];
+
+    determineACHpaymentMethodAndAddAsOption() {
+        if (this.isBankPaymentAllowed || this.rd2State.paymentMethod === ACH) {
+            if (!this.paymentMethodOptions.some((element) => element.value === ACH)) {
+                this.paymentMethodOptions.push({ label: ACHPaymentMethodLabel, value: ACH });
+            }
+        } else if (this.paymentMethodOptions.some((element) => element.value === ACH)) {
+            this.paymentMethodOptions.pop({ label: ACHPaymentMethodLabel, value: ACH });
+        }
+    }
 
     /***
      * @description Get the next donation date for this recurring donation
@@ -148,6 +194,67 @@ export default class rd2EntryForm extends LightningElement {
         return !this.isLoading && this.isSettingReady && this.isRecordReady ? "" : "slds-hide";
     }
 
+    renderedCallback() {
+        this.applyCSSOnlyOnEperienceSite();
+    }
+
+    /***
+     * @description Applies CSS styles to rendered elements only for Experience Sites.
+     */
+    applyCSSOnlyOnEperienceSite() {
+        if (this.isExperienceSite && this.template.querySelector("lightning-record-edit-form")) {
+            this.style.innerText = `lightning-helptext {
+                display:none;
+            }
+            abbr.slds-required {
+                display:none;
+            }
+            .slds-form-element__control.slds-grow{
+                padding-left:initial;
+            }
+            label.slds-form-element__label {
+                max-width: 100%;
+                display: contents;
+            }
+            .slds-form-element_horizontal .slds-form-element__control {
+                padding-left: initial;
+            }
+            lightning-base-combobox-item[data-value="1st and 15th"] {
+                display: none;
+            }
+            .slds-grid.slds-wrap table {
+                opacity: 0;
+            }
+            .slds-spinner_container {
+                top: -5000px;
+                right: -5000px;
+                bottom: -5000px;
+                left: -5000px;
+            }
+            lightning-input-field[data-id="currencyField"] lightning-picklist lightning-combobox label {
+                display: none;
+            }
+            lightning-input-field[data-id="plannedInstallments"] {
+                margin-top: -4px;
+            }
+            .slds-form-element_horizontal .slds-form-element__help, .slds-form_horizontal .slds-form-element .slds-form-element__help, .slds-form_stacked .slds-form-element_horizontal .slds-form-element__help {
+                margin-left: initial;
+            }
+            
+            @media screen and (min-width: 1135px) {
+                .fixExperienceDayOfMonth[c-rd2EntryFormScheduleSection_rd2EntryFormScheduleSection] {
+                    margin-top: -4px;
+                }
+            }
+            @media screen and (max-width: 1024px) {
+                .rd2-entry-custom-field-padding[c-rd2EntryFormScheduleSection_rd2EntryFormScheduleSection] {
+                    padding-top: 5px;
+                }
+            }`;
+            this.template.querySelector("lightning-record-edit-form").appendChild(this.style);
+        }
+    }
+
     /***
      * @description Get settings required to enable or disable fields and populate their values
      */
@@ -177,6 +284,34 @@ export default class rd2EntryForm extends LightningElement {
         }
 
         registerListener(ELEVATE_WIDGET_EVENT_NAME, this.handleElevateWidgetDisplayState, this);
+        this.applyExperienceSiteChanges();
+    }
+
+    /**
+     * @description Apply component updates only for Experience Sites
+     */
+    applyExperienceSiteChanges() {
+        if(this.isExperienceSite) {
+            this.cssComponent = 'slds-hide';
+            this.ariaHidden = true;
+            this.determineACHpaymentMethodAndAddAsOption();
+            this.cssModalContent += ' experienceCombo';
+            this.cssHideExperienceSite = this.isExperienceSite ? 'slds-hide' : '';
+            this.cssHideOnlyPaymentModal = this.isPaymentModal ? 'slds-hide' : '';
+            this.cssHideOnlyAmountFrequencyModal = this.isAmountFrequencyModal ? 'slds-hide' : '';
+            if(this.isAmountFrequencyModal) {
+                this.rd2State.periodType = 'Advanced';
+                this.cssExperienceElevate = 'slds-hide';
+                this.cssCurrencyExperienceSite = 'experienceCurrency';
+            }
+            if(this.isPaymentModal && this.mappedStatus === 'Lapsed') {
+                this.rd2State.recurringStatus = 'Active';
+                this.rd2State.initialViewState.recurringStatus = 'Active';
+            }
+            if(this.isPaymentModal) {
+                this.cssCurrencyExperienceSite = 'slds-hide';
+            }
+        }
     }
 
     perform(action) {
@@ -520,7 +655,7 @@ export default class rd2EntryForm extends LightningElement {
         this.isLoading = true;
         this.loadingText = this.customLabels.waitMessage;
         this.isSaveButtonDisabled = true;
-
+        
         if (this.isFormValid()) {
             const allFields = this.getAllFields();
             if (this.shouldSendToElevate(allFields)) {
@@ -541,10 +676,9 @@ export default class rd2EntryForm extends LightningElement {
     async processCommitmentSubmit(allFields) {
         try {
             if (this.isElevateWidgetDisplayed()) {
-                this.loadingText = this.rd2Service.getPaymentProcessingMessage(this.rd2State.paymentMethod);
-
+                
+                this.loadingText = this.isExperienceSite && String.valueOf(this.rd2State.paymentMethod) === String.valueOf(this.ACH) ? '' : this.rd2Service.getPaymentProcessingMessage(this.rd2State.paymentMethod);
                 const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
-
                 const paymentToken = await elevateWidget.returnToken().payload;
                 this.perform({
                     type: ACTIONS.SET_PAYMENT_TOKEN,
@@ -557,7 +691,9 @@ export default class rd2EntryForm extends LightningElement {
             return;
         }
 
-        this.loadingText = this.customLabels.savingCommitmentMessage;
+        if(!this.isExperienceSite) {
+            this.loadingText = this.customLabels.savingCommitmentMessage;
+        }    
 
         try {
             const rd = this.rd2Service
@@ -722,10 +858,18 @@ export default class rd2EntryForm extends LightningElement {
      * @description Fires an event to utilDedicatedListener with the success action
      */
     handleSuccess() {
-        const message = this.isEdit
+        let message = this.isEdit
             ? updateSuccessMessage.replace("{0}", this.rd2State.recordName)
             : insertSuccessMessage.replace("{0}", this.rd2State.recordName);
 
+        if(this.isPaymentModal) {
+            message = this.customLabels.RD2_Payment_method_was_updated;
+        }
+
+        if(this.isAmountFrequencyModal) {
+            message = this.customLabels.RD2_Recurring_Donation_was_updated;
+        }
+        
         showToast(message, "", "success");
 
         this.closeModal(this.rd2State.recordId);
@@ -737,10 +881,17 @@ export default class rd2EntryForm extends LightningElement {
     closeModal(recordId) {
         this.resetAllValues();
 
-        const closeModalEvent = new CustomEvent("closemodal", {
-            detail: { recordId: recordId },
-        });
-        this.dispatchEvent(closeModalEvent);
+        if(this.isPaymentModal) {
+            this.dispatchEvent(new CustomEvent("close", { detail: "updatePaymentMethod" }));
+        } else if(this.isAmountFrequencyModal) {
+            this.dispatchEvent(new CustomEvent("close", { detail: "changeAmountOrFrequency" }));
+        } else {
+            const closeModalEvent = new CustomEvent("closemodal", {
+                detail: { recordId: recordId },
+            });
+            this.dispatchEvent(closeModalEvent);
+        }
+        
     }
 
     /**

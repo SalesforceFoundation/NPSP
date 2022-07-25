@@ -128,6 +128,7 @@ private class BDI_ProcessSelectedDIs_TEST {
         insert testDIs;
 
         Test.startTest();
+        
         Test.setCurrentPage(Page.BDI_ProcessSelectedDIs);
         ApexPages.StandardSetController setCtrl = new ApexPages.StandardSetController(testDIs);
         setCtrl.setSelected(testDIs);
@@ -141,6 +142,35 @@ private class BDI_ProcessSelectedDIs_TEST {
         System.assertEquals(System.label.bdiSelectCantProcessImportedRecords,ApexPages.getMessages()[0].getDetail());
 
         ctrl.returnToListView();
+    }
+
+    /*********************************************************************************************************
+    * @description Tests that an error is thrown if one of the selected DIs is a part of a NPSP Data Import Batch
+    **********************************************************************************************************/
+    @isTest
+    static void testBatchDataImportRecordError() {
+
+        DataImportBatch__c diBatch = Util_UnitTestData_TEST.createGiftBatches(200,2,1)[0];
+        insert diBatch;
+
+        DataImport__c[] testDIs = diGenerator(2);
+        // Set one to be part of a batch to test error
+        testDIs[0].NPSP_Data_Import_Batch__c = diBatch.Id;
+
+        insert testDIs;
+
+        Test.startTest();
+        Test.setCurrentPage(Page.BDI_ProcessSelectedDIs);
+        ApexPages.StandardSetController setCtrl = new ApexPages.StandardSetController(testDIs);
+        setCtrl.setSelected(testDIs);
+
+        BDI_ProcessSelectedDIs_CTRL ctrl = new BDI_ProcessSelectedDIs_CTRL(setCtrl);
+
+        Test.stopTest();
+        
+        // Confirm error message was generated
+        System.assertEquals(true, ApexPages.hasMessages());
+        System.assertEquals(System.label.bdiSelectCantProcessBatchDIRecords,ApexPages.getMessages()[0].getDetail());
     }
 
     /*********************************************************************************************************

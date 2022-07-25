@@ -1,31 +1,13 @@
 <apex:page controller="STG_PanelOppNamingBatch_CTRL" docType="html-5.0" standardStylesheets="false" >
-    <apex:includeLightning />
 
-    <script>
-        if ({!NOT(hasAccess)}) {
-            $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function() {
-                $Lightning.createComponent("{!namespace}" + ":utilIllustration",
-                    {   title : "{!$Label.commonAdminPermissionErrorTitle}",
-                        message : "{!$Label.commonPermissionErrorMessage}",
-                        size: 'small',
-                        variant: 'no-access',
-                        illustrationClass: "slds-p-top_x-large slds-m-top_x-large"
-                    },
-                    "stgPanelOppNamingBatchIllustration",
-                    function () { }
-                );
-            });
-        }
-    </script>
+    <apex:outputPanel rendered="{!NOT(isRunningUserIsAdmin)}">
+        <c:InsufficientPermissions />
+    </apex:outputPanel>
 
-    <apex:form id="form" styleClass="slds-m-around_x-large">
+    <apex:form id="form" styleClass="slds-m-around_x-large" rendered="{!isRunningUserIsAdmin}">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavBulkProcesses}" pageLabel="{!$Label.stgLabelOppNamingRefreshTitle}" />
 
-        <apex:outputPanel rendered="{!NOT(hasAccess)}">
-            <div id="stgPanelOppNamingBatchIllustration" />
-        </apex:outputPanel>
-
-        <apex:outputPanel rendered="{!hasAccess}">
+        <apex:outputPanel>
             <div class="slds-text-body_small slds-m-around_medium">
                 <c:UTIL_HtmlOutput html="{!$Label.stgHelpBtnOppNaming}" />
             </div>

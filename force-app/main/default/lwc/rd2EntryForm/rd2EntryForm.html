@@ -21,14 +21,16 @@
                 </lightning-button-icon>
                 <h2
                     class="slds-text-heading_medium slds-hyphenate header-string slds-p-top_large slds-p-horizontal_medium" id="modal-heading-01">
-                    {headerLabel}
+                    <template if:false={isExperienceSite}>{headerLabel}</template>
+                    <template if:true={isPaymentModal}>{customLabels.updatePaymentMethod}</template>
+                    <template if:true={isAmountFrequencyModal}>{customLabels.changeAmountOrFrequency}</template>
                 </h2>
             </header>
 
             <lightning-record-edit-form record-id={recordId}
                                         object-api-name="npe03__Recurring_Donation__c"
                                         data-id="outerRecordEditForm">
-                <div class="slds-modal__content slds-p-top_none slds-p-horizontal_medium slds-p-bottom_medium" id="modal-content-id-1">
+                <div class={cssModalContent} id="modal-content-id-1">
                     <template if:true={isLoading}>
                         <div class="slds-grid slds-grid_align-center">
                             <div class="slds-is-relative slds-size_1-of-1">
@@ -57,7 +59,7 @@
                     </div>
                     <div class={cssEditForm}>
 
-                        <div class="slds-section slds-is-open">
+                        <div class={cssComponent} aria-hidden={ariaHidden}>
                             <h3 class="slds-section__title slds-theme_shade">
                                 <span class="slds-truncate slds-p-horizontal_small">{customLabels.donorSectionHeader}</span>
                             </h3>
@@ -77,7 +79,7 @@
                         </div>
 
                         <template if:true={isEdit}>
-                            <div class="slds-section slds-is-open">
+                            <div class={cssComponent} aria-hidden={ariaHidden}>
                                 <h3 class="slds-section__title slds-theme_shade">
                                     <span
                                         class="slds-truncate slds-p-horizontal_small">{customLabels.statusSectionHeader}</span>
@@ -110,45 +112,52 @@
                         </template>
 
                         <div class="slds-section slds-is-open">
-                            <h3 class="slds-section__title slds-theme_shade">
-                                <span class="slds-truncate slds-p-horizontal_small">{customLabels.scheduleSectionHeader}</span>
-                            </h3>
+                            <template if:false={isPaymentModal}>
+                                <h3 class="slds-section__title slds-theme_shade">
+                                    <span class="slds-truncate slds-p-horizontal_small">{customLabels.scheduleSectionHeader}</span>
+                                </h3>
+                            </template>
+
                             <div aria-hidden="false" class="slds-section__content">
 
-                                <lightning-layout horizontal-align="spread" multiple-rows="true">
-                                    <lightning-layout-item padding="horizontal-small" size="6" small-device-size="6"
-                                        if:true={fields.amount}>
-                                        <lightning-input-field
-                                                field-name={fields.amount.apiName}
-                                                value={rd2State.donationValue}
-                                                data-id="amountField"
-                                                onchange={handleAmountChange}
-                                                required
-                                        >
-                                        </lightning-input-field>
-                                    </lightning-layout-item>
-
-                                    <template if:true={rd2State.isMultiCurrencyEnabled}>
+                                <div class="slds-section slds-is-open" aria-hidden="false">
+                                    <lightning-layout horizontal-align="spread" multiple-rows="true">
+                                            
                                         <lightning-layout-item padding="horizontal-small" size="6" small-device-size="6"
                                             if:true={fields.amount}>
-                                            <div class="slds-p-horizontal_xx-small slds-m-bottom_x-small">
-                                                <label for="currencyField"
-                                                    class="slds-form-element__label slds-no-flex">{fields.currency.label}</label>
-                                                <lightning-input-field id="currencyField"
-                                                                       data-id="currencyField"
-                                                                       field-name={fields.currency.apiName}
-                                                                       value={rd2State.currencyIsoCode}
-                                                                       variant="label-hidden"
-                                                                       onchange={handleCurrencyChange}
-                                                                       required
-                                                ></lightning-input-field>
+                                            <div class={cssHideOnlyPaymentModal}>
+                                                <lightning-input-field
+                                                        field-name={fields.amount.apiName}
+                                                        value={rd2State.donationValue}
+                                                        data-id="amountField"
+                                                        onchange={handleAmountChange}
+                                                        required
+                                                >
+                                                </lightning-input-field>
                                             </div>
                                         </lightning-layout-item>
-                                    </template>
 
-                                </lightning-layout>
+                                        <template if:true={rd2State.isMultiCurrencyEnabled}>
+                                            <lightning-layout-item padding="horizontal-small" size="6" small-device-size="6"
+                                                if:true={fields.amount} class={cssCurrencyExperienceSite}>
+                                                <div class="slds-p-horizontal_xx-small slds-m-bottom_x-small">
+                                                    <label for="currencyField"
+                                                        class="slds-form-element__label slds-no-flex">{fields.currency.label}</label>
+                                                    <lightning-input-field id="currencyField"
+                                                                        data-id="currencyField"
+                                                                        field-name={fields.currency.apiName}
+                                                                        value={rd2State.currencyIsoCode}
+                                                                        variant="label-hidden"
+                                                                        onchange={handleCurrencyChange}
+                                                                        required
+                                                    ></lightning-input-field>
+                                                </div>
+                                            </lightning-layout-item>
+                                        </template>
 
-                                <c-rd2-entry-form-schedule-section
+                                    </lightning-layout>
+                                    
+                                    <c-rd2-entry-form-schedule-section
                                         rd2-state={rd2State}
                                         data-id="scheduleComponent"
                                         onerrorevent={handleChildComponentError}
@@ -159,43 +168,76 @@
                                         onperiodtypechange={handleRecurringPeriodTypeChange}
                                         onfrequencychange={handleFrequencyChange}
                                         oninstallmentschange={handleInstallmentsChange}
-                                        if:true={isSettingReady}>
-                                </c-rd2-entry-form-schedule-section>
+                                        if:true={isSettingReady}
+                                        is-amount-frequency-modal={isAmountFrequencyModal}
+                                        is-payment-modal={isPaymentModal}
+                                        is-experience-site={isExperienceSite}
+                                        is-elevate-donation={isElevateDonation}
+                                        is-initially-monthly-donation={isInitiallyMonthlyDonation}>
+                                    </c-rd2-entry-form-schedule-section>
+                                </div>
 
                                 <lightning-layout horizontal-align="spread" multiple-rows="true">
                                     <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6"
                                         if:true={fields.paymentMethod}>
-                                        <lightning-input-field
-                                            field-name={fields.paymentMethod.apiName}
-                                            onchange={handlePaymentChange}
-                                            value={rd2State.paymentMethod}
-                                            data-id="paymentMethod">
-                                        </lightning-input-field>
+                                        <template if:false={isExperienceSite}>
+                                            <lightning-input-field
+                                                field-name={fields.paymentMethod.apiName}
+                                                onchange={handlePaymentChange}
+                                                value={rd2State.paymentMethod}
+                                                data-id="paymentMethod">
+                                            </lightning-input-field>
+                                        </template>
+                                        <template if:true={isExperienceSite}>
+                                            <div class={cssHideOnlyAmountFrequencyModal}>
+                                                <h3 class="slds-section__title slds-theme_shade">
+                                                    <span class="experienceTitle">{customLabels.paymentMethodLabel}</span>
+                                                </h3>
+                                                <lightning-radio-group
+                                                    class="slds-size_1-of-1 slds-large-size_1-of-3"
+                                                    name="paymentMethodRadioGroup"
+                                                    variant="label-hidden"
+                                                    options={paymentMethodOptions}
+                                                    value={rd2State.paymentMethod}
+                                                    type="radio"
+                                                    onchange={handlePaymentChange}
+                                                    data-id="paymentMethod">
+                                                </lightning-radio-group>
+                                            </div>
+                                        </template>
                                     </lightning-layout-item>
-
+                                    
                                     <lightning-layout-item size="12" class="slds-p-bottom_small"
                                         if:true={isElevateWidgetEnabled}>
-                                        <c-rd2-elevate-credit-card-form data-id='elevateWidget'
-                                            rd2-state={rd2State}
-                                            data-qa-locator='widget Elevate'
-                                            is-edit-mode={isCommitmentEdit}
-                                            rd2-record-id={recordId}
-                                            card-last-four-label={cardLastFourLabel}
-                                            ach-last-four-label={achLastFourLabel}
-                                            next-donation-date={nextDonationDate}
-                                            payer-organization-name={rd2State.accountName}
-                                            payer-first-name={rd2State.contactFirstName}
-                                            payer-last-name={rd2State.contactLastName}
-                                            existing-payment-method={originalPaymentMethod}
-                                            payment-method={rd2State.paymentMethod}>
-                                        </c-rd2-elevate-credit-card-form>
+                                        <div class={cssExperienceElevate}>
+                                            <template if:true={isPaymentModal}>
+                                                <h3 class="slds-section__title slds-theme_shade">
+                                                    <span class="paymentDetails experienceTitle">{customLabels.RD2_Payment_Details}</span>
+                                                </h3>
+                                            </template>
+                                            <c-rd2-elevate-credit-card-form data-id='elevateWidget'
+                                                rd2-state={rd2State}
+                                                data-qa-locator='widget Elevate'
+                                                is-edit-mode={isCommitmentEdit}
+                                                rd2-record-id={recordId}
+                                                card-last-four-label={cardLastFourLabel}
+                                                ach-last-four-label={achLastFourLabel}
+                                                next-donation-date={nextDonationDate}
+                                                payer-organization-name={rd2State.accountName}
+                                                payer-first-name={rd2State.contactFirstName}
+                                                payer-last-name={rd2State.contactLastName}
+                                                existing-payment-method={originalPaymentMethod}
+                                                payment-method={rd2State.paymentMethod}
+                                                is-digital-experience={isPaymentModal}>
+                                            </c-rd2-elevate-credit-card-form>
+                                        </div>
                                     </lightning-layout-item>
                                 </lightning-layout>
 
                             </div>
                         </div>
 
-                        <div class="slds-section slds-is-open">
+                        <div class={cssComponent} aria-hidden={ariaHidden}>
                             <h3 class="slds-section__title slds-theme_shade">
                                 <span class="slds-truncate slds-p-horizontal_small">{customLabels.otherSectionHeader}</span>
                             </h3>

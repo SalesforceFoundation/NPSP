@@ -115,7 +115,7 @@ class GiftEntryLandingPage(BaseNPSPPage, BasePage):
         """
         id=self.get_template_record_id(template)
         namespace= self.cumulusci.get_namespace_prefix("Nonprofit Success Pack") or self.cumulusci.get_namespace_prefix("Nonprofit Success Pack Managed Feature Test")
-        self.salesforce.store_session_record(namespace + "Form_Template__c",id)
+        self.salesforce_api.store_session_record(namespace + "Form_Template__c",id)
 
 
 @pageobject("Template", "GE_Gift_Entry")
@@ -369,10 +369,12 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 option=npsp_lex_locators["gift_entry"]["lookup-option"].format(value)
                 self.selenium.wait_until_page_contains_element(option)
                 try:
+                    time.sleep(1)
                     self.selenium.click_element(option)
                 except ElementNotInteractableException:
                     self.salesforce._jsclick(option)
             elif 'combobox' in type :
+                field_locator = npsp_lex_locators["gift_entry"]["field_input"].format(key, "button")
                 self.selenium.wait_until_page_contains_element(field_locator)
                 self.selenium.click_element(field_locator)
                 popup=npsp_lex_locators["flexipage-popup"]

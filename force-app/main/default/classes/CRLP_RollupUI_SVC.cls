@@ -35,6 +35,9 @@
 * @description Lightning Component Server Controller for the Rollups UI page CRLP_Setup.
 */
 
+// Adding custom rule to avoid this class being scanned by the SFCA scanner since we will not enforce FLS for
+// customizable rollups.
+/* sfge-disable ApexFlsViolationRule */
 public with sharing class CRLP_RollupUI_SVC {
 
     private static final String SUCCESS_RESPONSE = 'SUCCESS';

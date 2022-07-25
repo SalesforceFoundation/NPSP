@@ -33,6 +33,7 @@ Create Donation from a Contact
     [Documentation]                      Create a donation schedule payment from Ui and verify
     ...                                  The number of payment installments and interval splits
 
+    [tags]                               feature:Donations and Payments   unstable   api
     Go To Page                           Details
     ...                                  Opportunity
     ...                                  object_id=${data}[contact_opportunity][Id]
