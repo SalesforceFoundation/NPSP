@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>53.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Recurring Donations</masterLabel>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+        <target>lightning__RecordPage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default,lightning__RecordPage">
+            <property label="Show these types of Recurring Donations" name="donationTypeFilter" type="String" datasource="All Recurring Donations,Elevate Recurring Donations,Non-Elevate Recurring Donations" default="All Recurring Donations"/>
+            <property label="Allow ACH payment method" name="allowACHPaymentMethod" type="Boolean" default="true"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

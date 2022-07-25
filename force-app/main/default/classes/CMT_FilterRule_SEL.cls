@@ -33,6 +33,9 @@
 * @group CMT Filter Rules
 * @description Selector class for FilterGroups and FilterRule Custom Metadata Type objects
 */
+// Adding custom rule to avoid this class being scanned by the SFCA scanner since we will not enforce FLS for
+// customizable rollups.
+/* sfge-disable ApexFlsViolationRule */
 public without sharing class CMT_FilterRule_SEL {
 
     /** @description Platform Cache instance, if available */

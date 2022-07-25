@@ -175,7 +175,7 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
         field = ns + "Active__c"
         status = False
         query = "SELECT Id FROM {} WHERE {} = True AND Label = '{}'".format(object, field, label)
-        record = self.salesforce.soql_query(query).get("records", [])
+        record = self.salesforce_api.soql_query(query).get("records", [])
         print(f"record is {record}")
         if len(record) > 0:
             status = True

@@ -35,56 +35,56 @@ const ADMIN_RESOURCES = [
         id: 1, 
         label: gsResourcesItemNonprofitCloudLabel, 
         linkLabel: gsResourcesItemNonprofitCloudLink,
-        href: 'https://trailhead.salesforce.com/en/content/learn/modules/nonprofit-cloud-basics',
+        href: 'https://sforce.co/37GAkS1',
         ariaLabel: `${gsResourcesItemNonprofitCloudLink} ${opensInNewLink}`
     },
     {
         id: 2, 
         label: gsResourcesItemFundraisingLabel, 
         linkLabel: gsResourcesItemFundraisingLink,
-        href: 'https://pub.s7.exacttarget.com/twkj3twkqri',
+        href: 'https://bit.ly/3grDDQP',
         ariaLabel: `${gsResourcesItemFundraisingLink} ${opensInNewLink}`
     },
     {
         id: 3,
         label: gsResourcesProgramManagementLabel,
         linkLabel: gsResourcesProgramManagementLink,
-        href: 'https://pub.s7.exacttarget.com/twkj3twkqri',
+        href: 'https://bit.ly/3gnpB2y',
         ariaLabel: `${gsResourcesProgramManagementLink} ${opensInNewLink}`
     },
     {
         id: 4,
         label: gsResourcesMarketingEngagementLabel,
         linkLabel: gsResourcesMarketingEngagementLink,
-        href: 'https://pub.s7.exacttarget.com/twkj3twkqri',
+        href: 'https://bit.ly/3gppF1Z',
         ariaLabel: `${gsResourcesMarketingEngagementLink} ${opensInNewLink}`
     },
     {
         id: 5,
         label: gsResourcesWebinarsLabel,
         linkLabel: gsResourcesWebinarsLink,
-        href: 'https://cloud.mail.salesforce.com/event-calendar/#&product=.NonprofitCloud',
+        href: 'https://sforce.co/3qCiyYI',
         ariaLabel: `${gsResourcesWebinarsLink} ${opensInNewLink}`
     },
     {
         id: 6,
         label: gsResourcesHubLabel,
         linkLabel: gsResourcesHubLink,
-        href: 'https://powerofus.force.com/HUB_Salesforce_Org_Get_Started',
+        href: 'https://sforce.co/2VQHVIg',
         ariaLabel: `${gsResourcesHubLink} ${opensInNewLink}`
     },
     {
         id: 7,
         label: gsResourcesPartnersLabel,
         linkLabel: gsResourcesPartnersLink,
-        href: 'https://www.salesforce.org/nonprofit/find-partner/',
+        href: 'https://bit.ly/3gutvH5',
         ariaLabel: `${gsResourcesPartnersLink} ${opensInNewLink}`
     },
     {
         id: 8,
         label: gsResourcesVideographyLabel,
         linkLabel: gsResourcesVideographyLinkLabel,
-        href: 'https://www.youtube.com/channel/UC8kDDLRZzDdOBS24al99Kag',
+        href: 'https://bit.ly/3qDURPA',
         ariaLabel: `${gsResourcesVideographyLinkLabel} ${opensInNewLink}`
     }
 ];
@@ -94,35 +94,35 @@ const END_USER_RESOURCES = [
         id: 1,
         label: gseuResourcesItemQuestionsAnsweredLabel,
         linkLabel: gseuResourcesItemQuestionsAnsweredLinkLabel,
-        href: 'https://powerofus.force.com/HUB_NPSP_Group',
+        href: 'https://sforce.co/3qGnlbu',
         ariaLabel: `${gseuResourcesItemQuestionsAnsweredLinkLabel} ${opensInNewLink}`
     },
     {
         id: 2,
         label: gseuResourcesItemAboutNPSPLabel,
         linkLabel: gseuResourcesItemAboutNPSPLinkLabel,
-        href: 'https://powerofus.force.com/NPSP_Documentation',
+        href: 'https://sforce.co/3oCXOxY',
         ariaLabel: `${gseuResourcesItemAboutNPSPLinkLabel} ${opensInNewLink}`
     },
     {
         id: 3,
         label: gseuResourcesItemWatchVideosLabel,
         linkLabel: gseuResourcesItemWatchVideosLinkLabel,
-        href: 'https://www.youtube.com/channel/UC8kDDLRZzDdOBS24al99Kag',
+        href: 'https://bit.ly/3n26U7d',
         ariaLabel: `${gseuResourcesItemWatchVideosLinkLabel} ${opensInNewLink}`
     },
     {
         id: 4,
         label: gseuResourcesItemWebinarsLabel,
         linkLabel: gseuResourcesItemWebinarsLinkLabel,
-        href: 'https://cs.salesforce.com/events?filter=true&product=nonprofit-cloud%2Csalesforce.org&category=®ion=&language=&type=&search=&startDate=&endDate=&dateSpan=custom',
+        href: 'https://sforce.co/33UBNmy',
         ariaLabel: `${gseuResourcesItemWebinarsLinkLabel} ${opensInNewLink}`
     },
     {
         id: 5,
         label: gseuResourcesItemCommunityGroupLabel,
         linkLabel: gseuResourcesItemCommunityGroupLinkLabel,
-        href: 'https://trailblazercommunitygroups.com/',
+        href: 'https://bit.ly/2VQngnD',
         ariaLabel: `${gseuResourcesItemCommunityGroupLinkLabel} ${opensInNewLink}`
     }
 

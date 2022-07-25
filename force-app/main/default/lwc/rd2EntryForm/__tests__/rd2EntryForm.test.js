@@ -454,6 +454,44 @@ describe("c-rd2-entry-form", () => {
             setupIframeReply();
         });
 
+        it("when Bank Payment is enabled, displays ACH option for Payment Methods field", async () => {
+            getInitialView.mockResolvedValue({
+                isBankPaymentAllowed: true
+            });
+
+            const element = createRd2EntryForm();
+            const controller = new RD2FormController(element);
+
+            await flushPromises();
+
+            expect(mockScrollIntoView).toHaveBeenCalled();
+
+            const saveButton = controller.saveButton();
+            expect(saveButton.disabled).toBe(true);
+
+            const achOption = element.shadowRoot.querySelector('[value="ACH"]');
+            expect(achOption).toBeDefined();
+        });
+
+        it("when Bank Payment is not enabled, do not displays ACH option for Payment Methods field", async () => {
+            getInitialView.mockResolvedValue({
+                isBankPaymentAllowed: false
+            });
+
+            const element = createRd2EntryForm();
+            const controller = new RD2FormController(element);
+
+            await flushPromises();
+
+            expect(mockScrollIntoView).toHaveBeenCalled();
+
+            const saveButton = controller.saveButton();
+            expect(saveButton.disabled).toBe(true);
+
+            const achOption = element.shadowRoot.querySelector('[value="ACH"]');
+            expect(achOption).toBeNull();
+        });
+
         it("displays label with record name in header", async () => {
             getInitialView.mockResolvedValue(rd2WithCardCommitmentInitialView);
             const element = createRd2EditForm(FAKE_CARD_RD2_ID);
