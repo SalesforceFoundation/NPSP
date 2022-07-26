@@ -1,6 +1,11 @@
 import { createElement } from 'lwc';
 import rd2RecurringDonation from '../rd2RecurringDonation';
+import { extended, full } from "@sa11y/preset-rules";
+import { setup } from "@sa11y/jest";
+
 const MOCK_DATA = require('./data/rd2RecurringDonationData.json');
+
+setup();
 
 // Helper function to wait until the microtask queue is empty. This is needed for promise
 // timing when calling imperative Apex.
@@ -48,5 +53,21 @@ const MOCK_DATA = require('./data/rd2RecurringDonationData.json');
           expect(element).toBeDefined();
         });
       });
+
+      it("checks element is accessible", async () => {
+        const element = createElement("c-rd2-recurring-donation", {
+            is: rd2RecurringDonation,
+        });
+        document.body.appendChild(element);
+        await expect(element).toBeAccessible(extended);
+    });
+
+    it("checks document is fully accessible", async () => {
+        const element = createElement("c-rd2-recurring-donation", {
+            is: rd2RecurringDonation,
+        });
+        document.body.appendChild(element);
+        await expect(element).toBeAccessible(full);
+    });
 
 });
