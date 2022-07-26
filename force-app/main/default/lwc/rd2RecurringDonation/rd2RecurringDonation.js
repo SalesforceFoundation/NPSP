@@ -199,7 +199,7 @@ export default class RecurringDonationTable extends LightningElement {
         while (!this._tableThInnerDiv.className.includes("cell")) {
             this._tableThInnerDiv = this._tableThInnerDiv.parentNode;
         }
-        this._pageX = e.pageX;
+        this._pageX = e.pageX ? e.pageX : e.changedTouches[0].pageX;
 
         this._padding = this.paddingDiff(this._tableThColumn);
 
@@ -208,7 +208,7 @@ export default class RecurringDonationTable extends LightningElement {
 
     handlemousemove(e) {
         if (this._tableThColumn && this._tableThColumn.tagName === "TH") {
-            this._diffX = e.pageX - this._pageX;
+            this._diffX = (e.pageX ? e.pageX : e.changedTouches[0].pageX) - this._pageX;
             if((this._tableThWidth + this._diffX) > 50){
                 this._tableThColumn.style.width = this._tableThWidth + this._diffX + "px";
                 this._tableThInnerDiv.style.width = this._tableThColumn.style.width;
