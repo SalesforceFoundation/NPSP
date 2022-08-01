@@ -682,11 +682,11 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
 
     private static void configHouseholdNamingSettings(Household_Naming_Settings__c hns) {
-        hns.Household_Name_Format__c = '{!LastName} ' + label.npo02.DefaultHouseholdName;
+        hns.Household_Name_Format__c = '{!LastName} ' + 'Household';
         hns.Formal_Greeting_Format__c = '{!{!Salutation} {!FirstName}} {!LastName}';
         hns.Informal_Greeting_Format__c = '{!{!FirstName}}';
-        hns.Name_Connector__c = label.npo02.HouseholdNameConnector;
-        hns.Name_Overrun__c = label.npo02.HouseholdNameOverrun;
+        hns.Name_Connector__c = 'and';
+        hns.Name_Overrun__c = 'Friends';
         hns.Contact_Overrun_Count__c = 9;
         hns.Implementing_Class__c = 'HH_NameSpec';
     }
