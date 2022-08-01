@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Pre_Verification_Address__c</name>
+    <help>Armazena o Endereço como era antes da verificação com um serviço remoto, caso alguma informação seja perdida no processo de verificação.</help>
+    <label>Endereço pré-verificação</label>
+</CustomFieldTranslation>

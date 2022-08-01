@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Engagement_Plan_Task__c</name>
+    <relationshipLabel>Tarefas</relationshipLabel>
+    <label>Tarefa de plano de interação</label>
+</CustomFieldTranslation>

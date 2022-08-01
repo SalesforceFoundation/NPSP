@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Run_Opportunity_Rollups_while_Processing__c</name>
+    <help>Quando marcado, o NPSP calcula totaliz. dos doadores quando as doações são processadas. Se não for marcado, as totaliz. de doadores são calculadas durante o trab. agendado noturno padrão. A marcação desta caixa de seleção pode atrasar o process. do lote.</help>
+    <label>Calcular totalizações de doação com lote</label>
+</CustomFieldTranslation>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>NextDonationDateMatchRangeDays__c</name>
-    <help>The number of days before or after the Next Donation Date that NPSP won&apos;t create a new
-            installment Opportunity if the next open Opportunity&apos;s Close Date is changed. Applies only to
+    <help>The number of days before or after the Next Donation Date that NPSP won't create a new
+            installment Opportunity if the next open Opportunity's Close Date is changed. Applies only to
             Recurring Donations where Installment Period is Monthly or Yearly.</help>
     <label>Next Donation Date Match Range</label>
 </CustomFieldTranslation>

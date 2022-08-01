@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Account1_Street__c</name>
+    <help>Rue de facturation du Compte1</help>
     <label>Adresse du Compte1</label>
 </CustomFieldTranslation>

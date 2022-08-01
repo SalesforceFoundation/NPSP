@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Active__c</name>
+    <help>Determina se esta Unidade contábil geral está disponível para seleção em Alocações. Apenas unidades contábeis gerais ativas estão disponíveis para seleção.</help>
+    <label>Ativo</label>
+</CustomFieldTranslation>

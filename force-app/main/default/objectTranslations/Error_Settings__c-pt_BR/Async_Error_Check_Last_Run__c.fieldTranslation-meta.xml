@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Async_Error_Check_Last_Run__c</name>
+    <help>Usado para acompanhar a execução mais recente do registro em log de erros de trabalho assíncrono</help>
+    <label>Última exec. de verif. de erros ass.</label>
+</CustomFieldTranslation>

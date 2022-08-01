@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Required__c</name>
-    <help>Indique si le champ de l&apos;objet Importation de données NPSP doit contenir une valeur. Lorsqu&apos;une valeur est obligatoire, l&apos;importation test échoue si ce champ ne contient aucune valeur.</help>
+    <help>Indique si le champ de l'objet Importation de données NPSP doit contenir une valeur. Lorsqu'une valeur est obligatoire, l'importation test échoue si ce champ ne contient aucune valeur.</help>
     <label>Obligatoire ?</label>
     <picklistValues>
         <masterLabel>Yes</masterLabel>

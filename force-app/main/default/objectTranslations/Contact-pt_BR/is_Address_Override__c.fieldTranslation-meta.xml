@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>is_Address_Override__c</name>
+    <help>Quando selecionado, o NPSP não sincronizará o endereço deste Contato com o Padrão da família ou Endereço sazonal. Use a opção a fim de manter um endereço de email separado para este contato em particular.</help>
+    <label>Substituição de endereço</label>
+</CustomFieldTranslation>

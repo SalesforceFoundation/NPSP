@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Retry_Pending__c</name>
+    <help>Quando marcado, o registro especificado no ID do registro rel. será reprocess. no próximo processo agendado. Se o reprocess. for bem-sucedido, este campo será então desmarcado. Aplica-se a tipos específicos de erros que ocorrem nos processos agendados.</help>
+    <label>Nova tentativa pendente?</label>
+</CustomFieldTranslation>

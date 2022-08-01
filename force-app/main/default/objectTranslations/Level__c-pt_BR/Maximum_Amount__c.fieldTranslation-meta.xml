@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Maximum_Amount__c</name>
+    <help>O valor máximo abaixo do qual o NPSP atribui este nível. Se este campo estiver vazio, o NPSP atribuirá este nível para qualquer valor maior ou igual ao valor mínimo deste nível.</help>
+    <label>Valor máximo (&lt;)</label>
+</CustomFieldTranslation>

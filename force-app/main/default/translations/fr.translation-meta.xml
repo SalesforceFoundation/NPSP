@@ -5,6 +5,14 @@
         <label>L’ID d’authentification ne peut pas être vide.</label>
     </customLabels>
     <customLabels>
+        <name>installmentPeriod</name>
+        <label>Période de versement</label>
+    </customLabels>
+    <customLabels>
+        <name>recurringDonationSchedule</name>
+        <label>Calendrier de dons récurrents</label>
+    </customLabels>
+    <customLabels>
         <name>Addr_No_Batch</name>
         <label>Le service indiqué ne prend pas en charge la vérification d’adresses par lots.</label>
     </customLabels>
@@ -34,7 +42,7 @@
 1. Ouvrez un compte de vérification d’adresse sur un service tiers. (Certains sont gratuits pour les organisations à but non lucratif.)&lt;br/&gt;
 2. Dans votre service de vérification d’adresse, créez l’ID et/ou le jeton d’authentification nécessaire(s).&lt;br/&gt;
 3. Retournez à cette page de configuration, cliquez sur le bouton Modifier en haut, et collez l’ID et/ou le jeton dans les champs appropriés.&lt;br/&gt;
-4. Remplissez les champs restants et cliquez sur Enregistrer. Le texte d’aide pour chaque champ fournit des informations. Si vous avez besoin de plus d’aide, consultez la &lt;a href=&quot;https://powerofus.force.com/NPSP_Address_Verification&quot;&gt;documentation de NPSP&lt;/a&gt;.</label>
+4. Remplissez les champs restants et cliquez sur Enregistrer. Le texte d’aide pour chaque champ fournit des informations. Si vous avez besoin de plus d’aide, consultez la &lt;a href="https://powerofus.force.com/NPSP_Address_Verification"&gt;documentation de NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>Addr_Settings_Intro_Title</name>
@@ -122,7 +130,7 @@
     </customLabels>
     <customLabels>
         <name>Addr_Verify_Google_Help</name>
-        <label>L’API Geocoding de Google demande une valeur uniquement pour le jeton d’authentification. Pour la trouver, rendez-vous sur la console de l’API à l’adresse https://code.google.com/apis/console et en vous connectant avec votre compte Google. Cliquez sur le lien Services dans le menu de gauche de la console de l’API, et activez le service d’API Geocoding. Une fois le service activé, votre clé d’API est disponible depuis la page d’accès API, dans la section Simple API Access. Pour plus d&apos;informations sur ce service, accédez à https://developers.google.com/maps/documentation/geocoding/.</label>
+        <label>L’API Geocoding de Google demande une valeur uniquement pour le jeton d’authentification. Pour la trouver, rendez-vous sur la console de l’API à l’adresse https://code.google.com/apis/console et en vous connectant avec votre compte Google. Cliquez sur le lien Services dans le menu de gauche de la console de l’API, et activez le service d’API Geocoding. Une fois le service activé, votre clé d’API est disponible depuis la page d’accès API, dans la section Simple API Access. Pour plus d'informations sur ce service, accédez à https://developers.google.com/maps/documentation/geocoding/.</label>
     </customLabels>
     <customLabels>
         <name>Addr_Verify_Settings</name>
@@ -138,7 +146,7 @@
     </customLabels>
     <customLabels>
         <name>Address_StateCountry_Invalid_Error</name>
-        <label>&apos;{0}&apos; n’est pas configuré comme un pays valide dans votre organisation.</label>
+        <label>'{0}' n’est pas configuré comme un pays valide dans votre organisation.</label>
     </customLabels>
     <customLabels>
         <name>Address_Verification_Limit</name>
@@ -162,7 +170,7 @@
     </customLabels>
     <customLabels>
         <name>AssistiveTextNewWindow</name>
-        <label>Le lien s&apos;ouvre dans une nouvelle fenêtre</label>
+        <label>Le lien s'ouvre dans une nouvelle fenêtre</label>
     </customLabels>
     <customLabels>
         <name>AssistiveTextRecordIcon</name>
@@ -218,7 +226,7 @@
     </customLabels>
     <customLabels>
         <name>BatchProgressStatusQueued</name>
-        <label>Mis en file d&apos;attente</label>
+        <label>Mis en file d'attente</label>
     </customLabels>
     <customLabels>
         <name>BatchProgressStatusStopped</name>
@@ -246,7 +254,7 @@
     </customLabels>
     <customLabels>
         <name>BatchProgressTotalRecords</name>
-        <label>Nombre total d&apos;enregistrements :</label>
+        <label>Nombre total d'enregistrements :</label>
     </customLabels>
     <customLabels>
         <name>BatchProgressTotalRecordsProcessed</name>
@@ -282,7 +290,7 @@
     </customLabels>
     <customLabels>
         <name>CONV_All_Backed_Up</name>
-        <label>Mes données ont été sauvegardées à l’aide de l&apos;outil d’exportation de données dans Configuration | Gestion des données.</label>
+        <label>Mes données ont été sauvegardées à l’aide de l'outil d’exportation de données dans Configuration | Gestion des données.</label>
     </customLabels>
     <customLabels>
         <name>CONV_All_Dup_Rules_Disabled</name>
@@ -298,7 +306,7 @@
     </customLabels>
     <customLabels>
         <name>CONV_All_Triggers_Disabled</name>
-        <label>Tous les déclencheurs NPSP sont désactivés. REMARQUE : L&apos;outil ne désactive pas vos déclencheurs personnalisés. Vous devez désactiver manuellement les déclencheurs personnalisés avant de continuer.</label>
+        <label>Tous les déclencheurs NPSP sont désactivés. REMARQUE : L'outil ne désactive pas vos déclencheurs personnalisés. Vous devez désactiver manuellement les déclencheurs personnalisés avant de continuer.</label>
     </customLabels>
     <customLabels>
         <name>CONV_All_Users_Logged_Out</name>
@@ -350,11 +358,11 @@
     </customLabels>
     <customLabels>
         <name>CONV_Master_Address_Set</name>
-        <label>Définit l&apos;adresse du compte foyer. Utilise l&apos;adresse actuelle du foyer, si elle existe, ou l&apos;une des adresses de contact en fonction de la fréquence d&apos;utilisation ou du don de contact le plus élevé.</label>
+        <label>Définit l'adresse du compte foyer. Utilise l'adresse actuelle du foyer, si elle existe, ou l'une des adresses de contact en fonction de la fréquence d'utilisation ou du don de contact le plus élevé.</label>
     </customLabels>
     <customLabels>
         <name>CONV_New_Affiliations</name>
-        <label>Restructure les associations de contact et de compte organisation en créant des enregistrements d&apos;affiliation et définit le champ Affiliation principale sur Contact.</label>
+        <label>Restructure les associations de contact et de compte organisation en créant des enregistrements d'affiliation et définit le champ Affiliation principale sur Contact.</label>
     </customLabels>
     <customLabels>
         <name>CONV_New_Households_Created</name>
@@ -450,7 +458,7 @@
     </customLabels>
     <customLabels>
         <name>CMT_FilterGroupDeleteError</name>
-        <label>Vous ne pouvez pas supprimer ce groupe de filtres car au moins un cumul l&apos;utilise. Pour supprimer ce groupe de filtres, retirez-le des cumuls associés ou supprimez les cumuls.</label>
+        <label>Vous ne pouvez pas supprimer ce groupe de filtres car au moins un cumul l'utilise. Pour supprimer ce groupe de filtres, retirez-le des cumuls associés ou supprimez les cumuls.</label>
     </customLabels>
     <customLabels>
         <name>CMT_FilterGroupDescriptionHelpText</name>
@@ -466,7 +474,7 @@
     </customLabels>
     <customLabels>
         <name>CMT_FilterRulesHelpText</name>
-        <label>La liste des règles incluses dans ce groupe de filtres. Les règles de filtrage définissent les critères garantissant que vous n&apos;obtenez que les données dont vous avez besoin. N&apos;oubliez pas que les groupes de filtres utilisent des critères pour les règles de filtrage. Par conséquent, si les données ne correspondent pas à TOUTES les règles de filtrage dans un groupe de filtres, elles ne seront pas incluses dans le cumul.</label>
+        <label>La liste des règles incluses dans ce groupe de filtres. Les règles de filtrage définissent les critères garantissant que vous n'obtenez que les données dont vous avez besoin. N'oubliez pas que les groupes de filtres utilisent des critères pour les règles de filtrage. Par conséquent, si les données ne correspondent pas à TOUTES les règles de filtrage dans un groupe de filtres, elles ne seront pas incluses dans le cumul.</label>
     </customLabels>
     <customLabels>
         <name>CMT_FilterRulesValueHelpText</name>
@@ -514,7 +522,7 @@
     </customLabels>
     <customLabels>
         <name>CRLP_BatchSkipped</name>
-        <label>Le traitement par lots {0} planifié d’aujourd&apos;hui a été ignoré car une tâche {0} précédente était toujours en cours d’exécution. Le prochain traitement par lots sera exécuté comme prévu. Aucune action n’est requise, cette erreur est fournie uniquement à titre indicatif.</label>
+        <label>Le traitement par lots {0} planifié d’aujourd'hui a été ignoré car une tâche {0} précédente était toujours en cours d’exécution. Le prochain traitement par lots sera exécuté comme prévu. Aucune action n’est requise, cette erreur est fournie uniquement à titre indicatif.</label>
     </customLabels>
     <customLabels>
         <name>CRLP_CreateRollupIntroHelpText</name>
@@ -522,11 +530,11 @@
     </customLabels>
     <customLabels>
         <name>CRLP_CreateRollupTargetObjectHelpText</name>
-        <label>L&apos;objet détermine les champs cibles disponibles pour votre cumul de données de dons. Les objets cibles disponibles sont compte, contact, unité comptable générale et don régulier.</label>
+        <label>L'objet détermine les champs cibles disponibles pour votre cumul de données de dons. Les objets cibles disponibles sont compte, contact, unité comptable générale et don régulier.</label>
     </customLabels>
     <customLabels>
         <name>CRLP_CreateRollupTargetFieldHelpText</name>
-        <label>Champ personnalisé sur l&apos;objet cible sélectionné pour lequel vous cumulez des données de don. Notez qu&apos;un champ cible ne peut être associé qu&apos;à un seul cumul.</label>
+        <label>Champ personnalisé sur l'objet cible sélectionné pour lequel vous cumulez des données de don. Notez qu'un champ cible ne peut être associé qu'à un seul cumul.</label>
     </customLabels>
     <customLabels>
         <name>CRLP_CreateRollupActiveHelpText</name>
@@ -542,7 +550,7 @@
     </customLabels>
     <customLabels>
         <name>CRLP_CreateRollupTypeHelpText</name>
-        <label>Indique la combinaison de l&apos;objet à partir duquel vous cumulez des données et si le crédit est un crédit direct ou un crédit indirect.</label>
+        <label>Indique la combinaison de l'objet à partir duquel vous cumulez des données et si le crédit est un crédit direct ou un crédit indirect.</label>
     </customLabels>
     <customLabels>
         <name>CRLP_CreateRollupFilterGroupHelpText</name>
@@ -550,7 +558,7 @@
     </customLabels>
     <customLabels>
         <name>CRLP_CreateRollupOperationHelpText</name>
-        <label>Détermine la manière dont les données de don seront cumulées. S&apos;agit-il d&apos;une somme, d&apos;une moyenne ou du meilleur total de l&apos;année (pour n&apos;en nommer que quelques-uns) ? Les valeurs disponibles sont déterminées par le type du champ cible.</label>
+        <label>Détermine la manière dont les données de don seront cumulées. S'agit-il d'une somme, d'une moyenne ou du meilleur total de l'année (pour n'en nommer que quelques-uns) ? Les valeurs disponibles sont déterminées par le type du champ cible.</label>
     </customLabels>
     <customLabels>
         <name>CRLP_CreateRollupFiscalYearHelpText</name>
@@ -562,15 +570,15 @@
     </customLabels>
     <customLabels>
         <name>CRLP_CreateRollupYearsAgoHelpText</name>
-        <label>Choisissez le nombre d&apos;années pour lesquelles vous souhaitez cumuler les données. N&apos;oubliez pas que seules les données de cette année civile (ou fiscale) seront cumulées. Donc, si l&apos;année en cours est 2018 et que vous choisissez il y a 2 ans, la synthèse inclura les données pour 2016.</label>
+        <label>Choisissez le nombre d'années pour lesquelles vous souhaitez cumuler les données. N'oubliez pas que seules les données de cette année civile (ou fiscale) seront cumulées. Donc, si l'année en cours est 2018 et que vous choisissez il y a 2 ans, la synthèse inclura les données pour 2016.</label>
     </customLabels>
     <customLabels>
         <name>CRLP_CreateRollupDaysBackHelpText</name>
-        <label>Choisissez le nombre de jours (à compter d&apos;aujourd&apos;hui) pour lesquels vous souhaitez cumuler les données.</label>
+        <label>Choisissez le nombre de jours (à compter d'aujourd'hui) pour lesquels vous souhaitez cumuler les données.</label>
     </customLabels>
     <customLabels>
         <name>CRLP_CreateRollupDetailFieldHelpText</name>
-        <label>Le champ du résultat de l&apos;opération de cumul que vous souhaitez copier dans le champ cible. Disponible uniquement si l&apos;opération est une opération à résultat unique (Premier, Dernier, Plus grand ou Plus petit). Cette liste affiche uniquement les champs dont les types de champ sont compatibles avec le champ cible sélectionné.</label>
+        <label>Le champ du résultat de l'opération de cumul que vous souhaitez copier dans le champ cible. Disponible uniquement si l'opération est une opération à résultat unique (Premier, Dernier, Plus grand ou Plus petit). Cette liste affiche uniquement les champs dont les types de champ sont compatibles avec le champ cible sélectionné.</label>
     </customLabels>
     <customLabels>
         <name>CRLP_CreateRollupDateFieldHelpText</name>
@@ -610,7 +618,7 @@
     </customLabels>
     <customLabels>
         <name>CRLP_DisabledMessage</name>
-        <label>Vous n’avez pas activé les cumuls personnalisables. Pour plus d&apos;informations sur la manière de les activer, retournez aux paramètres NPSP.</label>
+        <label>Vous n’avez pas activé les cumuls personnalisables. Pour plus d'informations sur la manière de les activer, retournez aux paramètres NPSP.</label>
     </customLabels>
     <customLabels>
         <name>CRLP_DuplicateTargetField</name>
@@ -746,7 +754,7 @@
     </customLabels>
     <customLabels>
         <name>EPTaskTemplate</name>
-        <label>La tâche parente que vous avez sélectionnée appartient à un autre modèle de plan d&apos;engagement. Sélectionnez une tâche de plan d&apos;engagement faisant partie de ce modèle de plan d&apos;engagement.</label>
+        <label>La tâche parente que vous avez sélectionnée appartient à un autre modèle de plan d'engagement. Sélectionnez une tâche de plan d'engagement faisant partie de ce modèle de plan d'engagement.</label>
     </customLabels>
     <customLabels>
         <name>EPTo</name>
@@ -778,7 +786,7 @@
     </customLabels>
     <customLabels>
         <name>OCRRemovePrimaryDuplicateBatchErrorText</name>
-        <label>Impossible de supprimer les OCR principaux en double de l’opportunité {0}. Examinez les rôles de contacts de l’enregistrement d&apos;opportunité, choisissez celui qui convient et supprimez les autres.</label>
+        <label>Impossible de supprimer les OCR principaux en double de l’opportunité {0}. Examinez les rôles de contacts de l’enregistrement d'opportunité, choisissez celui qui convient et supprimez les autres.</label>
     </customLabels>
     <customLabels>
         <name>OrganizationalOpportunities</name>
@@ -814,11 +822,11 @@
     </customLabels>
     <customLabels>
         <name>RD2_ContactChangeIsRestricted</name>
-        <label>Vous ne pouvez pas changer le Compte de foyer ou Contact d&apos;un Don récurrent qui contient des opportunités fermées.</label>
+        <label>Vous ne pouvez pas changer le Compte de foyer ou Contact d'un Don récurrent qui contient des opportunités fermées.</label>
     </customLabels>
     <customLabels>
         <name>RD2_CurrencyChangeIsRestrictedOnOpp</name>
-        <label>Vous ne pouvez pas définir la devise de l&apos;opportunité sur une devise différente de celle du Don récurrent.</label>
+        <label>Vous ne pouvez pas définir la devise de l'opportunité sur une devise différente de celle du Don récurrent.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevatePaymentMethodChangeError</name>
@@ -826,7 +834,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_CurrencyChangeIsRestrictedOnRD</name>
-        <label>Vous ne pouvez pas changer la devise du Don récurrent lorsqu&apos;une opportunité fermée associée existe.</label>
+        <label>Vous ne pouvez pas changer la devise du Don récurrent lorsqu'une opportunité fermée associée existe.</label>
     </customLabels>
     <customLabels>
         <name>RD2_CurrentScheduleTitle</name>
@@ -842,15 +850,15 @@
     </customLabels>
     <customLabels>
         <name>RD2_DataMigrationInvalidOpenEndedStatus</name>
-        <label>Le statut de don récurrent sans date de fin « {0} » ne peut pas être converti au format Dons récurrents avancés. Vous devez utiliser l&apos;une des valeurs suivantes : Ouvert, Fermé ou Aucun.</label>
+        <label>Le statut de don récurrent sans date de fin « {0} » ne peut pas être converti au format Dons récurrents avancés. Vous devez utiliser l'une des valeurs suivantes : Ouvert, Fermé ou Aucun.</label>
     </customLabels>
     <customLabels>
         <name>RD2_DataMigrationInvalidPlannedInstallments</name>
-        <label>Lorsque le Statut sans date de fin est Fermé et que le Type de planification n&apos;est pas rempli, le Nombre de versements prévus doit être de 1.</label>
+        <label>Lorsque le Statut sans date de fin est Fermé et que le Type de planification n'est pas rempli, le Nombre de versements prévus doit être de 1.</label>
     </customLabels>
     <customLabels>
         <name>RD2_DayOfMonthMustBeValid</name>
-        <label>La valeur {0} n&apos;est pas prise en charge pour Jour du mois. Sélectionnez une valeur de 1 à 30 ou Dernier jour du mois.</label>
+        <label>La valeur {0} n'est pas prise en charge pour Jour du mois. Sélectionnez une valeur de 1 à 30 ou Dernier jour du mois.</label>
     </customLabels>
     <customLabels>
         <name>RD2_DayOfMonthIsRequiredForMonthlyInstallment</name>
@@ -869,20 +877,28 @@
         <label>Vous devez activer les dons récurrents avancés pour pouvoir traiter les dons récurrents.</label>
     </customLabels>
     <customLabels>
+        <name>RD2_PaidInstallments</name>
+        <label>Versements payés :</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_NextDonationDate</name>
+        <label>Date du prochain versement :</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_ElevateCancelInProgress</name>
         <label>Annulation du paiement récurrent en cours</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateDisableButtonLabel</name>
-        <label>Ne saisissez pas d&apos;informations de paiement.</label>
+        <label>Ne saisissez pas d'informations de paiement.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateDisabledHeader</name>
-        <label>Elevate n&apos;est pas activé pour votre organisation Salesforce</label>
+        <label>Elevate n'est pas activé pour votre organisation Salesforce</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateDisabledMessage</name>
-        <label>Vous ne saisissez pas d&apos;informations de paiement pour le traitement Elevate.</label>
+        <label>Vous ne saisissez pas d'informations de paiement pour le traitement Elevate.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateEnableButtonLabel</name>
@@ -897,12 +913,24 @@
         <label>Aucune erreur</label>
     </customLabels>
     <customLabels>
+        <name>RD2_ViewMoreDetails</name>
+        <label>Afficher plus de détails</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ViewLessDetails</name>
+        <label>Afficher moins de détails</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_ElevateNotSupported</name>
-        <label>Actuellement, cette fonctionnalité n&apos;est pas prise en charge pour des Dons récurrents générés à partir des Services de paiement Elevate.</label>
+        <label>Actuellement, cette fonctionnalité n'est pas prise en charge pour des Dons récurrents générés à partir des Services de paiement Elevate.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevatePendingStatus</name>
         <label>Processus Elevate en attente</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevatePermissionRequired</name>
+        <label>Gérez ce don récurrent dans Elevate.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRDAmountMustBeValid</name>
@@ -914,7 +942,11 @@
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRDClosedStatusCannotBeChanged</name>
-        <label>Nous ne pouvons pas mettre à jour le Statut d&apos;un don récurrent connecté Elevate lorsqu&apos;il est Fermé.</label>
+        <label>Nous ne pouvons pas mettre à jour le Statut d'un don récurrent connecté Elevate lorsqu'il est Fermé.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDCannotBeFixedLength</name>
+        <label>Un don récurrent lié à Elevate ne peut pas avoir le type de récurrence Fixe.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRDDayOfMonthCannotChange</name>
@@ -934,7 +966,23 @@
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRecordCreateFailed</name>
-        <label>Le paiement récurrent Elevate n&apos;a pas pu être créé. Contactez votre administrateur système pour obtenir une aide.</label>
+        <label>Le paiement récurrent Elevate n'a pas pu être créé. Contactez votre administrateur système pour obtenir une aide.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDCancellingTitle</name>
+        <label>Votre demande d’arrêt de don récurrent a été soumise.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDCancellingMessage</name>
+        <label>Cette opération peut prendre un certain temps. Actualisez la page pour vérifier le statut. Contactez-nous si vous avez besoin d’aide.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDStopDonationMessage</name>
+        <label>L’organisation sans but lucratif ne traitera aucun don futur pour ce don récurrent.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_NonElevateRDCancellingTitle</name>
+        <label>Votre don récurrent a été arrêté.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementDisabledHeader</name>
@@ -942,7 +990,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EnablementDisabledMessage</name>
-        <label>(1) Si vous n&apos;utilisez pas encore Lightning Experience, cliquez sur Basculer vers Lightning Experience en haut de votre écran.&lt;br/&gt;(2) Activez les Cumuls personnalisables en accédant à Paramètres NPSP | Dons | Cumuls personnalisables.&lt;br/&gt;&lt;br/&gt;Revenez ici pour accéder à la page Mettre à niveau vers les dons récurrents avancés.</label>
+        <label>(1) Si vous n'utilisez pas encore Lightning Experience, cliquez sur Basculer vers Lightning Experience en haut de votre écran.&lt;br/&gt;(2) Activez les Cumuls personnalisables en accédant à Paramètres NPSP | Dons | Cumuls personnalisables.&lt;br/&gt;&lt;br/&gt;Revenez ici pour accéder à la page Mettre à niveau vers les dons récurrents avancés.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementDryRunBatchTitle</name>
@@ -982,11 +1030,11 @@
     </customLabels>
     <customLabels>
         <name>RD2_EnablementDryRunIntro</name>
-        <label>NPSP simule la migration de vos données existantes vers le modèle Dons récurrents avancés et recherche la présence d&apos;erreurs. Si des erreurs sont détectées, accédez à Paramètres NPSP | Outils système | Journal des erreurs. Après avoir corrigé les erreurs, revenez ici et validez de nouveau la migration. Lorsque la validation ne renvoie aucune erreur, vous pouvez passer à l&apos;étape suivante.&lt;br/&gt;&lt;br/&gt;Le processus de validation peut être long. Vous pouvez quitter cette page et revenir plus tard pour suivre la progression.</label>
+        <label>NPSP simule la migration de vos données existantes vers le modèle Dons récurrents avancés et recherche la présence d'erreurs. Si des erreurs sont détectées, accédez à Paramètres NPSP | Outils système | Journal des erreurs. Après avoir corrigé les erreurs, revenez ici et validez de nouveau la migration. Lorsque la validation ne renvoie aucune erreur, vous pouvez passer à l'étape suivante.&lt;br/&gt;&lt;br/&gt;Le processus de validation peut être long. Vous pouvez quitter cette page et revenir plus tard pour suivre la progression.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementEnableConfirm</name>
-        <label>Je confirme que j&apos;ai effectué les tâches de préparation et de validation ci-dessus et que je suis prêt(e) à activer les Dons récurrents avancés.</label>
+        <label>Je confirme que j'ai effectué les tâches de préparation et de validation ci-dessus et que je suis prêt(e) à activer les Dons récurrents avancés.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementEnableIntro</name>
@@ -1010,13 +1058,13 @@
     </customLabels>
     <customLabels>
         <name>RD2_EnablementIncomplete</name>
-        <label>Vous ne pouvez pas créer ou mettre à jour des Dons récurrents, car vous n&apos;avez pas terminé l&apos;activation des Dons récurrents avancés. Accédez à Paramètres NPSP | Dons récurrents | Mettre à jour vers les Dons récurrents avancés, puis complétez toutes les étapes d&apos;activation.</label>
+        <label>Vous ne pouvez pas créer ou mettre à jour des Dons récurrents, car vous n'avez pas terminé l'activation des Dons récurrents avancés. Accédez à Paramètres NPSP | Dons récurrents | Mettre à jour vers les Dons récurrents avancés, puis complétez toutes les étapes d'activation.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementIntro</name>
         <label>Bienvenue ! Les Dons récurrents avancés améliorent la fonctionnalité Dons récurrents de NPSP (Nonprofit Success Pack). Un grand merci aux membres de notre communauté qui ont contribué aux Dons récurrents avancés par leurs avis et conseils éclairés.
         &lt;br/&gt;&lt;br/&gt;Comme NPSP contient déjà une fonctionnalité Dons récurrents, vous devez exécuter plusieurs tâches de mise à niveau et déplacer vos données existantes vers le modèle Dons récurrents avancés. Nous présentons ci-dessous la procédure à suivre.
-        &lt;br/&gt;&lt;br/&gt;Pour vous aider à préparer chaque étape et répondre à toutes vos questions, nous mettons à votre disposition une &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentation sur les Dons récurrents avancés&lt;/a&gt; que vous pouvez suivre pendant tout le processus de mise à niveau.</label>
+        &lt;br/&gt;&lt;br/&gt;Pour vous aider à préparer chaque étape et répondre à toutes vos questions, nous mettons à votre disposition une &lt;a href="https://powerofus.force.com/NPSP_Recurring_Donations" target="_blank"&gt;documentation sur les Dons récurrents avancés&lt;/a&gt; que vous pouvez suivre pendant tout le processus de mise à niveau.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMetaDeployConfirm</name>
@@ -1024,7 +1072,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMetaDeployConfirmError</name>
-        <label>Vous n&apos;avez pas encore installé les métadonnées Dons récurrents avancés. Cliquez sur Lancer MetaDeploy et suivez les instructions.</label>
+        <label>Vous n'avez pas encore installé les métadonnées Dons récurrents avancés. Cliquez sur Lancer MetaDeploy et suivez les instructions.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMetaDeployIntro</name>
@@ -1064,7 +1112,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationErrorMessage</name>
-        <label>L&apos;exécution de votre migration a généré des erreurs qui doivent être corrigées pour réussir la migration. Vous pouvez consulter les erreurs dans Paramètres NPSP &gt; Outils système &gt; Journal des erreurs. Pour obtenir une aide, consultez la documentation&lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;&lt;/a&gt;. Corrigez les erreurs, puis revenez et réessayez.</label>
+        <label>L'exécution de votre migration a généré des erreurs qui doivent être corrigées pour réussir la migration. Vous pouvez consulter les erreurs dans Paramètres NPSP &gt; Outils système &gt; Journal des erreurs. Pour obtenir une aide, consultez la documentation&lt;a href="https://powerofus.force.com/NPSP_Recurring_Donations" target="_blank"&gt;&lt;/a&gt;. Corrigez les erreurs, puis revenez et réessayez.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationIntro</name>
@@ -1092,7 +1140,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationWarning</name>
-        <label>&lt;b&gt;AVERTISSEMENT : L&apos;exécution de la migration modifie les données existantes des Dons récurrents pour les adapter au modèle Dons récurrents avancés. Faites une sauvegarde de votre base de données si ce n&apos;est déjà fait.&lt;/b&gt;</label>
+        <label>&lt;b&gt;AVERTISSEMENT : L'exécution de la migration modifie les données existantes des Dons récurrents pour les adapter au modèle Dons récurrents avancés. Faites une sauvegarde de votre base de données si ce n'est déjà fait.&lt;/b&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementPermissionRequired</name>
@@ -1106,7 +1154,7 @@
         <name>RD2_EnablementPrepTasks</name>
         <label>&lt;ul&gt;&lt;li&gt;Désactivez les workflows, processus, règles de validation et déclencheurs dans les objets Dons récurrents, Opportunité et Paiement.&lt;/li&gt;
 &lt;li&gt;Sauvegardez votre base de données, notamment tous les dons récurrents et leurs enregistrements associés.&lt;/li&gt;
-&lt;li&gt;Lisez la &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt; sur les dons récurrents avancés.&lt;/li&gt;&lt;/ul&gt;</label>
+&lt;li&gt;Lisez la &lt;a href="https://powerofus.force.com/NPSP_Recurring_Donations" target="_blank"&gt;documentation&lt;/a&gt; sur les dons récurrents avancés.&lt;/li&gt;&lt;/ul&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementPrepTitle</name>
@@ -1116,7 +1164,7 @@
         <name>RD2_EnablementSimpleIntro</name>
         <label>Les dons récurrents avancés rendent les dons récurrents plus flexibles et plus faciles à gérer que jamais. Pour activer les dons récurrents avancés, suivez les étapes ci-dessous. Vous devez suivre TOUTES les étapes pour activer complètement les dons récurrents avancés.
         &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Étant donné que vous n’avez aucun enregistrement de don récurrent, vous n’avez pas besoin de valider ou de migrer de données.&lt;/b&gt;
-        &lt;br/&gt;&lt;br/&gt;Pour plus d’informations, consultez la &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentation sur les dons récurrents avancés&lt;/a&gt;.</label>
+        &lt;br/&gt;&lt;br/&gt;Pour plus d’informations, consultez la &lt;a href="https://powerofus.force.com/NPSP_Recurring_Donations" target="_blank"&gt;documentation sur les dons récurrents avancés&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EndDateMustBeLaterThanCloseWonOpp</name>
@@ -1200,7 +1248,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormSaveCommitmentMessage</name>
-        <label>Enregistrement d&apos;un paiement récurrent Elevate... Cette opération peut prendre quelques minutes.</label>
+        <label>Enregistrement d'un paiement récurrent Elevate... Cette opération peut prendre quelques minutes.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormSaveCommitmentFailedMessage</name>
@@ -1214,6 +1262,30 @@
     <customLabels>
         <name>RD2_EntryFormSaveACHMessage</name>
         <label>Envoi des informations CCA à Elevate...</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ACH_Payment_Method_Label</name>
+        <label>Compte bancaire</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Payment_Method</name>
+        <label>Mode de paiement</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Payment_method_was_updated</name>
+        <label>Le mode de paiement a été mis à jour.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Recurring_Donation_was_updated</name>
+        <label>Le don récurrent a été mis à jour.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Payment_Details</name>
+        <label>Détails du paiement</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Credit_Card_Payment_Method_Label</name>
+        <label>Carte de crédit</label>
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormSaveCreditCardValidationMessage</name>
@@ -1237,15 +1309,15 @@
     </customLabels>
     <customLabels>
         <name>RD2_ErrorDataMigrationJobCannotBeRun</name>
-        <label>Vous devez activer les Dons récurrents avancés avant d&apos;exécuter la tâche de Migration des données des dons récurrents avancés.</label>
+        <label>Vous devez activer les Dons récurrents avancés avant d'exécuter la tâche de Migration des données des dons récurrents avancés.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ErrorEnhancedRDBatchJobCannotBeRun</name>
-        <label>Vous devez activer les Dons récurrents avancés avant d&apos;exécuter la tâche par lots des Dons récurrents avancés.</label>
+        <label>Vous devez activer les Dons récurrents avancés avant d'exécuter la tâche par lots des Dons récurrents avancés.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ErrorRDIdIsMissingForCommitment</name>
-        <label>Une erreur a été rencontrée lors de la création de l&apos;enregistrement Don récurrent. Aucune demande de paiement récurrente n&apos;a été envoyée à Elevate. Contactez votre administrateur système pour obtenir une aide.</label>
+        <label>Une erreur a été rencontrée lors de la création de l'enregistrement Don récurrent. Aucune demande de paiement récurrente n'a été envoyée à Elevate. Contactez votre administrateur système pour obtenir une aide.</label>
     </customLabels>
     <customLabels>
         <name>RD2_InstallmentFrequencyMustBeValid</name>
@@ -1257,7 +1329,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_InstallmentPeriodMustBeValid</name>
-        <label>{0} n&apos;est pas une valeur prise en charge pour la Période de versement. Sélectionnez Quotidienne, Hebdomadaire, 1er et 15e jour du mois, Mensuelle ou Annuelle.</label>
+        <label>{0} n'est pas une valeur prise en charge pour la Période de versement. Sélectionnez Quotidienne, Hebdomadaire, 1er et 15e jour du mois, Mensuelle ou Annuelle.</label>
     </customLabels>
     <customLabels>
         <name>RD2_InstallmentStatusSkipped</name>
@@ -1293,11 +1365,11 @@
     </customLabels>
     <customLabels>
         <name>RD2_PageNotAvailableMessage</name>
-        <label>Cette page n&apos;est pas disponible dans les Dons récurrents avancés. Actualisez votre navigateur et revenez aux Paramètres NPSP.</label>
+        <label>Cette page n'est pas disponible dans les Dons récurrents avancés. Actualisez votre navigateur et revenez aux Paramètres NPSP.</label>
     </customLabels>
     <customLabels>
         <name>RD2_PauseCannotExistOnScheduleChange</name>
-        <label>Vous ne pouvez pas mettre à jour le ou les champs suivants, car ce Don récurrent est interrompu : {0}. Si vous souhaitez mettre ce ou ces champs à jour, vous devez désactiver l&apos;interruption.</label>
+        <label>Vous ne pouvez pas mettre à jour le ou les champs suivants, car ce Don récurrent est interrompu : {0}. Si vous souhaitez mettre ce ou ces champs à jour, vous devez désactiver l'interruption.</label>
     </customLabels>
     <customLabels>
         <name>RD2_PauseClosedRDErrorMessage</name>
@@ -1305,7 +1377,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_PauseDeactivationSuccessMessage</name>
-        <label>L&apos;interruption {0} a été retirée.</label>
+        <label>L'interruption {0} a été retirée.</label>
     </customLabels>
     <customLabels>
         <name>RD2_PauseDescription</name>
@@ -1317,7 +1389,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_PausedReasonLabel</name>
-        <label>Motif de l&apos;interruption</label>
+        <label>Motif de l'interruption</label>
     </customLabels>
     <customLabels>
         <name>RD2_PauseEndDateCannotBeMoreThanTwelveMonths</name>
@@ -1337,7 +1409,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_PauseSaveSuccessMessage</name>
-        <label>L&apos;interruption {0} a été enregistrée.</label>
+        <label>L'interruption {0} a été enregistrée.</label>
     </customLabels>
     <customLabels>
         <name>RD2_PauseSelectedInstallmentTextPlural</name>
@@ -1357,7 +1429,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_PauseStatusMustExist</name>
-        <label>NPSP ne peut pas mettre à jour le Statut et le Motif du statut dans des Dons récurrents interrompus. Vous devez ajouter la valeur de liste de sélection &apos;Interrompu&apos; au champ Statut.</label>
+        <label>NPSP ne peut pas mettre à jour le Statut et le Motif du statut dans des Dons récurrents interrompus. Vous devez ajouter la valeur de liste de sélection 'Interrompu' au champ Statut.</label>
     </customLabels>
     <customLabels>
         <name>RD2_PaymentInformation</name>
@@ -1381,7 +1453,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_ScheduleVisualizerErrorEnhancedRDNot</name>
-        <label>Ce composant doit être utilisé dans une page d&apos;enregistrement Dons récurrents.</label>
+        <label>Ce composant doit être utilisé dans une page d'enregistrement Dons récurrents.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ScheduleVisualizerErrorInvalidUsage</name>
@@ -1389,19 +1461,19 @@
     </customLabels>
     <customLabels>
         <name>RD2_ScheduleVisualizerFLSInstallment</name>
-        <label>Vous n’êtes pas autorisé à afficher les Prochains versements. Pour plus d&apos;informations, contactez votre administrateur système.</label>
+        <label>Vous n’êtes pas autorisé à afficher les Prochains versements. Pour plus d'informations, contactez votre administrateur système.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ScheduleVisualizerFLSSchedule</name>
-        <label>Vous n’êtes pas autorisé à afficher les Calendriers actifs. Pour plus d&apos;informations, contactez votre administrateur système.</label>
+        <label>Vous n’êtes pas autorisé à afficher les Calendriers actifs. Pour plus d'informations, contactez votre administrateur système.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ScheduleVisualizerMessageNoSchedule</name>
-        <label>Aucune opportunité de versement n&apos;est prévue.</label>
+        <label>Aucune opportunité de versement n'est prévue.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ScheduleVisualizerMessageNoActiveSchedule</name>
-        <label>Aucun calendrier actif n&apos;existe pour ce Don récurrent.</label>
+        <label>Aucun calendrier actif n'existe pour ce Don récurrent.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ScheduleVisualizerTitle</name>
@@ -1425,7 +1497,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationIntro</name>
-        <label>Ces paramètres automatisent la modification du statut de don récurrent lorsque les donateurs manquent des versements.&lt;br/&gt;&lt;br/&gt; Prenons l’exemple d’un don mensuel récurrent ayant commencé le 1er février dont le nombre de jours correspondant à la valeur Écoulé est défini sur 10. Le don récurrent devient écoulé le 12 février si aucun versement n’est reçu d’ici là. Si le nombre de jours correspondant à la valeur Fermé est défini sur 20, le don récurrent devient fermé le 22 février.&lt;br/&gt;&lt;br/&gt; Salesforce commence à comptabiliser le nombre de jours correspondant aux valeurs Écoulé et Fermé le lendemain de la date de versement prévue (le 2 février dans notre exemple).</label>
+        <label>Ces paramètres automatisent la modification du statut de don récurrent lorsque les donateurs manquent des versements.&lt;br/&gt;&lt;br/&gt; Prenons l’exemple d’un don mensuel récurrent ayant commencé le 1er février dont le nombre de jours correspondant à la valeur Écoulé est défini sur 10. Le don récurrent prend le statut Écoulé le 12 février si aucun versement n’est reçu d’ici là. Si le nombre de jours correspondant à la valeur Fermé est défini sur 20, le don récurrent prend le statut Fermé le 22 février.&lt;br/&gt;&lt;br/&gt; Salesforce commence à comptabiliser le nombre de jours correspondant aux valeurs Écoulé et Fermé le lendemain de la date de versement prévue (le 2 février dans notre exemple).</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationInvalidClosedStatus</name>
@@ -1469,7 +1541,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_StatusMappingColumnStatusAPIName</name>
-        <label>Nom d&apos;API</label>
+        <label>Nom d'API</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusMappingDefinitions</name>
@@ -1543,6 +1615,74 @@
         <label>Récurrent</label>
     </customLabels>
     <customLabels>
+        <name>RD_achElevatePayment</name>
+        <label>{0}, *{1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_creditCardElevatePayment</name>
+        <label>{0}, *{1} Exp. {2}/{3}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_firstDonation</name>
+        <label>Premier don</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_finalDonation</name>
+        <label>Dernier don</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_firstOrdinalNumber</name>
+        <label>premier</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyOnThePeriod</name>
+        <label>Le {0}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyPeriodOnTheDayOfTheMonth</name>
+        <label>{0}, le {1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyYearly</name>
+        <label>Tous les {0} ans</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyMonthly</name>
+        <label>Tous les {0} mois, le {1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyWeekly</name>
+        <label>Toutes les {0} semaines</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyFirstAndFifteenth</name>
+        <label>Tou(te)s les {0} {1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_lastModified</name>
+        <label>Dernière modification</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_mostRecentDonation</name>
+        <label>Don le plus récent</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_nextDonation</name>
+        <label>Prochain don</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_otherOrdinalNumber</name>
+        <label>e</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_secondOrdinalNumber</name>
+        <label>e</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_thirdOrdinalNumber</name>
+        <label>e</label>
+    </customLabels>
+    <customLabels>
         <name>RD_ContactMustBelongToAccount</name>
         <label>Vous devez sélectionner un Contact associé à ce Compte de foyer.</label>
     </customLabels>
@@ -1556,7 +1696,7 @@
     </customLabels>
     <customLabels>
         <name>RD_ErrorAddDonationLimitedToLegacyMode</name>
-        <label>Le bouton Actualiser les opportunités n&apos;a aucune fonction dans les Dons récurrents avancés. Demandez à votre administrateur de retirer ce bouton des présentations de page Dons récurrents.</label>
+        <label>Le bouton Actualiser les opportunités n'a aucune fonction dans les Dons récurrents avancés. Demandez à votre administrateur de retirer ce bouton des présentations de page Dons récurrents.</label>
     </customLabels>
     <customLabels>
         <name>RD_ErrorAddDonationMissingId</name>
@@ -1576,7 +1716,7 @@
     </customLabels>
     <customLabels>
         <name>RD_ErrorNotEnoughClosedValueForFixedLength</name>
-        <label>Le montant combiné de toutes les opportunités Clôturées/Gagnées et Promises associées doit correspondre au montant d&apos;un don régulier de longueur fixe.</label>
+        <label>Le montant combiné de toutes les opportunités Clôturées/Gagnées et Promises associées doit correspondre au montant d'un don régulier de longueur fixe.</label>
     </customLabels>
     <customLabels>
         <name>RD_RefreshOppsContinueMessage</name>
@@ -1665,7 +1805,7 @@
     </customLabels>
     <customLabels>
         <name>RP_SubTitle</name>
-        <label>Vous avez maintenant accès à TOUTES les puissantes fonctionnalités de Salesforce Enterprise Edition. Vous pouvez également mieux gérer les donateurs avec l&apos;application Nonprofit Success Pack. Commençons sans plus tarder.</label>
+        <label>Vous avez maintenant accès à TOUTES les puissantes fonctionnalités de Salesforce Enterprise Edition. Vous pouvez également mieux gérer les donateurs avec l'application Nonprofit Success Pack. Commençons sans plus tarder.</label>
     </customLabels>
     <customLabels>
         <name>RP_Title</name>
@@ -1685,7 +1825,7 @@
     </customLabels>
     <customLabels>
         <name>RP_USParagraph</name>
-        <label>Obtenez l&apos;aide de notre communauté active d&apos;utilisateurs NPSP ou contactez Salesforce.org.</label>
+        <label>Obtenez l'aide de notre communauté active d'utilisateurs NPSP ou contactez Salesforce.org.</label>
     </customLabels>
     <customLabels>
         <name>RP_UsHubLinkLabel</name>
@@ -1705,7 +1845,7 @@
     </customLabels>
     <customLabels>
         <name>RP_YoutubeChannel</name>
-        <label>Plus d&apos;informations sur notre chaîne YouTube &gt;</label>
+        <label>Plus d'informations sur notre chaîne YouTube &gt;</label>
     </customLabels>
     <customLabels>
         <name>RecurringDonationAccountAndContactError</name>
@@ -1749,11 +1889,11 @@
     </customLabels>
     <customLabels>
         <name>adapterException</name>
-        <label>Appel non valide. Cette fonction est réservée à l&apos;usage de Salesforce.</label>
+        <label>Appel non valide. Cette fonction est réservée à l'usage de Salesforce.</label>
     </customLabels>
     <customLabels>
         <name>addrCiceroMissingAPIKey</name>
-        <label>Vous devez spécifier la clé de l&apos;API Cicero dans le champ jeton d&apos;autorisation pour la vérification de l&apos;adresse. Connectez-vous à Salesforce et accédez à Contacts | Adresses sur la page Paramètres NPSP.</label>
+        <label>Vous devez spécifier la clé de l'API Cicero dans le champ jeton d'autorisation pour la vérification de l'adresse. Connectez-vous à Salesforce et accédez à Contacts | Adresses sur la page Paramètres NPSP.</label>
     </customLabels>
     <customLabels>
         <name>addrCopyConAddBtnConfirm</name>
@@ -1765,7 +1905,7 @@
     </customLabels>
     <customLabels>
         <name>addrCopyConAddBtnHHObjOnly</name>
-        <label>Le bouton Copier l&apos;adresse dans le foyer ne fonctionne qu&apos;avec les contacts associés à un objet de foyer.</label>
+        <label>Le bouton Copier l'adresse dans le foyer ne fonctionne qu'avec les contacts associés à un objet de foyer.</label>
     </customLabels>
     <customLabels>
         <name>addrGeneralSettings</name>
@@ -1801,17 +1941,17 @@
     </customLabels>
     <customLabels>
         <name>alloBatchCreateDefault</name>
-        <label>Création par lots d’allocations par défaut</label>
+        <label>Création par lots d’affectations par défaut</label>
     </customLabels>
     <customLabels>
         <name>alloBatchDefaultInfo</name>
-        <label>Cet utilitaire exécute un processus par lots qui crée des allocations par défaut pour toutes les opportunités existantes, sauf les opportunités exclues dans les paramètres de cumul d’allocations UCG.
+        <label>Cet utilitaire exécute un processus par lots qui crée des affectations par défaut pour toutes les opportunités existantes, sauf les opportunités exclues dans les paramètres de cumul d’affectations UCG.
 &lt;br/&gt;
 &lt;br/&gt;
-Pour exécuter cet utilitaire, les allocations par défaut doivent être activées et une unité comptable générale par défaut doit être sélectionnée. Vous n’avez besoin d’exécuter cet utilitaire qu’une seule fois après avoir activé les allocations par défaut, puisque toutes les nouvelles opportunités recevront une allocation par défaut après l’activation.
+Pour exécuter cet utilitaire, les affectations par défaut doivent être activées et une unité comptable générale par défaut doit être sélectionnée. Vous n’avez besoin d’exécuter cet utilitaire qu’une seule fois après avoir activé les affectations par défaut, puisque toutes les nouvelles opportunités recevront une affectation par défaut après l’activation.
 &lt;br/&gt;
 &lt;br/&gt;
-Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocations UCG.</label>
+Pour vérifier vos paramètres d’affectations UCG, accédez à Dons | Affectations UCG.</label>
     </customLabels>
     <customLabels>
         <name>alloBtnCancel</name>
@@ -1823,15 +1963,15 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>alloCampaignExceedsOppAmount</name>
-        <label>Vos allocations de campagne n’ont pas été créées. Les allocations de campagne pour l’opportunité ont dépassé le montant de l’opportunité.</label>
+        <label>Vos affectations de campagne n’ont pas été créées. Les affectations de campagne pour l’opportunité ont dépassé le montant de l’opportunité.</label>
     </customLabels>
     <customLabels>
         <name>alloCantAllocateNothing</name>
-        <label>Vous ne pouvez créer des allocations que pour les opportunités ayant un montant positif.</label>
+        <label>Vous ne pouvez créer des affectations que pour les opportunités ayant un montant positif.</label>
     </customLabels>
     <customLabels>
         <name>alloDefaultGAUMissing</name>
-        <label>Vous avez activé les allocations par défaut. Vous devez aussi sélectionner une unité comptable générale par défaut.</label>
+        <label>Vous avez activé les affectations par défaut. Vous devez aussi sélectionner une unité comptable générale par défaut.</label>
     </customLabels>
     <customLabels>
         <name>alloDefaultGAUNotActive</name>
@@ -1839,11 +1979,11 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>alloDefaultNotEnabled</name>
-        <label>Vous devez activer les allocations par défaut afin d’allouer au niveau du paiement.</label>
+        <label>Vous devez activer les affectations par défaut afin d’allouer au niveau du paiement.</label>
     </customLabels>
     <customLabels>
         <name>alloDefaultNotPercent</name>
-        <label>L’allocation par défaut ne peut pas être basée sur un pourcentage.</label>
+        <label>L’affectation par défaut ne peut pas être basée sur un pourcentage.</label>
     </customLabels>
     <customLabels>
         <name>alloDeleteRow</name>
@@ -1851,31 +1991,31 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>alloExceedsOppAmount</name>
-        <label>Vous devez mettre à jour vos allocations avant de pouvoir réduire le montant d’une opportunité. Les allocations pour cette opportunité sont actuellement plus élevées que le montant de l’opportunité.</label>
+        <label>Vous devez mettre à jour vos affectations avant de pouvoir réduire le montant d’une opportunité. Les affectations pour cette opportunité sont actuellement plus élevées que le montant de l’opportunité.</label>
     </customLabels>
     <customLabels>
         <name>alloExceedsPmtAmount</name>
-        <label>Les allocations pour ce paiement sont actuellement plus élevées que le montant du paiement. Vous devez mettre à jour les montants de vos allocations, puis ajuster le montant du paiement.</label>
+        <label>Les affectations pour ce paiement sont actuellement plus élevées que le montant du paiement. Vous devez mettre à jour les montants de vos affectations, puis ajuster le montant du paiement.</label>
     </customLabels>
     <customLabels>
         <name>alloManageCampaignAllocations</name>
-        <label>Gérer des allocations de campagne</label>
+        <label>Gérer des affectations de campagne</label>
     </customLabels>
     <customLabels>
         <name>alloManageOppAllocations</name>
-        <label>Gérer des allocations d’opportunité</label>
+        <label>Gérer des affectations d’opportunité</label>
     </customLabels>
     <customLabels>
         <name>alloManagePaymentAllocations</name>
-        <label>Gérer des allocations de paiement</label>
+        <label>Gérer des affectations de paiement</label>
     </customLabels>
     <customLabels>
         <name>alloManageRecurringDonationAllocations</name>
-        <label>Gérer des allocations de don régulier</label>
+        <label>Gérer des affectations de don régulier</label>
     </customLabels>
     <customLabels>
         <name>alloModifyCurrency</name>
-        <label>Vous ne pouvez pas modifier directement les devises des allocations. La devise d’une allocation est mise à jour lorsque la devise de l’opportunité, campagne ou don régulier parent est modifiée.</label>
+        <label>Vous ne pouvez pas modifier directement les devises des affectations. La devise d’une affectation est mise à jour lorsque la devise de l’opportunité, campagne ou don régulier parent est modifiée.</label>
     </customLabels>
     <customLabels>
         <name>alloNegativeAmount</name>
@@ -1887,19 +2027,19 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>alloObjectUnsupported</name>
-        <label>Le bouton Gérer des allocations est uniquement pris en charge depuis un enregistrement de campagne, opportunité, paiement ou don régulier.</label>
+        <label>Le bouton Gérer des affectations est uniquement pris en charge depuis un enregistrement de campagne, opportunité, paiement ou don régulier.</label>
     </customLabels>
     <customLabels>
         <name>alloOverallocatedError</name>
-        <label>Le total des Allocations de {0} dépasse son Montant. Mettez à jour les Allocations {0} pour que leur total soit égal au Montant {0}.</label>
+        <label>Le total des Affectations de {0} dépasse son Montant. Mettez à jour les Affectations {0} pour que leur total soit égal au Montant {0}.</label>
     </customLabels>
     <customLabels>
         <name>alloPaidPmtsExceedsOpp</name>
-        <label>Le total des allocations des paiements payés ne peut pas être supérieur à l’allocation de l’opportunité pour une UCG.</label>
+        <label>Le total des affectations des paiements payés ne peut pas être supérieur à l’affectation de l’opportunité pour une UCG.</label>
     </customLabels>
     <customLabels>
         <name>alloPaymentAllocationBatchAllocationError</name>
-        <label>Une erreur s’est produite lors du traitement de l’enregistrement {0} associé à l’Allocation {1} ({2}). Détails : {3}</label>
+        <label>Une erreur s’est produite lors du traitement de l’enregistrement {0} associé à l’Affectation {1} ({2}). Détails : {3}</label>
     </customLabels>
     <customLabels>
         <name>alloPaymentAllocationBatchRecordError</name>
@@ -1911,19 +2051,19 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>alloPaymentNotEnabled</name>
-        <label>Les allocations au niveau du paiement ne sont pas activées pour votre organisation. Allouez-les plutôt au niveau de l’opportunité.</label>
+        <label>Les affectations au niveau du paiement ne sont pas activées pour votre organisation. Allouez-les plutôt au niveau de l’opportunité.</label>
     </customLabels>
     <customLabels>
         <name>alloPaymentOverallocatedError</name>
-        <label>Le montant alloué est supérieur au montant du paiement. Mettez à jour le(s) montant(s) de l’allocation de paiement pour que le total soit égal au montant du paiement. Voir opportunité « {0}, Id : {1} »</label>
+        <label>Le montant alloué est supérieur au montant du paiement. Mettez à jour le(s) montant(s) de l’affectation de paiement pour que le total soit égal au montant du paiement. Voir opportunité « {0}, Id : {1} »</label>
     </customLabels>
     <customLabels>
         <name>alloPercentExceed100</name>
-        <label>Les allocations par pourcentage ne peuvent pas dépasser 100 %.</label>
+        <label>Les affectations par pourcentage ne peuvent pas dépasser 100 %.</label>
     </customLabels>
     <customLabels>
         <name>alloPmtOppSingleTransaction</name>
-        <label>Les allocations de paiement et d&apos;opportunité pour le même enregistrement d’opportunité ne peuvent pas être créées ou modifiées au même moment.</label>
+        <label>Les affectations de paiement et d'opportunité pour le même enregistrement d’opportunité ne peuvent pas être créées ou modifiées au même moment.</label>
     </customLabels>
     <customLabels>
         <name>alloRemainder</name>
@@ -1931,23 +2071,23 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>alloRemoveOppWithPmt</name>
-        <label>Vous ne pouvez pas supprimer une allocation d&apos;opportunité pour une UCG qui a payé les allocations de paiement.</label>
+        <label>Vous ne pouvez pas supprimer une affectation d'opportunité pour une UCG qui a payé les affectations de paiement.</label>
     </customLabels>
     <customLabels>
         <name>alloSignMistmatch</name>
-        <label>Les allocations négatives sont autorisées uniquement dans les dons négatifs et les allocations positives ne sont pas autorisées dans les dons négatifs.</label>
+        <label>Les affectations négatives sont autorisées uniquement dans les dons négatifs et les affectations positives ne sont pas autorisées dans les dons négatifs.</label>
     </customLabels>
     <customLabels>
         <name>alloSingleParent</name>
-        <label>Chaque allocation doit avoir un objet parent unique : paiement, opportunité, don régulier ou campagne.</label>
+        <label>Chaque affectation doit avoir un objet parent unique : paiement, opportunité, don régulier ou campagne.</label>
     </customLabels>
     <customLabels>
         <name>alloSuccessfulRecordRetry</name>
-        <label>Le traitement de ces Allocations a été effectué à nouveau et s’est terminé correctement.</label>
+        <label>Le traitement de ces Affectations a été effectué à nouveau et s’est terminé correctement.</label>
     </customLabels>
     <customLabels>
         <name>alloTotalExceedsOppAmt</name>
-        <label>Les totaux d’allocation d’une opportunité ne peuvent pas dépasser le montant de l’opportunité ou du paiement associé.</label>
+        <label>Les totaux d’affectation d’une opportunité ne peuvent pas dépasser le montant de l’opportunité ou du paiement associé.</label>
     </customLabels>
     <customLabels>
         <name>alloTotals</name>
@@ -1974,12 +2114,20 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <label>Retrait de la Saisie de données par lots</label>
     </customLabels>
     <customLabels>
+        <name>bdiAPIBatchError</name>
+        <label>Nous n’avons pas pu traiter les enregistrements d’importation de données en raison des erreurs suivantes :</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiAPISelectedError</name>
+        <label>Nous n’avons pas pu traiter les enregistrements d’importation de données sélectionnés en raison des erreurs suivantes :</label>
+    </customLabels>
+    <customLabels>
         <name>bdiAccountCustomIdError</name>
         <label>Le champ de paramètre d’ID unique personnalisé de compte {0} doit avoir des champs correspondants dans l’objet d’importation de données NPSP dont les noms d’API sont {1} et {2}.</label>
     </customLabels>
     <customLabels>
         <name>bdiAdditionalObjChildNotUpdated</name>
-        <label>Impossible de mettre à jour le champ de référence de cet enregistrement enfant avec l&apos;ID de l&apos;enregistrement parent. L&apos;enregistrement n&apos;a pas pu être mis à jour en raison de cette erreur système :</label>
+        <label>Impossible de mettre à jour le champ de référence de cet enregistrement enfant avec l'ID de l'enregistrement parent. L'enregistrement n'a pas pu être mis à jour en raison de cette erreur système :</label>
     </customLabels>
     <customLabels>
         <name>bdiAdditionalObjPredNotFound</name>
@@ -2007,7 +2155,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bdiBehaviorExactMatchOrCreate</name>
-        <label>Correspondance unique ou Créer - Importer si un enregistrement unique existe. Créer si aucune correspondance unique n&apos;existe.</label>
+        <label>Correspondance unique ou Créer - Importer si un enregistrement unique existe. Créer si aucune correspondance unique n'existe.</label>
     </customLabels>
     <customLabels>
         <name>bdiBehaviorRequireBestMatch</name>
@@ -2036,6 +2184,10 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     <customLabels>
         <name>bdiContactCustomIdError</name>
         <label>Le champ de paramètre d’ID unique personnalisé de contact {0} doit avoir des champs correspondants dans l’objet d’importation de données NPSP dont les noms d’API sont {1} et {2}.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiContactMatchDupeMgmt</name>
+        <label>Règles de duplication de contact</label>
     </customLabels>
     <customLabels>
         <name>bdiContactMatchEmail</name>
@@ -2075,7 +2227,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bdiDataImporterInfoLine1</name>
-        <label>Si vous utilisez le Mappage avancé, vous pouvez mapper n&apos;importe quel objet et champ Salesforce, standard ou personnalisé, directement associé à des Contacts, des Comptes et des Opportunités. Avec le mappage Texte d&apos;aide, chaque enregistrement d&apos;importation peut contenir jusqu&apos;à 2 contacts, 2 organisations, une Adresse de domicile facultative et un Don facultatif.</label>
+        <label>Si vous utilisez le Mappage avancé, vous pouvez mapper n'importe quel objet et champ Salesforce, standard ou personnalisé, directement associé à des Contacts, des Comptes et des Opportunités. Avec le mappage Texte d'aide, chaque enregistrement d'importation peut contenir jusqu'à 2 contacts, 2 organisations, une Adresse de domicile facultative et un Don facultatif.</label>
     </customLabels>
     <customLabels>
         <name>bdiDataImporterInfoLine2</name>
@@ -2107,7 +2259,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bdiDeploymentInProgress</name>
-        <label>Les mappages Texte d&apos;aide sont actuellement convertis vers le Mappage avancé.</label>
+        <label>Les mappages Texte d'aide sont actuellement convertis vers le Mappage avancé.</label>
     </customLabels>
     <customLabels>
         <name>bdiDonation</name>
@@ -2150,48 +2302,52 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <label>Importateur de données NPSP - Essai</label>
     </customLabels>
     <customLabels>
+        <name>bdiDupeMgmtMatchImportStatus</name>
+        <label>- Règle de duplication :</label>
+    </customLabels>
+    <customLabels>
         <name>bdiErrorBatchNameRequired</name>
         <label>Le nom du lot est un champ obligatoire.</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorDataImportCustomSettings</name>
-        <label>Une erreur s&apos;est produite en tentant de mettre à jour les Paramètres personnalisés nommés Paramètres d&apos;importation de données.</label>
+        <label>Une erreur s'est produite en tentant de mettre à jour les Paramètres personnalisés nommés Paramètres d'importation de données.</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorDeploymentFailed</name>
-        <label>Une erreur s&apos;est produite en tentant de convertir le mappage Texte d&apos;aide et d&apos;activer le Mappage avancé.</label>
+        <label>Une erreur s'est produite en tentant de convertir le mappage Texte d'aide et d'activer le Mappage avancé.</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorDeploymentFailedLink</name>
-        <label>&lt;a href=&quot;{0}&quot; target=&quot;_blank&quot;&gt;Vous pouvez afficher le statut de déploiement ici.&lt;/a&gt;</label>
+        <label>&lt;a href="{0}" target="_blank"&gt;Vous pouvez afficher le statut de déploiement ici.&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorDonationLookupMatch</name>
-        <label>La valeur de recherche indiquée dans don importé ou paiement importé n&apos;est pas valide.</label>
+        <label>La valeur de recherche indiquée dans don importé ou paiement importé n'est pas valide.</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorDonationMultiMatch</name>
-        <label>Les informations sur les dons correspondent à plusieurs opportunités, donc l&apos;importateur de données NPSP ne les a pas importées. Le champ correspondances possibles de dons contient les ID Salesforce des opportunités correspondantes.</label>
+        <label>Les informations sur les dons correspondent à plusieurs opportunités, donc l'importateur de données NPSP ne les a pas importées. Le champ correspondances possibles de dons contient les ID Salesforce des opportunités correspondantes.</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorDonationNoMatch</name>
-        <label>L&apos;importateur de données NPSP n’a trouvé aucun don correspondant.</label>
+        <label>L'importateur de données NPSP n’a trouvé aucun don correspondant.</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorDonationRequireNoMatch</name>
-        <label>Les informations sur les dons correspondent à une ou plusieurs opportunités, mais le paramètre ne requiert aucune correspondance. L&apos;importateur de données NPSP ne les a donc pas importées. Le champ correspondances possibles de dons contient les ID Salesforce des opportunités correspondantes.</label>
+        <label>Les informations sur les dons correspondent à une ou plusieurs opportunités, mais le paramètre ne requiert aucune correspondance. L'importateur de données NPSP ne les a donc pas importées. Le champ correspondances possibles de dons contient les ID Salesforce des opportunités correspondantes.</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorExistingDonationAllocations</name>
-        <label>Les allocations UCG fournies entrent en conflit avec les allocations existantes sur l’enregistrement d’opportunité du don. Supprimez les allocations de l’enregistrement d’opportunité ou de l’enregistrement d’importation de données NPSP, puis procédez à nouveau au traitement avec l’importateur de données NPSP.</label>
+        <label>Les affectations UCG fournies entrent en conflit avec les affectations existantes sur l’enregistrement d’opportunité du don. Supprimez les affectations de l’enregistrement d’opportunité ou de l’enregistrement d’importation de données NPSP, puis procédez à nouveau au traitement avec l’importateur de données NPSP.</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorExistingPaymentAllocations</name>
-        <label>Les allocations UCG fournies entrent en conflit avec les allocations existantes sur l’enregistrement de paiement du don. Supprimez les allocations de l’enregistrement de paiement ou de l’enregistrement d’importation de données NPSP, puis procédez à nouveau au traitement avec l’importateur de données NPSP.</label>
+        <label>Les affectations UCG fournies entrent en conflit avec les affectations existantes sur l’enregistrement de paiement du don. Supprimez les affectations de l’enregistrement de paiement ou de l’enregistrement d’importation de données NPSP, puis procédez à nouveau au traitement avec l’importateur de données NPSP.</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorGAUAllocationOver100</name>
-        <label>Les allocations UCG fournies dépassent 100 %.</label>
+        <label>Les affectations UCG fournies dépassent 100 %.</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorInvalidCampaignName</name>
@@ -2203,7 +2359,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bdiErrorInvalidIMatchDonations</name>
-        <label>L&apos;importateur de données NPSP n&apos;a pas trouvé les classes Apex {0}, ou cette classe ne prend pas en charge l&apos;interface {1}.</label>
+        <label>L'importateur de données NPSP n'a pas trouvé les classes Apex {0}, ou cette classe ne prend pas en charge l'interface {1}.</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorInvalidLastname</name>
@@ -2219,7 +2375,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bdiErrorNonHHAccountContactWithAdv</name>
-        <label>Ce contact correspond à un contact existant associé un compte non foyer et non administratif. Cet outil de saisie de don peut uniquement mettre à jour les contacts faisant partie d&apos;une compte foyer ou administratif.</label>
+        <label>Ce contact correspond à un contact existant associé un compte non foyer et non administratif. Cet outil de saisie de don peut uniquement mettre à jour les contacts faisant partie d'une compte foyer ou administratif.</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorOneToOneMultiContact</name>
@@ -2227,11 +2383,11 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bdiErrorPaymentMultiMatch</name>
-        <label>Les informations sur les dons correspondent à plusieurs paiements, donc l&apos;importateur de données NPSP ne les a pas importées. Le champ correspondances possibles de paiements contient les ID Salesforce des paiements correspondants.</label>
+        <label>Les informations sur les dons correspondent à plusieurs paiements, donc l'importateur de données NPSP ne les a pas importées. Le champ correspondances possibles de paiements contient les ID Salesforce des paiements correspondants.</label>
     </customLabels>
     <customLabels>
         <name>bdiFMUIBackToMapGroup</name>
-        <label>Revenir au Groupe d&apos;objets</label>
+        <label>Revenir au Groupe d'objets</label>
     </customLabels>
     <customLabels>
         <name>bdiFMUIDataType</name>
@@ -2253,7 +2409,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bdiFMUIFieldAPIName</name>
-        <label>Nom d&apos;API du champ</label>
+        <label>Nom d'API du champ</label>
     </customLabels>
     <customLabels>
         <name>bdiFMUIFieldLabel</name>
@@ -2261,19 +2417,19 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bdiFMUISourceFieldLabelHelp</name>
-        <label>Le champ d&apos;importation de données NPSP que vous souhaitez mapper. Recherchez par Étiquette de champ ou Nom d&apos;API. Si le champ est introuvable, vérifiez si vous l&apos;avez créé dans l&apos;objet Importation de données NPSP.</label>
+        <label>Le champ d'importation de données NPSP que vous souhaitez mapper. Recherchez par Étiquette de champ ou Nom d'API. Si le champ est introuvable, vérifiez si vous l'avez créé dans l'objet Importation de données NPSP.</label>
     </customLabels>
     <customLabels>
         <name>bdiFMUISourceFieldDataTypeHelp</name>
-        <label>Le type de données du champ que vous avez choisi dans l&apos;objet Importation de données NPSP.</label>
+        <label>Le type de données du champ que vous avez choisi dans l'objet Importation de données NPSP.</label>
     </customLabels>
     <customLabels>
         <name>bdiFMUITargetFieldLabelHelp</name>
-        <label>Le champ cible que vous souhaitez connecter au champ d&apos;importation de données NPSP. Recherchez par Étiquette de champ ou Nom d&apos;API. La recherche est filtrée et affiche uniquement les champs de votre objet cible qui sont compatibles avec le champ choisi dans l&apos;objet Importation de données NPSP.</label>
+        <label>Le champ cible que vous souhaitez connecter au champ d'importation de données NPSP. Recherchez par Étiquette de champ ou Nom d'API. La recherche est filtrée et affiche uniquement les champs de votre objet cible qui sont compatibles avec le champ choisi dans l'objet Importation de données NPSP.</label>
     </customLabels>
     <customLabels>
         <name>bdiFMUITargetFieldDataTypeHelp</name>
-        <label>Le type de données du champ que vous avez choisi dans l&apos;objet cible.</label>
+        <label>Le type de données du champ que vous avez choisi dans l'objet cible.</label>
     </customLabels>
     <customLabels>
         <name>bdiFMUILongDeployment</name>
@@ -2293,15 +2449,15 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bdiFMUINoFieldMappings</name>
-        <label>Aucun mappage de champs n&apos;est défini pour ce groupe de mappages.</label>
+        <label>Aucun mappage de champs n'est défini pour ce groupe de mappages.</label>
     </customLabels>
     <customLabels>
         <name>bdiFMUISearchSourceInputLabel</name>
-        <label>Recherchez le champ de l&apos;objet Importation de données NPSP par étiquette ou nom d&apos;API.</label>
+        <label>Recherchez le champ de l'objet Importation de données NPSP par étiquette ou nom d'API.</label>
     </customLabels>
     <customLabels>
         <name>bdiFMUISearchTargetInputLabel</name>
-        <label>Recherchez le champ cible par étiquette ou nom d&apos;API.</label>
+        <label>Recherchez le champ cible par étiquette ou nom d'API.</label>
     </customLabels>
     <customLabels>
         <name>bdiFMUISourceObject</name>
@@ -2399,7 +2555,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bdiOMUIChildParentHelp</name>
-        <label>Association de l&apos;objet cible avec l&apos;autre Groupe d&apos;objets. Par exemple, une Allocation UCG est un enfant d&apos;une opportunité ou un Don récurrent est un parent d&apos;une opportunité.</label>
+        <label>Association de l'objet cible avec l'autre Groupe d'objets. Par exemple, une Affectation UCG est un enfant d'une opportunité ou un Don récurrent est un parent d'une opportunité.</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIChildParentLabel</name>
@@ -2407,27 +2563,27 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bdiOMUICreateModalTitle</name>
-        <label>Créer un groupe d&apos;objets</label>
+        <label>Créer un groupe d'objets</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUICreateNewObjectGroup</name>
-        <label>Créer un autre groupe d&apos;objets</label>
+        <label>Créer un autre groupe d'objets</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIEditModalTitle</name>
-        <label>Modifier le groupe d&apos;objets</label>
+        <label>Modifier le groupe d'objets</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUILongDeployment</name>
-        <label>La modification de ce groupe d&apos;objets est plus longue que prévu.</label>
+        <label>La modification de ce groupe d'objets est plus longue que prévu.</label>
     </customLabels>
     <customLabels>
         <name>bdiMigrationLongDeployment</name>
-        <label>La conversion des mappages Texte d&apos;aide en Mappage avancé est plus longue que prévu.</label>
+        <label>La conversion des mappages Texte d'aide en Mappage avancé est plus longue que prévu.</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIGroupNameHelp</name>
-        <label>Le nom de ce Groupe d&apos;objets. Une convention de nommage courante est Groupe [nom de l&apos;objet].</label>
+        <label>Le nom de ce Groupe d'objets. Une convention de nommage courante est Groupe [nom de l'objet].</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIGroupNameLabel</name>
@@ -2435,11 +2591,11 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bdiOMUIImportDetailsTitle</name>
-        <label>Détails d&apos;importation</label>
+        <label>Détails d'importation</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIImportStatusHelp</name>
-        <label>Pendant une importation test ou lors de l&apos;exécution de l&apos;importation, le statut d&apos;importation du Groupe d&apos;objets est affiché dans ce champ.</label>
+        <label>Pendant une importation test ou lors de l'exécution de l'importation, le statut d'importation du Groupe d'objets est affiché dans ce champ.</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIImportStatusLabel</name>
@@ -2447,15 +2603,15 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bdiOMUILinkToRecordHelp</name>
-        <label>Lors de l&apos;exécution de l&apos;importation, ce champ affiche un lien vers l&apos;enregistrement de ce Groupe d&apos;objets ou l&apos;ID Salesforce de l&apos;enregistrement.</label>
+        <label>Lors de l'exécution de l'importation, ce champ affiche un lien vers l'enregistrement de ce Groupe d'objets ou l'ID Salesforce de l'enregistrement.</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUILinkToRecordLabel</name>
-        <label>Lier à l&apos;enregistrement.</label>
+        <label>Lier à l'enregistrement.</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIObjectNameHelp</name>
-        <label>L&apos;objet cible dans lequel ces enregistrements d&apos;importation de données vont être créés. La liste des objets est filtrée. Pour obtenir la liste complète des objets disponibles, consultez la documentation.</label>
+        <label>L'objet cible dans lequel ces enregistrements d'importation de données vont être créés. La liste des objets est filtrée. Pour obtenir la liste complète des objets disponibles, consultez la documentation.</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIObjectNameLabel</name>
@@ -2463,30 +2619,30 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bdiOMUIOfGroupHelp</name>
-        <label>Les enregistrements de votre objet cible sont associés à un autre groupe d&apos;objets. Choisissez ici le groupe d&apos;objets associé.</label>
+        <label>Les enregistrements de votre objet cible sont associés à un autre groupe d'objets. Choisissez ici le groupe d'objets associé.</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIOfGroupLabel</name>
-        <label>De ce groupe d&apos;objets</label>
+        <label>De ce groupe d'objets</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIPageDescriptionPt1</name>
-        <label>Chaque ligne de ce tableau affiche vos groupes d&apos;objets. Vous configurez les mappages de champs individuels en cliquant sur l&apos;icône de la liste déroulante d&apos;un groupe d&apos;objets, puis sur Afficher les mappages de champs.</label>
+        <label>Chaque ligne de ce tableau affiche vos groupes d'objets. Vous configurez les mappages de champs individuels en cliquant sur l'icône de la liste déroulante d'un groupe d'objets, puis sur Afficher les mappages de champs.</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIPageDescriptionPt2</name>
-        <label>Les groupes d&apos;objets sont des collections de mappages de champs qui indiquent à l&apos;outil Importation de données NPSP les types d&apos;enregistrement à créer ou à mettre à jour (par exemple Contacts, Opportunités, Paiements, etc.). Le regroupement des mappages de champs dans des groupes d&apos;objets permet à NPSP de lier les enregistrements associés d&apos;une ligne de votre importation à un autre enregistrement.</label>
+        <label>Les groupes d'objets sont des collections de mappages de champs qui indiquent à l'outil Importation de données NPSP les types d'enregistrement à créer ou à mettre à jour (par exemple Contacts, Opportunités, Paiements, etc.). Le regroupement des mappages de champs dans des groupes d'objets permet à NPSP de lier les enregistrements associés d'une ligne de votre importation à un autre enregistrement.</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIPageDescriptionPt3</name>
-        <label>Examinons deux exemples de groupes d’objets, Allocation UCG 1 et Allocation UCG 2. Ces groupes sont directement liés à l’objet Opportunité.
-            Vous pouvez attribuer deux allocations UCG à une même opportunité. Pour cela, saisissez les informations sur l’opportunité dans les colonnes Dons de votre fichier d’importation.
-            Insérez ensuite la première allocation UCG dans les colonnes Allocations UCG 1 et la deuxième dans les colonnes Allocations UCG 2. En raison du mappage des objets Allocations UCG 1 et
-            Allocations UCG 2, lors de l’importation, les allocations UCG sont toutes les deux attribuées à l’opportunité.</label>
+        <label>Examinons deux exemples de groupes d’objets, Affectation UCG 1 et Affectation UCG 2. Ces groupes sont directement liés à l’objet Opportunité.
+            Vous pouvez attribuer deux affectations UCG à une même opportunité. Pour cela, saisissez les informations sur l’opportunité dans les colonnes Dons de votre fichier d’importation.
+            Insérez ensuite la première affectation UCG dans les colonnes Affectations UCG 1 et la deuxième dans les colonnes Affectations UCG 2. En raison du mappage des objets Affectations UCG 1 et
+            Affectations UCG 2, lors de l’importation, les affectations UCG sont toutes les deux attribuées à l’opportunité.</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIObjectGroupsTitle</name>
-        <label>Groupes d&apos;objets</label>
+        <label>Groupes d'objets</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIThroughFieldHelp</name>
@@ -2504,7 +2660,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bdiOMUIErrorNoValidThroughThisField</name>
-        <label>Erreur : Aucun champ valide n&apos;existe basé sur votre sélection dans « Nom de l&apos;objet », « Est enfant/parent » et « De ce groupe de mappages ».</label>
+        <label>Erreur : Aucun champ valide n'existe basé sur votre sélection dans « Nom de l'objet », « Est enfant/parent » et « De ce groupe de mappages ».</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIErrorDupeName</name>
@@ -2520,11 +2676,11 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bdiOMUIErrorNoUnmappedFieldsPt1</name>
-        <label>Erreur : Aucun champ n&apos;est mappé avec l&apos;objet Importation de données NPSP à utiliser pour l’option</label>
+        <label>Erreur : Aucun champ n'est mappé avec l'objet Importation de données NPSP à utiliser pour l’option</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIErrorNoUnmappedFieldsPt2</name>
-        <label>Si nécessaire, créez d&apos;autres champs dans l&apos;objet Importation de données NPSP.</label>
+        <label>Si nécessaire, créez d'autres champs dans l'objet Importation de données NPSP.</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIFieldMappingProblemHeader</name>
@@ -2557,6 +2713,22 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     <customLabels>
         <name>bdiRunBtn</name>
         <label>Début du processus d’importation de données</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectCantProcessImportedRecords</name>
+        <label>Vous ne pouvez pas importer des enregistrements qui ont déjà été importés. Supprimez de votre sélection les enregistrements avec le statut Importé.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectNoDIRecordsSelected</name>
+        <label>Sélectionnez un ou plusieurs enregistrements d’importation de données.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectReturnToListView</name>
+        <label>Revenir en arrière</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectTooManyDIRecords</name>
+        <label>Sélectionnez jusqu’à {0} enregistrements d’importation de données.</label>
     </customLabels>
     <customLabels>
         <name>bdiSettingsSectionContactMatching</name>
@@ -2612,7 +2784,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bgeBatchDonationDateRangeHelp</name>
-        <label>Saisissez le nombre de jours à compter de la date de don à prendre en compte lors de la recherche d’une opportunité ou d&apos;un paiement correspondant. NPSP choisira l’opportunité ou le paiement correspondant dont la date tombe dans le nombre de jours ET se rapproche le plus de la date du don.</label>
+        <label>Saisissez le nombre de jours à compter de la date de don à prendre en compte lors de la recherche d’une opportunité ou d'un paiement correspondant. NPSP choisira l’opportunité ou le paiement correspondant dont la date tombe dans le nombre de jours ET se rapproche le plus de la date du don.</label>
     </customLabels>
     <customLabels>
         <name>bgeBatchDonationMatchingBehaviorHelp</name>
@@ -2620,7 +2792,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bgeBatchDonationMatchingClassHelp</name>
-        <label>Le nom de développeur d&apos;une classe Apex qui implémente l&apos;interface BDI_IMatching pour les dons. Laissez le champ vide pour que NPSP gère la correspondance.</label>
+        <label>Le nom de développeur d'une classe Apex qui implémente l'interface BDI_IMatching pour les dons. Laissez le champ vide pour que NPSP gère la correspondance.</label>
     </customLabels>
     <customLabels>
         <name>bgeBatchDonationMatchingRuleHelp</name>
@@ -2644,7 +2816,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bgeBatchPostProcessClassHelp</name>
-        <label>Le nom de développeur d&apos;une classe Apex qui implémente l&apos;interface BDI_IPostProcess pour les enregistrements par lots NPSP.</label>
+        <label>Le nom de développeur d'une classe Apex qui implémente l'interface BDI_IPostProcess pour les enregistrements par lots NPSP.</label>
     </customLabels>
     <customLabels>
         <name>bgeBatchProcessUsingScheduledJobHelp</name>
@@ -2692,11 +2864,11 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bgeEditBatchFieldSelectionWarning</name>
-        <label>AVERTISSEMENT : Il existe des enregistrements enregistrés dans ce lot. Les modifications que vous apportez n&apos;affecteront pas les enregistrements existants. Si vous supprimez des champs, ceux-ci n&apos;apparaitront plus sur l&apos;écran de saisie du don, mais les données ne seront pas supprimées de ces champs dans les enregistrements existants. Par conséquent, nous vous recommandons de ne pas supprimer de champs.</label>
+        <label>AVERTISSEMENT : Il existe des enregistrements enregistrés dans ce lot. Les modifications que vous apportez n'affecteront pas les enregistrements existants. Si vous supprimez des champs, ceux-ci n'apparaitront plus sur l'écran de saisie du don, mais les données ne seront pas supprimées de ces champs dans les enregistrements existants. Par conséquent, nous vous recommandons de ne pas supprimer de champs.</label>
     </customLabels>
     <customLabels>
         <name>bgeEditBatchOptionsWarning</name>
-        <label>AVERTISSEMENT : Il existe des enregistrements enregistrés dans ce lot. Les modifications que vous apportez n&apos;affecteront pas les enregistrements existants. Nous n&apos;essaierons pas de faire correspondre les enregistrements existants en utilisant les paramètres de règle de mise en correspondance des dons mis à jour, à moins que ces enregistrements ne soient modifiés.</label>
+        <label>AVERTISSEMENT : Il existe des enregistrements enregistrés dans ce lot. Les modifications que vous apportez n'affecteront pas les enregistrements existants. Nous n'essaierons pas de faire correspondre les enregistrements existants en utilisant les paramètres de règle de mise en correspondance des dons mis à jour, à moins que ces enregistrements ne soient modifiés.</label>
     </customLabels>
     <customLabels>
         <name>bgeFLSError</name>
@@ -2720,7 +2892,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bgeFormSelectedOpportunityApplyNewPayment</name>
-        <label>Application d&apos;un nouveau paiement</label>
+        <label>Application d'un nouveau paiement</label>
     </customLabels>
     <customLabels>
         <name>bgeFormSelectedOpportunity</name>
@@ -2800,7 +2972,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bgeGridWarningRequiredTotalsExpected</name>
-        <label>L&apos;option Exiger la correspondance des totaux attendus est sélectionnée, mais les champs Nombre de dons attendus et Montant total des lots attendus sont vides. Modifiez les détails du lot et désélectionnez l&apos;option Exiger la correspondance des totaux attendus ou ajoutez des valeurs dans les champs associés.</label>
+        <label>L'option Exiger la correspondance des totaux attendus est sélectionnée, mais les champs Nombre de dons attendus et Montant total des lots attendus sont vides. Modifiez les détails du lot et désélectionnez l'option Exiger la correspondance des totaux attendus ou ajoutez des valeurs dans les champs associés.</label>
     </customLabels>
     <customLabels>
         <name>bgeBatchDryRun</name>
@@ -2832,7 +3004,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>La saisie de dons par lots héritée sera retirée le 13 juillet 2021 et ne fonctionnera plus dans NPSP. Si vous avez des lots en cours à cette date, vous pourrez toujours accéder à ces enregistrements, mais vous ne pourrez pas les traiter en utilisant la saisie de dons par lots. Pour garantir une parfaite transition, activez et utilisez la nouvelle saisie de dons avant le 13 juillet. Pour plus d’informations sur la saisie de dons, consultez la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;documentation NPSP&lt;/a&gt;.</label>
+        <label>La saisie de dons par lots héritée sera retirée le 13 juillet 2021 et ne fonctionnera plus dans NPSP. Si vous avez des lots en cours à cette date, vous pourrez toujours accéder à ces enregistrements, mais vous ne pourrez pas les traiter en utilisant la saisie de dons par lots. Pour garantir une parfaite transition, activez et utilisez la nouvelle saisie de dons avant le 13 juillet. Pour plus d’informations sur la saisie de dons, consultez la &lt;a href='https://powerofus.force.com/NPSP_Documentation' target='_blank'&gt;documentation NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -2868,7 +3040,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bgeUnmappedFieldsNoticeMessageHelpTextMapping</name>
-        <label>Les champs suivants sont inclus dans ce lot, mais leurs mappages ont été supprimés : {0}. Pour les corriger, accédez à l&apos;objet Importation de données NPSP, puis mappez de nouveau les champs en utilisant Texte d&apos;aide.</label>
+        <label>Les champs suivants sont inclus dans ce lot, mais leurs mappages ont été supprimés : {0}. Pour les corriger, accédez à l'objet Importation de données NPSP, puis mappez de nouveau les champs en utilisant Texte d'aide.</label>
     </customLabels>
     <customLabels>
         <name>bgeWizardShowAdvancedOptions</name>
@@ -2955,11 +3127,11 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>batchNumberSettingsError</name>
-        <label>Impossible d&apos;enregistrer le format à numérotation automatique. Examinez les erreurs, puis réessayez.</label>
+        <label>Impossible d'enregistrer le format à numérotation automatique. Examinez les erreurs, puis réessayez.</label>
     </customLabels>
     <customLabels>
         <name>batchNumberSettingsHeaderDisplayFormat</name>
-        <label>En savoir plus sur les formats d&apos;affichage.</label>
+        <label>En savoir plus sur les formats d'affichage.</label>
     </customLabels>
     <customLabels>
         <name>batchNumberSettingsDescriptionCreate</name>
@@ -2967,11 +3139,11 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>autoNumberErrorInvalidDisplayFormat</name>
-        <label>Format d&apos;affichage non valide.</label>
+        <label>Format d'affichage non valide.</label>
     </customLabels>
     <customLabels>
         <name>autoNumberErrorDuplicate</name>
-        <label>Ce Format d&apos;affichage est déjà utilisé.</label>
+        <label>Ce Format d'affichage est déjà utilisé.</label>
     </customLabels>
     <customLabels>
         <name>batchNumberSettingsConfigureHeader</name>
@@ -3054,8 +3226,12 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <label>Fermer</label>
     </customLabels>
     <customLabels>
+        <name>commonCancelAndClose</name>
+        <label>Annuler et fermer</label>
+    </customLabels>
+    <customLabels>
         <name>commonConcurrentBatchError</name>
-        <label>Une tâche est déjà en cours dans la classe Apex {0}. La tâche doit être terminée avant d&apos;être réexécutée.</label>
+        <label>Une tâche est déjà en cours dans la classe Apex {0}. La tâche doit être terminée avant d'être réexécutée.</label>
     </customLabels>
     <customLabels>
         <name>commonContactCount</name>
@@ -3091,7 +3267,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>commonElevateFailedOnboarding</name>
-        <label>Une erreur s&apos;est produite lors de l’intégration de ce client Elevate</label>
+        <label>Une erreur s'est produite lors de l’intégration de ce client Elevate</label>
     </customLabels>
     <customLabels>
         <name>commonError</name>
@@ -3186,6 +3362,10 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <label>Enregistrements traités</label>
     </customLabels>
     <customLabels>
+        <name>commonRefreshPage</name>
+        <label>Actualisez la page pour afficher les dernières modifications.</label>
+    </customLabels>
+    <customLabels>
         <name>commonRequired</name>
         <label>Obligatoire</label>
     </customLabels>
@@ -3271,11 +3451,11 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>conMergeErrorNoDeleteObjPermission</name>
-        <label>Pour pouvoir fusionner les contacts, vous devez disposer de l&apos;autorisation Supprimer sur les Contacts.</label>
+        <label>Pour pouvoir fusionner les contacts, vous devez disposer de l'autorisation Supprimer sur les Contacts.</label>
     </customLabels>
     <customLabels>
         <name>conMergeErrorNoDeleteRecAccess</name>
-        <label>Vous ne disposez pas des autorisations de partage d&apos;enregistrements pour fusionner ces contacts. Sélectionnez d&apos;autres enregistrements de contact ou demandez à votre administrateur système d&apos;ajuster les autorisations de partage.</label>
+        <label>Vous ne disposez pas des autorisations de partage d'enregistrements pour fusionner ces contacts. Sélectionnez d'autres enregistrements de contact ou demandez à votre administrateur système d'ajuster les autorisations de partage.</label>
     </customLabels>
     <customLabels>
         <name>conMergeErrNoPersonAccounts</name>
@@ -3339,7 +3519,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>conMergeFoundDRS</name>
-        <label>Dupliquer les Ensembles d&apos;enregistrements</label>
+        <label>Dupliquer les Ensembles d'enregistrements</label>
     </customLabels>
     <customLabels>
         <name>conMergeDRSPickBtnLabel</name>
@@ -3347,11 +3527,11 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>conMergeErrorNoDRSFound</name>
-        <label>&lt;b&gt;Aucun Ensemble d’enregistrements en double.&lt;/b&gt;&lt;/br&gt;&lt;/br&gt; Aucun Ensemble d’enregistrements en double trouvé. Assurez-vous que les règles en double sont activées. &lt;a href=&quot;https://help.salesforce.com/articleView?id=duplicate_rules_map_of_reference.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;En savoir plus&lt;/a&gt;.</label>
+        <label>&lt;b&gt;Aucun Ensemble d’enregistrements en double.&lt;/b&gt;&lt;/br&gt;&lt;/br&gt; Aucun Ensemble d’enregistrements en double trouvé. Assurez-vous que les règles en double sont activées. &lt;a href="https://help.salesforce.com/articleView?id=duplicate_rules_map_of_reference.htm&amp;type=5" target="_blank"&gt;En savoir plus&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>conMergeErrorNoReadDSRObjPermission</name>
-        <label>Pour pouvoir fusionner les Contacts, vous devez disposer des autorisations de lecture sur les Ensembles d&apos;enregistrements en double.</label>
+        <label>Pour pouvoir fusionner les Contacts, vous devez disposer des autorisations de lecture sur les Ensembles d'enregistrements en double.</label>
     </customLabels>
     <customLabels>
         <name>conMergeTooManyContactError</name>
@@ -3363,7 +3543,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>Voir tous les contacts en double trouvés à l’aide de règles de correspondance. &lt;a href=’https://powerofus.force.com/IP_Contacts’ target=’_blank’&gt;&lt;b&gt; En savoir plus&lt;/b&gt;&lt;/a&gt;</label>
+        <label>Voir tous les contacts en double trouvés à l’aide de règles de correspondance. &lt;a href=&quot;https://powerofus.force.com/IP_Contacts&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; En savoir plus&lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>
@@ -3383,7 +3563,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>engagementPlanMissingField</name>
-        <label>Impossible de créer un plan d&apos;engagement lors de l&apos;application d&apos;un niveau. Le champ est manquant dans le plan d&apos;engagement</label>
+        <label>Impossible de créer un plan d'engagement lors de l'application d'un niveau. Le champ est manquant dans le plan d'engagement</label>
     </customLabels>
     <customLabels>
         <name>engagementPlanNoLookups</name>
@@ -3411,7 +3591,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>errErrorUnsupportedDMLType</name>
-        <label>Opération non prise en charge : impossible de consigner une erreur pour ce type d&apos;opération DML.</label>
+        <label>Opération non prise en charge : impossible de consigner une erreur pour ce type d'opération DML.</label>
     </customLabels>
     <customLabels>
         <name>exceptionDeletePermission</name>
@@ -3435,11 +3615,19 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>geAddNewAllocation</name>
-        <label>Ajouter une nouvelle Allocation</label>
+        <label>Ajouter une nouvelle Affectation</label>
     </customLabels>
     <customLabels>
         <name>geAddSoftCredit</name>
         <label>Ajouter un crédit indirect</label>
+    </customLabels>
+    <customLabels>
+        <name>geRecurringGiftModalWarning</name>
+        <label>L’application d’un calendrier de dons récurrents à une opportunité ou à un paiement existant, et l’ajout de crédits indirects ne sont pas pris en charge dans la saisie de dons.</label>
+    </customLabels>
+    <customLabels>
+        <name>geSoftCreditsWarning</name>
+        <label>Les crédits indirects dans la saisie de dons ne sont pas pris en charge pour les dons récurrents.</label>
     </customLabels>
     <customLabels>
         <name>geA11ySection</name>
@@ -3467,7 +3655,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>geAssistiveBatchHeaderRemoveField</name>
-        <label>Retirez le champ {0} de l&apos;en-tête du lot.</label>
+        <label>Retirez le champ {0} de l'en-tête du lot.</label>
     </customLabels>
     <customLabels>
         <name>geAssistiveFieldDown</name>
@@ -3483,11 +3671,11 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>geAssistiveFormFieldsCollapseAll</name>
-        <label>Réduisez tous les Groupes d&apos;objets et les Composants de modèle.</label>
+        <label>Réduisez tous les Groupes d'objets et les Composants de modèle.</label>
     </customLabels>
     <customLabels>
         <name>geAssistiveFormFieldsExpandAll</name>
-        <label>Agrandissez tous les Groupes d&apos;objets et les Composants de modèle.</label>
+        <label>Agrandissez tous les Groupes d'objets et les Composants de modèle.</label>
     </customLabels>
     <customLabels>
         <name>geAssistiveFormFieldsRemoveField</name>
@@ -3503,7 +3691,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>geAssistiveRemoveSelectedOption</name>
-        <label>Retirez l&apos;option sélectionnée</label>
+        <label>Retirez l'option sélectionnée</label>
     </customLabels>
     <customLabels>
         <name>geAssistiveSectionDown</name>
@@ -3563,7 +3751,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>geBodyAdvancedFieldMapping</name>
-        <label>Pour plus d’options de saisie de dons avancée, sélectionnez des champs dans les Groupes d&apos;objets suivants.</label>
+        <label>Pour plus d’options de saisie de dons avancée, sélectionnez des champs dans les Groupes d'objets suivants.</label>
     </customLabels>
     <customLabels>
         <name>geBodyBatchTableColumnsPart1</name>
@@ -3589,15 +3777,15 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>geBodyBatchHeaderLeftCol</name>
-        <label>Choisissez les champs à inclure dans l&apos;en-tête de votre lot. Cochez la case pour ajouter un champ et désélectionnez-la pour retirer le champ du formulaire. Si vous souhaitez ajouter des champs personnalisés supplémentaires dans l&apos;en-tête du lot, ajoutez-les dans l&apos;objet Lot d’importation de données NPSP.</label>
+        <label>Choisissez les champs à inclure dans l'en-tête de votre lot. Cochez la case pour ajouter un champ et désélectionnez-la pour retirer le champ du formulaire. Si vous souhaitez ajouter des champs personnalisés supplémentaires dans l'en-tête du lot, ajoutez-les dans l'objet Lot d’importation de données NPSP.</label>
     </customLabels>
     <customLabels>
         <name>geBodyBatchHeaderRightCol</name>
-        <label>Vous pouvez modifier l&apos;étiquette de chaque champ, le marquer comme obligatoire ou lui attribuer une valeur par défaut. Les valeurs par défaut peuvent être remplacées par la personne qui a créé le lot.</label>
+        <label>Vous pouvez modifier l'étiquette de chaque champ, le marquer comme obligatoire ou lui attribuer une valeur par défaut. Les valeurs par défaut peuvent être remplacées par la personne qui a créé le lot.</label>
     </customLabels>
     <customLabels>
         <name>geBodyBatchHeaderWarning</name>
-        <label>Ces champs obligatoires ont été automatiquement ajoutés à l&apos;en-tête du lot :</label>
+        <label>Ces champs obligatoires ont été automatiquement ajoutés à l'en-tête du lot :</label>
     </customLabels>
     <customLabels>
         <name>geBodyBatchDefaultValues</name>
@@ -3613,11 +3801,11 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>geBodyFormFieldsLeftCol</name>
-        <label>Choisissez les champs à inclure dans votre formulaire. Avant d&apos;ajouter des champs, cliquez sur la section de l&apos;écran principal Configurer les champs du formulaire à laquelle les champs sont destinés. Dans le menu latéral Champs de formulaire et paquets de champs, cochez la case pour ajouter un champ et désélectionnez-la pour retirer le champ du formulaire. Si l&apos;objet ou le champ que vous souhaitez utiliser n&apos;est pas répertorié, assurez-vous qu&apos;il est configuré dans Mappage avancé.</label>
+        <label>Choisissez les champs à inclure dans votre formulaire. Avant d'ajouter des champs, cliquez sur la section de l'écran principal Configurer les champs du formulaire à laquelle les champs sont destinés. Dans le menu latéral Champs de formulaire et paquets de champs, cochez la case pour ajouter un champ et désélectionnez-la pour retirer le champ du formulaire. Si l'objet ou le champ que vous souhaitez utiliser n'est pas répertorié, assurez-vous qu'il est configuré dans Mappage avancé.</label>
     </customLabels>
     <customLabels>
         <name>geBodyFormFieldsDescLeftCol</name>
-        <label>Ces champs sont généralement inclus dans les formulaires de saisie de don. Les Groupes d&apos;objets personnalisés se trouvent également dans cette section.</label>
+        <label>Ces champs sont généralement inclus dans les formulaires de saisie de don. Les Groupes d'objets personnalisés se trouvent également dans cette section.</label>
     </customLabels>
     <customLabels>
         <name>geBodyFormFieldsLeftColAdditional</name>
@@ -3625,32 +3813,32 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         &lt;/br&gt;
         &lt;/br&gt;
         &lt;ol&gt;
-            &lt;li&gt; Créez le champ dans l&apos;objet cible. &lt;/li&gt;
-            &lt;li&gt; Créez le champ dans l&apos;objet Importation de données NPSP. &lt;/li&gt;
-            &lt;li&gt; Avec un nouveau Groupe d&apos;objets, créez des champs supplémentaires pour le nouveau groupe d&apos;objets, puis créez le Groupe d&apos;objets dans Paramètres de NPSP. &lt;/li&gt;
-            &lt;li&gt; Ajoutez le Mappage de champs dans Paramètres de NPSP pour connecter le champ d&apos;importation de données NPSP au champ cible. &lt;/li&gt;
+            &lt;li&gt; Créez le champ dans l'objet cible. &lt;/li&gt;
+            &lt;li&gt; Créez le champ dans l'objet Importation de données NPSP. &lt;/li&gt;
+            &lt;li&gt; Avec un nouveau Groupe d'objets, créez des champs supplémentaires pour le nouveau groupe d'objets, puis créez le Groupe d'objets dans Paramètres de NPSP. &lt;/li&gt;
+            &lt;li&gt; Ajoutez le Mappage de champs dans Paramètres de NPSP pour connecter le champ d'importation de données NPSP au champ cible. &lt;/li&gt;
         &lt;/ol&gt;
-        Pour plus d&apos;informations sur le Mappage avancé, consultez la documentation NPSP.</label>
+        Pour plus d'informations sur le Mappage avancé, consultez la documentation NPSP.</label>
     </customLabels>
     <customLabels>
         <name>geBodyFormFieldsModalDeleteSection</name>
-        <label>La suppression de cette section entraîne la suppression des champs qu&apos;elle contient.</label>
+        <label>La suppression de cette section entraîne la suppression des champs qu'elle contient.</label>
     </customLabels>
     <customLabels>
         <name>geBodyFormFieldsRightCol</name>
-        <label>Sélectionnez une section, puis sélectionnez un champ dans le menu latéral Champs de formulaire et paquets de champs pour l&apos;ajouter à cette section dans l&apos;écran principal Configurer les champs du formulaire. Vous pouvez modifier l&apos;étiquette de chaque champ, le marquer comme obligatoire, lui attribuer une valeur par défaut ou le retirer de la section. Ajustez la présentation du formulaire de Saisie de dons en créant des sections et en réorganisant les sections ou les champs.</label>
+        <label>Sélectionnez une section, puis sélectionnez un champ dans le menu latéral Champs de formulaire et paquets de champs pour l'ajouter à cette section dans l'écran principal Configurer les champs du formulaire. Vous pouvez modifier l'étiquette de chaque champ, le marquer comme obligatoire, lui attribuer une valeur par défaut ou le retirer de la section. Ajustez la présentation du formulaire de Saisie de dons en créant des sections et en réorganisant les sections ou les champs.</label>
     </customLabels>
     <customLabels>
         <name>geBodyGiftEntryHelp</name>
-        <label>Avant d&apos;activer la Saisie de dons, vous devez activer le Mappage avancé.
+        <label>Avant d'activer la Saisie de dons, vous devez activer le Mappage avancé.
 &lt;br/&gt;&lt;br/&gt;
-Utilisez les modèles de Saisie de dons pour saisir des dons uniques ou des lots de dons. Les dons saisis avec l&apos;ancien outil Saisie de dons par lots ne sont pas affichés dans la Saisie de dons, et inversement.
+Utilisez les modèles de Saisie de dons pour saisir des dons uniques ou des lots de dons. Les dons saisis avec l'ancien outil Saisie de dons par lots ne sont pas affichés dans la Saisie de dons, et inversement.
 &lt;br/&gt;&lt;br/&gt;
-Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la place de l&apos;ancien outil Saisie de dons par lots (ou Saisie de don unique, si vous utilisez GEM).</label>
+Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la place de l'ancien outil Saisie de dons par lots (ou Saisie de don unique, si vous utilisez GEM).</label>
     </customLabels>
     <customLabels>
         <name>geBodyMatchingApplyNewPayment</name>
-        <label>Vous ajoutez actuellement un nouveau paiement à l&apos;opportunité :</label>
+        <label>Vous ajoutez actuellement un nouveau paiement à l'opportunité :</label>
     </customLabels>
     <customLabels>
         <name>geBodyMatchingNewOpportunity</name>
@@ -3658,7 +3846,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>geBodyMatchingNoPayments</name>
-        <label>Cette opportunité n&apos;a aucun paiement non réglé.</label>
+        <label>Cette opportunité n'a aucun paiement non réglé.</label>
     </customLabels>
     <customLabels>
         <name>geBodyMatchingPendingDonation</name>
@@ -3674,7 +3862,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>geBodyPaymentNotProcessingTransaction</name>
-        <label>Vous ne saisissez pas d&apos;informations de paiement pour le traitement Elevate.</label>
+        <label>Vous ne saisissez pas d'informations de paiement pour le traitement Elevate.</label>
     </customLabels>
     <customLabels>
         <name>geBodyPaymentProcessedDuringBatchProcessing</name>
@@ -3686,7 +3874,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>geBodyTemplatesTabDescription</name>
-        <label>Un modèle est une présentation réutilisable de champs de saisie de données. Modifiez un modèle en cliquant sur son nom. Vous pouvez également créer un modèle ou cliquer sur le menu déroulant d&apos;un modèle pour afficher plus d&apos;options. Les modèles en cours d&apos;utilisation ne peuvent pas être supprimés.</label>
+        <label>Un modèle est une présentation réutilisable de champs de saisie de données. Modifiez un modèle en cliquant sur son nom. Vous pouvez également créer un modèle ou cliquer sur le menu déroulant d'un modèle pour afficher plus d'options. Les modèles en cours d'utilisation ne peuvent pas être supprimés.</label>
     </customLabels>
     <customLabels>
         <name>geBodyWidgetFields</name>
@@ -3774,7 +3962,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>geButtonPaymentDoNotCharge</name>
-        <label>Ne saisissez pas d&apos;informations de paiement.</label>
+        <label>Ne saisissez pas d'informations de paiement.</label>
     </customLabels>
     <customLabels>
         <name>geButtonSaveNewGift</name>
@@ -3806,7 +3994,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>geErrorCardChargedBDIFailed</name>
-        <label>Elevate a traité le paiement avec succès, mais NPSP n&apos;a pas créé d&apos;enregistrement pour la transaction dans Salesforce. Corrigez les erreurs et soumettez de nouveau le formulaire pour créer l&apos;enregistrement Salesforce.</label>
+        <label>Elevate a traité le paiement avec succès, mais NPSP n'a pas créé d'enregistrement pour la transaction dans Salesforce. Corrigez les erreurs et soumettez de nouveau le formulaire pour créer l'enregistrement Salesforce.</label>
     </customLabels>
     <customLabels>
         <name>geElevateDeleteErrorLog</name>
@@ -3837,6 +4025,38 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <label>Ce formulaire inclut des champs introuvables. Consultez votre administrateur.</label>
     </customLabels>
     <customLabels>
+        <name>geAddSchedule</name>
+        <label>Ajouter une planification récurrente</label>
+    </customLabels>
+    <customLabels>
+        <name>geUpdateSchedule</name>
+        <label>Mettre à jour la planification récurrente</label>
+    </customLabels>
+    <customLabels>
+        <name>geMakeRecurring</name>
+        <label>Rendre récurrent</label>
+    </customLabels>
+    <customLabels>
+        <name>geRemoveSchedule</name>
+        <label>Supprimer la planification récurrente</label>
+    </customLabels>
+    <customLabels>
+        <name>geEditSchedule</name>
+        <label>Modifier la planification récurrente</label>
+    </customLabels>
+    <customLabels>
+        <name>geOpenEndedGiftSchedule</name>
+        <label>Don de {0} {1} à partir du {2}.</label>
+    </customLabels>
+    <customLabels>
+        <name>geFixedGiftSchedule</name>
+        <label>Don de {0} {1} à partir du {2} et se terminant après {3} versements.</label>
+    </customLabels>
+    <customLabels>
+        <name>geRecurringScheduleInformation</name>
+        <label>Informations sur la planification récurrente</label>
+    </customLabels>
+    <customLabels>
         <name>gsAdminSetupTitle</name>
         <label>LISTE DE CONTRÔLE DE CONFIGURATION ADMINISTRATIVE</label>
     </customLabels>
@@ -3850,7 +4070,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>gsChecklistItemAddUserDesc</name>
-        <label>Accordez aux utilisateurs l&apos;accès à NPSP et gérez les autorisations de votre organisation en vous assurant que les personnes appropriées accèdent uniquement aux données dont elles ont besoin pour un fonctionnement optimal.</label>
+        <label>Accordez aux utilisateurs l'accès à NPSP et gérez les autorisations de votre organisation en vous assurant que les personnes appropriées accèdent uniquement aux données dont elles ont besoin pour un fonctionnement optimal.</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemAddUserLinkLabel</name>
@@ -3862,7 +4082,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>gsChecklistItemCommunicateWithUserskDesc</name>
-        <label>Bien avant de basculer l&apos;interrupteur et de commencer à utiliser Salesforce, nous recommandons de définir un plan de communication clair, bienveillant et transparent avec votre organisation au sujet des postes de travail.</label>
+        <label>Bien avant de basculer l'interrupteur et de commencer à utiliser Salesforce, nous recommandons de définir un plan de communication clair, bienveillant et transparent avec votre organisation au sujet des postes de travail.</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemCommunicateWithUserskLinkLabel</name>
@@ -3874,7 +4094,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>gsChecklistItemCreateDonationDesc</name>
-        <label>Suivez les dons, les subventions et les autres types de revenu afin d&apos;identifier des modèles de dons et de comprendre ce qui motive le don chez l&apos;administré. Commencez par apprendre comment saisir des dons dans NPSP.</label>
+        <label>Suivez les dons, les subventions et les autres types de revenu afin d'identifier des modèles de dons et de comprendre ce qui motive le don chez l'administré. Commencez par apprendre comment saisir des dons dans NPSP.</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemCreateDonationLinkLabel</name>
@@ -3890,11 +4110,11 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>gsChecklistItemCustomFieldsDesc</name>
-        <label>Découvrez les meilleures pratiques d&apos;utilisation de listes de sélection, de filtres, de formules et des autres outils du Gestionnaire d&apos;objet pour personnaliser les objets de votre organisation.</label>
+        <label>Découvrez les meilleures pratiques d'utilisation de listes de sélection, de filtres, de formules et des autres outils du Gestionnaire d'objet pour personnaliser les objets de votre organisation.</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemCustomFieldsLinkLabel</name>
-        <label>Apprenez à utiliser le Gestionnaire d&apos;objet avec Trailhead</label>
+        <label>Apprenez à utiliser le Gestionnaire d'objet avec Trailhead</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemCustomFieldsTitle</name>
@@ -3906,7 +4126,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>gsChecklistItemExtraOneMinuteVideo</name>
-        <label>Vidéo d&apos;1 minute</label>
+        <label>Vidéo d'1 minute</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemExtraSixtyMinuteVideo</name>
@@ -3918,7 +4138,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>gsChecklistItemGoFurtherDesc</name>
-        <label>Ces étapes initiales vont guider vos premiers pas, mais les possibilités sont illimitées dans Salesforce. Découvrez les autres fonctionnalités ainsi que les activités remarquables que d&apos;autres organisations ont réalisées sur la plate-forme.</label>
+        <label>Ces étapes initiales vont guider vos premiers pas, mais les possibilités sont illimitées dans Salesforce. Découvrez les autres fonctionnalités ainsi que les activités remarquables que d'autres organisations ont réalisées sur la plate-forme.</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemGoFurtherLinkLabel</name>
@@ -3934,7 +4154,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>gsChecklistItemImportDataDesc</name>
-        <label>Utilisez l&apos;Importateur de données NPSP pour intégrer vos enregistrements à Salesforce.</label>
+        <label>Utilisez l'Importateur de données NPSP pour intégrer vos enregistrements à Salesforce.</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemImportDataPriBtnLabel</name>
@@ -3954,7 +4174,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>gsChecklistItemManageChangeDesc</name>
-        <label>Salesforce fait l&apos;objet de fréquentes mises à jour qui ont pour but de corriger les problèmes éventuels et d&apos;ajouter de nouvelles fonctionnalités. Découvrez ces modifications et comment gérer le processus de mise à jour pour vous assurer que votre organisation est toujours prête à exploiter tout le potentiel de la plate-forme.</label>
+        <label>Salesforce fait l'objet de fréquentes mises à jour qui ont pour but de corriger les problèmes éventuels et d'ajouter de nouvelles fonctionnalités. Découvrez ces modifications et comment gérer le processus de mise à jour pour vous assurer que votre organisation est toujours prête à exploiter tout le potentiel de la plate-forme.</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemManageChangeLinkLabel</name>
@@ -3970,7 +4190,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>gsChecklistItemNPSPCloudDesc</name>
-        <label>Cette vue d&apos;ensemble montre les possibilités qu&apos;offre NPSP, mais vous pouvez approfondir votre exploration et découvrir les nombreuses autres fonctionnalités disponibles pour votre organisation.</label>
+        <label>Cette vue d'ensemble montre les possibilités qu'offre NPSP, mais vous pouvez approfondir votre exploration et découvrir les nombreuses autres fonctionnalités disponibles pour votre organisation.</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemNPSPCloudPriBtnLabel</name>
@@ -3998,7 +4218,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>gsChecklistItemNPSPSettingsDesc</name>
-        <label>Parcourez les pages des Paramètres NPSP et examinez attentivement les paramètres pour vérifier qu&apos;ils conviennent à votre organisation et qu&apos;ils fonctionnent comme vous le souhaitez.</label>
+        <label>Parcourez les pages des Paramètres NPSP et examinez attentivement les paramètres pour vérifier qu'ils conviennent à votre organisation et qu'ils fonctionnent comme vous le souhaitez.</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemNPSPSettingsPriBtnLabel</name>
@@ -4014,7 +4234,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>gsChecklistItemPageLayoutsDesc</name>
-        <label>Prenez le temps de personnaliser la présentation de votre organisation afin de faciliter l&apos;accès aux données pour les utilisateurs.</label>
+        <label>Prenez le temps de personnaliser la présentation de votre organisation afin de faciliter l'accès aux données pour les utilisateurs.</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemPageLayoutsLinkLabel</name>
@@ -4026,7 +4246,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>gsChecklistItemPrepareNPSPDesc</name>
-        <label>Définissez des objectifs précis et découvrez les meilleures pratiques d&apos;implémentation de Nonprofit Cloud.</label>
+        <label>Définissez des objectifs précis et découvrez les meilleures pratiques d'implémentation de Nonprofit Cloud.</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemPrepareNPSPPriBtnLabel</name>
@@ -4042,7 +4262,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>gsChecklistItemReviewCompanyDesc</name>
-        <label>Dans Salesforce, les informations de l&apos;organisation sont désignées par l&apos;expression « Informations sur la société ». Vous pouvez configurer le fuseau horaire, la devise locale et le mois de début de l&apos;exercice fiscal par défaut de votre organisation. Vous pouvez également rechercher des informations sur votre utilisation des licences.</label>
+        <label>Dans Salesforce, les informations de l'organisation sont désignées par l'expression « Informations sur la société ». Vous pouvez configurer le fuseau horaire, la devise locale et le mois de début de l'exercice fiscal par défaut de votre organisation. Vous pouvez également rechercher des informations sur votre utilisation des licences.</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemReviewCompanyLinkLabel</name>
@@ -4054,7 +4274,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>gsChecklistItemRunningReportsDesc</name>
-        <label>Apprenez à générer des rapports et des tableaux de bord qui donnent vie à vos données et montrent l&apos;impact de votre organisation.</label>
+        <label>Apprenez à générer des rapports et des tableaux de bord qui donnent vie à vos données et montrent l'impact de votre organisation.</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemRunningReportsPriBtnLabel</name>
@@ -4090,7 +4310,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>gsChecklistItemStayTrackDesc</name>
-        <label>Les activités sont des tâches, des événements ou d&apos;autres interactions suivies dans la Chronologie des activités. Les activités vous informent chaque fois que vous êtes en contact avec un administré. Apprenez comment exploiter les activités pour consigner les interactions avec les administrés et attribuer des tâches.</label>
+        <label>Les activités sont des tâches, des événements ou d'autres interactions suivies dans la Chronologie des activités. Les activités vous informent chaque fois que vous êtes en contact avec un administré. Apprenez comment exploiter les activités pour consigner les interactions avec les administrés et attribuer des tâches.</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemStayTrackLinkLabel</name>
@@ -4106,7 +4326,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>gsChecklistItemTrainUsersDesc</name>
-        <label>Le jour où vous lancez votre organisation Salesforce, vous souhaitez que chaque utilisateur soit prêt. Il est par conséquent important de planifier l&apos;intégration de vos utilisateurs et de les aider à tirer parti de Salesforce.</label>
+        <label>Le jour où vous lancez votre organisation Salesforce, vous souhaitez que chaque utilisateur soit prêt. Il est par conséquent important de planifier l'intégration de vos utilisateurs et de les aider à tirer parti de Salesforce.</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemTrainUsersLinkLabel</name>
@@ -4202,7 +4422,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>gsChecklistMakeItYourTitle</name>
-        <label>S&apos;approprier Salesforce</label>
+        <label>S'approprier Salesforce</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistOnboardUsersDesc</name>
@@ -4358,15 +4578,15 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>gseuChecklistItemCaptureDonorIntentLinkLabel</name>
-        <label>Consultez Trailhead pour en savoir plus sur les allocations de don</label>
+        <label>Consultez Trailhead pour en savoir plus sur les affectations de don</label>
     </customLabels>
     <customLabels>
         <name>gseuChecklistItemCaptureDonorIntentPriBtnLabel</name>
-        <label>Création d’allocations</label>
+        <label>Création d’affectations</label>
     </customLabels>
     <customLabels>
         <name>gseuChecklistItemCaptureDonorIntentTitle</name>
-        <label>Identification de l’intention du donateur avec les allocations de don</label>
+        <label>Identification de l’intention du donateur avec les affectations de don</label>
     </customLabels>
     <customLabels>
         <name>gseuChecklistItemCollectGiftsDesc</name>
@@ -4473,8 +4693,12 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <label>Ce nom a été utilisé par un autre modèle. Saisissez un nom unique.</label>
     </customLabels>
     <customLabels>
+        <name>geErrorDonorMismatch</name>
+        <label>Pour un don de foyer, sélectionnez Contact1 pour Type de donateur et renseignez les champs Contact.</label>
+    </customLabels>
+    <customLabels>
         <name>geErrorDonorTypeValidation</name>
-        <label>Lorsque vous sélectionnez {0} pour {1}, vous devez saisir des informations dans au moins l&apos;un des champs suivants : {2} ou {3}</label>
+        <label>Lorsque vous sélectionnez {0} pour {1}, vous devez saisir des informations dans au moins l'un des champs suivants : {2} ou {3}</label>
     </customLabels>
     <customLabels>
         <name>geErrorDonorTypeValidationSingle</name>
@@ -4486,11 +4710,11 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>geErrorFieldPermission</name>
-        <label>Vous n&apos;êtes pas autorisé(e) à modifier ce champ.</label>
+        <label>Vous n'êtes pas autorisé(e) à modifier ce champ.</label>
     </customLabels>
     <customLabels>
         <name>geErrorObjectCRUDHeader</name>
-        <label>Vérifier vos autorisations d&apos;objet</label>
+        <label>Vérifier vos autorisations d'objet</label>
     </customLabels>
     <customLabels>
         <name>geErrorObjectCRUDBody</name>
@@ -4522,11 +4746,11 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>geErrorPageLevelFieldPermission1</name>
-        <label>Pour enregistrer les modifications apportées à ce modèle, vous devez disposer de l&apos;autorisation de modification de tous les champs du formulaire. Retirez les champs suivants : {0}</label>
+        <label>Pour enregistrer les modifications apportées à ce modèle, vous devez disposer de l'autorisation de modification de tous les champs du formulaire. Retirez les champs suivants : {0}</label>
     </customLabels>
     <customLabels>
         <name>geErrorPageLevelFieldPermission2</name>
-        <label>Alternativement, quittez ce formulaire sans enregistrer, puis vérifiez vos autorisations sur l&apos;objet cible et sur l&apos;objet Importation de données NPSP.</label>
+        <label>Alternativement, quittez ce formulaire sans enregistrer, puis vérifiez vos autorisations sur l'objet cible et sur l'objet Importation de données NPSP.</label>
     </customLabels>
     <customLabels>
         <name>geErrorPageLevelMissingRequiredFields</name>
@@ -4534,7 +4758,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>geErrorPageLevelMissingRequiredGroupFields</name>
-        <label>Au moins l&apos;un des champs suivants est requis : {0}</label>
+        <label>Au moins l'un des champs suivants est requis : {0}</label>
     </customLabels>
     <customLabels>
         <name>geErrorRequestTimedout</name>
@@ -4550,7 +4774,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>geErrorUncertainCardChargePart2</name>
-        <label>Si le paiement n&apos;a pas été traité, saisissez de nouveau le don et le paiement par carte dans Saisie de dons.</label>
+        <label>Si le paiement n'a pas été traité, saisissez de nouveau le don et le paiement par carte dans Saisie de dons.</label>
     </customLabels>
     <customLabels>
         <name>geErrorUncertainCardChargePart3</name>
@@ -4562,11 +4786,11 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>commonGauAllocations</name>
-        <label>Allocations UCG</label>
+        <label>Affectations UCG</label>
     </customLabels>
     <customLabels>
         <name>gauAllocationErrorGeneral</name>
-        <label>Erreur d’allocation UCG</label>
+        <label>Erreur d’affectation UCG</label>
     </customLabels>
     <customLabels>
         <name>geHeaderAdvancedFormFields</name>
@@ -4582,11 +4806,11 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>geHeaderBatchHeaderLeftCol</name>
-        <label>Sélectionner les champs d&apos;en-tête du lot</label>
+        <label>Sélectionner les champs d'en-tête du lot</label>
     </customLabels>
     <customLabels>
         <name>geHeaderBatchHeaderRightCol</name>
-        <label>Configurer les champs d&apos;en-tête du lot</label>
+        <label>Configurer les champs d'en-tête du lot</label>
     </customLabels>
     <customLabels>
         <name>geHeaderBatchSelectTemplate</name>
@@ -4626,7 +4850,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>geHeaderFormFieldsModalDisplayOptionsSection</name>
-        <label>Options d&apos;affichage</label>
+        <label>Options d'affichage</label>
     </customLabels>
     <customLabels>
         <name>geHeaderFormFieldsModalRenameSection</name>
@@ -4690,15 +4914,15 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>geHelpTextAddressMapping</name>
-        <label>L’enregistrement Adresse qui est associé au Compte de foyer du Contact1. L’automatisation NPSP peut également remplir cette adresse pour le foyer de Contact1 et tous les contacts au sein du même foyer. Si vous utilisez l&apos;objet Adresse EDA, vous devez créer un nouveau Groupe d’objets pour l’objet et utiliser ses champs sur votre modèle.</label>
+        <label>L’enregistrement Adresse qui est associé au Compte de foyer du Contact1. L’automatisation NPSP peut également remplir cette adresse pour le foyer de Contact1 et tous les contacts au sein du même foyer. Si vous utilisez l'objet Adresse EDA, vous devez créer un nouveau Groupe d’objets pour l’objet et utiliser ses champs sur votre modèle.</label>
     </customLabels>
     <customLabels>
         <name>geHelpTextAllocation1Mapping</name>
-        <label>Ce Groupe d&apos;objets ne vous permet de saisir qu’une seule allocation UCG. Utilisez ces champs uniquement si vous mappez des champs personnalisés sur les allocations UCG. Sinon, utilisez le Paquet de champs des Allocations UCG.</label>
+        <label>Ce Groupe d'objets ne vous permet de saisir qu’une seule affectation UCG. Utilisez ces champs uniquement si vous mappez des champs personnalisés sur les affectations UCG. Sinon, utilisez le Paquet de champs des Affectations UCG.</label>
     </customLabels>
     <customLabels>
         <name>geHelpTextAllocation2Mapping</name>
-        <label>Ce Groupe d&apos;objets ne vous permet de saisir qu’une deuxième allocation UCG. Utilisez ces champs uniquement si vous mappez des champs personnalisés sur les allocations UCG. Sinon, utilisez le Paquet de champs des Allocations UCG.</label>
+        <label>Ce Groupe d'objets ne vous permet de saisir qu’une deuxième affectation UCG. Utilisez ces champs uniquement si vous mappez des champs personnalisés sur les affectations UCG. Sinon, utilisez le Paquet de champs des Affectations UCG.</label>
     </customLabels>
     <customLabels>
         <name>geHelpTextAllocationBundle</name>
@@ -4710,19 +4934,19 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>geHelpTextContact1Mapping</name>
-        <label>Le Contact principal dans un Compte de foyer. Ce Contact peut être le donateur ou avoir une Affiliation avec l&apos;organisation dans le Compte1.</label>
+        <label>Le Contact principal dans un Compte de foyer. Ce Contact peut être le donateur ou avoir une Affiliation avec l'organisation dans le Compte1.</label>
     </customLabels>
     <customLabels>
         <name>geHelpTextContact2Mapping</name>
-        <label>Le Contact secondaire dans le Compte de foyer du Contact1. Ce Contact peut également avoir une Affiliation avec l&apos;organisation dans le Compte2.</label>
+        <label>Le Contact secondaire dans le Compte de foyer du Contact1. Ce Contact peut également avoir une Affiliation avec l'organisation dans le Compte2.</label>
     </customLabels>
     <customLabels>
         <name>geHelpTextFormFieldsFieldCustomLabel</name>
-        <label>Ce champ utilise le Groupe d&apos;objets {0} pour cibler le champ {1} de l&apos;objet {2}.</label>
+        <label>Ce champ utilise le Groupe d'objets {0} pour cibler le champ {1} de l'objet {2}.</label>
     </customLabels>
     <customLabels>
         <name>geHelpTextFormFieldsFieldLabelLabel</name>
-        <label>Affiche le groupe d&apos;objets et le nom d&apos;API du champ cible. Vous pouvez modifier l&apos;étiquette ci-dessous visible par les utilisateurs.</label>
+        <label>Affiche le groupe d'objets et le nom d'API du champ cible. Vous pouvez modifier l'étiquette ci-dessous visible par les utilisateurs.</label>
     </customLabels>
     <customLabels>
         <name>geHelpTextHouseholdMapping</name>
@@ -4734,7 +4958,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>geTextFieldBundlePaymentMethod</name>
-        <label>Le paquet de champs Salesforce.org Elevate contient des champs de saisie d&apos;informations de paiement. Autorisez les utilisateurs à changer de type de paiement en ajoutant au formulaire Mode de paiement depuis l&apos;objet Paiement avant ce paquet de champs.</label>
+        <label>Le paquet de champs Salesforce.org Elevate contient des champs de saisie d'informations de paiement. Autorisez les utilisateurs à changer de type de paiement en ajoutant au formulaire Mode de paiement depuis l'objet Paiement avant ce paquet de champs.</label>
     </customLabels>
     <customLabels>
         <name>geJWTUtilInvalidBase64Message</name>
@@ -4777,7 +5001,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>gePaymentProcessingErrorBanner</name>
-        <label>Une erreur s&apos;est produite lors du traitement de la transaction.</label>
+        <label>Une erreur s'est produite lors du traitement de la transaction.</label>
     </customLabels>
     <customLabels>
         <name>gePaymentServicesUnavailableHeader</name>
@@ -4925,7 +5149,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>geToastTemplateTabsError</name>
-        <label>Vérifiez l&apos;élément suivant : {0}</label>
+        <label>Vérifiez l'élément suivant : {0}</label>
     </customLabels>
     <customLabels>
         <name>geToastTemplateUpdateSuccess</name>
@@ -4949,11 +5173,11 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>geWarningFormFieldsModalDeleteSection</name>
-        <label>Avertissement : En supprimant cette section, vous retirez également des champs obligatoires du modèle. Ces champs doivent être ajoutés à une autre section avant d&apos;enregistrer le modèle.</label>
+        <label>Avertissement : En supprimant cette section, vous retirez également des champs obligatoires du modèle. Ces champs doivent être ajoutés à une autre section avant d'enregistrer le modèle.</label>
     </customLabels>
     <customLabels>
         <name>geWarningGauAllocFieldUpdatesDisabled</name>
-        <label>Cette donation a au moins une Allocation UCG attribuée. Par conséquent, vous ne pouvez pas mettre à jour certains champs.</label>
+        <label>Cette donation a au moins une Affectation UCG attribuée. Par conséquent, vous ne pouvez pas mettre à jour certains champs.</label>
     </customLabels>
     <customLabels>
         <name>giftProcessingAccountException</name>
@@ -4985,7 +5209,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>gsDaysRemainingInFreeTrial</name>
-        <label>jours restants pour l&apos;essai gratuit</label>
+        <label>jours restants pour l'essai gratuit</label>
     </customLabels>
     <customLabels>
         <name>gseuExploreTrailheadButton</name>
@@ -5001,7 +5225,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>gsFollowUpApplicationStatus</name>
-        <label>Pour suivre le statut de votre demande, envoyez-nous un e-mail à l&apos;adresse :</label>
+        <label>Pour suivre le statut de votre demande, envoyez-nous un e-mail à l'adresse :</label>
     </customLabels>
     <customLabels>
         <name>gsLearnMore</name>
@@ -5033,11 +5257,11 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>healthDetailsAccountDefaultRTInvalid</name>
-        <label>Le type d&apos;enregistrement Modèle de compte n’est pas valide.</label>
+        <label>Le type d'enregistrement Modèle de compte n’est pas valide.</label>
     </customLabels>
     <customLabels>
         <name>healthDetailsAccountDefaultRTIssue</name>
-        <label>Le type d&apos;enregistrement de modèle de compte, {0} (défini dans les paramètres NPSP) est actuellement défini comme type d&apos;enregistrement de compte par défaut de votre profil.</label>
+        <label>Le type d'enregistrement de modèle de compte, {0} (défini dans les paramètres NPSP) est actuellement défini comme type d'enregistrement de compte par défaut de votre profil.</label>
     </customLabels>
     <customLabels>
         <name>healthDetailsAccountModel</name>
@@ -5085,7 +5309,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>healthDetailsHHAccountModel</name>
-        <label>Lors de l’utilisation du modèle de compte de foyer, les règles de foyer doivent être configurées avec « Aucun contact ». Vous pouvez définir le champ Règles d&apos;objet de foyer dans la page Paramètres NPSP sous Personnes | Foyer.</label>
+        <label>Lors de l’utilisation du modèle de compte de foyer, les règles de foyer doivent être configurées avec « Aucun contact ». Vous pouvez définir le champ Règles d'objet de foyer dans la page Paramètres NPSP sous Personnes | Foyer.</label>
     </customLabels>
     <customLabels>
         <name>healthDetailsHHActNoContacts</name>
@@ -5157,7 +5381,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>healthDetailsInvalidPicklistValue</name>
-        <label>La valeur de liste de sélection « {0} » n&apos;est pas prise en charge.</label>
+        <label>La valeur de liste de sélection « {0} » n'est pas prise en charge.</label>
     </customLabels>
     <customLabels>
         <name>healthDetailsInvalidRecordtypeId</name>
@@ -5173,7 +5397,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>healthDetailsMailingListReportMissing</name>
-        <label>Le rapport de la liste de diffusion des foyers de la campagne NPSP est manquant. Ce rapport est exécuté lorsque vous cliquez sur le bouton Liste de diffusion des foyers à partir d&apos;un enregistrement de campagne.</label>
+        <label>Le rapport de la liste de diffusion des foyers de la campagne NPSP est manquant. Ce rapport est exécuté lorsque vous cliquez sur le bouton Liste de diffusion des foyers à partir d'un enregistrement de campagne.</label>
     </customLabels>
     <customLabels>
         <name>healthDetailsMissingOppPayments</name>
@@ -5257,7 +5481,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>healthLabelAccountDefaultRT</name>
-        <label>Type d&apos;enregistrement Modèle de compte</label>
+        <label>Type d'enregistrement Modèle de compte</label>
     </customLabels>
     <customLabels>
         <name>healthLabelAccountModelData</name>
@@ -5281,15 +5505,15 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>healthLabelDataBatchNotRun</name>
-        <label>Les contrôles d&apos;intégrité des données d’enregistrement n&apos;ont pas été exécutés.</label>
+        <label>Les contrôles d'intégrité des données d’enregistrement n'ont pas été exécutés.</label>
     </customLabels>
     <customLabels>
         <name>healthLabelDisableRecordBatch</name>
-        <label>Désactiver les contrôles d&apos;intégrité des données d&apos;enregistrement</label>
+        <label>Désactiver les contrôles d'intégrité des données d'enregistrement</label>
     </customLabels>
     <customLabels>
         <name>healthLabelDisableRecordBatchDescription</name>
-        <label>Si cette option est sélectionnée, le Contrôle d&apos;intégrité vérifie uniquement vos paramètres de configuration NPSP pour détecter les problèmes. Sélectionnez cette option si votre organisation contient un nombre important d&apos;enregistrements et si le Contrôle d&apos;intégrité rencontre des problèmes d&apos;exécution.</label>
+        <label>Si cette option est sélectionnée, le Contrôle d'intégrité vérifie uniquement vos paramètres de configuration NPSP pour détecter les problèmes. Sélectionnez cette option si votre organisation contient un nombre important d'enregistrements et si le Contrôle d'intégrité rencontre des problèmes d'exécution.</label>
     </customLabels>
     <customLabels>
         <name>healthLabelErrorRecipientValid</name>
@@ -5405,11 +5629,11 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>healthPaymentAutoCloseStageInvalid</name>
-        <label>Sélectionnez une étape active Clôturée/Gagnée dans l&apos;étape d&apos;opportunité à laquelle effectuer la transition lorsque tous les paiements sont payés.</label>
+        <label>Sélectionnez une étape active Clôturée/Gagnée dans l'étape d'opportunité à laquelle effectuer la transition lorsque tous les paiements sont payés.</label>
     </customLabels>
     <customLabels>
         <name>healthPaymentAutoCloseStageMustBeActiveClosedWonOrBlank</name>
-        <label>Sélectionnez une étape Clôturée/Gagnée active dans la phase d&apos;opportunité pour le paramètre Une fois entièrement payé. Vous pouvez également laisser la valeur vide, ce qui empêche NPSP de mettre à jour automatiquement l&apos;étape Opportunité lorsque tous les paiements sont reçus.</label>
+        <label>Sélectionnez une étape Clôturée/Gagnée active dans la phase d'opportunité pour le paramètre Une fois entièrement payé. Vous pouvez également laisser la valeur vide, ce qui empêche NPSP de mettre à jour automatiquement l'étape Opportunité lorsque tous les paiements sont reçus.</label>
     </customLabels>
     <customLabels>
         <name>healthPaymentAutoCloseStageValid</name>
@@ -5421,11 +5645,11 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>healthSolutionAccountDefaultRTInvalid</name>
-        <label>Accédez à &lt;b&gt;Personnes | Modèle de compte&lt;/b&gt; et sélectionnez un type d&apos;enregistrement valide.</label>
+        <label>Accédez à &lt;b&gt;Personnes | Modèle de compte&lt;/b&gt; et sélectionnez un type d'enregistrement valide.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionAccountDefaultRTIssue</name>
-        <label>Le type d’enregistrement sélectionné pour le modèle de compte ne doit pas être utilisé comme type d&apos;enregistrement de compte par défaut pour un profile. Cela peut entraîner divers problèmes de données.</label>
+        <label>Le type d’enregistrement sélectionné pour le modèle de compte ne doit pas être utilisé comme type d'enregistrement de compte par défaut pour un profile. Cela peut entraîner divers problèmes de données.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionAccountModel</name>
@@ -5525,7 +5749,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>healthSolutionOCRDupPrimary</name>
-        <label>Si vous avez plusieurs rôles de contact d&apos;opportunité marqués comme principaux, cela peut amener NPSP à calculer de manière incorrecte les cumuls d&apos;occasions, tels que le nombre total de dons. Pour voir quelles opportunités ont plus d&apos;un rôle de contact d&apos;opportunité marqué Principal, exécutez le rapport &lt;b&gt;Opportunités avec rôles de contact principal&lt;/b&gt; dans le dossier de rapport Contrôles d’intégrité du NPSP.</label>
+        <label>Si vous avez plusieurs rôles de contact d'opportunité marqués comme principaux, cela peut amener NPSP à calculer de manière incorrecte les cumuls d'occasions, tels que le nombre total de dons. Pour voir quelles opportunités ont plus d'un rôle de contact d'opportunité marqué Principal, exécutez le rapport &lt;b&gt;Opportunités avec rôles de contact principal&lt;/b&gt; dans le dossier de rapport Contrôles d’intégrité du NPSP.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionOCRException</name>
@@ -5765,7 +5989,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>lblToday</name>
-        <label>Aujourd&apos;hui</label>
+        <label>Aujourd'hui</label>
     </customLabels>
     <customLabels>
         <name>lblYouAreHere</name>
@@ -5964,12 +6188,76 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <label>Dons d’une organisation</label>
     </customLabels>
     <customLabels>
+        <name>pmtElevatePermissionRequired</name>
+        <label>Gérez ce paiement dans Elevate.</label>
+    </customLabels>
+    <customLabels>
         <name>pmtModifyCurrency</name>
         <label>Vous ne pouvez pas modifier directement les devises de paiement. Mettez à jour la devise de l’opportunité parente et NPSP mettra automatiquement à jour la devise de tous les enregistrements de paiement associés.</label>
     </customLabels>
     <customLabels>
+        <name>pmtNoRefundPermissionMessage</name>
+        <label>Vous n’êtes pas autorisé à rembourser les paiements. Contactez votre administrateur Salesforce pour obtenir de l’aide.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtOriginalPaymentNotCompleted</name>
+        <label>Le paiement ne peut pas être remboursé, car Elevate ne l’a pas encore traité.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtOriginalPaymentNotPaid</name>
+        <label>Ce paiement est toujours en cours de traitement et ne peut pas encore être remboursé.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtOriginalPaymentNotFound</name>
+        <label>Vous ne pouvez pas modifier un remboursement sans paiement initial.</label>
+    </customLabels>
+    <customLabels>
         <name>pmtPaidPaymentDateRequired</name>
         <label>Une paiement payé doit avoir une date de paiement.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentDate</name>
+        <label>Date du paiement</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentErrorMessage</name>
+        <label>Une erreur s'est produite lors du traitement du remboursement.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmountInvalid</name>
+        <label>Saisissez un remboursement inférieur ou égal au solde restant.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentSuccessMessage</name>
+        <label>Le remboursement a été effectué.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtPaymentNotFound</name>
+        <label>L’enregistrement de paiement Elevate correspondant est introuvable. Contactez votre administrateur Salesforce pour obtenir de l’aide.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtPaymentNotRefundable</name>
+        <label>Ce paiement a déjà été remboursé ou il s’agit d’un remboursement.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmount</name>
+        <label>Montant du remboursement</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentMessage</name>
+        <label>Remboursez le paiement suivant :</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundProcessing</name>
+        <label>Remboursement soumis pour traitement. Recherchez le paiement remboursé dans l’enregistrement de l’opportunité.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentConfirmedButton</name>
+        <label>Rembourser le paiement</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentTitle</name>
+        <label>Rembourser le paiement ?</label>
     </customLabels>
     <customLabels>
         <name>pmtUnpaidPaymentScheduledDateRequired</name>
@@ -6157,7 +6445,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>pscManageSoftCreditsPermissionDenied</name>
-        <label>Vous n’êtes pas autorisé à gérer les crédits indirects partiels. Pour plus d&apos;informations, contactez votre administrateur système.</label>
+        <label>Vous n’êtes pas autorisé à gérer les crédits indirects partiels. Pour plus d'informations, contactez votre administrateur système.</label>
     </customLabels>
     <customLabels>
         <name>pscManageSoftCreditsFull</name>
@@ -6225,7 +6513,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>sendAcknowledgmentFailureReasons</name>
-        <label>Les enregistrements suivants n’ont pas été confirmés. Les confirmations peuvent échouer s’il n’y a pas de règle de workflow (Acknowledgement Status EQUALS &apos;Send Acknowledgement&apos;) activée pour envoyer la confirmation, ou si les enregistrements n’ont pas satisfait les critères additionnels de déclenchement de la règle de workflow. Par exemple, si le contact principal n’est pas défini, ou si son champ d’e-mail est vide ou non valide.</label>
+        <label>Les enregistrements suivants n’ont pas été confirmés. Les confirmations peuvent échouer s’il n’y a pas de règle de workflow (Acknowledgement Status EQUALS 'Send Acknowledgement') activée pour envoyer la confirmation, ou si les enregistrements n’ont pas satisfait les critères additionnels de déclenchement de la règle de workflow. Par exemple, si le contact principal n’est pas défini, ou si son champ d’e-mail est vide ou non valide.</label>
     </customLabels>
     <customLabels>
         <name>sendAcknowledgmentFireStatus</name>
@@ -6289,11 +6577,11 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>stgAddrPermissionDenied</name>
-        <label>Vous n’êtes pas autorisé à gérer les paramètres d’adresse. Pour plus d&apos;informations, contactez votre administrateur système.</label>
+        <label>Vous n’êtes pas autorisé à gérer les paramètres d’adresse. Pour plus d'informations, contactez votre administrateur système.</label>
     </customLabels>
     <customLabels>
         <name>stgAllocationLevel</name>
-        <label>Type d’allocation</label>
+        <label>Type d’affectation</label>
     </customLabels>
     <customLabels>
         <name>stgBDIGoToSetup</name>
@@ -6467,7 +6755,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>stgDIFMNonAdminError</name>
-        <label>Seul un administrateur système peut activer ou désactiver le Mappage avancé d&apos;importation de données.</label>
+        <label>Seul un administrateur système peut activer ou désactiver le Mappage avancé d'importation de données.</label>
     </customLabels>
     <customLabels>
         <name>stgDocumentation</name>
@@ -6479,11 +6767,11 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>stgDeploymentHasInvalidHelpTextMappings</name>
-        <label>Le Mappage avancé est activé, mais nous avons détecté des mappages Texte d&apos;aide non valides qui n&apos;ont pas pu être migrés. &lt;b&gt;Prenez une capture d&apos;écran du tableau ci-dessous, qui ne sera plus affiché lorsque vous aurez quitté la page.&lt;/b&gt;</label>
+        <label>Le Mappage avancé est activé, mais nous avons détecté des mappages Texte d'aide non valides qui n'ont pas pu être migrés. &lt;b&gt;Prenez une capture d'écran du tableau ci-dessous, qui ne sera plus affiché lorsque vous aurez quitté la page.&lt;/b&gt;</label>
     </customLabels>
     <customLabels>
         <name>stgDeploymentHelpTextMappingEnabled</name>
-        <label>Le mappage Texte d&apos;aide est activé.</label>
+        <label>Le mappage Texte d'aide est activé.</label>
     </customLabels>
     <customLabels>
         <name>stgDeploymentInProgress</name>
@@ -6516,7 +6804,7 @@ Si vous sélectionnez Ne pas planifier automatiquement les tâches NPSP par déf
     </customLabels>
     <customLabels>
         <name>stgErrorINaming</name>
-        <label>La classe Apex que vous avez sélectionnée dans le champ Implementing Class n&apos;implémente pas l&apos;interface HH_INaming. Sélectionnez une autre classe Apex ou utilisez la classe NPSP par défaut HH_NameSpec.</label>
+        <label>La classe Apex que vous avez sélectionnée dans le champ Implementing Class n'implémente pas l'interface HH_INaming. Sélectionnez une autre classe Apex ou utilisez la classe NPSP par défaut HH_NameSpec.</label>
     </customLabels>
     <customLabels>
         <name>stgErrorInvalidClass</name>
@@ -6528,11 +6816,11 @@ Si vous sélectionnez Ne pas planifier automatiquement les tâches NPSP par déf
     </customLabels>
     <customLabels>
         <name>stgErrorMissingDefaultGauRecordWithPmtAllocEnabled</name>
-        <label>L&apos;Unité comptable générale par défaut précédemment configurée n&apos;existe plus et a été retirée. Vous devez réactiver les Allocations par défaut et sélectionner une Unité comptable générale par défaut pour pouvoir utiliser les allocations de paiement. Pour mettre à jour les Paramètres d&apos;allocation par défaut, ouvrez la page Allocations UCG dans les Paramètres de NPSP.</label>
+        <label>L'Unité comptable générale par défaut précédemment configurée n'existe plus et a été retirée. Vous devez réactiver les Affectations par défaut et sélectionner une Unité comptable générale par défaut pour pouvoir utiliser les affectations de paiement. Pour mettre à jour les Paramètres d'affectation par défaut, ouvrez la page Affectations UCG dans les Paramètres de NPSP.</label>
     </customLabels>
     <customLabels>
         <name>stgErrorMissingDefaultGauRecord</name>
-        <label>L&apos;Unité comptable générale par défaut précédemment configurée n&apos;existe plus et a été retirée. Pour réactiver les Allocations par défaut, ouvrez la page Allocations UCG dans les Paramètres de NPSP.</label>
+        <label>L'Unité comptable générale par défaut précédemment configurée n'existe plus et a été retirée. Pour réactiver les Affectations par défaut, ouvrez la page Affectations UCG dans les Paramètres de NPSP.</label>
     </customLabels>
     <customLabels>
         <name>stgHHDataRefreshTitle</name>
@@ -6548,38 +6836,38 @@ Si vous sélectionnez Ne pas planifier automatiquement les tâches NPSP par déf
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMapping1</name>
-        <label>Lorsque vous activez le Mappage avancé, nous convertissons les mappages de champs Texte d&apos;aide existants vers le Mappage avancé. Une fois activé, vous pouvez ensuite modifier les mappages et créer d&apos;autres mappages sur cette page.</label>
+        <label>Lorsque vous activez le Mappage avancé, nous convertissons les mappages de champs Texte d'aide existants vers le Mappage avancé. Une fois activé, vous pouvez ensuite modifier les mappages et créer d'autres mappages sur cette page.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMapping2</name>
-        <label>Vous pouvez désactiver le Mappage avancé et rétablir le mappage Texte d&apos;aide, mais les modifications apportées au Mappage avancé sont perdues.</label>
+        <label>Vous pouvez désactiver le Mappage avancé et rétablir le mappage Texte d'aide, mais les modifications apportées au Mappage avancé sont perdues.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMapping3</name>
-        <label>Vous pouvez consulter la documentation complète sur la configuration du Mappage avancé &lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;ici&lt;/a&gt;.</label>
+        <label>Vous pouvez consulter la documentation complète sur la configuration du Mappage avancé &lt;a href="https://powerofus.force.com/NPSP_Advanced_Mapping" target="_blank"&gt;ici&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMapping4</name>
         <label>&lt;b&gt;Ce message ne sera pas affiché si vous quittez la page. Prenez une capture d’écran de cette page ou copiez les informations du tableau ci-dessous pour garder une trace des mappages Texte d’aide que vous devez corriger. &lt;/b&gt;
             &lt;br/&gt;
             &lt;br/&gt;
-            Nous n’avons pas pu convertir certains mappages Texte d’aide, car ceux-ci n’étaient pas valides. &lt;a href=&quot;https://powerofus.force.com/NPSP_Troubleshoot_Help_Text&quot; target=&quot;_blank&quot;&gt;Informations supplémentaires sur les problèmes courants relatifs aux mappages Texte d’aide&lt;/a&gt;. Nous vous recommandons de désactiver le mappage avancé, de corriger les mappages Texte d’aide non valides, puis de réactiver le mappage avancé. Vous pouvez aussi ajouter ces mappages en configurant le mappage avancé à l’écran suivant, mais si vous désactivez le mappage avancé, le texte d’aide non valide d’origine sera rétabli pour ces mappages supplémentaires.</label>
+            Nous n’avons pas pu convertir certains mappages Texte d’aide, car ceux-ci n’étaient pas valides. &lt;a href="https://powerofus.force.com/NPSP_Troubleshoot_Help_Text" target="_blank"&gt;Informations supplémentaires sur les problèmes courants relatifs aux mappages Texte d’aide&lt;/a&gt;. Nous vous recommandons de désactiver le mappage avancé, de corriger les mappages Texte d’aide non valides, puis de réactiver le mappage avancé. Vous pouvez aussi ajouter ces mappages en configurant le mappage avancé à l’écran suivant, mais si vous désactivez le mappage avancé, le texte d’aide non valide d’origine sera rétabli pour ces mappages supplémentaires.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMappingInvalidHelpText</name>
-        <label>Mappages Texte d&apos;aide non valides</label>
+        <label>Mappages Texte d'aide non valides</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMappingTableHeader1</name>
-        <label>Champ d&apos;importation de données NPSP</label>
+        <label>Champ d'importation de données NPSP</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMappingTableHeader2</name>
-        <label>Valeur Texte d&apos;aide actuelle</label>
+        <label>Valeur Texte d'aide actuelle</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAlloFiscalYearRollups</name>
-        <label>Lorsque cette option est sélectionnée, elle active les paramètres d’année fiscale, au lieu d’année civile, pour les cumuls totaux d’allocation. Pour définir les informations sur l’année fiscale, accédez à Configuration, puis Année fiscale. REMARQUE : NPSP n’est pas compatible avec les paramètres d’années fiscales personnalisés.</label>
+        <label>Lorsque cette option est sélectionnée, elle active les paramètres d’année fiscale, au lieu d’année civile, pour les cumuls totaux d’affectation. Pour définir les informations sur l’année fiscale, accédez à Configuration, puis Année fiscale. REMARQUE : NPSP n’est pas compatible avec les paramètres d’années fiscales personnalisés.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAlloNDayValue</name>
@@ -6587,17 +6875,17 @@ Si vous sélectionnez Ne pas planifier automatiquement les tâches NPSP par déf
     </customLabels>
     <customLabels>
         <name>stgHelpAllocationLevel</name>
-        <label>Une allocation est le montant spécifique d’un don qui va dans une unité comptable générale (UCG) désignée. Ce paramètre détermine si les fonds sont attribués en fonction de l’opportunité ou du montant qui correspond au paiement.&lt;br/&gt;&lt;br/&gt;
+        <label>Une affectation est le montant spécifique d’un don qui va dans une unité comptable générale (UCG) désignée. Ce paramètre détermine si les fonds sont attribués en fonction de l’opportunité ou du montant qui correspond au paiement.&lt;br/&gt;&lt;br/&gt;
 
-&lt;b&gt;AVERTISSEMENT :&lt;/b&gt; choisir d’utiliser les allocations de paiement modifie la manière dont les allocations d’opportunité fonctionnent dans votre organisation. Il est important de comprendre ces modifications et les exigences supplémentaires existantes avant de les activer.&lt;br/&gt;&lt;br/&gt;
+&lt;b&gt;AVERTISSEMENT :&lt;/b&gt; choisir d’utiliser les affectations de paiement modifie la manière dont les affectations d’opportunité fonctionnent dans votre organisation. Il est important de comprendre ces modifications et les exigences supplémentaires existantes avant de les activer.&lt;br/&gt;&lt;br/&gt;
 
-Si vous activez et commencez à utiliser les allocations de paiement puis que vous les désactivez, vous devrez rapprocher manuellement vos données et mettre à jour les enregistrements d’allocations d’opportunités pour refléter les informations attribuées précédemment dans les allocations de paiement. Pour mieux comprendre les conséquences que cela peut avoir, consultez la documentation relative aux allocations de paiement.&lt;br/&gt;&lt;br/&gt;
+Si vous activez et commencez à utiliser les affectations de paiement puis que vous les désactivez, vous devrez rapprocher manuellement vos données et mettre à jour les enregistrements d’affectations d’opportunités pour refléter les informations attribuées précédemment dans les affectations de paiement. Pour mieux comprendre les conséquences que cela peut avoir, consultez la documentation relative aux affectations de paiement.&lt;br/&gt;&lt;br/&gt;
 
-Lorsque vous activez les allocations de paiement, les cumuls existants restent les mêmes. Nous ne modifions pas les cumuls ni ne créons de nouveaux cumuls personnalisés. Si vous le souhaitez, vous pouvez créer de nouveaux cumuls uniquement en fonction des paiements.</label>
+Lorsque vous activez les affectations de paiement, les cumuls existants restent les mêmes. Nous ne modifions pas les cumuls ni ne créons de nouveaux cumuls personnalisés. Si vous le souhaitez, vous pouvez créer de nouveaux cumuls uniquement en fonction des paiements.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAutoAffil</name>
-        <label>Lorsque cette option est sélectionnée, Salesforce crée ou met à jour les affiliations pour les contacts connectés aux comptes d’organisation dès que le champ de compte ou d’affiliation principale du contact est modifié. Les comptes d&apos;organisations incluent tous les types d&apos;enregistrement, à l&apos;exception de ceux définis en tant que types d&apos;enregistrement de compte un-à-un ou individuel.</label>
+        <label>Lorsque cette option est sélectionnée, Salesforce crée ou met à jour les affiliations pour les contacts connectés aux comptes d’organisation dès que le champ de compte ou d’affiliation principale du contact est modifié. Les comptes d'organisations incluent tous les types d'enregistrement, à l'exception de ceux définis en tant que types d'enregistrement de compte un-à-un ou individuel.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAutoRelCampaignRT</name>
@@ -6621,16 +6909,16 @@ Lorsque vous activez les allocations de paiement, les cumuls existants restent l
     </customLabels>
     <customLabels>
         <name>stgHelpBDEOppNaming</name>
-        <label>Lorsque cette option est sélectionnée, le paramètre génère automatiquement le nom de l’enregistrement pour les enregistrements d’opportunités saisis par lots en fonction de la valeur des champs saisis. REMARQUE : Ce paramètre n&apos;a aucun effet si des noms d&apos;opportunité personnalisés sont configurés.</label>
+        <label>Lorsque cette option est sélectionnée, le paramètre génère automatiquement le nom de l’enregistrement pour les enregistrements d’opportunités saisis par lots en fonction de la valeur des champs saisis. REMARQUE : Ce paramètre n'a aucun effet si des noms d'opportunité personnalisés sont configurés.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpBatchAlloRollup</name>
-        <label>Cet utilitaire calcule les cumuls totaux pour toutes les opportunités Clôturées avec des allocations et met à jour l’unité comptable générale (UCG) concernée.
+        <label>Cet utilitaire calcule les cumuls totaux pour toutes les opportunités Clôturées avec des affectations et met à jour l’unité comptable générale (UCG) concernée.
 Ce processus peut prendre un certain temps, mais vous pouvez fermer cette page en toute sécurité et le processus continuera en arrière-plan.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpBatchCreateDefault</name>
-        <label>Cliquer sur ce bouton démarre un processus par lots qui crée des allocations par défaut pour toutes les opportunités existantes, excepté les opportunités exclues dans les paramètres de cumul d’allocations. Les allocations par défaut doivent être activées et une unité comptable générale par défaut sélectionnée pour exécuter cet outil.</label>
+        <label>Cliquer sur ce bouton démarre un processus par lots qui crée des affectations par défaut pour toutes les opportunités existantes, excepté les opportunités exclues dans les paramètres de cumul d’affectations. Les affectations par défaut doivent être activées et une unité comptable générale par défaut sélectionnée pour exécuter cet outil.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpBatchOppRollup</name>
@@ -6707,11 +6995,11 @@ Attendez que le processus soit terminé à 100 % pour quitter ou rafraîchir ce
     </customLabels>
     <customLabels>
         <name>stgHelpCustomizableRollupsEnable1</name>
-        <label>Vous trouverez la documentation complète relative aux cumuls personnalisables &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;ici&lt;/a&gt;.</label>
+        <label>Vous trouverez la documentation complète relative aux cumuls personnalisables &lt;a href="https://powerofus.force.com/NPSP_Customizable_Rollups_Overview" target="_blank"&gt;ici&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpCustomizableRollupsEnable2</name>
-        <label>Lorsque vous activez les cumuls personnalisables pour la première fois, nous convertirons automatiquement vos cumuls existants et les 87 cumuls NPSP prédéfinis en cumuls personnalisables. Pour plus d&apos;informations, consultez &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;ce document&lt;/a&gt;.
+        <label>Lorsque vous activez les cumuls personnalisables pour la première fois, nous convertirons automatiquement vos cumuls existants et les 87 cumuls NPSP prédéfinis en cumuls personnalisables. Pour plus d'informations, consultez &lt;a href="https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations" target="_blank"&gt;ce document&lt;/a&gt;.
             &lt;br/&gt;&lt;br/&gt;
             Vous pouvez désactiver et retourner aux cumuls hérités, mais les nouveaux cumuls ou les modifications de cumuls/filtres effectuées dans les cumuls personnalisables ne seront pas appliquées à vos paramètres de cumuls hérités.</label>
     </customLabels>
@@ -6721,11 +7009,11 @@ Attendez que le processus soit terminé à 100 % pour quitter ou rafraîchir ce
     </customLabels>
     <customLabels>
         <name>stgHelpDefaultAllocationsEnabled</name>
-        <label>Lorsque cette option est sélectionnée, NPSP active la création et la gestion automatique des enregistrements d’allocations UCG à l’unité comptable générale par défaut. Cette fonctionnalité permet d’améliorer les rapports sur l’unité comptable générale par défaut, mais utilise plus d’espace de stockage.</label>
+        <label>Lorsque cette option est sélectionnée, NPSP active la création et la gestion automatique des enregistrements d’affectations UCG à l’unité comptable générale par défaut. Cette fonctionnalité permet d’améliorer les rapports sur l’unité comptable générale par défaut, mais utilise plus d’espace de stockage.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpDefaultGAU</name>
-        <label>Lorsque les allocations par défaut sont activées, Salesforce crée une allocation UCG pour toute les nouvelles opportunités et les assigne à cette unité comptable générale. REMARQUE : Ceci n’inclut pas les opportunités non allouées existantes. Vous pouvez les allouer à l’unité comptable générale par défaut dans les paramètres NPSP sous Processus de données en masse | Création par lot d’allocations par défaut.</label>
+        <label>Lorsque les affectations par défaut sont activées, Salesforce crée une affectation UCG pour toute les nouvelles opportunités et les assigne à cette unité comptable générale. REMARQUE : Ceci n’inclut pas les opportunités non allouées existantes. Vous pouvez les allouer à l’unité comptable générale par défaut dans les paramètres NPSP sous Processus de données en masse | Création par lot d’affectations par défaut.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpDisableHHAccountAddr</name>
@@ -6795,7 +7083,7 @@ Attendez que le processus soit terminé à 100 % pour quitter ou rafraîchir ce
     </customLabels>
     <customLabels>
         <name>stgHelpHHObjectOverview</name>
-        <label>Pour en savoir plus sur le modèle de compte recommandé de foyer, consultez la &lt;a href=&quot;https://powerofus.force.com/NPSP_Account_Model&quot; target=&quot;_blank&quot;&gt;documentation de NPSP&lt;/a&gt;.</label>
+        <label>Pour en savoir plus sur le modèle de compte recommandé de foyer, consultez la &lt;a href="https://powerofus.force.com/NPSP_Account_Model" target="_blank"&gt;documentation de NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpHHRules</name>
@@ -6803,7 +7091,7 @@ Attendez que le processus soit terminé à 100 % pour quitter ou rafraîchir ce
     </customLabels>
     <customLabels>
         <name>stgHelpHealthCheck</name>
-        <label>Utilisez le &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelHealthCheck&apos;);return false;&quot;&gt;contrôle d’intégrité&lt;/a&gt; pour vérifier votre configuration NPSP !</label>
+        <label>Utilisez le &lt;a href="#" onclick="ShowPanel('idPanelHealthCheck');return false;"&gt;contrôle d’intégrité&lt;/a&gt; pour vérifier votre configuration NPSP !</label>
     </customLabels>
     <customLabels>
         <name>stgHelpIGFormat</name>
@@ -6815,7 +7103,7 @@ Attendez que le processus soit terminé à 100 % pour quitter ou rafraîchir ce
     </customLabels>
     <customLabels>
         <name>stgHelpLeadConvert</name>
-        <label>Indique le comportement par défaut pour la création d’opportunité lorsque vous convertissez une piste en contact. Si cette option n’est pas sélectionnée, Salesforce ne créera pas d’opportunité automatiquement lorsque vous convertirez une piste en contact. Consultez la &lt;a href=&quot;https://powerofus.force.com/NPSP_Leads&quot; target=&quot;_blank&quot;&gt;documentation de NPSP&lt;/a&gt; pour plus d’informations.</label>
+        <label>Indique le comportement par défaut pour la création d’opportunité lorsque vous convertissez une piste en contact. Si cette option n’est pas sélectionnée, Salesforce ne créera pas d’opportunité automatiquement lorsque vous convertirez une piste en contact. Consultez la &lt;a href="https://powerofus.force.com/NPSP_Leads" target="_blank"&gt;documentation de NPSP&lt;/a&gt; pour plus d’informations.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpLvlAssignBatch</name>
@@ -6871,7 +7159,7 @@ IMPORTANT : ces deux champs doivent avoir le même type de données.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCR</name>
-        <label>Les crédits indirects, les rôles de contact et les dons jumelés sont étroitement liés les uns aux autres. Si vous n’êtes pas familier avec ces concepts et la façon dont ils interagissent, nous vous conseillons de lire la &lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;documentation de NPSP&lt;/a&gt; avant d’effectuer des ajustements à ces paramètres.</label>
+        <label>Les crédits indirects, les rôles de contact et les dons jumelés sont étroitement liés les uns aux autres. Si vous n’êtes pas familier avec ces concepts et la façon dont ils interagissent, nous vous conseillons de lire la &lt;a href="https://powerofus.force.com/NPSP_SCMG" target="_blank"&gt;documentation de NPSP&lt;/a&gt; avant d’effectuer des ajustements à ces paramètres.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCRDefaultRole</name>
@@ -6899,7 +7187,7 @@ IMPORTANT : ces deux champs doivent avoir le même type de données.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingFormat</name>
-        <label>Le format de nom des opportunités. Choisissez « Autre » pour créer votre propre format. Consultez la &lt;a href=&quot;https://powerofus.force.com/NPSP_Opp_Names&quot; target=&quot;_blank&quot;&gt;documentation de NPSP&lt;/a&gt; pour plus de détails.</label>
+        <label>Le format de nom des opportunités. Choisissez « Autre » pour créer votre propre format. Consultez la &lt;a href="https://powerofus.force.com/NPSP_Opp_Names" target="_blank"&gt;documentation de NPSP&lt;/a&gt; pour plus de détails.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingRecTypes</name>
@@ -6943,7 +7231,7 @@ IMPORTANT : ces deux champs doivent avoir le même type de données.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPowerOfUsHub</name>
-        <label>Vous avez des questions ? Essayez le groupe &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; pour des questions sur NPSP et le groupe &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;Administrateurs système&lt;/a&gt; pour des questions sur l’administration et la configuration de Salesforce.&lt;br/&gt;&lt;br/&gt;Et pour vous tenir au courant des dernières notes de version de NPSP, consultez le groupe &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;Notes de publication NPSP&lt;/a&gt;.</label>
+        <label>Vous avez des questions ? Essayez le groupe &lt;a href="https://powerofus.force.com/HUB_NPSP_Group" target="_blank"&gt;Nonprofit Success Pack&lt;/a&gt; pour des questions sur NPSP et le groupe &lt;a href="https://powerofus.force.com/HUB_System_Admin_Group" target="_blank"&gt;Administrateurs système&lt;/a&gt; pour des questions sur l’administration et la configuration de Salesforce.&lt;br/&gt;&lt;br/&gt;Et pour vous tenir au courant des dernières notes de version de NPSP, consultez le groupe &lt;a href="https://powerofus.force.com/HUB_NPSP_Release_Group" target="_blank"&gt;Notes de publication NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPrimaryContactBatch</name>
@@ -7031,7 +7319,7 @@ Ce processus peut prendre un certain temps, mais vous pouvez fermer cette page e
     </customLabels>
     <customLabels>
         <name>stgHelpRDOppForecastMonths</name>
-        <label>Nombre de mois pour lesquels des opportunités ouvertes sont créées pour les dons réguliers sans date de fin. NPSP veille à ce qu&apos;il existe toujours autant d&apos;opportunités que ce nombre de mois en créant le nombre approprié de nouvelles opportunités chaque mois.</label>
+        <label>Nombre de mois pour lesquels des opportunités ouvertes sont créées pour les dons réguliers sans date de fin. NPSP veille à ce qu'il existe toujours autant d'opportunités que ce nombre de mois en créant le nombre approprié de nouvelles opportunités chaque mois.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRDOppRT</name>
@@ -7083,7 +7371,7 @@ Ce processus peut prendre un certain temps, mais vous pouvez fermer cette page e
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalMethod</name>
-        <label>Indique la méthode utilisée pour générer des relations réciproques. Consultez la &lt;a href=&quot;https://powerofus.force.com/NPSP_Relationships_Settings&quot; target=&quot;_blank&quot;&gt;documentation de NPSP&lt;/a&gt; pour plus d’informations.</label>
+        <label>Indique la méthode utilisée pour générer des relations réciproques. Consultez la &lt;a href="https://powerofus.force.com/NPSP_Relationships_Settings" target="_blank"&gt;documentation de NPSP&lt;/a&gt; pour plus d’informations.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalName</name>
@@ -7104,7 +7392,7 @@ Pour vérifier vos paramètres existants, accédez à Règles de duplication sou
     </customLabels>
     <customLabels>
         <name>stgHelpReviewErrorLog</name>
-        <label>Examinez les &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;Journaux d’erreurs&lt;/a&gt; pour voir si des problèmes sont présents.</label>
+        <label>Examinez les &lt;a href="#" onclick="ShowPanel('idPanelErrorLog');return false;"&gt;Journaux d’erreurs&lt;/a&gt; pour voir si des problèmes sont présents.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRollupBatchSize</name>
@@ -7120,11 +7408,11 @@ Pour vérifier vos paramètres existants, accédez à Règles de duplication sou
     </customLabels>
     <customLabels>
         <name>stgHelpRollupExcludeAlloOppRecType</name>
-        <label>Les allocations UCG venant d’opportunités ayant les types d’enregistrement sélectionnés ne seront pas incluses lors du cumul sur l’enregistrement d’unité comptable générale.</label>
+        <label>Les affectations UCG venant d’opportunités ayant les types d’enregistrement sélectionnés ne seront pas incluses lors du cumul sur l’enregistrement d’unité comptable générale.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRollupExcludeAlloOppType</name>
-        <label>Les allocations UCG venant d’opportunités ayant cette valeur dans la liste de sélection de type ne seront pas incluses lors du cumul sur l’enregistrement d’unité comptable générale.</label>
+        <label>Les affectations UCG venant d’opportunités ayant cette valeur dans la liste de sélection de type ne seront pas incluses lors du cumul sur l’enregistrement d’unité comptable générale.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRollupExcludeContactOppRT</name>
@@ -7140,7 +7428,7 @@ Pour vérifier vos paramètres existants, accédez à Règles de duplication sou
     </customLabels>
     <customLabels>
         <name>stgHelpRollupPrimaryContact</name>
-        <label>Lorsque cette option est sélectionnée, Salesforce cumule TOUJOURS les données de donateur sur le contact principal de l’opportunité. Notez que seul le compte de l&apos;opportunité recevra un crédit direct. Ainsi, si le nom de compte de l&apos;opportunité est une organisation, cette organisation et son contact principal recevront un crédit direct. Le compte foyer ou le compte un-à-un du contact ne recevra PAS de crédit direct. Si cette option n&apos;est pas sélectionnée et que le compte de l&apos;opportunité est une organisation, seule l&apos;organisation recevra un crédit pour l&apos;opportunité.</label>
+        <label>Lorsque cette option est sélectionnée, Salesforce cumule TOUJOURS les données de donateur sur le contact principal de l’opportunité. Notez que seul le compte de l'opportunité recevra un crédit direct. Ainsi, si le nom de compte de l'opportunité est une organisation, cette organisation et son contact principal recevront un crédit direct. Le compte foyer ou le compte un-à-un du contact ne recevra PAS de crédit direct. Si cette option n'est pas sélectionnée et que le compte de l'opportunité est une organisation, seule l'organisation recevra un crédit pour l'opportunité.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRollupSkewLimit</name>
@@ -7148,7 +7436,7 @@ Pour vérifier vos paramètres existants, accédez à Règles de duplication sou
     </customLabels>
     <customLabels>
         <name>stgHelpSalesforceSetup</name>
-        <label>Vous souhaitez personnaliser des présentations de page, ou ajouter des champs ou des utilisateurs ? Essayez les pages de &lt;a href=&quot;/setup/forcecomHomepage.apexp?setupid=ForceCom&quot; target=&quot;_blank&quot;&gt;configuration de Salesforce&lt;/a&gt;.</label>
+        <label>Vous souhaitez personnaliser des présentations de page, ou ajouter des champs ou des utilisateurs ? Essayez les pages de &lt;a href="/setup/forcecomHomepage.apexp?setupid=ForceCom" target="_blank"&gt;configuration de Salesforce&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpSimpleAddrChangeIsUpdate</name>
@@ -7250,19 +7538,19 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
     </customLabels>
     <customLabels>
         <name>stgLabelAlloBatchProgress</name>
-        <label>Progression du cumul d’allocations par lots</label>
+        <label>Progression du cumul d’affectations par lots</label>
     </customLabels>
     <customLabels>
         <name>stgLabelAllocationBehaviorSettings</name>
-        <label>Paramètres de comportement d’allocation</label>
+        <label>Paramètres de comportement d’affectation</label>
     </customLabels>
     <customLabels>
         <name>stgLabelAllocationsRollupSettings</name>
-        <label>Paramètres de cumul d’allocations UCG</label>
+        <label>Paramètres de cumul d’affectations UCG</label>
     </customLabels>
     <customLabels>
         <name>stgLabelAllocationsSettings</name>
-        <label>Paramètres d’allocations par défaut</label>
+        <label>Paramètres d’affectations par défaut</label>
     </customLabels>
     <customLabels>
         <name>stgLabelAreYouSure</name>
@@ -7618,7 +7906,7 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
     </customLabels>
     <customLabels>
         <name>stgNavAllocations</name>
-        <label>Allocations UCG</label>
+        <label>Affectations UCG</label>
     </customLabels>
     <customLabels>
         <name>stgNavBatchProcessSettings</name>
@@ -7730,7 +8018,7 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
     </customLabels>
     <customLabels>
         <name>stgNavRollupAlloBatch</name>
-        <label>Cumul d’allocations par lots</label>
+        <label>Cumul d’affectations par lots</label>
     </customLabels>
     <customLabels>
         <name>stgNavRollupBatch</name>
@@ -7770,7 +8058,7 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
     </customLabels>
     <customLabels>
         <name>stgRDNamingDescription</name>
-        <label>Lorsque vous créez un don récurrent, NPSP remplit automatiquement le Nom à l’aide du format de nom spécifié. Sélectionnez l&apos;option Désactiver la dénomination automatique pour désactiver cette fonctionnalité.</label>
+        <label>Lorsque vous créez un don récurrent, NPSP remplit automatiquement le Nom à l’aide du format de nom spécifié. Sélectionnez l'option Désactiver la dénomination automatique pour désactiver cette fonctionnalité.</label>
     </customLabels>
     <customLabels>
         <name>stgRDNamingDisable</name>
@@ -7838,7 +8126,7 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
     </customLabels>
     <customLabels>
         <name>gsResourcesItemMarketingEngagementLabel</name>
-        <label>Parcours de formation à l&apos;engagement</label>
+        <label>Parcours de formation à l'engagement</label>
     </customLabels>
     <customLabels>
         <name>gsResourcesItemMarketingEngagementLinkLabel</name>
@@ -7858,11 +8146,11 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
     </customLabels>
     <customLabels>
         <name>gsResourcesItemHubLinkLabel</name>
-        <label>Apprendre auprès d&apos;autres associations à but non lucratif</label>
+        <label>Apprendre auprès d'autres associations à but non lucratif</label>
     </customLabels>
     <customLabels>
         <name>gsResourcesItemPartnersLabel</name>
-        <label>Partenaires d&apos;implémentation</label>
+        <label>Partenaires d'implémentation</label>
     </customLabels>
     <customLabels>
         <name>gsResourcesItemPartnersLinkLabel</name>
@@ -7928,6 +8216,30 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
         <name>donationHistoryDatatableAriaLabel</name>
         <label>Historique des dons</label>
     </customLabels>
+    <customLabels>
+        <name>RD2_Actions</name>
+        <label>Actions</label>
+    </customLabels>
+    <customLabels>
+        <name>updatePaymentMethod</name>
+        <label>Mettre à jour le mode de paiement</label>
+    </customLabels>
+    <customLabels>
+        <name>changeAmountOrFrequency</name>
+        <label>Modifier le montant ou la fréquence</label>
+    </customLabels>
+    <customLabels>
+        <name>stopRecurringDonation</name>
+        <label>Arrêter le don récurrent</label>
+    </customLabels>
+    <customLabels>
+        <name>stopRecurringDonationModalTitle</name>
+        <label>Arrêter ce don récurrent ?</label>
+    </customLabels>
+    <customLabels>
+        <name>updateRecurringDonation</name>
+        <label>Mettre à jour le don récurrent</label>
+    </customLabels>
     <reportTypes>
         <name>Contacts_Only</name>
         <label>Uniquement contacts</label>
@@ -7977,6 +8289,10 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
         <label>Nouvelle campagne</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.Pause</name>
+        <label>Interruption</label>
+    </quickActions>
+    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>Nouvelle affiliation</label>
     </quickActions>
@@ -7989,8 +8305,32 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
         <label>Nouveau don régulier</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
+        <label>Nouvelle opportunité</label>
+    </quickActions>
+    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>Nouveau don régulier</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__oppPayment__c.Refund</name>
+        <label>Rembourser</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Quick_Update</name>
+        <label>Mise à jour rapide</label>
+    </quickActions>
+    <quickActions>
+        <name>npo02__Household__c.Update_Household</name>
+        <label>Mettre à jour un foyer</label>
+    </quickActions>
+    <quickActions>
+        <name>Address__c.Update_Address</name>
+        <label>Mettre à jour une adresse</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
+        <label>Fermer le don récurrent</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -8011,6 +8351,10 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>Nouvelle relation</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Quick_Update</name>
+        <label>Mise à jour rapide</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>

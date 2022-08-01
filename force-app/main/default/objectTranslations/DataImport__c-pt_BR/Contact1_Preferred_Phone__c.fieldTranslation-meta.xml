@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Contact1_Preferred_Phone__c</name>
+    <label>Telefone preferido do Contact1</label>
+    <picklistValues>
+        <masterLabel>Home</masterLabel>
+        <translation>Início</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Work</masterLabel>
+        <translation>Comercial</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Mobile</masterLabel>
+        <translation>Celular</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Other</masterLabel>
+        <translation>Outro</translation>
+    </picklistValues>
+</CustomFieldTranslation>

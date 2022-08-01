@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>DisableRollupsWhenCreatingInstallments__c</name>
-    <help>Lorsque cette option est sélectionnée, si les cumuls personnalisables sont activés, les calculs de cumuls immédiats sont désactivés lors de la création d&apos;opportunités de versement pour un Don récurrent.</help>
+    <help>Lorsque cette option est sélectionnée, si les cumuls personnalisables sont activés, les calculs de cumuls immédiats sont désactivés lors de la création d'opportunités de versement pour un Don récurrent.</help>
     <label>Désactiver CRLP en créant des versements</label>
 </CustomFieldTranslation>

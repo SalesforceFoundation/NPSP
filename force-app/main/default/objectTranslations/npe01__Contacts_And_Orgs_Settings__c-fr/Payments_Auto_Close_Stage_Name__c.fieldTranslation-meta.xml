@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Payments_Auto_Close_Stage_Name__c</name>
-    <help>NPSP définit automatiquement une étape d’opportunité à cette valeur lorsque le montant de paiement reçu est égal au montant de l’opportunité. Si aucune étape n&apos;est sélectionnée, l’étape Opportunité ne changera pas une fois les paiements terminés.</help>
+    <help>NPSP définit automatiquement une étape d’opportunité à cette valeur lorsque le montant de paiement reçu est égal au montant de l’opportunité. Si aucune étape n'est sélectionnée, l’étape Opportunité ne changera pas une fois les paiements terminés.</help>
     <label>Étape d’opp. après paiement complet</label>
 </CustomFieldTranslation>

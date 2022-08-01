@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Matching_Gift_Phone__c</name>
+    <help>O número de telefone do administrador da doação correspondente da empresa.</help>
+    <label>Telefone da doação correspondente</label>
+</CustomFieldTranslation>

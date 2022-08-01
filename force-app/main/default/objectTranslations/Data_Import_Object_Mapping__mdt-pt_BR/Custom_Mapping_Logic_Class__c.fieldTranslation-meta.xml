@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Custom_Mapping_Logic_Class__c</name>
+    <help>Se a lógica do Apex person. deve ser usada para mapear os campos para este objeto, o campo deve ser preenchido com o nome de uma classe (incl. namespace, se necessário) que estenda a classe BDI_ObjectMappingLogic e substitua o método populateObject.</help>
+    <label>Classe de lógica de map. person.</label>
+</CustomFieldTranslation>

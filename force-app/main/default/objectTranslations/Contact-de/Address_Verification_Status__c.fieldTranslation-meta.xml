@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Address_Verification_Status__c</name>
-    <help>Der Überprüfungsstatus der aktuellen Adresse. Wenn eine Überprüfung dieser Adresse erforderlich ist, navigieren Sie zum aktuellen Adressdatensatz und wählen Sie &quot;Adresse überprüfen&quot; aus. Mehr zur Adressüberprüfung finden Sie in der NPSP-Dokumentation.</help>
+    <help>Der Überprüfungsstatus der aktuellen Adresse. Wenn eine Überprüfung dieser Adresse erforderlich ist, navigieren Sie zum aktuellen Adressdatensatz und wählen Sie "Adresse überprüfen" aus. Mehr zur Adressüberprüfung finden Sie in der NPSP-Dokumentation.</help>
     <label>Adressenüberprüfungsstatus</label>
 </CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Honoree_Opportunity_Contact_Role__c</name>
+    <help>Se você preencher essa configuração, o NPSP criará automaticamente um registro de Função de contato para Oportunidades com um Contato homenageado.</help>
+    <label>Função de cont. de oport. de homenageado</label>
+</CustomFieldTranslation>

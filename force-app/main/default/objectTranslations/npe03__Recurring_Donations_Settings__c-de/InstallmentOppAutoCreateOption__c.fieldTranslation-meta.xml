@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>InstallmentOppAutoCreateOption__c</name>
-    <help>Legt fest, wann NPSP Ratenzahlungs-Opportunities für wiederkehrende Spenden erstellt. Der Standardwert ist &quot;Always Create Next Installment&quot; (Immer nächste Rate erstellen).</help>
+    <help>Legt fest, wann NPSP Ratenzahlungs-Opportunities für wiederkehrende Spenden erstellt. Der Standardwert ist "Always Create Next Installment" (Immer nächste Rate erstellen).</help>
     <label>Autom. Erstellung Raten-Opportunity</label>
 </CustomFieldTranslation>

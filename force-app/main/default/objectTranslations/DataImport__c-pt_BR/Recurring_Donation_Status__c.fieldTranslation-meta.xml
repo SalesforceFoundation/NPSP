@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Status__c</name>
+    <help>Indica se esta Doação recorrente está ativamente em uso, temporariamente suspensa ou fechada.</help>
+    <label>Status da doação recorrente</label>
+</CustomFieldTranslation>

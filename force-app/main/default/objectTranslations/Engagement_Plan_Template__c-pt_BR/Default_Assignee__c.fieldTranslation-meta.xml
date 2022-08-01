@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Default_Assignee__c</name>
+    <help>Quando o campo Atribuído a da tarefa do plano de interação é deixado em branco, a quem a tarefa deve ser atribuída?</help>
+    <label>Atribuído padrão</label>
+    <picklistValues>
+        <masterLabel>Owner of Object for Engagement Plan</masterLabel>
+        <translation>Proprietário do objeto para o plano de interação</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>User Creating Engagement Plan</masterLabel>
+        <translation>Plano de interação criado por usuário</translation>
+    </picklistValues>
+</CustomFieldTranslation>

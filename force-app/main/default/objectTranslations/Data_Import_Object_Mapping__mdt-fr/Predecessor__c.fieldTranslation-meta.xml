@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Predecessor__c</name>
-    <help>L&apos;enregistrement Groupe d&apos;objets Importation de données doit exister pour pouvoir créer cet enregistrement (Parent ou Enfant).</help>
+    <help>L'enregistrement Groupe d'objets Importation de données doit exister pour pouvoir créer cet enregistrement (Parent ou Enfant).</help>
     <label>Prédécesseur</label>
 </CustomFieldTranslation>

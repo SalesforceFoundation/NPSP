@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>GAU_Allocation_2_Import_Status__c</name>
+    <help>O status da tentativa de inserir a segunda Alocação de GAU.</help>
+    <label>Alocação de GAU 2: status de importação</label>
+</CustomFieldTranslation>

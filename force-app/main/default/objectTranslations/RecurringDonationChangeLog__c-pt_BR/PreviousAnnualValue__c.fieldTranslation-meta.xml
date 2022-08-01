@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>PreviousAnnualValue__c</name>
+    <help>O valor anual anterior para esta doação recorrente, com base no valor e na agenda</help>
+    <label>Valor anual anterior</label>
+</CustomFieldTranslation>

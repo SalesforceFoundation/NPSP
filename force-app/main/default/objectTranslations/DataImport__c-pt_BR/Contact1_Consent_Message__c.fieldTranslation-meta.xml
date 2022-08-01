@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Contact1_Consent_Message__c</name>
+    <help>Fornece detalhes sobre o que o Contato aceitou.</help>
+    <label>Mensagem de autorização do Contact1</label>
+</CustomFieldTranslation>

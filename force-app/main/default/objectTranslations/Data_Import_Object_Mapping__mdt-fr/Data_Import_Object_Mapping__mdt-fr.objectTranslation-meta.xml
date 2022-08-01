@@ -3,7 +3,7 @@
     <layouts>
         <layout>Data Import Object Mapping Layout</layout>
         <sections>
-            <label>Détails de la relation de l&apos;objet personnalisé</label>
+            <label>Détails de la relation de l'objet personnalisé</label>
             <section>Custom Object Relationship Details</section>
         </sections>
         <sections>
@@ -15,10 +15,10 @@
     <startsWith>Consonant</startsWith>
     <caseValues>
         <plural>false</plural>
-        <value>Mappage d&apos;objets d&apos;importation de données</value>
+        <value>Mappage d'objets d'importation de données</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value>Mappages d&apos;objets d&apos;importation de données</value>
+        <value>Mappages d'objets d'importation de données</value>
     </caseValues>
 </CustomObjectTranslation>

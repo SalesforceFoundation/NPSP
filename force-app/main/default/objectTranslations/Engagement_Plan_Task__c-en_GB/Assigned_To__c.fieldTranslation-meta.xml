@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Assigned_To__c</name>
-    <help>Lookup to the User you&apos;d like to assign the task to. If you leave this field blank, NPSP assigns the task based on the Engagement Plan Template&apos;s Default Assignee.</help>
+    <help>Lookup to the User you'd like to assign the task to. If you leave this field blank, NPSP assigns the task based on the Engagement Plan Template's Default Assignee.</help>
     <label>Assigned To</label>
 </CustomFieldTranslation>

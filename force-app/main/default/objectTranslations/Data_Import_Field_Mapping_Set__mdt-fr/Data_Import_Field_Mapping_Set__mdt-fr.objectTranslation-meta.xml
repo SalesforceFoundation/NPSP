@@ -4,10 +4,10 @@
     <startsWith>Vowel</startsWith>
     <caseValues>
         <plural>false</plural>
-        <value>Ensemble de mappage de champs d&apos;importation de données</value>
+        <value>Ensemble de mappage de champs d'importation de données</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value>Ensembles de mappage de champs d&apos;importation de données</value>
+        <value>Ensembles de mappage de champs d'importation de données</value>
     </caseValues>
 </CustomObjectTranslation>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>DonationCampaignImported__c</name>
+    <help>ID de campagne de l’opportunité</help>
     <relationshipLabel>Importations de données NPSP</relationshipLabel>
     <label>Source de la campagne du don</label>
 </CustomFieldTranslation>

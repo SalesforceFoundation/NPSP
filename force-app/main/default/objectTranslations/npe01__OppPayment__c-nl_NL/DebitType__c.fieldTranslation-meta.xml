@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>DebitType__c</name>
+    <label>Type debitering</label>
+    <picklistValues>
+        <masterLabel>Refund</masterLabel>
+        <translation>Terugbetaling</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Partial Refund</masterLabel>
+        <translation>Gedeeltelijke terugbetaling</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Chargeback</masterLabel>
+        <translation>Terugvordering</translation>
+    </picklistValues>
+</CustomFieldTranslation>

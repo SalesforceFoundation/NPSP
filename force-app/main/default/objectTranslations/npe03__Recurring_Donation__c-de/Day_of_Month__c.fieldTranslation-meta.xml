@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Day_of_Month__c</name>
-    <help>Setzt künftige monatl., benutzerdef. monatl. o. vierteljährl. Spendenraten unabh. v. nächsten Spendendatum a. d. ausgew. Tag des Monats. HINWEIS: Wenn &quot;Immer letzten Tag des Monats verwenden&quot; aktiviert ist, ersetzt dies den Wert &quot;Tag des Monats&quot;.</help>
+    <help>Setzt künftige monatl., benutzerdef. monatl. o. vierteljährl. Spendenraten unabh. v. nächsten Spendendatum a. d. ausgew. Tag des Monats. HINWEIS: Wenn "Immer letzten Tag des Monats verwenden" aktiviert ist, ersetzt dies den Wert "Tag des Monats".</help>
     <label>Tag des Monats</label>
     <picklistValues>
         <masterLabel>1</masterLabel>

@@ -9,8 +9,12 @@
         <label>Delete Imported Data Import Records</label>
     </webLinks>
     <webLinks>
+        <name>Import_Selected_Data_Import_Records</name>
+        <label>Import Selected Data Import Records</label>
+    </webLinks>
+    <webLinks>
         <name>Process_Data_Import</name>
-        <label>Start Data Import</label>
+        <label>Import All Data Import Records</label>
     </webLinks>
     <layouts>
         <layout>Data Import Layout</layout>

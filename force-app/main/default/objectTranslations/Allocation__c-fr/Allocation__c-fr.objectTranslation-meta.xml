@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <fieldSets>
-        <label>Gérer les allocations - Champs supplémentaires</label>
+        <label>Gérer les affectations - Champs supplémentaires</label>
         <name>ManageAllocationsAdditionalFields</name>
     </fieldSets>
     <webLinks>
         <name>Manage_Allocations</name>
-        <label>Gérer des allocations</label>
+        <label>Gérer des affectations</label>
     </webLinks>
     <layouts>
         <layout>Allocation Layout</layout>
@@ -15,10 +15,10 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel>Nom des Allocations UCG</nameFieldLabel>
+    <nameFieldLabel>Nom des Affectations UCG</nameFieldLabel>
     <standardFields>
         <name>Name</name>
-        <label>Nom des Allocations UCG</label>
+        <label>Nom des Affectations UCG</label>
     </standardFields>
     <gender>Feminine</gender>
     <startsWith>Vowel</startsWith>

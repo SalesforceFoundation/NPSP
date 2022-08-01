@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Has_Link__c</name>
+    <help>Indica se o item tem um link para exibir.</help>
+    <label>Possui link</label>
+</CustomFieldTranslation>

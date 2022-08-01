@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <help>מכיל את המזהה של משק הבית הנוכחי, בין אם זהו חשבון משק בית או אובייקט משק בית.</help>
-    <label/>
+    <label></label>
     <name>HHId__c</name>
 </CustomFieldTranslation>

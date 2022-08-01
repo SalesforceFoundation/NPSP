@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>HHId__c</name>
+    <help>Detém o ID do registro de família (Conta de família ou objeto Família) ao qual este Contato está atualmente associado (somente leitura).</help>
+    <label>HHId</label>
+</CustomFieldTranslation>
