@@ -463,10 +463,10 @@ private class BDI_RecurringDonations_TEST {
             }
         }
         
-        System.assertEquals(System.Label.bdiImported,testDIResultA2.Status__c);
+        System.assertEquals('Imported', testDIResultA2.Status__c);
         System.assertEquals(System.Label.bdiUpdated,testDIResultA2.RecurringDonationImportStatus__c);
 
-        System.assertEquals(System.Label.bdiImported,testDIResultB2.Status__c);
+        System.assertEquals('Imported', testDIResultB2.Status__c);
         System.assertEquals(System.Label.bdiUpdated,testDIResultB2.RecurringDonationImportStatus__c);
 
         npe03__Recurring_Donation__c rdA2;
