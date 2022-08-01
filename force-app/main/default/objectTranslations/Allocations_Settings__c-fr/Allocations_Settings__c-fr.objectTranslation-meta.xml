@@ -4,10 +4,10 @@
     <startsWith>Consonant</startsWith>
     <caseValues>
         <plural>false</plural>
-        <value>Paramètre d'allocation</value>
+        <value>Paramètre d&apos;allocation</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value>Paramètres d'allocation</value>
+        <value>Paramètres d&apos;allocation</value>
     </caseValues>
 </CustomObjectTranslation>

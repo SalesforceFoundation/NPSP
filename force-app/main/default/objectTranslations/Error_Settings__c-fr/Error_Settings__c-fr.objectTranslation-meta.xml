@@ -4,10 +4,10 @@
     <startsWith>Consonant</startsWith>
     <caseValues>
         <plural>false</plural>
-        <value>Paramètre d'erreur</value>
+        <value>Paramètre d&apos;erreur</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value>Paramètres d'erreur</value>
+        <value>Paramètres d&apos;erreur</value>
     </caseValues>
 </CustomObjectTranslation>

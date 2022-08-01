@@ -16,10 +16,10 @@
     <startsWith>Consonant</startsWith>
     <caseValues>
         <plural>false</plural>
-        <value>Plan d'engagement</value>
+        <value>Plan d&apos;engagement</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value>Plans d'engagement</value>
+        <value>Plans d&apos;engagement</value>
     </caseValues>
 </CustomObjectTranslation>

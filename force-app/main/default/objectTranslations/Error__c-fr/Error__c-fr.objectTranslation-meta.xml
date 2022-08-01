@@ -7,10 +7,10 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel>Numéro d'erreur</nameFieldLabel>
+    <nameFieldLabel>Numéro d&apos;erreur</nameFieldLabel>
     <standardFields>
         <name>Name</name>
-        <label>Numéro d'erreur</label>
+        <label>Numéro d&apos;erreur</label>
     </standardFields>
     <gender>Feminine</gender>
     <startsWith>Vowel</startsWith>

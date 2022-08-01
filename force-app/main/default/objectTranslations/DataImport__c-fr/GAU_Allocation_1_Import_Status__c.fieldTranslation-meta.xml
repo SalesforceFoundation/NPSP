@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>GAU_Allocation_1_Import_Status__c</name>
-    <help>Le statut de la tentative d'insertion de la première Affectation UCG.</help>
-    <label>Affectation UCG 1 : Statut d'importation</label>
+    <help>Le statut de la tentative d&apos;insertion de la première Affectation UCG.</help>
+    <label>Affectation UCG 1 : Statut d&apos;importation</label>
 </CustomFieldTranslation>

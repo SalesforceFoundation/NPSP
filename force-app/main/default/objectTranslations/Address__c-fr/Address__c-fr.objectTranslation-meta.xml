@@ -19,10 +19,10 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel>ID d'adresse</nameFieldLabel>
+    <nameFieldLabel>ID d&apos;adresse</nameFieldLabel>
     <standardFields>
         <name>Name</name>
-        <label>ID d'adresse</label>
+        <label>ID d&apos;adresse</label>
     </standardFields>
     <gender>Feminine</gender>
     <startsWith>Vowel</startsWith>

@@ -42,7 +42,7 @@
 1. Open a third-party address verification account. (Some are free for nonprofits.)&lt;br/&gt;
 2. In your address verification service, create the required authentication ID and/or token.&lt;br/&gt;
 3. Return to this settings page, click the Edit button above, and paste the ID and/or token into the appropriate fields.&lt;br/&gt;
-4. Complete the remaining fields and click Save. The help text for each field provides more information. If you still need more help, see the &lt;a href="https://powerofus.force.com/NPSP_Address_Verification"&gt;NPSP documentation&lt;/a&gt;.</label>
+4. Complete the remaining fields and click Save. The help text for each field provides more information. If you still need more help, see the &lt;a href=&quot;https://powerofus.force.com/NPSP_Address_Verification&quot;&gt;NPSP documentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>Addr_Settings_Intro_Title</name>
@@ -50,7 +50,7 @@
     </customLabels>
     <customLabels>
         <name>Addr_Settings_Notice</name>
-        <label>Address verification will only work for records you create from this point on. Verification does not apply to contact information that you've already entered in Salesforce.</label>
+        <label>Address verification will only work for records you create from this point on. Verification does not apply to contact information that you&apos;ve already entered in Salesforce.</label>
     </customLabels>
     <customLabels>
         <name>Addr_Settings_Test_Body</name>
@@ -146,7 +146,7 @@
     </customLabels>
     <customLabels>
         <name>Address_StateCountry_Invalid_Error</name>
-        <label>'{0}' is not configured as a valid Country in your Organisation.</label>
+        <label>&apos;{0}&apos; is not configured as a valid Country in your Organisation.</label>
     </customLabels>
     <customLabels>
         <name>Address_Verification_Limit</name>
@@ -290,7 +290,7 @@
     </customLabels>
     <customLabels>
         <name>CONV_All_Backed_Up</name>
-        <label>I've backed up my data using the Export Data tool in Setup | Data Management.</label>
+        <label>I&apos;ve backed up my data using the Export Data tool in Setup | Data Management.</label>
     </customLabels>
     <customLabels>
         <name>CONV_All_Dup_Rules_Disabled</name>
@@ -342,7 +342,7 @@
     </customLabels>
     <customLabels>
         <name>CONV_ConversionAccessDenied</name>
-        <label>You don't have the required system permissions to convert. Contact your system administrator for assistance.</label>
+        <label>You don&apos;t have the required system permissions to convert. Contact your system administrator for assistance.</label>
     </customLabels>
     <customLabels>
         <name>CONV_Fundamental_Changes</name>
@@ -354,7 +354,7 @@
     </customLabels>
     <customLabels>
         <name>CONV_Local_Expert</name>
-        <label>I've consulted with my local Salesforce expert.</label>
+        <label>I&apos;ve consulted with my local Salesforce expert.</label>
     </customLabels>
     <customLabels>
         <name>CONV_Master_Address_Set</name>
@@ -374,7 +374,7 @@
     </customLabels>
     <customLabels>
         <name>CONV_Old_Household_Objects</name>
-        <label>Does NOT delete Household objects after conversion is complete. You should manually delete these after you've verified the conversion.</label>
+        <label>Does NOT delete Household objects after conversion is complete. You should manually delete these after you&apos;ve verified the conversion.</label>
     </customLabels>
     <customLabels>
         <name>CONV_Only_Household_Contacts</name>
@@ -398,7 +398,7 @@
     </customLabels>
     <customLabels>
         <name>CONV_Permanent_Change</name>
-        <label>Account Model Conversion is a permanent change. Please consider this action carefully before proceeding. While the conversion is in process, your database functionality will be temporarily disabled. Salesforce.com and Salesforce.org are not responsible for any data loss, modifications, or corruption that occur as a result of this operation. Please proceed at YOUR OWN RISK. You'll need to confirm that you've taken the following steps before beginning the conversion:</label>
+        <label>Account Model Conversion is a permanent change. Please consider this action carefully before proceeding. While the conversion is in process, your database functionality will be temporarily disabled. Salesforce.com and Salesforce.org are not responsible for any data loss, modifications, or corruption that occur as a result of this operation. Please proceed at YOUR OWN RISK. You&apos;ll need to confirm that you&apos;ve taken the following steps before beginning the conversion:</label>
     </customLabels>
     <customLabels>
         <name>CONV_Primary_Contacts_Set</name>
@@ -422,7 +422,7 @@
     </customLabels>
     <customLabels>
         <name>CONV_Selected_Field_Verification_Failure</name>
-        <label>The conversion tool encountered an error when attempting to verify the validity of your selected Account field. Without this verification, the conversion tool can't determine if your field mapping, and therefore your conversion, will be successful.  You may proceed at your own risk, or select a different field to hold the Household Id.</label>
+        <label>The conversion tool encountered an error when attempting to verify the validity of your selected Account field. Without this verification, the conversion tool can&apos;t determine if your field mapping, and therefore your conversion, will be successful.  You may proceed at your own risk, or select a different field to hold the Household Id.</label>
     </customLabels>
     <customLabels>
         <name>CONV_Tested_in_Sandbox</name>
@@ -430,7 +430,7 @@
     </customLabels>
     <customLabels>
         <name>CONV_Triggers_Reenabled</name>
-        <label>Re-enables all NPSP triggers. NOTE: You'll need to manually re-enable any custom triggers you disabled for the conversion. Also, the utility re-enables &lt;b&gt;all&lt;/b&gt; NPSP triggers, so if you selectively disabled any of them beforehand, you'll need to manually disable them again.</label>
+        <label>Re-enables all NPSP triggers. NOTE: You&apos;ll need to manually re-enable any custom triggers you disabled for the conversion. Also, the utility re-enables &lt;b&gt;all&lt;/b&gt; NPSP triggers, so if you selectively disabled any of them beforehand, you&apos;ll need to manually disable them again.</label>
     </customLabels>
     <customLabels>
         <name>CONV_Warning</name>
@@ -450,7 +450,7 @@
     </customLabels>
     <customLabels>
         <name>CMT_FilterGroupActiveRollupsHelpText</name>
-        <label>The list of rollups that are using this filter group. As long as there are rollups listed here, you can't delete this filter group.</label>
+        <label>The list of rollups that are using this filter group. As long as there are rollups listed here, you can&apos;t delete this filter group.</label>
     </customLabels>
     <customLabels>
         <name>CMT_DeleteConfirm</name>
@@ -458,11 +458,11 @@
     </customLabels>
     <customLabels>
         <name>CMT_FilterGroupDeleteError</name>
-        <label>You can't delete this filter group because there is at least one rollup using it. To delete this filter group, either remove it from the associated rollups or delete the rollups.</label>
+        <label>You can&apos;t delete this filter group because there is at least one rollup using it. To delete this filter group, either remove it from the associated rollups or delete the rollups.</label>
     </customLabels>
     <customLabels>
         <name>CMT_FilterGroupDescriptionHelpText</name>
-        <label>It's important to enter a detailed description that explains the filter rules in this group so that users in your org can understand if this filter group is right for their rollup.</label>
+        <label>It&apos;s important to enter a detailed description that explains the filter rules in this group so that users in your org can understand if this filter group is right for their rollup.</label>
     </customLabels>
     <customLabels>
         <name>CMT_FilterGroupNameHelpText</name>
@@ -474,11 +474,11 @@
     </customLabels>
     <customLabels>
         <name>CMT_FilterRulesHelpText</name>
-        <label>The list of rules included in this filter group. The filter rules set the criteria to ensure that you only get the data you need. Keep in mind that filter groups use AND criteria for filter rules, so if the data doesn't match ALL filter rules within a filter group, it won't be included in the rollup.</label>
+        <label>The list of rules included in this filter group. The filter rules set the criteria to ensure that you only get the data you need. Keep in mind that filter groups use AND criteria for filter rules, so if the data doesn&apos;t match ALL filter rules within a filter group, it won&apos;t be included in the rollup.</label>
     </customLabels>
     <customLabels>
         <name>CMT_FilterRulesValueHelpText</name>
-        <label>If the Operator is In List or Not in List and you don't see a picklist, enter values separated by semi-colons.</label>
+        <label>If the Operator is In List or Not in List and you don&apos;t see a picklist, enter values separated by semi-colons.</label>
     </customLabels>
     <customLabels>
         <name>CMT_FilterNew</name>
@@ -522,7 +522,7 @@
     </customLabels>
     <customLabels>
         <name>CRLP_BatchSkipped</name>
-        <label>Today''s scheduled {0} batch job was skipped because a previous {0} job was still running. The next batch job will run as scheduled. No action is required; this error is for information purposes only.</label>
+        <label>Today&apos;&apos;s scheduled {0} batch job was skipped because a previous {0} job was still running. The next batch job will run as scheduled. No action is required; this error is for information purposes only.</label>
     </customLabels>
     <customLabels>
         <name>CRLP_CreateRollupIntroHelpText</name>
@@ -538,11 +538,11 @@
     </customLabels>
     <customLabels>
         <name>CRLP_CreateRollupActiveHelpText</name>
-        <label>Indicates that the rollup is active. Inactive rollups won't be calculated along with active rollups.</label>
+        <label>Indicates that the rollup is active. Inactive rollups won&apos;t be calculated along with active rollups.</label>
     </customLabels>
     <customLabels>
         <name>CRLP_CreateRollupDescriptionHelpText</name>
-        <label>It's important to enter a detailed description so that you (or other users) understand exactly what this rollup calculates. The description will show when you hover over the rollup in the list view.</label>
+        <label>It&apos;s important to enter a detailed description so that you (or other users) understand exactly what this rollup calculates. The description will show when you hover over the rollup in the list view.</label>
     </customLabels>
     <customLabels>
         <name>CRLP_CreateRollupNameHelpText</name>
@@ -550,7 +550,7 @@
     </customLabels>
     <customLabels>
         <name>CRLP_CreateRollupTypeHelpText</name>
-        <label>The combination of which object you're rolling up data from and whether the rollup is a hard credit or soft credit.</label>
+        <label>The combination of which object you&apos;re rolling up data from and whether the rollup is a hard credit or soft credit.</label>
     </customLabels>
     <customLabels>
         <name>CRLP_CreateRollupFilterGroupHelpText</name>
@@ -614,11 +614,11 @@
     </customLabels>
     <customLabels>
         <name>CRLP_DisabledTitle</name>
-        <label>These aren't the rollups you're looking for.</label>
+        <label>These aren&apos;t the rollups you&apos;re looking for.</label>
     </customLabels>
     <customLabels>
         <name>CRLP_DisabledMessage</name>
-        <label>You don't have Customisable Rollups enabled. Return to NPSP Settings for information on how to enable these.</label>
+        <label>You don&apos;t have Customisable Rollups enabled. Return to NPSP Settings for information on how to enable these.</label>
     </customLabels>
     <customLabels>
         <name>CRLP_DuplicateTargetField</name>
@@ -698,11 +698,11 @@
     </customLabels>
     <customLabels>
         <name>CascadeDeletionError</name>
-        <label>You can''t delete {0} because it''s associated with the following records. Delete or re-associate these records and then try again.&lt;br/&gt;&lt;br/&gt;{1}</label>
+        <label>You can&apos;&apos;t delete {0} because it&apos;&apos;s associated with the following records. Delete or re-associate these records and then try again.&lt;br/&gt;&lt;br/&gt;{1}</label>
     </customLabels>
     <customLabels>
         <name>CascadeDeletionErrorLightning</name>
-        <label>You can''t delete {0} because it''s associated with these records: {1}. Delete or re-associate these records and then try again.</label>
+        <label>You can&apos;&apos;t delete {0} because it&apos;&apos;s associated with these records: {1}. Delete or re-associate these records and then try again.</label>
     </customLabels>
     <customLabels>
         <name>DeleteAccount</name>
@@ -754,7 +754,7 @@
     </customLabels>
     <customLabels>
         <name>EPTaskTemplate</name>
-        <label>The Parent Task you selected belongs to a different Engagement Plan Template. Please select an Engagement Plan Task that's part of this Engagement Plan Template.</label>
+        <label>The Parent Task you selected belongs to a different Engagement Plan Template. Please select an Engagement Plan Task that&apos;s part of this Engagement Plan Template.</label>
     </customLabels>
     <customLabels>
         <name>EPTo</name>
@@ -766,7 +766,7 @@
     </customLabels>
     <customLabels>
         <name>ErrorEmailMessage</name>
-        <label>Salesforce encountered these NPSP errors. If you're unsure how to resolve the errors, post a message in the Nonprofit Success Pack group: https://powerofus.force.com/HUB_NPSP_Group</label>
+        <label>Salesforce encountered these NPSP errors. If you&apos;re unsure how to resolve the errors, post a message in the Nonprofit Success Pack group: https://powerofus.force.com/HUB_NPSP_Group</label>
     </customLabels>
     <customLabels>
         <name>FieldSetRelatedFieldError</name>
@@ -822,11 +822,11 @@
     </customLabels>
     <customLabels>
         <name>RD2_ContactChangeIsRestricted</name>
-        <label>You can't change the Household Account or Contact on a Recurring Donation that has Closed Opportunities.</label>
+        <label>You can&apos;t change the Household Account or Contact on a Recurring Donation that has Closed Opportunities.</label>
     </customLabels>
     <customLabels>
         <name>RD2_CurrencyChangeIsRestrictedOnOpp</name>
-        <label>You can't change the Opportunity currency to a different currency than the related Recurring Donation.</label>
+        <label>You can&apos;t change the Opportunity currency to a different currency than the related Recurring Donation.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevatePaymentMethodChangeError</name>
@@ -834,7 +834,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_CurrencyChangeIsRestrictedOnRD</name>
-        <label>You can't change the Recurring Donation currency when there is a related closed Opportunity.</label>
+        <label>You can&apos;t change the Recurring Donation currency when there is a related closed Opportunity.</label>
     </customLabels>
     <customLabels>
         <name>RD2_CurrentScheduleTitle</name>
@@ -842,15 +842,15 @@
     </customLabels>
     <customLabels>
         <name>RD2_DataMigrationInvalidCloseAction</name>
-        <label>In NPSP Settings | Recurring Donations, select any value other than "No_Action" for Open Opportunity Behaviour on RD Close. After data migration is complete, you may change the setting back to the previous value.</label>
+        <label>In NPSP Settings | Recurring Donations, select any value other than &quot;No_Action&quot; for Open Opportunity Behaviour on RD Close. After data migration is complete, you may change the setting back to the previous value.</label>
     </customLabels>
     <customLabels>
         <name>RD2_DataMigrationInvalidInstallmentPeriod</name>
-        <label>Recurring Donation Installment Period "{0}" cannot be converted to the Enhanced Recurring Donations format. Make sure the Installment Period is defined in NPSP Settings -&gt; Recurring Donations -&gt; Recurring Donation Custom Installment Periods.</label>
+        <label>Recurring Donation Installment Period &quot;{0}&quot; cannot be converted to the Enhanced Recurring Donations format. Make sure the Installment Period is defined in NPSP Settings -&gt; Recurring Donations -&gt; Recurring Donation Custom Installment Periods.</label>
     </customLabels>
     <customLabels>
         <name>RD2_DataMigrationInvalidOpenEndedStatus</name>
-        <label>Recurring Donation Open Ended Status "{0}" cannot be converted to the Enhanced Recurring Donations format. You must use one of these values: Open, Closed, or None.</label>
+        <label>Recurring Donation Open Ended Status &quot;{0}&quot; cannot be converted to the Enhanced Recurring Donations format. You must use one of these values: Open, Closed, or None.</label>
     </customLabels>
     <customLabels>
         <name>RD2_DataMigrationInvalidPlannedInstallments</name>
@@ -890,7 +890,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_ElevateDisableButtonLabel</name>
-        <label>Don't enter payment information.</label>
+        <label>Don&apos;t enter payment information.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateDisabledHeader</name>
@@ -898,7 +898,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_ElevateDisabledMessage</name>
-        <label>You aren't entering payment information to be processed by Elevate.</label>
+        <label>You aren&apos;t entering payment information to be processed by Elevate.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateEnableButtonLabel</name>
@@ -938,11 +938,11 @@
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRDCannotBePaused</name>
-        <label>You can't pause Elevate connected Recurring Donations.</label>
+        <label>You can&apos;t pause Elevate connected Recurring Donations.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRDClosedStatusCannotBeChanged</name>
-        <label>You can't edit the Status for an Elevate connected Recurring Donation when Status is Closed.</label>
+        <label>You can&apos;t edit the Status for an Elevate connected Recurring Donation when Status is Closed.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRDCannotBeFixedLength</name>
@@ -950,7 +950,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRDDayOfMonthCannotChange</name>
-        <label>You can't change Day of Month for an Elevate-connected Recurring Donation.</label>
+        <label>You can&apos;t change Day of Month for an Elevate-connected Recurring Donation.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRDEffectiveDateMustBeValid</name>
@@ -958,11 +958,11 @@
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRDCannotChangeElevateFields</name>
-        <label>You can't edit the donor, amount, schedule, or campaign fields on a Closed Elevate-connected Recurring Donation.</label>
+        <label>You can&apos;t edit the donor, amount, schedule, or campaign fields on a Closed Elevate-connected Recurring Donation.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRDCampaignCannotUpdateToNull</name>
-        <label>You can't remove the Campaign on an active Elevate-connected Recurring Donation. To remove the Campaign, close the Recurring Donation and create a new one.</label>
+        <label>You can&apos;t remove the Campaign on an active Elevate-connected Recurring Donation. To remove the Campaign, close the Recurring Donation and create a new one.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRecordCreateFailed</name>
@@ -978,7 +978,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRDStopDonationMessage</name>
-        <label>The nonprofit won't process any future donations for this Recurring Donation.</label>
+        <label>The nonprofit won&apos;t process any future donations for this Recurring Donation.</label>
     </customLabels>
     <customLabels>
         <name>RD2_NonElevateRDCancellingTitle</name>
@@ -990,7 +990,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EnablementDisabledMessage</name>
-        <label>(1) If you're not already using Lightning Experience, click Switch to Lightning Experience at the top of your screen.&lt;br/&gt;(2) Enable Customisable Rollups by going to NPSP Settings | Donations | Customisable Rollups.&lt;br/&gt;&lt;br/&gt;Return here to the Upgrade to Enhanced Recurring Donations page.</label>
+        <label>(1) If you&apos;re not already using Lightning Experience, click Switch to Lightning Experience at the top of your screen.&lt;br/&gt;(2) Enable Customisable Rollups by going to NPSP Settings | Donations | Customisable Rollups.&lt;br/&gt;&lt;br/&gt;Return here to the Upgrade to Enhanced Recurring Donations page.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementDryRunBatchTitle</name>
@@ -1010,11 +1010,11 @@
     </customLabels>
     <customLabels>
         <name>RD2_EnablementDryRunOutdatedError</name>
-        <label>It's been longer than 7 days since you completed a migration validation. Refresh the page and click Validate Migration to confirm that your data will migrate without errors.</label>
+        <label>It&apos;s been longer than 7 days since you completed a migration validation. Refresh the page and click Validate Migration to confirm that your data will migrate without errors.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementDryRunOutdatedInfo</name>
-        <label>It's been longer than 7 days since you completed a migration validation. Click Validate Migration to confirm that your data will migrate without errors.</label>
+        <label>It&apos;s been longer than 7 days since you completed a migration validation. Click Validate Migration to confirm that your data will migrate without errors.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementDryRunSkipButton</name>
@@ -1034,7 +1034,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EnablementEnableConfirm</name>
-        <label>I confirm that I have completed the preparation and validation tasks above and I'm ready to enable Enhanced Recurring Donations.</label>
+        <label>I confirm that I have completed the preparation and validation tasks above and I&apos;m ready to enable Enhanced Recurring Donations.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementEnableIntro</name>
@@ -1054,17 +1054,17 @@
     </customLabels>
     <customLabels>
         <name>RD2_EnablementEnableWarning</name>
-        <label>&lt;b&gt;WARNING: NPSP doesn't provide a way to revert back to legacy Recurring Donations.&lt;/b&gt;</label>
+        <label>&lt;b&gt;WARNING: NPSP doesn&apos;t provide a way to revert back to legacy Recurring Donations.&lt;/b&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementIncomplete</name>
-        <label>You cannot create or update Recurring Donations because you haven't finished enabling Enhanced Recurring Donations. Go to NPSP Settings | Recurring Donations | Upgrade to Enhanced Recurring Donations and complete all enablement steps.</label>
+        <label>You cannot create or update Recurring Donations because you haven&apos;t finished enabling Enhanced Recurring Donations. Go to NPSP Settings | Recurring Donations | Upgrade to Enhanced Recurring Donations and complete all enablement steps.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementIntro</name>
         <label>Greetings! Enhanced Recurring Donations is our redesigned and improved Recurring Donations feature for the Nonprofit Success Pack (NPSP). A big thanks to our community members who offered their feedback and helped make Enhanced Recurring Donations possible.
-        &lt;br/&gt;&lt;br/&gt;Since there's already a Recurring Donations feature in NPSP, you'll need to perform several upgrade tasks and move your existing data to the Enhanced Recurring Donations model. We've outlined the required tasks for you below.
-        &lt;br/&gt;&lt;br/&gt;You'll probably have questions along the way and we want you to be fully prepared at each step. Refer to the &lt;a href="https://powerofus.force.com/NPSP_Recurring_Donations" target="_blank"&gt;Enhanced Recurring Donations documentation&lt;/a&gt; as you work through the upgrade process.</label>
+        &lt;br/&gt;&lt;br/&gt;Since there&apos;s already a Recurring Donations feature in NPSP, you&apos;ll need to perform several upgrade tasks and move your existing data to the Enhanced Recurring Donations model. We&apos;ve outlined the required tasks for you below.
+        &lt;br/&gt;&lt;br/&gt;You&apos;ll probably have questions along the way and we want you to be fully prepared at each step. Refer to the &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;Enhanced Recurring Donations documentation&lt;/a&gt; as you work through the upgrade process.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMetaDeployConfirm</name>
@@ -1076,7 +1076,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMetaDeployIntro</name>
-        <label>Use MetaDeploy to install new metadata (picklist values, help text, etc.) for Enhanced Recurring Donations. MetaDeploy is a service that exists outside of your Salesforce org. Once you've installed the metadata, return to this page to continue the upgrade to Enhanced Recurring Donations.</label>
+        <label>Use MetaDeploy to install new metadata (picklist values, help text, etc.) for Enhanced Recurring Donations. MetaDeploy is a service that exists outside of your Salesforce org. Once you&apos;ve installed the metadata, return to this page to continue the upgrade to Enhanced Recurring Donations.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMetaDeployLaunch</name>
@@ -1112,7 +1112,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationErrorMessage</name>
-        <label>Your migration run has errors, these will need to be fixed to complete a successful Migration. See the errors by going to NPSP Settings &gt; System Tools &gt; Error Logs. Consult the &lt;a href="https://powerofus.force.com/NPSP_Recurring_Donations" target="_blank"&gt;documentation&lt;/a&gt; for help. Fix the errors then return and try again.</label>
+        <label>Your migration run has errors, these will need to be fixed to complete a successful Migration. See the errors by going to NPSP Settings &gt; System Tools &gt; Error Logs. Consult the &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt; for help. Fix the errors then return and try again.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationIntro</name>
@@ -1140,7 +1140,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationWarning</name>
-        <label>&lt;b&gt;WARNING: Run Migration modifies existing Recurring Donation data to match the Enhanced Recurring Donations model. Backup your database if you haven't already done so.&lt;/b&gt;</label>
+        <label>&lt;b&gt;WARNING: Run Migration modifies existing Recurring Donation data to match the Enhanced Recurring Donations model. Backup your database if you haven&apos;t already done so.&lt;/b&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementPermissionRequired</name>
@@ -1154,7 +1154,7 @@
         <name>RD2_EnablementPrepTasks</name>
         <label>&lt;ul&gt;&lt;li&gt;Disable workflows, processes, validation rules and triggers on the Recurring Donations, Opportunity, and Payment objects.&lt;/li&gt;
 &lt;li&gt;Backup your database, including all Recurring Donations and their related records.&lt;/li&gt;
-&lt;li&gt;Read the Enhanced Recurring Donations &lt;a href="https://powerofus.force.com/NPSP_Recurring_Donations" target="_blank"&gt;documentation&lt;/a&gt;.&lt;/li&gt;&lt;/ul&gt;</label>
+&lt;li&gt;Read the Enhanced Recurring Donations &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt;.&lt;/li&gt;&lt;/ul&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementPrepTitle</name>
@@ -1163,16 +1163,16 @@
     <customLabels>
         <name>RD2_EnablementSimpleIntro</name>
         <label>Enhanced Recurring Donations makes Recurring Donations more flexible and easier to manage than ever before. To enable Enhanced Recurring Donations, follow the steps below. You must complete ALL the steps to fully enable Enhanced Recurring Donations.
-        &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Because you have no Recurring Donation records, you don't need to validate or migrate any data.&lt;/b&gt;
-        &lt;br/&gt;&lt;br/&gt;For more information, read the &lt;a href="https://powerofus.force.com/NPSP_Recurring_Donations" target="_blank"&gt;Enhanced Recurring Donations documentation&lt;/a&gt;.</label>
+        &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Because you have no Recurring Donation records, you don&apos;t need to validate or migrate any data.&lt;/b&gt;
+        &lt;br/&gt;&lt;br/&gt;For more information, read the &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;Enhanced Recurring Donations documentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EndDateMustBeLaterThanCloseWonOpp</name>
-        <label>End Date must be later than the last Closed Won Opportunity's Close Date.</label>
+        <label>End Date must be later than the last Closed Won Opportunity&apos;s Close Date.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EndDateMustBeValidForFixedLength</name>
-        <label>End Date can't be in the future when Recurring Type is Fixed.</label>
+        <label>End Date can&apos;t be in the future when Recurring Type is Fixed.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnhancedRecurringDonationsNotEnabled</name>
@@ -1180,7 +1180,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EndDateElevateCannotBeInFuture</name>
-        <label>End Date can't be in the future for Elevate connected Recurring Donations.</label>
+        <label>End Date can&apos;t be in the future for Elevate connected Recurring Donations.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormCustomFieldsSectionHeader</name>
@@ -1208,11 +1208,11 @@
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormInsertSuccessMessage</name>
-        <label>Recurring Donation "{0}" was created.</label>
+        <label>Recurring Donation &quot;{0}&quot; was created.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormMissingPermissions</name>
-        <label>You don't have the required Recurring Donations field permissions. Contact your system administrator for assistance.</label>
+        <label>You don&apos;t have the required Recurring Donations field permissions. Contact your system administrator for assistance.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormOtherSectionHeader</name>
@@ -1254,7 +1254,7 @@
         <name>RD2_EntryFormSaveCommitmentFailedMessage</name>
         <label>A recurring payment has been created in Elevate. Elevate Recurring Id: {0}.
         
-        However, a matching Recurring Donation wasn't created in NPSP due to the following error:
+        However, a matching Recurring Donation wasn&apos;t created in NPSP due to the following error:
         ● {1}
         
         You can keep this form open, fix the error, and save the Recurring Donation again. Alternatively, cancel and contact your System Administrator for help.</label>
@@ -1305,7 +1305,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormUpdateSuccessMessage</name>
-        <label>Recurring Donation "{0}" was saved.</label>
+        <label>Recurring Donation &quot;{0}&quot; was saved.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ErrorDataMigrationJobCannotBeRun</name>
@@ -1341,11 +1341,11 @@
     </customLabels>
     <customLabels>
         <name>RD2_NextPaymentDonationDateInfo</name>
-        <label>The donor's credit card will be charged on the next donation date: {{DATE}}</label>
+        <label>The donor&apos;s credit card will be charged on the next donation date: {{DATE}}</label>
     </customLabels>
     <customLabels>
         <name>RD2_NextACHPaymentDonationDateInfo</name>
-        <label>The donor's ACH payment information will be sent to their bank on {{DATE}}. Payments begin after the bank verifies and processes the information.</label>
+        <label>The donor&apos;s ACH payment information will be sent to their bank on {{DATE}}. Payments begin after the bank verifies and processes the information.</label>
     </customLabels>
     <customLabels>
         <name>RD2_NumberInstallmentsRequiredWhenFixed</name>
@@ -1357,7 +1357,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_NumberInstallmentsCannotBeLessThanPaid</name>
-        <label>Number of Planned Installments can't be less than the Number of Paid Installments.</label>
+        <label>Number of Planned Installments can&apos;t be less than the Number of Paid Installments.</label>
     </customLabels>
     <customLabels>
         <name>RD2_PageNotAvailableHeader</name>
@@ -1369,11 +1369,11 @@
     </customLabels>
     <customLabels>
         <name>RD2_PauseCannotExistOnScheduleChange</name>
-        <label>You can''t update the following field(s) because this Recurring Donation is paused: {0}. If you''d like to update the field(s), you must deactivate the pause.</label>
+        <label>You can&apos;&apos;t update the following field(s) because this Recurring Donation is paused: {0}. If you&apos;&apos;d like to update the field(s), you must deactivate the pause.</label>
     </customLabels>
     <customLabels>
         <name>RD2_PauseClosedRDErrorMessage</name>
-        <label>You can't Pause a Closed Recurring Donation</label>
+        <label>You can&apos;t Pause a Closed Recurring Donation</label>
     </customLabels>
     <customLabels>
         <name>RD2_PauseDeactivationSuccessMessage</name>
@@ -1385,7 +1385,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_PausePermissionRequired</name>
-        <label>You don't have the required permissions to pause a Recurring Donation. Contact your system administrator for assistance.</label>
+        <label>You don&apos;t have the required permissions to pause a Recurring Donation. Contact your system administrator for assistance.</label>
     </customLabels>
     <customLabels>
         <name>RD2_PausedReasonLabel</name>
@@ -1393,7 +1393,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_PauseEndDateCannotBeMoreThanTwelveMonths</name>
-        <label>You can't pause Recurring Donations for more than a year. The pause End Date must be less than one year after the Start Date.</label>
+        <label>You can&apos;t pause Recurring Donations for more than a year. The pause End Date must be less than one year after the Start Date.</label>
     </customLabels>
     <customLabels>
         <name>RD2_PauseEndDateMustBeGreaterThanStartDate</name>
@@ -1413,15 +1413,15 @@
     </customLabels>
     <customLabels>
         <name>RD2_PauseSelectedInstallmentTextPlural</name>
-        <label>You've selected {0} installments.</label>
+        <label>You&apos;ve selected {0} installments.</label>
     </customLabels>
     <customLabels>
         <name>RD2_PauseSelectedInstallmentTextSingular</name>
-        <label>You've selected 1 installment.</label>
+        <label>You&apos;ve selected 1 installment.</label>
     </customLabels>
     <customLabels>
         <name>RD2_PauseStartDateMustBeTodayOrLater</name>
-        <label>You can't set a pause Start Date in the past. The pause Start Date must be today or later.</label>
+        <label>You can&apos;t set a pause Start Date in the past. The pause Start Date must be today or later.</label>
     </customLabels>
     <customLabels>
         <name>RD2_PauseRequestMustIncludeBothStartDateAndEndDate</name>
@@ -1429,7 +1429,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_PauseStatusMustExist</name>
-        <label>NPSP is unable to update Status and Status Reason on Paused Recurring Donations. You must add the picklist value 'Paused' to the Status field.</label>
+        <label>NPSP is unable to update Status and Status Reason on Paused Recurring Donations. You must add the picklist value &apos;Paused&apos; to the Status field.</label>
     </customLabels>
     <customLabels>
         <name>RD2_PaymentInformation</name>
@@ -1461,11 +1461,11 @@
     </customLabels>
     <customLabels>
         <name>RD2_ScheduleVisualizerFLSInstallment</name>
-        <label>You don't have permissions to view Upcoming Installments. Please contact your system administrator for more information.</label>
+        <label>You don&apos;t have permissions to view Upcoming Installments. Please contact your system administrator for more information.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ScheduleVisualizerFLSSchedule</name>
-        <label>You don't have permissions to view Active Schedules. Please contact your system administrator for more information.</label>
+        <label>You don&apos;t have permissions to view Active Schedules. Please contact your system administrator for more information.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ScheduleVisualizerMessageNoSchedule</name>
@@ -1485,7 +1485,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationClosedDefinition</name>
-        <label>After the specified number of days, NPSP updates the Recurring Donation Status to the Closed Status Value if donations aren't being received as expected. This value must be higher than the Number of Days for Lapsed. NPSP does not create instalment Opportunities for Closed Recurring Donations.</label>
+        <label>After the specified number of days, NPSP updates the Recurring Donation Status to the Closed Status Value if donations aren&apos;t being received as expected. This value must be higher than the Number of Days for Lapsed. NPSP does not create instalment Opportunities for Closed Recurring Donations.</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationDaysForClosed</name>
@@ -1525,7 +1525,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationLapsedDefinition</name>
-        <label>After the specified number of days, NPSP updates the Recurring Donation Status to the Lapsed Status Value if donations aren't being received as expected. NPSP continues to create instalment Opportunities for Lapsed Recurring Donations as defined by the schedule.</label>
+        <label>After the specified number of days, NPSP updates the Recurring Donation Status to the Lapsed Status Value if donations aren&apos;t being received as expected. NPSP continues to create instalment Opportunities for Lapsed Recurring Donations as defined by the schedule.</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationSetClosedStatus</name>
@@ -1546,17 +1546,17 @@
     <customLabels>
         <name>RD2_StatusMappingDefinitions</name>
         <label>&lt;b&gt;State Definitions&lt;/b&gt;&lt;br/&gt;&lt;ul&gt;&lt;li&gt;Active: The donor is actively donating. NPSP creates installment Opportunities as defined by the Recurring Donation schedule.&lt;/li&gt;
-&lt;li&gt;Lapsed: Donations aren't being received as expected, but NPSP still creates installment Opportunities as defined by the Recurring Donation schedule.&lt;/li&gt;
-&lt;li&gt;Closed: The donor has stopped making donations for this Recurring Donation. NPSP doesn't create any new installment Opportunities.&lt;/li&gt;&lt;/ul&gt;</label>
+&lt;li&gt;Lapsed: Donations aren&apos;t being received as expected, but NPSP still creates installment Opportunities as defined by the Recurring Donation schedule.&lt;/li&gt;
+&lt;li&gt;Closed: The donor has stopped making donations for this Recurring Donation. NPSP doesn&apos;t create any new installment Opportunities.&lt;/li&gt;&lt;/ul&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusMappingDeploymentAlreadyInProgress</name>
-        <label>You can't save a mapping while NPSP is processing another Status to State mapping.</label>
+        <label>You can&apos;t save a mapping while NPSP is processing another Status to State mapping.</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusMappingIntro</name>
         <label>When you create custom picklist values for Recurring Donation Status, you must map them to a State so that NPSP knows how to process records with those custom Status values.
-        &lt;br/&gt;&lt;br/&gt;If you haven't created any custom picklist values for Recurring Donation Status, there's nothing you need to map.</label>
+        &lt;br/&gt;&lt;br/&gt;If you haven&apos;t created any custom picklist values for Recurring Donation Status, there&apos;s nothing you need to map.</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusMappingInProgressMessage</name>
@@ -1572,7 +1572,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_StatusMustBeMapped</name>
-        <label>The Status "{0}" hasn''t been mapped to a State.</label>
+        <label>The Status &quot;{0}&quot; hasn&apos;&apos;t been mapped to a State.</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusMustBeMappedSolution</name>
@@ -1704,7 +1704,7 @@
     </customLabels>
     <customLabels>
         <name>RD_ErrorAddDonationPermissionDenied</name>
-        <label>You don't  have the required permissions to Refresh Opportunities. Contact your system administrator for assistance.</label>
+        <label>You don&apos;t  have the required permissions to Refresh Opportunities. Contact your system administrator for assistance.</label>
     </customLabels>
     <customLabels>
         <name>RD_ErrorLegacyBatchJobCannotBeRun</name>
@@ -1797,7 +1797,7 @@
     </customLabels>
     <customLabels>
         <name>RP_Remote_Site_Settings_Deactivated</name>
-        <label>To take advantage of all the new functionality on the Getting Started page, go to Setup, search for Remote Site Settings, and ensure that the SFDOEndpoints site is active. If it isn't, click Edit, check the Active box, and click Save.</label>
+        <label>To take advantage of all the new functionality on the Getting Started page, go to Setup, search for Remote Site Settings, and ensure that the SFDOEndpoints site is active. If it isn&apos;t, click Edit, check the Active box, and click Save.</label>
     </customLabels>
     <customLabels>
         <name>RP_SalesforceOrgLinkLabel</name>
@@ -1805,7 +1805,7 @@
     </customLabels>
     <customLabels>
         <name>RP_SubTitle</name>
-        <label>You now have access to ALL the powerful features of Salesforce Enterprise Edition PLUS the ability to better manage donors with the Nonprofit Success Pack application. Now let's get started.</label>
+        <label>You now have access to ALL the powerful features of Salesforce Enterprise Edition PLUS the ability to better manage donors with the Nonprofit Success Pack application. Now let&apos;s get started.</label>
     </customLabels>
     <customLabels>
         <name>RP_Title</name>
@@ -1901,7 +1901,7 @@
     </customLabels>
     <customLabels>
         <name>addrCopyConAddBtnFls</name>
-        <label>You don't have the required object or field permissions. Contact your system administrator to inquire about getting the necessary permissions.</label>
+        <label>You don&apos;t have the required object or field permissions. Contact your system administrator to inquire about getting the necessary permissions.</label>
     </customLabels>
     <customLabels>
         <name>addrCopyConAddBtnHHObjOnly</name>
@@ -1967,11 +1967,11 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>alloCantAllocateNothing</name>
-        <label>You can't create Allocations for an Opportunity with a blank or zero amount.</label>
+        <label>You can&apos;t create Allocations for an Opportunity with a blank or zero amount.</label>
     </customLabels>
     <customLabels>
         <name>alloDefaultGAUMissing</name>
-        <label>You've selected Default Allocations Enabled. You also need to select a Default General Accounting Unit.</label>
+        <label>You&apos;ve selected Default Allocations Enabled. You also need to select a Default General Accounting Unit.</label>
     </customLabels>
     <customLabels>
         <name>alloDefaultGAUNotActive</name>
@@ -2015,15 +2015,15 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>alloModifyCurrency</name>
-        <label>You can't modify Allocation currencies directly. NPSP updates Allocation currencies when you update the currency of the parent Opportunity, Campaign, or Recurring Donation.</label>
+        <label>You can&apos;t modify Allocation currencies directly. NPSP updates Allocation currencies when you update the currency of the parent Opportunity, Campaign, or Recurring Donation.</label>
     </customLabels>
     <customLabels>
         <name>alloNegativeAmount</name>
-        <label>The Amount field can't contain a negative value.</label>
+        <label>The Amount field can&apos;t contain a negative value.</label>
     </customLabels>
     <customLabels>
         <name>alloNegativePercent</name>
-        <label>The Percent field can't contain a negative value.</label>
+        <label>The Percent field can&apos;t contain a negative value.</label>
     </customLabels>
     <customLabels>
         <name>alloObjectUnsupported</name>
@@ -2047,11 +2047,11 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>alloPaymentAllocationBatchRetriesExceeded</name>
-        <label>Error occurred while processing records that didn't error on the first attempt. No data was saved.</label>
+        <label>Error occurred while processing records that didn&apos;t error on the first attempt. No data was saved.</label>
     </customLabels>
     <customLabels>
         <name>alloPaymentNotEnabled</name>
-        <label>Payment-level Allocations aren't enabled for your organisation. Try allocating at the Opportunity level instead.</label>
+        <label>Payment-level Allocations aren&apos;t enabled for your organisation. Try allocating at the Opportunity level instead.</label>
     </customLabels>
     <customLabels>
         <name>alloPaymentOverallocatedError</name>
@@ -2087,7 +2087,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>alloTotalExceedsOppAmt</name>
-        <label>Allocation totals can't exceed the amount of the related Payment or Opportunity.</label>
+        <label>Allocation totals can&apos;t exceed the amount of the related Payment or Opportunity.</label>
     </customLabels>
     <customLabels>
         <name>alloTotals</name>
@@ -2103,11 +2103,11 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>As of October 1, 2020, Batch Data Entry is no longer supported. Most capabilities have been replaced with newer features in NPSP. If you have any in-progress batches, you can still access those records, but you can't process them using Batch Data Entry. Contact support if you need to access in-progress batches. &lt;br/&gt; You may want to explore Gift Entry as an alternative to Batch Data Entry. Learn more about Gift Entry in the &lt;a href='https://powerofus.force.com/NPSP_Documentation' target='_blank'&gt;NPSP Documentation&lt;/a&gt;.</label>
+        <label>As of October 1, 2020, Batch Data Entry is no longer supported. Most capabilities have been replaced with newer features in NPSP. If you have any in-progress batches, you can still access those records, but you can&apos;t process them using Batch Data Entry. Contact support if you need to access in-progress batches. &lt;br/&gt; You may want to explore Gift Entry as an alternative to Batch Data Entry. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
-        <label>On October 1, 2020, Batch Data Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can't process them using Batch Data Entry. To ensure a smooth transition, enable and use Gift Entry in advance of October 1st. Learn more about Gift Entry in the &lt;a href='https://powerofus.force.com/NPSP_Documentation' target='_blank'&gt;NPSP Documentation&lt;/a&gt;.</label>
+        <label>On October 1, 2020, Batch Data Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Data Entry. To ensure a smooth transition, enable and use Gift Entry in advance of October 1st. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
@@ -2115,11 +2115,11 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bdiAPIBatchError</name>
-        <label>We couldn't process the Data Import records because of the following errors:</label>
+        <label>We couldn&apos;t process the Data Import records because of the following errors:</label>
     </customLabels>
     <customLabels>
         <name>bdiAPISelectedError</name>
-        <label>We couldn't process the selected Data Import records because of the following errors:</label>
+        <label>We couldn&apos;t process the selected Data Import records because of the following errors:</label>
     </customLabels>
     <customLabels>
         <name>bdiAccountCustomIdError</name>
@@ -2127,11 +2127,11 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bdiAdditionalObjChildNotUpdated</name>
-        <label>Unable to update the child record's lookup field with the parent record's ID. The record could not be updated because of this system error:</label>
+        <label>Unable to update the child record&apos;s lookup field with the parent record&apos;s ID. The record could not be updated because of this system error:</label>
     </customLabels>
     <customLabels>
         <name>bdiAdditionalObjPredNotFound</name>
-        <label>Error: record not created. This record is dependent on {0} which couldn''t be found.</label>
+        <label>Error: record not created. This record is dependent on {0} which couldn&apos;&apos;t be found.</label>
     </customLabels>
     <customLabels>
         <name>bdiAdditionalObjRequiredFieldsNull</name>
@@ -2167,7 +2167,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bdiBehaviorRequireNoMatch</name>
-        <label>No Match - Only import a record if it doesn't match an existing record.</label>
+        <label>No Match - Only import a record if it doesn&apos;t match an existing record.</label>
     </customLabels>
     <customLabels>
         <name>bdiBtnClose</name>
@@ -2227,7 +2227,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bdiDataImporterInfoLine1</name>
-        <label>If you're using Advanced Mapping you can map to any Salesforce object and field—standard or custom—that directly relates to Contacts, Accounts, and Opportunities. With Help Text mapping, each import record can contain up to 2 Contacts, up to 2 Organisations, an optional Home Address, and an optional Donation.</label>
+        <label>If you&apos;re using Advanced Mapping you can map to any Salesforce object and field—standard or custom—that directly relates to Contacts, Accounts, and Opportunities. With Help Text mapping, each import record can contain up to 2 Contacts, up to 2 Organisations, an optional Home Address, and an optional Donation.</label>
     </customLabels>
     <customLabels>
         <name>bdiDataImporterInfoLine2</name>
@@ -2243,7 +2243,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bdiDataImporterInfoLine4</name>
-        <label>The start of the data import may not begin immediately. Its processing depends on Salesforce's current activity.</label>
+        <label>The start of the data import may not begin immediately. Its processing depends on Salesforce&apos;s current activity.</label>
     </customLabels>
     <customLabels>
         <name>bdiDataImporterInfoTitle</name>
@@ -2319,7 +2319,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bdiErrorDeploymentFailedLink</name>
-        <label>&lt;a href="{0}" target="_blank"&gt;You can view the deployment status here.&lt;/a&gt;</label>
+        <label>&lt;a href=&quot;{0}&quot; target=&quot;_blank&quot;&gt;You can view the deployment status here.&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorDonationLookupMatch</name>
@@ -2371,11 +2371,11 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bdiErrorNonHHAccountContact</name>
-        <label>This Contact matched an existing Contact that's associated with a non-Household Account. The Data Import Tool can only update Contacts that are part of a Household Account.</label>
+        <label>This Contact matched an existing Contact that&apos;s associated with a non-Household Account. The Data Import Tool can only update Contacts that are part of a Household Account.</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorNonHHAccountContactWithAdv</name>
-        <label>This Contact matched an existing Contact that's associated with a non-Household, non-Administrative Account. The Gift Entry Tool can only update Contacts that are part of a Household or Administrative Account.</label>
+        <label>This Contact matched an existing Contact that&apos;s associated with a non-Household, non-Administrative Account. The Gift Entry Tool can only update Contacts that are part of a Household or Administrative Account.</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorOneToOneMultiContact</name>
@@ -2441,7 +2441,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bdiFMUILongDeploymentMessage</name>
-        <label>It'll continue to process in the background. Please wait.</label>
+        <label>It&apos;ll continue to process in the background. Please wait.</label>
     </customLabels>
     <customLabels>
         <name>bdiFMUINewFieldMapping</name>
@@ -2453,7 +2453,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bdiFMUISearchSourceInputLabel</name>
-        <label>Search for the NPSP Data Import object's field by label or API name.</label>
+        <label>Search for the NPSP Data Import object&apos;s field by label or API name.</label>
     </customLabels>
     <customLabels>
         <name>bdiFMUISearchTargetInputLabel</name>
@@ -2523,7 +2523,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
         <name>bdiMassDeleteWarning</name>
         <label>You are about to delete {0} record(s).
         &lt;br/&gt;
-        &lt;br/&gt;&lt;b&gt;IMPORTANT:&lt;/b&gt; If you create gifts in your org using the Batch Gift Entry feature, we don''t recommend using the Mass Delete button. Please see the NPSP documentation for instructions on deleting records using the data loader.</label>
+        &lt;br/&gt;&lt;b&gt;IMPORTANT:&lt;/b&gt; If you create gifts in your org using the Batch Gift Entry feature, we don&apos;&apos;t recommend using the Mass Delete button. Please see the NPSP documentation for instructions on deleting records using the data loader.</label>
     </customLabels>
     <customLabels>
         <name>bdiMatched</name>
@@ -2603,7 +2603,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bdiOMUILinkToRecordHelp</name>
-        <label>When the import processes, this field will have a link to this Object Group's record or it will display the Salesforce ID of the record.</label>
+        <label>When the import processes, this field will have a link to this Object Group&apos;s record or it will display the Salesforce ID of the record.</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUILinkToRecordLabel</name>
@@ -2619,7 +2619,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bdiOMUIOfGroupHelp</name>
-        <label>Your target object's records are related to another Object Group. Choose the related Object Group here.</label>
+        <label>Your target object&apos;s records are related to another Object Group. Choose the related Object Group here.</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIOfGroupLabel</name>
@@ -2627,7 +2627,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bdiOMUIPageDescriptionPt1</name>
-        <label>Each row of this table shows your Object Groups. You'll set up individual field mappings when you click the dropdown icon for an Object Group, then click View Field Mappings.</label>
+        <label>Each row of this table shows your Object Groups. You&apos;ll set up individual field mappings when you click the dropdown icon for an Object Group, then click View Field Mappings.</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIPageDescriptionPt2</name>
@@ -2660,7 +2660,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bdiOMUIErrorNoValidThroughThisField</name>
-        <label>Error: There are no valid fields based on what you selected in "Object Name", "Is Child/Parent", and "Of This Mapping Group"</label>
+        <label>Error: There are no valid fields based on what you selected in &quot;Object Name&quot;, &quot;Is Child/Parent&quot;, and &quot;Of This Mapping Group&quot;</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIErrorDupeName</name>
@@ -2716,7 +2716,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bdiSelectCantProcessImportedRecords</name>
-        <label>You can't import records that have already been imported. Remove records with the Imported status from your selection.</label>
+        <label>You can&apos;t import records that have already been imported. Remove records with the Imported status from your selection.</label>
     </customLabels>
     <customLabels>
         <name>bdiSelectNoDIRecordsSelected</name>
@@ -2860,19 +2860,19 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bgeEditBatchFieldOptionsWarning</name>
-        <label>WARNING: There are records saved to this batch. Any changes you make won't affect existing records.</label>
+        <label>WARNING: There are records saved to this batch. Any changes you make won&apos;t affect existing records.</label>
     </customLabels>
     <customLabels>
         <name>bgeEditBatchFieldSelectionWarning</name>
-        <label>WARNING: There are records saved to this batch. Any changes you make won't affect existing records. If you remove fields, those fields no longer appear on the gift entry screen, but data isn't deleted from those fields on existing records. Therefore, we recommend that you do not remove fields.</label>
+        <label>WARNING: There are records saved to this batch. Any changes you make won&apos;t affect existing records. If you remove fields, those fields no longer appear on the gift entry screen, but data isn&apos;t deleted from those fields on existing records. Therefore, we recommend that you do not remove fields.</label>
     </customLabels>
     <customLabels>
         <name>bgeEditBatchOptionsWarning</name>
-        <label>WARNING: There are records saved to this batch. Any changes you make won't affect existing records. We will not attempt to match existing records using updated donation matching rule settings, unless those records are edited.</label>
+        <label>WARNING: There are records saved to this batch. Any changes you make won&apos;t affect existing records. We will not attempt to match existing records using updated donation matching rule settings, unless those records are edited.</label>
     </customLabels>
     <customLabels>
         <name>bgeFLSError</name>
-        <label>You don't have the required field permissions. Contact your system administrator to inquire about getting the necessary permissions.</label>
+        <label>You don&apos;t have the required field permissions. Contact your system administrator to inquire about getting the necessary permissions.</label>
     </customLabels>
     <customLabels>
         <name>bgeFormMatchingModalText</name>
@@ -2932,11 +2932,11 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bgeGridErrorConflictingGifts</name>
-        <label>There are conflicting gifts in this batch. You will need to resolve these conflicts before you're able to process this batch.</label>
+        <label>There are conflicting gifts in this batch. You will need to resolve these conflicts before you&apos;re able to process this batch.</label>
     </customLabels>
     <customLabels>
         <name>bgeGridErrorRequiredTotalsExpected</name>
-        <label>Either the count of gifts or the total gifts doesn't match the expected values for this batch. These values must match before you can process the batch.</label>
+        <label>Either the count of gifts or the total gifts doesn&apos;t match the expected values for this batch. These values must match before you can process the batch.</label>
     </customLabels>
     <customLabels>
         <name>bgeGridGiftCountHeader</name>
@@ -2956,7 +2956,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bgeGridNoGiftsHeader</name>
-        <label>Looks like you haven't entered any gifts yet!</label>
+        <label>Looks like you haven&apos;t entered any gifts yet!</label>
     </customLabels>
     <customLabels>
         <name>bgeGridNoGiftsBody</name>
@@ -3004,7 +3004,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>On July 13, 2021, legacy Batch Gift Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can't process them using Batch Gift Entry. To ensure a smooth transition, enable and use the newer Gift Entry in advance of July 13th. Learn more about Gift Entry in the &lt;a href='https://powerofus.force.com/NPSP_Documentation' target='_blank'&gt;NPSP Documentation&lt;/a&gt;.</label>
+        <label>On July 13, 2021, legacy Batch Gift Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Gift Entry. To ensure a smooth transition, enable and use the newer Gift Entry in advance of July 13th. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -3017,10 +3017,10 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     <customLabels>
         <name>bgeNotSupportedBody</name>
         <label>As of July 13, 2021, Batch Gift Entry is no longer supported and has been replaced by Gift Entry.
-            If you have any in-progress batches, you can still access those records, but you can't process them using Batch Gift Entry.
+            If you have any in-progress batches, you can still access those records, but you can&apos;t process them using Batch Gift Entry.
             Contact support if you need to access in-progress batches.
             You may want to explore Gift Entry as an alternative to Batch Gift Entry.
-            Learn more about Gift Entry in the &lt;a href='https://powerofus.force.com/NPSP_Documentation' target='_blank'&gt;NPSP Documentation&lt;/a&gt;.</label>
+            Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -3072,7 +3072,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>CallableApiJobScheduleInvalidClass</name>
-        <label>The Apex class {0} doesn''t exist or doesn''t implement the Schedulable interface.</label>
+        <label>The Apex class {0} doesn&apos;&apos;t exist or doesn&apos;&apos;t implement the Schedulable interface.</label>
     </customLabels>
     <customLabels>
         <name>CallableApiMaximumRecordsExceeded</name>
@@ -3158,7 +3158,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>commonAccessErrorMessage</name>
-        <label>You don't have the required permissions to perform this action. Contact your system administrator for assistance.</label>
+        <label>You don&apos;t have the required permissions to perform this action. Contact your system administrator for assistance.</label>
     </customLabels>
     <customLabels>
         <name>commonActivate</name>
@@ -3230,7 +3230,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>commonConcurrentBatchError</name>
-        <label>There''s already a job running on the {0} Apex class. The job must complete before it can be run again.</label>
+        <label>There&apos;&apos;s already a job running on the {0} Apex class. The job must complete before it can be run again.</label>
     </customLabels>
     <customLabels>
         <name>commonContactCount</name>
@@ -3346,7 +3346,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>commonPermissionErrorMessage</name>
-        <label>You don't have the necessary access to use this feature. Please check with your Salesforce Administrator.</label>
+        <label>You don&apos;t have the necessary access to use this feature. Please check with your Salesforce Administrator.</label>
     </customLabels>
     <customLabels>
         <name>commonReadMore</name>
@@ -3454,7 +3454,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>conMergeErrorNoDeleteRecAccess</name>
-        <label>You don't have the record sharing permissions to merge these Contacts. Select other Contact records or your system administrator may need to adjust sharing permissions.</label>
+        <label>You don&apos;t have the record sharing permissions to merge these Contacts. Select other Contact records or your system administrator may need to adjust sharing permissions.</label>
     </customLabels>
     <customLabels>
         <name>conMergeErrNoPersonAccounts</name>
@@ -3526,7 +3526,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>conMergeErrorNoDRSFound</name>
-        <label>&lt;b&gt;No Duplicate Record Sets.&lt;/b&gt;&lt;/br&gt;&lt;/br&gt; No Duplicate Record Sets found. Make sure duplicate rules are enabled. &lt;a href="https://help.salesforce.com/articleView?id=duplicate_rules_map_of_reference.htm&amp;type=5" target="_blank"&gt;More Info&lt;/a&gt;.</label>
+        <label>&lt;b&gt;No Duplicate Record Sets.&lt;/b&gt;&lt;/br&gt;&lt;/br&gt; No Duplicate Record Sets found. Make sure duplicate rules are enabled. &lt;a href=&quot;https://help.salesforce.com/articleView?id=duplicate_rules_map_of_reference.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;More Info&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>conMergeErrorNoReadDSRObjPermission</name>
@@ -3558,7 +3558,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>engagementPlanCantEdit</name>
-        <label>You can't change the Account, Contact, Campaign, Case, Opportunity, or Recurring Donation for an Engagement Plan. Create a new Engagement Plan instead.</label>
+        <label>You can&apos;t change the Account, Contact, Campaign, Case, Opportunity, or Recurring Donation for an Engagement Plan. Create a new Engagement Plan instead.</label>
     </customLabels>
     <customLabels>
         <name>engagementPlanMissingField</name>
@@ -3594,7 +3594,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>exceptionDeletePermission</name>
-        <label>You don''t have the permissions required to delete {0} records.</label>
+        <label>You don&apos;&apos;t have the permissions required to delete {0} records.</label>
     </customLabels>
     <customLabels>
         <name>exceptionRequiredField</name>
@@ -3730,7 +3730,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>geBatchGiftsExpectedCountOrTotalMessage</name>
-        <label>The expected doesn't match either the count of gifts or the amount of gifts. These values must match before you can process this batch.</label>
+        <label>The expected doesn&apos;t match either the count of gifts or the amount of gifts. These values must match before you can process this batch.</label>
     </customLabels>
     <customLabels>
         <name>geBatchGiftsExpectedTotalsMessage</name>
@@ -3768,7 +3768,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>geBodyBatchFieldBundleInfo</name>
-        <label>You can't set default values for fields included in this section.</label>
+        <label>You can&apos;t set default values for fields included in this section.</label>
     </customLabels>
     <customLabels>
         <name>geBatchGiftsHeader</name>
@@ -3776,7 +3776,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>geBodyBatchHeaderLeftCol</name>
-        <label>Choose fields to include in your Batch Header. Select the checkbox to add a field and deselect to remove the field from the form. If you'd like additional custom fields available for the Batch Header, add them in the NPSP Data Import Batch object.</label>
+        <label>Choose fields to include in your Batch Header. Select the checkbox to add a field and deselect to remove the field from the form. If you&apos;d like additional custom fields available for the Batch Header, add them in the NPSP Data Import Batch object.</label>
     </customLabels>
     <customLabels>
         <name>geBodyBatchHeaderRightCol</name>
@@ -3800,7 +3800,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>geBodyFormFieldsLeftCol</name>
-        <label>Choose fields to include in your form. Before adding fields, click the section in the main Configure Form Fields screen where you want the fields to go. In this Form Fields &amp; Field Bundles sidebar, select the checkbox to add a field, and deselect it to remove the field from the form. If the object or field you want to use isn't listed, make sure you've set up the field with Advanced Mapping.</label>
+        <label>Choose fields to include in your form. Before adding fields, click the section in the main Configure Form Fields screen where you want the fields to go. In this Form Fields &amp; Field Bundles sidebar, select the checkbox to add a field, and deselect it to remove the field from the form. If the object or field you want to use isn&apos;t listed, make sure you&apos;ve set up the field with Advanced Mapping.</label>
     </customLabels>
     <customLabels>
         <name>geBodyFormFieldsDescLeftCol</name>
@@ -3861,11 +3861,11 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>geBodyPaymentNotProcessingTransaction</name>
-        <label>You aren't entering payment information to be processed by Elevate.</label>
+        <label>You aren&apos;t entering payment information to be processed by Elevate.</label>
     </customLabels>
     <customLabels>
         <name>geBodyPaymentProcessedDuringBatchProcessing</name>
-        <label>The donor's credit card will be processed when you process the batch.</label>
+        <label>The donor&apos;s credit card will be processed when you process the batch.</label>
     </customLabels>
     <customLabels>
         <name>geBodyTemplateInfoLeftCol</name>
@@ -3873,7 +3873,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>geBodyTemplatesTabDescription</name>
-        <label>A template is a reusable layout of fields for data entry. Edit a template by clicking the template name. Alternatively, create a new template or click any template's dropdown menu for more options. Any templates that are in use can't be deleted.</label>
+        <label>A template is a reusable layout of fields for data entry. Edit a template by clicking the template name. Alternatively, create a new template or click any template&apos;s dropdown menu for more options. Any templates that are in use can&apos;t be deleted.</label>
     </customLabels>
     <customLabels>
         <name>geBodyWidgetFields</name>
@@ -3961,7 +3961,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>geButtonPaymentDoNotCharge</name>
-        <label>Don't enter payment information.</label>
+        <label>Don&apos;t enter payment information.</label>
     </customLabels>
     <customLabels>
         <name>geButtonSaveNewGift</name>
@@ -3981,7 +3981,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>geErrorAmountDoesNotMatch</name>
-        <label>Total amount doesn't match the {0}</label>
+        <label>Total amount doesn&apos;t match the {0}</label>
     </customLabels>
     <customLabels>
         <name>geErrorBatchGiftEntryReauthRequired</name>
@@ -3993,19 +3993,19 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>geErrorCardChargedBDIFailed</name>
-        <label>Elevate successfully processed the payment, but NPSP didn't create the record for the transaction in Salesforce. Please correct the errors and resubmit the form to create the Salesforce record.</label>
+        <label>Elevate successfully processed the payment, but NPSP didn&apos;t create the record for the transaction in Salesforce. Please correct the errors and resubmit the form to create the Salesforce record.</label>
     </customLabels>
     <customLabels>
         <name>geElevateDeleteErrorLog</name>
-        <label>Gift deleted from {0}, but Gift Entry cannot delete the gift. Remove the gift's NPSP Data Import record with ID: {1} from the batch with ID {2} in NPSP Data Import Batches.</label>
+        <label>Gift deleted from {0}, but Gift Entry cannot delete the gift. Remove the gift&apos;s NPSP Data Import record with ID: {1} from the batch with ID {2} in NPSP Data Import Batches.</label>
     </customLabels>
     <customLabels>
         <name>geElevateUpdateErrorLog</name>
-        <label>Gift updated in {0}, but Gift Entry cannot update the gift. Update the gift's NPSP Data Import record with ID: {1} from the batch with ID {2} in NPSP Data Import Batches.</label>
+        <label>Gift updated in {0}, but Gift Entry cannot update the gift. Update the gift&apos;s NPSP Data Import record with ID: {1} from the batch with ID {2} in NPSP Data Import Batches.</label>
     </customLabels>
     <customLabels>
         <name>geErrorElevateDelete</name>
-        <label>Cannot delete gift in {0}. We don't recommend processing this batch, as the payment for this gift can still be charged. Refresh and try deleting again.</label>
+        <label>Cannot delete gift in {0}. We don&apos;t recommend processing this batch, as the payment for this gift can still be charged. Refresh and try deleting again.</label>
     </customLabels>
     <customLabels>
         <name>geErrorElevateUpdate</name>
@@ -4021,7 +4021,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>geFieldsNotFoundMessage</name>
-        <label>This form contains fields that can't be found. Please check with your administrator.</label>
+        <label>This form contains fields that can&apos;t be found. Please check with your administrator.</label>
     </customLabels>
     <customLabels>
         <name>geAddSchedule</name>
@@ -4189,7 +4189,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>gsChecklistItemNPSPCloudDesc</name>
-        <label>This brief overview is meant to dip your toes into what's possible with NPSP, but you can dive deeper and discover the many other features available to your organisation.</label>
+        <label>This brief overview is meant to dip your toes into what&apos;s possible with NPSP, but you can dive deeper and discover the many other features available to your organisation.</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemNPSPCloudPriBtnLabel</name>
@@ -4233,7 +4233,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>gsChecklistItemPageLayoutsDesc</name>
-        <label>Take the time to customise your org's look and feel, so you can be sure your users can easily find the data they need.</label>
+        <label>Take the time to customise your org&apos;s look and feel, so you can be sure your users can easily find the data they need.</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemPageLayoutsLinkLabel</name>
@@ -4261,7 +4261,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>gsChecklistItemReviewCompanyDesc</name>
-        <label>Within Salesforce, organisational information is referred to as "Company Information." Here you'll set up your org's default time zone, currency locale, and fiscal year start month. You can also find information about your licence usage.</label>
+        <label>Within Salesforce, organisational information is referred to as &quot;Company Information.&quot; Here you&apos;ll set up your org&apos;s default time zone, currency locale, and fiscal year start month. You can also find information about your licence usage.</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemReviewCompanyLinkLabel</name>
@@ -4273,7 +4273,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>gsChecklistItemRunningReportsDesc</name>
-        <label>Learn how to build reports and dashboards to bring your data to life and help tell the story of your organisation's impact.</label>
+        <label>Learn how to build reports and dashboards to bring your data to life and help tell the story of your organisation&apos;s impact.</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemRunningReportsPriBtnLabel</name>
@@ -4325,7 +4325,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>gsChecklistItemTrainUsersDesc</name>
-        <label>When the day to launch your Salesforce org arrives, you want every user in your organisation to be ready. That's why it's important to make a plan for onboarding your users and helping them get the most out of Salesforce.</label>
+        <label>When the day to launch your Salesforce org arrives, you want every user in your organisation to be ready. That&apos;s why it&apos;s important to make a plan for onboarding your users and helping them get the most out of Salesforce.</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemTrainUsersLinkLabel</name>
@@ -4405,7 +4405,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>gseuChecklistItemWhatIsNPSPDesc</name>
-        <label>The foundation of Nonprofit Cloud is the Nonprofit Success Pack (NPSP) app. NPSP helps you manage your constituents and fundraising efforts. If someone says they're using the "nonprofit version" of Salesforce, they're usually talking about NPSP.</label>
+        <label>The foundation of Nonprofit Cloud is the Nonprofit Success Pack (NPSP) app. NPSP helps you manage your constituents and fundraising efforts. If someone says they&apos;re using the &quot;nonprofit version&quot; of Salesforce, they&apos;re usually talking about NPSP.</label>
     </customLabels>
     <customLabels>
         <name>gseuChecklistItemWhatIsNPSPLink</name>
@@ -4417,7 +4417,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>gsChecklistMakeItYourDesc</name>
-        <label>Customise Salesforce with information that's unique to your organisation.</label>
+        <label>Customise Salesforce with information that&apos;s unique to your organisation.</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistMakeItYourTitle</name>
@@ -4457,7 +4457,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>gseuChecklistWorkRecordsDesc</name>
-        <label>After you get your constituent and donation data into NPSP, you need to be able to easily find and interact with the records you're working on.</label>
+        <label>After you get your constituent and donation data into NPSP, you need to be able to easily find and interact with the records you&apos;re working on.</label>
     </customLabels>
     <customLabels>
         <name>gseuChecklistWorkRecordsTitle</name>
@@ -4465,7 +4465,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>gseuChecklistItemGlobalSearchDesc</name>
-        <label>When you're just getting started with NPSP, finding records can be tricky. Use global search to search across your entire Salesforce org and find what you need fast.</label>
+        <label>When you&apos;re just getting started with NPSP, finding records can be tricky. Use global search to search across your entire Salesforce org and find what you need fast.</label>
     </customLabels>
     <customLabels>
         <name>gseuChecklistItemGlobalSearchLinkLabel</name>
@@ -4481,7 +4481,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>gseuChecklistItemStayTrackDesc</name>
-        <label>The activities panel helps you and your colleagues capture all work related to a particular Contact, Organisation, or Opportunity. Log calls, assign tasks, send an email, and create calendar events right from the record you're working on.</label>
+        <label>The activities panel helps you and your colleagues capture all work related to a particular Contact, Organisation, or Opportunity. Log calls, assign tasks, send an email, and create calendar events right from the record you&apos;re working on.</label>
     </customLabels>
     <customLabels>
         <name>gseuChecklistItemStayTrackLinkLabel</name>
@@ -4565,7 +4565,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>gseuChecklistYourDataDesc</name>
-        <label>Reports and Dashboards help organise your data so that you can tell the story of your organisation's impact. NPSP includes out-of-the-box reports, or you can create your own.</label>
+        <label>Reports and Dashboards help organise your data so that you can tell the story of your organisation&apos;s impact. NPSP includes out-of-the-box reports, or you can create your own.</label>
     </customLabels>
     <customLabels>
         <name>gseuChecklistYourDataTitle</name>
@@ -4589,7 +4589,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>gseuChecklistItemCollectGiftsDesc</name>
-        <label>Monthly giving can provide a predictable source of nonprofit revenue, and sustaining donors are often a nonprofit's most loyal and committed supporters. Track monthly giving by creating a Recurring Donation.</label>
+        <label>Monthly giving can provide a predictable source of nonprofit revenue, and sustaining donors are often a nonprofit&apos;s most loyal and committed supporters. Track monthly giving by creating a Recurring Donation.</label>
     </customLabels>
     <customLabels>
         <name>gseuChecklistItemCollectGiftsLinkLabel</name>
@@ -4705,11 +4705,11 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>geErrorDonorTypeInvalid</name>
-        <label>You've selected {0} for {1}, but the required {0} fields aren't available on your form. Please check with your administrator.</label>
+        <label>You&apos;ve selected {0} for {1}, but the required {0} fields aren&apos;t available on your form. Please check with your administrator.</label>
     </customLabels>
     <customLabels>
         <name>geErrorFieldPermission</name>
-        <label>You don't have permission to edit this field.</label>
+        <label>You don&apos;t have permission to edit this field.</label>
     </customLabels>
     <customLabels>
         <name>geErrorObjectCRUDHeader</name>
@@ -4721,7 +4721,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>geErrorFLSBatchTableColumns</name>
-        <label>You're unable to modify your Batch Table Columns.</label>
+        <label>You&apos;re unable to modify your Batch Table Columns.</label>
     </customLabels>
     <customLabels>
         <name>geErrorFLSHeader</name>
@@ -4913,7 +4913,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>geHelpTextAddressMapping</name>
-        <label>The Address record that's associated with Contact1's Household Account. NPSP automation may also populate this address to Contact1's household and all contacts within the same household. If you're using the EDA Address object, you should create a new Object Group for the object and use its fields on your template.</label>
+        <label>The Address record that&apos;s associated with Contact1&apos;s Household Account. NPSP automation may also populate this address to Contact1&apos;s household and all contacts within the same household. If you&apos;re using the EDA Address object, you should create a new Object Group for the object and use its fields on your template.</label>
     </customLabels>
     <customLabels>
         <name>geHelpTextAllocation1Mapping</name>
@@ -4937,7 +4937,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>geHelpTextContact2Mapping</name>
-        <label>The secondary Contact in Contact1's Household Account. This Contact could also have an Affiliation with the organisation in Account2.</label>
+        <label>The secondary Contact in Contact1&apos;s Household Account. This Contact could also have an Affiliation with the organisation in Account2.</label>
     </customLabels>
     <customLabels>
         <name>geHelpTextFormFieldsFieldCustomLabel</name>
@@ -4949,7 +4949,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>geHelpTextHouseholdMapping</name>
-        <label>Additional information about Contact1's Household Account.</label>
+        <label>Additional information about Contact1&apos;s Household Account.</label>
     </customLabels>
     <customLabels>
         <name>geHelpTextPaymentServices</name>
@@ -4995,7 +4995,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     <customLabels>
         <name>gePaymentProcessError</name>
         <label>There was an error processing the payment. Please review the error and try again. Alternatively,
-            select "Don't enter payment information." to enter a donation without processing a payment. {0} errors:
+            select &quot;Don&apos;t enter payment information.&quot; to enter a donation without processing a payment. {0} errors:
             /0x0A/ {1}</label>
     </customLabels>
     <customLabels>
@@ -5004,15 +5004,15 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>gePaymentServicesUnavailableHeader</name>
-        <label>{0} Can't Charge Payments</label>
+        <label>{0} Can&apos;t Charge Payments</label>
     </customLabels>
     <customLabels>
         <name>gePaymentServicesUnavailableBody</name>
-        <label>Disconnected from {0}. This batch includes authorised gifts that haven't been charged. To charge authorised gifts, reconnect to {0}. Alternatively, remove payment information.</label>
+        <label>Disconnected from {0}. This batch includes authorised gifts that haven&apos;t been charged. To charge authorised gifts, reconnect to {0}. Alternatively, remove payment information.</label>
     </customLabels>
     <customLabels>
         <name>gePaymentServicesUnavailableFailureMessage</name>
-        <label>Donation not created because {0} is disconnected and can't charge payment.</label>
+        <label>Donation not created because {0} is disconnected and can&apos;t charge payment.</label>
     </customLabels>
     <customLabels>
         <name>geLabelCustomTableSelectedFields</name>
@@ -5104,7 +5104,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>geTextNavigateToOpportunity</name>
-        <label>Let's go look at the Opportunity...</label>
+        <label>Let&apos;s go look at the Opportunity...</label>
     </customLabels>
     <customLabels>
         <name>geTextPaymentsSaveNotice</name>
@@ -5136,7 +5136,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>geToastTemplateCreateSuccess</name>
-        <label>The "{0}" template was created.</label>
+        <label>The &quot;{0}&quot; template was created.</label>
     </customLabels>
     <customLabels>
         <name>geToastTemplateDeleteError</name>
@@ -5144,7 +5144,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>geToastTemplateDeleteSuccess</name>
-        <label>The "{0}" template was deleted.</label>
+        <label>The &quot;{0}&quot; template was deleted.</label>
     </customLabels>
     <customLabels>
         <name>geToastTemplateTabsError</name>
@@ -5152,7 +5152,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>geToastTemplateUpdateSuccess</name>
-        <label>The "{0}" template was updated.</label>
+        <label>The &quot;{0}&quot; template was updated.</label>
     </customLabels>
     <customLabels>
         <name>geUtilJWTTestInvalidKey</name>
@@ -5176,11 +5176,11 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>geWarningGauAllocFieldUpdatesDisabled</name>
-        <label>Since this donation has at least one GAU Allocation assigned, you can't update certain fields.</label>
+        <label>Since this donation has at least one GAU Allocation assigned, you can&apos;t update certain fields.</label>
     </customLabels>
     <customLabels>
         <name>giftProcessingAccountException</name>
-        <label>Gift Processing doesn't support the Individual ("Bucket") account model.</label>
+        <label>Gift Processing doesn&apos;t support the Individual (&quot;Bucket&quot;) account model.</label>
     </customLabels>
     <customLabels>
         <name>giftProcessingConfigException</name>
@@ -5256,11 +5256,11 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>healthDetailsAccountDefaultRTInvalid</name>
-        <label>The Account Model record type isn't valid.</label>
+        <label>The Account Model record type isn&apos;t valid.</label>
     </customLabels>
     <customLabels>
         <name>healthDetailsAccountDefaultRTIssue</name>
-        <label>The Account Model record type, {0} (set in NPSP Settings) is currently set as your Profile's default Account record type.</label>
+        <label>The Account Model record type, {0} (set in NPSP Settings) is currently set as your Profile&apos;s default Account record type.</label>
     </customLabels>
     <customLabels>
         <name>healthDetailsAccountModel</name>
@@ -5268,7 +5268,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>healthDetailsAccountProcessor</name>
-        <label>The Account Model is set to {0}, but Health Check has found that you're using a mixture of Account types.</label>
+        <label>The Account Model is set to {0}, but Health Check has found that you&apos;re using a mixture of Account types.</label>
     </customLabels>
     <customLabels>
         <name>healthDetailsAccountRTIssue</name>
@@ -5296,7 +5296,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>healthDetailsContactData</name>
-        <label>There are {0} Contacts that have no Account. Contacts with no Account are private to the User who created them and can't be seen by other Users.</label>
+        <label>There are {0} Contacts that have no Account. Contacts with no Account are private to the User who created them and can&apos;t be seen by other Users.</label>
     </customLabels>
     <customLabels>
         <name>healthDetailsDuplicateAcctRT</name>
@@ -5308,7 +5308,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>healthDetailsHHAccountModel</name>
-        <label>When using the Household Account Model, you must set Household Object Rules to "No Contacts". You can set the Household Object Rules field on the NPSP Settings Page under People | Households.</label>
+        <label>When using the Household Account Model, you must set Household Object Rules to &quot;No Contacts&quot;. You can set the Household Object Rules field on the NPSP Settings Page under People | Households.</label>
     </customLabels>
     <customLabels>
         <name>healthDetailsHHActNoContacts</name>
@@ -5380,7 +5380,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>healthDetailsInvalidPicklistValue</name>
-        <label>The picklist value "{0}" is not supported.</label>
+        <label>The picklist value &quot;{0}&quot; is not supported.</label>
     </customLabels>
     <customLabels>
         <name>healthDetailsInvalidRecordtypeId</name>
@@ -5404,7 +5404,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>healthDetailsMissingRequiredPicklistValue</name>
-        <label>The required picklist value "{0}" is missing.</label>
+        <label>The required picklist value &quot;{0}&quot; is missing.</label>
     </customLabels>
     <customLabels>
         <name>healthDetailsNothingScheduled</name>
@@ -5656,7 +5656,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>healthSolutionAccountRTIssue</name>
-        <label>For Household Accounts, make sure npe01__SYSTEM_AccountType__c is 'Household Account'. For One-to-One Accounts, make sure npe01__SYSTEM_AccountType__c is 'One-to-One Individual'. Also make sure for both, npe01__SYSTEMISINDIVIDUAL__c is true.</label>
+        <label>For Household Accounts, make sure npe01__SYSTEM_AccountType__c is &apos;Household Account&apos;. For One-to-One Accounts, make sure npe01__SYSTEM_AccountType__c is &apos;One-to-One Individual&apos;. Also make sure for both, npe01__SYSTEMISINDIVIDUAL__c is true.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionAutoRelFieldsMissing</name>
@@ -5732,19 +5732,19 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>healthSolutionMailingListReportMissing</name>
-        <label>Create a Campaigns with Contacts report, and add a filter for Member Status does not contain "Duplicate". Then specify this report on the {0} | {1} tab in NPSP Settings.</label>
+        <label>Create a Campaigns with Contacts report, and add a filter for Member Status does not contain &quot;Duplicate&quot;. Then specify this report on the {0} | {1} tab in NPSP Settings.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionMissingOppPayments</name>
-        <label>View these Opportunities by running the &lt;b&gt;Opportunities without Payments&lt;/b&gt; report in the NPSP Health Check reports folder. Note that you should add filter criteria on the report to exclude any Opportunity types and Opportunity record types you've excluded in NPSP Payments Settings. You can create the missing Payment records using the Create Missing Payments button on NPSP Settings | Bulk Data Processes | Create Missing Payments.</label>
+        <label>View these Opportunities by running the &lt;b&gt;Opportunities without Payments&lt;/b&gt; report in the NPSP Health Check reports folder. Note that you should add filter criteria on the report to exclude any Opportunity types and Opportunity record types you&apos;ve excluded in NPSP Payments Settings. You can create the missing Payment records using the Create Missing Payments button on NPSP Settings | Bulk Data Processes | Create Missing Payments.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionMissingPicklistValue</name>
-        <label>Add the required picklist value "{0}" on the "{1}" field.</label>
+        <label>Add the required picklist value &quot;{0}&quot; on the &quot;{1}&quot; field.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionNothingScheduled</name>
-        <label>To reschedule the default NPSP jobs, go to NPSP Settings | Bulk Data Processes | Process Scheduler. Click Edit. Make sure Don't Enable Auto Schedule Default NPSP Job is not selected. Click Save. See Edit or Reschedule NPSP Jobs for more information: https://powerofus.force.com/NPSP_Scheduled_Jobs</label>
+        <label>To reschedule the default NPSP jobs, go to NPSP Settings | Bulk Data Processes | Process Scheduler. Click Edit. Make sure Don&apos;t Enable Auto Schedule Default NPSP Job is not selected. Click Save. See Edit or Reschedule NPSP Jobs for more information: https://powerofus.force.com/NPSP_Scheduled_Jobs</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionOCRDupPrimary</name>
@@ -5784,7 +5784,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>healthSolutionUnsupportedPicklistValue</name>
-        <label>Deactivate or delete the picklist value "{0}" on the "{1}" field.</label>
+        <label>Deactivate or delete the picklist value &quot;{0}&quot; on the &quot;{1}&quot; field.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionUDFBadDatatypes</name>
@@ -5800,7 +5800,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>hhCmpDedupeBatchMessage</name>
-        <label>Due to the large number of Campaign Members on this Campaign, NPSP is using a batch process to identify Household Members, which may take several minutes to complete. When it's done, you can view the Household Mailing report by clicking on the Household Mailing Report link.</label>
+        <label>Due to the large number of Campaign Members on this Campaign, NPSP is using a batch process to identify Household Members, which may take several minutes to complete. When it&apos;s done, you can view the Household Mailing report by clicking on the Household Mailing Report link.</label>
     </customLabels>
     <customLabels>
         <name>hhCmpDedupeBatchProgressTitle</name>
@@ -5812,7 +5812,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>hhCmpDedupeNoReport</name>
-        <label>Could not find the report. Create a report and save it with the Report Unique Name of 'NPSP_Campaign_Household_Mailing_List_V2'. Use the Campaigns with Contacts report type and add filters for CampaignId equals blank and Member Status does not contain 'Duplicate'.</label>
+        <label>Could not find the report. Create a report and save it with the Report Unique Name of &apos;NPSP_Campaign_Household_Mailing_List_V2&apos;. Use the Campaigns with Contacts report type and add filters for CampaignId equals blank and Member Status does not contain &apos;Duplicate&apos;.</label>
     </customLabels>
     <customLabels>
         <name>hhCmpDedupeStatus</name>
@@ -6192,23 +6192,23 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>pmtModifyCurrency</name>
-        <label>You can't modify Payment currencies directly. Update the parent Opportunity's currency, and NPSP will automatically update the currency of all related Payment records.</label>
+        <label>You can&apos;t modify Payment currencies directly. Update the parent Opportunity&apos;s currency, and NPSP will automatically update the currency of all related Payment records.</label>
     </customLabels>
     <customLabels>
         <name>pmtNoRefundPermissionMessage</name>
-        <label>You don't have permissions to refund Payments. Contact your Salesforce admin for help.</label>
+        <label>You don&apos;t have permissions to refund Payments. Contact your Salesforce admin for help.</label>
     </customLabels>
     <customLabels>
         <name>pmtOriginalPaymentNotCompleted</name>
-        <label>Payment can't be refunded because Elevate hasn't processed the payment yet.</label>
+        <label>Payment can&apos;t be refunded because Elevate hasn&apos;t processed the payment yet.</label>
     </customLabels>
     <customLabels>
         <name>pmtOriginalPaymentNotPaid</name>
-        <label>This payment's still processing and can't be refunded yet.</label>
+        <label>This payment&apos;s still processing and can&apos;t be refunded yet.</label>
     </customLabels>
     <customLabels>
         <name>pmtOriginalPaymentNotFound</name>
-        <label>You can't edit a refund without an Original Payment.</label>
+        <label>You can&apos;t edit a refund without an Original Payment.</label>
     </customLabels>
     <customLabels>
         <name>pmtPaidPaymentDateRequired</name>
@@ -6224,7 +6224,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>pmtRefundAmountInvalid</name>
-        <label>Enter a refund that's less than or equal to the remaining balance.</label>
+        <label>Enter a refund that&apos;s less than or equal to the remaining balance.</label>
     </customLabels>
     <customLabels>
         <name>pmtRefundPaymentSuccessMessage</name>
@@ -6232,7 +6232,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>pmtPaymentNotFound</name>
-        <label>The corresponding Elevate payment record couldn't be found. Contact your Salesforce admin for help.</label>
+        <label>The corresponding Elevate payment record couldn&apos;t be found. Contact your Salesforce admin for help.</label>
     </customLabels>
     <customLabels>
         <name>pmtPaymentNotRefundable</name>
@@ -6264,7 +6264,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>pmtWriteOffPaidPayment</name>
-        <label>A Payment can't be both paid and written off. You must deselect one or both checkboxes.</label>
+        <label>A Payment can&apos;t be both paid and written off. You must deselect one or both checkboxes.</label>
     </customLabels>
     <customLabels>
         <name>pmtWizardBtnCalcPayments</name>
@@ -6440,7 +6440,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>pscManageSoftCreditsCantChangeCurrency</name>
-        <label>You can't modify soft credit currencies directly. Update the parent Opportunity's currency, and NPSP will automatically update the currency of all related soft credits.</label>
+        <label>You can&apos;t modify soft credit currencies directly. Update the parent Opportunity&apos;s currency, and NPSP will automatically update the currency of all related soft credits.</label>
     </customLabels>
     <customLabels>
         <name>pscManageSoftCreditsPermissionDenied</name>
@@ -6452,7 +6452,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>pscManageSoftCreditsInvalidContact</name>
-        <label>{0} is the Primary Contact for this Opportunity. You can't add soft credit to this Contact.</label>
+        <label>{0} is the Primary Contact for this Opportunity. You can&apos;t add soft credit to this Contact.</label>
     </customLabels>
     <customLabels>
         <name>pscManageSoftCreditsNoRoles</name>
@@ -6480,7 +6480,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>pscManageSoftCreditsReconcileFail</name>
-        <label>The total Soft Credit Amount can't exceed the Opportunity Amount. Select Allow Soft Credit Amount more than Total Amount to override this restriction.</label>
+        <label>The total Soft Credit Amount can&apos;t exceed the Opportunity Amount. Select Allow Soft Credit Amount more than Total Amount to override this restriction.</label>
     </customLabels>
     <customLabels>
         <name>pscManageSoftCreditsRestrictions</name>
@@ -6512,7 +6512,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>sendAcknowledgmentFailureReasons</name>
-        <label>NPSP did not send acknowledgements for the following records. Acknowledgements can fail if there is no workflow rule (Acknowledgement Status EQUALS 'Send Acknowledgement') activated to send the acknowledgement, or if the records did not meet additional criteria to trigger the workflow rule. For example, if Primary Contact is not set, or if the Primary Contact's email field is empty or invalid.</label>
+        <label>NPSP did not send acknowledgements for the following records. Acknowledgements can fail if there is no workflow rule (Acknowledgement Status EQUALS &apos;Send Acknowledgement&apos;) activated to send the acknowledgement, or if the records did not meet additional criteria to trigger the workflow rule. For example, if Primary Contact is not set, or if the Primary Contact&apos;s email field is empty or invalid.</label>
     </customLabels>
     <customLabels>
         <name>sendAcknowledgmentFireStatus</name>
@@ -6750,7 +6750,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>stgDeletePermissionError</name>
-        <label>You don't have the required system permissions to delete this setting. Contact your system administrator for assistance.</label>
+        <label>You don&apos;t have the required system permissions to delete this setting. Contact your system administrator for assistance.</label>
     </customLabels>
     <customLabels>
         <name>stgDIFMNonAdminError</name>
@@ -6766,7 +6766,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>stgDeploymentHasInvalidHelpTextMappings</name>
-        <label>Advanced Mapping is enabled, but we found some invalid Help Text mappings that couldn't be migrated. &lt;b&gt;Take a screenshot of the table below; it will not be displayed again after you leave this page.&lt;/b&gt;</label>
+        <label>Advanced Mapping is enabled, but we found some invalid Help Text mappings that couldn&apos;t be migrated. &lt;b&gt;Take a screenshot of the table below; it will not be displayed again after you leave this page.&lt;/b&gt;</label>
     </customLabels>
     <customLabels>
         <name>stgDeploymentHelpTextMappingEnabled</name>
@@ -6789,17 +6789,17 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <label>NPSP has a number of Scheduled Jobs that calculate rollups, update Recurring Donations and Seasonal Addresses, and perform error handling.
 &lt;br/&gt;
 &lt;br/&gt;
-When Don't Auto Schedule Default NPSP Jobs is not selected, whenever you load the NPSP Settings page, NPSP checks that all the default NPSP Jobs are scheduled. If they're not scheduled, NPSP reschedules them. NPSP will reschedule only missing NPSP Jobs; it will not overwrite Jobs that have been updated.
+When Don&apos;t Auto Schedule Default NPSP Jobs is not selected, whenever you load the NPSP Settings page, NPSP checks that all the default NPSP Jobs are scheduled. If they&apos;re not scheduled, NPSP reschedules them. NPSP will reschedule only missing NPSP Jobs; it will not overwrite Jobs that have been updated.
 &lt;br/&gt;
 &lt;br/&gt;
 To view these Jobs, search for Scheduled Jobs in Salesforce Setup.
 &lt;br/&gt;
 &lt;br/&gt;
-Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or reschedule the default Jobs.</label>
+Selecting Don&apos;t Auto Schedule Default NPSP Jobs tells NPSP not to check for or reschedule the default Jobs.</label>
     </customLabels>
     <customLabels>
         <name>stgEditPermissionError</name>
-        <label>You don't have the required system permissions to edit this setting. Contact your system administrator for assistance.</label>
+        <label>You don&apos;t have the required system permissions to edit this setting. Contact your system administrator for assistance.</label>
     </customLabels>
     <customLabels>
         <name>stgErrorINaming</name>
@@ -6835,7 +6835,7 @@ Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or r
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMapping1</name>
-        <label>When you enable Advanced Mapping, we convert your existing Help Text field mappings to Advanced Mapping. Once enabled, you'll edit mappings and create new ones on this page.</label>
+        <label>When you enable Advanced Mapping, we convert your existing Help Text field mappings to Advanced Mapping. Once enabled, you&apos;ll edit mappings and create new ones on this page.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMapping2</name>
@@ -6843,14 +6843,14 @@ Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or r
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMapping3</name>
-        <label>Find complete Advanced Mapping setup documentation &lt;a href="https://powerofus.force.com/NPSP_Advanced_Mapping" target="_blank"&gt;here&lt;/a&gt;.</label>
+        <label>Find complete Advanced Mapping setup documentation &lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMapping4</name>
-        <label>&lt;b&gt;This message won't be displayed if you leave this page! Take a screenshot of this page or copy the information in the table below to track the Help Text mappings you need correct. &lt;/b&gt;
+        <label>&lt;b&gt;This message won&apos;t be displayed if you leave this page! Take a screenshot of this page or copy the information in the table below to track the Help Text mappings you need correct. &lt;/b&gt;
             &lt;br/&gt;
             &lt;br/&gt;
-            We couldn't convert some of your existing Help Text mappings because they're invalid. &lt;a href="https://powerofus.force.com/NPSP_Troubleshoot_Help_Text" target="_blank"&gt;Read more about common Help Text mapping issues&lt;/a&gt;. We recommend disabling Advanced Mapping, correcting the invalid Help Text mappings, then re-enabling Advanced Mapping. Alternatively, you could add these mappings when you configure Advanced Mapping on the next screen, but these additional mappings will revert to the original invalid Help Text if you disable Advanced Mapping.</label>
+            We couldn&apos;t convert some of your existing Help Text mappings because they&apos;re invalid. &lt;a href=&quot;https://powerofus.force.com/NPSP_Troubleshoot_Help_Text&quot; target=&quot;_blank&quot;&gt;Read more about common Help Text mapping issues&lt;/a&gt;. We recommend disabling Advanced Mapping, correcting the invalid Help Text mappings, then re-enabling Advanced Mapping. Alternatively, you could add these mappings when you configure Advanced Mapping on the next screen, but these additional mappings will revert to the original invalid Help Text if you disable Advanced Mapping.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMappingInvalidHelpText</name>
@@ -6870,13 +6870,13 @@ Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or r
     </customLabels>
     <customLabels>
         <name>stgHelpAlloNDayValue</name>
-        <label>Sets the value for 'N day' rollups, where 'N' is the number of days from today into the past. This value defaults to roll up GAU Allocations over the past 365 days.</label>
+        <label>Sets the value for &apos;N day&apos; rollups, where &apos;N&apos; is the number of days from today into the past. This value defaults to roll up GAU Allocations over the past 365 days.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAllocationLevel</name>
         <label>An allocation is the specific amount of a gift that goes to a designated General Accounting Unit (GAU). This setting determines whether funds are allocated based on the Amount on the Opportunity or the Amount on the Payment.&lt;br/&gt;&lt;br/&gt;
 
-&lt;b&gt;WARNING:&lt;/b&gt; Choosing to use Payment Allocations changes the way Opportunity Allocations work in your org. It's important that you understand these changes and the additional requirements that exist before enabling them.&lt;br/&gt;&lt;br/&gt;
+&lt;b&gt;WARNING:&lt;/b&gt; Choosing to use Payment Allocations changes the way Opportunity Allocations work in your org. It&apos;s important that you understand these changes and the additional requirements that exist before enabling them.&lt;br/&gt;&lt;br/&gt;
 
 If you enable and start using Payment Allocations and then disable them, you will need to manually reconcile your data and update Opportunity Allocation records to reflect the information previously assigned in Payment Allocations. Review the Payment Allocations documentation to better understand the potential impact.&lt;br/&gt;&lt;br/&gt;
 
@@ -6884,11 +6884,11 @@ When you enable Payment Allocations, existing rollups remain the same. We do not
     </customLabels>
     <customLabels>
         <name>stgHelpAutoAffil</name>
-        <label>When selected, this option tells Salesforce to create or update Affiliations for Contacts connected to Organisation Accounts whenever the Contact's Account field or Primary Affiliation field changes. Organisations Accounts include all Record Types except those defined as Household or One-to-One Account Record Types.</label>
+        <label>When selected, this option tells Salesforce to create or update Affiliations for Contacts connected to Organisation Accounts whenever the Contact&apos;s Account field or Primary Affiliation field changes. Organisations Accounts include all Record Types except those defined as Household or One-to-One Account Record Types.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAutoRelCampaignRT</name>
-        <label>Select the Campaign Type(s) you'd like this Automatic Relationship to be created for.</label>
+        <label>Select the Campaign Type(s) you&apos;d like this Automatic Relationship to be created for.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAutoRelField</name>
@@ -6926,7 +6926,7 @@ This process may take some time, but you can safely close this page and the proc
     </customLabels>
     <customLabels>
         <name>stgHelpBtnHHNaming</name>
-        <label>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate Automatic Household Naming, and populate your existing Household Names, Formal Greetings, and Informal Greetings with new names, according to the formats you've chosen. Every single Household Account (or Household object) in your Salesforce organisation will be renamed (except those Households that do not have automatic naming enabled.)&lt;br/&gt;&lt;br/&gt;
+        <label>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate Automatic Household Naming, and populate your existing Household Names, Formal Greetings, and Informal Greetings with new names, according to the formats you&apos;ve chosen. Every single Household Account (or Household object) in your Salesforce organisation will be renamed (except those Households that do not have automatic naming enabled.)&lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;This is an irreversible process.&lt;/b&gt; While you can deactivate Automatic Household Naming at any time, all newly populated names will remain. &lt;br/&gt;&lt;br/&gt;
 
@@ -6944,7 +6944,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</l
     </customLabels>
     <customLabels>
         <name>stgHelpBtnOppNaming</name>
-        <label>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate batch Opportunity renaming, and refresh all Opportunity Names according to the formats you've chosen. Salesforce will rename every Opportunity in your organisation except those Opportunities whose Opportunity Name Formats you've specified as "Do Not Rename."&lt;br/&gt;&lt;br/&gt;
+        <label>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate batch Opportunity renaming, and refresh all Opportunity Names according to the formats you&apos;ve chosen. Salesforce will rename every Opportunity in your organisation except those Opportunities whose Opportunity Name Formats you&apos;ve specified as &quot;Do Not Rename.&quot;&lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;This is an irreversible process.&lt;/b&gt;
 Before starting this process, we recommend that you back up your data. We also recommend disabling the following when they affect Opportunities:
@@ -6967,7 +6967,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</l
     </customLabels>
     <customLabels>
         <name>stgHelpContactRTExcluded</name>
-        <label>The Contact Record Types you want to exclude from automatic Household Member Contact Role creation. For example, you might want to create a "child" record type for children Contacts in the Household, and enter it here. Salesforce would then exclude those Contacts from receiving the Household Member Contact Role when the Opportunity is created.</label>
+        <label>The Contact Record Types you want to exclude from automatic Household Member Contact Role creation. For example, you might want to create a &quot;child&quot; record type for children Contacts in the Household, and enter it here. Salesforce would then exclude those Contacts from receiving the Household Member Contact Role when the Opportunity is created.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpCreateMissingPayments</name>
@@ -6994,13 +6994,13 @@ Once the process is 100% complete, you can safely leave or refresh this page.</l
     </customLabels>
     <customLabels>
         <name>stgHelpCustomizableRollupsEnable1</name>
-        <label>You can find complete Customisable Rollups documentation &lt;a href="https://powerofus.force.com/NPSP_Customizable_Rollups_Overview" target="_blank"&gt;here&lt;/a&gt;.</label>
+        <label>You can find complete Customisable Rollups documentation &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpCustomizableRollupsEnable2</name>
-        <label>When you enable Customisable Rollups for the first time, we will automatically convert your existing rollups and the 87 out-of-box NPSP rollups into Customisable Rollups. For complete details, see &lt;a href="https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations" target="_blank"&gt;this doc&lt;/a&gt;.
+        <label>When you enable Customisable Rollups for the first time, we will automatically convert your existing rollups and the 87 out-of-box NPSP rollups into Customisable Rollups. For complete details, see &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;this doc&lt;/a&gt;.
             &lt;br/&gt;&lt;br/&gt;
-            You can disable and go back to legacy rollups, but any new rollups or rollup/filter changes made in Customisable Rollups won't be applied to your legacy rollup settings.</label>
+            You can disable and go back to legacy rollups, but any new rollups or rollup/filter changes made in Customisable Rollups won&apos;t be applied to your legacy rollup settings.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpCustomizableRollupsEnable3</name>
@@ -7012,7 +7012,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</l
     </customLabels>
     <customLabels>
         <name>stgHelpDefaultGAU</name>
-        <label>When Default Allocations Enabled is selected, NPSP creates a GAU Allocation for all new Opportunities not excluded in GAU Allocations Rollup Settings, and assigns them to this General Accounting Unit. NOTE: This doesn't include existing unallocated Opportunities. You can allocate them to the default General Accounting Unit in NPSP Settings under Bulk Data Processes | Batch Create Default Allocations.</label>
+        <label>When Default Allocations Enabled is selected, NPSP creates a GAU Allocation for all new Opportunities not excluded in GAU Allocations Rollup Settings, and assigns them to this General Accounting Unit. NOTE: This doesn&apos;t include existing unallocated Opportunities. You can allocate them to the default General Accounting Unit in NPSP Settings under Bulk Data Processes | Batch Create Default Allocations.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpDisableHHAccountAddr</name>
@@ -7042,7 +7042,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</l
     </customLabels>
     <customLabels>
         <name>stgHelpExampleHHNames</name>
-        <label>&lt;b&gt;NOTE:&lt;/b&gt; The above preview examples cannot preview information for fields other than First Name, Last Name, or Salutation. (For example, if you've created a custom field for nickname that you want to use in the Informal Greeting, that custom field would not show up here.) Fields other than First Name, Last Name, and Salutation don't show up in the greetings fields of the Manage Household page either, but when you save Contact information from the Manage Household page, your Household naming conventions will appear correctly.</label>
+        <label>&lt;b&gt;NOTE:&lt;/b&gt; The above preview examples cannot preview information for fields other than First Name, Last Name, or Salutation. (For example, if you&apos;ve created a custom field for nickname that you want to use in the Informal Greeting, that custom field would not show up here.) Fields other than First Name, Last Name, and Salutation don&apos;t show up in the greetings fields of the Manage Household page either, but when you save Contact information from the Manage Household page, your Household naming conventions will appear correctly.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpFGFormat</name>
@@ -7054,7 +7054,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</l
     </customLabels>
     <customLabels>
         <name>stgHelpHHAccountRTID</name>
-        <label>The Account record type you want to use for new Accounts if you've selected the Household Account model above. You can select the default Household Account record type, or your own record type. If you select --None--, then Salesforce will use the default Account record type for the user who's creating the new Contact (and associated Account).</label>
+        <label>The Account record type you want to use for new Accounts if you&apos;ve selected the Household Account model above. You can select the default Household Account record type, or your own record type. If you select --None--, then Salesforce will use the default Account record type for the user who&apos;s creating the new Contact (and associated Account).</label>
     </customLabels>
     <customLabels>
         <name>stgHelpHHData</name>
@@ -7066,7 +7066,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</l
     </customLabels>
     <customLabels>
         <name>stgHelpHHMailingListReport</name>
-        <label>The Household Mailing List Report deduplicates a Campaign that contains multiple Contacts from the same household in order to help prevent sending multiples of the same mailing to the same address. NPSP includes a report you can select called "NPSP Campaign Household Mailing List V2". If that report has been renamed or deleted, select a report that uses the Campaigns with Contacts report type, with filters for Member Status does not contain "Duplicate", and Campaign Id = blank.</label>
+        <label>The Household Mailing List Report deduplicates a Campaign that contains multiple Contacts from the same household in order to help prevent sending multiples of the same mailing to the same address. NPSP includes a report you can select called &quot;NPSP Campaign Household Mailing List V2&quot;. If that report has been renamed or deleted, select a report that uses the Campaigns with Contacts report type, with filters for Member Status does not contain &quot;Duplicate&quot;, and Campaign Id = blank.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpHHNameFormat</name>
@@ -7078,11 +7078,11 @@ Once the process is 100% complete, you can safely leave or refresh this page.</l
     </customLabels>
     <customLabels>
         <name>stgHelpHHOCROn</name>
-        <label>When selected, NPSP automatically creates Contact Roles on Individual gifts for Household members of the Opportunity's Primary Contact.</label>
+        <label>When selected, NPSP automatically creates Contact Roles on Individual gifts for Household members of the Opportunity&apos;s Primary Contact.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpHHObjectOverview</name>
-        <label>To learn more about the recommended Household Account model, see the &lt;a href="https://powerofus.force.com/NPSP_Account_Model" target="_blank"&gt;NPSP Documentation&lt;/a&gt;.</label>
+        <label>To learn more about the recommended Household Account model, see the &lt;a href=&quot;https://powerofus.force.com/NPSP_Account_Model&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpHHRules</name>
@@ -7090,7 +7090,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</l
     </customLabels>
     <customLabels>
         <name>stgHelpHealthCheck</name>
-        <label>Use &lt;a href="#" onclick="ShowPanel('idPanelHealthCheck');return false;"&gt;Health Check&lt;/a&gt; to verify your NPSP configuration!</label>
+        <label>Use &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelHealthCheck&apos;);return false;&quot;&gt;Health Check&lt;/a&gt; to verify your NPSP configuration!</label>
     </customLabels>
     <customLabels>
         <name>stgHelpIGFormat</name>
@@ -7102,7 +7102,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</l
     </customLabels>
     <customLabels>
         <name>stgHelpLeadConvert</name>
-        <label>Specifies the default behaviour for Opportunity creation when you convert a Lead to a Contact. If left unselected, Salesforce will NOT automatically create an Opportunity when you convert Leads to Contacts. For more information, see the &lt;a href="https://powerofus.force.com/NPSP_Leads" target="_blank"&gt;NPSP Documentation&lt;/a&gt;.</label>
+        <label>Specifies the default behaviour for Opportunity creation when you convert a Lead to a Contact. If left unselected, Salesforce will NOT automatically create an Opportunity when you convert Leads to Contacts. For more information, see the &lt;a href=&quot;https://powerofus.force.com/NPSP_Leads&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpLvlAssignBatch</name>
@@ -7113,7 +7113,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</l
     </customLabels>
     <customLabels>
         <name>stgHelpMatchedDonorRole</name>
-        <label>The Contact Role you want to use for matched donors. We recommend using "Matched Donor."</label>
+        <label>The Contact Role you want to use for matched donors. We recommend using &quot;Matched Donor.&quot;</label>
     </customLabels>
     <customLabels>
         <name>stgHelpMaxPayments</name>
@@ -7133,7 +7133,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</l
     </customLabels>
     <customLabels>
         <name>stgHelpNPSPSettings</name>
-        <label>Configure the Nonprofit Success Pack to meet your organisation's needs. You can also monitor the health of your Salesforce organisation, or run batch processes to update data.</label>
+        <label>Configure the Nonprofit Success Pack to meet your organisation&apos;s needs. You can also monitor the health of your Salesforce organisation, or run batch processes to update data.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpNameConnector</name>
@@ -7158,7 +7158,7 @@ IMPORTANT: Both of these fields must have the same data type.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCR</name>
-        <label>Soft Credits, Contact Roles, and Matching Gifts relate to each other in important ways. If you're not familiar with these concepts and how they interact, you should read through the &lt;a href="https://powerofus.force.com/NPSP_SCMG" target="_blank"&gt;NPSP Documentation&lt;/a&gt; before making any adjustments to these settings.</label>
+        <label>Soft Credits, Contact Roles, and Matching Gifts relate to each other in important ways. If you&apos;re not familiar with these concepts and how they interact, you should read through the &lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt; before making any adjustments to these settings.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCRDefaultRole</name>
@@ -7166,7 +7166,7 @@ IMPORTANT: Both of these fields must have the same data type.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOrgOCRDefaultRole</name>
-        <label>The default Contact Role automatically assigned to the Opportunity's Primary Contact when the Opportunity's Account is NOT a Household, One-to-One, or Individual Account.</label>
+        <label>The default Contact Role automatically assigned to the Opportunity&apos;s Primary Contact when the Opportunity&apos;s Account is NOT a Household, One-to-One, or Individual Account.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCRRoleForHH</name>
@@ -7174,31 +7174,31 @@ IMPORTANT: Both of these fields must have the same data type.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOneToOneRTID</name>
-        <label>The Account record type you want to use for new Accounts if you've selected the One-to-One Account model above. NPSP does not come with a default record type for One-to-One Accounts, so you should create one (such as "Individual") before selecting this model. If you select --None--, then Salesforce will use the default Account record type for the user who's creating the new Contact (and associated One-to-One Account).</label>
+        <label>The Account record type you want to use for new Accounts if you&apos;ve selected the One-to-One Account model above. NPSP does not come with a default record type for One-to-One Accounts, so you should create one (such as &quot;Individual&quot;) before selecting this model. If you select --None--, then Salesforce will use the default Account record type for the user who&apos;s creating the new Contact (and associated One-to-One Account).</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingAttribution</name>
-        <label>Specifies whether you want to apply these settings to Contact Donations (i.e. Opportunities associated with Household, 1-to-1, or Individual "Bucket" Accounts), Organisation Donations, or both Contact and Organisation Donations.</label>
+        <label>Specifies whether you want to apply these settings to Contact Donations (i.e. Opportunities associated with Household, 1-to-1, or Individual &quot;Bucket&quot; Accounts), Organisation Donations, or both Contact and Organisation Donations.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingDateFormat</name>
-        <label>The date format used for any Date or DateTime fields referenced in the Opportunity Name Format. Choose a format, or choose "other" to create your own custom format following the Java SimpleDateFormat specification.</label>
+        <label>The date format used for any Date or DateTime fields referenced in the Opportunity Name Format. Choose a format, or choose &quot;other&quot; to create your own custom format following the Java SimpleDateFormat specification.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingFormat</name>
-        <label>The Opportunity Name format. Choose "other" to create your own. See the &lt;a href="https://powerofus.force.com/NPSP_Opp_Names" target="_blank"&gt;NPSP Documentation&lt;/a&gt; for details.</label>
+        <label>The Opportunity Name format. Choose &quot;other&quot; to create your own. See the &lt;a href=&quot;https://powerofus.force.com/NPSP_Opp_Names&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt; for details.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingRecTypes</name>
-        <label>The Opportunity record type(s) to which you want to apply this Opportunity Name. Control or Command click to select more than one record type. "--None--" applies the new naming to ALL record types.</label>
+        <label>The Opportunity record type(s) to which you want to apply this Opportunity Name. Control or Command click to select more than one record type. &quot;--None--&quot; applies the new naming to ALL record types.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppRecTypesNoPayments</name>
-        <label>Salesforce won't automatically create Payments for the selected Opportunity record types. Control or Command click to select more than one record type.</label>
+        <label>Salesforce won&apos;t automatically create Payments for the selected Opportunity record types. Control or Command click to select more than one record type.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppTypesNoPayments</name>
-        <label>Salesforce won't automatically create Payments for Opportunities that have this value in the Type picklist.</label>
+        <label>Salesforce won&apos;t automatically create Payments for Opportunities that have this value in the Type picklist.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOrgAccountAddressMgmt</name>
@@ -7230,11 +7230,11 @@ IMPORTANT: Both of these fields must have the same data type.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPowerOfUsHub</name>
-        <label>Got questions? Try the &lt;a href="https://powerofus.force.com/HUB_NPSP_Group" target="_blank"&gt;Nonprofit Success Pack&lt;/a&gt; group for questions about NPSP and the &lt;a href="https://powerofus.force.com/HUB_System_Admin_Group" target="_blank"&gt;System Administrators&lt;/a&gt; group for questions about Salesforce administration and configuration.&lt;br/&gt;&lt;br/&gt;Keep up with the latest NPSP release notes in the &lt;a href="https://powerofus.force.com/HUB_NPSP_Release_Group" target="_blank"&gt;NPSP Release Announcements&lt;/a&gt; group.</label>
+        <label>Got questions? Try the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; group for questions about NPSP and the &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; group for questions about Salesforce administration and configuration.&lt;br/&gt;&lt;br/&gt;Keep up with the latest NPSP release notes in the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt; group.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPrimaryContactBatch</name>
-        <label>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate a batch Opportunity update to refresh the Primary Contact field. Salesforce will update Opportunity records where the Primary Contact field isn't the same value as the  Opportunity Contact Role record marked Primary.&lt;br/&gt;&lt;br/&gt;
+        <label>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate a batch Opportunity update to refresh the Primary Contact field. Salesforce will update Opportunity records where the Primary Contact field isn&apos;t the same value as the  Opportunity Contact Role record marked Primary.&lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;This is an irreversible process.&lt;/b&gt;
 This change updates Opportunity records. Before starting this process, we recommend that you back up your data. We also recommend disabling the following when they affect Opportunities:
@@ -7249,7 +7249,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</l
     </customLabels>
     <customLabels>
         <name>stgHelpPrimaryContactRoleMergeBatch</name>
-        <label>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate a batch that permanently removes any duplicate Primary Opportunity Contact Roles that exist in your org. These records won't be recoverable in the recycle bin, so be careful to review expected changes in advance.&lt;br/&gt;&lt;br/&gt;
+        <label>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate a batch that permanently removes any duplicate Primary Opportunity Contact Roles that exist in your org. These records won&apos;t be recoverable in the recycle bin, so be careful to review expected changes in advance.&lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;This is an irreversible process.&lt;/b&gt;
 This change updates Opportunity Contact Role records. Before starting this process, we recommend that you back up your data. We also recommend disabling the following when they affect Opportunities:
@@ -7294,7 +7294,7 @@ This process may take some time, but you can close this page and the process wil
     </customLabels>
     <customLabels>
         <name>stgHelpRDFieldMap</name>
-        <label>This setting lets you map fields from the Recurring Donation record to the Recurring Donation's child Opportunities.</label>
+        <label>This setting lets you map fields from the Recurring Donation record to the Recurring Donation&apos;s child Opportunities.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRDFieldMapOppField</name>
@@ -7318,11 +7318,11 @@ This process may take some time, but you can close this page and the process wil
     </customLabels>
     <customLabels>
         <name>stgHelpRDOppForecastMonths</name>
-        <label>Number of months' worth of open Opportunities that NPSP maintains on Open-Ended Recurring Donations. NPSP makes sure there are always this many months' worth of Opportunities by creating the appropriate number of new Opportunities every month.</label>
+        <label>Number of months&apos; worth of open Opportunities that NPSP maintains on Open-Ended Recurring Donations. NPSP makes sure there are always this many months&apos; worth of Opportunities by creating the appropriate number of new Opportunities every month.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRDOppRT</name>
-        <label>The Opportunity record type assigned to the Recurring Donation's installment Opportunities.</label>
+        <label>The Opportunity record type assigned to the Recurring Donation&apos;s installment Opportunities.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRDInstallmentCreateOptionMessage</name>
@@ -7362,15 +7362,15 @@ This process may take some time, but you can close this page and the process wil
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalFemale</name>
-        <label>The value Salesforce uses if the Contact's Gender field value is Female, or if the Contact's Salutation indicates gender.</label>
+        <label>The value Salesforce uses if the Contact&apos;s Gender field value is Female, or if the Contact&apos;s Salutation indicates gender.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalMale</name>
-        <label>The value Salesforce uses if the Contact's Gender field value is Male, or if the Contact's Salutation indicates gender.</label>
+        <label>The value Salesforce uses if the Contact&apos;s Gender field value is Male, or if the Contact&apos;s Salutation indicates gender.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalMethod</name>
-        <label>Specifies the method used for generating reciprocal relationships. See the &lt;a href="https://powerofus.force.com/NPSP_Relationships_Settings" target="_blank"&gt;NPSP Documentation&lt;/a&gt; for more information.</label>
+        <label>Specifies the method used for generating reciprocal relationships. See the &lt;a href=&quot;https://powerofus.force.com/NPSP_Relationships_Settings&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt; for more information.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalName</name>
@@ -7378,7 +7378,7 @@ This process may take some time, but you can close this page and the process wil
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalNeutral</name>
-        <label>The value Salesforce uses if it cannot determine the Contact's gender based on Gender field value or Salutation.</label>
+        <label>The value Salesforce uses if it cannot determine the Contact&apos;s gender based on Gender field value or Salutation.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRelSyncFields</name>
@@ -7387,11 +7387,11 @@ This process may take some time, but you can close this page and the process wil
     <customLabels>
         <name>stgHelpRespectDuplicateRuleSettings</name>
         <label>Respect the settings on a Duplicate Rule that control whether duplicate records are allowed.
-To check your existing settings, go to Duplicate Rules under Setup. For any rule, when the Action On Create or Action On Edit fields are set to "Allow," duplicates will be saved.</label>
+To check your existing settings, go to Duplicate Rules under Setup. For any rule, when the Action On Create or Action On Edit fields are set to &quot;Allow,&quot; duplicates will be saved.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpReviewErrorLog</name>
-        <label>Review &lt;a href="#" onclick="ShowPanel('idPanelErrorLog');return false;"&gt;Error Logs&lt;/a&gt; to see if there are issues.</label>
+        <label>Review &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;Error Logs&lt;/a&gt; to see if there are issues.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRollupBatchSize</name>
@@ -7399,35 +7399,35 @@ To check your existing settings, go to Duplicate Rules under Setup. For any rule
     </customLabels>
     <customLabels>
         <name>stgHelpRollupExcludeAccountOppRT</name>
-        <label>Opportunities with the selected record types won't be included in rollups to the Account. Control or Command click to select more than one record type.</label>
+        <label>Opportunities with the selected record types won&apos;t be included in rollups to the Account. Control or Command click to select more than one record type.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRollupExcludeAccountOppType</name>
-        <label>Opportunities that have this value in the Type picklist won't be included in rollups to the Account.</label>
+        <label>Opportunities that have this value in the Type picklist won&apos;t be included in rollups to the Account.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRollupExcludeAlloOppRecType</name>
-        <label>GAU Allocations from Opportunities with the selected record types won't be included when rolling up to the General Accounting Unit record.</label>
+        <label>GAU Allocations from Opportunities with the selected record types won&apos;t be included when rolling up to the General Accounting Unit record.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRollupExcludeAlloOppType</name>
-        <label>GAU Allocations from Opportunities that have this value in the Type picklist won't be included when rolling up to the General Accounting Unit record.</label>
+        <label>GAU Allocations from Opportunities that have this value in the Type picklist won&apos;t be included when rolling up to the General Accounting Unit record.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRollupExcludeContactOppRT</name>
-        <label>Opportunities with the selected record types won't be included in rollups to the Contact. Control or Command click to select more than one record type.</label>
+        <label>Opportunities with the selected record types won&apos;t be included in rollups to the Contact. Control or Command click to select more than one record type.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRollupExcludeContactOppType</name>
-        <label>Opportunities that have this value in the Type picklist won't be included in rollups to the Contact.</label>
+        <label>Opportunities that have this value in the Type picklist won&apos;t be included in rollups to the Contact.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRollupNDayValue</name>
-        <label>Sets the value for 'N day' rollups, where 'N' is the number of days from today into the past. This value defaults to rollup over the past 365 days.</label>
+        <label>Sets the value for &apos;N day&apos; rollups, where &apos;N&apos; is the number of days from today into the past. This value defaults to rollup over the past 365 days.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRollupPrimaryContact</name>
-        <label>When this option is selected, Salesforce will ALWAYS roll up donor data to the Opportunity's Primary Contact. Note that only the Account on the Opportunity will receive hard credit. So, if the Account Name on the Opportunity is an Organisation, that Organisation and the Primary Contact will receive hard credit; the Contact's Household or 1:1 Account will NOT receive hard credit. If left unselected, and the Opportunity's Account is an Organisation, only the Organisation will receive credit for the Opportunity.</label>
+        <label>When this option is selected, Salesforce will ALWAYS roll up donor data to the Opportunity&apos;s Primary Contact. Note that only the Account on the Opportunity will receive hard credit. So, if the Account Name on the Opportunity is an Organisation, that Organisation and the Primary Contact will receive hard credit; the Contact&apos;s Household or 1:1 Account will NOT receive hard credit. If left unselected, and the Opportunity&apos;s Account is an Organisation, only the Organisation will receive credit for the Opportunity.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRollupSkewLimit</name>
@@ -7435,7 +7435,7 @@ To check your existing settings, go to Duplicate Rules under Setup. For any rule
     </customLabels>
     <customLabels>
         <name>stgHelpSalesforceSetup</name>
-        <label>Looking to customise page layouts, add fields, or add users?  Try the &lt;a href="/setup/forcecomHomepage.apexp?setupid=ForceCom" target="_blank"&gt;Salesforce Setup&lt;/a&gt; pages.</label>
+        <label>Looking to customise page layouts, add fields, or add users?  Try the &lt;a href=&quot;/setup/forcecomHomepage.apexp?setupid=ForceCom&quot; target=&quot;_blank&quot;&gt;Salesforce Setup&lt;/a&gt; pages.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpSimpleAddrChangeIsUpdate</name>
@@ -7459,7 +7459,7 @@ To check your existing settings, go to Duplicate Rules under Setup. For any rule
     </customLabels>
     <customLabels>
         <name>stgHelpTHAsync</name>
-        <label>Indicates that this trigger handler's After Events should run asynchronously. WARNING: If the specified Apex Class doesn't support asynchronous processing and you select this checkbox, the class may not work properly.</label>
+        <label>Indicates that this trigger handler&apos;s After Events should run asynchronously. WARNING: If the specified Apex Class doesn&apos;t support asynchronous processing and you select this checkbox, the class may not work properly.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpTHClass</name>
@@ -7467,7 +7467,7 @@ To check your existing settings, go to Duplicate Rules under Setup. For any rule
     </customLabels>
     <customLabels>
         <name>stgHelpTHLoadOrder</name>
-        <label>Order in which this trigger should be run. If the records that this trigger handler processes have related records, the load order ensures that they're created or updated in the correct order.</label>
+        <label>Order in which this trigger should be run. If the records that this trigger handler processes have related records, the load order ensures that they&apos;re created or updated in the correct order.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpTHObject</name>
@@ -7517,7 +7517,7 @@ To check your existing settings, go to Duplicate Rules under Setup. For any rule
         <name>stgInstallScriptError</name>
         <label>Your installation was successful, but we detected a slight problem. To fix the problem, simply load the NPSP Settings page in Salesforce.
 
-Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application. If you don't see the tab, select Nonprofit Success Pack from the app menu in the upper-right corner.</label>
+Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application. If you don&apos;t see the tab, select Nonprofit Success Pack from the app menu in the upper-right corner.</label>
     </customLabels>
     <customLabels>
         <name>stgLabelActionColumn</name>
@@ -7841,7 +7841,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </customLabels>
     <customLabels>
         <name>stgLabelUDRTargetFieldHelp</name>
-        <label>The custom field on the target object that will display your custom rollup summary. This field must be of the same type as the Opportunity field you're rolling up.</label>
+        <label>The custom field on the target object that will display your custom rollup summary. This field must be of the same type as the Opportunity field you&apos;re rolling up.</label>
     </customLabels>
     <customLabels>
         <name>stgLabelUDRTargetObject</name>
@@ -8093,7 +8093,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </customLabels>
     <customLabels>
         <name>stgValidationHHAccountHHRules</name>
-        <label>The Account Model is set to 'Household Account', which requires Household Rules to be set to 'No Contacts'.   When using Household Accounts, there is no need to have an additional Household Object.</label>
+        <label>The Account Model is set to &apos;Household Account&apos;, which requires Household Rules to be set to &apos;No Contacts&apos;.   When using Household Accounts, there is no need to have an additional Household Object.</label>
     </customLabels>
     <customLabels>
         <name>gsResourcesTitle</name>
@@ -8288,10 +8288,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <label>New Campaign</label>
     </quickActions>
     <quickActions>
-        <name>npe03__Recurring_Donation__c.Pause</name>
-        <label>Pause</label>
-    </quickActions>
-    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>New Affiliation</label>
     </quickActions>
@@ -8304,32 +8300,8 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <label>New Recurring Donation</label>
     </quickActions>
     <quickActions>
-        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
-        <label>New Opportunity</label>
-    </quickActions>
-    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>New Recurring Donation</label>
-    </quickActions>
-    <quickActions>
-        <name>npe01__oppPayment__c.Refund</name>
-        <label>Refund</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Quick_Update</name>
-        <label>Quick Update</label>
-    </quickActions>
-    <quickActions>
-        <name>npo02__Household__c.Update_Household</name>
-        <label>Update Household</label>
-    </quickActions>
-    <quickActions>
-        <name>Address__c.Update_Address</name>
-        <label>Update Address</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
-        <label>Close Recurring Donation</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -8350,10 +8322,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>New Relationship</label>
-    </quickActions>
-    <quickActions>
-        <name>npe01__OppPayment__c.Quick_Update</name>
-        <label>Quick Update</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>
