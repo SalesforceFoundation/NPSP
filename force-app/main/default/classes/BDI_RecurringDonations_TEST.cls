@@ -620,7 +620,7 @@ private class BDI_RecurringDonations_TEST {
                 WHERE Id =: testDI1.Id LIMIT 1];
 
         // Verify that the donation was imported and that the import status on the Recurring Donation is correct.
-        System.assertEquals(System.Label.bdiImported, testDI1.Status__c);
+        System.assertEquals('Imported', testDI1.Status__c);
         System.assertNotEquals(null,testDI1.DonationImported__c);
         System.assertEquals(null, testDI1.FailureInformation__c);
         System.assertEquals(System.Label.bdiCreated,testDI1.DonationImportStatus__c);
