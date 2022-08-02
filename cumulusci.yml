@@ -747,13 +747,15 @@ tasks:
                   xpath: //ns:gender|//ns:caseValues|//ns:nameFieldLabel|//ns:standardFields
 
     set_user_language:
-        description: Update the language of the Current User to the specified language as '-o param1 English' (Other languages are are Spanish, French, German and Dutch).
+        description: Update the language of the Current User to the specified language as '-o param1 english'
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
         group: Org Config
         options:
             apex: >-
                 User u = [SELECT Id FROM User WHERE Id = :UserInfo.getUserId() LIMIT 1];
-                Map<String, String> languageMap = new Map<String, String>{ 'English' => 'en_US', 'Spanish' => 'es', 'French' => 'fr', 'German' => 'de', 'Dutch' => 'nl_NL', 'english' => 'en_US', 'spanish' => 'es', 'french' => 'fr', 'german' => 'de', 'dutch' => 'nl_NL' };
+                Map<String, String> languageMap = new Map<String, String>{ 'English' => 'en_US', 'Spanish' => 'es', 
+                'French' => 'fr', 'German' => 'de', 'Dutch' => 'nl_NL', 'Japanese' => 'ja', 'english' => 'en_US', 
+                'spanish' => 'es', 'french' => 'fr', 'german' => 'de', 'dutch' => 'nl_NL', 'japanese' => 'ja' };
                 u.LanguageLocaleKey = languageMap.get('%%%PARAM_1%%%');
                 Update u;
 
