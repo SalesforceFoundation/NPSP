@@ -34,7 +34,7 @@ const MOBILE_CLASSES_HEAD = "slds-is-resizable dv-dynamic-width dv-dynamic-mobil
 const DESKTOP_CLASSES_HEAD = "slds-is-resizable dv-dynamic-width th-dynamic-width";
 const MOBILE_VIEW_MORE = "viewMore";
 const DESKTOP_VIEW_MORE = "slds-hide";
-const MOBILE_HEADER_CLASS = "slds-border_right slds-border_left";
+const MOBILE_HEADER_CLASS = "slds-border_right slds-border_left th-padding-top";
 const DESKTOP_HEADER_CLASS = "slds-table_header-fixed_container slds-border_right slds-border_left th-padding-top";
 const CLOSED_STATUS = "Closed";
 const MONTHLY = "Monthly";
@@ -199,7 +199,7 @@ export default class RecurringDonationTable extends LightningElement {
         while (!this._tableThInnerDiv.className.includes("cell")) {
             this._tableThInnerDiv = this._tableThInnerDiv.parentNode;
         }
-        this._pageX = e.pageX;
+        this._pageX = e.pageX ? e.pageX : e.changedTouches[0].pageX;
 
         this._padding = this.paddingDiff(this._tableThColumn);
 
@@ -208,7 +208,7 @@ export default class RecurringDonationTable extends LightningElement {
 
     handlemousemove(e) {
         if (this._tableThColumn && this._tableThColumn.tagName === "TH") {
-            this._diffX = e.pageX - this._pageX;
+            this._diffX = (e.pageX ? e.pageX : e.changedTouches[0].pageX) - this._pageX;
             if((this._tableThWidth + this._diffX) > 50){
                 this._tableThColumn.style.width = this._tableThWidth + this._diffX + "px";
                 this._tableThInnerDiv.style.width = this._tableThColumn.style.width;
