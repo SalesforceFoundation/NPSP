@@ -24,10 +24,10 @@
     <startsWith>Vowel</startsWith>
     <caseValues>
         <plural>false</plural>
-        <value>Allocation UCG</value>
+        <value>Affectation UCG</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value>Allocations UCG</value>
+        <value>Affectations UCG</value>
     </caseValues>
 </CustomObjectTranslation>

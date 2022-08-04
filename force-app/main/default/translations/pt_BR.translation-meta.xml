@@ -2103,11 +2103,11 @@ Para verificar as configurações de Alocação de GAU, acesse Doações | Aloca
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>A partir de 1º de outubro de 2020, a Entrada de dados em lote não é mais suportada. A maioria dos recursos foram substituídos por recursos mais novos no NPSP. Se você tiver algum lote em andamento, ainda poderá acessar esses registros, mas não poderá processá-los usando a Entrada de dados em lote. Entre em contato com o suporte se precisar acessar lotes em andamento. &lt;br/&gt; Talvez seja melhor explorar a Entrada de doações como uma alternativa à Entrada de dados em lote. Saiba mais sobre a Entrada de doações na &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentação do NPSP&lt;/a&gt;.</label>
+        <label>A partir de 1º de outubro de 2020, a Entrada de dados em lote não é mais suportada. A maioria dos recursos foram substituídos por recursos mais novos no NPSP. Se você tiver algum lote em andamento, ainda poderá acessar esses registros, mas não poderá processá-los usando a Entrada de dados em lote. Entre em contato com o suporte se precisar acessar lotes em andamento. &lt;br/&gt; Talvez seja melhor explorar a Entrada de doações como uma alternativa à Entrada de dados em lote. Saiba mais sobre a Entrada de doações na &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;Documentação do NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
-        <label>Em 1º de outubro de 2020, a Entrada de dados em lote será aposentada e não funcionará mais no NPSP. Se você tiver algum lote em andamento no momento, ainda poderá acessar esses registros, mas não poderá processá-los usando a Entrada de dados em lote. Para garantir uma transição suave, ative e use a Entrada de doações antes de 1º de outubro. Saiba mais sobre a Entrada de doações na &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentação do NPSP&lt;/a&gt;.</label>
+        <label>Em 1º de outubro de 2020, a Entrada de dados em lote será aposentada e não funcionará mais no NPSP. Se você tiver algum lote em andamento no momento, ainda poderá acessar esses registros, mas não poderá processá-los usando a Entrada de dados em lote. Para garantir uma transição suave, ative e use a Entrada de doações antes de 1º de outubro. Saiba mais sobre a Entrada de doações na &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;Documentação do NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
@@ -2715,6 +2715,10 @@ Para verificar as configurações de Alocação de GAU, acesse Doações | Aloca
         <label>Iniciar processo de importação de dados</label>
     </customLabels>
     <customLabels>
+        <name>bdiSelectCantProcessBatchDIRecords</name>
+        <label>Você selecionou registros vinculados a um Lote de importação de dados do NPSP. Para importar registros associados a um Lote de importação de dados do NPSP, abra o lote e clique em Processar lote.</label>
+    </customLabels>
+    <customLabels>
         <name>bdiSelectCantProcessImportedRecords</name>
         <label>Você não pode importar registros que já foram importados. Remova os registros com o status Importado da sua seleção.</label>
     </customLabels>
@@ -3004,7 +3008,7 @@ Para verificar as configurações de Alocação de GAU, acesse Doações | Aloca
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>Em 13 de julho de 2021, a Entrada de doações em lote será aposentada e não funcionará mais no NPSP. Se você tiver algum lote em andamento no momento, ainda poderá acessar esses registros, mas não poderá processá-los usando a Entrada de doações em lote. Para garantir uma transição suave, ative e use a Entrada de doações mais recente antes de 13 de julho. Saiba mais sobre a Entrada de doações na &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentação do NPSP&lt;/a&gt;.</label>
+        <label>Em 13 de julho de 2021, a Entrada de doações em lote será aposentada e não funcionará mais no NPSP. Se você tiver algum lote em andamento no momento, ainda poderá acessar esses registros, mas não poderá processá-los usando a Entrada de doações em lote. Para garantir uma transição suave, ative e use a Entrada de doações mais recente antes de 13 de julho. Saiba mais sobre a Entrada de doações na &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;Documentação do NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -3020,7 +3024,7 @@ Para verificar as configurações de Alocação de GAU, acesse Doações | Aloca
             Se você tiver algum lote em andamento, ainda poderá acessar esses registros, mas não poderá processá-los usando a Entrada de doações em lote.
             Entre em contato com o suporte se precisar acessar lotes em andamento.
             Talvez seja melhor explorar a Entrada de doações como uma alternativa à Entrada de doações em lote.
-            Saiba mais sobre a Entrada de doações na &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentação do NPSP&lt;/a&gt;.</label>
+            Saiba mais sobre a Entrada de doações na &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;Documentação do NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -8288,6 +8292,10 @@ Nota: a guia Configurações do NPSP está visível no aplicativo Pacote de suce
         <label>Nova campanha</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.Pause</name>
+        <label>Pausar</label>
+    </quickActions>
+    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>Nova afiliação</label>
     </quickActions>
@@ -8300,8 +8308,32 @@ Nota: a guia Configurações do NPSP está visível no aplicativo Pacote de suce
         <label>Nova doação recorrente</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
+        <label>Nova oportunidade</label>
+    </quickActions>
+    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>Nova doação recorrente</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__oppPayment__c.Refund</name>
+        <label>Reembolso</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Quick_Update</name>
+        <label>Atualização rápida</label>
+    </quickActions>
+    <quickActions>
+        <name>npo02__Household__c.Update_Household</name>
+        <label>Atualizar família</label>
+    </quickActions>
+    <quickActions>
+        <name>Address__c.Update_Address</name>
+        <label>Atualizar endereço</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
+        <label>Fechar doação recorrente</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -8322,6 +8354,10 @@ Nota: a guia Configurações do NPSP está visível no aplicativo Pacote de suce
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>Novo relacionamento</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Quick_Update</name>
+        <label>Atualização rápida</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>

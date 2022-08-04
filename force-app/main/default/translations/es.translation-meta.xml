@@ -2103,11 +2103,11 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>Desde el 1 de octubre de 2020, Entrada de datos en lote ya no se admite. La mayoría de las funciones han sido sustituidas por nuevas funciones en NPSP. Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de datos en lote. Póngase en contacto con el servicio de asistencia si necesita acceder a lotes en curso&lt;br/&gt;. Puede explorar Entrada de regalos como una alternativa a Entrada de datos en lote en la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentación de NPSP&lt;/a&gt;.</label>
+        <label>Desde el 1 de octubre de 2020, Entrada de datos en lote ya no se admite. La mayoría de las funciones han sido sustituidas por nuevas funciones en NPSP. Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de datos en lote. Póngase en contacto con el servicio de asistencia si necesita acceder a lotes en curso&lt;br/&gt;. Puede explorar Entrada de regalos como una alternativa a Entrada de datos en lote en la &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;Documentación de NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
-        <label>El 1 de octubre de 2020, Entrada de datos en lote quedará retirada y dejará de funcionar en NPSP. Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de datos en lote. Para garantizar una transición sin problemas, active y utilice Entrada de regalos antes del 1 de octubre. Conozca más detalles sobre Entrada de regalos en la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentación de NPSP&lt;/a&gt;.</label>
+        <label>El 1 de octubre de 2020, Entrada de datos en lote quedará retirada y dejará de funcionar en NPSP. Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de datos en lote. Para garantizar una transición sin problemas, active y utilice Entrada de regalos antes del 1 de octubre. Conozca más detalles sobre Entrada de regalos en la &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;Documentación de NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
@@ -2712,6 +2712,10 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <label>Iniciar proceso de importación</label>
     </customLabels>
     <customLabels>
+        <name>bdiSelectCantProcessBatchDIRecords</name>
+        <label>Seleccionó registros vinculados a un Lote de importación de datos de NPSP. Para importar registros asociados con un Lote de importación de datos de NPSP, abra el lote y haga clic en Procesar lote.</label>
+    </customLabels>
+    <customLabels>
         <name>bdiSelectCantProcessImportedRecords</name>
         <label>No puede importar registros que ya se han importado. Elimine los registros con el estado Importado de su selección.</label>
     </customLabels>
@@ -3001,7 +3005,7 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>El 13 de julio de 2021, Entrada de regalos en lote quedará retirada y dejará de funcionar en NPSP. Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de regalos en lote. Para garantizar una transición sin problemas, active y utilice Entrada de regalos antes del 13 de julio. Conozca más detalles sobre Entrada de regalos en la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentación de NPSP&lt;/a&gt;.</label>
+        <label>El 13 de julio de 2021, Entrada de regalos en lote quedará retirada y dejará de funcionar en NPSP. Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de regalos en lote. Para garantizar una transición sin problemas, active y utilice Entrada de regalos antes del 13 de julio. Conozca más detalles sobre Entrada de regalos en la &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;Documentación de NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -3016,7 +3020,7 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <label>A fecha del 13 de julio de 2021, Entrada de regalos en lote dejará de admitirse y queda sustituida por Entrada de regalos.
 Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de regalos en lote.
 Póngase en contacto con el servicio de asistencia si necesita acceder a lotes en curso.
-Puede explorar Entrada de regalos como una alternativa a Entrada de regalos en lote en la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentación de NPSP&lt;/a&gt;.</label>
+Puede explorar Entrada de regalos como una alternativa a Entrada de regalos en lote en la &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;Documentación de NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -8277,6 +8281,10 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <label>Nueva campaña</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.Pause</name>
+        <label>Pausa</label>
+    </quickActions>
+    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>Nueva afiliación</label>
     </quickActions>
@@ -8289,8 +8297,32 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <label>Nueva donación recurrente</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
+        <label>Nueva oportunidad</label>
+    </quickActions>
+    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>Nueva donación recurrente</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__oppPayment__c.Refund</name>
+        <label>Reembolso</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Quick_Update</name>
+        <label>Actualización rápida</label>
+    </quickActions>
+    <quickActions>
+        <name>npo02__Household__c.Update_Household</name>
+        <label>Actualizar hogar</label>
+    </quickActions>
+    <quickActions>
+        <name>Address__c.Update_Address</name>
+        <label>Actualizar dirección</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
+        <label>Cerrar donación recurrente</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -8311,6 +8343,10 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>Nueva relación</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Quick_Update</name>
+        <label>Actualización rápida</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>

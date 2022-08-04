@@ -652,11 +652,6 @@ tasks:
         options:
             output_style: salesforce
             elements:
-                # Strip all underlying field translations, leaving translations for new fields in these objects
-                - path: force-app/main/default/*ranslations/**/*ranslation-meta.xml
-                  xpath: /*/*[re:match(ns:name, '...+__..+')]
-                - path: force-app/tdtm/*ranslations/**/*ranslation-meta.xml
-                  xpath: /*/*[re:match(ns:name, '...+__..+')]
                 # Strip any underlying package object label translations
                 - path: force-app/main/default/objectTranslations/npe01**/**objectTranslation-meta.xml
                   xpath: //ns:layouts|//ns:nameFieldLabel|//ns:gender|//ns:caseValues|//ns:plural|//ns:startsWith

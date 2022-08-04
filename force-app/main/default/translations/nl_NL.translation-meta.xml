@@ -2103,11 +2103,11 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>Sinds 1 oktober 2020 wordt Batchgegevensinvoer niet meer ondersteund. De meeste opties zijn vervangen door nieuwere functies in NPSP. Als u nog actieve batches hebt, kunt u de records nog wel openen, maar niet meer verwerken met Batchgegevensinvoer. Neem contact op met Support als u toegang wilt tot deze batches. &lt;br/&gt; Mogelijk is Opgave van gift een goed alternatief voor Batchgegevensinvoer. Meer informatie over Opgave van gift vindt u in de &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-documentatie&lt;/a&gt;.</label>
+        <label>Sinds 1 oktober 2020 wordt Batchgegevensinvoer niet meer ondersteund. De meeste opties zijn vervangen door nieuwere functies in NPSP. Als u nog actieve batches hebt, kunt u de records nog wel openen, maar niet meer verwerken met Batchgegevensinvoer. Neem contact op met Support als u toegang wilt tot deze batches. &lt;br/&gt; Mogelijk is Opgave van gift een goed alternatief voor Batchgegevensinvoer. Meer informatie over Opgave van gift vindt u in de &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-documentatie&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
-        <label>Op 1 oktober 2020 wordt Batchgegevensinvoer buiten gebruik gesteld; de functie is dan niet meer beschikbaar in NPSP. Als u op dat moment actieve batches hebt, kunt u de records nog wel openen, maar u kunt ze niet meer verwerken met Batchgegevensinvoer. Als u voor een goede overgang wilt zorgen, schakelt u Opgave van gift op voorhand in en neemt u dit al in gebruik vóór 1 oktober. Meer informatie over Opgave van gift vindt u in de &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-documentatie&lt;/a&gt;.</label>
+        <label>Op 1 oktober 2020 wordt Batchgegevensinvoer buiten gebruik gesteld; de functie is dan niet meer beschikbaar in NPSP. Als u op dat moment actieve batches hebt, kunt u de records nog wel openen, maar u kunt ze niet meer verwerken met Batchgegevensinvoer. Als u voor een goede overgang wilt zorgen, schakelt u Opgave van gift op voorhand in en neemt u dit al in gebruik vóór 1 oktober. Meer informatie over Opgave van gift vindt u in de &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-documentatie&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
@@ -2715,6 +2715,10 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
         <label>Proces Gegevensimport starten</label>
     </customLabels>
     <customLabels>
+        <name>bdiSelectCantProcessBatchDIRecords</name>
+        <label>U hebt records geselecteerd die zijn gekoppeld aan een NPSP-gegevensimportbatch. Voor het importeren van records die zijn gekoppeld aan een NPSP-importbatch opent u de batch en klikt u op Batch verwerken.</label>
+    </customLabels>
+    <customLabels>
         <name>bdiSelectCantProcessImportedRecords</name>
         <label>U kunt geen records importeren die al zijn geïmporteerd. Verwijder records met de status Geïmporteerd uit uw selectie.</label>
     </customLabels>
@@ -3004,7 +3008,7 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>Op 13 juli 2021 wordt de verouderde functie Batchinvoer van giften buiten gebruik gesteld; de functie is dan niet meer beschikbaar in NPSP. Als u op dat moment actieve batches hebt, kunt u de records nog wel openen, maar u kunt ze niet meer verwerken met Batchinvoer van giften. Als u voor een goede overgang wilt zorgen, schakelt u de nieuwere functie Opgave van gift op voorhand in en neemt u deze al in gebruik vóór 13 juli. Meer informatie over Opgave van gift vindt u in de &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-documentatie&lt;/a&gt;.</label>
+        <label>Op 13 juli 2021 wordt de verouderde functie Batchinvoer van giften buiten gebruik gesteld; de functie is dan niet meer beschikbaar in NPSP. Als u op dat moment actieve batches hebt, kunt u de records nog wel openen, maar u kunt ze niet meer verwerken met Batchinvoer van giften. Als u voor een goede overgang wilt zorgen, schakelt u de nieuwere functie Opgave van gift op voorhand in en neemt u deze al in gebruik vóór 13 juli. Meer informatie over Opgave van gift vindt u in de &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-documentatie&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -3020,7 +3024,7 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
             Als u nog actieve batches hebt, kunt u de records nog wel openen, maar niet meer verwerken met Batchinvoer van giften.
             Neem contact op met Support als u toegang wilt tot deze batches.
             Mogelijk is Opgave van gift een goed alternatief voor Batchinvoer van giften.
-            Meer informatie over opgave van giften vindt u in de &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-documentatie&lt;/a&gt;.</label>
+            Meer informatie over opgave van giften vindt u in de &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-documentatie&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -8287,6 +8291,10 @@ Opmerking: Het tabblad NPSP-instellingen is zichtbaar in de toepassing Nonprofit
         <label>Nieuwe Campagne</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.Pause</name>
+        <label>Onderbreken</label>
+    </quickActions>
+    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>Nieuwe Gelieerde Organisatie</label>
     </quickActions>
@@ -8299,8 +8307,32 @@ Opmerking: Het tabblad NPSP-instellingen is zichtbaar in de toepassing Nonprofit
         <label>Nieuwe Terugkerende Donatie</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
+        <label>Nieuwe Opportunity</label>
+    </quickActions>
+    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>Nieuwe Terugkerende Donatie</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__oppPayment__c.Refund</name>
+        <label>Terugbetalen</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Quick_Update</name>
+        <label>Snelle Update</label>
+    </quickActions>
+    <quickActions>
+        <name>npo02__Household__c.Update_Household</name>
+        <label>Huishouden bijwerken</label>
+    </quickActions>
+    <quickActions>
+        <name>Address__c.Update_Address</name>
+        <label>Adres bijwerken</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
+        <label>Terugkerende donatie sluiten</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -8321,6 +8353,10 @@ Opmerking: Het tabblad NPSP-instellingen is zichtbaar in de toepassing Nonprofit
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>Nieuwe Relatie</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Quick_Update</name>
+        <label>Snelle Update</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>

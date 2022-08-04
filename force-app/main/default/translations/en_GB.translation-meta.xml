@@ -522,7 +522,7 @@
     </customLabels>
     <customLabels>
         <name>CRLP_BatchSkipped</name>
-        <label>Today&apos;&apos;s scheduled {0} batch job was skipped because a previous {0} job was still running. The next batch job will run as scheduled. No action is required; this error is for information purposes only.</label>
+        <label>Today&apos;s scheduled {0} batch job was skipped because a previous {0} job was still running. The next batch job will run as scheduled. No action is required; this error is for information purposes only.</label>
     </customLabels>
     <customLabels>
         <name>CRLP_CreateRollupIntroHelpText</name>
@@ -698,11 +698,11 @@
     </customLabels>
     <customLabels>
         <name>CascadeDeletionError</name>
-        <label>You can&apos;&apos;t delete {0} because it&apos;&apos;s associated with the following records. Delete or re-associate these records and then try again.&lt;br/&gt;&lt;br/&gt;{1}</label>
+        <label>You can&apos;t delete {0} because it&apos;s associated with the following records. Delete or re-associate these records and then try again.&lt;br/&gt;&lt;br/&gt;{1}</label>
     </customLabels>
     <customLabels>
         <name>CascadeDeletionErrorLightning</name>
-        <label>You can&apos;&apos;t delete {0} because it&apos;&apos;s associated with these records: {1}. Delete or re-associate these records and then try again.</label>
+        <label>You can&apos;t delete {0} because it&apos;s associated with these records: {1}. Delete or re-associate these records and then try again.</label>
     </customLabels>
     <customLabels>
         <name>DeleteAccount</name>
@@ -1369,7 +1369,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_PauseCannotExistOnScheduleChange</name>
-        <label>You can&apos;&apos;t update the following field(s) because this Recurring Donation is paused: {0}. If you&apos;&apos;d like to update the field(s), you must deactivate the pause.</label>
+        <label>You can&apos;t update the following field(s) because this Recurring Donation is paused: {0}. If you&apos;d like to update the field(s), you must deactivate the pause.</label>
     </customLabels>
     <customLabels>
         <name>RD2_PauseClosedRDErrorMessage</name>
@@ -1572,7 +1572,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_StatusMustBeMapped</name>
-        <label>The Status &quot;{0}&quot; hasn&apos;&apos;t been mapped to a State.</label>
+        <label>The Status &quot;{0}&quot; hasn&apos;t been mapped to a State.</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusMustBeMappedSolution</name>
@@ -2103,11 +2103,11 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>As of October 1, 2020, Batch Data Entry is no longer supported. Most capabilities have been replaced with newer features in NPSP. If you have any in-progress batches, you can still access those records, but you can&apos;t process them using Batch Data Entry. Contact support if you need to access in-progress batches. &lt;br/&gt; You may want to explore Gift Entry as an alternative to Batch Data Entry. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.</label>
+        <label>As of October 1, 2020, Batch Data Entry is no longer supported. Most capabilities have been replaced with newer features in NPSP. If you have any in-progress batches, you can still access those records, but you can&apos;t process them using Batch Data Entry. Contact support if you need to access in-progress batches. &lt;br/&gt; You may want to explore Gift Entry as an alternative to Batch Data Entry. Learn more about Gift Entry in the &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
-        <label>On October 1, 2020, Batch Data Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Data Entry. To ensure a smooth transition, enable and use Gift Entry in advance of October 1st. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.</label>
+        <label>On October 1, 2020, Batch Data Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Data Entry. To ensure a smooth transition, enable and use Gift Entry in advance of October 1st. Learn more about Gift Entry in the &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
@@ -2131,7 +2131,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bdiAdditionalObjPredNotFound</name>
-        <label>Error: record not created. This record is dependent on {0} which couldn&apos;&apos;t be found.</label>
+        <label>Error: record not created. This record is dependent on {0} which couldn&apos;t be found.</label>
     </customLabels>
     <customLabels>
         <name>bdiAdditionalObjRequiredFieldsNull</name>
@@ -2523,7 +2523,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
         <name>bdiMassDeleteWarning</name>
         <label>You are about to delete {0} record(s).
         &lt;br/&gt;
-        &lt;br/&gt;&lt;b&gt;IMPORTANT:&lt;/b&gt; If you create gifts in your org using the Batch Gift Entry feature, we don&apos;&apos;t recommend using the Mass Delete button. Please see the NPSP documentation for instructions on deleting records using the data loader.</label>
+        &lt;br/&gt;&lt;b&gt;IMPORTANT:&lt;/b&gt; If you create gifts in your org using the Batch Gift Entry feature, we don&apos;t recommend using the Mass Delete button. Please see the NPSP documentation for instructions on deleting records using the data loader.</label>
     </customLabels>
     <customLabels>
         <name>bdiMatched</name>
@@ -2713,6 +2713,10 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     <customLabels>
         <name>bdiRunBtn</name>
         <label>Begin Data Import Process</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectCantProcessBatchDIRecords</name>
+        <label>You selected records linked to an NPSP Data Import Batch. To import records associated with an NPSP Data Import Batch, open the batch and click Process Batch.</label>
     </customLabels>
     <customLabels>
         <name>bdiSelectCantProcessImportedRecords</name>
@@ -3004,7 +3008,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>On July 13, 2021, legacy Batch Gift Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Gift Entry. To ensure a smooth transition, enable and use the newer Gift Entry in advance of July 13th. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.</label>
+        <label>On July 13, 2021, legacy Batch Gift Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Gift Entry. To ensure a smooth transition, enable and use the newer Gift Entry in advance of July 13th. Learn more about Gift Entry in the &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -3020,7 +3024,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
             If you have any in-progress batches, you can still access those records, but you can&apos;t process them using Batch Gift Entry.
             Contact support if you need to access in-progress batches.
             You may want to explore Gift Entry as an alternative to Batch Gift Entry.
-            Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.</label>
+            Learn more about Gift Entry in the &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -3072,7 +3076,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>CallableApiJobScheduleInvalidClass</name>
-        <label>The Apex class {0} doesn&apos;&apos;t exist or doesn&apos;&apos;t implement the Schedulable interface.</label>
+        <label>The Apex class {0} doesn&apos;t exist or doesn&apos;t implement the Schedulable interface.</label>
     </customLabels>
     <customLabels>
         <name>CallableApiMaximumRecordsExceeded</name>
@@ -3230,7 +3234,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>commonConcurrentBatchError</name>
-        <label>There&apos;&apos;s already a job running on the {0} Apex class. The job must complete before it can be run again.</label>
+        <label>There&apos;s already a job running on the {0} Apex class. The job must complete before it can be run again.</label>
     </customLabels>
     <customLabels>
         <name>commonContactCount</name>
@@ -3594,7 +3598,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>exceptionDeletePermission</name>
-        <label>You don&apos;&apos;t have the permissions required to delete {0} records.</label>
+        <label>You don&apos;t have the permissions required to delete {0} records.</label>
     </customLabels>
     <customLabels>
         <name>exceptionRequiredField</name>
@@ -8288,6 +8292,10 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <label>New Campaign</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.Pause</name>
+        <label>Pause</label>
+    </quickActions>
+    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>New Affiliation</label>
     </quickActions>
@@ -8300,8 +8308,32 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <label>New Recurring Donation</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
+        <label>New Opportunity</label>
+    </quickActions>
+    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>New Recurring Donation</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__oppPayment__c.Refund</name>
+        <label>Refund</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Quick_Update</name>
+        <label>Quick Update</label>
+    </quickActions>
+    <quickActions>
+        <name>npo02__Household__c.Update_Household</name>
+        <label>Update Household</label>
+    </quickActions>
+    <quickActions>
+        <name>Address__c.Update_Address</name>
+        <label>Update Address</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
+        <label>Close Recurring Donation</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -8322,6 +8354,10 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>New Relationship</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Quick_Update</name>
+        <label>Quick Update</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>

@@ -2103,11 +2103,11 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>Seit dem 1. Oktober 2020 wird die Batch-Dateneingabe nicht mehr unterstützt. Die meisten Funktionen wurden durch neuere Features in NPSP ersetzt. Wenn sich bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Dateneingabe verarbeiten. Wenden Sie sich an den Support, wenn Sie auf in Bearbeitung befindliche Datensätze zugreifen müssen. &lt;br/&gt; Sie sollten sich Spendeneintrag als Alternative zur Batch-Dateneingabe ansehen. Weitere Informationen zum Spendeneintrag finden Sie in der &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
+        <label>Seit dem 1. Oktober 2020 wird die Batch-Dateneingabe nicht mehr unterstützt. Die meisten Funktionen wurden durch neuere Features in NPSP ersetzt. Wenn sich bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Dateneingabe verarbeiten. Wenden Sie sich an den Support, wenn Sie auf in Bearbeitung befindliche Datensätze zugreifen müssen. &lt;br/&gt; Sie sollten sich Spendeneintrag als Alternative zur Batch-Dateneingabe ansehen. Weitere Informationen zum Spendeneintrag finden Sie in der &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
-        <label>Am 1. Oktober 2020 wird die Batch-Dateneingabe deaktiviert und funktioniert dann in NPSP nicht mehr. Wenn sich zu diesem Zeitpunkt bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Dateneingabe verarbeiten. Um einen reibungslosen Übergang zu gewährleisten, aktivieren und verwenden Sie den Spendeneintrag vor dem 1. Oktober. Weitere Informationen zum Spendeneintrag finden Sie in der &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
+        <label>Am 1. Oktober 2020 wird die Batch-Dateneingabe deaktiviert und funktioniert dann in NPSP nicht mehr. Wenn sich zu diesem Zeitpunkt bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Dateneingabe verarbeiten. Um einen reibungslosen Übergang zu gewährleisten, aktivieren und verwenden Sie den Spendeneintrag vor dem 1. Oktober. Weitere Informationen zum Spendeneintrag finden Sie in der &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
@@ -2715,6 +2715,10 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <label>Datenimportvorgang beginnen</label>
     </customLabels>
     <customLabels>
+        <name>bdiSelectCantProcessBatchDIRecords</name>
+        <label>Sie haben Datensätze ausgewählt, die mit einem NPSP-Datenimport-Batch verknüpft sind. Zum Importieren von Datensätzen, die einem NPSP-Datenimport-Batch zugeordnet sind, öffnen Sie den Batch, und klicken Sie auf &quot;Batch verarbeiten&quot;.</label>
+    </customLabels>
+    <customLabels>
         <name>bdiSelectCantProcessImportedRecords</name>
         <label>Sie können keine Datensätze importieren, die bereits importiert wurden. Entfernen Sie Datensätze mit dem Status &quot;Importiert&quot; aus Ihrer Auswahl.</label>
     </customLabels>
@@ -3004,7 +3008,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>Am 13. Juli 2021 wird das Legacy-Batch-Spendeneintragsmodul deaktiviert und funktioniert dann in NPSP nicht mehr. Wenn sich zu diesem Zeitpunkt bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Spendeneingabe verarbeiten. Um einen reibungslosen Übergang zu gewährleisten, aktivieren und verwenden Sie vor dem 13. Juli den neueren Spendeneintrag. Weitere Informationen zum Spendeneintrag finden Sie in der &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
+        <label>Am 13. Juli 2021 wird das Legacy-Batch-Spendeneintragsmodul deaktiviert und funktioniert dann in NPSP nicht mehr. Wenn sich zu diesem Zeitpunkt bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Spendeneingabe verarbeiten. Um einen reibungslosen Übergang zu gewährleisten, aktivieren und verwenden Sie vor dem 13. Juli den neueren Spendeneintrag. Weitere Informationen zum Spendeneintrag finden Sie in der &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -3020,7 +3024,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
             Wenn sich bei Ihnen noch Batches in Bearbeitung befinden, können Sie nach wie vor auf die betreffenden Datensätze zugreifen, sie jedoch nicht mehr mithilfe des Batch-Spendeneintrags bearbeiten.
             Wenden Sie sich an den Support, wenn Sie Zugriff auf in Bearbeitung befindliche Batches benötigen.
             Sie sollten sich den Spendeneintrag als Alternative zum Batch-Spendeneintrag ansehen.
-            Weitere Informationen zum Spendeneintrag finden Sie in der &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
+            Weitere Informationen zum Spendeneintrag finden Sie in der &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -3542,7 +3546,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>Zeigen Sie alle doppelten Kontakte an, die mithilfe von Zuordnungsregeln gefunden wurden. &lt;a href=&quot;https://powerofus.force.com/IP_Contacts&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; Weitere Informationen &lt;/b&gt;&lt;/a&gt;</label>
+        <label>Zeigen Sie alle doppelten Kontakte an, die mithilfe von Zuordnungsregeln gefunden wurden. &lt;a href=&quot;https://powerofus.force.com/IP_Contacts&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; Weitere Informationen&lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>
@@ -8288,6 +8292,10 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <label>Neue Kampagne</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.Pause</name>
+        <label>Aufschub</label>
+    </quickActions>
+    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>Neue Zugehörigkeit</label>
     </quickActions>
@@ -8300,8 +8308,32 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <label>Neue wiederkehrende Spende</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
+        <label>Neue Opportunity</label>
+    </quickActions>
+    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>Neue wiederkehrende Spende</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__oppPayment__c.Refund</name>
+        <label>Rückerstattung</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Quick_Update</name>
+        <label>Schnelle Aktualisierung</label>
+    </quickActions>
+    <quickActions>
+        <name>npo02__Household__c.Update_Household</name>
+        <label>Haushalt aktualisieren</label>
+    </quickActions>
+    <quickActions>
+        <name>Address__c.Update_Address</name>
+        <label>Adresse aktualisieren</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
+        <label>Wiederkehrende Spende schließen</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -8322,6 +8354,10 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>Neue Beziehung</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Quick_Update</name>
+        <label>Schnelle Aktualisierung</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>
