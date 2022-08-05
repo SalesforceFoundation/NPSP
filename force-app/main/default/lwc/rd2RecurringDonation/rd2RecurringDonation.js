@@ -19,6 +19,11 @@ import TIME_ZONE from '@salesforce/i18n/timeZone';
 import CURRENCY from '@salesforce/i18n/currency';
 
 import RECURRING_DONATION from "@salesforce/schema/npe03__Recurring_Donation__c";
+import FIELD_COMMITMENT_ID from "@salesforce/schema/npe03__Recurring_Donation__c.CommitmentId__c";
+import FIELD_PAYMENT_METHOD from "@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c";
+import FIELD_DAY_OF_MONTH from "@salesforce/schema/npe03__Recurring_Donation__c.Day_of_Month__c";
+import FIELD_INSTALLMENTS from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installments__c";
+
 import { getObjectInfo } from "lightning/uiObjectInfoApi";
 import FORM_FACTOR from "@salesforce/client/formFactor";
 
@@ -34,7 +39,7 @@ const MOBILE_CLASSES_HEAD = "slds-is-resizable dv-dynamic-width dv-dynamic-mobil
 const DESKTOP_CLASSES_HEAD = "slds-is-resizable dv-dynamic-width th-dynamic-width";
 const MOBILE_VIEW_MORE = "viewMore";
 const DESKTOP_VIEW_MORE = "slds-hide";
-const MOBILE_HEADER_CLASS = "slds-border_right slds-border_left";
+const MOBILE_HEADER_CLASS = "slds-border_right slds-border_left th-padding-top";
 const DESKTOP_HEADER_CLASS = "slds-table_header-fixed_container slds-border_right slds-border_left th-padding-top";
 const CLOSED_STATUS = "Closed";
 const MONTHLY = "Monthly";
@@ -47,6 +52,7 @@ export default class RecurringDonationTable extends LightningElement {
     fixedInstallmentsLabel;
     isElevateDonation = false;
     isInitiallyMonthlyDonation = false;
+    paymentMethodLabel;
     dayOfMonthFieldLabel;
     defaultRecordTypeId;
 
@@ -61,8 +67,6 @@ export default class RecurringDonationTable extends LightningElement {
     @track actionClasses = "dv-dynamic-width"
 
     formFactor = FORM_FACTOR;
-
-    paymentMethod = "";
 
     lastDonationDate = "";
 
@@ -95,9 +99,9 @@ export default class RecurringDonationTable extends LightningElement {
     @wire(getObjectInfo, { objectApiName: RECURRING_DONATION })
     oppInfo({ data, error }) {
         if (data) {
-            this.paymentMethod = data.fields.PaymentMethod__c.label;
-            this.dayOfMonthFieldLabel = data.fields.Day_of_Month__c.label;
-            this.fixedInstallmentsLabel = data.fields.npe03__Installments__c.label;
+            this.paymentMethodLabel = data.fields[FIELD_PAYMENT_METHOD.fieldApiName].label;
+            this.dayOfMonthFieldLabel = data.fields[FIELD_DAY_OF_MONTH.fieldApiName].label;
+            this.fixedInstallmentsLabel = data.fields[FIELD_INSTALLMENTS.fieldApiName].label;
             this.defaultRecordTypeId = data.defaultRecordTypeId;
             this.getRecurringDonationFields();
         }
@@ -199,7 +203,7 @@ export default class RecurringDonationTable extends LightningElement {
         while (!this._tableThInnerDiv.className.includes("cell")) {
             this._tableThInnerDiv = this._tableThInnerDiv.parentNode;
         }
-        this._pageX = e.pageX;
+        this._pageX = e.pageX ? e.pageX : e.changedTouches[0].pageX;
 
         this._padding = this.paddingDiff(this._tableThColumn);
 
@@ -208,7 +212,7 @@ export default class RecurringDonationTable extends LightningElement {
 
     handlemousemove(e) {
         if (this._tableThColumn && this._tableThColumn.tagName === "TH") {
-            this._diffX = e.pageX - this._pageX;
+            this._diffX = (e.pageX ? e.pageX : e.changedTouches[0].pageX) - this._pageX;
             if((this._tableThWidth + this._diffX) > 50){
                 this._tableThColumn.style.width = this._tableThWidth + this._diffX + "px";
                 this._tableThInnerDiv.style.width = this._tableThColumn.style.width;
@@ -264,7 +268,7 @@ export default class RecurringDonationTable extends LightningElement {
             return row.recurringDonation.Id === e.target.getAttribute("data-recordid");
         });
 
-        this.isElevateDonation = this.currentRecord.recurringDonation.CommitmentId__c ? true : false;
+        this.isElevateDonation = this.currentRecord.recurringDonation[FIELD_COMMITMENT_ID.fieldApiName] ? true : false;
         this.isInitiallyMonthlyDonation = this.currentRecord.recurringDonation.npe03__Installment_Period__c === MONTHLY;
 
         switch (action) {
@@ -304,7 +308,7 @@ export default class RecurringDonationTable extends LightningElement {
         retrieveTableView({elevateFilter:this.donationTypeFilter}).then((data) => {
             if (data) {
                 this.data = data.map((el) => {
-                    let isElevate = el.recurringDonation.CommitmentId__c ? true : false;
+                    let isElevate = el.recurringDonation[FIELD_COMMITMENT_ID.fieldApiName] ? true : false;
                     let actions = this.actions
                         .filter((elo) => (elo.name !== "updatePaymentMethod" && !isElevate) || (isElevate))
                         .map((action) => { return { ...action }; });
