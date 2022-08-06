@@ -99,6 +99,8 @@ export default class RecurringDonationTable extends LightningElement {
     @wire(getObjectInfo, { objectApiName: RECURRING_DONATION })
     oppInfo({ data, error }) {
         if (data) {
+            console.log('NEW CODE HAS BEEN PICKED UP');
+            console.log(data);
             this.paymentMethodLabel = data.fields[FIELD_PAYMENT_METHOD.fieldApiName].label;
             this.dayOfMonthFieldLabel = data.fields[FIELD_DAY_OF_MONTH.fieldApiName].label;
             this.fixedInstallmentsLabel = data.fields[FIELD_INSTALLMENTS.fieldApiName].label;
