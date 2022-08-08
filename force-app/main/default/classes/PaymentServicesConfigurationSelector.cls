@@ -34,7 +34,7 @@
 * @description Selector class for Payment Services Configuration
 */
 
-public with sharing class PaymentServicesConfigurationSelector {
+public without sharing class PaymentServicesConfigurationSelector {
 
    public List<Payment_Services_Configuration__c> getConfigRecordsByName(List<String> serviceNames) {
       return [
