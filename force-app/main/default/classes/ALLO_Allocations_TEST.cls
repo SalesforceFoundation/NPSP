@@ -1409,8 +1409,8 @@ private with sharing class ALLO_Allocations_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Tests that an error is generated if Opportunity Amount is 0 and a non zero fixed
-    * Amount Allocation is added
+    * @description Tests that no error is generated if Opportunity Amount becomes 0 and a non zero fixed
+    * Amount Allocation exists
     ********************************************************************************************************/
     @isTest
     private static void testFixupForNonZeroFixedAmountAllocationIfOpportunityAmountIsZero() {
