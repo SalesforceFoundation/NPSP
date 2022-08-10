@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>LimitRecalculatedRecurringDonations__c</name>
+    <help>Beperk het aantal terugkerende donaties dat tijdens de nachtelijke batchtaak Terugkerende donaties opnieuw wordt berekend op basis van de recentheid van de donatie.</help>
+    <label>Opnieuw berekende terugk. donaties bep.</label>
+</CustomFieldTranslation>

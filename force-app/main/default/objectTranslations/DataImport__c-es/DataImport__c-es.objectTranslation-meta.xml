@@ -9,8 +9,12 @@
         <label>Eliminar registros de importación de datos importados</label>
     </webLinks>
     <webLinks>
+        <name>Import_Selected_Data_Import_Records</name>
+        <label>Importar registros de importación de datos seleccionados</label>
+    </webLinks>
+    <webLinks>
         <name>Process_Data_Import</name>
-        <label>Iniciar importación de datos</label>
+        <label>Importar todos los registros de importación de datos</label>
     </webLinks>
     <layouts>
         <layout>Data Import Layout</layout>

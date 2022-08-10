@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Opportunity__c</name>
+    <help>A oportunidade à qual você quer atribuir esta alocação. O NPSP totaliza todas as oportunidades em uma fase fechada/ganha para a Unidade contábil geral desta alocação.</help>
+    <relationshipLabel>Alocações de GAU</relationshipLabel>
+    <label>Oportunidade</label>
+</CustomFieldTranslation>

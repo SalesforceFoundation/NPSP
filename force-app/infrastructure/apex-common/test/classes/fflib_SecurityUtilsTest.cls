@@ -310,7 +310,7 @@ private class fflib_SecurityUtilsTest {
 
 	@isTest
 	static void sysadmin_objectAndField_access() {
-		User testUser = setupTestUser('System Administrator');
+		User testUser = setupTestUser(UTIL_Profile.SYSTEM_ADMINISTRATOR);
 		System.runAs(testUser){
 			fflib_SecurityUtils.checkInsert(
 				Account.SObjectType,

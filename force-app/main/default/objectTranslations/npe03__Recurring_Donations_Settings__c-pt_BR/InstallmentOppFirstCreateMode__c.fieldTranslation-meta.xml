@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>InstallmentOppFirstCreateMode__c</name>
+    <help>Especifica como o NPSP criará a primeira oportunidade de parcela de doações recorrentes. O padrão é Síncrono.</help>
+    <label>Comportam. assíncrono oport. de parcela</label>
+</CustomFieldTranslation>

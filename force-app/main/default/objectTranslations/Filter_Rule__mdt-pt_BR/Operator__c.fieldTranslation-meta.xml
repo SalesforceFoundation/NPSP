@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Operator__c</name>
+    <label>Operador</label>
+    <picklistValues>
+        <masterLabel>Equals</masterLabel>
+        <translation>Igual a</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Not Equals</masterLabel>
+        <translation>Não é igual</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Greater Than</masterLabel>
+        <translation>Maior que</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Less Than</masterLabel>
+        <translation>Menor que</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Greater or Equal</masterLabel>
+        <translation>Maior ou igual a</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Less or Equal</masterLabel>
+        <translation>Menor ou Igual</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Starts With</masterLabel>
+        <translation>Começa com</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Contains</masterLabel>
+        <translation>Contém</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Does Not Contain</masterLabel>
+        <translation>Não contém</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>In List</masterLabel>
+        <translation>Na lista</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Not In List</masterLabel>
+        <translation>Não está na lista</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Is Included</masterLabel>
+        <translation>Está incluído</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Is Not Included</masterLabel>
+        <translation>Não está incluído</translation>
+    </picklistValues>
+</CustomFieldTranslation>

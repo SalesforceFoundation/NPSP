@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>DebitType__c</name>
+    <label>借方種別</label>
+    <picklistValues>
+        <masterLabel>Refund</masterLabel>
+        <translation>返金</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Partial Refund</masterLabel>
+        <translation>部分返金</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Chargeback</masterLabel>
+        <translation>チャージバック</translation>
+    </picklistValues>
+</CustomFieldTranslation>

@@ -5,6 +5,14 @@
         <label>U moet een Auth.-ID opgeven.</label>
     </customLabels>
     <customLabels>
+        <name>installmentPeriod</name>
+        <label>Termijnperiode</label>
+    </customLabels>
+    <customLabels>
+        <name>recurringDonationSchedule</name>
+        <label>Terugkerende donatieplanning</label>
+    </customLabels>
+    <customLabels>
         <name>Addr_No_Batch</name>
         <label>De gespecificeerde dienst ondersteunt geen Batchadresverificaties.</label>
     </customLabels>
@@ -869,6 +877,14 @@
         <label>U moet Uitgebreide terugkerende donaties inschakelen voordat u terugkerende donaties kunt verwerken.</label>
     </customLabels>
     <customLabels>
+        <name>RD2_PaidInstallments</name>
+        <label>Betaalde termijnen:</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_NextDonationDate</name>
+        <label>Datum van volgende termijn:</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_ElevateCancelInProgress</name>
         <label>Terugkerende betaling wordt geannuleerd</label>
     </customLabels>
@@ -897,12 +913,24 @@
         <label>Geen fouten</label>
     </customLabels>
     <customLabels>
+        <name>RD2_ViewMoreDetails</name>
+        <label>Meer details weergeven</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ViewLessDetails</name>
+        <label>Minder details weergeven</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_ElevateNotSupported</name>
         <label>Deze functionaliteit wordt momenteel niet ondersteund voor terugkerende donaties afkomstig uit de Elevate-betaalservices.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevatePendingStatus</name>
         <label>Elevate-proces in behandeling</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevatePermissionRequired</name>
+        <label>Beheer deze terugkerende donatie in Elevate.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRDAmountMustBeValid</name>
@@ -915,6 +943,10 @@
     <customLabels>
         <name>RD2_ElevateRDClosedStatusCannotBeChanged</name>
         <label>De status voor een terugkerende donatie in Elevate kan niet worden bewerkt wanneer Status is gesloten.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDCannotBeFixedLength</name>
+        <label>Het type terugkeer van een aan Elevate gekoppelde terugkerende donatie mag niet worden ingesteld op Vast.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRDDayOfMonthCannotChange</name>
@@ -935,6 +967,22 @@
     <customLabels>
         <name>RD2_ElevateRecordCreateFailed</name>
         <label>Er kan geen terugkerende betaling in Elevate worden gemaakt. Vraag de systeembeheerder om hulp.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDCancellingTitle</name>
+        <label>Uw verzoek om stopzetting van uw terugkerende donatie is ingediend.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDCancellingMessage</name>
+        <label>Dit kan enige tijd duren. Vernieuw de pagina om de status te controleren. Neem contact met ons op als u hulp nodig hebt.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDStopDonationMessage</name>
+        <label>De non-profit zal toekomstige donaties van deze terugkerende donatie niet verwerken.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_NonElevateRDCancellingTitle</name>
+        <label>Uw terugkerende donatie is stopgezet.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementDisabledHeader</name>
@@ -1214,6 +1262,30 @@
     <customLabels>
         <name>RD2_EntryFormSaveACHMessage</name>
         <label>ACH-informatie versturen naar Elevate...</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ACH_Payment_Method_Label</name>
+        <label>Bankrekening</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Payment_Method</name>
+        <label>Betalingsmethode</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Payment_method_was_updated</name>
+        <label>Betalingsmethode is bijgewerkt.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Recurring_Donation_was_updated</name>
+        <label>Terugkerende donatie is bijgewerkt.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Payment_Details</name>
+        <label>Betalingsgegevens</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Credit_Card_Payment_Method_Label</name>
+        <label>Creditcard</label>
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormSaveCreditCardValidationMessage</name>
@@ -1543,6 +1615,74 @@
         <label>Terugkerend</label>
     </customLabels>
     <customLabels>
+        <name>RD_achElevatePayment</name>
+        <label>{0}, *{1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_creditCardElevatePayment</name>
+        <label>{0}, *{1} Verv.{2}/{3}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_firstDonation</name>
+        <label>Eerste donatie</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_finalDonation</name>
+        <label>Laatste donatie</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_firstOrdinalNumber</name>
+        <label>e</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyOnThePeriod</name>
+        <label>Op de {0}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyPeriodOnTheDayOfTheMonth</name>
+        <label>{0} op de {1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyYearly</name>
+        <label>Elke {0} jaar</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyMonthly</name>
+        <label>Elke {0} maanden op de {1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyWeekly</name>
+        <label>Elke {0} weken</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyFirstAndFifteenth</name>
+        <label>Elke {0} {1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_lastModified</name>
+        <label>Laatst bijgewerkt</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_mostRecentDonation</name>
+        <label>Meest recente donatie</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_nextDonation</name>
+        <label>Volgende donatie</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_otherOrdinalNumber</name>
+        <label>e</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_secondOrdinalNumber</name>
+        <label>e</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_thirdOrdinalNumber</name>
+        <label>e</label>
+    </customLabels>
+    <customLabels>
         <name>RD_ContactMustBelongToAccount</name>
         <label>U moet een contactpersoon selecteren, die is gekoppeld aan deze Account van huishouden.</label>
     </customLabels>
@@ -1665,7 +1805,7 @@
     </customLabels>
     <customLabels>
         <name>RP_SubTitle</name>
-        <label>U hebt nu toegang tot ALLE krachtige voorzieningen van de Salesforce Enterprise Edition EN de mogelijkheid om donors beter te beheren met het Nonprofit Success Pack. Laten we van start gaan.</label>
+        <label>U hebt nu toegang tot ALLE krachtige voorzieningen van de Salesforce Enterprise Edition EN de mogelijkheid om donateurs beter te beheren met het Nonprofit Success Pack. Laten we van start gaan.</label>
     </customLabels>
     <customLabels>
         <name>RP_Title</name>
@@ -1677,7 +1817,7 @@
     </customLabels>
     <customLabels>
         <name>RP_TrailheadParagraph</name>
-        <label>Maak kennis met het Nonprofit Success Pack door de grondbeginselen van Salesforce en het beheer van donors en vrijwilligers te leren.</label>
+        <label>Maak kennis met het Nonprofit Success Pack door de grondbeginselen van Salesforce en het beheer van donateurs en vrijwilligers te leren.</label>
     </customLabels>
     <customLabels>
         <name>RP_TrailheadSubtitle</name>
@@ -1963,15 +2103,23 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>Sinds 1 oktober 2020 wordt Batchgegevensinvoer niet meer ondersteund. De meeste opties zijn vervangen door nieuwere functies in NPSP. Als u nog actieve batches hebt, kunt u de records nog wel openen, maar niet meer verwerken met Batchgegevensinvoer. Neem contact op met Support als u toegang wilt tot deze batches. &lt;br/&gt; Mogelijk is Opgave van gift een goed alternatief voor Batchgegevensinvoer. Meer informatie over Opgave van gift vindt u in de &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-documentatie&lt;/a&gt;.</label>
+        <label>Sinds 1 oktober 2020 wordt Batchgegevensinvoer niet meer ondersteund. De meeste opties zijn vervangen door nieuwere functies in NPSP. Als u nog actieve batches hebt, kunt u de records nog wel openen, maar niet meer verwerken met Batchgegevensinvoer. Neem contact op met Support als u toegang wilt tot deze batches. &lt;br/&gt; Mogelijk is Opgave van gift een goed alternatief voor Batchgegevensinvoer. Meer informatie over Opgave van gift vindt u in de &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-documentatie&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
-        <label>Op 1 oktober 2020 wordt Batchgegevensinvoer buiten gebruik gesteld; de functie is dan niet meer beschikbaar in NPSP. Als u op dat moment actieve batches hebt, kunt u de records nog wel openen, maar u kunt ze niet meer verwerken met Batchgegevensinvoer. Als u voor een goede overgang wilt zorgen, schakelt u Opgave van gift op voorhand in en neemt u dit al in gebruik vóór 1 oktober. Meer informatie over Opgave van gift vindt u in de &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-documentatie&lt;/a&gt;.</label>
+        <label>Op 1 oktober 2020 wordt Batchgegevensinvoer buiten gebruik gesteld; de functie is dan niet meer beschikbaar in NPSP. Als u op dat moment actieve batches hebt, kunt u de records nog wel openen, maar u kunt ze niet meer verwerken met Batchgegevensinvoer. Als u voor een goede overgang wilt zorgen, schakelt u Opgave van gift op voorhand in en neemt u dit al in gebruik vóór 1 oktober. Meer informatie over Opgave van gift vindt u in de &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-documentatie&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
         <label>Batchgegevensinvoer wordt buiten gebruik gesteld</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiAPIBatchError</name>
+        <label>We kunnen de gegevensimportrecords niet verwerken vanwege de volgende fouten:</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiAPISelectedError</name>
+        <label>We kunnen de geselecteerde gegevensimportrecords niet verwerken vanwege de volgende fouten:</label>
     </customLabels>
     <customLabels>
         <name>bdiAccountCustomIdError</name>
@@ -2036,6 +2184,10 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
     <customLabels>
         <name>bdiContactCustomIdError</name>
         <label>Het instellingenveld {0} Aangepast Uniek ID voor Contactpersoon moet overeenkomende velden hebben in het object NPSP-Gegevensimport waarvan de API-Namen {1} en {2} zijn.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiContactMatchDupeMgmt</name>
+        <label>Contactpersoonduplicaatregels</label>
     </customLabels>
     <customLabels>
         <name>bdiContactMatchEmail</name>
@@ -2148,6 +2300,10 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
     <customLabels>
         <name>bdiDryRunTitle</name>
         <label>NPSP-Gegevensimporteur - Testuitvoering</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiDupeMgmtMatchImportStatus</name>
+        <label>- Duplicaatregel:</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorBatchNameRequired</name>
@@ -2559,6 +2715,26 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
         <label>Proces Gegevensimport starten</label>
     </customLabels>
     <customLabels>
+        <name>bdiSelectCantProcessBatchDIRecords</name>
+        <label>U hebt records geselecteerd die zijn gekoppeld aan een NPSP-gegevensimportbatch. Voor het importeren van records die zijn gekoppeld aan een NPSP-importbatch opent u de batch en klikt u op Batch verwerken.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectCantProcessImportedRecords</name>
+        <label>U kunt geen records importeren die al zijn geïmporteerd. Verwijder records met de status Geïmporteerd uit uw selectie.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectNoDIRecordsSelected</name>
+        <label>Selecteer een of meer gegevensimportrecords.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectReturnToListView</name>
+        <label>Ga terug</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectTooManyDIRecords</name>
+        <label>U kunt maximaal {0} gegevensimportrecords selecteren.</label>
+    </customLabels>
+    <customLabels>
         <name>bdiSettingsSectionContactMatching</name>
         <label>Overeenkomst Contactpersoon en Account</label>
     </customLabels>
@@ -2628,7 +2804,7 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>bgeBatchDonorLookupInfo</name>
-        <label>Selecteer de te gebruiken velden voor het invoeren van gifts in deze batch. Donortype en opzoekopdrachten voor Account en Contactpersoon worden altijd weergegeven. U ziet alleen de velden waartoe u toegang hebt.</label>
+        <label>Selecteer de te gebruiken velden voor het invoeren van gifts in deze batch. Donateurtype en opzoekopdrachten voor Account en Contactpersoon worden altijd weergegeven. U ziet alleen de velden waartoe u toegang hebt.</label>
     </customLabels>
     <customLabels>
         <name>bgeBatchErrorRequiredFields</name>
@@ -2652,7 +2828,7 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>bgeBatchRunOpportunityRollupsWhileProcessingHelp</name>
-        <label>Wanneer aangevinkt, berekent NPSP donortotaliseringen wanneer donaties worden verwerkt. Wanneer niet aangevinkt, worden donortotaliseringen berekend tijdens de standaard nachtelijke Geplande Taak. Het aanvinken van dit selectievakje kan de verwerking van deze batch vertragen.</label>
+        <label>Wanneer aangevinkt, berekent NPSP donateurtotaliseringen wanneer donaties worden verwerkt. Wanneer niet aangevinkt, worden donateurtotaliseringen berekend tijdens de standaard nachtelijke Geplande Taak. Het aanvinken van dit selectievakje kan de verwerking van deze batch vertragen.</label>
     </customLabels>
     <customLabels>
         <name>bgeBatchOverview</name>
@@ -2752,7 +2928,7 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>bgeGridDonorType</name>
-        <label>Donortype</label>
+        <label>Donateurtype</label>
     </customLabels>
     <customLabels>
         <name>bgeGridErrorFromDryRun</name>
@@ -2808,7 +2984,7 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>bgeMatchingAlert</name>
-        <label>Deze donor heeft donaties in afwachting.</label>
+        <label>Deze donateur heeft donaties in afwachting.</label>
     </customLabels>
     <customLabels>
         <name>bgeMatchingSelect</name>
@@ -2832,7 +3008,7 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>Op 13 juli 2021 wordt de verouderde functie Batchinvoer van giften buiten gebruik gesteld; de functie is dan niet meer beschikbaar in NPSP. Als u op dat moment actieve batches hebt, kunt u de records nog wel openen, maar u kunt ze niet meer verwerken met Batchinvoer van giften. Als u voor een goede overgang wilt zorgen, schakelt u de nieuwere functie Opgave van gift op voorhand in en neemt u deze al in gebruik vóór 13 juli. Meer informatie over Opgave van gift vindt u in de &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-documentatie&lt;/a&gt;.</label>
+        <label>Op 13 juli 2021 wordt de verouderde functie Batchinvoer van giften buiten gebruik gesteld; de functie is dan niet meer beschikbaar in NPSP. Als u op dat moment actieve batches hebt, kunt u de records nog wel openen, maar u kunt ze niet meer verwerken met Batchinvoer van giften. Als u voor een goede overgang wilt zorgen, schakelt u de nieuwere functie Opgave van gift op voorhand in en neemt u deze al in gebruik vóór 13 juli. Meer informatie over Opgave van gift vindt u in de &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-documentatie&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -2848,7 +3024,7 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
             Als u nog actieve batches hebt, kunt u de records nog wel openen, maar niet meer verwerken met Batchinvoer van giften.
             Neem contact op met Support als u toegang wilt tot deze batches.
             Mogelijk is Opgave van gift een goed alternatief voor Batchinvoer van giften.
-            Meer informatie over opgave van giften vindt u in de &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-documentatie&lt;/a&gt;.</label>
+            Meer informatie over opgave van giften vindt u in de &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-documentatie&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -3053,6 +3229,10 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
         <label>Sluiten</label>
     </customLabels>
     <customLabels>
+        <name>commonCancelAndClose</name>
+        <label>Annuleren en sluiten</label>
+    </customLabels>
+    <customLabels>
         <name>commonConcurrentBatchError</name>
         <label>Er wordt al een taak uitgevoerd in de Apex-klasse {0}. De taak moet worden voltooid voordat deze opnieuw kan worden uitgevoerd.</label>
     </customLabels>
@@ -3183,6 +3363,10 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
     <customLabels>
         <name>commonRecordsProcessed</name>
         <label>Records verwerkt</label>
+    </customLabels>
+    <customLabels>
+        <name>commonRefreshPage</name>
+        <label>Vernieuw de pagina voor de nieuwste updates.</label>
     </customLabels>
     <customLabels>
         <name>commonRequired</name>
@@ -3362,7 +3546,7 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>Bekijk alle dubbele contactpersonen die zijn gevonden aan de hand van overeenkomstregels. &lt;a href=&apos;https://powerofus.force.com/IP_Contacts&apos; target=&apos;_blank&apos;&gt;&lt;b&gt; Meer informatie &lt;/b&gt;&lt;/a&gt;</label>
+        <label>Bekijk alle dubbele contactpersonen die zijn gevonden aan de hand van overeenkomstregels. &lt;a href=&quot;https://powerofus.force.com/IP_Contacts&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; Meer informatie &lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>
@@ -3439,6 +3623,14 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
     <customLabels>
         <name>geAddSoftCredit</name>
         <label>Soft Credit toevoegen</label>
+    </customLabels>
+    <customLabels>
+        <name>geRecurringGiftModalWarning</name>
+        <label>Het toepassen van een terugkerende-donatieplanning op een bestaande Opportunity of Betaling of het toevoegen van soft credits wordt niet ondersteund in Opgave van gift.</label>
+    </customLabels>
+    <customLabels>
+        <name>geSoftCreditsWarning</name>
+        <label>Soft credits in Opgave van gift wordt niet ondersteund voor Terugkerende donaties.</label>
     </customLabels>
     <customLabels>
         <name>geA11ySection</name>
@@ -3660,7 +3852,7 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
     </customLabels>
     <customLabels>
         <name>geBodyMatchingPendingDonation</name>
-        <label>Deze donor heeft donaties in afwachting.</label>
+        <label>Deze donateur heeft donaties in afwachting.</label>
     </customLabels>
     <customLabels>
         <name>geBodyMatchingSelectRecord</name>
@@ -3833,6 +4025,38 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
     <customLabels>
         <name>geFieldsNotFoundMessage</name>
         <label>Sommige velden in dit formulier zijn niet gevonden. Raadpleeg de beheerder.</label>
+    </customLabels>
+    <customLabels>
+        <name>geAddSchedule</name>
+        <label>Terugkerende planning toevoegen</label>
+    </customLabels>
+    <customLabels>
+        <name>geUpdateSchedule</name>
+        <label>Terugkerende planning bijwerken</label>
+    </customLabels>
+    <customLabels>
+        <name>geMakeRecurring</name>
+        <label>Terugkerend maken</label>
+    </customLabels>
+    <customLabels>
+        <name>geRemoveSchedule</name>
+        <label>Terugkerende planning verwijderen</label>
+    </customLabels>
+    <customLabels>
+        <name>geEditSchedule</name>
+        <label>Terugkerende planning bewerken</label>
+    </customLabels>
+    <customLabels>
+        <name>geOpenEndedGiftSchedule</name>
+        <label>{0} donatie start op {1} ({2})</label>
+    </customLabels>
+    <customLabels>
+        <name>geFixedGiftSchedule</name>
+        <label>{0} donatie start op {1} ({2}) en eindigt na {3} termijnen.</label>
+    </customLabels>
+    <customLabels>
+        <name>geRecurringScheduleInformation</name>
+        <label>Informatie Terugkerende planning</label>
     </customLabels>
     <customLabels>
         <name>gsAdminSetupTitle</name>
@@ -4469,6 +4693,10 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
     <customLabels>
         <name>geErrorExistingTemplateName</name>
         <label>Deze naam is gebruikt door een andere sjabloon. Geef een unieke naam op.</label>
+    </customLabels>
+    <customLabels>
+        <name>geErrorDonorMismatch</name>
+        <label>Selecteer voor een gift van een huishouden Contact1 als donateurtype en vul de contactpersoonvelden in.</label>
     </customLabels>
     <customLabels>
         <name>geErrorDonorTypeValidation</name>
@@ -5962,12 +6190,76 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
         <label>Organisatiedonaties</label>
     </customLabels>
     <customLabels>
+        <name>pmtElevatePermissionRequired</name>
+        <label>Beheer deze betaling in Elevate.</label>
+    </customLabels>
+    <customLabels>
         <name>pmtModifyCurrency</name>
         <label>U kunt Betalingsvaluta niet rechtstreeks wijzigen. Werk de valuta van de bovenliggende Opportunity bij en NPSP werkt de valuta van alle gerelateerde Betalingsrecords automatisch bij.</label>
     </customLabels>
     <customLabels>
+        <name>pmtNoRefundPermissionMessage</name>
+        <label>U beschikt niet over de machtigingen om terugbetalingen te doen. Neem contact op met uw Salesforce-beheerder voor hulp.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtOriginalPaymentNotCompleted</name>
+        <label>Betalingen kunnen niet worden terugbetaald omdat Elevate de betaling nog niet heeft verwerkt.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtOriginalPaymentNotPaid</name>
+        <label>De betaling is nog in behandeling en kan nog niet worden terugbetaald.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtOriginalPaymentNotFound</name>
+        <label>Zonder een oorspronkelijke betaling kunt u geen terugbetalingen bewerken.</label>
+    </customLabels>
+    <customLabels>
         <name>pmtPaidPaymentDateRequired</name>
         <label>Een betaalde Betaling moet een Betalingsdatum hebben.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentDate</name>
+        <label>Betalingsdatum</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentErrorMessage</name>
+        <label>Er is een fout opgetreden bij het verwerken van de terugbetaling.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmountInvalid</name>
+        <label>Voer een bedrag voor terugbetaling in dat lager is dan of gelijk is aan het openstaande saldo.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentSuccessMessage</name>
+        <label>Terugbetaling is gelukt.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtPaymentNotFound</name>
+        <label>De bijbehorende Elevate-betaling is niet gevonden. Neem contact op met uw Salesforce-beheerder voor hulp.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtPaymentNotRefundable</name>
+        <label>Deze betaling is al terugbetaald of betrof zelf een terugbetaling.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmount</name>
+        <label>Terugbetalingsbedrag</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentMessage</name>
+        <label>Betaal de volgende betaling terug:</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundProcessing</name>
+        <label>Terugbetaling ter verwerking ingediend. Controleer of de terugbetaalde betaling wordt weergegeven op de opportunityrecord.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentConfirmedButton</name>
+        <label>Betaling terugbetalen</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentTitle</name>
+        <label>Betaling terugbetalen?</label>
     </customLabels>
     <customLabels>
         <name>pmtUnpaidPaymentScheduledDateRequired</name>
@@ -6187,7 +6479,7 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
     </customLabels>
     <customLabels>
         <name>pscManageSoftCreditsPrimaryDonor</name>
-        <label>Primaire Donor</label>
+        <label>Primaire donateur</label>
     </customLabels>
     <customLabels>
         <name>pscManageSoftCreditsReconcileFail</name>
@@ -6824,7 +7116,7 @@ Wanneer het proces 100% is voltooid, is het veilig de pagina af te sluiten of op
     </customLabels>
     <customLabels>
         <name>stgHelpMatchedDonorRole</name>
-        <label>De Contactpersoonrol die u wilt gebruiken voor overeenkomende donors. We raden aan &apos;Overeenkomende Donor&apos; te gebruiken.</label>
+        <label>De Contactpersoonrol die u wilt gebruiken voor overeenkomende donateurs. We raden aan &apos;Overeenkomende donateur&apos; te gebruiken.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpMaxPayments</name>
@@ -7106,7 +7398,7 @@ Om uw bestaande instellingen te controleren, gaat u naar Duplicaatregels onder S
     </customLabels>
     <customLabels>
         <name>stgHelpRollupBatchSize</name>
-        <label>Het aantal records dat per keer verwerkt zal worden bij het berekenen van donorstatistieken. De standaardgrootte is 200. Verminder dit aantal als Opportunitytotaliseringen mislukken door systeemlimieten.</label>
+        <label>Het aantal records dat per keer verwerkt zal worden bij het berekenen van donateurstatistieken. De standaardgrootte is 200. Verminder dit aantal als Opportunitytotaliseringen mislukken door systeemlimieten.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRollupExcludeAccountOppRT</name>
@@ -7138,7 +7430,7 @@ Om uw bestaande instellingen te controleren, gaat u naar Duplicaatregels onder S
     </customLabels>
     <customLabels>
         <name>stgHelpRollupPrimaryContact</name>
-        <label>Wanneer deze optie is aangevinkt, zal Salesforce donorgegevens ALTIJD totaliseren naar de Primaire Contactpersoon van de Opportunity. Merk op dat enkel de Account op de Opportunity een hard credit ontvangt. Dus, als de Accountnaam op de Opportunity een Organisatie is, zullen die Organisatie en de Primaire Contactpersoon een hard credit ontvangen; het Huishouden of de One-to-One-Account van de Contactpersoon ontvangen GEEN hard credit. Wanneer niet aangevinkt, en wanneer de Opportunityaccount een Organisatie is, ontvangt enkel de Organisatie credit voor de Opportunity.</label>
+        <label>Wanneer deze optie is aangevinkt, zal Salesforce donateurgegevens ALTIJD totaliseren naar de Primaire Contactpersoon van de Opportunity. Merk op dat enkel de Account op de Opportunity een hard credit ontvangt. Dus, als de Accountnaam op de Opportunity een Organisatie is, zullen die Organisatie en de Primaire Contactpersoon een hard credit ontvangen; het Huishouden of de One-to-One-Account van de Contactpersoon ontvangen GEEN hard credit. Wanneer niet aangevinkt, en wanneer de Opportunityaccount een Organisatie is, ontvangt enkel de Organisatie credit voor de Opportunity.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRollupSkewLimit</name>
@@ -7648,7 +7940,7 @@ Opmerking: Het tabblad NPSP-instellingen is zichtbaar in de toepassing Nonprofit
     </customLabels>
     <customLabels>
         <name>stgNavDonorStatistics</name>
-        <label>Donorstatistieken</label>
+        <label>Donateurstatistieken</label>
     </customLabels>
     <customLabels>
         <name>stgNavErrorLog</name>
@@ -7926,6 +8218,30 @@ Opmerking: Het tabblad NPSP-instellingen is zichtbaar in de toepassing Nonprofit
         <name>donationHistoryDatatableAriaLabel</name>
         <label>Donatiegeschiedenis</label>
     </customLabels>
+    <customLabels>
+        <name>RD2_Actions</name>
+        <label>Acties</label>
+    </customLabels>
+    <customLabels>
+        <name>updatePaymentMethod</name>
+        <label>Betalingsmethode bijwerken</label>
+    </customLabels>
+    <customLabels>
+        <name>changeAmountOrFrequency</name>
+        <label>Bedrag of frequentie aanpassen</label>
+    </customLabels>
+    <customLabels>
+        <name>stopRecurringDonation</name>
+        <label>Terugkerende donatie stopzetten</label>
+    </customLabels>
+    <customLabels>
+        <name>stopRecurringDonationModalTitle</name>
+        <label>Deze terugkerende donatie stopzetten?</label>
+    </customLabels>
+    <customLabels>
+        <name>updateRecurringDonation</name>
+        <label>Terugkerende donatie bijwerken</label>
+    </customLabels>
     <reportTypes>
         <name>Contacts_Only</name>
         <label>Alleen Contactpersonen</label>
@@ -7975,6 +8291,10 @@ Opmerking: Het tabblad NPSP-instellingen is zichtbaar in de toepassing Nonprofit
         <label>Nieuwe Campagne</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.Pause</name>
+        <label>Onderbreken</label>
+    </quickActions>
+    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>Nieuwe Gelieerde Organisatie</label>
     </quickActions>
@@ -7987,8 +8307,32 @@ Opmerking: Het tabblad NPSP-instellingen is zichtbaar in de toepassing Nonprofit
         <label>Nieuwe Terugkerende Donatie</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
+        <label>Nieuwe Opportunity</label>
+    </quickActions>
+    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>Nieuwe Terugkerende Donatie</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__oppPayment__c.Refund</name>
+        <label>Terugbetalen</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Quick_Update</name>
+        <label>Snelle Update</label>
+    </quickActions>
+    <quickActions>
+        <name>npo02__Household__c.Update_Household</name>
+        <label>Huishouden bijwerken</label>
+    </quickActions>
+    <quickActions>
+        <name>Address__c.Update_Address</name>
+        <label>Adres bijwerken</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
+        <label>Terugkerende donatie sluiten</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -8009,6 +8353,10 @@ Opmerking: Het tabblad NPSP-instellingen is zichtbaar in de toepassing Nonprofit
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>Nieuwe Relatie</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Quick_Update</name>
+        <label>Snelle Update</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>

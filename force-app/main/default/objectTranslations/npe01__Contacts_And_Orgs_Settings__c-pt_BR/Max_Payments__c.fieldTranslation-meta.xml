@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Max_Payments__c</name>
+    <help>Determina o número máximo de Pagamentos permitidos ao agendar Pagamentos para uma Oportunidade.</help>
+    <label>Máximo de pagamentos</label>
+</CustomFieldTranslation>

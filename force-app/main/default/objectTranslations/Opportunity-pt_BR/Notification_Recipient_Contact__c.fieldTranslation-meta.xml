@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Notification_Recipient_Contact__c</name>
+    <help>Pesquisa o registro de Contato da pessoa a ser notificada sobre esta Doação.</help>
+    <relationshipLabel>Oportunidades (Destinatário de notificação)</relationshipLabel>
+    <label>Contato do destinatário da notificação</label>
+</CustomFieldTranslation>

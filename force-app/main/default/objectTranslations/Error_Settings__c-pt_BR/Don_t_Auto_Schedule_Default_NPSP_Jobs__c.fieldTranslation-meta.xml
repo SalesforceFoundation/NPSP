@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
+    <help>Quando marcado, o NPSP não agenda automaticamente trabalhos recorrentes padrão. Esses trabalhos recorrentes calculam totalizações, atualizam doações recorrentes e endereços sazonais e lidam com erros.</help>
+    <label>Não progr. autom. trab. NPSP padrão</label>
+</CustomFieldTranslation>

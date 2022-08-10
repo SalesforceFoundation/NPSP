@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Parent_Task__c</name>
+    <help>Indica que esta tarefa do plano de interação depende de uma tarefa pai.</help>
+    <relationshipLabel>Tarefas de plano de interação</relationshipLabel>
+    <label>Tarefa pai</label>
+</CustomFieldTranslation>

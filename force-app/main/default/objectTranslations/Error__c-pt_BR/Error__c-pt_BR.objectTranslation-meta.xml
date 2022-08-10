@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <layouts>
+        <layout>Error Layout</layout>
+        <sections>
+            <label>Links personalizados</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Número do erro</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Número do erro</label>
+    </standardFields>
+    <gender>Masculine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>Erro</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Erros</value>
+    </caseValues>
+</CustomObjectTranslation>

@@ -5,6 +5,14 @@
         <label>認証 ID は空白にできません。</label>
     </customLabels>
     <customLabels>
+        <name>installmentPeriod</name>
+        <label>間隔</label>
+    </customLabels>
+    <customLabels>
+        <name>recurringDonationSchedule</name>
+        <label>継続支援スケジュール</label>
+    </customLabels>
+    <customLabels>
         <name>Addr_No_Batch</name>
         <label>指定したサービスではバッチ住所検証はサポートされていません。</label>
     </customLabels>
@@ -874,6 +882,14 @@
         <label>継続支援を処理する前に拡張継続支援を有効にする必要があります。</label>
     </customLabels>
     <customLabels>
+        <name>RD2_PaidInstallments</name>
+        <label>支払済回数:</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_NextDonationDate</name>
+        <label>次回支払日:</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_ElevateCancelInProgress</name>
         <label>継続支払のキャンセル処理中</label>
     </customLabels>
@@ -902,12 +918,24 @@
         <label>エラーはありません</label>
     </customLabels>
     <customLabels>
+        <name>RD2_ViewMoreDetails</name>
+        <label>詳細をさらに表示</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ViewLessDetails</name>
+        <label>詳細の表示を減らす</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_ElevateNotSupported</name>
         <label>Elevate 支払サービスから生成された継続支援については、この機能は現時点ではサポートされていません。</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevatePendingStatus</name>
         <label>Elevate 処理待機中</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevatePermissionRequired</name>
+        <label>この継続支援は Elevate で管理します。</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRDAmountMustBeValid</name>
@@ -920,6 +948,10 @@
     <customLabels>
         <name>RD2_ElevateRDClosedStatusCannotBeChanged</name>
         <label>[状況] が [完了] の場合、Elevate に接続された継続支援の状況は編集できません。</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDCannotBeFixedLength</name>
+        <label>Elevate に接続された継続支援の継続種別を [固定] にすることはできません。</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRDDayOfMonthCannotChange</name>
@@ -940,6 +972,22 @@
     <customLabels>
         <name>RD2_ElevateRecordCreateFailed</name>
         <label>Elevate 継続支払を作成できませんでした。システム管理者にお問い合わせください。</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDCancellingTitle</name>
+        <label>継続支援の停止要求が送信されました。</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDCancellingMessage</name>
+        <label>少し時間がかかる場合があります。ページを更新して状況を確認してください。ご不明な点がありましたら、お問い合わせください。</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDStopDonationMessage</name>
+        <label>今後、この非営利団体はこの継続支援について支援を処理しません。</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_NonElevateRDCancellingTitle</name>
+        <label>継続支援が停止されました。</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementDisabledHeader</name>
@@ -1219,6 +1267,30 @@
     <customLabels>
         <name>RD2_EntryFormSaveACHMessage</name>
         <label>ACH 情報を Elevate に送信しています...</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ACH_Payment_Method_Label</name>
+        <label>銀行口座</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Payment_Method</name>
+        <label>支払方法</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Payment_method_was_updated</name>
+        <label>支払方法が更新されました。</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Recurring_Donation_was_updated</name>
+        <label>継続支援が更新されました。</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Payment_Details</name>
+        <label>支払の詳細</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Credit_Card_Payment_Method_Label</name>
+        <label>クレジットカード</label>
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormSaveCreditCardValidationMessage</name>
@@ -1546,6 +1618,74 @@
     <customLabels>
         <name>RecurringDonationNameSuffix</name>
         <label>継続</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_achElevatePayment</name>
+        <label>{0}、*{1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_creditCardElevatePayment</name>
+        <label>{0}、*{1} 有効期限 {2}/{3}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_firstDonation</name>
+        <label>最初の支援</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_finalDonation</name>
+        <label>最後の支援</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_firstOrdinalNumber</name>
+        <label>回目</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyOnThePeriod</name>
+        <label>{0} 日</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyPeriodOnTheDayOfTheMonth</name>
+        <label>{0} {1} 日</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyYearly</name>
+        <label>{0} 年ごと</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyMonthly</name>
+        <label>{0} か月ごとの {1} 日</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyWeekly</name>
+        <label>{0} 週間ごと</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyFirstAndFifteenth</name>
+        <label>毎月 {0} 日と {1} 日</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_lastModified</name>
+        <label>最終変更:</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_mostRecentDonation</name>
+        <label>前回の支援</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_nextDonation</name>
+        <label>次回の支援</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_otherOrdinalNumber</name>
+        <label>回目</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_secondOrdinalNumber</name>
+        <label>回目</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_thirdOrdinalNumber</name>
+        <label>回目</label>
     </customLabels>
     <customLabels>
         <name>RD_ContactMustBelongToAccount</name>
@@ -1962,15 +2102,23 @@
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>2020 年 10 月 1 日以降、バッチデータエントリはサポートされなくなりました。ほとんどの機能は NPSP の新機能に置き換えられました。進行中のバッチがある場合、それらのレコードには引き続きアクセスできますが、バッチデータエントリを使用して処理することはできません。進行中のバッチにアクセスする必要がある場合は、サポートにお問い合わせください。&lt;br/&gt;バッチデータエントリの代わりとして、支援エントリを検討することをお勧めします。支援エントリについての詳細は、&lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
+        <label>2020 年 10 月 1 日以降、バッチデータエントリはサポートされなくなりました。ほとんどの機能は NPSP の新機能に置き換えられました。進行中のバッチがある場合、それらのレコードには引き続きアクセスできますが、バッチデータエントリを使用して処理することはできません。進行中のバッチにアクセスする必要がある場合は、サポートにお問い合わせください。&lt;br/&gt;バッチデータエントリの代わりとして、支援エントリを検討することをお勧めします。支援エントリについての詳細は、&lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
-        <label>2020 年 10 月 1 日にバッチデータエントリは廃止になり、NPSP では機能しなくなります。その時点で進行中のバッチがあった場合、レコードには引き続きアクセスできますが、バッチデータエントリを使用して処理することはできません。スムーズに移行できるように、10 月 1 日に先立って支援エントリを有効化して使用するようにしてください。支援エントリについての詳細は、&lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
+        <label>2020 年 10 月 1 日にバッチデータエントリは廃止になり、NPSP では機能しなくなります。その時点で進行中のバッチがあった場合、レコードには引き続きアクセスできますが、バッチデータエントリを使用して処理することはできません。スムーズに移行できるように、10 月 1 日に先立って支援エントリを有効化して使用するようにしてください。支援エントリについての詳細は、&lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
         <label>バッチデータエントリの廃止</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiAPIBatchError</name>
+        <label>次のエラーのため、データインポートレコードを処理できませんでした:</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiAPISelectedError</name>
+        <label>次のエラーのため、選択されたデータインポートレコードを処理できませんでした:</label>
     </customLabels>
     <customLabels>
         <name>bdiAccountCustomIdError</name>
@@ -2035,6 +2183,10 @@
     <customLabels>
         <name>bdiContactCustomIdError</name>
         <label>[一意の取引先責任者カスタム ID] 設定項目の {0} には、API 参照名が {1} および {2} の NPSP データインポートオブジェクトのマッチング項目が必要です。</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiContactMatchDupeMgmt</name>
+        <label>取引先責任者重複ルール</label>
     </customLabels>
     <customLabels>
         <name>bdiContactMatchEmail</name>
@@ -2147,6 +2299,10 @@
     <customLabels>
         <name>bdiDryRunTitle</name>
         <label>NPSP データインポーター - Dry Run</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiDupeMgmtMatchImportStatus</name>
+        <label>- 重複ルール:</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorBatchNameRequired</name>
@@ -2558,6 +2714,26 @@
         <label>データインポート処理を開始</label>
     </customLabels>
     <customLabels>
+        <name>bdiSelectCantProcessBatchDIRecords</name>
+        <label>NPSP データインポートバッチにリンクされているレコードを選択しました。NPSP データインポートバッチに関連付けられているレコードをインポートするには、バッチを開いて [バッチを処理] をクリックしてください。</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectCantProcessImportedRecords</name>
+        <label>インポート済みのレコードはインポートできません。選択内容からインポート済み状況のレコードを削除してください。</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectNoDIRecordsSelected</name>
+        <label>データインポートレコードを 1 件以上選択してください。</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectReturnToListView</name>
+        <label>戻る</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectTooManyDIRecords</name>
+        <label>選択するデータインポートレコードは {0} 件以下にしてください。</label>
+    </customLabels>
+    <customLabels>
         <name>bdiSettingsSectionContactMatching</name>
         <label>取引先責任者 &amp; 取引先マッチング</label>
     </customLabels>
@@ -2831,7 +3007,7 @@
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>2021 年 7 月 13 日にバッチ支援エントリは廃止になり、NPSP では機能しなくなります。その時点で進行中のバッチがあった場合、レコードには引き続きアクセスできますが、バッチ支援エントリを使用して処理することはできません。スムーズに移行できるように、7 月 13 日に先立って新しい支援エントリを有効化して使用するようにしてください。支援エントリについての詳細は、&lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
+        <label>2021 年 7 月 13 日にバッチ支援エントリは廃止になり、NPSP では機能しなくなります。その時点で進行中のバッチがあった場合、レコードには引き続きアクセスできますが、バッチ支援エントリを使用して処理することはできません。スムーズに移行できるように、7 月 13 日に先立って新しい支援エントリを有効化して使用するようにしてください。支援エントリについての詳細は、&lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -2847,7 +3023,7 @@
             進行中のバッチがある場合、それらのレコードには引き続きアクセスできますが、バッチ支援エントリを使用して処理することはできません。
             進行中のバッチにアクセスする必要がある場合は、サポートにお問い合わせください。
             バッチ支援エントリの代わりとして、支援エントリを検討することをお勧めします。
-            支援エントリについての詳細は、&lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
+            支援エントリについての詳細は、&lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -3049,6 +3225,10 @@
         <label>完了</label>
     </customLabels>
     <customLabels>
+        <name>commonCancelAndClose</name>
+        <label>キャンセルして閉じる</label>
+    </customLabels>
+    <customLabels>
         <name>commonConcurrentBatchError</name>
         <label>{0} Apex クラスですでに実行中のジョブがあります。もう一度実行するには、このジョブを完了する必要があります。</label>
     </customLabels>
@@ -3179,6 +3359,10 @@
     <customLabels>
         <name>commonRecordsProcessed</name>
         <label>処理済みレコード数</label>
+    </customLabels>
+    <customLabels>
+        <name>commonRefreshPage</name>
+        <label>最新の更新を表示するには、ページを更新してください。</label>
     </customLabels>
     <customLabels>
         <name>commonRequired</name>
@@ -3358,7 +3542,7 @@
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>一致ルールを使用して、見つかったすべての重複する取引先責任者を表示します。&lt;a href=&apos;https://powerofus.force.com/IP_Contacts&apos; target=&apos;_blank&apos;&gt;&lt;b&gt; 詳細はこちら &lt;/b&gt;&lt;/a&gt;</label>
+        <label>一致ルールを使用して、見つかったすべての重複する取引先責任者を表示します。&lt;a href=&quot;https://powerofus.force.com/IP_Contacts&quot; target=&quot;_blank&quot;&gt;&lt;b&gt;詳細はこちら&lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>
@@ -3435,6 +3619,14 @@
     <customLabels>
         <name>geAddSoftCredit</name>
         <label>ソフトクレジットを追加</label>
+    </customLabels>
+    <customLabels>
+        <name>geRecurringGiftModalWarning</name>
+        <label>支援エントリでは、継続支援スケジュールの既存の商談への適用、支払、ソフトクレジットの追加はサポートされていません。</label>
+    </customLabels>
+    <customLabels>
+        <name>geSoftCreditsWarning</name>
+        <label>支援エントリでは継続支援のソフトクレジットはサポートされていません。</label>
     </customLabels>
     <customLabels>
         <name>geA11ySection</name>
@@ -3830,6 +4022,38 @@
     <customLabels>
         <name>geFieldsNotFoundMessage</name>
         <label>このフォームには、見つからない項目が含まれています。システム管理者にお問い合わせください。</label>
+    </customLabels>
+    <customLabels>
+        <name>geAddSchedule</name>
+        <label>継続スケジュールを追加</label>
+    </customLabels>
+    <customLabels>
+        <name>geUpdateSchedule</name>
+        <label>継続スケジュールを更新</label>
+    </customLabels>
+    <customLabels>
+        <name>geMakeRecurring</name>
+        <label>継続に変更</label>
+    </customLabels>
+    <customLabels>
+        <name>geRemoveSchedule</name>
+        <label>継続スケジュールを削除</label>
+    </customLabels>
+    <customLabels>
+        <name>geEditSchedule</name>
+        <label>継続スケジュールを編集</label>
+    </customLabels>
+    <customLabels>
+        <name>geOpenEndedGiftSchedule</name>
+        <label>{2} に開始する {0} {1} 支援。</label>
+    </customLabels>
+    <customLabels>
+        <name>geFixedGiftSchedule</name>
+        <label>{2} に開始し、{3} 回支払後に修了する {0} {1} 支援。</label>
+    </customLabels>
+    <customLabels>
+        <name>geRecurringScheduleInformation</name>
+        <label>継続スケジュール情報</label>
     </customLabels>
     <customLabels>
         <name>gsAdminSetupTitle</name>
@@ -4466,6 +4690,10 @@
     <customLabels>
         <name>geErrorExistingTemplateName</name>
         <label>この名前は別のテンプレートで使用されています。一意の名前を入力してください。</label>
+    </customLabels>
+    <customLabels>
+        <name>geErrorDonorMismatch</name>
+        <label>世帯支援の場合、[支援者種別] で [取引先責任者1] を選択し、取引先責任者項目を指定します。</label>
     </customLabels>
     <customLabels>
         <name>geErrorDonorTypeValidation</name>
@@ -5959,12 +6187,76 @@
         <label>団体支援</label>
     </customLabels>
     <customLabels>
+        <name>pmtElevatePermissionRequired</name>
+        <label>この支払は Elevate で管理します。</label>
+    </customLabels>
+    <customLabels>
         <name>pmtModifyCurrency</name>
         <label>支払通貨は直接変更できません。親商談の通貨を更新すると、自動的に更新されます。</label>
     </customLabels>
     <customLabels>
+        <name>pmtNoRefundPermissionMessage</name>
+        <label>支払を返金する権限がありません。Salesforce システム管理者にお問い合わせください。</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtOriginalPaymentNotCompleted</name>
+        <label>Elevate でまだ支払が処理されていないため、返金できません。</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtOriginalPaymentNotPaid</name>
+        <label>この支払は処理中であるため、まだ返金できません。</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtOriginalPaymentNotFound</name>
+        <label>元の支払がないと返金を編集できません。</label>
+    </customLabels>
+    <customLabels>
         <name>pmtPaidPaymentDateRequired</name>
         <label>支払済の支払には [支払日] が必要です。</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentDate</name>
+        <label>支払日</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentErrorMessage</name>
+        <label>返金の処理中にエラーが発生しました。</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmountInvalid</name>
+        <label>残高以下の返金を入力してください。</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentSuccessMessage</name>
+        <label>返金に成功しました。</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtPaymentNotFound</name>
+        <label>対応する Elevate 支払レコードが見つかりませんでした。Salesforce システム管理者にお問い合わせください。</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtPaymentNotRefundable</name>
+        <label>この支払は返金済みか、それ自体が返金です。</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmount</name>
+        <label>返金額</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentMessage</name>
+        <label>次の支払を返金します:</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundProcessing</name>
+        <label>返金は処理のために送信されました。返金された支払は商談レコードで確認してください。</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentConfirmedButton</name>
+        <label>支払を返金</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentTitle</name>
+        <label>支払を返金しますか?</label>
     </customLabels>
     <customLabels>
         <name>pmtUnpaidPaymentScheduledDateRequired</name>
@@ -7926,6 +8218,30 @@
         <name>donationHistoryDatatableAriaLabel</name>
         <label>支援履歴</label>
     </customLabels>
+    <customLabels>
+        <name>RD2_Actions</name>
+        <label>アクション</label>
+    </customLabels>
+    <customLabels>
+        <name>updatePaymentMethod</name>
+        <label>支払方法を更新</label>
+    </customLabels>
+    <customLabels>
+        <name>changeAmountOrFrequency</name>
+        <label>金額または頻度を変更</label>
+    </customLabels>
+    <customLabels>
+        <name>stopRecurringDonation</name>
+        <label>継続支援を停止</label>
+    </customLabels>
+    <customLabels>
+        <name>stopRecurringDonationModalTitle</name>
+        <label>この継続支援を停止しますか?</label>
+    </customLabels>
+    <customLabels>
+        <name>updateRecurringDonation</name>
+        <label>継続支援を更新</label>
+    </customLabels>
     <reportTypes>
         <name>Contacts_Only</name>
         <label>取引先責任者のみ</label>
@@ -7975,6 +8291,10 @@
         <label>新規キャンペーン</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.Pause</name>
+        <label>一時停止</label>
+    </quickActions>
+    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>新規アフィリエーション</label>
     </quickActions>
@@ -7987,8 +8307,32 @@
         <label>新規継続支援</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
+        <label>新規商談</label>
+    </quickActions>
+    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>新規継続支援</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__oppPayment__c.Refund</name>
+        <label>返金</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Quick_Update</name>
+        <label>クイック更新</label>
+    </quickActions>
+    <quickActions>
+        <name>npo02__Household__c.Update_Household</name>
+        <label>世帯を更新</label>
+    </quickActions>
+    <quickActions>
+        <name>Address__c.Update_Address</name>
+        <label>住所を更新</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
+        <label>継続支援を完了</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -8009,6 +8353,10 @@
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>新規リレーション</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Quick_Update</name>
+        <label>クイック更新</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>

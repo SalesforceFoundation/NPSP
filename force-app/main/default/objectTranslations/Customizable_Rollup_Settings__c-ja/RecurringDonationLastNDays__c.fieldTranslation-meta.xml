@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>RecurringDonationLastNDays__c</name>
+    <help>継続支援積み上げ集計に含める商談を日数内に変更されたものに制限します。この設定は期間限定継続支援積み上げ集計バッチジョブで上書きされます。</help>
+    <label>過去の日数内に変更された継続支援</label>
+</CustomFieldTranslation>
