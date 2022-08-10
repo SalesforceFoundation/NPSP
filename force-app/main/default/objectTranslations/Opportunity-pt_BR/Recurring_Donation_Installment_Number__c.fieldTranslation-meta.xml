@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Installment_Number__c</name>
+    <help>O número da parcela da agenda da Doação recorrente desta Oportunidade.</help>
+    <label>Número da parcela de Doação recor.</label>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>ExcludeClosedRecurringDonations__c</name>
+    <help>完了した継続支援を継続支援商談評価バッチジョブから除外します。</help>
+    <label>完了した継続支援を除外</label>
+</CustomFieldTranslation>

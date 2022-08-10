@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Display_Format__c</name>
+    <help>O formato do campo de numeração automática, incluindo número de dígitos e, se desejado, um prefixo.</help>
+    <label>Formato de apresentação</label>
+</CustomFieldTranslation>

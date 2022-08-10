@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Membership_Status__c</name>
+    <help>Status de assoc. desta Família, (Atual, Expirado ou Período de carência). Valor baseado na data de término da assoc. e no período de carência. O período de carência padrão é definido em Config. do NPSP, em Config. da família. Este campo é somente leitura.</help>
+    <label>Status de associação</label>
+</CustomFieldTranslation>

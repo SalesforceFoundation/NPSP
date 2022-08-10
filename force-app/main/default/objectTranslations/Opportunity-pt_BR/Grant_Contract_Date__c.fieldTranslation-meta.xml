@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Grant_Contract_Date__c</name>
+    <help>A data do início da bolsa, de acordo com o documento ou contrato enviado pela instituição de concessão da bolsa.</help>
+    <label>Data do contrato de bolsa</label>
+</CustomFieldTranslation>

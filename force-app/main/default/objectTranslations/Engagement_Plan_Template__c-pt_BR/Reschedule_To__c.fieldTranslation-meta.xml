@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Reschedule_To__c</name>
+    <help>As tarefas com datas de vencimento em um dia de fim de semana devem ser agendadas para sexta-feira antes do fim de semana ou para a segunda-feira seguinte? Isso só se aplica se Ignorar fins de semana for selecionado.</help>
+    <label>Reagendar para</label>
+    <picklistValues>
+        <masterLabel>Monday</masterLabel>
+        <translation>Segunda-feira</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Friday</masterLabel>
+        <translation>Sexta-feira</translation>
+    </picklistValues>
+</CustomFieldTranslation>

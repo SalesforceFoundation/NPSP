@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Congressional_District__c</name>
+    <help>A jurisdição eleitoral federal em que o Endereço está.</help>
+    <label>Jurisdição eleitoral federal</label>
+</CustomFieldTranslation>

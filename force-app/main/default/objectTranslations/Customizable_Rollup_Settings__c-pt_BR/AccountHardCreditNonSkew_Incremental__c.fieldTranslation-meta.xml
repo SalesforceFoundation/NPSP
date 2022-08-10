@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>AccountHardCreditNonSkew_Incremental__c</name>
+    <help>Quando marcado, o trab. noturno de Crédito direto de conta (não distorcido) limita o n.º de contas para recálculo procurando oport. atualizadas recentemente nessas Contas. Isso ajuda a melhorar o desempenho do trab. noturno de Totalização personalizável.</help>
+    <label>Créd. dir. conta increm. não distorcido</label>
+</CustomFieldTranslation>

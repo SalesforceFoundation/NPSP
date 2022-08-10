@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>LimitRecalculatedRecurringDonations__c</name>
+    <help>Schränken Sie die Anzahl der wiederkehrenden Spenden ein, die im Rahmen des nächtlichen Batch-Auftrags für wiederkehrende Spenden neu berechnet werden, basierend auf der Aktualität der Spende.</help>
+    <label>Neuberechnete wiederk. Spenden begrenzen</label>
+</CustomFieldTranslation>

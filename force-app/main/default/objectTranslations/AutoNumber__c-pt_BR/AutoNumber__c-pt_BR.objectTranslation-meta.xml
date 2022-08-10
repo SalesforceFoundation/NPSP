@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <nameFieldLabel>Nome da numeração automática</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Nome da numeração automática</label>
+    </standardFields>
+    <gender>Masculine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>AutoNumber</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>AutoNumbers</value>
+    </caseValues>
+</CustomObjectTranslation>
