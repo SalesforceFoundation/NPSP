@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Batch_Status__c</name>
+    <label>Status do lote</label>
+    <picklistValues>
+        <masterLabel>In Progress</masterLabel>
+        <translation>Em andamento</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Complete</masterLabel>
+        <translation>Concluído</translation>
+    </picklistValues>
+</CustomFieldTranslation>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label>Entrada de BDE FS</label>
+        <name>BDE_Entry_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label>Lista de BDE FS</label>
+        <name>BDE_List_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label>Gerenciar a personalização de família</label>
+        <name>Manage_Household_Custom</name>
+    </fieldSets>
+    <webLinks>
+        <name>Manage_Household</name>
+        <label>Gerenciar família</label>
+    </webLinks>
+    <webLinks>
+        <name>New_Gift</name>
+        <label>Nova doação</label>
+    </webLinks>
+    <webLinks>
+        <name>Recalculate_Rollups</name>
+        <label>Recalcular totalizações</label>
+    </webLinks>
+    <layouts>
+        <layout>Organization Layout</layout>
+        <sections>
+            <label>Campos</label>
+            <section>Fields</section>
+        </sections>
+        <sections>
+            <label>Endereço</label>
+            <section>Address</section>
+        </sections>
+        <sections>
+            <label>Descrição</label>
+            <section>Description</section>
+        </sections>
+        <sections>
+            <label>Informações sobre a doação</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Doações totais</label>
+            <section>Donation Totals</section>
+        </sections>
+        <sections>
+            <label>Informações de associação</label>
+            <section>Membership Information</section>
+        </sections>
+        <sections>
+            <label>Informações de bolsa</label>
+            <section>Grantmaking Information</section>
+        </sections>
+        <sections>
+            <label>Informações sobre doação correspondente</label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label>Comentários de doação corresp.</label>
+            <section>Matching Gift Comments</section>
+        </sections>
+        <sections>
+            <label>Links personalizados</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Household Layout</layout>
+        <sections>
+            <label>Campos</label>
+            <section>Fields</section>
+        </sections>
+        <sections>
+            <label>Endereço</label>
+            <section>Address</section>
+        </sections>
+        <sections>
+            <label>Descrição</label>
+            <section>Description</section>
+        </sections>
+        <sections>
+            <label>Informações sobre a doação</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Doações totais</label>
+            <section>Donation Totals</section>
+        </sections>
+        <sections>
+            <label>Informações de associação</label>
+            <section>Membership Information</section>
+        </sections>
+        <sections>
+            <label>Links personalizados</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+</CustomObjectTranslation>

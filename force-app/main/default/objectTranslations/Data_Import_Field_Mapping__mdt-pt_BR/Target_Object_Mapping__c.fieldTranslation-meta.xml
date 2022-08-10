@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Target_Object_Mapping__c</name>
+    <help>O grupo de objetos de importação de dados de destino para este mapeamento de campos.</help>
+    <relationshipLabel>Mapeamentos de campo imp. de dados</relationshipLabel>
+    <label>Mapeamento de objetos de destino</label>
+</CustomFieldTranslation>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Grant_Period_End_Date__c</name>
+    <label>Data de término do período da bolsa</label>
+</CustomFieldTranslation>

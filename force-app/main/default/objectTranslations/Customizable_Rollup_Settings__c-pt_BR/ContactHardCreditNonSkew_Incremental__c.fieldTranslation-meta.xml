@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>ContactHardCreditNonSkew_Incremental__c</name>
+    <help>Quando marcado, o trab. noturno de Crédito direto de contato (não distorcido) limita o n.º de contatos para recálculo procurando Contatos em oport. atualizadas recentemente. Isso ajuda a melhorar o desempenho do trab. noturno de Totaliz. personalizável.</help>
+    <label>Créd. dir. do Cont. incr. não distorcido</label>
+</CustomFieldTranslation>

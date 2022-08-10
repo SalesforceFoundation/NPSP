@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label>Gerenciar campos adicionais de alocações</label>
+        <name>ManageAllocationsAdditionalFields</name>
+    </fieldSets>
+    <webLinks>
+        <name>Manage_Allocations</name>
+        <label>Gerenciar alocações</label>
+    </webLinks>
+    <layouts>
+        <layout>Allocation Layout</layout>
+        <sections>
+            <label>Links personalizados</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Nome da alocação de GAU</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Nome da alocação de GAU</label>
+    </standardFields>
+    <gender>Feminine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>Alocação de GAU</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Alocações de GAU</value>
+    </caseValues>
+</CustomObjectTranslation>

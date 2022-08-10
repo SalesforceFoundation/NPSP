@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Grant_Requirements_Website__c</name>
+    <help>Uma URL que aponta para os requisitos da bolsa no site da instituição.</help>
+    <label>Site de requisitos da bolsa</label>
+</CustomFieldTranslation>

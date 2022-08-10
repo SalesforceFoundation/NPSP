@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Contact_Matching_Rule__c</name>
-    <help>既存の取引先責任者に対してデータインポートレコード内の取引先責任者を照合するときのルールを指定します。</help>
+    <help>データインポートレコードの取引先責任者を既存の取引先責任者とどうマッチングするかを指定します。取引先責任者重複ルールでは取引先責任者オブジェクトについてすべての有効な重複ルールを実行してベストマッチを見つけます。重複ルールは [設定] | [重複管理] で管理されます。</help>
     <label>取引先責任者マッチングルール</label>
 </CustomFieldTranslation>

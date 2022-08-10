@@ -5,6 +5,14 @@
         <label>El Id. de autenticación no puede estar en blanco.</label>
     </customLabels>
     <customLabels>
+        <name>installmentPeriod</name>
+        <label>Frecuencia</label>
+    </customLabels>
+    <customLabels>
+        <name>recurringDonationSchedule</name>
+        <label>Programación de donación recurrente</label>
+    </customLabels>
+    <customLabels>
         <name>Addr_No_Batch</name>
         <label>El servicio especificado no admite verificación de direcciones en lote.</label>
     </customLabels>
@@ -869,6 +877,14 @@
         <label>Debe activar Donaciones recurrentes mejoradas avanzada antes de poder procesar donaciones recurrentes.</label>
     </customLabels>
     <customLabels>
+        <name>RD2_PaidInstallments</name>
+        <label>Abonos realizados:</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_NextDonationDate</name>
+        <label>Próxima fecha de abono:</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_ElevateCancelInProgress</name>
         <label>Cancelación de pago recurrente en progreso</label>
     </customLabels>
@@ -897,12 +913,24 @@
         <label>No hay errores</label>
     </customLabels>
     <customLabels>
+        <name>RD2_ViewMoreDetails</name>
+        <label>Ver más detalles</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ViewLessDetails</name>
+        <label>Ver menos detalles</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_ElevateNotSupported</name>
         <label>Esta función no se admite en estos momentos para Donaciones recurrentes generadas desde Servicios de pago de Elevate.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevatePendingStatus</name>
         <label>Proceso de Elevate pendiente</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevatePermissionRequired</name>
+        <label>Gestione esta donación recurrente en Elevate.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRDAmountMustBeValid</name>
@@ -915,6 +943,10 @@
     <customLabels>
         <name>RD2_ElevateRDClosedStatusCannotBeChanged</name>
         <label>No puede modificar el estado de una donación recurrente de Elevate conectada cuando Estado es Cerrado.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDCannotBeFixedLength</name>
+        <label>Una donación recurrente conectada con Elevate no puede tener un Tipo de recurrencia como Fijo.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRDDayOfMonthCannotChange</name>
@@ -935,6 +967,22 @@
     <customLabels>
         <name>RD2_ElevateRecordCreateFailed</name>
         <label>No se pudo crear un pago recurrente de Elevate. Póngase en contacto con su administrador del sistema para obtener asistencia.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDCancellingTitle</name>
+        <label>Se envió su solicitud de detener su donación recurrente.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDCancellingMessage</name>
+        <label>Esto puede tardar algún tiempo. Actualice la página para comprobar el estado. Contáctenos si necesita ayuda.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDStopDonationMessage</name>
+        <label>La organización sin ánimo de lucro no procesará donaciones futuras para esta donación recurrente.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_NonElevateRDCancellingTitle</name>
+        <label>Se detuvo su donación recurrente.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementDisabledHeader</name>
@@ -1214,6 +1262,30 @@
     <customLabels>
         <name>RD2_EntryFormSaveACHMessage</name>
         <label>Enviando información de ACH a Elevate...</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ACH_Payment_Method_Label</name>
+        <label>Cuenta bancaria</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Payment_Method</name>
+        <label>Método de pago</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Payment_method_was_updated</name>
+        <label>Se actualizó el método de pago.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Recurring_Donation_was_updated</name>
+        <label>Se actualizó la donación recurrente.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Payment_Details</name>
+        <label>Detalles de pago</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Credit_Card_Payment_Method_Label</name>
+        <label>Tarjeta de crédito</label>
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormSaveCreditCardValidationMessage</name>
@@ -1541,6 +1613,74 @@
     <customLabels>
         <name>RecurringDonationNameSuffix</name>
         <label>Recurrente</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_achElevatePayment</name>
+        <label>{0}, *{1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_creditCardElevatePayment</name>
+        <label>{0}, *{1} Cad.{2}/{3}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_firstDonation</name>
+        <label>Primera donación</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_finalDonation</name>
+        <label>Donación final</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_firstOrdinalNumber</name>
+        <label>ro</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyOnThePeriod</name>
+        <label>El {0}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyPeriodOnTheDayOfTheMonth</name>
+        <label>{0} el {1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyYearly</name>
+        <label>Cada {0} años</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyMonthly</name>
+        <label>Cada {0} meses el {1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyWeekly</name>
+        <label>Cada {0} semanas</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyFirstAndFifteenth</name>
+        <label>Cada {0} {1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_lastModified</name>
+        <label>Última modificación</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_mostRecentDonation</name>
+        <label>Donación más reciente</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_nextDonation</name>
+        <label>Próxima donación</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_otherOrdinalNumber</name>
+        <label>to</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_secondOrdinalNumber</name>
+        <label>do</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_thirdOrdinalNumber</name>
+        <label>ro</label>
     </customLabels>
     <customLabels>
         <name>RD_ContactMustBelongToAccount</name>
@@ -1963,15 +2103,23 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>Desde el 1 de octubre de 2020, Entrada de datos en lote ya no se admite. La mayoría de las funciones han sido sustituidas por nuevas funciones en NPSP. Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de datos en lote. Póngase en contacto con el servicio de asistencia si necesita acceder a lotes en curso&lt;br/&gt;. Puede explorar Entrada de regalos como una alternativa a Entrada de datos en lote en la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentación de NPSP&lt;/a&gt;.</label>
+        <label>Desde el 1 de octubre de 2020, Entrada de datos en lote ya no se admite. La mayoría de las funciones han sido sustituidas por nuevas funciones en NPSP. Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de datos en lote. Póngase en contacto con el servicio de asistencia si necesita acceder a lotes en curso&lt;br/&gt;. Puede explorar Entrada de regalos como una alternativa a Entrada de datos en lote en la &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;Documentación de NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
-        <label>El 1 de octubre de 2020, Entrada de datos en lote quedará retirada y dejará de funcionar en NPSP. Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de datos en lote. Para garantizar una transición sin problemas, active y utilice Entrada de regalos antes del 1 de octubre. Conozca más detalles sobre Entrada de regalos en la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentación de NPSP&lt;/a&gt;.</label>
+        <label>El 1 de octubre de 2020, Entrada de datos en lote quedará retirada y dejará de funcionar en NPSP. Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de datos en lote. Para garantizar una transición sin problemas, active y utilice Entrada de regalos antes del 1 de octubre. Conozca más detalles sobre Entrada de regalos en la &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;Documentación de NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
         <label>Retirada de Entrada de datos en lote</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiAPIBatchError</name>
+        <label>No pudimos procesar los registros de importación de datos debido a los siguientes errores:</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiAPISelectedError</name>
+        <label>No pudimos procesar los registros de importación de datos seleccionados debido a los siguientes errores:</label>
     </customLabels>
     <customLabels>
         <name>bdiAccountCustomIdError</name>
@@ -2036,6 +2184,10 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     <customLabels>
         <name>bdiContactCustomIdError</name>
         <label>El campo Id. exclusivo personalizado del Contacto {0} debe tener campos coincidentes en el objeto Importación de datos de NPSP cuyos nombres de API son {1} y {2}.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiContactMatchDupeMgmt</name>
+        <label>Reglas de duplicados de contactos</label>
     </customLabels>
     <customLabels>
         <name>bdiContactMatchEmail</name>
@@ -2148,6 +2300,10 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     <customLabels>
         <name>bdiDryRunTitle</name>
         <label>NPSP Data Importer - Ejecución en seco</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiDupeMgmtMatchImportStatus</name>
+        <label>- Regla de duplicados:</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorBatchNameRequired</name>
@@ -2556,6 +2712,26 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <label>Iniciar proceso de importación</label>
     </customLabels>
     <customLabels>
+        <name>bdiSelectCantProcessBatchDIRecords</name>
+        <label>Seleccionó registros vinculados a un Lote de importación de datos de NPSP. Para importar registros asociados con un Lote de importación de datos de NPSP, abra el lote y haga clic en Procesar lote.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectCantProcessImportedRecords</name>
+        <label>No puede importar registros que ya se han importado. Elimine los registros con el estado Importado de su selección.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectNoDIRecordsSelected</name>
+        <label>Seleccione uno o más registros de importación de datos.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectReturnToListView</name>
+        <label>Volver</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectTooManyDIRecords</name>
+        <label>Seleccione un máximo de {0} registros de importación de datos.</label>
+    </customLabels>
+    <customLabels>
         <name>bdiSettingsSectionContactMatching</name>
         <label>Coincidencia de contactos y cuentas</label>
     </customLabels>
@@ -2829,7 +3005,7 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>El 13 de julio de 2021, Entrada de regalos en lote quedará retirada y dejará de funcionar en NPSP. Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de regalos en lote. Para garantizar una transición sin problemas, active y utilice Entrada de regalos antes del 13 de julio. Conozca más detalles sobre Entrada de regalos en la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentación de NPSP&lt;/a&gt;.</label>
+        <label>El 13 de julio de 2021, Entrada de regalos en lote quedará retirada y dejará de funcionar en NPSP. Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de regalos en lote. Para garantizar una transición sin problemas, active y utilice Entrada de regalos antes del 13 de julio. Conozca más detalles sobre Entrada de regalos en la &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;Documentación de NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -2844,7 +3020,7 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <label>A fecha del 13 de julio de 2021, Entrada de regalos en lote dejará de admitirse y queda sustituida por Entrada de regalos.
 Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de regalos en lote.
 Póngase en contacto con el servicio de asistencia si necesita acceder a lotes en curso.
-Puede explorar Entrada de regalos como una alternativa a Entrada de regalos en lote en la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentación de NPSP&lt;/a&gt;.</label>
+Puede explorar Entrada de regalos como una alternativa a Entrada de regalos en lote en la &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;Documentación de NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -3046,6 +3222,10 @@ Puede explorar Entrada de regalos como una alternativa a Entrada de regalos en l
         <label>Cerrar</label>
     </customLabels>
     <customLabels>
+        <name>commonCancelAndClose</name>
+        <label>Cancelar y cerrar</label>
+    </customLabels>
+    <customLabels>
         <name>commonConcurrentBatchError</name>
         <label>Ya hay un trabajo ejecutándose en la clase de Apex {0}. El trabajo debe completarse antes de que pueda ejecutarse de nuevo.</label>
     </customLabels>
@@ -3176,6 +3356,10 @@ Puede explorar Entrada de regalos como una alternativa a Entrada de regalos en l
     <customLabels>
         <name>commonRecordsProcessed</name>
         <label>Registros procesados</label>
+    </customLabels>
+    <customLabels>
+        <name>commonRefreshPage</name>
+        <label>Actualice la página para mostrar las actualizaciones más recientes.</label>
     </customLabels>
     <customLabels>
         <name>commonRequired</name>
@@ -3355,7 +3539,7 @@ Puede explorar Entrada de regalos como una alternativa a Entrada de regalos en l
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>Vea todos los contactos duplicados encontrados empleando reglas de coincidencia. &lt;a href=&apos;https://powerofus.force.com/IP_Contacts&apos; target=&apos;_blank&apos;&gt;&lt;b&gt;Más información &lt;/b&gt;&lt;/a&gt;</label>
+        <label>Vea todos los contactos duplicados encontrados empleando reglas de coincidencia. &lt;a href=&quot;https://powerofus.force.com/IP_Contacts&quot; target=&quot;_blank&quot;&gt;&lt;b&gt;Más información &lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>
@@ -3432,6 +3616,14 @@ Puede explorar Entrada de regalos como una alternativa a Entrada de regalos en l
     <customLabels>
         <name>geAddSoftCredit</name>
         <label>Agregar crédito blando</label>
+    </customLabels>
+    <customLabels>
+        <name>geRecurringGiftModalWarning</name>
+        <label>No se permite aplicar una programación de donación recurrente a una Oportunidad, Pago existente o aportar créditos blandos en Entrada de regalos.</label>
+    </customLabels>
+    <customLabels>
+        <name>geSoftCreditsWarning</name>
+        <label>No se admiten créditos blandos en Entrada de regalos para donaciones recurrentes.</label>
     </customLabels>
     <customLabels>
         <name>geA11ySection</name>
@@ -3827,6 +4019,38 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     <customLabels>
         <name>geFieldsNotFoundMessage</name>
         <label>Este formulario contiene campos que no se pueden encontrar. Consúltelo con su administrador.</label>
+    </customLabels>
+    <customLabels>
+        <name>geAddSchedule</name>
+        <label>Agregar programación recurrente</label>
+    </customLabels>
+    <customLabels>
+        <name>geUpdateSchedule</name>
+        <label>Actualizar programación recurrente</label>
+    </customLabels>
+    <customLabels>
+        <name>geMakeRecurring</name>
+        <label>Hacer recurrente</label>
+    </customLabels>
+    <customLabels>
+        <name>geRemoveSchedule</name>
+        <label>Eliminar programación recurrente</label>
+    </customLabels>
+    <customLabels>
+        <name>geEditSchedule</name>
+        <label>Modificar programación recurrente</label>
+    </customLabels>
+    <customLabels>
+        <name>geOpenEndedGiftSchedule</name>
+        <label>{0} {1} donación que comienza el {2}.</label>
+    </customLabels>
+    <customLabels>
+        <name>geFixedGiftSchedule</name>
+        <label>{0} {1} donación que comienza el {2} y que finaliza después de {3} abonos.</label>
+    </customLabels>
+    <customLabels>
+        <name>geRecurringScheduleInformation</name>
+        <label>Información de programación recurrente</label>
     </customLabels>
     <customLabels>
         <name>gsAdminSetupTitle</name>
@@ -4463,6 +4687,10 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     <customLabels>
         <name>geErrorExistingTemplateName</name>
         <label>Este nombre lo está utilizando otra plantilla. Introduzca un nombre exclusivo.</label>
+    </customLabels>
+    <customLabels>
+        <name>geErrorDonorMismatch</name>
+        <label>Para un regalo de domicilio, seleccione Contacto1 para Tipo de donante y complete los campos de Contacto.</label>
     </customLabels>
     <customLabels>
         <name>geErrorDonorTypeValidation</name>
@@ -5956,12 +6184,76 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <label>Donaciones de la organización</label>
     </customLabels>
     <customLabels>
+        <name>pmtElevatePermissionRequired</name>
+        <label>Gestione este pago en Elevate.</label>
+    </customLabels>
+    <customLabels>
         <name>pmtModifyCurrency</name>
         <label>No se pueden modificar las divisas de pago directamente. Actualice la divisa de la oportunidad principal y NPSP actualizará automáticamente la divisa de todos los registros de pago relacionados.</label>
     </customLabels>
     <customLabels>
+        <name>pmtNoRefundPermissionMessage</name>
+        <label>No tiene permiso para reembolsar pagos. Póngase en contacto con su administrador de Salesforce para obtener ayuda.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtOriginalPaymentNotCompleted</name>
+        <label>No se puede reembolsar el pago porque Elevate no ha procesado aún el pago.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtOriginalPaymentNotPaid</name>
+        <label>Este pago aún se está procesando y no se puede reembolsar aún.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtOriginalPaymentNotFound</name>
+        <label>No puede modificar un reembolso sin un pago original.</label>
+    </customLabels>
+    <customLabels>
         <name>pmtPaidPaymentDateRequired</name>
         <label>Un pago realizado debe tener una fecha de pago.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentDate</name>
+        <label>Fecha del pago</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentErrorMessage</name>
+        <label>Se produjo un error al procesar el reembolso.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmountInvalid</name>
+        <label>Introduzca un reembolso que sea inferior o igual al saldo restante.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentSuccessMessage</name>
+        <label>El reembolso se realizó correctamente.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtPaymentNotFound</name>
+        <label>No se pudo encontrar el registro del pago de Elevate correspondiente. Póngase en contacto con su administrador de Salesforce para obtener ayuda.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtPaymentNotRefundable</name>
+        <label>Este pago ya se ha reembolsado o es un reembolso en sí.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmount</name>
+        <label>Reembolsar importe</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentMessage</name>
+        <label>Reembolsar el siguiente pago:</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundProcessing</name>
+        <label>Reembolso enviado para procesamiento. Consulte el pago reembolsado en el registro Oportunidad.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentConfirmedButton</name>
+        <label>Reembolsar pago</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentTitle</name>
+        <label>¿Reembolsar pago?</label>
     </customLabels>
     <customLabels>
         <name>pmtUnpaidPaymentScheduledDateRequired</name>
@@ -7916,6 +8208,30 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>donationHistoryDatatableAriaLabel</name>
         <label>Historial de donaciones</label>
     </customLabels>
+    <customLabels>
+        <name>RD2_Actions</name>
+        <label>Acciones</label>
+    </customLabels>
+    <customLabels>
+        <name>updatePaymentMethod</name>
+        <label>Actualizar método de pago</label>
+    </customLabels>
+    <customLabels>
+        <name>changeAmountOrFrequency</name>
+        <label>Cambiar importe o frecuencia</label>
+    </customLabels>
+    <customLabels>
+        <name>stopRecurringDonation</name>
+        <label>Detener donación recurrente</label>
+    </customLabels>
+    <customLabels>
+        <name>stopRecurringDonationModalTitle</name>
+        <label>¿Detener esta donación recurrente?</label>
+    </customLabels>
+    <customLabels>
+        <name>updateRecurringDonation</name>
+        <label>Actualizar donación recurrente</label>
+    </customLabels>
     <reportTypes>
         <name>Contacts_Only</name>
         <label>Solo contactos</label>
@@ -7965,6 +8281,10 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <label>Nueva campaña</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.Pause</name>
+        <label>Pausa</label>
+    </quickActions>
+    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>Nueva afiliación</label>
     </quickActions>
@@ -7977,8 +8297,32 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <label>Nueva donación recurrente</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
+        <label>Nueva oportunidad</label>
+    </quickActions>
+    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>Nueva donación recurrente</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__oppPayment__c.Refund</name>
+        <label>Reembolso</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Quick_Update</name>
+        <label>Actualización rápida</label>
+    </quickActions>
+    <quickActions>
+        <name>npo02__Household__c.Update_Household</name>
+        <label>Actualizar hogar</label>
+    </quickActions>
+    <quickActions>
+        <name>Address__c.Update_Address</name>
+        <label>Actualizar dirección</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
+        <label>Cerrar donación recurrente</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -7999,6 +8343,10 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>Nueva relación</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Quick_Update</name>
+        <label>Actualización rápida</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>

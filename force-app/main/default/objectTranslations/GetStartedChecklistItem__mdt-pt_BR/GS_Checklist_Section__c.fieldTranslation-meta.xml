@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>GS_Checklist_Section__c</name>
+    <help>A seção na página Introdução da qual este item faz parte.</help>
+    <relationshipLabel>Itens Lista de verificação da Introdução</relationshipLabel>
+    <label>Seção Lista de verificação da Introdução</label>
+</CustomFieldTranslation>

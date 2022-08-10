@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>LimitRecalculatedRecurringDonations__c</name>
+    <help>Limitez le nombre de dons récurrents qui sont recalculés pendant le traitement de nuit par lots des dons récurrents en fonction de la récence du don.</help>
+    <label>Limiter les dons récurrents recalculés</label>
+</CustomFieldTranslation>

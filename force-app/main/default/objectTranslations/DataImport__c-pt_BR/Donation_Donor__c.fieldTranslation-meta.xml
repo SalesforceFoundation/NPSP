@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Donor__c</name>
+    <help>Especifica se a doação é uma doação individual do Contact1 ou uma doação organizacional da Account1.</help>
+    <label>Doador de doação</label>
+    <picklistValues>
+        <masterLabel>Contact1</masterLabel>
+        <translation>Contact1</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Account1</masterLabel>
+        <translation>Account1</translation>
+    </picklistValues>
+</CustomFieldTranslation>

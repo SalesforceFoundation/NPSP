@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Soft_Credit_Last_N_Days__c</name>
+    <help>O valor total de crédito indireto atribuído a este Contato nos últimos N dias. O valor de N é definido em Configurações do NPSP | Doações | Estatísticas do doador.</help>
+    <label>Crédito indireto nos últimos N dias</label>
+</CustomFieldTranslation>

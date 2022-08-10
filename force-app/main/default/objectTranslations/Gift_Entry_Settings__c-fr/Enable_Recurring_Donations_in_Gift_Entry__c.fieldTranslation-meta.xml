@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Enable_Recurring_Donations_in_Gift_Entry__c</name>
+    <help>Indique si les dons récurrents sont disponibles dans la saisie des dons.</help>
+    <label>Activer les DR dans la saisie des dons</label>
+</CustomFieldTranslation>

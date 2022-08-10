@@ -9,8 +9,12 @@
         <label>Importierte Datenimportdatensätze löschen</label>
     </webLinks>
     <webLinks>
+        <name>Import_Selected_Data_Import_Records</name>
+        <label>Ausgewählte Datenimportdatensätze importieren</label>
+    </webLinks>
+    <webLinks>
         <name>Process_Data_Import</name>
-        <label>Datenimport starten</label>
+        <label>Alle Datenimportdatensätze importieren</label>
     </webLinks>
     <layouts>
         <layout>Data Import Layout</layout>
