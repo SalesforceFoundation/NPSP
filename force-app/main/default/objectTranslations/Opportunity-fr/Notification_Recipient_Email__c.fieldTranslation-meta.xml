@@ -2,5 +2,5 @@
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Notification_Recipient_Email__c</name>
     <help>Adresse e-mail de la personne qui reçoit la notification relative à l’hommage ou à la commémoration.</help>
-    <label>Adresse e-mail du destinataire</label>
+    <label>Adresse e-mail destinataire notification</label>
 </CustomFieldTranslation>

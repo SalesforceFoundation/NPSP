@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label>LevelEdit</label>
+        <name>LevelEdit</name>
+    </fieldSets>
+    <validationRules>
+        <errorMessage>O destino é um campo obrigatório no nível. Especifique o objeto de destino para este nível.</errorMessage>
+        <name>Target_Required</name>
+    </validationRules>
+    <layouts>
+        <layout>Level Layout</layout>
+        <sections>
+            <label>seção de texto longo</label>
+            <section>long text section</section>
+        </sections>
+        <sections>
+            <label>Links personalizados</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Nome do nível</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Nome do nível</label>
+    </standardFields>
+    <gender>Masculine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>Nível</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Níveis</value>
+    </caseValues>
+</CustomObjectTranslation>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>General_Accounting_Unit__c</name>
+    <help>A Unidade contábil geral à qual esta Alocação é atribuída. Apenas unidades contábeis gerais marcadas como ativas estão disponíveis para novas alocações.</help>
+    <relationshipLabel>Alocações de GAU</relationshipLabel>
+    <label>Unidade contábil geral</label>
+</CustomFieldTranslation>

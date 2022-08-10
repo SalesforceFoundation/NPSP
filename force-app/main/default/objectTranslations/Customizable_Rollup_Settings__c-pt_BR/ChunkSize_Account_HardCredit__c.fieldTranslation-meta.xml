@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>ChunkSize_Account_HardCredit__c</name>
+    <help>PARA ORGANIZAÇÕES LDV SOMENTE COM DIRETRIZES DA SFDO. Para evitar tempo limite de consulta no trabalho de lote de totalização em organizações com muitos milhões de Contas, isso especifica o número máximo de Contas processadas em cada lote.</help>
+    <label>LDV: parte do crédito direto da conta</label>
+</CustomFieldTranslation>

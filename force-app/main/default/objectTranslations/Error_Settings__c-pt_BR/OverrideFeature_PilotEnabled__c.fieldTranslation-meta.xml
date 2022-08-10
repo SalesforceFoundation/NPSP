@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>OverrideFeature_PilotEnabled__c</name>
+    <help>Não atualizar. Apenas para testes piloto da Salesforce.org. Permite a substituição limitada do parâmetro de recurso PilotEnabled em organizações temporárias para suportar testes piloto em orgs teste onde não há licença de produto associada na LMO.</help>
+    <label>Subst. de org. teste: piloto ativado</label>
+</CustomFieldTranslation>

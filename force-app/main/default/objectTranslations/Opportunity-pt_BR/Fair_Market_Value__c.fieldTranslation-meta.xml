@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Fair_Market_Value__c</name>
+    <help>O Valor justo de mercado de uma doação em espécie.</help>
+    <label>Valor justo de mercado</label>
+</CustomFieldTranslation>

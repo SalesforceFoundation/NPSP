@@ -5,6 +5,14 @@
         <label>Sie müssen eine Authentifizierungskennung angeben.</label>
     </customLabels>
     <customLabels>
+        <name>installmentPeriod</name>
+        <label>Ratenlaufzeit</label>
+    </customLabels>
+    <customLabels>
+        <name>recurringDonationSchedule</name>
+        <label>Zeitplan für wiederkehrende Spenden</label>
+    </customLabels>
+    <customLabels>
         <name>Addr_No_Batch</name>
         <label>Der angegebene Service unterstützt nicht die Batch-Adressenüberprüfung.</label>
     </customLabels>
@@ -869,6 +877,14 @@
         <label>Sie müssen Erweiterte wiederkehrende Spenden aktivieren, damit Sie wiederkehrende Spenden verarbeiten können.</label>
     </customLabels>
     <customLabels>
+        <name>RD2_PaidInstallments</name>
+        <label>Bezahlte Raten:</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_NextDonationDate</name>
+        <label>Datum der nächsten Rate:</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_ElevateCancelInProgress</name>
         <label>Der Abbruch der wiederkehrenden Spenden wird verarbeitet</label>
     </customLabels>
@@ -897,12 +913,24 @@
         <label>Keine Fehler</label>
     </customLabels>
     <customLabels>
+        <name>RD2_ViewMoreDetails</name>
+        <label>Mehr Details anzeigen</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ViewLessDetails</name>
+        <label>Weniger Details anzeigen</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_ElevateNotSupported</name>
         <label>Diese Funktionalität wird aktuell für wiederkehrende Spenden, die von Elevate-Zahlungsservices erstellt wurden, nicht unterstützt.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevatePendingStatus</name>
         <label>Ausstehender Elevate-Prozess</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevatePermissionRequired</name>
+        <label>Diese wiederkehrende Spende in Elevate verwalten.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRDAmountMustBeValid</name>
@@ -915,6 +943,10 @@
     <customLabels>
         <name>RD2_ElevateRDClosedStatusCannotBeChanged</name>
         <label>Sie können den Status einer mit Elevate verbundenen wiederkehrenden Spende nicht bearbeiten, wenn der Status &quot;Geschlossen&quot; ist.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDCannotBeFixedLength</name>
+        <label>Eine mit Elevate verbundene wiederkehrende Spende kann nicht den Wiederholungstyp &quot;Befristet&quot; aufweisen.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRDDayOfMonthCannotChange</name>
@@ -935,6 +967,22 @@
     <customLabels>
         <name>RD2_ElevateRecordCreateFailed</name>
         <label>Eine wiederkehrende Elevate-Zahlung konnte nicht erstellt werden. Bitten Sie Ihren Systemadministrator um Unterstützung.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDCancellingTitle</name>
+        <label>Ihr Antrag auf Beendigung Ihrer wiederkehrenden Spende wurde eingereicht.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDCancellingMessage</name>
+        <label>Dies kann einige Zeit dauern. Aktualisieren Sie die Seite, um den Status zu überprüfen. Wenden Sie sich an uns, wenn Sie Hilfe benötigen.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDStopDonationMessage</name>
+        <label>Die gemeinnützige Organisation wird keine weiteren Einzelspenden für diese wiederkehrende Spende bearbeiten.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_NonElevateRDCancellingTitle</name>
+        <label>Ihre wiederkehrende Spende wurde beendet.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementDisabledHeader</name>
@@ -1214,6 +1262,30 @@
     <customLabels>
         <name>RD2_EntryFormSaveACHMessage</name>
         <label>Informationen zur Clearing-Zentrale werden an Elevate gesendet...</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ACH_Payment_Method_Label</name>
+        <label>Bankkonto</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Payment_Method</name>
+        <label>Zahlungsmethode</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Payment_method_was_updated</name>
+        <label>Die Zahlungsmethode wurde aktualisiert.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Recurring_Donation_was_updated</name>
+        <label>Die wiederkehrende Spende wurde aktualisiert.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Payment_Details</name>
+        <label>Zahlungsdetails</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Credit_Card_Payment_Method_Label</name>
+        <label>Kreditkarte</label>
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormSaveCreditCardValidationMessage</name>
@@ -1541,6 +1613,74 @@
     <customLabels>
         <name>RecurringDonationNameSuffix</name>
         <label>Wiederkehrend</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_achElevatePayment</name>
+        <label>{0}, *{1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_creditCardElevatePayment</name>
+        <label>{0}, *{1} Exp.{2}/{3}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_firstDonation</name>
+        <label>Erste Spende</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_finalDonation</name>
+        <label>Letzte Spende</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_firstOrdinalNumber</name>
+        <label>.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyOnThePeriod</name>
+        <label>Am Tag {0}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyPeriodOnTheDayOfTheMonth</name>
+        <label>{0} am {1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyYearly</name>
+        <label>Alle {0} Jahre</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyMonthly</name>
+        <label>Alle {0} Monate am {1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyWeekly</name>
+        <label>Alle {0} Wochen</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyFirstAndFifteenth</name>
+        <label>Jeden {0} {1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_lastModified</name>
+        <label>Letzte Änderung</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_mostRecentDonation</name>
+        <label>Letzte Spende</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_nextDonation</name>
+        <label>Nächste Spende</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_otherOrdinalNumber</name>
+        <label>.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_secondOrdinalNumber</name>
+        <label>.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_thirdOrdinalNumber</name>
+        <label>.</label>
     </customLabels>
     <customLabels>
         <name>RD_ContactMustBelongToAccount</name>
@@ -1963,15 +2103,23 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>Seit dem 1. Oktober 2020 wird die Batch-Dateneingabe nicht mehr unterstützt. Die meisten Funktionen wurden durch neuere Features in NPSP ersetzt. Wenn sich bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Dateneingabe verarbeiten. Wenden Sie sich an den Support, wenn Sie auf in Bearbeitung befindliche Datensätze zugreifen müssen. &lt;br/&gt; Sie sollten sich Spendeneintrag als Alternative zur Batch-Dateneingabe ansehen. Weitere Informationen zum Spendeneintrag finden Sie in der &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
+        <label>Seit dem 1. Oktober 2020 wird die Batch-Dateneingabe nicht mehr unterstützt. Die meisten Funktionen wurden durch neuere Features in NPSP ersetzt. Wenn sich bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Dateneingabe verarbeiten. Wenden Sie sich an den Support, wenn Sie auf in Bearbeitung befindliche Datensätze zugreifen müssen. &lt;br/&gt; Sie sollten sich Spendeneintrag als Alternative zur Batch-Dateneingabe ansehen. Weitere Informationen zum Spendeneintrag finden Sie in der &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
-        <label>Am 1. Oktober 2020 wird die Batch-Dateneingabe deaktiviert und funktioniert dann in NPSP nicht mehr. Wenn sich zu diesem Zeitpunkt bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Dateneingabe verarbeiten. Um einen reibungslosen Übergang zu gewährleisten, aktivieren und verwenden Sie den Spendeneintrag vor dem 1. Oktober. Weitere Informationen zum Spendeneintrag finden Sie in der &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
+        <label>Am 1. Oktober 2020 wird die Batch-Dateneingabe deaktiviert und funktioniert dann in NPSP nicht mehr. Wenn sich zu diesem Zeitpunkt bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Dateneingabe verarbeiten. Um einen reibungslosen Übergang zu gewährleisten, aktivieren und verwenden Sie den Spendeneintrag vor dem 1. Oktober. Weitere Informationen zum Spendeneintrag finden Sie in der &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
         <label>Einstellung der Batch-Dateneingabe</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiAPIBatchError</name>
+        <label>Wir konnten die Datenimportdatensätze aufgrund der folgenden Fehler nicht verarbeiten:</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiAPISelectedError</name>
+        <label>Wir konnten die ausgewählten Datenimportdatensätze aufgrund der folgenden Fehler nicht verarbeiten:</label>
     </customLabels>
     <customLabels>
         <name>bdiAccountCustomIdError</name>
@@ -2036,6 +2184,10 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     <customLabels>
         <name>bdiContactCustomIdError</name>
         <label>Das Feld {0} für die Einstellung der benutzerdefinierten eindeutigen Kennung des Kontakts muss mit Feldern im NPSP-Datenimportobjekt übereinstimmen, deren API-Namen {1} und {2} lauten.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiContactMatchDupeMgmt</name>
+        <label>Doppelt vorhandene Kontaktregeln</label>
     </customLabels>
     <customLabels>
         <name>bdiContactMatchEmail</name>
@@ -2148,6 +2300,10 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     <customLabels>
         <name>bdiDryRunTitle</name>
         <label>NPSP-Datenimportprogramm – Testausführung</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiDupeMgmtMatchImportStatus</name>
+        <label>– Doppelt vorhandene Regel:</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorBatchNameRequired</name>
@@ -2559,6 +2715,26 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <label>Datenimportvorgang beginnen</label>
     </customLabels>
     <customLabels>
+        <name>bdiSelectCantProcessBatchDIRecords</name>
+        <label>Sie haben Datensätze ausgewählt, die mit einem NPSP-Datenimport-Batch verknüpft sind. Zum Importieren von Datensätzen, die einem NPSP-Datenimport-Batch zugeordnet sind, öffnen Sie den Batch, und klicken Sie auf &quot;Batch verarbeiten&quot;.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectCantProcessImportedRecords</name>
+        <label>Sie können keine Datensätze importieren, die bereits importiert wurden. Entfernen Sie Datensätze mit dem Status &quot;Importiert&quot; aus Ihrer Auswahl.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectNoDIRecordsSelected</name>
+        <label>Wählen Sie mindestens einen Datenimportdatensatz aus.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectReturnToListView</name>
+        <label>Zurück</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectTooManyDIRecords</name>
+        <label>Wählen Sie bis zu {0} Datenimport-Datensätze aus.</label>
+    </customLabels>
+    <customLabels>
         <name>bdiSettingsSectionContactMatching</name>
         <label>Kontakt- und Account-Abgleich</label>
     </customLabels>
@@ -2832,7 +3008,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>Am 13. Juli 2021 wird das Legacy-Batch-Spendeneintragsmodul deaktiviert und funktioniert dann in NPSP nicht mehr. Wenn sich zu diesem Zeitpunkt bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Spendeneingabe verarbeiten. Um einen reibungslosen Übergang zu gewährleisten, aktivieren und verwenden Sie vor dem 13. Juli den neueren Spendeneintrag. Weitere Informationen zum Spendeneintrag finden Sie in der &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
+        <label>Am 13. Juli 2021 wird das Legacy-Batch-Spendeneintragsmodul deaktiviert und funktioniert dann in NPSP nicht mehr. Wenn sich zu diesem Zeitpunkt bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Spendeneingabe verarbeiten. Um einen reibungslosen Übergang zu gewährleisten, aktivieren und verwenden Sie vor dem 13. Juli den neueren Spendeneintrag. Weitere Informationen zum Spendeneintrag finden Sie in der &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -2848,7 +3024,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
             Wenn sich bei Ihnen noch Batches in Bearbeitung befinden, können Sie nach wie vor auf die betreffenden Datensätze zugreifen, sie jedoch nicht mehr mithilfe des Batch-Spendeneintrags bearbeiten.
             Wenden Sie sich an den Support, wenn Sie Zugriff auf in Bearbeitung befindliche Batches benötigen.
             Sie sollten sich den Spendeneintrag als Alternative zum Batch-Spendeneintrag ansehen.
-            Weitere Informationen zum Spendeneintrag finden Sie in der &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
+            Weitere Informationen zum Spendeneintrag finden Sie in der &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -3053,6 +3229,10 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <label>Schließen</label>
     </customLabels>
     <customLabels>
+        <name>commonCancelAndClose</name>
+        <label>Abbrechen und schließen</label>
+    </customLabels>
+    <customLabels>
         <name>commonConcurrentBatchError</name>
         <label>In der Apex-Klasse {0} wird bereits ein Auftrag ausgeführt. Der Auftrag muss abgeschlossen werden, bevor er erneut ausgeführt werden kann.</label>
     </customLabels>
@@ -3183,6 +3363,10 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     <customLabels>
         <name>commonRecordsProcessed</name>
         <label>Verarbeitete Datensätze</label>
+    </customLabels>
+    <customLabels>
+        <name>commonRefreshPage</name>
+        <label>Aktualisieren Sie die Seite, um die neuesten Updates anzuzeigen.</label>
     </customLabels>
     <customLabels>
         <name>commonRequired</name>
@@ -3362,7 +3546,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>Zeigen Sie alle doppelten Kontakte an, die mithilfe von Zuordnungsregeln gefunden wurden. &lt;a href=&apos;https://powerofus.force.com/IP_Contacts&apos; target=&apos;_blank&apos;&gt;&lt;b&gt; Weitere Informationen &lt;/b&gt;&lt;/a&gt;</label>
+        <label>Zeigen Sie alle doppelten Kontakte an, die mithilfe von Zuordnungsregeln gefunden wurden. &lt;a href=&quot;https://powerofus.force.com/IP_Contacts&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; Weitere Informationen&lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>
@@ -3439,6 +3623,14 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     <customLabels>
         <name>geAddSoftCredit</name>
         <label>Soft Credit hinzufügen</label>
+    </customLabels>
+    <customLabels>
+        <name>geRecurringGiftModalWarning</name>
+        <label>Das Anwenden eines Zeitplans für wiederkehrende Spenden auf eine vorhandene Opportunity oder eine Zahlung oder das Hinzufügen von Soft Credits wird im Spendeneintrag nicht unterstützt.</label>
+    </customLabels>
+    <customLabels>
+        <name>geSoftCreditsWarning</name>
+        <label>Soft Credits in Spendeneintrag werden für wiederkehrende Spenden nicht unterstützt.</label>
     </customLabels>
     <customLabels>
         <name>geA11ySection</name>
@@ -3834,6 +4026,38 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
     <customLabels>
         <name>geFieldsNotFoundMessage</name>
         <label>Dieses Formular enthält Felder, die nicht gefunden werden können. Bitte wenden Sie sich an Ihren Administrator.</label>
+    </customLabels>
+    <customLabels>
+        <name>geAddSchedule</name>
+        <label>Wiederholungszeitplan hinzufügen</label>
+    </customLabels>
+    <customLabels>
+        <name>geUpdateSchedule</name>
+        <label>Wiederholungszeitplan aktualisieren</label>
+    </customLabels>
+    <customLabels>
+        <name>geMakeRecurring</name>
+        <label>Als wiederkehrend festlegen</label>
+    </customLabels>
+    <customLabels>
+        <name>geRemoveSchedule</name>
+        <label>Wiederholungszeitplan entfernen</label>
+    </customLabels>
+    <customLabels>
+        <name>geEditSchedule</name>
+        <label>Wiederholungszeitplan bearbeiten</label>
+    </customLabels>
+    <customLabels>
+        <name>geOpenEndedGiftSchedule</name>
+        <label>{0} {1} Spende beginnend am {2}.</label>
+    </customLabels>
+    <customLabels>
+        <name>geFixedGiftSchedule</name>
+        <label>{0} {1} Spende beginnend am {2} und endend nach {3} Raten.</label>
+    </customLabels>
+    <customLabels>
+        <name>geRecurringScheduleInformation</name>
+        <label>Informationen zum Wiederholungszeitplan</label>
     </customLabels>
     <customLabels>
         <name>gsAdminSetupTitle</name>
@@ -4470,6 +4694,10 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
     <customLabels>
         <name>geErrorExistingTemplateName</name>
         <label>Dieser Name wurde von einer anderen Vorlage verwendet. Bitte geben Sie einen eindeutigen Namen ein.</label>
+    </customLabels>
+    <customLabels>
+        <name>geErrorDonorMismatch</name>
+        <label>Wählen Sie für eine Haushaltsspende &quot;Kontakt1&quot; als &quot;Spendertyp&quot; aus, und füllen Sie die Kontaktfelder aus.</label>
     </customLabels>
     <customLabels>
         <name>geErrorDonorTypeValidation</name>
@@ -5963,12 +6191,76 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
         <label>Organisationsspenden</label>
     </customLabels>
     <customLabels>
+        <name>pmtElevatePermissionRequired</name>
+        <label>Diese Zahlung in Elevate verwalten.</label>
+    </customLabels>
+    <customLabels>
         <name>pmtModifyCurrency</name>
         <label>Sie können Währungen bei Zahlungen nicht direkt ändern. Wenn Sie die Währung der übergeordneten Opportunity aktualisieren, aktualisiert NPSP automatisch die Währung aller verwandten Zahlungsdatensätze.</label>
     </customLabels>
     <customLabels>
+        <name>pmtNoRefundPermissionMessage</name>
+        <label>Sie haben keine Berechtigung, Zahlungen zurückzuerstatten. Bitten Sie Ihren Salesforce-Administrator um Hilfe.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtOriginalPaymentNotCompleted</name>
+        <label>Die Zahlung kann nicht zurückerstattet werden, da Elevate die Zahlung noch nicht bearbeitet hat.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtOriginalPaymentNotPaid</name>
+        <label>Diese Zahlung ist noch in Bearbeitung und kann noch nicht zurückerstattet werden.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtOriginalPaymentNotFound</name>
+        <label>Sie können eine Erstattung nicht ohne Originalzahlung bearbeiten.</label>
+    </customLabels>
+    <customLabels>
         <name>pmtPaidPaymentDateRequired</name>
         <label>Eine ausgeführte Zahlung muss über ein Zahlungsdatum verfügen.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentDate</name>
+        <label>Zahlungsdatum</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentErrorMessage</name>
+        <label>Fehler beim Bearbeiten der Rückerstattung.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmountInvalid</name>
+        <label>Geben Sie eine Rückerstattung ein, die kleiner oder gleich dem Restsaldo ist.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentSuccessMessage</name>
+        <label>Die Rückerstattung war erfolgreich.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtPaymentNotFound</name>
+        <label>Der entsprechende Elevate-Zahlungsdatensatz konnte nicht gefunden werden. Bitten Sie Ihren Salesforce-Administrator um Hilfe.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtPaymentNotRefundable</name>
+        <label>Diese Zahlung wurde bereits zurückerstattet oder stellt selbst eine Erstattung dar.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmount</name>
+        <label>Erstattungsbetrag</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentMessage</name>
+        <label>Rückerstattung der folgenden Zahlung:</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundProcessing</name>
+        <label>Die Rückerstattung wurde zur Bearbeitung eingereicht. Prüfen Sie, ob die erstattete Zahlung im Opportunity-Datensatz enthalten ist.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentConfirmedButton</name>
+        <label>Zahlung zurückerstatten</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentTitle</name>
+        <label>Zahlung zurückerstatten?</label>
     </customLabels>
     <customLabels>
         <name>pmtUnpaidPaymentScheduledDateRequired</name>
@@ -7927,6 +8219,30 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <name>donationHistoryDatatableAriaLabel</name>
         <label>Spendenverlauf</label>
     </customLabels>
+    <customLabels>
+        <name>RD2_Actions</name>
+        <label>Aktionen</label>
+    </customLabels>
+    <customLabels>
+        <name>updatePaymentMethod</name>
+        <label>Zahlungsmethode aktualisieren</label>
+    </customLabels>
+    <customLabels>
+        <name>changeAmountOrFrequency</name>
+        <label>Betrag oder Häufigkeit ändern</label>
+    </customLabels>
+    <customLabels>
+        <name>stopRecurringDonation</name>
+        <label>Wiederkehrende Spende beenden</label>
+    </customLabels>
+    <customLabels>
+        <name>stopRecurringDonationModalTitle</name>
+        <label>Diese wiederkehrende Spende beenden?</label>
+    </customLabels>
+    <customLabels>
+        <name>updateRecurringDonation</name>
+        <label>Wiederkehrende Spende aktualisieren</label>
+    </customLabels>
     <reportTypes>
         <name>Contacts_Only</name>
         <label>Nur Kontakte</label>
@@ -7976,6 +8292,10 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <label>Neue Kampagne</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.Pause</name>
+        <label>Aufschub</label>
+    </quickActions>
+    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>Neue Zugehörigkeit</label>
     </quickActions>
@@ -7988,8 +8308,32 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <label>Neue wiederkehrende Spende</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
+        <label>Neue Opportunity</label>
+    </quickActions>
+    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>Neue wiederkehrende Spende</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__oppPayment__c.Refund</name>
+        <label>Rückerstattung</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Quick_Update</name>
+        <label>Schnelle Aktualisierung</label>
+    </quickActions>
+    <quickActions>
+        <name>npo02__Household__c.Update_Household</name>
+        <label>Haushalt aktualisieren</label>
+    </quickActions>
+    <quickActions>
+        <name>Address__c.Update_Address</name>
+        <label>Adresse aktualisieren</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
+        <label>Wiederkehrende Spende schließen</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -8010,6 +8354,10 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>Neue Beziehung</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Quick_Update</name>
+        <label>Schnelle Aktualisierung</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>

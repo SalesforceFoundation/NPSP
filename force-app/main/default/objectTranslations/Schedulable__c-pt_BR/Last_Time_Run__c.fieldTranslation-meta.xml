@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Last_Time_Run__c</name>
+    <help>Última vez em que o trabalho foi executado.</help>
+    <label>Última execução</label>
+</CustomFieldTranslation>

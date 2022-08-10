@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Opportunity_Naming__c</name>
+    <help>Esta configuração gera automaticamente o nome de registro para registros de oportunidade inseridos em lote com base no valor dos campos inseridos.</help>
+    <label>Nomenclatura de oportunidade</label>
+</CustomFieldTranslation>

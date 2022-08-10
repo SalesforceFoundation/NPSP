@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Disable_Error_Handling__c</name>
+    <help>Se marcado, a estrutura de tratamento de erros do NPSP será desativada.</help>
+    <label>Desativar tratamento de erros</label>
+</CustomFieldTranslation>

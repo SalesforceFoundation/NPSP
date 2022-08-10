@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Amount__c</name>
+    <help>O valor da oportunidade atribuída a esta Unidade contábil geral. Deixe em branco para alocações baseadas em porcentagem.</help>
+    <label>Valor</label>
+</CustomFieldTranslation>

@@ -217,10 +217,11 @@ public with sharing class CRLP_RollupCMT_TEST {
         rule.value = '1;Last_Day';
         rule.setValueLabel();
 
-        String expected = '1;\nLast Day Of Month';
-        if (UserInfo.getLanguage() == 'es') {
-            expected = '1;\nÚltimo día del mes';
-        }
+        String expected = '1;\n' + UTIL_Describe.getTranslatedPicklistLabel(
+            RecurringDonationSchedule__c.SObjectType,
+            RecurringDonationSchedule__c.DayOfMonth__c,
+            'Last_Day');
+
         System.assertEquals(expected, rule.valueLabel, 'The value label should have been set from the Api Name');
     }
 

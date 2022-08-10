@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>RecurringDonationLastNDays__c</name>
+    <help>Beperk opportunities die zijn inbegrepen in de totalisering voor terugkerende donaties tot de opportunities die in de laatste aantal dagen zijn gewijzigd. Batchtaken voor Tijdgebonden totalisering terugkerende donaties overschrijven deze instelling.</help>
+    <label>TD gewijzigd in de laatste aantal dagen</label>
+</CustomFieldTranslation>

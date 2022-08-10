@@ -5,6 +5,14 @@
         <label>You must provide an Auth ID.</label>
     </customLabels>
     <customLabels>
+        <name>installmentPeriod</name>
+        <label>Installment Period</label>
+    </customLabels>
+    <customLabels>
+        <name>recurringDonationSchedule</name>
+        <label>Recurring Donation Schedule</label>
+    </customLabels>
+    <customLabels>
         <name>Addr_No_Batch</name>
         <label>The specified service does not support Batch Address Verification.</label>
     </customLabels>
@@ -514,7 +522,7 @@
     </customLabels>
     <customLabels>
         <name>CRLP_BatchSkipped</name>
-        <label>Today&apos;&apos;s scheduled {0} batch job was skipped because a previous {0} job was still running. The next batch job will run as scheduled. No action is required; this error is for information purposes only.</label>
+        <label>Today&apos;s scheduled {0} batch job was skipped because a previous {0} job was still running. The next batch job will run as scheduled. No action is required; this error is for information purposes only.</label>
     </customLabels>
     <customLabels>
         <name>CRLP_CreateRollupIntroHelpText</name>
@@ -690,11 +698,11 @@
     </customLabels>
     <customLabels>
         <name>CascadeDeletionError</name>
-        <label>You can&apos;&apos;t delete {0} because it&apos;&apos;s associated with the following records. Delete or re-associate these records and then try again.&lt;br/&gt;&lt;br/&gt;{1}</label>
+        <label>You can&apos;t delete {0} because it&apos;s associated with the following records. Delete or re-associate these records and then try again.&lt;br/&gt;&lt;br/&gt;{1}</label>
     </customLabels>
     <customLabels>
         <name>CascadeDeletionErrorLightning</name>
-        <label>You can&apos;&apos;t delete {0} because it&apos;&apos;s associated with these records: {1}. Delete or re-associate these records and then try again.</label>
+        <label>You can&apos;t delete {0} because it&apos;s associated with these records: {1}. Delete or re-associate these records and then try again.</label>
     </customLabels>
     <customLabels>
         <name>DeleteAccount</name>
@@ -869,6 +877,14 @@
         <label>You must enable Enhanced Recurring Donations before you can process Recurring Donations.</label>
     </customLabels>
     <customLabels>
+        <name>RD2_PaidInstallments</name>
+        <label>Paid Installments:</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_NextDonationDate</name>
+        <label>Next Installment Date:</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_ElevateCancelInProgress</name>
         <label>Recurring Payment Cancel in Progress</label>
     </customLabels>
@@ -897,12 +913,24 @@
         <label>No Errors</label>
     </customLabels>
     <customLabels>
+        <name>RD2_ViewMoreDetails</name>
+        <label>View More Details</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ViewLessDetails</name>
+        <label>View Less Details</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_ElevateNotSupported</name>
         <label>This functionality is currently not supported for Recurring Donations generated from Elevate Payment Services.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevatePendingStatus</name>
         <label>Pending Elevate Process</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevatePermissionRequired</name>
+        <label>Manage this Recurring Donation in Elevate.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRDAmountMustBeValid</name>
@@ -915,6 +943,10 @@
     <customLabels>
         <name>RD2_ElevateRDClosedStatusCannotBeChanged</name>
         <label>You can&apos;t edit the Status for an Elevate connected Recurring Donation when Status is Closed.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDCannotBeFixedLength</name>
+        <label>An Elevate-connected Recurring Donation cannot have a Recurring Type of Fixed.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRDDayOfMonthCannotChange</name>
@@ -935,6 +967,22 @@
     <customLabels>
         <name>RD2_ElevateRecordCreateFailed</name>
         <label>An Elevate recurring payment could not be created. Contact your system administrator for assistance.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDCancellingTitle</name>
+        <label>Your request to stop your Recurring Donation was submitted.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDCancellingMessage</name>
+        <label>This can take some time. Refresh the page to check the status. Contact us if you need help.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDStopDonationMessage</name>
+        <label>The nonprofit won&apos;t process any future donations for this Recurring Donation.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_NonElevateRDCancellingTitle</name>
+        <label>Your Recurring Donation was stopped.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementDisabledHeader</name>
@@ -1216,6 +1264,30 @@
         <label>Sending ACH information to Elevate...</label>
     </customLabels>
     <customLabels>
+        <name>RD2_ACH_Payment_Method_Label</name>
+        <label>Bank Account</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Payment_Method</name>
+        <label>Payment Method</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Payment_method_was_updated</name>
+        <label>Payment method was updated.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Recurring_Donation_was_updated</name>
+        <label>Recurring Donation was updated.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Payment_Details</name>
+        <label>Payment Details</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Credit_Card_Payment_Method_Label</name>
+        <label>Credit Card</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_EntryFormSaveCreditCardValidationMessage</name>
         <label>Validating credit card...</label>
     </customLabels>
@@ -1297,7 +1369,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_PauseCannotExistOnScheduleChange</name>
-        <label>You can&apos;&apos;t update the following field(s) because this Recurring Donation is paused: {0}. If you&apos;&apos;d like to update the field(s), you must deactivate the pause.</label>
+        <label>You can&apos;t update the following field(s) because this Recurring Donation is paused: {0}. If you&apos;d like to update the field(s), you must deactivate the pause.</label>
     </customLabels>
     <customLabels>
         <name>RD2_PauseClosedRDErrorMessage</name>
@@ -1425,7 +1497,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationIntro</name>
-        <label>These settings automate changing the Recurring Donation Status when donors miss instalment payments.&lt;br/&gt;&lt;br/&gt;For example, given a monthly Recurring Donation started on January 1st, and Number of Days for Lapsed is set to 10 days, the Recurring Donation becomes Lapsed on February 12th if no instalment payment is received. If Number of Days for Closed is set to 20 days, the Recurring Donation becomes Closed on February 22nd.&lt;br/&gt;&lt;br/&gt;Salesforce begins counting Number of Days for Lapsed and Number of Days for Closed on the day after the expected instalment date (February 2nd in our example).</label>
+        <label>These settings automate changing the Recurring Donation Status when donors miss installment payments.&lt;br/&gt;&lt;br/&gt;For example, given a monthly Recurring Donation started on January 1st, and Number of Days for Lapsed is set to 10 days, the Recurring Donation becomes Lapsed on February 12th if no installment payment is received. If Number of Days for Closed is set to 20 days, the Recurring Donation becomes Closed on February 22nd.&lt;br/&gt;&lt;br/&gt;Salesforce begins counting Number of Days for Lapsed and Number of Days for Closed on the day after the expected installment date (February 2nd in our example).</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationInvalidClosedStatus</name>
@@ -1500,7 +1572,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_StatusMustBeMapped</name>
-        <label>The Status &quot;{0}&quot; hasn&apos;&apos;t been mapped to a State.</label>
+        <label>The Status &quot;{0}&quot; hasn&apos;t been mapped to a State.</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusMustBeMappedSolution</name>
@@ -1541,6 +1613,74 @@
     <customLabels>
         <name>RecurringDonationNameSuffix</name>
         <label>Recurring</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_achElevatePayment</name>
+        <label>{0}, *{1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_creditCardElevatePayment</name>
+        <label>{0}, *{1} Exp.{2}/{3}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_firstDonation</name>
+        <label>First Donation</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_finalDonation</name>
+        <label>Final Donation</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_firstOrdinalNumber</name>
+        <label>st</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyOnThePeriod</name>
+        <label>On the {0}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyPeriodOnTheDayOfTheMonth</name>
+        <label>{0} on the {1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyYearly</name>
+        <label>Every {0} years</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyMonthly</name>
+        <label>Every {0} months on the {1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyWeekly</name>
+        <label>Every {0} weeks</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyFirstAndFifteenth</name>
+        <label>Every {0} {1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_lastModified</name>
+        <label>Last Modified</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_mostRecentDonation</name>
+        <label>Most Recent Donation</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_nextDonation</name>
+        <label>Next Donation</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_otherOrdinalNumber</name>
+        <label>th</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_secondOrdinalNumber</name>
+        <label>nd</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_thirdOrdinalNumber</name>
+        <label>rd</label>
     </customLabels>
     <customLabels>
         <name>RD_ContactMustBelongToAccount</name>
@@ -1963,15 +2103,23 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>As of October 1, 2020, Batch Data Entry is no longer supported. Most capabilities have been replaced with newer features in NPSP. If you have any in-progress batches, you can still access those records, but you can&apos;t process them using Batch Data Entry. Contact support if you need to access in-progress batches. &lt;br/&gt; You may want to explore Gift Entry as an alternative to Batch Data Entry. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.</label>
+        <label>As of October 1, 2020, Batch Data Entry is no longer supported. Most capabilities have been replaced with newer features in NPSP. If you have any in-progress batches, you can still access those records, but you can&apos;t process them using Batch Data Entry. Contact support if you need to access in-progress batches. &lt;br/&gt; You may want to explore Gift Entry as an alternative to Batch Data Entry. Learn more about Gift Entry in the &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
-        <label>On October 1, 2020, Batch Data Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Data Entry. To ensure a smooth transition, enable and use Gift Entry in advance of October 1st. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.</label>
+        <label>On October 1, 2020, Batch Data Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Data Entry. To ensure a smooth transition, enable and use Gift Entry in advance of October 1st. Learn more about Gift Entry in the &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
         <label>Retiring Batch Data Entry</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiAPIBatchError</name>
+        <label>We couldn&apos;t process the Data Import records because of the following errors:</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiAPISelectedError</name>
+        <label>We couldn&apos;t process the selected Data Import records because of the following errors:</label>
     </customLabels>
     <customLabels>
         <name>bdiAccountCustomIdError</name>
@@ -1983,7 +2131,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bdiAdditionalObjPredNotFound</name>
-        <label>Error: record not created. This record is dependent on {0} which couldn&apos;&apos;t be found.</label>
+        <label>Error: record not created. This record is dependent on {0} which couldn&apos;t be found.</label>
     </customLabels>
     <customLabels>
         <name>bdiAdditionalObjRequiredFieldsNull</name>
@@ -2036,6 +2184,10 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     <customLabels>
         <name>bdiContactCustomIdError</name>
         <label>The Contact Custom Unique ID setting field {0} must have matching fields in the NPSP Data Import object whose API Names are {1} and {2}.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiContactMatchDupeMgmt</name>
+        <label>Contact Duplicate Rules</label>
     </customLabels>
     <customLabels>
         <name>bdiContactMatchEmail</name>
@@ -2148,6 +2300,10 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     <customLabels>
         <name>bdiDryRunTitle</name>
         <label>NPSP Data Importer - Dry Run</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiDupeMgmtMatchImportStatus</name>
+        <label>- Duplicate Rule:</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorBatchNameRequired</name>
@@ -2367,7 +2523,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
         <name>bdiMassDeleteWarning</name>
         <label>You are about to delete {0} record(s).
         &lt;br/&gt;
-        &lt;br/&gt;&lt;b&gt;IMPORTANT:&lt;/b&gt; If you create gifts in your org using the Batch Gift Entry feature, we don&apos;&apos;t recommend using the Mass Delete button. Please see the NPSP documentation for instructions on deleting records using the data loader.</label>
+        &lt;br/&gt;&lt;b&gt;IMPORTANT:&lt;/b&gt; If you create gifts in your org using the Batch Gift Entry feature, we don&apos;t recommend using the Mass Delete button. Please see the NPSP documentation for instructions on deleting records using the data loader.</label>
     </customLabels>
     <customLabels>
         <name>bdiMatched</name>
@@ -2557,6 +2713,26 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     <customLabels>
         <name>bdiRunBtn</name>
         <label>Begin Data Import Process</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectCantProcessBatchDIRecords</name>
+        <label>You selected records linked to an NPSP Data Import Batch. To import records associated with an NPSP Data Import Batch, open the batch and click Process Batch.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectCantProcessImportedRecords</name>
+        <label>You can&apos;t import records that have already been imported. Remove records with the Imported status from your selection.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectNoDIRecordsSelected</name>
+        <label>Select one or more Data Import records.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectReturnToListView</name>
+        <label>Go Back</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectTooManyDIRecords</name>
+        <label>Select up to {0} Data Import records.</label>
     </customLabels>
     <customLabels>
         <name>bdiSettingsSectionContactMatching</name>
@@ -2832,7 +3008,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>On July 13, 2021, legacy Batch Gift Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Gift Entry. To ensure a smooth transition, enable and use the newer Gift Entry in advance of July 13th. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.</label>
+        <label>On July 13, 2021, legacy Batch Gift Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Gift Entry. To ensure a smooth transition, enable and use the newer Gift Entry in advance of July 13th. Learn more about Gift Entry in the &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -2848,7 +3024,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
             If you have any in-progress batches, you can still access those records, but you can&apos;t process them using Batch Gift Entry.
             Contact support if you need to access in-progress batches.
             You may want to explore Gift Entry as an alternative to Batch Gift Entry.
-            Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.</label>
+            Learn more about Gift Entry in the &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -2900,7 +3076,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>CallableApiJobScheduleInvalidClass</name>
-        <label>The Apex class {0} doesn&apos;&apos;t exist or doesn&apos;&apos;t implement the Schedulable interface.</label>
+        <label>The Apex class {0} doesn&apos;t exist or doesn&apos;t implement the Schedulable interface.</label>
     </customLabels>
     <customLabels>
         <name>CallableApiMaximumRecordsExceeded</name>
@@ -3053,8 +3229,12 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
         <label>Close</label>
     </customLabels>
     <customLabels>
+        <name>commonCancelAndClose</name>
+        <label>Cancel and close</label>
+    </customLabels>
+    <customLabels>
         <name>commonConcurrentBatchError</name>
-        <label>There&apos;&apos;s already a job running on the {0} Apex class. The job must complete before it can be run again.</label>
+        <label>There&apos;s already a job running on the {0} Apex class. The job must complete before it can be run again.</label>
     </customLabels>
     <customLabels>
         <name>commonContactCount</name>
@@ -3183,6 +3363,10 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     <customLabels>
         <name>commonRecordsProcessed</name>
         <label>Records Processed</label>
+    </customLabels>
+    <customLabels>
+        <name>commonRefreshPage</name>
+        <label>Refresh page to show the latest updates.</label>
     </customLabels>
     <customLabels>
         <name>commonRequired</name>
@@ -3362,7 +3546,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>See all duplicate Contacts found using matching rules. &lt;a href=&apos;https://powerofus.force.com/IP_Contacts&apos; target=&apos;_blank&apos;&gt;&lt;b&gt; Tell Me More &lt;/b&gt;&lt;/a&gt;</label>
+        <label>See all duplicate Contacts found using matching rules. &lt;a href=&quot;https://powerofus.force.com/IP_Contacts&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; Tell Me More &lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>
@@ -3414,7 +3598,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>exceptionDeletePermission</name>
-        <label>You don&apos;&apos;t have the permissions required to delete {0} records.</label>
+        <label>You don&apos;t have the permissions required to delete {0} records.</label>
     </customLabels>
     <customLabels>
         <name>exceptionRequiredField</name>
@@ -3439,6 +3623,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     <customLabels>
         <name>geAddSoftCredit</name>
         <label>Add Soft Credit</label>
+    </customLabels>
+    <customLabels>
+        <name>geRecurringGiftModalWarning</name>
+        <label>Applying a Recurring Donation schedule to an existing Opportunity, Payment, or adding soft credits is not supported in Gift Entry.</label>
+    </customLabels>
+    <customLabels>
+        <name>geSoftCreditsWarning</name>
+        <label>Soft credits in Gift Entry is not supported for Recurring Donations.</label>
     </customLabels>
     <customLabels>
         <name>geA11ySection</name>
@@ -3834,6 +4026,38 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     <customLabels>
         <name>geFieldsNotFoundMessage</name>
         <label>This form contains fields that can&apos;t be found. Please check with your administrator.</label>
+    </customLabels>
+    <customLabels>
+        <name>geAddSchedule</name>
+        <label>Add Recurring Schedule</label>
+    </customLabels>
+    <customLabels>
+        <name>geUpdateSchedule</name>
+        <label>Update Recurring Schedule</label>
+    </customLabels>
+    <customLabels>
+        <name>geMakeRecurring</name>
+        <label>Make Recurring</label>
+    </customLabels>
+    <customLabels>
+        <name>geRemoveSchedule</name>
+        <label>Remove Recurring Schedule</label>
+    </customLabels>
+    <customLabels>
+        <name>geEditSchedule</name>
+        <label>Edit Recurring Schedule</label>
+    </customLabels>
+    <customLabels>
+        <name>geOpenEndedGiftSchedule</name>
+        <label>{0} {1} donation starting on {2}.</label>
+    </customLabels>
+    <customLabels>
+        <name>geFixedGiftSchedule</name>
+        <label>{0} {1} donation starting on {2} and ending after {3} installments.</label>
+    </customLabels>
+    <customLabels>
+        <name>geRecurringScheduleInformation</name>
+        <label>Recurring Schedule Information</label>
     </customLabels>
     <customLabels>
         <name>gsAdminSetupTitle</name>
@@ -4470,6 +4694,10 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     <customLabels>
         <name>geErrorExistingTemplateName</name>
         <label>This name has been used by another template. Please enter a unique name.</label>
+    </customLabels>
+    <customLabels>
+        <name>geErrorDonorMismatch</name>
+        <label>For a household gift, select Contact1 for Donor Type and complete the Contact fields.</label>
     </customLabels>
     <customLabels>
         <name>geErrorDonorTypeValidation</name>
@@ -5963,12 +6191,76 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <label>Organisation Donations</label>
     </customLabels>
     <customLabels>
+        <name>pmtElevatePermissionRequired</name>
+        <label>Manage this payment in Elevate.</label>
+    </customLabels>
+    <customLabels>
         <name>pmtModifyCurrency</name>
         <label>You can&apos;t modify Payment currencies directly. Update the parent Opportunity&apos;s currency, and NPSP will automatically update the currency of all related Payment records.</label>
     </customLabels>
     <customLabels>
+        <name>pmtNoRefundPermissionMessage</name>
+        <label>You don&apos;t have permissions to refund Payments. Contact your Salesforce admin for help.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtOriginalPaymentNotCompleted</name>
+        <label>Payment can&apos;t be refunded because Elevate hasn&apos;t processed the payment yet.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtOriginalPaymentNotPaid</name>
+        <label>This payment&apos;s still processing and can&apos;t be refunded yet.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtOriginalPaymentNotFound</name>
+        <label>You can&apos;t edit a refund without an Original Payment.</label>
+    </customLabels>
+    <customLabels>
         <name>pmtPaidPaymentDateRequired</name>
         <label>A paid Payment must have a Payment Date.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentDate</name>
+        <label>Payment Date</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentErrorMessage</name>
+        <label>There was an error processing the refund.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmountInvalid</name>
+        <label>Enter a refund that&apos;s less than or equal to the remaining balance.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentSuccessMessage</name>
+        <label>Refund was successful.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtPaymentNotFound</name>
+        <label>The corresponding Elevate payment record couldn&apos;t be found. Contact your Salesforce admin for help.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtPaymentNotRefundable</name>
+        <label>This payment has already been refunded, or is a refund itself.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmount</name>
+        <label>Refund Amount</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentMessage</name>
+        <label>Refund the following payment:</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundProcessing</name>
+        <label>Refund submitted for processing. Check for the refunded Payment on the Opportunity record.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentConfirmedButton</name>
+        <label>Refund Payment</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentTitle</name>
+        <label>Refund Payment?</label>
     </customLabels>
     <customLabels>
         <name>pmtUnpaidPaymentScheduledDateRequired</name>
@@ -7927,6 +8219,30 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <name>donationHistoryDatatableAriaLabel</name>
         <label>Donation History</label>
     </customLabels>
+    <customLabels>
+        <name>RD2_Actions</name>
+        <label>Actions</label>
+    </customLabels>
+    <customLabels>
+        <name>updatePaymentMethod</name>
+        <label>Update Payment Method</label>
+    </customLabels>
+    <customLabels>
+        <name>changeAmountOrFrequency</name>
+        <label>Change Amount or Frequency</label>
+    </customLabels>
+    <customLabels>
+        <name>stopRecurringDonation</name>
+        <label>Stop Recurring Donation</label>
+    </customLabels>
+    <customLabels>
+        <name>stopRecurringDonationModalTitle</name>
+        <label>Stop this Recurring Donation?</label>
+    </customLabels>
+    <customLabels>
+        <name>updateRecurringDonation</name>
+        <label>Update Recurring Donation</label>
+    </customLabels>
     <reportTypes>
         <name>Contacts_Only</name>
         <label>Contacts Only</label>
@@ -7976,6 +8292,10 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <label>New Campaign</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.Pause</name>
+        <label>Pause</label>
+    </quickActions>
+    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>New Affiliation</label>
     </quickActions>
@@ -7988,8 +8308,32 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <label>New Recurring Donation</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
+        <label>New Opportunity</label>
+    </quickActions>
+    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>New Recurring Donation</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__oppPayment__c.Refund</name>
+        <label>Refund</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Quick_Update</name>
+        <label>Quick Update</label>
+    </quickActions>
+    <quickActions>
+        <name>npo02__Household__c.Update_Household</name>
+        <label>Update Household</label>
+    </quickActions>
+    <quickActions>
+        <name>Address__c.Update_Address</name>
+        <label>Update Address</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
+        <label>Close Recurring Donation</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -8010,6 +8354,10 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>New Relationship</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Quick_Update</name>
+        <label>Quick Update</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>

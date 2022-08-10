@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Day_of_Month__c</name>
+    <help>Define o dia específico do mês para futuras oportunidades de parcelamento quando o Período de parcelamento for Mensal. Se você selecionar 29 ou 30, a data do parcelamento será o último dia do mês nos meses que não têm tantos dias.</help>
+    <label>Dia do mês da Doação recorrente</label>
+</CustomFieldTranslation>

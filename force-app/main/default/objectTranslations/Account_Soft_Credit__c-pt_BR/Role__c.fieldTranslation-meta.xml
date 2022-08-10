@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Role__c</name>
+    <help>A função associada a esse crédito indireto. A função descreve como a conta estava envolvida com a oportunidade.</help>
+    <label>Função</label>
+    <picklistValues>
+        <masterLabel>Donation Source</masterLabel>
+        <translation>Fonte de doação</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Influencer</masterLabel>
+        <translation>Influenciador</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Match</masterLabel>
+        <translation>Correspondência</translation>
+    </picklistValues>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Enable_Recurring_Donations_in_Gift_Entry__c</name>
+    <help>Indica se existem doações recorrentes disponíveis em Entrada de doações.</help>
+    <label>Atv. doações recorr. em Entr. doações</label>
+</CustomFieldTranslation>

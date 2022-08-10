@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>General_Accounting_Unit__c</name>
-    <help>L’unité comptable générale à laquelle cette allocation est attribuée. Seules les unités comptables générales marquées comme actives seront disponibles pour les nouvelles allocations.</help>
-    <relationshipLabel>Allocations UCG</relationshipLabel>
+    <help>L’unité comptable générale à laquelle cette affectation est attribuée. Seules les unités comptables générales marquées comme actives seront disponibles pour les nouvelles affectations.</help>
+    <relationshipLabel>Affectations UCG</relationshipLabel>
     <label>Unité comptable générale</label>
 </CustomFieldTranslation>

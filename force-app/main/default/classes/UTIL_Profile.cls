@@ -54,6 +54,9 @@ public class UTIL_Profile {
                 when 'NL_nl' {
                     return 'Systeembeheerder';
                 }
+                when 'pt_BR' {
+                    return 'Administrador do sistema';
+                }
             }
             return 'System Administrator';
         }

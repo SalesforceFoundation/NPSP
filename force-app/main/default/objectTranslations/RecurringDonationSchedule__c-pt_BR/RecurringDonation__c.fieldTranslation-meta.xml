@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>RecurringDonation__c</name>
+    <help>A Doação recorrente com a qual o registro de agendamento está associado.</help>
+    <relationshipLabel>Agendas de doação recorrente</relationshipLabel>
+    <label>Doação recorrente</label>
+</CustomFieldTranslation>

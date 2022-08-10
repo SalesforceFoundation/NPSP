@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Possible_Matches__c</name>
+    <help>Uma lista separada por vírgulas das primeiras 10 possíveis correspondências de oportunidade para uma doação.</help>
+    <label>Possíveis correspondências de doação</label>
+</CustomFieldTranslation>

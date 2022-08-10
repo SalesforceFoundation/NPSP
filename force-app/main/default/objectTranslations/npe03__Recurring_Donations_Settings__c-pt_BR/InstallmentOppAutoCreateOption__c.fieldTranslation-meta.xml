@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>InstallmentOppAutoCreateOption__c</name>
+    <help>Especifica quando o NPSP criará Oportunidades de parcelamento para Doações recorrentes. O padrão é Sempre criar próxima parcela.</help>
+    <label>Criação autom. de oport. de parcela</label>
+</CustomFieldTranslation>
