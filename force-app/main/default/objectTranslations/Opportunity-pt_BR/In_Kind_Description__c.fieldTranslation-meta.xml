@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>In_Kind_Description__c</name>
+    <help>Contém uma descrição em rich text da Doação em espécie, incluindo imagens.</help>
+    <label>Descrição em espécie</label>
+</CustomFieldTranslation>

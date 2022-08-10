@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Required__c</name>
+    <help>Indica se o campo no objeto de importação de dados do NPSP deve conter um valor. Quando for obrigatório, o teste de simulação falhará se esse campo não contiver um valor.</help>
+    <label>Obrigatório?</label>
+    <picklistValues>
+        <masterLabel>Yes</masterLabel>
+        <translation>Sim</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>No</masterLabel>
+        <translation>Não</translation>
+    </picklistValues>
+</CustomFieldTranslation>

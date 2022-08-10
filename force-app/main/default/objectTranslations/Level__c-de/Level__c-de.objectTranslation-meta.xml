@@ -19,10 +19,10 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel> Name der Ebene</nameFieldLabel>
+    <nameFieldLabel>Name der Ebene</nameFieldLabel>
     <standardFields>
         <name>Name</name>
-        <label> Name der Ebene</label>
+        <label>Name der Ebene</label>
     </standardFields>
     <gender>Feminine</gender>
     <caseValues>

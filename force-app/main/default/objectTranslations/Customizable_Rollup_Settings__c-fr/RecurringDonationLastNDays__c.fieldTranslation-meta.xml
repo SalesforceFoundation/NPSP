@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>RecurringDonationLastNDays__c</name>
+    <help>Limitez les opportunités incluses dans le cumul des dons récurrents à celles modifiées au cours d’un nombre défini de jours. Les traitements par lots des cumuls de dons récurrents limités dans le temps remplacent ce paramètre.</help>
+    <label>DR modifiés au cours des X derniers jrs</label>
+</CustomFieldTranslation>

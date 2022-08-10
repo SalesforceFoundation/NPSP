@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Use_Fiscal_Year_for_Rollups__c</name>
+    <help>Marcar esta caixa fará com que os totais de totaliz. da Aloc. usem ano fiscal em vez de ano civil. Para definir as infos do Ano fiscal, acesse Configuração-&gt;Perfil da empresa-&gt;Ano fiscal. NOTA: as Config. de ano fiscal personalizadas NÃO são suportadas.</help>
+    <label>Usar Ano fiscal em totalizações</label>
+</CustomFieldTranslation>

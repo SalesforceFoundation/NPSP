@@ -9,8 +9,12 @@
         <label>Geïmporteerde Gegevensimportrecords verwijderen</label>
     </webLinks>
     <webLinks>
+        <name>Import_Selected_Data_Import_Records</name>
+        <label>Geselecteerde gegevensimportrecords importeren</label>
+    </webLinks>
+    <webLinks>
         <name>Process_Data_Import</name>
-        <label>Gegevensimport starten</label>
+        <label>Alle gegevensimportrecords importeren</label>
     </webLinks>
     <layouts>
         <layout>Data Import Layout</layout>

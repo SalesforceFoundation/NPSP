@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Grant_Contract_Number__c</name>
+    <help>Use-o para rastrear números exclusivos que às vezes são atribuídos por instituições de concessão de bolsas.</help>
+    <label>Número do contrato de bolsa</label>
+</CustomFieldTranslation>

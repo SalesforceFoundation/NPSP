@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Always_Use_Last_Day_Of_Month__c</name>
+    <help>Define futuras parcelas mensais, mensais personalizadas ou trimestrais de doação até o último dia do mês, independentemente da Data da próxima doação. O parcelamento deve ser mensal, trimestral ou um período de parcelamento personalizado com meses.</help>
+    <label>Usar sempre o último dia do mês</label>
+</CustomFieldTranslation>

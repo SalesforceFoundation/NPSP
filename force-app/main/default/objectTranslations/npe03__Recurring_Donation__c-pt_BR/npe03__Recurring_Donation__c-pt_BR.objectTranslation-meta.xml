@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label>Campos personalizados do formulário da Entrada de doações recorrentes</label>
+        <name>RD2_Entry_Form_Custom_Fields</name>
+    </fieldSets>
+    <webLinks>
+        <name>Recalculate_Rollups</name>
+        <label>Recalcular totalizações</label>
+    </webLinks>
+</CustomObjectTranslation>

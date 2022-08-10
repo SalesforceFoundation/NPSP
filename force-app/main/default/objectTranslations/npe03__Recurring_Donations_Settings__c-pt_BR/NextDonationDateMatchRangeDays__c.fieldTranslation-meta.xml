@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>NextDonationDateMatchRangeDays__c</name>
+    <help>O n.º de dias antes ou depois da Próx. data de doação em que o NPSP não criará outra
+       oport. de parcela se a data de fech. da próx. oport. aberta for alterada. Aplica-se só a
+       Doações recorr. cujos Períodos de Parcel. sejam Mensal ou Anual.</help>
+    <label>Faixa corresp. próx. data de doação</label>
+</CustomFieldTranslation>

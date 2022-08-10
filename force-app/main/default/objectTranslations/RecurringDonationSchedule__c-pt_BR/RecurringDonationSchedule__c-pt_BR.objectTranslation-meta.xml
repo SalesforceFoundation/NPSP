@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <layouts>
+        <layout>Recurring Schedule Layout</layout>
+        <sections>
+            <label>Detalhes do agendamento</label>
+            <section>Schedule Details</section>
+        </sections>
+        <sections>
+            <label>Links personalizados</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Número do agendamento recorrente</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Número do agendamento recorrente</label>
+    </standardFields>
+    <gender>Feminine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>Programação de doação recorrente</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Programações de doações recorrentes</value>
+    </caseValues>
+</CustomObjectTranslation>

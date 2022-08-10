@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>RecurringDonationLastNDays__c</name>
+    <help>Limite las oportunidades incluidas en la totalización de donaciones recurrentes a aquellas modificadas en un número de días. Los trabajos por lotes de totalización de donaciones recurrentes dependientes de tiempo sustituyen este parámetro.</help>
+    <label>DR modificadas en último número de días</label>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Reminder_Time__c</name>
+    <help>O tempo durante o prazo em que aparece um lembrete sobre a data de vencimento.</help>
+    <label>Hora do lembrete</label>
+</CustomFieldTranslation>
