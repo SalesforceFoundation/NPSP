@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Percent__c</name>
+    <help>Percentual do valor da oportunidade atribuído à Unidade contábil geral desta alocação. Se você modificar posteriormente o valor da oportunidade, o NPSP atualizará o valor de alocação na Unidade contábil geral.</help>
+    <label>Porcentagem</label>
+</CustomFieldTranslation>

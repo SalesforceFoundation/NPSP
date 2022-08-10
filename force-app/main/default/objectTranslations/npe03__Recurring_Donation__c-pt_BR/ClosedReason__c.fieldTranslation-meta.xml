@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>ClosedReason__c</name>
+    <help>A razão pela qual a Doação Recorrente tem seu valor de Status atual.</help>
+    <label>Motivo do status</label>
+    <picklistValues>
+        <masterLabel>Card Expired</masterLabel>
+        <translation>Cartão vencido</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Commitment Completed</masterLabel>
+        <translation>Compromisso concluído</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Deceased Donor</masterLabel>
+        <translation>Doador falecido</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Financial Difficulty</masterLabel>
+        <translation>Dificuldade financeira</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>No Longer Interested</masterLabel>
+        <translation>Não está mais interessado</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Unknown</masterLabel>
+        <translation>Desconhecido</translation>
+    </picklistValues>
+</CustomFieldTranslation>

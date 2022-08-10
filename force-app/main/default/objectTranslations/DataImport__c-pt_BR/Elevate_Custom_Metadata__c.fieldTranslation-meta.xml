@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Elevate_Custom_Metadata__c</name>
+    <help>Metadados personalizados das Páginas de doação do Elevate armazenados como JSON.</help>
+    <label>Metadados personalizados do Elevate</label>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Reject_Ambiguous_Addresses__c</name>
+    <help>Marca endereços ambíguos como inválidos quando a API retorna mais de um endereço. Se não for marcado, a Salesforce aceitará o primeiro endereço sugerido como endereço válido.</help>
+    <label>Rejeitar endereços ambíguos-OBSOLETO</label>
+</CustomFieldTranslation>

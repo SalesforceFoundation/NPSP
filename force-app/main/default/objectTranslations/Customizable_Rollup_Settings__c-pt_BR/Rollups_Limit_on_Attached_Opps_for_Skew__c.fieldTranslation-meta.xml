@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Rollups_Limit_on_Attached_Opps_for_Skew__c</name>
+    <help>O número máximo de Oport. relacionadas em uma Conta ou um Contato permitido em Trabalhos em lote de totalização no modo não distorcido. Uma Conta ou um Contato com mais do que esse n.º de oportunidades rel. sempre será totalizado usando o Modo distorcido.</help>
+    <label>Limite do Modo distorcido</label>
+</CustomFieldTranslation>

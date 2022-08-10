@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Elevate_Payment_Created_Date__c</name>
+    <help>Data e hora em que a transação foi criada.</help>
+    <label>Data de criação do pgmt. do Elevate</label>
+</CustomFieldTranslation>

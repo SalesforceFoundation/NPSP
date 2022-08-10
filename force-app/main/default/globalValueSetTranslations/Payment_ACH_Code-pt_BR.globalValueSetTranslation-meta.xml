@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSetTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <valueTranslation>
+        <masterLabel>Prearranged Payment and Deposit Entry (PPD)</masterLabel>
+        <translation>Entrada de depósito e pagamento pré-agendado (PPD)</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Cash Concentration or Disbursement (CCD)</masterLabel>
+        <translation>Concentração de dinheiro ou desembolso (CCD)</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Web-initiated Entry (WEB)</masterLabel>
+        <translation>Entrada iniciada pela Web (WEB)</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Telephone-initiated Entry (TEL)</masterLabel>
+        <translation>Entrada iniciada por telefone (TEL)</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Back Office Conversion (BOC)</masterLabel>
+        <translation>Conversão de Back Office (BOC)</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Accounts Receivable Conversion (ARC)</masterLabel>
+        <translation>Conversão de contas a receber (ARC)</translation>
+    </valueTranslation>
+</GlobalValueSetTranslation>

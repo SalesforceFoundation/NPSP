@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Payment_Type__c</name>
+    <help>Indica o tipo de transação.</help>
+    <label>Tipo de pagamento</label>
+</CustomFieldTranslation>

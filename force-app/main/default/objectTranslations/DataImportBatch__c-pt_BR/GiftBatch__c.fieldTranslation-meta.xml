@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>GiftBatch__c</name>
+    <help>Este lote serve para ser utilizado com a Entrada de doações em lote. Os lotes são automaticamente marcados como lotes de presente quando configurados na guia Entrada de doações em lote. A mudança manual deste campo pode ter consequências não intencionais.</help>
+    <label>Lote de doações</label>
+</CustomFieldTranslation>

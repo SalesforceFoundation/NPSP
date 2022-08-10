@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Contact_Overrun_Count__c</name>
+    <help>Especifica o número de contatos para listar explicitamente em um nome. Depois desse valor, a Substituição de nome será usada.</help>
+    <label>Contagem de substituição de contato</label>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>StatusAutomationLapsedValue__c</name>
+    <help>O Status de doação recorrente definido quando a automação de status atualiza o registro de doação recorrente como Vencido.</help>
+    <label>Valor de automação de status vencido</label>
+</CustomFieldTranslation>

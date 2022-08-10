@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>ExcludeClosedRecurringDonations__c</name>
+    <help>Excluez les dons récurrents fermés du traitement par lots de l’évaluation des opportunités de don récurrent.</help>
+    <label>Exclure les dons récurrents fermés</label>
+</CustomFieldTranslation>

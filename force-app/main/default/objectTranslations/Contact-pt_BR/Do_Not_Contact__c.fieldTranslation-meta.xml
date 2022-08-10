@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Do_Not_Contact__c</name>
+    <help>Indica que o Contato não quer que sua organização ligue ou envie um email. Use este campo para filtrar contatos em listas de email e telefone. Quando selecionado, o NPSP exclui este Contato de Confirmações de oportunidade.</help>
+    <label>Não entrar em contato</label>
+</CustomFieldTranslation>

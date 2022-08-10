@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Template_JSON__c</name>
+    <help>As seções e os campos neste modelo, juntamente com sua ordem, os requisitos e os valores padrão. Armazenado como JSON. Não editar diretamente.</help>
+    <label>Modelo JSON</label>
+</CustomFieldTranslation>

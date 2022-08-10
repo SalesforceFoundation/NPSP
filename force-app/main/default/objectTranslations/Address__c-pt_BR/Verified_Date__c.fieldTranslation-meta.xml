@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Verified_Date__c</name>
+    <help>A data e a hora mais recentes da verificação do endereço.</help>
+    <label>Data da verificação</label>
+</CustomFieldTranslation>

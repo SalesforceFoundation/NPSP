@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label>Entrada de BDE FS</label>
+        <name>BDE_Entry_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label>Lista de BDE FS</label>
+        <name>BDE_List_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label>Mesclagem de contato encontrada FS</label>
+        <name>ContactMergeFoundFS</name>
+    </fieldSets>
+    <webLinks>
+        <name>Merge_Contacts</name>
+        <label>Mesclar contatos</label>
+    </webLinks>
+    <webLinks>
+        <name>New_Gift</name>
+        <label>Nova doação</label>
+    </webLinks>
+    <webLinks>
+        <name>Recalculate_Rollups</name>
+        <label>Recalcular totalizações</label>
+    </webLinks>
+    <layouts>
+        <layout>Contact Layout</layout>
+        <sections>
+            <label>Detalhes do contato</label>
+            <section>Contact Details</section>
+        </sections>
+        <sections>
+            <label>Endereço da família</label>
+            <section>Household Address</section>
+        </sections>
+        <sections>
+            <label>Informações sobre a doação</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Doações totais</label>
+            <section>Donation Totals</section>
+        </sections>
+        <sections>
+            <label>Total de crédito indireto</label>
+            <section>Soft Credit Totals</section>
+        </sections>
+        <sections>
+            <label>Informações de doação da família</label>
+            <section>Household Donation Info</section>
+        </sections>
+        <sections>
+            <label>Informações de associação</label>
+            <section>Membership Information</section>
+        </sections>
+        <sections>
+            <label>Diversos</label>
+            <section>Misc</section>
+        </sections>
+    </layouts>
+</CustomObjectTranslation>

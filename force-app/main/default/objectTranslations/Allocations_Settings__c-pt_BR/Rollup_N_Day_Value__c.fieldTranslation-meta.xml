@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Rollup_N_Day_Value__c</name>
+    <help>Esse valor afeta o número de dias a serem contados para os campos de totalização de alocação de N dias.</help>
+    <label>Valor de N dias de totalização</label>
+</CustomFieldTranslation>

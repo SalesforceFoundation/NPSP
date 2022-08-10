@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Honoree_Information__c</name>
+    <help>Informações de contato, como email, endereço ou telefone que o doador forneceu para o homenageado.</help>
+    <label>Informações do homenageado da doação</label>
+</CustomFieldTranslation>

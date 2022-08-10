@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Total_Allocations_Last_N_Days__c</name>
+    <help>O número de alocações de oportunidades fechadas/ganhas nos últimos N dias. (O valor de N é definido em Configurações do NPSP &gt; Doações &gt; Alocações de GAU.) O NPSP atualiza este campo em um trabalho agendado noturno.</help>
+    <label>Total de alocações nos últimos N dias</label>
+</CustomFieldTranslation>

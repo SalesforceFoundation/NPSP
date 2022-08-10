@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Batch_Size__c</name>
+    <help>O número de registros a ser processado durante o trabalho em lote Doações recorrentes. O tamanho padrão é 50. Reduza para um número menor se o trabalho em lote de Doações recorrentes estiver falhando devido aos limites do sistema.</help>
+    <label>Tam. do lote de Doações recorrentes</label>
+</CustomFieldTranslation>

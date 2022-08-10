@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Rollups_Account_SkewMode_Batch_Size__c</name>
+    <help>Número de registros por lote a serem processados ao recalcular as totalizações do doador para o objeto Conta usando o Modo distorcido.</help>
+    <label>Tam. do lote do modo dist. da conta</label>
+</CustomFieldTranslation>

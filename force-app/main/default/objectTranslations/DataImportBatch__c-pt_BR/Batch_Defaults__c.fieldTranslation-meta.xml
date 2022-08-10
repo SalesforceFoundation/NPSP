@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Batch_Defaults__c</name>
+    <help>Os valores de campo padrão para um Lote na Entrada de doações. Não edite diretamente. Isso deve ser atualizado na interface do usuário onde você edita o Lote.</help>
+    <label>Padrões do lote</label>
+</CustomFieldTranslation>

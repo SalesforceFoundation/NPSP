@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Extra_Info_Label__c</name>
+    <help>O nome da API do Rótulo de informações extras, que fornece informações extras sobre um item da seção (como duração do vídeo, PDF, etc). Mostrado no canto superior direito.</help>
+    <label>Nome do rótulo de informações extras</label>
+</CustomFieldTranslation>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Sustainer__c</name>
+    <help>Indica se este Contato é um doador ativo, vencido ou antigo recorrente. O valor é baseado no Status das Doações recorrentes relacionadas.</help>
+    <label>Sustentação</label>
+    <picklistValues>
+        <masterLabel>Active</masterLabel>
+        <translation>Ativo</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Lapsed</masterLabel>
+        <translation>Vencido</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Former</masterLabel>
+        <translation>Anterior</translation>
+    </picklistValues>
+</CustomFieldTranslation>

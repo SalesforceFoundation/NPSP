@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Account_Matching_Rule__c</name>
+    <help>Especifica qual regra seguir ao tentar corresponder as Contas nos registros de importação de dados com as Contas existentes.</help>
+    <label>Regra de correspondência de contas</label>
+</CustomFieldTranslation>
