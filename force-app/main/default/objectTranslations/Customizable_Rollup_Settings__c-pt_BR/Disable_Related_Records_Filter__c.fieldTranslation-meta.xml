@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Disable_Related_Records_Filter__c</name>
+    <help>Marque esta caixa para evitar que as totalizações de créditos diretos e indiretos em Contas e Contatos processem apenas registros de Conta e Contato que tenham registros de Oportunidade ou Função de oportunidade existentes.</help>
+    <label>Desativar filtro de reg. relacionados</label>
+</CustomFieldTranslation>

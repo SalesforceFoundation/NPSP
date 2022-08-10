@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Date_Range__c</name>
+    <help>Digite o n.º de dias a contar da Data de doação a serem levados em conta na procura de uma Oport. ou um Pagamento corresp.. O NPSP escolherá a Oport. ou o Pagamento corresp. cuja data se enquadre no número de dias e esteja mais próxima da Data de doação.</help>
+    <label>N.º de dias a contar da data da doação</label>
+</CustomFieldTranslation>

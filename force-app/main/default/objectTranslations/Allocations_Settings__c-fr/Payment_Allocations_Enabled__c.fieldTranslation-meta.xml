@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Payment_Allocations_Enabled__c</name>
-    <help>Indique si les allocations peuvent être définies au niveau du paiement. À utiliser uniquement avec Accounting Subledger. Contactez votre responsable de compte Salesforce pour plus d’informations.</help>
-    <label>Allocations de paiement activées</label>
+    <help>Indique si les affectations peuvent être définies au niveau du paiement. À utiliser uniquement avec Accounting Subledger. Contactez votre responsable de compte Salesforce pour plus d’informations.</help>
+    <label>Affectations de paiement activées</label>
 </CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>In_Kind_Donor_Declared_Value__c</name>
+    <help>Indica se o doador forneceu o Valor justo de mercado para esta Doação em espécie.</help>
+    <label>Valor declarado do doador em espécie</label>
+</CustomFieldTranslation>

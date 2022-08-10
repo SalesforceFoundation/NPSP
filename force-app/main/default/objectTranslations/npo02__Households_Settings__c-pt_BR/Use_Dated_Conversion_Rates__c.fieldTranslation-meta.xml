@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Use_Dated_Conversion_Rates__c</name>
+    <help>Marque esta caixa para usar taxas de conversão com data quando o gerenciamento de moedas avançado estiver ativado nesta Organização. Se não for marcado e o ACM estiver ativado, todas as totalizações do NPSP usarão a taxa de câmbio padrão para a moeda.</help>
+    <label>Usar taxas de conv. com data, se houver</label>
+</CustomFieldTranslation>

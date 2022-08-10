@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>DataMigrationBatchSize__c</name>
+    <help>O número de registros a serem processados simultaneamente na migração dos registros de doação recorrente existentes para o modelo de dados Doações recorrentes aprimoradas.</help>
+    <label>Tam. do lote migr. de dados de DR aprim.</label>
+</CustomFieldTranslation>

@@ -5,6 +5,14 @@
         <label>L’ID d’authentification ne peut pas être vide.</label>
     </customLabels>
     <customLabels>
+        <name>installmentPeriod</name>
+        <label>Période de versement</label>
+    </customLabels>
+    <customLabels>
+        <name>recurringDonationSchedule</name>
+        <label>Calendrier de dons récurrents</label>
+    </customLabels>
+    <customLabels>
         <name>Addr_No_Batch</name>
         <label>Le service indiqué ne prend pas en charge la vérification d’adresses par lots.</label>
     </customLabels>
@@ -869,6 +877,14 @@
         <label>Vous devez activer les dons récurrents avancés pour pouvoir traiter les dons récurrents.</label>
     </customLabels>
     <customLabels>
+        <name>RD2_PaidInstallments</name>
+        <label>Versements payés :</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_NextDonationDate</name>
+        <label>Date du prochain versement :</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_ElevateCancelInProgress</name>
         <label>Annulation du paiement récurrent en cours</label>
     </customLabels>
@@ -897,12 +913,24 @@
         <label>Aucune erreur</label>
     </customLabels>
     <customLabels>
+        <name>RD2_ViewMoreDetails</name>
+        <label>Afficher plus de détails</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ViewLessDetails</name>
+        <label>Afficher moins de détails</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_ElevateNotSupported</name>
         <label>Actuellement, cette fonctionnalité n&apos;est pas prise en charge pour des Dons récurrents générés à partir des Services de paiement Elevate.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevatePendingStatus</name>
         <label>Processus Elevate en attente</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevatePermissionRequired</name>
+        <label>Gérez ce don récurrent dans Elevate.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRDAmountMustBeValid</name>
@@ -915,6 +943,10 @@
     <customLabels>
         <name>RD2_ElevateRDClosedStatusCannotBeChanged</name>
         <label>Nous ne pouvons pas mettre à jour le Statut d&apos;un don récurrent connecté Elevate lorsqu&apos;il est Fermé.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDCannotBeFixedLength</name>
+        <label>Un don récurrent lié à Elevate ne peut pas avoir le type de récurrence Fixe.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateRDDayOfMonthCannotChange</name>
@@ -935,6 +967,22 @@
     <customLabels>
         <name>RD2_ElevateRecordCreateFailed</name>
         <label>Le paiement récurrent Elevate n&apos;a pas pu être créé. Contactez votre administrateur système pour obtenir une aide.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDCancellingTitle</name>
+        <label>Votre demande d’arrêt de don récurrent a été soumise.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDCancellingMessage</name>
+        <label>Cette opération peut prendre un certain temps. Actualisez la page pour vérifier le statut. Contactez-nous si vous avez besoin d’aide.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_ElevateRDStopDonationMessage</name>
+        <label>L’organisation sans but lucratif ne traitera aucun don futur pour ce don récurrent.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_NonElevateRDCancellingTitle</name>
+        <label>Votre don récurrent a été arrêté.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementDisabledHeader</name>
@@ -1216,6 +1264,30 @@
         <label>Envoi des informations CCA à Elevate...</label>
     </customLabels>
     <customLabels>
+        <name>RD2_ACH_Payment_Method_Label</name>
+        <label>Compte bancaire</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Payment_Method</name>
+        <label>Mode de paiement</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Payment_method_was_updated</name>
+        <label>Le mode de paiement a été mis à jour.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Recurring_Donation_was_updated</name>
+        <label>Le don récurrent a été mis à jour.</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Payment_Details</name>
+        <label>Détails du paiement</label>
+    </customLabels>
+    <customLabels>
+        <name>RD2_Credit_Card_Payment_Method_Label</name>
+        <label>Carte de crédit</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_EntryFormSaveCreditCardValidationMessage</name>
         <label>Validation de la carte de crédit...</label>
     </customLabels>
@@ -1425,7 +1497,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationIntro</name>
-        <label>Ces paramètres automatisent la modification du statut de don récurrent lorsque les donateurs manquent des versements.&lt;br/&gt;&lt;br/&gt; Prenons l’exemple d’un don mensuel récurrent ayant commencé le 1er février dont le nombre de jours correspondant à la valeur Écoulé est défini sur 10. Le don récurrent devient écoulé le 12 février si aucun versement n’est reçu d’ici là. Si le nombre de jours correspondant à la valeur Fermé est défini sur 20, le don récurrent devient fermé le 22 février.&lt;br/&gt;&lt;br/&gt; Salesforce commence à comptabiliser le nombre de jours correspondant aux valeurs Écoulé et Fermé le lendemain de la date de versement prévue (le 2 février dans notre exemple).</label>
+        <label>Ces paramètres automatisent la modification du statut de don récurrent lorsque les donateurs manquent des versements.&lt;br/&gt;&lt;br/&gt; Prenons l’exemple d’un don mensuel récurrent ayant commencé le 1er février dont le nombre de jours correspondant à la valeur Écoulé est défini sur 10. Le don récurrent prend le statut Écoulé le 12 février si aucun versement n’est reçu d’ici là. Si le nombre de jours correspondant à la valeur Fermé est défini sur 20, le don récurrent prend le statut Fermé le 22 février.&lt;br/&gt;&lt;br/&gt; Salesforce commence à comptabiliser le nombre de jours correspondant aux valeurs Écoulé et Fermé le lendemain de la date de versement prévue (le 2 février dans notre exemple).</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationInvalidClosedStatus</name>
@@ -1541,6 +1613,74 @@
     <customLabels>
         <name>RecurringDonationNameSuffix</name>
         <label>Récurrent</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_achElevatePayment</name>
+        <label>{0}, *{1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_creditCardElevatePayment</name>
+        <label>{0}, *{1} Exp. {2}/{3}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_firstDonation</name>
+        <label>Premier don</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_finalDonation</name>
+        <label>Dernier don</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_firstOrdinalNumber</name>
+        <label>premier</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyOnThePeriod</name>
+        <label>Le {0}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyPeriodOnTheDayOfTheMonth</name>
+        <label>{0}, le {1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyYearly</name>
+        <label>Tous les {0} ans</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyMonthly</name>
+        <label>Tous les {0} mois, le {1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyWeekly</name>
+        <label>Toutes les {0} semaines</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_frequencyFirstAndFifteenth</name>
+        <label>Tou(te)s les {0} {1}</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_lastModified</name>
+        <label>Dernière modification</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_mostRecentDonation</name>
+        <label>Don le plus récent</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_nextDonation</name>
+        <label>Prochain don</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_otherOrdinalNumber</name>
+        <label>e</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_secondOrdinalNumber</name>
+        <label>e</label>
+    </customLabels>
+    <customLabels>
+        <name>RD_thirdOrdinalNumber</name>
+        <label>e</label>
     </customLabels>
     <customLabels>
         <name>RD_ContactMustBelongToAccount</name>
@@ -1801,17 +1941,17 @@
     </customLabels>
     <customLabels>
         <name>alloBatchCreateDefault</name>
-        <label>Création par lots d’allocations par défaut</label>
+        <label>Création par lots d’affectations par défaut</label>
     </customLabels>
     <customLabels>
         <name>alloBatchDefaultInfo</name>
-        <label>Cet utilitaire exécute un processus par lots qui crée des allocations par défaut pour toutes les opportunités existantes, sauf les opportunités exclues dans les paramètres de cumul d’allocations UCG.
+        <label>Cet utilitaire exécute un processus par lots qui crée des affectations par défaut pour toutes les opportunités existantes, sauf les opportunités exclues dans les paramètres de cumul d’affectations UCG.
 &lt;br/&gt;
 &lt;br/&gt;
-Pour exécuter cet utilitaire, les allocations par défaut doivent être activées et une unité comptable générale par défaut doit être sélectionnée. Vous n’avez besoin d’exécuter cet utilitaire qu’une seule fois après avoir activé les allocations par défaut, puisque toutes les nouvelles opportunités recevront une allocation par défaut après l’activation.
+Pour exécuter cet utilitaire, les affectations par défaut doivent être activées et une unité comptable générale par défaut doit être sélectionnée. Vous n’avez besoin d’exécuter cet utilitaire qu’une seule fois après avoir activé les affectations par défaut, puisque toutes les nouvelles opportunités recevront une affectation par défaut après l’activation.
 &lt;br/&gt;
 &lt;br/&gt;
-Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocations UCG.</label>
+Pour vérifier vos paramètres d’affectations UCG, accédez à Dons | Affectations UCG.</label>
     </customLabels>
     <customLabels>
         <name>alloBtnCancel</name>
@@ -1823,15 +1963,15 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>alloCampaignExceedsOppAmount</name>
-        <label>Vos allocations de campagne n’ont pas été créées. Les allocations de campagne pour l’opportunité ont dépassé le montant de l’opportunité.</label>
+        <label>Vos affectations de campagne n’ont pas été créées. Les affectations de campagne pour l’opportunité ont dépassé le montant de l’opportunité.</label>
     </customLabels>
     <customLabels>
         <name>alloCantAllocateNothing</name>
-        <label>Vous ne pouvez créer des allocations que pour les opportunités ayant un montant positif.</label>
+        <label>Vous ne pouvez créer des affectations que pour les opportunités ayant un montant positif.</label>
     </customLabels>
     <customLabels>
         <name>alloDefaultGAUMissing</name>
-        <label>Vous avez activé les allocations par défaut. Vous devez aussi sélectionner une unité comptable générale par défaut.</label>
+        <label>Vous avez activé les affectations par défaut. Vous devez aussi sélectionner une unité comptable générale par défaut.</label>
     </customLabels>
     <customLabels>
         <name>alloDefaultGAUNotActive</name>
@@ -1839,11 +1979,11 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>alloDefaultNotEnabled</name>
-        <label>Vous devez activer les allocations par défaut afin d’allouer au niveau du paiement.</label>
+        <label>Vous devez activer les affectations par défaut afin d’allouer au niveau du paiement.</label>
     </customLabels>
     <customLabels>
         <name>alloDefaultNotPercent</name>
-        <label>L’allocation par défaut ne peut pas être basée sur un pourcentage.</label>
+        <label>L’affectation par défaut ne peut pas être basée sur un pourcentage.</label>
     </customLabels>
     <customLabels>
         <name>alloDeleteRow</name>
@@ -1851,31 +1991,31 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>alloExceedsOppAmount</name>
-        <label>Vous devez mettre à jour vos allocations avant de pouvoir réduire le montant d’une opportunité. Les allocations pour cette opportunité sont actuellement plus élevées que le montant de l’opportunité.</label>
+        <label>Vous devez mettre à jour vos affectations avant de pouvoir réduire le montant d’une opportunité. Les affectations pour cette opportunité sont actuellement plus élevées que le montant de l’opportunité.</label>
     </customLabels>
     <customLabels>
         <name>alloExceedsPmtAmount</name>
-        <label>Les allocations pour ce paiement sont actuellement plus élevées que le montant du paiement. Vous devez mettre à jour les montants de vos allocations, puis ajuster le montant du paiement.</label>
+        <label>Les affectations pour ce paiement sont actuellement plus élevées que le montant du paiement. Vous devez mettre à jour les montants de vos affectations, puis ajuster le montant du paiement.</label>
     </customLabels>
     <customLabels>
         <name>alloManageCampaignAllocations</name>
-        <label>Gérer des allocations de campagne</label>
+        <label>Gérer des affectations de campagne</label>
     </customLabels>
     <customLabels>
         <name>alloManageOppAllocations</name>
-        <label>Gérer des allocations d’opportunité</label>
+        <label>Gérer des affectations d’opportunité</label>
     </customLabels>
     <customLabels>
         <name>alloManagePaymentAllocations</name>
-        <label>Gérer des allocations de paiement</label>
+        <label>Gérer des affectations de paiement</label>
     </customLabels>
     <customLabels>
         <name>alloManageRecurringDonationAllocations</name>
-        <label>Gérer des allocations de don régulier</label>
+        <label>Gérer des affectations de don régulier</label>
     </customLabels>
     <customLabels>
         <name>alloModifyCurrency</name>
-        <label>Vous ne pouvez pas modifier directement les devises des allocations. La devise d’une allocation est mise à jour lorsque la devise de l’opportunité, campagne ou don régulier parent est modifiée.</label>
+        <label>Vous ne pouvez pas modifier directement les devises des affectations. La devise d’une affectation est mise à jour lorsque la devise de l’opportunité, campagne ou don régulier parent est modifiée.</label>
     </customLabels>
     <customLabels>
         <name>alloNegativeAmount</name>
@@ -1887,19 +2027,19 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>alloObjectUnsupported</name>
-        <label>Le bouton Gérer des allocations est uniquement pris en charge depuis un enregistrement de campagne, opportunité, paiement ou don régulier.</label>
+        <label>Le bouton Gérer des affectations est uniquement pris en charge depuis un enregistrement de campagne, opportunité, paiement ou don régulier.</label>
     </customLabels>
     <customLabels>
         <name>alloOverallocatedError</name>
-        <label>Le total des Allocations de {0} dépasse son Montant. Mettez à jour les Allocations {0} pour que leur total soit égal au Montant {0}.</label>
+        <label>Le total des Affectations de {0} dépasse son Montant. Mettez à jour les Affectations {0} pour que leur total soit égal au Montant {0}.</label>
     </customLabels>
     <customLabels>
         <name>alloPaidPmtsExceedsOpp</name>
-        <label>Le total des allocations des paiements payés ne peut pas être supérieur à l’allocation de l’opportunité pour une UCG.</label>
+        <label>Le total des affectations des paiements payés ne peut pas être supérieur à l’affectation de l’opportunité pour une UCG.</label>
     </customLabels>
     <customLabels>
         <name>alloPaymentAllocationBatchAllocationError</name>
-        <label>Une erreur s’est produite lors du traitement de l’enregistrement {0} associé à l’Allocation {1} ({2}). Détails : {3}</label>
+        <label>Une erreur s’est produite lors du traitement de l’enregistrement {0} associé à l’Affectation {1} ({2}). Détails : {3}</label>
     </customLabels>
     <customLabels>
         <name>alloPaymentAllocationBatchRecordError</name>
@@ -1911,19 +2051,19 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>alloPaymentNotEnabled</name>
-        <label>Les allocations au niveau du paiement ne sont pas activées pour votre organisation. Allouez-les plutôt au niveau de l’opportunité.</label>
+        <label>Les affectations au niveau du paiement ne sont pas activées pour votre organisation. Allouez-les plutôt au niveau de l’opportunité.</label>
     </customLabels>
     <customLabels>
         <name>alloPaymentOverallocatedError</name>
-        <label>Le montant alloué est supérieur au montant du paiement. Mettez à jour le(s) montant(s) de l’allocation de paiement pour que le total soit égal au montant du paiement. Voir opportunité « {0}, Id : {1} »</label>
+        <label>Le montant alloué est supérieur au montant du paiement. Mettez à jour le(s) montant(s) de l’affectation de paiement pour que le total soit égal au montant du paiement. Voir opportunité « {0}, Id : {1} »</label>
     </customLabels>
     <customLabels>
         <name>alloPercentExceed100</name>
-        <label>Les allocations par pourcentage ne peuvent pas dépasser 100 %.</label>
+        <label>Les affectations par pourcentage ne peuvent pas dépasser 100 %.</label>
     </customLabels>
     <customLabels>
         <name>alloPmtOppSingleTransaction</name>
-        <label>Les allocations de paiement et d&apos;opportunité pour le même enregistrement d’opportunité ne peuvent pas être créées ou modifiées au même moment.</label>
+        <label>Les affectations de paiement et d&apos;opportunité pour le même enregistrement d’opportunité ne peuvent pas être créées ou modifiées au même moment.</label>
     </customLabels>
     <customLabels>
         <name>alloRemainder</name>
@@ -1931,23 +2071,23 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>alloRemoveOppWithPmt</name>
-        <label>Vous ne pouvez pas supprimer une allocation d&apos;opportunité pour une UCG qui a payé les allocations de paiement.</label>
+        <label>Vous ne pouvez pas supprimer une affectation d&apos;opportunité pour une UCG qui a payé les affectations de paiement.</label>
     </customLabels>
     <customLabels>
         <name>alloSignMistmatch</name>
-        <label>Les allocations négatives sont autorisées uniquement dans les dons négatifs et les allocations positives ne sont pas autorisées dans les dons négatifs.</label>
+        <label>Les affectations négatives sont autorisées uniquement dans les dons négatifs et les affectations positives ne sont pas autorisées dans les dons négatifs.</label>
     </customLabels>
     <customLabels>
         <name>alloSingleParent</name>
-        <label>Chaque allocation doit avoir un objet parent unique : paiement, opportunité, don régulier ou campagne.</label>
+        <label>Chaque affectation doit avoir un objet parent unique : paiement, opportunité, don régulier ou campagne.</label>
     </customLabels>
     <customLabels>
         <name>alloSuccessfulRecordRetry</name>
-        <label>Le traitement de ces Allocations a été effectué à nouveau et s’est terminé correctement.</label>
+        <label>Le traitement de ces Affectations a été effectué à nouveau et s’est terminé correctement.</label>
     </customLabels>
     <customLabels>
         <name>alloTotalExceedsOppAmt</name>
-        <label>Les totaux d’allocation d’une opportunité ne peuvent pas dépasser le montant de l’opportunité ou du paiement associé.</label>
+        <label>Les totaux d’affectation d’une opportunité ne peuvent pas dépasser le montant de l’opportunité ou du paiement associé.</label>
     </customLabels>
     <customLabels>
         <name>alloTotals</name>
@@ -1972,6 +2112,14 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
         <label>Retrait de la Saisie de données par lots</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiAPIBatchError</name>
+        <label>Nous n’avons pas pu traiter les enregistrements d’importation de données en raison des erreurs suivantes :</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiAPISelectedError</name>
+        <label>Nous n’avons pas pu traiter les enregistrements d’importation de données sélectionnés en raison des erreurs suivantes :</label>
     </customLabels>
     <customLabels>
         <name>bdiAccountCustomIdError</name>
@@ -2036,6 +2184,10 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     <customLabels>
         <name>bdiContactCustomIdError</name>
         <label>Le champ de paramètre d’ID unique personnalisé de contact {0} doit avoir des champs correspondants dans l’objet d’importation de données NPSP dont les noms d’API sont {1} et {2}.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiContactMatchDupeMgmt</name>
+        <label>Règles de duplication de contact</label>
     </customLabels>
     <customLabels>
         <name>bdiContactMatchEmail</name>
@@ -2150,6 +2302,10 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <label>Importateur de données NPSP - Essai</label>
     </customLabels>
     <customLabels>
+        <name>bdiDupeMgmtMatchImportStatus</name>
+        <label>- Règle de duplication :</label>
+    </customLabels>
+    <customLabels>
         <name>bdiErrorBatchNameRequired</name>
         <label>Le nom du lot est un champ obligatoire.</label>
     </customLabels>
@@ -2183,15 +2339,15 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bdiErrorExistingDonationAllocations</name>
-        <label>Les allocations UCG fournies entrent en conflit avec les allocations existantes sur l’enregistrement d’opportunité du don. Supprimez les allocations de l’enregistrement d’opportunité ou de l’enregistrement d’importation de données NPSP, puis procédez à nouveau au traitement avec l’importateur de données NPSP.</label>
+        <label>Les affectations UCG fournies entrent en conflit avec les affectations existantes sur l’enregistrement d’opportunité du don. Supprimez les affectations de l’enregistrement d’opportunité ou de l’enregistrement d’importation de données NPSP, puis procédez à nouveau au traitement avec l’importateur de données NPSP.</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorExistingPaymentAllocations</name>
-        <label>Les allocations UCG fournies entrent en conflit avec les allocations existantes sur l’enregistrement de paiement du don. Supprimez les allocations de l’enregistrement de paiement ou de l’enregistrement d’importation de données NPSP, puis procédez à nouveau au traitement avec l’importateur de données NPSP.</label>
+        <label>Les affectations UCG fournies entrent en conflit avec les affectations existantes sur l’enregistrement de paiement du don. Supprimez les affectations de l’enregistrement de paiement ou de l’enregistrement d’importation de données NPSP, puis procédez à nouveau au traitement avec l’importateur de données NPSP.</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorGAUAllocationOver100</name>
-        <label>Les allocations UCG fournies dépassent 100 %.</label>
+        <label>Les affectations UCG fournies dépassent 100 %.</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorInvalidCampaignName</name>
@@ -2399,7 +2555,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bdiOMUIChildParentHelp</name>
-        <label>Association de l&apos;objet cible avec l&apos;autre Groupe d&apos;objets. Par exemple, une Allocation UCG est un enfant d&apos;une opportunité ou un Don récurrent est un parent d&apos;une opportunité.</label>
+        <label>Association de l&apos;objet cible avec l&apos;autre Groupe d&apos;objets. Par exemple, une Affectation UCG est un enfant d&apos;une opportunité ou un Don récurrent est un parent d&apos;une opportunité.</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIChildParentLabel</name>
@@ -2479,10 +2635,10 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bdiOMUIPageDescriptionPt3</name>
-        <label>Examinons deux exemples de groupes d’objets, Allocation UCG 1 et Allocation UCG 2. Ces groupes sont directement liés à l’objet Opportunité.
-            Vous pouvez attribuer deux allocations UCG à une même opportunité. Pour cela, saisissez les informations sur l’opportunité dans les colonnes Dons de votre fichier d’importation.
-            Insérez ensuite la première allocation UCG dans les colonnes Allocations UCG 1 et la deuxième dans les colonnes Allocations UCG 2. En raison du mappage des objets Allocations UCG 1 et
-            Allocations UCG 2, lors de l’importation, les allocations UCG sont toutes les deux attribuées à l’opportunité.</label>
+        <label>Examinons deux exemples de groupes d’objets, Affectation UCG 1 et Affectation UCG 2. Ces groupes sont directement liés à l’objet Opportunité.
+            Vous pouvez attribuer deux affectations UCG à une même opportunité. Pour cela, saisissez les informations sur l’opportunité dans les colonnes Dons de votre fichier d’importation.
+            Insérez ensuite la première affectation UCG dans les colonnes Affectations UCG 1 et la deuxième dans les colonnes Affectations UCG 2. En raison du mappage des objets Affectations UCG 1 et
+            Affectations UCG 2, lors de l’importation, les affectations UCG sont toutes les deux attribuées à l’opportunité.</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIObjectGroupsTitle</name>
@@ -2557,6 +2713,26 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     <customLabels>
         <name>bdiRunBtn</name>
         <label>Début du processus d’importation de données</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectCantProcessBatchDIRecords</name>
+        <label>Vous avez sélectionné des enregistrements liés à un lot d’importation de données NPSP. Pour importer des enregistrements associés à un lot d’importation de données NPSP, ouvrez le lot et cliquez sur Traiter le lot.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectCantProcessImportedRecords</name>
+        <label>Vous ne pouvez pas importer des enregistrements qui ont déjà été importés. Supprimez de votre sélection les enregistrements avec le statut Importé.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectNoDIRecordsSelected</name>
+        <label>Sélectionnez un ou plusieurs enregistrements d’importation de données.</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectReturnToListView</name>
+        <label>Revenir en arrière</label>
+    </customLabels>
+    <customLabels>
+        <name>bdiSelectTooManyDIRecords</name>
+        <label>Sélectionnez jusqu’à {0} enregistrements d’importation de données.</label>
     </customLabels>
     <customLabels>
         <name>bdiSettingsSectionContactMatching</name>
@@ -2832,7 +3008,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>La saisie de dons par lots héritée sera retirée le 13 juillet 2021 et ne fonctionnera plus dans NPSP. Si vous avez des lots en cours à cette date, vous pourrez toujours accéder à ces enregistrements, mais vous ne pourrez pas les traiter en utilisant la saisie de dons par lots. Pour garantir une parfaite transition, activez et utilisez la nouvelle saisie de dons avant le 13 juillet. Pour plus d’informations sur la saisie de dons, consultez la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;documentation NPSP&lt;/a&gt;.</label>
+        <label>La saisie de dons par lots héritée sera retirée le 13 juillet 2021 et ne fonctionnera plus dans NPSP. Si vous avez des lots en cours à cette date, vous pourrez toujours accéder à ces enregistrements, mais vous ne pourrez pas les traiter en utilisant la saisie de dons par lots. Pour garantir une parfaite transition, activez et utilisez la nouvelle saisie de dons avant le 13 juillet. Pour plus d’informations sur la saisie de dons, consultez la &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;documentation NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -3054,6 +3230,10 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <label>Fermer</label>
     </customLabels>
     <customLabels>
+        <name>commonCancelAndClose</name>
+        <label>Annuler et fermer</label>
+    </customLabels>
+    <customLabels>
         <name>commonConcurrentBatchError</name>
         <label>Une tâche est déjà en cours dans la classe Apex {0}. La tâche doit être terminée avant d&apos;être réexécutée.</label>
     </customLabels>
@@ -3184,6 +3364,10 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     <customLabels>
         <name>commonRecordsProcessed</name>
         <label>Enregistrements traités</label>
+    </customLabels>
+    <customLabels>
+        <name>commonRefreshPage</name>
+        <label>Actualisez la page pour afficher les dernières modifications.</label>
     </customLabels>
     <customLabels>
         <name>commonRequired</name>
@@ -3363,7 +3547,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>Voir tous les contacts en double trouvés à l’aide de règles de correspondance. &lt;a href=’https://powerofus.force.com/IP_Contacts’ target=’_blank’&gt;&lt;b&gt; En savoir plus&lt;/b&gt;&lt;/a&gt;</label>
+        <label>Voir tous les contacts en double trouvés à l’aide de règles de correspondance. &lt;a href=&quot;https://powerofus.force.com/IP_Contacts&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; En savoir plus &lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>
@@ -3435,11 +3619,19 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
     </customLabels>
     <customLabels>
         <name>geAddNewAllocation</name>
-        <label>Ajouter une nouvelle Allocation</label>
+        <label>Ajouter une nouvelle Affectation</label>
     </customLabels>
     <customLabels>
         <name>geAddSoftCredit</name>
         <label>Ajouter un crédit indirect</label>
+    </customLabels>
+    <customLabels>
+        <name>geRecurringGiftModalWarning</name>
+        <label>L’application d’un calendrier de dons récurrents à une opportunité ou à un paiement existant, et l’ajout de crédits indirects ne sont pas pris en charge dans la saisie de dons.</label>
+    </customLabels>
+    <customLabels>
+        <name>geSoftCreditsWarning</name>
+        <label>Les crédits indirects dans la saisie de dons ne sont pas pris en charge pour les dons récurrents.</label>
     </customLabels>
     <customLabels>
         <name>geA11ySection</name>
@@ -3835,6 +4027,38 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     <customLabels>
         <name>geFieldsNotFoundMessage</name>
         <label>Ce formulaire inclut des champs introuvables. Consultez votre administrateur.</label>
+    </customLabels>
+    <customLabels>
+        <name>geAddSchedule</name>
+        <label>Ajouter une planification récurrente</label>
+    </customLabels>
+    <customLabels>
+        <name>geUpdateSchedule</name>
+        <label>Mettre à jour la planification récurrente</label>
+    </customLabels>
+    <customLabels>
+        <name>geMakeRecurring</name>
+        <label>Rendre récurrent</label>
+    </customLabels>
+    <customLabels>
+        <name>geRemoveSchedule</name>
+        <label>Supprimer la planification récurrente</label>
+    </customLabels>
+    <customLabels>
+        <name>geEditSchedule</name>
+        <label>Modifier la planification récurrente</label>
+    </customLabels>
+    <customLabels>
+        <name>geOpenEndedGiftSchedule</name>
+        <label>Don de {0} {1} à partir du {2}.</label>
+    </customLabels>
+    <customLabels>
+        <name>geFixedGiftSchedule</name>
+        <label>Don de {0} {1} à partir du {2} et se terminant après {3} versements.</label>
+    </customLabels>
+    <customLabels>
+        <name>geRecurringScheduleInformation</name>
+        <label>Informations sur la planification récurrente</label>
     </customLabels>
     <customLabels>
         <name>gsAdminSetupTitle</name>
@@ -4358,15 +4582,15 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>gseuChecklistItemCaptureDonorIntentLinkLabel</name>
-        <label>Consultez Trailhead pour en savoir plus sur les allocations de don</label>
+        <label>Consultez Trailhead pour en savoir plus sur les affectations de don</label>
     </customLabels>
     <customLabels>
         <name>gseuChecklistItemCaptureDonorIntentPriBtnLabel</name>
-        <label>Création d’allocations</label>
+        <label>Création d’affectations</label>
     </customLabels>
     <customLabels>
         <name>gseuChecklistItemCaptureDonorIntentTitle</name>
-        <label>Identification de l’intention du donateur avec les allocations de don</label>
+        <label>Identification de l’intention du donateur avec les affectations de don</label>
     </customLabels>
     <customLabels>
         <name>gseuChecklistItemCollectGiftsDesc</name>
@@ -4473,6 +4697,10 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <label>Ce nom a été utilisé par un autre modèle. Saisissez un nom unique.</label>
     </customLabels>
     <customLabels>
+        <name>geErrorDonorMismatch</name>
+        <label>Pour un don de foyer, sélectionnez Contact1 pour Type de donateur et renseignez les champs Contact.</label>
+    </customLabels>
+    <customLabels>
         <name>geErrorDonorTypeValidation</name>
         <label>Lorsque vous sélectionnez {0} pour {1}, vous devez saisir des informations dans au moins l&apos;un des champs suivants : {2} ou {3}</label>
     </customLabels>
@@ -4562,11 +4790,11 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>commonGauAllocations</name>
-        <label>Allocations UCG</label>
+        <label>Affectations UCG</label>
     </customLabels>
     <customLabels>
         <name>gauAllocationErrorGeneral</name>
-        <label>Erreur d’allocation UCG</label>
+        <label>Erreur d’affectation UCG</label>
     </customLabels>
     <customLabels>
         <name>geHeaderAdvancedFormFields</name>
@@ -4694,11 +4922,11 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>geHelpTextAllocation1Mapping</name>
-        <label>Ce Groupe d&apos;objets ne vous permet de saisir qu’une seule allocation UCG. Utilisez ces champs uniquement si vous mappez des champs personnalisés sur les allocations UCG. Sinon, utilisez le Paquet de champs des Allocations UCG.</label>
+        <label>Ce Groupe d&apos;objets ne vous permet de saisir qu’une seule affectation UCG. Utilisez ces champs uniquement si vous mappez des champs personnalisés sur les affectations UCG. Sinon, utilisez le Paquet de champs des Affectations UCG.</label>
     </customLabels>
     <customLabels>
         <name>geHelpTextAllocation2Mapping</name>
-        <label>Ce Groupe d&apos;objets ne vous permet de saisir qu’une deuxième allocation UCG. Utilisez ces champs uniquement si vous mappez des champs personnalisés sur les allocations UCG. Sinon, utilisez le Paquet de champs des Allocations UCG.</label>
+        <label>Ce Groupe d&apos;objets ne vous permet de saisir qu’une deuxième affectation UCG. Utilisez ces champs uniquement si vous mappez des champs personnalisés sur les affectations UCG. Sinon, utilisez le Paquet de champs des Affectations UCG.</label>
     </customLabels>
     <customLabels>
         <name>geHelpTextAllocationBundle</name>
@@ -4953,7 +5181,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>geWarningGauAllocFieldUpdatesDisabled</name>
-        <label>Cette donation a au moins une Allocation UCG attribuée. Par conséquent, vous ne pouvez pas mettre à jour certains champs.</label>
+        <label>Cette donation a au moins une Affectation UCG attribuée. Par conséquent, vous ne pouvez pas mettre à jour certains champs.</label>
     </customLabels>
     <customLabels>
         <name>giftProcessingAccountException</name>
@@ -5964,12 +6192,76 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <label>Dons d’une organisation</label>
     </customLabels>
     <customLabels>
+        <name>pmtElevatePermissionRequired</name>
+        <label>Gérez ce paiement dans Elevate.</label>
+    </customLabels>
+    <customLabels>
         <name>pmtModifyCurrency</name>
         <label>Vous ne pouvez pas modifier directement les devises de paiement. Mettez à jour la devise de l’opportunité parente et NPSP mettra automatiquement à jour la devise de tous les enregistrements de paiement associés.</label>
     </customLabels>
     <customLabels>
+        <name>pmtNoRefundPermissionMessage</name>
+        <label>Vous n’êtes pas autorisé à rembourser les paiements. Contactez votre administrateur Salesforce pour obtenir de l’aide.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtOriginalPaymentNotCompleted</name>
+        <label>Le paiement ne peut pas être remboursé, car Elevate ne l’a pas encore traité.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtOriginalPaymentNotPaid</name>
+        <label>Ce paiement est toujours en cours de traitement et ne peut pas encore être remboursé.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtOriginalPaymentNotFound</name>
+        <label>Vous ne pouvez pas modifier un remboursement sans paiement initial.</label>
+    </customLabels>
+    <customLabels>
         <name>pmtPaidPaymentDateRequired</name>
         <label>Une paiement payé doit avoir une date de paiement.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentDate</name>
+        <label>Date du paiement</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentErrorMessage</name>
+        <label>Une erreur s&apos;est produite lors du traitement du remboursement.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmountInvalid</name>
+        <label>Saisissez un remboursement inférieur ou égal au solde restant.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentSuccessMessage</name>
+        <label>Le remboursement a été effectué.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtPaymentNotFound</name>
+        <label>L’enregistrement de paiement Elevate correspondant est introuvable. Contactez votre administrateur Salesforce pour obtenir de l’aide.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtPaymentNotRefundable</name>
+        <label>Ce paiement a déjà été remboursé ou il s’agit d’un remboursement.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmount</name>
+        <label>Montant du remboursement</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentMessage</name>
+        <label>Remboursez le paiement suivant :</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundProcessing</name>
+        <label>Remboursement soumis pour traitement. Recherchez le paiement remboursé dans l’enregistrement de l’opportunité.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentConfirmedButton</name>
+        <label>Rembourser le paiement</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentTitle</name>
+        <label>Rembourser le paiement ?</label>
     </customLabels>
     <customLabels>
         <name>pmtUnpaidPaymentScheduledDateRequired</name>
@@ -6293,7 +6585,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>stgAllocationLevel</name>
-        <label>Type d’allocation</label>
+        <label>Type d’affectation</label>
     </customLabels>
     <customLabels>
         <name>stgBDIGoToSetup</name>
@@ -6528,11 +6820,11 @@ Si vous sélectionnez Ne pas planifier automatiquement les tâches NPSP par déf
     </customLabels>
     <customLabels>
         <name>stgErrorMissingDefaultGauRecordWithPmtAllocEnabled</name>
-        <label>L&apos;Unité comptable générale par défaut précédemment configurée n&apos;existe plus et a été retirée. Vous devez réactiver les Allocations par défaut et sélectionner une Unité comptable générale par défaut pour pouvoir utiliser les allocations de paiement. Pour mettre à jour les Paramètres d&apos;allocation par défaut, ouvrez la page Allocations UCG dans les Paramètres de NPSP.</label>
+        <label>L&apos;Unité comptable générale par défaut précédemment configurée n&apos;existe plus et a été retirée. Vous devez réactiver les Affectations par défaut et sélectionner une Unité comptable générale par défaut pour pouvoir utiliser les affectations de paiement. Pour mettre à jour les Paramètres d&apos;affectation par défaut, ouvrez la page Affectations UCG dans les Paramètres de NPSP.</label>
     </customLabels>
     <customLabels>
         <name>stgErrorMissingDefaultGauRecord</name>
-        <label>L&apos;Unité comptable générale par défaut précédemment configurée n&apos;existe plus et a été retirée. Pour réactiver les Allocations par défaut, ouvrez la page Allocations UCG dans les Paramètres de NPSP.</label>
+        <label>L&apos;Unité comptable générale par défaut précédemment configurée n&apos;existe plus et a été retirée. Pour réactiver les Affectations par défaut, ouvrez la page Affectations UCG dans les Paramètres de NPSP.</label>
     </customLabels>
     <customLabels>
         <name>stgHHDataRefreshTitle</name>
@@ -6579,7 +6871,7 @@ Si vous sélectionnez Ne pas planifier automatiquement les tâches NPSP par déf
     </customLabels>
     <customLabels>
         <name>stgHelpAlloFiscalYearRollups</name>
-        <label>Lorsque cette option est sélectionnée, elle active les paramètres d’année fiscale, au lieu d’année civile, pour les cumuls totaux d’allocation. Pour définir les informations sur l’année fiscale, accédez à Configuration, puis Année fiscale. REMARQUE : NPSP n’est pas compatible avec les paramètres d’années fiscales personnalisés.</label>
+        <label>Lorsque cette option est sélectionnée, elle active les paramètres d’année fiscale, au lieu d’année civile, pour les cumuls totaux d’affectation. Pour définir les informations sur l’année fiscale, accédez à Configuration, puis Année fiscale. REMARQUE : NPSP n’est pas compatible avec les paramètres d’années fiscales personnalisés.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAlloNDayValue</name>
@@ -6587,13 +6879,13 @@ Si vous sélectionnez Ne pas planifier automatiquement les tâches NPSP par déf
     </customLabels>
     <customLabels>
         <name>stgHelpAllocationLevel</name>
-        <label>Une allocation est le montant spécifique d’un don qui va dans une unité comptable générale (UCG) désignée. Ce paramètre détermine si les fonds sont attribués en fonction de l’opportunité ou du montant qui correspond au paiement.&lt;br/&gt;&lt;br/&gt;
+        <label>Une affectation est le montant spécifique d’un don qui va dans une unité comptable générale (UCG) désignée. Ce paramètre détermine si les fonds sont attribués en fonction de l’opportunité ou du montant qui correspond au paiement.&lt;br/&gt;&lt;br/&gt;
 
-&lt;b&gt;AVERTISSEMENT :&lt;/b&gt; choisir d’utiliser les allocations de paiement modifie la manière dont les allocations d’opportunité fonctionnent dans votre organisation. Il est important de comprendre ces modifications et les exigences supplémentaires existantes avant de les activer.&lt;br/&gt;&lt;br/&gt;
+&lt;b&gt;AVERTISSEMENT :&lt;/b&gt; choisir d’utiliser les affectations de paiement modifie la manière dont les affectations d’opportunité fonctionnent dans votre organisation. Il est important de comprendre ces modifications et les exigences supplémentaires existantes avant de les activer.&lt;br/&gt;&lt;br/&gt;
 
-Si vous activez et commencez à utiliser les allocations de paiement puis que vous les désactivez, vous devrez rapprocher manuellement vos données et mettre à jour les enregistrements d’allocations d’opportunités pour refléter les informations attribuées précédemment dans les allocations de paiement. Pour mieux comprendre les conséquences que cela peut avoir, consultez la documentation relative aux allocations de paiement.&lt;br/&gt;&lt;br/&gt;
+Si vous activez et commencez à utiliser les affectations de paiement puis que vous les désactivez, vous devrez rapprocher manuellement vos données et mettre à jour les enregistrements d’affectations d’opportunités pour refléter les informations attribuées précédemment dans les affectations de paiement. Pour mieux comprendre les conséquences que cela peut avoir, consultez la documentation relative aux affectations de paiement.&lt;br/&gt;&lt;br/&gt;
 
-Lorsque vous activez les allocations de paiement, les cumuls existants restent les mêmes. Nous ne modifions pas les cumuls ni ne créons de nouveaux cumuls personnalisés. Si vous le souhaitez, vous pouvez créer de nouveaux cumuls uniquement en fonction des paiements.</label>
+Lorsque vous activez les affectations de paiement, les cumuls existants restent les mêmes. Nous ne modifions pas les cumuls ni ne créons de nouveaux cumuls personnalisés. Si vous le souhaitez, vous pouvez créer de nouveaux cumuls uniquement en fonction des paiements.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAutoAffil</name>
@@ -6625,12 +6917,12 @@ Lorsque vous activez les allocations de paiement, les cumuls existants restent l
     </customLabels>
     <customLabels>
         <name>stgHelpBatchAlloRollup</name>
-        <label>Cet utilitaire calcule les cumuls totaux pour toutes les opportunités Clôturées avec des allocations et met à jour l’unité comptable générale (UCG) concernée.
+        <label>Cet utilitaire calcule les cumuls totaux pour toutes les opportunités Clôturées avec des affectations et met à jour l’unité comptable générale (UCG) concernée.
 Ce processus peut prendre un certain temps, mais vous pouvez fermer cette page en toute sécurité et le processus continuera en arrière-plan.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpBatchCreateDefault</name>
-        <label>Cliquer sur ce bouton démarre un processus par lots qui crée des allocations par défaut pour toutes les opportunités existantes, excepté les opportunités exclues dans les paramètres de cumul d’allocations. Les allocations par défaut doivent être activées et une unité comptable générale par défaut sélectionnée pour exécuter cet outil.</label>
+        <label>Cliquer sur ce bouton démarre un processus par lots qui crée des affectations par défaut pour toutes les opportunités existantes, excepté les opportunités exclues dans les paramètres de cumul d’affectations. Les affectations par défaut doivent être activées et une unité comptable générale par défaut sélectionnée pour exécuter cet outil.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpBatchOppRollup</name>
@@ -6721,11 +7013,11 @@ Attendez que le processus soit terminé à 100 % pour quitter ou rafraîchir ce
     </customLabels>
     <customLabels>
         <name>stgHelpDefaultAllocationsEnabled</name>
-        <label>Lorsque cette option est sélectionnée, NPSP active la création et la gestion automatique des enregistrements d’allocations UCG à l’unité comptable générale par défaut. Cette fonctionnalité permet d’améliorer les rapports sur l’unité comptable générale par défaut, mais utilise plus d’espace de stockage.</label>
+        <label>Lorsque cette option est sélectionnée, NPSP active la création et la gestion automatique des enregistrements d’affectations UCG à l’unité comptable générale par défaut. Cette fonctionnalité permet d’améliorer les rapports sur l’unité comptable générale par défaut, mais utilise plus d’espace de stockage.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpDefaultGAU</name>
-        <label>Lorsque les allocations par défaut sont activées, Salesforce crée une allocation UCG pour toute les nouvelles opportunités et les assigne à cette unité comptable générale. REMARQUE : Ceci n’inclut pas les opportunités non allouées existantes. Vous pouvez les allouer à l’unité comptable générale par défaut dans les paramètres NPSP sous Processus de données en masse | Création par lot d’allocations par défaut.</label>
+        <label>Lorsque les affectations par défaut sont activées, Salesforce crée une affectation UCG pour toute les nouvelles opportunités et les assigne à cette unité comptable générale. REMARQUE : Ceci n’inclut pas les opportunités non allouées existantes. Vous pouvez les allouer à l’unité comptable générale par défaut dans les paramètres NPSP sous Processus de données en masse | Création par lot d’affectations par défaut.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpDisableHHAccountAddr</name>
@@ -7120,11 +7412,11 @@ Pour vérifier vos paramètres existants, accédez à Règles de duplication sou
     </customLabels>
     <customLabels>
         <name>stgHelpRollupExcludeAlloOppRecType</name>
-        <label>Les allocations UCG venant d’opportunités ayant les types d’enregistrement sélectionnés ne seront pas incluses lors du cumul sur l’enregistrement d’unité comptable générale.</label>
+        <label>Les affectations UCG venant d’opportunités ayant les types d’enregistrement sélectionnés ne seront pas incluses lors du cumul sur l’enregistrement d’unité comptable générale.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRollupExcludeAlloOppType</name>
-        <label>Les allocations UCG venant d’opportunités ayant cette valeur dans la liste de sélection de type ne seront pas incluses lors du cumul sur l’enregistrement d’unité comptable générale.</label>
+        <label>Les affectations UCG venant d’opportunités ayant cette valeur dans la liste de sélection de type ne seront pas incluses lors du cumul sur l’enregistrement d’unité comptable générale.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRollupExcludeContactOppRT</name>
@@ -7250,19 +7542,19 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
     </customLabels>
     <customLabels>
         <name>stgLabelAlloBatchProgress</name>
-        <label>Progression du cumul d’allocations par lots</label>
+        <label>Progression du cumul d’affectations par lots</label>
     </customLabels>
     <customLabels>
         <name>stgLabelAllocationBehaviorSettings</name>
-        <label>Paramètres de comportement d’allocation</label>
+        <label>Paramètres de comportement d’affectation</label>
     </customLabels>
     <customLabels>
         <name>stgLabelAllocationsRollupSettings</name>
-        <label>Paramètres de cumul d’allocations UCG</label>
+        <label>Paramètres de cumul d’affectations UCG</label>
     </customLabels>
     <customLabels>
         <name>stgLabelAllocationsSettings</name>
-        <label>Paramètres d’allocations par défaut</label>
+        <label>Paramètres d’affectations par défaut</label>
     </customLabels>
     <customLabels>
         <name>stgLabelAreYouSure</name>
@@ -7618,7 +7910,7 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
     </customLabels>
     <customLabels>
         <name>stgNavAllocations</name>
-        <label>Allocations UCG</label>
+        <label>Affectations UCG</label>
     </customLabels>
     <customLabels>
         <name>stgNavBatchProcessSettings</name>
@@ -7730,7 +8022,7 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
     </customLabels>
     <customLabels>
         <name>stgNavRollupAlloBatch</name>
-        <label>Cumul d’allocations par lots</label>
+        <label>Cumul d’affectations par lots</label>
     </customLabels>
     <customLabels>
         <name>stgNavRollupBatch</name>
@@ -7928,6 +8220,30 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
         <name>donationHistoryDatatableAriaLabel</name>
         <label>Historique des dons</label>
     </customLabels>
+    <customLabels>
+        <name>RD2_Actions</name>
+        <label>Actions</label>
+    </customLabels>
+    <customLabels>
+        <name>updatePaymentMethod</name>
+        <label>Mettre à jour le mode de paiement</label>
+    </customLabels>
+    <customLabels>
+        <name>changeAmountOrFrequency</name>
+        <label>Modifier le montant ou la fréquence</label>
+    </customLabels>
+    <customLabels>
+        <name>stopRecurringDonation</name>
+        <label>Arrêter le don récurrent</label>
+    </customLabels>
+    <customLabels>
+        <name>stopRecurringDonationModalTitle</name>
+        <label>Arrêter ce don récurrent ?</label>
+    </customLabels>
+    <customLabels>
+        <name>updateRecurringDonation</name>
+        <label>Mettre à jour le don récurrent</label>
+    </customLabels>
     <reportTypes>
         <name>Contacts_Only</name>
         <label>Uniquement contacts</label>
@@ -7977,6 +8293,10 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
         <label>Nouvelle campagne</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.Pause</name>
+        <label>Interruption</label>
+    </quickActions>
+    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>Nouvelle affiliation</label>
     </quickActions>
@@ -7989,8 +8309,32 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
         <label>Nouveau don régulier</label>
     </quickActions>
     <quickActions>
+        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
+        <label>Nouvelle opportunité</label>
+    </quickActions>
+    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>Nouveau don régulier</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__oppPayment__c.Refund</name>
+        <label>Rembourser</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Quick_Update</name>
+        <label>Mise à jour rapide</label>
+    </quickActions>
+    <quickActions>
+        <name>npo02__Household__c.Update_Household</name>
+        <label>Mettre à jour un foyer</label>
+    </quickActions>
+    <quickActions>
+        <name>Address__c.Update_Address</name>
+        <label>Mettre à jour une adresse</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
+        <label>Fermer le don récurrent</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -8011,6 +8355,10 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>Nouvelle relation</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Quick_Update</name>
+        <label>Mise à jour rapide</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>

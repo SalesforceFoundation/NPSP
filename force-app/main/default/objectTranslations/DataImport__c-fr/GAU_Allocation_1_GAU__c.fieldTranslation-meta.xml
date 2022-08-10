@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>GAU_Allocation_1_GAU__c</name>
-    <help>L&apos;ID Salesforce de l&apos;UCG à utiliser pour la première allocation.</help>
+    <help>L&apos;ID Salesforce de l&apos;UCG à utiliser pour la première affectation.</help>
     <relationshipLabel>Importations de données NPSP (UCG 1)</relationshipLabel>
-    <label>Allocation UCG 1 : UCG</label>
+    <label>Affectation UCG 1 : UCG</label>
 </CustomFieldTranslation>

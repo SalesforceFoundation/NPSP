@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>LimitRecalculatedRecurringDonations__c</name>
+    <help>夜間の継続支援バッチジョブで再計算される継続支援の数を前回の支援に基づいて制限します。</help>
+    <label>再計算される継続支援を制限</label>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Contact_Role_for_Organizational_Opps__c</name>
+    <help>A Função de contato padrão atribuída automaticamente ao Contato primário da oportunidade quando a Conta de oportunidade NÃO é uma Conta de família, individual ou um para um.</help>
+    <label>Função de cont. para Op. organizacionais</label>
+</CustomFieldTranslation>
