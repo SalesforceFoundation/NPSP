@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>NCOA_Result_Code__c</name>
+    <help>O código de resultados do representante do NCOA.</help>
+    <label>Código de resultados NCOA</label>
+</CustomFieldTranslation>

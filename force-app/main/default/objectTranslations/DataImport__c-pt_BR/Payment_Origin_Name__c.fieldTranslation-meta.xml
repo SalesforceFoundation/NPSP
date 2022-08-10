@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Payment_Origin_Name__c</name>
+    <help>O nome do sistema em que a transação foi iniciada.</help>
+    <label>Nome de origem do pagamento</label>
+</CustomFieldTranslation>

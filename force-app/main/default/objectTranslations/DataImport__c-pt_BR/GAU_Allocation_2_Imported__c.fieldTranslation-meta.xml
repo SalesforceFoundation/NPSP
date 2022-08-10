@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>GAU_Allocation_2_Imported__c</name>
+    <help>Uma busca pela primeira Alocação de GAU se ela foi criada com sucesso.</help>
+    <relationshipLabel>Importações de dados do NPSP (GAU 2)</relationshipLabel>
+    <label>Alocação de GAU 2: importada</label>
+</CustomFieldTranslation>

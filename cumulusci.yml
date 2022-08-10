@@ -652,11 +652,6 @@ tasks:
         options:
             output_style: salesforce
             elements:
-                # Strip all underlying field translations, leaving translations for new fields in these objects
-                - path: force-app/main/default/*ranslations/**/*ranslation-meta.xml
-                  xpath: /*/*[re:match(ns:name, '...+__..+')]
-                - path: force-app/tdtm/*ranslations/**/*ranslation-meta.xml
-                  xpath: /*/*[re:match(ns:name, '...+__..+')]
                 # Strip any underlying package object label translations
                 - path: force-app/main/default/objectTranslations/npe01**/**objectTranslation-meta.xml
                   xpath: //ns:layouts|//ns:nameFieldLabel|//ns:gender|//ns:caseValues|//ns:plural|//ns:startsWith
@@ -747,13 +742,15 @@ tasks:
                   xpath: //ns:gender|//ns:caseValues|//ns:nameFieldLabel|//ns:standardFields
 
     set_user_language:
-        description: Update the language of the Current User to the specified language as '-o param1 English' (Other languages are are Spanish, French, German and Dutch).
+        description: Update the language of the Current User to the specified language as '-o param1 english'
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
         group: Org Config
         options:
             apex: >-
                 User u = [SELECT Id FROM User WHERE Id = :UserInfo.getUserId() LIMIT 1];
-                Map<String, String> languageMap = new Map<String, String>{ 'English' => 'en_US', 'Spanish' => 'es', 'French' => 'fr', 'German' => 'de', 'Dutch' => 'nl_NL', 'english' => 'en_US', 'spanish' => 'es', 'french' => 'fr', 'german' => 'de', 'dutch' => 'nl_NL' };
+                Map<String, String> languageMap = new Map<String, String>{ 'English' => 'en_US', 'Spanish' => 'es', 
+                'French' => 'fr', 'German' => 'de', 'Dutch' => 'nl_NL', 'Japanese' => 'ja', 'english' => 'en_US', 
+                'spanish' => 'es', 'french' => 'fr', 'german' => 'de', 'dutch' => 'nl_NL', 'japanese' => 'ja' };
                 u.LanguageLocaleKey = languageMap.get('%%%PARAM_1%%%');
                 Update u;
 

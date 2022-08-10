@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>RecurringDonationImported__c</name>
+    <help>Uma busca pela Doação recorrente se ela foi criada com sucesso.</help>
+    <relationshipLabel>Importações de dados do NPSP</relationshipLabel>
+    <label>Doação recorrente importada</label>
+</CustomFieldTranslation>

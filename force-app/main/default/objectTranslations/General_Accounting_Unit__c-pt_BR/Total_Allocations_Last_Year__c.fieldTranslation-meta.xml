@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Total_Allocations_Last_Year__c</name>
+    <help>Soma total de todas as alocações de oportunidades em uma fase fechada e ganha no ano passado.</help>
+    <label>Total de alocações no ano passado</label>
+</CustomFieldTranslation>

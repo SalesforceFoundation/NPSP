@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>PreviousPlannedInstallments__c</name>
+    <help>O número anterior de parcelas (doações) que você espera receber. Somente para doações recorrentes de prazo fixo.</help>
+    <label>Número anterior de parcelas planejadas</label>
+</CustomFieldTranslation>

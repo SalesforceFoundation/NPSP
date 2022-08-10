@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>StatusMappingDeploymentId__c</name>
+    <help>ID de implantação de metadados personalizados de mapeamento de status</help>
+    <label>ID de implantação de map. de status</label>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>RecurringDonationLastNDays__c</name>
+    <help>Schränken Sie die in den Rollup der wiederkehrenden Spenden aufgenommenen Opportunities auf die ein, die vor einer bestimmten Anzahl Tage geändert wurden. Diese Einstellung wird durch zeitgebundene Rollup-Batch-Aufträge für wiederk. Spenden überschrieben.</help>
+    <label>In der letzten Anzahl Tage geänderte WS</label>
+</CustomFieldTranslation>

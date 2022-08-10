@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Deceased__c</name>
+    <help>Indica que o Contato faleceu. Quando selecionado, o NPSP exclui este Contato da Nomenclatura de família (a menos que este Contato seja o único na Família) e das listas de email e telefone padrão.</help>
+    <label>Falecido</label>
+</CustomFieldTranslation>

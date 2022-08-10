@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Process_Using_Scheduled_Job__c</name>
+    <help>Quando marcado, o lote será processado automaticamente com base no agendamento do trabalho associado.</help>
+    <label>Processar usando trabalho agendado</label>
+</CustomFieldTranslation>

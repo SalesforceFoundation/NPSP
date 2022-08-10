@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>EnableChangeLog__c</name>
+    <help>Quando ativado, o NPSP cria um log de alterações de doação recorrente sempre que os campos de valor, agenda ou campanha de uma doação recorrente são atualizados.</help>
+    <label>Ativar log de alterações de DR</label>
+</CustomFieldTranslation>

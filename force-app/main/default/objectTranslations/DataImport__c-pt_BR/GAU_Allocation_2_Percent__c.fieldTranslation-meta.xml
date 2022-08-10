@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>GAU_Allocation_2_Percent__c</name>
+    <help>A porcentagem atribuída à segunda Alocação de GAU da Oportunidade. Você precisa usar o Mapeamento avançado de importação de dados a fim de mapear para este campo.</help>
+    <label>Alocação de GAU 2: porcentagem</label>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Effective_Date__c</name>
+    <help>A data em que as informações de agendamento novas ou atualizadas (Valor, Dia do mês, etc.) entram em vigor para esta Doação recorrente. O padrão é a data atual.</help>
+    <label>Data de vigência da Doação recorrente</label>
+</CustomFieldTranslation>

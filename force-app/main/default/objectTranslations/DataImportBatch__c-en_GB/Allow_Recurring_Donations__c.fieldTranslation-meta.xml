@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Allow_Recurring_Donations__c</name>
+    <help>Indicates if Recurring Donations are availabe in this Batch.</help>
+    <label>Allow Recurring Donations</label>
+</CustomFieldTranslation>

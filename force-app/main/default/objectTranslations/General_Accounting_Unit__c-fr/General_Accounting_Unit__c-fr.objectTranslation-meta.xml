@@ -7,11 +7,11 @@
     <layouts>
         <layout>General Accounting Unit Layout</layout>
         <sections>
-            <label>Informations d’allocation</label>
+            <label>Informations d’affectation</label>
             <section>Allocation Information</section>
         </sections>
         <sections>
-            <label>Totaux d’allocation</label>
+            <label>Totaux d’affectation</label>
             <section>Allocation Totals</section>
         </sections>
         <sections>

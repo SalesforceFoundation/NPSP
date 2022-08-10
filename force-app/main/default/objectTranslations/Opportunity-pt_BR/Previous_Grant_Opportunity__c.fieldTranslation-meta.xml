@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Previous_Grant_Opportunity__c</name>
+    <help>Se a Bolsa é uma renovação de uma Bolsa anterior, use este campo para relacionar o registro com a Bolsa anterior.</help>
+    <relationshipLabel>Bolsas/Doações relacionadas</relationshipLabel>
+    <label>Oportunidade de bolsa/doação anterior</label>
+</CustomFieldTranslation>

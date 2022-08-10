@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Engagement_Plan_Template__c</name>
+    <help>O modelo do plano de interação a aplicar ao objeto de destino quando este nível for alcançado.</help>
+    <relationshipLabel>Níveis</relationshipLabel>
+    <label>Modelo de plano de interação</label>
+</CustomFieldTranslation>

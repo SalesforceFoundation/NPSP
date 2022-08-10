@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <layouts>
+        <layout>Engagement Plan Layout</layout>
+        <sections>
+            <label>Links personalizados</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Número do plano de interação</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Número do plano de interação</label>
+    </standardFields>
+    <gender>Masculine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>Plano de engajamento</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Planos de engajamento</value>
+    </caseValues>
+</CustomObjectTranslation>

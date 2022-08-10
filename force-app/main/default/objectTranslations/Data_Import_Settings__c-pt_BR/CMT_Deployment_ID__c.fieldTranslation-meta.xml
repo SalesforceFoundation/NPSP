@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>CMT_Deployment_ID__c</name>
+    <help>ID da implantação de metadados personalizados</help>
+    <label>ID de implantação CMT</label>
+</CustomFieldTranslation>

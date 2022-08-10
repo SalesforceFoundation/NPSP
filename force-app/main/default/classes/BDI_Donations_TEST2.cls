@@ -127,17 +127,17 @@ public with sharing class BDI_Donations_TEST2 {
         }
 
         //Confirm that the DIs are Imported and that the correct status is in place for each Oppt/Payment
-        System.assertEquals(System.label.bdiImported,di1.Status__c);
+        System.assertEquals('Imported', di1.Status__c);
         System.assertEquals(System.label.bdiCreated,di1.DonationImportStatus__c);
         System.assertEquals(System.label.bdiCreated,di1.PaymentImportStatus__c);
         System.assertNotEquals(null,di1.DonationImported__c);
         System.assertNotEquals(null,di1.PaymentImported__c);
-        System.assertEquals(System.label.bdiImported,di2.Status__c);
+        System.assertEquals('Imported', di2.Status__c);
         System.assertEquals(System.label.bdiCreated,di2.DonationImportStatus__c);
         System.assertEquals(System.label.bdiCreated,di2.PaymentImportStatus__c);
         System.assertNotEquals(null,di2.DonationImported__c);
         System.assertNotEquals(null,di2.PaymentImported__c);
-        System.assertEquals(System.label.bdiImported,di3.Status__c);
+        System.assertEquals('Imported', di3.Status__c);
         System.assertEquals(System.label.bdiCreated,di3.DonationImportStatus__c);
         System.assertEquals(System.label.bdiCreated,di3.PaymentImportStatus__c);
         System.assertNotEquals(null,di3.DonationImported__c);
@@ -266,10 +266,10 @@ public with sharing class BDI_Donations_TEST2 {
         }
 
         //Confirm that both data import records were imported successfully and Oppts and Payments were marked as updated
-        System.assertEquals(System.label.bdiImported,di1update.Status__c);
+        System.assertEquals('Imported', di1update.Status__c);
         System.assertEquals(System.label.bdiMatchedId,di1update.DonationImportStatus__c);
         System.assertEquals(System.label.bdiUpdated,di1update.PaymentImportStatus__c);
-        System.assertEquals(System.label.bdiImported,di2update.Status__c);
+        System.assertEquals('Imported', di2update.Status__c);
         System.assertEquals(System.label.bdiUpdated,di2update.DonationImportStatus__c);
         System.assertEquals(System.label.bdiUpdated,di2update.PaymentImportStatus__c);
         

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>RequireTotalMatch__c</name>
+    <help>Quando marcado, o número total de doações e o valor total precisam corresponder aos totais esperados inseridos para o lote.</help>
+    <label>Exigir corresp. de totais esperados</label>
+</CustomFieldTranslation>

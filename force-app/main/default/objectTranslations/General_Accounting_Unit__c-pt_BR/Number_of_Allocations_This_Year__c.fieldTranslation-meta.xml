@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Number_of_Allocations_This_Year__c</name>
+    <help>O número total de alocações este ano de Oportunidades fechadas/ganhas. O NPSP atualiza este campo em um trabalho agendado noturno.</help>
+    <label>Número de alocações este ano</label>
+</CustomFieldTranslation>
