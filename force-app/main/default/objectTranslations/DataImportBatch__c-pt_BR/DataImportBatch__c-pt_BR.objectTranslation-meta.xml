@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label>Colunas da guia da Entrada de doações em lote</label>
+        <name>BatchGiftEntryTabColumns</name>
+    </fieldSets>
+    <webLinks>
+        <name>Process_Batch</name>
+        <label>Processar lote</label>
+    </webLinks>
+    <layouts>
+        <layout>NPSP Data Import Batch Layout</layout>
+        <sections>
+            <label>Correspondência de Contato e Conta</label>
+            <section>Contact &amp; Account Matching</section>
+        </sections>
+        <sections>
+            <label>Correspondência de doações</label>
+            <section>Donation Matching</section>
+        </sections>
+        <sections>
+            <label>Extensibilidade</label>
+            <section>Extensibility</section>
+        </sections>
+        <sections>
+            <label>Links personalizados</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Nome do lote</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Nome do lote</label>
+    </standardFields>
+    <gender>Masculine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>Lote de importação de dados do NPSP</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Lotes de importações de dados do NPSP</value>
+    </caseValues>
+</CustomObjectTranslation>

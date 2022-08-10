@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Opportunity_Contact_Role_1_Role__c</name>
+    <help>A função com a qual a Função de contato de oportunidade deve ser criada. Por exemplo, digite &apos;Crédito indireto&apos; para criar uma função de contato de oportunidade de crédito indireto.</help>
+    <label>Função de contato de oport.1: função</label>
+</CustomFieldTranslation>

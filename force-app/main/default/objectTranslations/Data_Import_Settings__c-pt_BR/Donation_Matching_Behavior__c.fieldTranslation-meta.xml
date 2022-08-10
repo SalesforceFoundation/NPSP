@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Matching_Behavior__c</name>
+    <help>Define como o Importador de dados deve lidar com doações correspondentes. Você precisa escolher um valor.</help>
+    <label>Comportamento de corresp. de doações</label>
+</CustomFieldTranslation>

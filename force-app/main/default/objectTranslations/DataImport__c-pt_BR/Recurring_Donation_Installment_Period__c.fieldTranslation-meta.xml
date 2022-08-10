@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Installment_Period__c</name>
+    <help>O Período de parcelamento, juntamente com a Frequência de parcelamento, define a agenda de parcelamento desta Doação recorrente. Por exemplo, se o Período de parcelamento for Mensal e a Frequência for 3, a agenda será definida como &quot;a cada 3 meses&quot;.</help>
+    <label>Período de parcel. de Doação recor.</label>
+</CustomFieldTranslation>

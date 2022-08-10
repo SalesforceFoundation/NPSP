@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label>Gerenciar FS do modelo de PI</label>
+        <name>ManageEPTemplateFS</name>
+    </fieldSets>
+    <webLinks>
+        <name>Manage_Template</name>
+        <label>Gerenciar modelo</label>
+    </webLinks>
+    <layouts>
+        <layout>Engagement Plan Template Layout</layout>
+        <sections>
+            <label>Links personalizados</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Nome do modelo de plano de interação</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Nome do modelo de plano de interação</label>
+    </standardFields>
+    <gender>Masculine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>Modelo do plano de engajamento</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Modelos do plano de engajamento</value>
+    </caseValues>
+</CustomObjectTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Send_Email__c</name>
+    <help>Determina se um email é enviado ao usuário no campo Atribuído a da tarefa quando a tarefa se torna ativa. As Tarefas dependentes ficam ativas quando sua tarefa pai é concluída.</help>
+    <label>Enviar email</label>
+</CustomFieldTranslation>

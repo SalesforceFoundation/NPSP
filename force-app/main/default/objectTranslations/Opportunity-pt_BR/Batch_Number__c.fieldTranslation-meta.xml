@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Batch_Number__c</name>
+    <help>O lote que criou a Oportunidade. Este campo é preenchido automaticamente com base nas Configurações de número de lote nas Configurações do NPSP.</help>
+    <label>Número de lote</label>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Matching_Gift_Amount_Min__c</name>
+    <help>O valor mínimo que a empresa pagará como correspondência de uma doação.</help>
+    <label>Valor mín. da doação correspondente</label>
+</CustomFieldTranslation>
