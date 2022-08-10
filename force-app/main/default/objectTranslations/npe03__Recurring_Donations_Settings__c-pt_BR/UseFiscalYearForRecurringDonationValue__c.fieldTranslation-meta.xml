@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>UseFiscalYearForRecurringDonationValue__c</name>
+    <help>Quando marcada, essa opção ativa o ano fiscal para totais de valor de DR. Para definir o mês inicial do ano fiscal, acesse Configuração | Configurações da empresa | Ano fiscal. NOTA: use o Ano fiscal padrão. Não ative o Ano fiscal personalizado.</help>
+    <label>Usar ano fiscal para DR</label>
+</CustomFieldTranslation>

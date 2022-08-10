@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Exclude_from_Updates__c</name>
+    <help>Se selecionado, este endereço não será incluído em atualizações de endereço do NCOA ou do fornecedor de verificação de endereços.</help>
+    <label>Excluir de atualizações</label>
+</CustomFieldTranslation>

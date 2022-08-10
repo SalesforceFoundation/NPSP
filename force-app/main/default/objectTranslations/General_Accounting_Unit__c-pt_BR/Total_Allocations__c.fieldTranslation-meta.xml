@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Total_Allocations__c</name>
+    <help>O valor total de todas as Alocações de Oportunidades fechadas/ganhas. O NPSP atualiza este campo em um trabalho agendado noturno.</help>
+    <label>Total de alocações</label>
+</CustomFieldTranslation>

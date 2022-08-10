@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Rollups_IncrementalLastNDays_FldOverride__c</name>
+    <help>Somente para uso em Substituição de totalizações. Esse valor substitui o campo usado para filtrar Oportunidades relacionadas e determinar quais Contas, Contatos, GAUs ou RDs são recalculados durante um trabalho noturno. O padrão é SystemModStamp.</help>
+    <label>Incremental: subst. cpo. Últimos N dias</label>
+</CustomFieldTranslation>

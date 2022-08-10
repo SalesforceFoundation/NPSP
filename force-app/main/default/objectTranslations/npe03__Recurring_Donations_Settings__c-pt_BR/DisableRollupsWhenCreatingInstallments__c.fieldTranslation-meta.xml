@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>DisableRollupsWhenCreatingInstallments__c</name>
+    <help>Quando selecionado, e se Totalizações personalizáveis estiverem ativadas, os cálculos imediatos de totalização são desativados quando novas oportunidades de parcela são criadas para uma doação recorrente.</help>
+    <label>Desativar CRLP ao criar parcelas</label>
+</CustomFieldTranslation>

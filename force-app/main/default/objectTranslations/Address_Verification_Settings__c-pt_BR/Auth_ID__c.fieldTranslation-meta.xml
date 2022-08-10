@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Auth_ID__c</name>
+    <help>O ID de autenticação da sua chave de par secreto.</help>
+    <label>ID de autenticação-OBSOLETO</label>
+</CustomFieldTranslation>

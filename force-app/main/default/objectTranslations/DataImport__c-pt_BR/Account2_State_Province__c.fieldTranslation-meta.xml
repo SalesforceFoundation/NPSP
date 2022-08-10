@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Account2_State_Province__c</name>
+    <label>Estado/Província da Account2</label>
+</CustomFieldTranslation>

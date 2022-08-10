@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Clear_Invalid_Addresses__c</name>
+    <help>Se marcado, qualquer endereço de conta dos EUA que o serviço marque como sem entrega será automaticamente apagado. (Você pode rever a entrada inválida no registro de endereço.)</help>
+    <label>Limpar endereços inválidos-OBSOLETO</label>
+</CustomFieldTranslation>

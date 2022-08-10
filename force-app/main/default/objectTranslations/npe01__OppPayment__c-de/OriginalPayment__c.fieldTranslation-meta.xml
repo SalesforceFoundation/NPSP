@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>OriginalPayment__c</name>
+    <help>Die ursprüngliche Zahlungstransaktion, die diesem Datensatz zugeordnet ist.</help>
+    <relationshipLabel>Erstattungen</relationshipLabel>
+    <label>Ursprüngliche Zahlung</label>
+</CustomFieldTranslation>

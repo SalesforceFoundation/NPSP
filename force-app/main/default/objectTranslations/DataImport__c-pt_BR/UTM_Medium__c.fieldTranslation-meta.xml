@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>UTM_Medium__c</name>
+    <help>Parâmetro do Google Analytics para rastrear como a URL foi compartilhada. Por exemplo, email ou banner_ad.</help>
+    <label>Meio UTM</label>
+</CustomFieldTranslation>

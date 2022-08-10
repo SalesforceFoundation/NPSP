@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>InstallmentOppStageName__c</name>
+    <help>A fase da oportunidade que o NPSP aplica a cada nova oportunidade de parcela quando você cria uma doação recorrente.</help>
+    <label>Nome da fase das oport. de parcela</label>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Source_Field_API_Name__c</name>
+    <help>O nome da API do campo no objeto Importar dados do NPSP.</help>
+    <label>Nome da API do campo de origem</label>
+</CustomFieldTranslation>
