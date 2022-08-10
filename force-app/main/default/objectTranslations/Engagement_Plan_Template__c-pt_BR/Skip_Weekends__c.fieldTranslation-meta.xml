@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Skip_Weekends__c</name>
+    <help>Se selecionado, as tarefas criadas neste plano de interação não terão datas de vencimento que caiam no sábado ou domingo.</help>
+    <label>Ignorar fins de semana</label>
+</CustomFieldTranslation>

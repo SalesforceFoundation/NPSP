@@ -124,9 +124,8 @@ private class HouseholdTests_TEST {
                 )
                 FROM Account
         ];
-
-        System.assertEquals('Contact_forTests and member2 Household', accounts.get(0).Name,
-                'Household Name characterization test failed.');
+        System.assertEquals('Contact_forTests ' + Label.npo02.HouseholdNameConnector + ' member2 ' +
+            Label.npo02.DefaultHouseholdName, accounts.get(0).Name, 'Household Name characterization test failed.');
     }
 
     private static List<Contact> getContacts() {

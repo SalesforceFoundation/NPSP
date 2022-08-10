@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>DisableRecordDataHealthChecks__c</name>
+    <help>Se selecionado, o Health Check verifica apenas problemas nas configurações do NPSP. Selecione esta opção se sua organização tiver um grande volume de registros e o Health Check estiver tendo problemas para concluir.</help>
+    <label>Desativar Verif. saúde de dados de reg.</label>
+</CustomFieldTranslation>

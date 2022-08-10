@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>User_Managed__c</name>
+    <help>Quando selecionado, o NPSP não enviará mais as atualizações por push para este manipulador de acionador. Selecione esta opção se você tiver feito alterações que não deseja que o NPSP substitua.</help>
+    <label>Gerenciado pelo usuário</label>
+</CustomFieldTranslation>

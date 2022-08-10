@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Opportunity_Contact_Role_2_ImportStatus__c</name>
+    <help>O status da tentativa de inserir a segunda Função de contato de oportunidade.</help>
+    <label>Função de cont. de oport.2: ImportStatus</label>
+</CustomFieldTranslation>

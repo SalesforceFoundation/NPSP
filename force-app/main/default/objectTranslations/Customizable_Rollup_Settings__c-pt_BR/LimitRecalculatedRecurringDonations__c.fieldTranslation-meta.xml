@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>LimitRecalculatedRecurringDonations__c</name>
+    <help>Limite o número de doações recorrentes que são recalculadas durante o trabalho noturno do lote de Doações recorrentes baseado no quão recente é a doação.</help>
+    <label>Limitar doações recorrentes recalculadas</label>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Title_Label__c</name>
+    <help>O nome da API do rótulo Título deste item da seção na página Introdução. Deve corresponder a um rótulo importado no gsLabelMapper LWC.</help>
+    <label>Nome do rótulo do título</label>
+</CustomFieldTranslation>

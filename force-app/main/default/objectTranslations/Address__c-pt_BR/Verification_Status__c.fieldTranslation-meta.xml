@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Verification_Status__c</name>
+    <help>Se este endereço exigir verificação, clique na seta suspensa Mostrar mais ações no canto superior direito e clique em Verificar endereço. Consulte a documentação do NPSP para obter mais informações sobre a verificação de endereços.</help>
+    <label>Status de verificação</label>
+</CustomFieldTranslation>

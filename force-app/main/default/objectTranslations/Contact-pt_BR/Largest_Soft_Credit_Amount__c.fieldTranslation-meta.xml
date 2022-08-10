@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Largest_Soft_Credit_Amount__c</name>
+    <help>O valor do maior crédito indireto deste Contato.</help>
+    <label>Maior valor de crédito indireto</label>
+</CustomFieldTranslation>

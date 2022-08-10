@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Legacy_Data_Import_Object_Name__c</name>
+    <help>O nome do objeto de importação de dados herdado em que este grupo de objeto de importação de dados se baseia.</help>
+    <label>Nome do objeto de imp. de dados herdado</label>
+</CustomFieldTranslation>

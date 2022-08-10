@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Expected_Count_of_Gifts__c</name>
+    <help>O número de doações que devem ser inseridas neste Lote.</help>
+    <label>Contagem de doações estimada</label>
+</CustomFieldTranslation>

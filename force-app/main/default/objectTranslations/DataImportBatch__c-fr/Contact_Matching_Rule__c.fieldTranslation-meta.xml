@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Contact_Matching_Rule__c</name>
-    <help>Indique quelle règle suivre pour mettre en correspondance les contacts des enregistrements d’importation de données avec les contacts existants.</help>
+    <help>Indique la procédure de mise en correspondance avec les contacts existants. Les règles de duplication de contact exécutent toutes les règles actives pour l’objet Contact pour trouver la meilleure correspondance (Configuration | Gestion des duplications).</help>
     <label>Règle de correspondance de contacts</label>
 </CustomFieldTranslation>

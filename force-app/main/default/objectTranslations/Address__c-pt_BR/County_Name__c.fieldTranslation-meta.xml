@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>County_Name__c</name>
+    <help>O nome do condado em que o endereço está.</help>
+    <label>Nome do condado</label>
+</CustomFieldTranslation>

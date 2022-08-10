@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>IsPause__c</name>
+    <help>Definido quando o registro de agendamento representa o intervalo de datas de pausa da doação recorrente</help>
+    <label>IsPause</label>
+</CustomFieldTranslation>

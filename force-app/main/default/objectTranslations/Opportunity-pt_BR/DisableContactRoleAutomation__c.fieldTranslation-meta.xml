@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>DisableContactRoleAutomation__c</name>
+    <help>Quando selecionado, este campo desativa vários aspectos da automação do papel de contato de oportunidade do NPSP, resultando em possível duplicação ou incorreção de dados. Consulte a documentação do produto para obter mais detalhes.</help>
+    <label>Desativar automação da função de contato</label>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Implementing_Class__c</name>
+    <help>O nome de uma classe que implementa a interface HH_INaming usada em nomenclatura de família.</help>
+    <label>Classe de implementação</label>
+</CustomFieldTranslation>
