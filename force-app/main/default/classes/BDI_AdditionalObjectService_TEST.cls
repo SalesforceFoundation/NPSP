@@ -1697,9 +1697,16 @@ private class BDI_AdditionalObjectService_TEST {
         System.assertEquals(null,testDataImportAResult.Opportunity_Contact_Role_2_ImportStatus__c);
 
         System.assert(testDataImportBResult.FailureInformation__c.contains(
-                                                                'Additional Object JSON - GAU_Allocation_102'));
+            UTIL_Describe.getFieldDescribe(
+                String.valueOf(DataImport__c.SObjectType),
+                String.valueOf(DataImport__c.Additional_Object_JSON__c)
+            ).getLabel() + ' - ' + 'GAU_Allocation_102'), 'Failure information field does not contain the expected ' +
+                'error message. Actual failure information message: ' + testDataImportBResult.FailureInformation__c);
+
         System.assert(testDataImportBResult.FailureInformation__c.contains(
-                                                            'Error: record not created, missing required fields:'));
+            Label.bdiAdditionalObjRequiredFieldsNull), 'Actual failure information message: ' +
+            testDataImportBResult.FailureInformation__c);
+
         System.assert(testDataImportBResult.FailureInformation__c.contains(
                                                             'GAU_Allocation_1_GAU__c'));
         System.assertEquals(BDI_DataImport_API.bdiFailed,testDataImportBResult.Status__c);

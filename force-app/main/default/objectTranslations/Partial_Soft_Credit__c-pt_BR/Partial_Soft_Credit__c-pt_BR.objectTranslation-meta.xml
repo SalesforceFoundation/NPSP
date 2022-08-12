@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <webLinks>
+        <name>Manage_Soft_Credits</name>
+        <label>Gerenciar créditos indiretos</label>
+    </webLinks>
+    <layouts>
+        <layout>Partial Soft Credit Layout</layout>
+        <sections>
+            <label>Links personalizados</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Nome do crédito indireto parcial</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Nome do crédito indireto parcial</label>
+    </standardFields>
+    <gender>Masculine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>Crédito indireto parcial</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Créditos indiretos parciais</value>
+    </caseValues>
+</CustomObjectTranslation>

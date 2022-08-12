@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>RecurringType__c</name>
+    <help>Selecione Aberto para uma Doação recorrente em andamento. Selecione Fixo para uma Doação recorrente com um número específico de parcelas. Para Fixo, você também precisa preencher o campo Número de parcelas planejadas.</help>
+    <label>Tipo de recorrência</label>
+    <picklistValues>
+        <masterLabel>Open</masterLabel>
+        <translation>Aberto</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Fixed</masterLabel>
+        <translation>Fixo</translation>
+    </picklistValues>
+</CustomFieldTranslation>

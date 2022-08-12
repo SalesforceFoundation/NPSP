@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>StatusReason__c</name>
+    <help>Contém detalhes adicionais da agenda. Por exemplo, um motivo de pausa para uma agenda pausada.</help>
+    <label>Motivo do status</label>
+</CustomFieldTranslation>

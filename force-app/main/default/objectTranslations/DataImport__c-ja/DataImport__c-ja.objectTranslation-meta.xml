@@ -9,8 +9,12 @@
         <label>インポート済みのデータインポートレコードを削除</label>
     </webLinks>
     <webLinks>
+        <name>Import_Selected_Data_Import_Records</name>
+        <label>選択したデータインポートレコードをインポート</label>
+    </webLinks>
+    <webLinks>
         <name>Process_Data_Import</name>
-        <label>データインポートの開始</label>
+        <label>すべてのデータインポートレコードをインポート</label>
     </webLinks>
     <layouts>
         <layout>Data Import Layout</layout>

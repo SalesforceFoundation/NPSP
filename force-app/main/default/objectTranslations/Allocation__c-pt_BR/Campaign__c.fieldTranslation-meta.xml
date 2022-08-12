@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Campaign__c</name>
+    <help>A campanha associada a essa alocação. Use este campo se você quiser que novas oportunidades associadas a esta campanha sejam alocadas da mesma forma.</help>
+    <relationshipLabel>Alocações de GAU</relationshipLabel>
+    <label>Campanha</label>
+</CustomFieldTranslation>

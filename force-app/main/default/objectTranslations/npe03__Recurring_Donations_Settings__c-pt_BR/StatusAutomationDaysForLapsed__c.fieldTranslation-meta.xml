@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>StatusAutomationDaysForLapsed__c</name>
+    <help>Após o número especificado de dias, o NPSP atualiza o Status de doação recorrente para o valor de automação de status Vencido se as doações não forem recebidas como esperado.</help>
+    <label>Dias de automação de status até vencido</label>
+</CustomFieldTranslation>

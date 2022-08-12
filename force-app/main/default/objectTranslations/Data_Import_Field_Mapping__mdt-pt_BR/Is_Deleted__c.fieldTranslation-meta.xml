@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Is_Deleted__c</name>
+    <help>Quando marcado, indica que esse registro foi excluído da interface de usuário do Mapeamento avançado de importação de dados e será ignorado durante o processamento da Importação de dados do NPSP.</help>
+    <label>Foi excluído</label>
+</CustomFieldTranslation>

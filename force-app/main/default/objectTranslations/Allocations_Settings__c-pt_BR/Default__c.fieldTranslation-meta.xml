@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Default__c</name>
+    <help>Contém o ID da Unidade contábil geral padrão para a criação de alocações padrão ou para a alocação de valores não alocados.</help>
+    <label>Unidade contábil geral padrão</label>
+</CustomFieldTranslation>

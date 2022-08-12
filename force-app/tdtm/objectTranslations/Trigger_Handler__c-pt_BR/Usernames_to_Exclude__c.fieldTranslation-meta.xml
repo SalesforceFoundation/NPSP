@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Usernames_to_Exclude__c</name>
+    <help>Uma lista separada por ponto e vírgula de nomes de usuário para os quais este manipulador de acionador não será executado. Deixe em branco a fim de executar para todos os usuários.</help>
+    <label>Nomes de usuário para exclusão</label>
+</CustomFieldTranslation>

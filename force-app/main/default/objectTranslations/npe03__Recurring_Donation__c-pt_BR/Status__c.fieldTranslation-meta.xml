@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Status__c</name>
+    <help>Indica se esta Doação recorrente está ativamente em uso, temporariamente suspensa ou fechada.</help>
+    <label>Status</label>
+    <picklistValues>
+        <masterLabel>Active</masterLabel>
+        <translation>Ativo</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Lapsed</masterLabel>
+        <translation>Vencido</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Closed</masterLabel>
+        <translation>Fechado</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Paused</masterLabel>
+        <translation>Pausado</translation>
+    </picklistValues>
+</CustomFieldTranslation>

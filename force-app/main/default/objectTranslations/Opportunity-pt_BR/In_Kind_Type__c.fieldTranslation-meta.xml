@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>In_Kind_Type__c</name>
+    <help>O tipo de Doação em espécie, por exemplo, Bens ou Serviços.</help>
+    <label>Tipo Em espécie</label>
+    <picklistValues>
+        <masterLabel>Goods</masterLabel>
+        <translation>Artigos</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Services</masterLabel>
+        <translation>Serviços</translation>
+    </picklistValues>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Date_Established__c</name>
+    <help>A data inicial desta Doação recorrente. O padrão é a data atual.</help>
+    <label>Data de def. da Doação recorrente</label>
+</CustomFieldTranslation>

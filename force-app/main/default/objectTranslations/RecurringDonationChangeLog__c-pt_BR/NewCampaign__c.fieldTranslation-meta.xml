@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>NewCampaign__c</name>
+    <help>A nova campanha para a doação recorrente relacionada.</help>
+    <relationshipLabel>Log de alterações de doação recorrente (nova campanha)</relationshipLabel>
+    <label>Nova campanha</label>
+</CustomFieldTranslation>
