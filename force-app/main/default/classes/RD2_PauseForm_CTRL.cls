@@ -187,26 +187,40 @@ public with sharing class RD2_PauseForm_CTRL {
         try {
             PauseData pause = (PauseData) JSON.deserialize(jsonPauseData, PauseData.class);
             
-            RD2_RecurringDonation rd = getRecurringDonation(pause.rdId);
-            if (RD2_ElevateIntegrationService.isIntegrationEnabled() && rd.isElevateRecord()) {
-                throw new PauseException(System.Label.RD2_ElevateNotSupported);
-            }
-    
-            Boolean isNewPause = pause.startDate != null && pause.resumeAfterDate != null;
-            if (isNewPause) {
-                //deactivate the current pause (if any) and create a new one
-                pauseHandler.savePauseSchedule(pause.rdId, buildPauseSchedule(pause));
+            pauseElevateRDsFor(pause);
+            processPauseScheduleFor(pause);
 
-            } else {//deactivate the current pause (if any)
-                pauseHandler.cancelPauseSchedule(pause.rdId);
-            }
-
-            Boolean isScheduleChanged = true;
-            RD2_QueueableService.enqueueOppEvalService(pause.rdId, isScheduleChanged);
+            RD2_QueueableService.enqueueOppEvalService(pause.rdId, true);
 
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
         }
+    }
+
+    @TestVisible
+    private static void processPauseScheduleFor(PauseData pause) {
+
+        pauseHandler.cancelPauseSchedule(pause.rdId);
+
+        if (isNewPause(pause)) {
+            pauseHandler.savePauseSchedule(pause.rdId, buildPauseSchedule(pause));
+        }
+
+    }
+
+    private static void pauseElevateRDsFor(PauseData pause) {
+        RD2_RecurringDonation rd = getRecurringDonation(pause.rdId);
+        if (isOnlineRecurringDonationRecord(rd)) {
+            // branch out to make call out to elevate here
+        }
+    }
+
+    private static Boolean isOnlineRecurringDonationRecord(RD2_RecurringDonation rd) {
+        return RD2_ElevateIntegrationService.isIntegrationEnabled() && rd.isElevateRecord();
+    }
+
+    private static Boolean isNewPause(PauseData pause) {
+        return pause.startDate != null && pause.resumeAfterDate != null;
     }
 
     /**
@@ -216,10 +230,10 @@ public with sharing class RD2_PauseForm_CTRL {
      */
     private static RecurringDonationSchedule__c buildPauseSchedule(PauseData pause) {
         return pauseHandler.createPauseSchedule(
-                pause.pausedReason?.value,
-                pause.startDate,
-                pause.resumeAfterDate,
-                pause.rdId
+            pause.pausedReason?.value,
+            pause.startDate,
+            pause.resumeAfterDate,
+            pause.rdId
         );
     }
 

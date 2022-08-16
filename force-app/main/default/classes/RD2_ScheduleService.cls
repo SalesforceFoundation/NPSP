@@ -1120,7 +1120,6 @@ public without sharing class RD2_ScheduleService {
 
             } catch (Exception e) {
                 Database.rollback(sp);
-
                 throw new ScheduleException(e.getMessage());
             }
         }
