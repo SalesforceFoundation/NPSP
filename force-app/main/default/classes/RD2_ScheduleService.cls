@@ -149,6 +149,7 @@ public without sharing class RD2_ScheduleService {
         Date newStartDate = rd.StartDate__c;
         Boolean isClosed = new RD2_RecurringDonation(rd).isClosed();
         TDTM_Runnable.DMLWrapper scheduleChanges = new TDTM_Runnable.DMLWrapper();
+        Decimal nextPaymentAmount;
 
         //Add updated schedules
         if (schedules != null) {
@@ -171,6 +172,7 @@ public without sharing class RD2_ScheduleService {
 
                 if (!isClosed && schedule.StartDate__c <= currentDate) {
                     schedule.EndDate__c = newStartDate.addDays(-1);
+                    nextPaymentAmount = schedule.NextPaymentAmount__c;
 
                 } else if (!isClosed && schedule.StartDate__c > currentDate) {
                     schedule.EndDate__c = schedule.StartDate__c.addDays(-1);
@@ -187,6 +189,7 @@ public without sharing class RD2_ScheduleService {
         List<RecurringDonationSchedule__c> newSchedules = buildNewSchedules(rd);
         for (RecurringDonationSchedule__c newSchedule : newSchedules) {
             newSchedule.StartDate__c = newStartDate;
+            newSchedule.NextPaymentAmount__c = nextPaymentAmount;
         }
 
         scheduleChanges.objectsToInsert.addAll(newSchedules);
@@ -328,6 +331,9 @@ public without sharing class RD2_ScheduleService {
             }
 
             if (isIncludeSkipped || !inst.isSkipped) {
+                if(installments.size() == 0 && inst.nextPaymentAmount != null) {
+                    inst.installmentAmount = inst.nextPaymentAmount;
+                }
                 installments.add(inst);
             }
             referenceDate = inst.nextDonationDate.addDays(1);
@@ -976,6 +982,7 @@ public without sharing class RD2_ScheduleService {
         public Date     nextDonationDate {get; set;}
         public String   installmentPeriod {get; set;}
         public Decimal  installmentAmount {get; set;}
+        public Decimal  nextPaymentAmount {get; set;}
         public String   paymentMethod {get; set;}
         public Id       scheduleId {get; set;}
         public Boolean  isSkipped {get; set;}
@@ -987,6 +994,7 @@ public without sharing class RD2_ScheduleService {
             endDate =               rdSchedule.EndDate__c;
             installmentPeriod =     rdSchedule.InstallmentPeriod__c;
             installmentAmount =     rdSchedule.InstallmentAmount__c;
+            nextPaymentAmount =     rdSchedule.NextPaymentAmount__c;
             paymentMethod =         rdSchedule.PaymentMethod__c;
             scheduleId =            rdSchedule.Id;
             isSkipped =             false;
@@ -1004,6 +1012,7 @@ public without sharing class RD2_ScheduleService {
         public String dayOfMonth { get; set; }
         public Date endDate { get; set; }
         public Decimal installmentAmount { get; set; }
+        public Decimal nextPaymentAmount { get; set; }
         public Integer installmentFrequency { get; set; }
         public String installmentPeriod { get; set; }
         public String paymentMethod { get; set; }
@@ -1018,6 +1027,7 @@ public without sharing class RD2_ScheduleService {
             dayOfMonth = rdSchedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ? rdSchedule.DayOfMonth__c : null;
             endDate = (rdSchedule.EndDate__c != null) ? rdSchedule.EndDate__c : rd.EndDate__c;
             installmentAmount = rdSchedule.InstallmentAmount__c;
+            nextPaymentAmount = rdSchedule.NextPaymentAmount__c;
             installmentFrequency = rdSchedule.InstallmentFrequency__c != null ? Integer.valueOf(rdSchedule.InstallmentFrequency__c) : null;
             installmentPeriod = rdSchedule.InstallmentPeriod__c;
             paymentMethod = rdSchedule.PaymentMethod__c;
@@ -1227,6 +1237,7 @@ public without sharing class RD2_ScheduleService {
                 'EndDate__c',
                 'DayOfMonth__c',
                 'InstallmentAmount__c',
+                'NextPaymentAmount__c',
                 'InstallmentFrequency__c',
                 'InstallmentPeriod__c',
                 'PaymentMethod__c',

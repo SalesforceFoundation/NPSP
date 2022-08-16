@@ -45,6 +45,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
 
     private static final String SCHEDULE_IS_CURRENT = 'isCurrent';
     private static final String SCHEDULE_AMOUNT = 'amount';
+    private static final String SCHEDULE_NEXT_AMOUNT = 'nextPaymentAmount';
     private static final String SCHEDULE_PAYMENT_METHOD = 'paymentMethod';
     private static final String SCHEDULE_CAMPAIGN = 'campaign';
     private static final String SCHEDULE_START_DATE = 'startDate';
@@ -58,6 +59,9 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     private static final String DATA_TYPE_CURRENCY = 'currency';
     private static final String DATA_TYPE_DATE = 'date-local';
     private static final String DATA_TYPE_CHECKBOX = 'checkbox';
+
+    private static Boolean setNextPaymentAmount = false;
+    private static final Decimal NEXT_PAYMENT_AMOUNT = 300;
 
     private static final String PAYMENT_CREDIT_CARD_LABEL = UTIL_Describe.getTranslatedPicklistLabel(
         npe03__Recurring_Donation__c.SObjectType,
@@ -682,15 +686,17 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
 
         RD2_VisualizeScheduleController.DataTable dataTable = RD2_VisualizeScheduleController.buildScheduleDataTable(rd);
 
+        setNextPaymentAmount = true;
         dataTable.setRecords(buildSchedules(rd));
         System.assertEquals(1, dataTable.getRecords().size(), 'Number of records should match');
 
         RD2_VisualizeScheduleController.sanitizeSchedules(dataTable);
+        System.assertEquals(true, dataTable.isAccessible(SCHEDULE_NEXT_AMOUNT), 'nextPaymentAmount should exist');
 
         RD2_VisualizeScheduleController.Schedule record = (RD2_VisualizeScheduleController.Schedule) dataTable.getRecords()[0];
         System.assertEquals(true, record.isCurrent, 'IsCurrent should match');
         System.assertNotEquals(null, record.amount, 'Amount should be specified');
-        System.assertNotEquals(null, record.paymentMethod, 'PaymentMethod should be specified');
+        System.assertEquals(NEXT_PAYMENT_AMOUNT, record.nextPaymentAmount, 'Next Payment Amount should be specified');
         System.assertNotEquals(null, record.paymentMethod, 'PaymentMethod should be specified');
         System.assertNotEquals(null, record.startDate, 'StartDate should be specified');
         System.assertEquals(null, record.endDate, 'EndDate should be null since this is one and only active schedule');
@@ -717,6 +723,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         System.assertEquals(1, dataTable.getRecords().size(), 'Number of records should match');
 
         RD2_VisualizeScheduleController.sanitizeSchedules(dataTable);
+        System.assertEquals(false, dataTable.isAccessible(SCHEDULE_NEXT_AMOUNT), 'nextPaymentAmount should be removed');
 
         RD2_VisualizeScheduleController.Schedule record = (RD2_VisualizeScheduleController.Schedule) dataTable.getRecords()[0];
         System.assertEquals(true, record.isCurrent, 'IsCurrent should match');
@@ -1001,6 +1008,9 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         List<RD2_VisualizeScheduleController.Schedule> schedules = new List<RD2_VisualizeScheduleController.Schedule>();
 
         for (RecurringDonationSchedule__c schedule : scheduleService.buildNewSchedules(rd)) {
+            if (setNextPaymentAmount) {
+                schedule.NextPaymentAmount__c = NEXT_PAYMENT_AMOUNT;
+            }
             schedules.add(new RD2_VisualizeScheduleController.Schedule(
                 counter++, new RD2_ScheduleService.ActiveSchedule(schedule, rd)
             ));

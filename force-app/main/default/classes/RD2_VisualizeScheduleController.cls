@@ -43,6 +43,7 @@ public with sharing class RD2_VisualizeScheduleController {
 
     private static final String SCHEDULE_IS_CURRENT = 'isCurrent';
     private static final String SCHEDULE_AMOUNT = 'amount';
+    private static final String SCHEDULE_NEXT_AMOUNT = 'nextPaymentAmount';
     private static final String SCHEDULE_PAYMENT_METHOD = 'paymentMethod';
     private static final String SCHEDULE_CAMPAIGN = 'campaign';
     private static final String SCHEDULE_START_DATE = 'startDate';
@@ -206,6 +207,13 @@ public with sharing class RD2_VisualizeScheduleController {
                     'currencyCode' => getCurrencyCode(rd)
                 })
             )
+            .addColumn(new DataTableColumn(Schema.SObjectType.RecurringDonationSchedule__c.fields.NextPaymentAmount__c)
+                .withFieldName(SCHEDULE_NEXT_AMOUNT)
+                .withLabel(Schema.SObjectType.RecurringDonationSchedule__c.fields.NextPaymentAmount__c.Label)
+                .withTypeAttributes(new Map<String, Object>{
+                    'currencyCode' => getCurrencyCode(rd)
+                })
+            )
             .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.PaymentMethod__c)
                 .withFieldName(SCHEDULE_PAYMENT_METHOD)
             )
@@ -280,7 +288,15 @@ public with sharing class RD2_VisualizeScheduleController {
      */
     @TestVisible
     private static void sanitizeSchedules(DataTable dataTable) {
-        if (dataTable.getColumns().size() == 9) {
+        // Remove the Next Payment Amount if it's null
+        for (Object obj : dataTable.getRecords()) {
+            Schedule record = (Schedule) obj;
+            if (record.nextPaymentAmount == null) {
+                dataTable.removeColumn(SCHEDULE_NEXT_AMOUNT);
+            }
+        }
+
+        if (dataTable.getColumns().size() >= 9) {
             return;//all columns are visible
         }
 
@@ -426,6 +442,7 @@ public with sharing class RD2_VisualizeScheduleController {
         @AuraEnabled public Integer installmentNumber;
         @AuraEnabled public Date donationDate;
         @AuraEnabled public Decimal amount;
+        @AuraEnabled public Decimal nextPaymentAmount;
         @AuraEnabled public String paymentMethod;
         @AuraEnabled public Boolean isSkipped;
         @AuraEnabled public String pauseStatus;
@@ -439,6 +456,7 @@ public with sharing class RD2_VisualizeScheduleController {
             );
             this.donationDate = installment.nextDonationDate;
             this.amount = installment.installmentAmount;
+            this.nextPaymentAmount = installment.nextPaymentAmount;
             this.isSkipped = installment.isSkipped;
             this.pauseStatus = installment.isSkipped ? System.Label.RD2_InstallmentStatusSkipped : '';
         }
@@ -451,6 +469,7 @@ public with sharing class RD2_VisualizeScheduleController {
         @AuraEnabled public Integer scheduleNumber;
         @AuraEnabled public Boolean isCurrent;
         @AuraEnabled public Decimal amount;
+        @AuraEnabled public Decimal nextPaymentAmount;
         @AuraEnabled public String paymentMethod;
         @AuraEnabled public String campaign;
         @AuraEnabled public Date startDate;
@@ -463,6 +482,7 @@ public with sharing class RD2_VisualizeScheduleController {
             this.scheduleNumber = num;
             this.isCurrent = schedule.isCurrent;
             this.amount = schedule.installmentAmount;
+            this.nextPaymentAmount = schedule.nextPaymentAmount;
             this.paymentMethod = UTIL_Describe.getTranslatedPicklistLabel(
                 npe03__Recurring_Donation__c.SObjectType,
                 npe03__Recurring_Donation__c.PaymentMethod__c,
@@ -509,6 +529,16 @@ public with sharing class RD2_VisualizeScheduleController {
                 columnByFieldName.put(column.fieldName, column);
             }
 
+            return this;
+        }
+
+        /**
+         * @description Remove column from the data table
+         * @param fieldName Data table column fieldName
+         * @return DataTable This data table instance
+         */
+        public DataTable removeColumn(String fieldName) {
+            columnByFieldName.remove(fieldName);
             return this;
         }
 

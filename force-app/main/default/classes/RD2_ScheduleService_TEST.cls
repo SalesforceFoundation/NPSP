@@ -720,6 +720,34 @@ public with sharing class RD2_ScheduleService_TEST {
     }
 
     /***
+    * @description Verifies Next Payment Amount remains after updating a schedule
+    */
+    @isTest
+    private static void shouldKeepNextAmountWhenCreatingNewSchedule() {
+        Decimal nextPaymentAmount = 500;
+        Date startDate = Date.newInstance(2018, 3, 17);
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStartDate(startDate)
+            .withDayOfMonth('23')
+            .build();
+
+        RD2_ScheduleService service = new RD2_ScheduleService();
+        List<RecurringDonationSchedule__c> schedules = service.buildNewSchedules(rd);
+        schedules[0].NextPaymentAmount__c = nextPaymentAmount;
+
+        System.debug(schedules); 
+
+        //RD update
+        String dayOfMonth = '21';
+        rd.Day_of_Month__c = dayOfMonth;
+
+        TDTM_Runnable.DMLWrapper changes = service.getUpdatedSchedules(rd, schedules);
+        System.assertEquals(startDate.addDays(-1), changes.objectsToUpdate[0].get('EndDate__c'), 'Existing schedule End Date should invalidate the schedule');
+        System.assertEquals(dayOfMonth, changes.objectsToInsert[0].get('DayOfMonth__c'), 'New schedule Day of month should be match');
+        System.assertEquals(nextPaymentAmount, changes.objectsToInsert[0].get('NextPaymentAmount__c'), 'New schedule Next Payment Amount should match');
+    }
+
+    /***
     * @description Verifies schedule is ended when RD is closed.
     */
     @isTest
@@ -1927,6 +1955,41 @@ public with sharing class RD2_ScheduleService_TEST {
         for (RD2_ScheduleService.Installment installment : installments) {
             System.assertEquals(false, installment.isSkipped,
                 'Installment should not be skipped when within the inactive pause: ' + installment);
+        }
+    }
+
+    /***
+    * @description Verifies the first installment is set to Next Payment Amount when not null
+    */
+    @isTest
+    private static void shouldSetFirstInstallmentsAsNextPaymentAmount() {
+        Decimal rdAmount = 100;
+        Decimal nextPaymentAmount = 500;
+        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withAmount(rdAmount)
+            .withMockId()
+            .build();
+
+        RD2_ScheduleService service = new RD2_ScheduleService();
+        List<RecurringDonationSchedule__c> schedules = service.buildNewSchedules(rd);
+        schedules[0].NextPaymentAmount__c = nextPaymentAmount;
+
+        List<RD2_ScheduleService.Installment> installments = service.getAllVisualizedInstallments(
+            RD2_ScheduleService.currentDate, NUM_INSTALLMENTS, schedules
+        );
+        System.assertEquals(NUM_INSTALLMENTS, installments.size(), 'Number of installments should match: ' + installments);
+
+        Boolean firstInstallment = true;
+        for (RD2_ScheduleService.Installment installment : installments) {
+            if(firstInstallment) {
+                System.assertEquals(nextPaymentAmount, installment.installmentAmount, 
+                    'Installment amount should equal Next Payment Amount ' + nextPaymentAmount);
+                firstInstallment = false;
+            } else {
+                System.assertEquals(rdAmount, installment.installmentAmount, 
+                    'Installment amount should equal RD Amount ' + rdAmount);
+            }
         }
     }
 
