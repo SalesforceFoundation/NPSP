@@ -49,6 +49,19 @@ public with sharing class RD2_PauseForm_CTRL {
     }
 
     /**
+    * @description Handles commitment request creation, response parsing and RD Commitment Id update
+    */
+    private static RD2_CommitmentService commitmentService {
+        get {
+            if (commitmentService == null) {
+                commitmentService = new RD2_CommitmentService();
+            }
+            return commitmentService;
+        }
+        set;
+    }
+
+    /**
      * @description Returns PauseData to the LWC so the page can be initialized and rendered.
      * Determines if the user has the access to create/update the pause
      * as well as determines if the Recurring Donation is closed.
@@ -107,6 +120,8 @@ public with sharing class RD2_PauseForm_CTRL {
     private static RD2_RecurringDonation getRecurringDonation(Id rdId) {
         return new RD2_RecurringDonation([
             SELECT Status__c,
+                npe03__Contact__c,
+                npe03__Organization__c,
                 CommitmentId__c
             FROM npe03__Recurring_Donation__c
             WHERE Id = :rdId
@@ -208,11 +223,20 @@ public with sharing class RD2_PauseForm_CTRL {
 
     }
 
-    private static void pauseElevateRDsFor(PauseData pause) {
+    private static String pauseElevateRDsFor(PauseData pause) {
         RD2_RecurringDonation rd = getRecurringDonation(pause.rdId);
-        if (isOnlineRecurringDonationRecord(rd)) {
-            // branch out to make call out to elevate here
+
+        try {
+            if (isOnlineRecurringDonationRecord(rd)) {
+
+                UTIL_Http.Response response = commitmentService.handleCommitmentPause(buildPauseSchedule(pause), rd);
+                return JSON.serialize(response);
+            }
+        } catch (Exception ex) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
         }
+
+        return null;
     }
 
     private static Boolean isOnlineRecurringDonationRecord(RD2_RecurringDonation rd) {

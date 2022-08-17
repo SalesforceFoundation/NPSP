@@ -40,6 +40,7 @@ public inherited sharing class PS_Request {
         PURCHASE,
         REFUND,
         COMMITMENT,
+        COMMITMENT_PAUSE,
         COMMITMENT_CANCEL,
         COMMITMENT_UPDATE_BULK,
         CREATE_ELEVATE_BATCH,
@@ -83,6 +84,7 @@ public inherited sharing class PS_Request {
     public static String ENDPOINT_ADD_TO_ELEVATE_BATCH = '/v1/payments/verified/batch/{0}/add';
     public static String ENDPOINT_CHARGE_ELEVATE_BATCH = '/v1/payments/verified/batch/{0}/capture';
     public static String ENDPOINT_REMOVE_FROM_ELEVATE_BATCH = '/v1/payments/verified/batch/{0}/remove/{1}';
+    public static String ENDPOINT_COMMITMENT_PAUSE = '/v1/payments/verified/commitments/{0}/pause';
 
     public static String PRODUCT_METADATA_SCHEMA_URI = 'https://payments-js.elevate.salesforce.org/schema/productMetadata/donation-v1.1.0';
     private static Integer RECOMMENDED_TIMEOUT_MS = 20000;
@@ -258,7 +260,12 @@ public inherited sharing class PS_Request {
                 if (String.isNotBlank(commitmentId)) {
                     value += '/' + commitmentId;
                 }
+            } else if (endpoint == ElevateEndpoint.COMMITMENT_PAUSE) {
+                value = ENDPOINT_COMMITMENT_PAUSE;
 
+                if (String.isNotBlank(commitmentId)) {
+                    value += '/' + commitmentId;
+                }
             } else if (endpoint == ElevateEndpoint.COMMITMENT_CANCEL) {
                 value = String.format(
                     ENDPOINT_COMMITMENT_CANCEL,
@@ -425,7 +432,8 @@ public inherited sharing class PS_Request {
         private Boolean isCommitmentEndpoint () {
             return endpoint == ElevateEndpoint.COMMITMENT
                     || endpoint == ElevateEndpoint.COMMITMENT_CANCEL
-                    || endpoint == ElevateEndpoint.COMMITMENT_UPDATE_BULK;
+                    || endpoint == ElevateEndpoint.COMMITMENT_UPDATE_BULK
+                    || endpoint == ElevateEndpoint.COMMITMENT_PAUSE;
         }
 
         private Boolean isRefundEndpoint() {

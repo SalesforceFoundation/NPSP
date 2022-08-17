@@ -168,14 +168,15 @@ public inherited sharing class PS_CommitmentRequest {
     * @param jsonRequestBody JSON containing parameters for the purchase call request body
     * @return HttpRequest
     */
-    public static HttpRequest buildRequest(String commitmentId, String jsonRequestBody) {
+    public static HttpRequest buildRequest(String commitmentId, String jsonRequestBody,
+        PS_Request.ElevateEndpoint endpoint) {
         UTIL_Http.Method method = String.isBlank(commitmentId)
             ? UTIL_Http.Method.POST
             : UTIL_Http.Method.PATCH;
 
         return new PS_Request.Builder()
             .withMethod(method)
-            .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT)
+            .withEndpoint(endpoint)
             .withRecommendedTimeout()
             .withBody(jsonRequestBody)
             .build();
@@ -207,6 +208,13 @@ public inherited sharing class PS_CommitmentRequest {
         return isCreateCommitment
             ? getCreateRequestBody(rd, token)
             : getUpdateRequestBody(rd, oldRd, token);
+    }
+
+    public RequestBody getPauseRequestBody(RecurringDonationSchedule__c schedule) {
+       return new RequestBody()
+           .withStartTimestamp(schedule.StartDate__c)
+           .withEndTimestamp(schedule.EndDate__c)
+           .withReason(schedule.StatusReason__c);
     }
 
     /***
@@ -471,6 +479,11 @@ public inherited sharing class PS_CommitmentRequest {
          */
         public Map<String, Object> productMetadata;
 
+        public Datetime startTimestamp;
+        public Datetime endTimestamp;
+        public String reason;
+        public String reasonComment;
+
         /***
          * @description Constructor
          */
@@ -655,6 +668,26 @@ public inherited sharing class PS_CommitmentRequest {
          */
         public Boolean isCommitmentUpdate() {
             return this.id != null;
+        }
+
+        public RequestBody withStartTimestamp(Datetime startTimestamp) {
+            this.startTimestamp = startTimestamp;
+            return this;
+        }
+
+        public RequestBody withEndTimestamp(Datetime endTimestamp) {
+            this.endTimestamp = endTimestamp;
+            return this;
+        }
+
+        public RequestBody withReason(String reason) {
+            this.reason = reason;
+            return this;
+        }
+
+        public RequestBody withReasonComment(String reasonComment) {
+            this.reasonComment = reasonComment;
+            return this;
         }
     }
 
