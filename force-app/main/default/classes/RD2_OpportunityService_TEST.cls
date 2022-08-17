@@ -790,7 +790,7 @@ private with sharing class RD2_OpportunityService_TEST {
         delete new TEST_SObjectGateway.OpportunityGateway().getRecords(rd);
 
         List<npe03__Recurring_Donation__c> rds = new RD2_QueryService()
-            .getRecurringDonationsWithRelatedREcords(new Set<Id>{ rd.Id }, START_DATE);
+            .getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
 
         Exception actualException;
         try {
@@ -807,6 +807,40 @@ private with sharing class RD2_OpportunityService_TEST {
 
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No error should be created: ' + errors);
+    }
+
+    /***
+    * @description Verify if the updates to the opportunity do not give error message
+    * when no opportunity records are passed.
+    */
+    @isTest
+    private static void shouldUseNextPaymentAmountOnNextOpp() {
+        Decimal NEXT_PAYMENT_AMOUNT = 500;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        setUpConfiguration();
+
+        Test.startTest();
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+        Test.stopTest();
+
+        List<npe03__Recurring_Donation__c> rds = new RD2_QueryService()
+            .getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
+
+        // Set Next Payment Amount on the schedule
+        rds[0].RecurringDonationSchedules__r[0].NextPaymentAmount__c = NEXT_PAYMENT_AMOUNT;
+
+        new RD2_OpportunityService(
+            TODAY, new RD2_DatabaseService(), new RD2_CustomFieldMapper()
+        ).updateOpportunities(rds);
+
+        rds = new RD2_QueryService()
+            .getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
+
+        Opportunity nextOpportunity = rds[0].npe03__Donations__r[0];
+
+        System.assertEquals(NEXT_PAYMENT_AMOUNT, nextOpportunity.Amount, 
+            'Opportunity Amount should match Next Payment Amount: ' + NEXT_PAYMENT_AMOUNT);
     }
 
     /***
