@@ -261,11 +261,12 @@ public inherited sharing class PS_Request {
                     value += '/' + commitmentId;
                 }
             } else if (endpoint == ElevateEndpoint.COMMITMENT_PAUSE) {
-                value = ENDPOINT_COMMITMENT_PAUSE;
-
-                if (String.isNotBlank(commitmentId)) {
-                    value += '/' + commitmentId;
-                }
+                value = String.format(
+                    ENDPOINT_COMMITMENT_CANCEL,
+                    new String[]{
+                        commitmentId
+                    }
+                );
             } else if (endpoint == ElevateEndpoint.COMMITMENT_CANCEL) {
                 value = String.format(
                     ENDPOINT_COMMITMENT_CANCEL,

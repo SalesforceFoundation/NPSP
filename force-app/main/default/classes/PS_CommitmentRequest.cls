@@ -177,6 +177,7 @@ public inherited sharing class PS_CommitmentRequest {
         return new PS_Request.Builder()
             .withMethod(method)
             .withEndpoint(endpoint)
+            .withCommitmentId(commitmentId)
             .withRecommendedTimeout()
             .withBody(jsonRequestBody)
             .build();

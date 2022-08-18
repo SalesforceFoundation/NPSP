@@ -82,10 +82,10 @@ public with sharing class RD2_PauseForm_CTRL {
             pause.hasAccess = hasAccess();
             pause.isElevateRecord = pause.hasAccess
                 ? RD2_ElevateIntegrationService.isIntegrationEnabled() && rd.isElevateRecord()
-                : null; 
+                : null;
             pause.isRDClosed = pause.hasAccess ? rd.isClosed() : null;
 
-            if (pause.isRDClosed == false && pause.isElevateRecord == false) {
+            if (!pause.isRDClosed) {
                 pause.pausedReason = buildPausedReason();
                 populateScheduleData(pause, rdId);
                
