@@ -55,6 +55,7 @@ private with sharing class RD2_OpportunityService_TEST {
     private static final String DAY_OF_MONTH = String.valueOf(CLOSE_DATE.day());
     private static final Decimal RD_AMOUNT = 400;
     private static final Decimal RD_NEW_AMOUNT = 100;
+    private static final Decimal NEXT_PAYMENT_AMOUNT = 500;
 
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
@@ -810,12 +811,10 @@ private with sharing class RD2_OpportunityService_TEST {
     }
 
     /***
-    * @description Verify if the updates to the opportunity do not give error message
-    * when no opportunity records are passed.
+    * @description Verify that the next Opportunity uses the Next Payment Amount
     */
     @isTest
     private static void shouldUseNextPaymentAmountOnNextOpp() {
-        Decimal NEXT_PAYMENT_AMOUNT = 500;
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         setUpConfiguration();
@@ -837,10 +836,65 @@ private with sharing class RD2_OpportunityService_TEST {
         rds = new RD2_QueryService()
             .getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
 
+        System.assertEquals(1, rds[0].npe03__Donations__r.size(), 'There should only be 1 Opportunity');
+
         Opportunity nextOpportunity = rds[0].npe03__Donations__r[0];
+        System.assertEquals(NEXT_PAYMENT_AMOUNT, nextOpportunity.Amount, 
+            'Opportunity Amount should match Next Payment Amount: ' + NEXT_PAYMENT_AMOUNT);
+    }
+
+    /***
+    * @description Verify that the Next Payment Amount is cleared after a Donation closes
+    */
+    @isTest
+    private static void shouldClearNextPaymentAmountWhenOppIsClosed() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        setUpConfiguration();
+
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
+        Opportunity nextOpportunity = oppBuilder
+            .withCloseDate(CLOSE_DATE)
+            .withOpenStage()
+            .build();
+        insert nextOpportunity;
+
+        List<npe03__Recurring_Donation__c> rds = new RD2_QueryService()
+            .getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
+
+        // Set Next Payment Amount on the schedule
+        rds[0].RecurringDonationSchedules__r[0].NextPaymentAmount__c = NEXT_PAYMENT_AMOUNT;
+        update rds[0].RecurringDonationSchedules__r[0];
+
+        new RD2_OpportunityService(
+            TODAY, new RD2_DatabaseService(), new RD2_CustomFieldMapper()
+        ).updateOpportunities(rds);
+
+        rds = new RD2_QueryService()
+            .getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
+
+        System.assertEquals(1, rds[0].npe03__Donations__r.size(), 'There should only be 1 Opportunity');
+        System.assertEquals(1, rds[0].RecurringDonationSchedules__r.size(), 'There should be 1 schedule');
+
+        nextOpportunity = rds[0].npe03__Donations__r[0];
 
         System.assertEquals(NEXT_PAYMENT_AMOUNT, nextOpportunity.Amount, 
             'Opportunity Amount should match Next Payment Amount: ' + NEXT_PAYMENT_AMOUNT);
+
+        // Now close the Opp and make sure the Schedule is updated accordingly 
+        Test.startTest();
+        nextOpportunity.StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        update nextOpportunity;
+        Test.stopTest();
+
+        rds = new RD2_QueryService()
+            .getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
+
+        System.assertEquals(2, rds[0].npe03__Donations__r.size(), 'There should be 2 Opportunities');
+        System.assertEquals(1, rds[0].RecurringDonationSchedules__r.size(), 'There should be 1 schedule');
+        System.assertEquals(null, rds[0].RecurringDonationSchedules__r[0].NextPaymentAmount__c, 
+            'The Next Payment Amount should be cleared');
     }
 
     /***

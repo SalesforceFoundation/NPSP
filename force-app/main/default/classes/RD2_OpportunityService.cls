@@ -141,6 +141,8 @@ public with sharing class RD2_OpportunityService {
         List<Opportunity> oppsToCreate = new List<Opportunity>();
         Map<Id, List<RD2_ScheduleService.Installment>> installmentsByRDId = new Map<Id, List<RD2_ScheduleService.Installment>>();
 
+        Map<Id, List<RecurringDonationSchedule__c>> rdSchedules = scheduleService.getExistingSchedules(rds);
+        List<RecurringDonationSchedule__c> schedulesToUpdate = new List<RecurringDonationSchedule__c>();
         for (npe03__Recurring_Donation__c rd : rds) {
             RD2_OpportunityMatcher.Record nextDonationDateRecord = scheduleService.getNextDonationDateRecord(
                 RD2_ScheduleService.currentDate, new RD2_RecurringDonation(rd), rd.RecurringDonationSchedules__r
@@ -155,7 +157,16 @@ public with sharing class RD2_OpportunityService {
 
             oppsToCreate.add(buildOpportunity(rd, nextDonationDateRecord.getInstallment()));
             installmentsByRDId.put(rd.Id, new List<RD2_ScheduleService.Installment>{ nextDonationDateRecord.getInstallment() });
+            
+            // Clear the Next Payment Amount on the Schedule record
+            RecurringDonationSchedule__c schedule = rdSchedules.get(rd.Id)[0];
+            if(schedule.NextPaymentAmount__c != null) {
+                schedule.NextPaymentAmount__c = null;
+                schedulesToUpdate.add(schedule);
+            }
         }
+
+        dbService.updateRecords(schedulesToUpdate);
 
         Set<Id> createdOppIds = dbService.insertRecords(oppsToCreate);
 
