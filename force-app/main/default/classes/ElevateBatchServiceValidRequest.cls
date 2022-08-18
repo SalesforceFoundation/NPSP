@@ -27,11 +27,11 @@
  *     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *     POSSIBILITY OF SUCH DAMAGE.
  */
-@isTest
+@IsTest
 public with sharing class ElevateBatchServiceValidRequest extends ElevateBatchService {
 
     public override ElevateAuthorizedGift addToElevateBatch(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
-        ElevateAuthorizedGiftResponse giftResponse = addElevateBatchSuccessMessage();
+        ElevateAuthorizedGiftResponse giftResponse = addOneTimePurchaseToBatchSuccessMessage();
 
         return new ElevateAuthorizedGift(tokenizedGift, giftResponse);
     }
@@ -48,15 +48,13 @@ public with sharing class ElevateBatchServiceValidRequest extends ElevateBatchSe
                 '}', ElevateBatchResponse.class);
     }
 
-    public ElevateAuthorizedGiftResponse addElevateBatchSuccessMessage() {
+    public ElevateAuthorizedGiftResponse addOneTimePurchaseToBatchSuccessMessage() {
         return (ElevateAuthorizedGiftResponse)JSON.deserialize(
                 '{\n' +
                     '"id": "test-valid-id",\n' +
                     '"timestamp": "2021-03-03T17:43:28.589Z",\n' +
                     '"createdAt": "2021-03-03T17:43:28.589Z",\n' +
                     '"submittedAt": "2021-03-03T17:43:29.313Z",\n' +
-                    '"authorizedAt": "2021-03-03T17:43:29.313Z",\n' +
-                    '"authExpiresAt": "2021-03-06T17:43:29.313Z",\n' +
                     '"status": "AUTHORIZED",\n' +
                     '"merchantId": "f4338833-20f1-44b5-9270-6087659e0b9f",\n' +
                     '"merchantName": "TestPortal",\n' +
