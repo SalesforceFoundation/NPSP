@@ -194,7 +194,7 @@ public without sharing class RD2_CommitmentService {
     * @param response Payments API response
     * @return Boolean
     */
-    private Boolean isCommitmentSuccess(UTIL_Http.Response response) {
+    public Boolean isCommitmentSuccess(UTIL_Http.Response response) {
         return response.statusCode == UTIL_Http.STATUS_CODE_CREATED
             || response.statusCode == UTIL_Http.STATUS_CODE_OK;
     }
