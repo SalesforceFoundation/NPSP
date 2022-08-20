@@ -169,22 +169,22 @@ public with sharing class GE_GiftEntryController_TEST {
     static void addCommitmentToElevateBatchShouldReturnSuccessResponse() {
         GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceValidRequest();
         AuraHandledException auraException;
-        ElevateBatchItem authorizedGift;
+        ElevateBatchItem elevateBatchItem;
 
         Test.startTest();
-        try {
-            authorizedGift = GE_GiftEntryController.addToElevateBatch(new ElevateTokenizedGift(),
-                    'test-valid-id');
-        } catch (AuraHandledException ex) {
-            auraException = ex;
-        }
+            try {
+                elevateBatchItem = GE_GiftEntryController.addToElevateBatch(new ElevateTokenizedGift(),
+                        'test-valid-id');
+            } catch (AuraHandledException ex) {
+                auraException = ex;
+            }
         Test.stopTest();
 
         System.assertEquals(null, auraException, 'The aura exception object should be null since no error should have' +
                 ' occurred with a valid request.');
         System.assertEquals(null, auraException, 'The aura exception object should be null since no error should have' +
                 ' occurred with a valid request.');
-        System.assertEquals('test-valid-id', authorizedGift.paymentId(),
+        System.assertEquals('test-valid-id', elevateBatchItem.paymentId(),
                 'The elevate batch id should be populated on a successful response.');
     }
 
