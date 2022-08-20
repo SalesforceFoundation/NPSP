@@ -45,7 +45,7 @@ public class ElevateBatchServiceInvalidRequest extends ElevateBatchService {
     }
 
     public override ElevateBatchItem addToElevateBatch(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
-        ElevateAuthorizedGiftResponse giftResponse = addElevateBatchErrorMessage();
+        ElevateBatchItemCreateResponse giftResponse = addElevateBatchErrorMessage();
         elevateBatchService.checkForAuthorizedGiftErrorsIn(giftResponse);
 
         return new ElevateBatchItem(tokenizedGift, giftResponse);
@@ -60,8 +60,8 @@ public class ElevateBatchServiceInvalidRequest extends ElevateBatchService {
         return elevateBatch;
     }
 
-    public ElevateAuthorizedGiftResponse addElevateBatchErrorMessage() {
-        return (ElevateAuthorizedGiftResponse)JSON.deserialize('{\n' +
+    public ElevateBatchItemCreateResponse addElevateBatchErrorMessage() {
+        return (ElevateBatchItemCreateResponse)JSON.deserialize('{\n' +
                 '  "errors": [\n' +
                 '    {\n' +
                 '      "message": "authorize failed",\n' +
@@ -69,7 +69,7 @@ public class ElevateBatchServiceInvalidRequest extends ElevateBatchService {
                 '      "detailedMessage": "create failed"\n' +
                 '    }\n' +
                 '  ]\n' +
-                '}', ElevateAuthorizedGiftResponse.class);
+                '}', ElevateBatchItemCreateResponse.class);
     }
 
     public ElevateBatchResponse createElevateBatchErrorMessage() {

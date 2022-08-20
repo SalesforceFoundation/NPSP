@@ -45,8 +45,8 @@ public virtual with sharing class ElevateBatchService {
         UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
                 addRequest(tokenizedGift, elevateBatchId)
         );
-        ElevateAuthorizedGiftResponse authorizedGiftResponse = (ElevateAuthorizedGiftResponse)JSON.deserialize
-                (response.body, ElevateAuthorizedGiftResponse.class);
+        ElevateBatchItemCreateResponse authorizedGiftResponse = (ElevateBatchItemCreateResponse)JSON.deserialize
+                (response.body, ElevateBatchItemCreateResponse.class);
         checkForAuthorizedGiftErrorsIn(authorizedGiftResponse);
 
         return new ElevateBatchItem(tokenizedGift, authorizedGiftResponse);
@@ -57,8 +57,8 @@ public virtual with sharing class ElevateBatchService {
                 removeRequest(elevateBatchId, elevatePaymentId)
         );
 
-        ElevateAuthorizedGiftResponse authorizedGiftResponse = (ElevateAuthorizedGiftResponse)JSON.deserialize
-                (response.body, ElevateAuthorizedGiftResponse.class);
+        ElevateBatchItemCreateResponse authorizedGiftResponse = (ElevateBatchItemCreateResponse)JSON.deserialize
+                (response.body, ElevateBatchItemCreateResponse.class);
         checkForAuthorizedGiftErrorsIn(authorizedGiftResponse);
 
         return new ElevateBatchItem(null, authorizedGiftResponse);
@@ -113,13 +113,13 @@ public virtual with sharing class ElevateBatchService {
     }
 
     @TestVisible
-    private void checkForAuthorizedGiftErrorsIn(ElevateAuthorizedGiftResponse authorizedGiftResponse) {
+    private void checkForAuthorizedGiftErrorsIn(ElevateBatchItemCreateResponse authorizedGiftResponse) {
         if (hasAuthorizedGiftErrors(authorizedGiftResponse)) {
             UTIL_AuraEnabledCommon.throwAuraHandledException(authorizedGiftResponse.errors()[0].message);
         }
     }
 
-    private Boolean hasAuthorizedGiftErrors(ElevateAuthorizedGiftResponse authorizedGiftResponse) {
+    private Boolean hasAuthorizedGiftErrors(ElevateBatchItemCreateResponse authorizedGiftResponse) {
         return authorizedGiftResponse.errors() != null &&
                !authorizedGiftResponse.errors().isEmpty();
     }

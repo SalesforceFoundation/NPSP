@@ -45,7 +45,7 @@ public with sharing class ElevateBatchItem {
     @AuraEnabled public String gatewayId;
 
     public ElevateBatchItem(ElevateTokenizedGift tokenizedGift,
-                                 ElevateAuthorizedGiftResponse authorizedGiftResponse) {
+                                 ElevateBatchItemCreateResponse authorizedGiftResponse) {
         this.tokenizedGift = tokenizedGift;
         this.paymentId = authorizedGiftResponse.id();
         this.authExpiration = authorizedGiftResponse.authExpiration();
