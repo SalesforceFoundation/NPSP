@@ -122,7 +122,8 @@ public with sharing class GE_GiftEntryController_TEST {
         Test.stopTest();
     }
 
-    @IsTest static void createCreditCardElevateBatchShouldReturnFailureResponse() {
+    @IsTest
+    static void createCreditCardElevateBatchShouldReturnFailureResponse() {
         GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceInvalidRequest();
         String errorMessage = new ElevateBatchServiceInvalidRequest().createElevateBatchErrorMessage()
                 .errors()[0].message;
@@ -142,7 +143,8 @@ public with sharing class GE_GiftEntryController_TEST {
                     'message specified in the invalid request data type.');
     }
 
-    @IsTest static void createCreditCardElevateBatchShouldReturnSuccessResponse() {
+    @IsTest
+    static void createCreditCardElevateBatchShouldReturnSuccessResponse() {
         GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceValidRequest();
         AuraHandledException auraException;
         ElevateBatch elevateBatch;
@@ -163,7 +165,8 @@ public with sharing class GE_GiftEntryController_TEST {
                 'populated on a successful response.');
     }
 
-    @IsTest static void addCommitmentToElevateBatchShouldReturnSuccessResponse() {
+    @IsTest
+    static void addCommitmentToElevateBatchShouldReturnSuccessResponse() {
         GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceValidRequest();
         AuraHandledException auraException;
         ElevateBatchItem authorizedGift;
@@ -185,7 +188,8 @@ public with sharing class GE_GiftEntryController_TEST {
                 'The elevate batch id should be populated on a successful response.');
     }
 
-    @IsTest static void addCreditCardElevateBatchShouldReturnSuccessResponse() {
+    @IsTest
+    static void addCreditCardElevateBatchShouldReturnSuccessResponse() {
         GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceValidRequest();
         AuraHandledException auraException;
         ElevateBatchItem authorizedGift;
@@ -207,7 +211,8 @@ public with sharing class GE_GiftEntryController_TEST {
                 'The elevate batch id should be populated on a successful response.');
     }
 
-    @IsTest static void addCreditCardElevateBatchShouldReturnFailureResponse() {
+    @IsTest
+    static void addCreditCardElevateBatchShouldReturnFailureResponse() {
         GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceInvalidRequest();
         String errorMessage = new ElevateBatchServiceInvalidRequest().addElevateBatchErrorMessage()
                 .errors()[0].message;
@@ -234,7 +239,7 @@ public with sharing class GE_GiftEntryController_TEST {
      * when one-time payment has been created in Elevate
      */
     @IsTest
-    private static void shouldReturnRecordCreatedResponseWhenPurchaseRequestSucceeds() {
+    static void shouldReturnRecordCreatedResponseWhenPurchaseRequestSucceeds() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
         String requestBodyParameters = GE_PaymentServices_TEST.GOOD_PURCHASE_CALL_BODY;
@@ -254,7 +259,7 @@ public with sharing class GE_GiftEntryController_TEST {
      * when building a purchase request body fails with an unexpected error
      */
     @IsTest
-    private static void shouldThrowExceptionWhenPurchaseRequestGetsUnexpectedError() {
+    static void shouldThrowExceptionWhenPurchaseRequestGetsUnexpectedError() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
         String invalidBodyParameters = '{"amount":2500,"email"';
@@ -278,7 +283,7 @@ public with sharing class GE_GiftEntryController_TEST {
      * when the purchase requests times out
      */
     @IsTest
-    private static void shouldLogErrorWhenPurchaseRequestTimesOut() {
+    static void shouldLogErrorWhenPurchaseRequestTimesOut() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
         final String requestTimeoutMessage = System.Label.geErrorRequestTimedout;
@@ -322,7 +327,7 @@ public with sharing class GE_GiftEntryController_TEST {
      * @description Confirm that the Data Import upsert method inserts and updates correctly.
      */
     @IsTest
-    private static void shouldUpsertDataImportRecord() {
+    static void shouldUpsertDataImportRecord() {
         DataImport__c inMemoryDataImport = BDI_DataImport_TEST.newDI('First', 'Last', 100);
         DataImport__c dataImportRecord = GE_GiftEntryController.upsertDataImport(inMemoryDataImport);
         System.assert(dataImportRecord.Id != null);
@@ -337,7 +342,7 @@ public with sharing class GE_GiftEntryController_TEST {
      * @description Confirm that a default RenderWrapper is correctly returned
      */
     @IsTest
-    private static void createAndReturnDefaultFormTemplate() {
+    static void createAndReturnDefaultFormTemplate() {
         Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
         Form_Template__c defaultTemplate = buildFormTemplate();
 
@@ -362,7 +367,7 @@ public with sharing class GE_GiftEntryController_TEST {
 
     }
     @IsTest
-    private static void createAndReturnFieldMappings() {
+    static void createAndReturnFieldMappings() {
 
         UTIL_UnitTestData_TEST.createSampleFieldMappings();
 
@@ -679,36 +684,8 @@ public with sharing class GE_GiftEntryController_TEST {
         );
     }
 
-    /***
-    * @description Sets up a new NPSP_Data_Import_Batch__c Record
-    * @return Id of the new NPSP_Data_Import_Batch__c
-    */
-    private static Id createDataImportBatch( String batchName ) {
-        DataImportBatch__c dataImportBatch = new DataImportBatch__c();
-        dataImportBatch.Name = batchName;
-
-        insert dataImportBatch;
-        return (Id)dataImportBatch.Id;
-    }
-
-    /***
-    * @description creates a new di record for tests
-    * @param firstname the firstname to specify for Contact1
-    * @param lastname the lastname to specify for Contact1
-    * @param batchId Data Import Batch Id
-    * @return DataImport__c the new Data Import record
-    */
-    public static DataImport__c createDataImport(String firstname, String lastname, Id batchId) {
-        return new DataImport__c(
-                Contact1_Firstname__c = firstname,
-                Contact1_Lastname__c = lastname,
-                Contact1_Personal_Email__c = firstname + '@' + lastname + '.com',
-                NPSP_Data_Import_Batch__c = batchId
-        );
-    }
-
     //Utility method for creating a sample template.
-    public static GE_Template.Template createSampleTemplate () {
+    private static GE_Template.Template createSampleTemplate () {
 
         GE_Template.Element field = new GE_Template.Element('FormField',
                 'True',
@@ -762,7 +739,7 @@ public with sharing class GE_GiftEntryController_TEST {
 
     private class UTIL_PermissionsMock implements StubProvider {
         Boolean hasPermission;
-        public UTIL_PermissionsMock(Boolean hasPermission) {
+        private UTIL_PermissionsMock(Boolean hasPermission) {
             this.hasPermission = hasPermission;
         }
 
