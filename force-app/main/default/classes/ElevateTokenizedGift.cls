@@ -30,10 +30,10 @@
 public with sharing class ElevateTokenizedGift {
     @AuraEnabled public Integer amount {get; set;}
     @AuraEnabled public String firstName {get; set;}
+    @AuraEnabled public String lastName {get; set;}
     @AuraEnabled public String paymentMethodToken {get; set;}
     public String merchantId;
     public String gatewayId;
-    @AuraEnabled public String lastName {get; set;}
     @AuraEnabled public String currencyCode {get; set;}
     public PS_IntegrationServiceConfig.Service configService;
     public String productMetadataSchemaUri;
