@@ -54,11 +54,11 @@ public with sharing class ElevateBatch {
         return elevateBatchService.getElevateBatch();
     }
 
-    public ElevateAuthorizedGift add(ElevateTokenizedGift tokenizedGift) {
+    public ElevateBatchItem add(ElevateTokenizedGift tokenizedGift) {
         return elevateBatchService.sendAddRequest(tokenizedGift, elevateBatchId());
     }
 
-    public ElevateAuthorizedGift remove(String elevateTransactionId) {
+    public ElevateBatchItem remove(String elevateTransactionId) {
         return elevateBatchService.sendRemoveRequest(elevateTransactionId, elevateBatchId());
     }
 

@@ -47,10 +47,10 @@ public with sharing class ElevateAuthorizedGift_TEST {
     @isTest
     private static void valueQueriesShouldReturnCorrectValues() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
-        ElevateAuthorizedGift authorizedGift;
+        ElevateBatchItem authorizedGift;
 
         Test.startTest();
-            authorizedGift = new ElevateAuthorizedGift(createTokenizedGift(),
+            authorizedGift = new ElevateBatchItem(createTokenizedGift(),
                     createAuthorizedGiftResponse());
         Test.stopTest();
 

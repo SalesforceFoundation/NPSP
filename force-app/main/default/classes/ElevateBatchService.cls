@@ -29,11 +29,11 @@
  */
 public virtual with sharing class ElevateBatchService {
 
-    public virtual ElevateAuthorizedGift addToElevateBatch(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
+    public virtual ElevateBatchItem addToElevateBatch(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
         return new ElevateBatch(elevateBatchId).add(tokenizedGift);
     }
 
-    public virtual ElevateAuthorizedGift removeFromElevateBatch(ElevateAuthorizedGift authorizedGift) {
+    public virtual ElevateBatchItem removeFromElevateBatch(ElevateBatchItem authorizedGift) {
         return new ElevateBatch(authorizedGift.elevateBatchId).remove(authorizedGift.paymentId);
     }
 
@@ -41,7 +41,7 @@ public virtual with sharing class ElevateBatchService {
         return new ElevateBatch().create();
     }
 
-    public ElevateAuthorizedGift sendAddRequest(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
+    public ElevateBatchItem sendAddRequest(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
         UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
                 addRequest(tokenizedGift, elevateBatchId)
         );
@@ -49,10 +49,10 @@ public virtual with sharing class ElevateBatchService {
                 (response.body, ElevateAuthorizedGiftResponse.class);
         checkForAuthorizedGiftErrorsIn(authorizedGiftResponse);
 
-        return new ElevateAuthorizedGift(tokenizedGift, authorizedGiftResponse);
+        return new ElevateBatchItem(tokenizedGift, authorizedGiftResponse);
     }
 
-    public ElevateAuthorizedGift sendRemoveRequest(String elevatePaymentId, String elevateBatchId) {
+    public ElevateBatchItem sendRemoveRequest(String elevatePaymentId, String elevateBatchId) {
         UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
                 removeRequest(elevateBatchId, elevatePaymentId)
         );
@@ -61,7 +61,7 @@ public virtual with sharing class ElevateBatchService {
                 (response.body, ElevateAuthorizedGiftResponse.class);
         checkForAuthorizedGiftErrorsIn(authorizedGiftResponse);
 
-        return new ElevateAuthorizedGift(null, authorizedGiftResponse);
+        return new ElevateBatchItem(null, authorizedGiftResponse);
     }
 
     public ElevateBatch getElevateBatch() {

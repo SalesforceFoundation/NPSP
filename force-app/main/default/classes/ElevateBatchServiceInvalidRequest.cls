@@ -44,11 +44,11 @@ public class ElevateBatchServiceInvalidRequest extends ElevateBatchService {
         set;
     }
 
-    public override ElevateAuthorizedGift addToElevateBatch(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
+    public override ElevateBatchItem addToElevateBatch(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
         ElevateAuthorizedGiftResponse giftResponse = addElevateBatchErrorMessage();
         elevateBatchService.checkForAuthorizedGiftErrorsIn(giftResponse);
 
-        return new ElevateAuthorizedGift(tokenizedGift, giftResponse);
+        return new ElevateBatchItem(tokenizedGift, giftResponse);
     }
 
     public override ElevateBatch createElevateBatch() {

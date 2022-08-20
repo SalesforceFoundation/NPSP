@@ -30,10 +30,10 @@
 @IsTest
 public with sharing class ElevateBatchServiceValidRequest extends ElevateBatchService {
 
-    public override ElevateAuthorizedGift addToElevateBatch(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
+    public override ElevateBatchItem addToElevateBatch(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
         ElevateAuthorizedGiftResponse giftResponse = addOneTimePurchaseToBatchSuccessMessage();
 
-        return new ElevateAuthorizedGift(tokenizedGift, giftResponse);
+        return new ElevateBatchItem(tokenizedGift, giftResponse);
     }
 
     public override ElevateBatch createElevateBatch() {

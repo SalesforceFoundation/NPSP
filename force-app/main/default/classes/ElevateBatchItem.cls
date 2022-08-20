@@ -27,7 +27,7 @@
  *     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *     POSSIBILITY OF SUCH DAMAGE.
  */
-public with sharing class ElevateAuthorizedGift {
+public with sharing class ElevateBatchItem {
     @AuraEnabled public ElevateTokenizedGift tokenizedGift;
     @AuraEnabled public String paymentId {get; set;}
     @AuraEnabled public DateTime authExpiration;
@@ -44,7 +44,7 @@ public with sharing class ElevateAuthorizedGift {
     @AuraEnabled public String gatewayTransactionId;
     @AuraEnabled public String gatewayId;
 
-    public ElevateAuthorizedGift(ElevateTokenizedGift tokenizedGift,
+    public ElevateBatchItem(ElevateTokenizedGift tokenizedGift,
                                  ElevateAuthorizedGiftResponse authorizedGiftResponse) {
         this.tokenizedGift = tokenizedGift;
         this.paymentId = authorizedGiftResponse.id();
@@ -64,7 +64,7 @@ public with sharing class ElevateAuthorizedGift {
         this.gatewayTransactionId = authorizedGiftResponse.gatewayTransactionId();
     }
 
-    public ElevateAuthorizedGift() {}
+    public ElevateBatchItem() {}
 
     public String elevateBatchId() {
         return elevateBatchId;
