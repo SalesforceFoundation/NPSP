@@ -34,11 +34,9 @@
 * @group-content ../../ApexDocContent/GiftEntry.htm
 * @description Unit tests to cover methods in GE_GiftEntryController.
 */
-@isTest
+@IsTest
 public with sharing class GE_GiftEntryController_TEST {
-
-    // TODO: can remove integration test later, here to verify existing behavior is not changed
-    @isTest
+    @IsTest
     static void shouldReturn2OpenDonationsForTheGivenDonor() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = false));
@@ -80,7 +78,6 @@ public with sharing class GE_GiftEntryController_TEST {
         System.assertEquals('Dummy Opp 0', openDonationsForDummyOrg[0].opportunity.Name);
         System.assertEquals(3, openDonationsForDummyOrg[0].opportunity.npe01__OppPayment__r.size());
 
-        // TODO: assert new DonationService method matches behavior of existing controller method
         DonationService donationService = new DonationService();
         DonationsView donationsView = donationService.getDonationsView(dummyOrg.Id);
 
@@ -89,7 +86,7 @@ public with sharing class GE_GiftEntryController_TEST {
         System.assertEquals(3, donationsView.donations[0].unpaidPayments.size());
     }
 
-    @isTest
+    @IsTest
     static void shouldReturnAGiftView() {
         Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
         Form_Template__c defaultTemplate = new Form_Template__c( Format_Version__c = '1.0' );
@@ -115,17 +112,17 @@ public with sharing class GE_GiftEntryController_TEST {
         );
         insert dataImport;
 
-        test.startTest();
+        Test.startTest();
         GiftService service = new GiftService();
         GiftView viewModel = service.viewModelFrom(new GiftId(dataImport.id));
 
         String account1NameField = String.valueOf(DataImport__c.Account1_Name__c);
         System.assertEquals('Dummy First Name', viewModel.fields.get(account1NameField));
         System.assertEquals(2, viewModel.softCredits.all.size());
-        test.stopTest();
+        Test.stopTest();
     }
 
-    @isTest static void createCreditCardElevateBatchShouldReturnFailureResponse() {
+    @IsTest static void createCreditCardElevateBatchShouldReturnFailureResponse() {
         GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceInvalidRequest();
         String errorMessage = new ElevateBatchServiceInvalidRequest().createElevateBatchErrorMessage()
                 .errors()[0].message;
@@ -145,7 +142,7 @@ public with sharing class GE_GiftEntryController_TEST {
                     'message specified in the invalid request data type.');
     }
 
-    @isTest static void createCreditCardElevateBatchShouldReturnSuccessResponse() {
+    @IsTest static void createCreditCardElevateBatchShouldReturnSuccessResponse() {
         GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceValidRequest();
         AuraHandledException auraException;
         ElevateBatch elevateBatch;
@@ -166,7 +163,7 @@ public with sharing class GE_GiftEntryController_TEST {
                 'populated on a successful response.');
     }
 
-    @isTest static void addCommitmentToElevateBatchShouldReturnSuccessResponse() {
+    @IsTest static void addCommitmentToElevateBatchShouldReturnSuccessResponse() {
         GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceValidRequest();
         AuraHandledException auraException;
         ElevateBatchItem authorizedGift;
@@ -188,7 +185,7 @@ public with sharing class GE_GiftEntryController_TEST {
                 'The elevate batch id should be populated on a successful response.');
     }
 
-    @isTest static void addCreditCardElevateBatchShouldReturnSuccessResponse() {
+    @IsTest static void addCreditCardElevateBatchShouldReturnSuccessResponse() {
         GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceValidRequest();
         AuraHandledException auraException;
         ElevateBatchItem authorizedGift;
@@ -210,7 +207,7 @@ public with sharing class GE_GiftEntryController_TEST {
                 'The elevate batch id should be populated on a successful response.');
     }
 
-    @isTest static void addCreditCardElevateBatchShouldReturnFailureResponse() {
+    @IsTest static void addCreditCardElevateBatchShouldReturnFailureResponse() {
         GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceInvalidRequest();
         String errorMessage = new ElevateBatchServiceInvalidRequest().addElevateBatchErrorMessage()
                 .errors()[0].message;
@@ -236,7 +233,7 @@ public with sharing class GE_GiftEntryController_TEST {
      * @description Verifies the purchase request response contains status code created
      * when one-time payment has been created in Elevate
      */
-    @isTest
+    @IsTest
     private static void shouldReturnRecordCreatedResponseWhenPurchaseRequestSucceeds() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
@@ -256,7 +253,7 @@ public with sharing class GE_GiftEntryController_TEST {
      * @description Verifies the purchase request response throws an excpetion
      * when building a purchase request body fails with an unexpected error
      */
-    @isTest
+    @IsTest
     private static void shouldThrowExceptionWhenPurchaseRequestGetsUnexpectedError() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
@@ -280,7 +277,7 @@ public with sharing class GE_GiftEntryController_TEST {
      * @description Verifies the purchase request response contains timed out status code and message
      * when the purchase requests times out
      */
-    @isTest
+    @IsTest
     private static void shouldLogErrorWhenPurchaseRequestTimesOut() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
@@ -324,7 +321,7 @@ public with sharing class GE_GiftEntryController_TEST {
     /***
      * @description Confirm that the Data Import upsert method inserts and updates correctly.
      */
-    @isTest
+    @IsTest
     private static void shouldUpsertDataImportRecord() {
         DataImport__c inMemoryDataImport = BDI_DataImport_TEST.newDI('First', 'Last', 100);
         DataImport__c dataImportRecord = GE_GiftEntryController.upsertDataImport(inMemoryDataImport);
@@ -339,7 +336,7 @@ public with sharing class GE_GiftEntryController_TEST {
     /***
      * @description Confirm that a default RenderWrapper is correctly returned
      */
-    @isTest
+    @IsTest
     private static void createAndReturnDefaultFormTemplate() {
         Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
         Form_Template__c defaultTemplate = buildFormTemplate();
@@ -383,7 +380,7 @@ public with sharing class GE_GiftEntryController_TEST {
     /***
     * @description Confirming that method returns the correct number of records
     */
-    @isTest
+    @IsTest
     static void shouldReturnCorrectNumberOfRecords() {
         GE_Template.Template template0 = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON0 = JSON.serialize(template0);
@@ -399,7 +396,7 @@ public with sharing class GE_GiftEntryController_TEST {
     /***
     * @description Confirming that method deletes Form Template records with given ids.
     */
-    @isTest
+    @IsTest
     static void shouldDeleteFormTemplatesWithGivenIds() {
         GE_Template.Template template0 = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON0 = JSON.serialize(template0);
@@ -422,7 +419,7 @@ public with sharing class GE_GiftEntryController_TEST {
     * @description Confirming that the lifecycle of storing and retrieving the template does not corrupt
     * the data.
     */
-    @isTest
+    @IsTest
     static void shouldCommitAndRetrieveTemplate() {
         GE_Template.Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
         Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
@@ -446,7 +443,7 @@ public with sharing class GE_GiftEntryController_TEST {
     /***
     * @description Confirm that we're able to retrieve column headers based on a list name.
     */
-    @isTest
+    @IsTest
     static void shouldRetrieveColumnHeaderBasedOnListName() {
 
         Test.startTest();
@@ -464,7 +461,7 @@ public with sharing class GE_GiftEntryController_TEST {
     /***
     * @description Confirm that we're able to retrieve column headers based on a list name.
     */
-    @isTest
+    @IsTest
     static void shouldPersistOnlyTheSelectedColumnHeadersForTheGivenList() {
 
         Test.startTest();
@@ -498,7 +495,7 @@ public with sharing class GE_GiftEntryController_TEST {
     /****
     * @description Confirm that we're able to build a query string and retrieve a list of records.
     */
-    @isTest
+    @IsTest
     static void shouldRetrieveRecordsBasedOnAQueryString() {
 
         Test.startTest();
@@ -521,7 +518,7 @@ public with sharing class GE_GiftEntryController_TEST {
     /****
     * @description Confirm that form template name uniqueness is enforced.
     */
-    @isTest
+    @IsTest
     static void shouldReturnFalseForExistingFormTemplateName() {
         GE_Template.Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON = JSON.serialize(template);
@@ -545,7 +542,7 @@ public with sharing class GE_GiftEntryController_TEST {
                 'New template names should return true from `GE_GiftEntryController.checkNameUniqueness`');
     }
 
-    @isTest
+    @IsTest
     static void shouldRetrieveSGETemplateWithPermission() {
         UTIL_PermissionsMock utilPermissionsMockInstance = new UTIL_PermissionsMock(true);
         UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(
@@ -579,7 +576,7 @@ public with sharing class GE_GiftEntryController_TEST {
     /***
     * @description Confirms that a form template used by any Data Import Batch cannot be deleted.
     */
-    @isTest
+    @IsTest
     static void shouldPreventDeletionOfTemplateInUse() {
         GE_Template.Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON = JSON.serialize(template);
@@ -620,7 +617,7 @@ public with sharing class GE_GiftEntryController_TEST {
     /***
     * @description Confirms that a form template used as default on Gift Entry settings cannot be deleted.
     */
-    @isTest
+    @IsTest
     static void shouldPreventDeletionOfTemplateReferencedByGiftEntry() {
 
         // aux vars
