@@ -85,23 +85,23 @@ public with sharing class ElevateAuthorizedGift_TEST {
         return tokenizedGift;
     }
 
-    private static ElevateAuthorizedGiftResponse createAuthorizedGiftResponse() {
-        ElevateAuthorizedGiftResponse authorizedGiftResponse = new ElevateAuthorizedGiftResponse();
-        authorizedGiftResponse.cardData = new ElevateAuthorizedGiftResponse.CardData();
-        authorizedGiftResponse.id = DUMMY_ID;
-        authorizedGiftResponse.authExpiresAt = System.today().addDays(1);
-        authorizedGiftResponse.gatewayTransactionId = DUMMY_ID;
-        authorizedGiftResponse.paymentType = DUMMY_PAYMENT_TYPE;
-        authorizedGiftResponse.originalTransactionId = DUMMY_ID;
-        authorizedGiftResponse.batchId = DUMMY_ID;
-        authorizedGiftResponse.status = ElevateTransactionStatus.AUTHORIZED;
-        authorizedGiftResponse.cardData.expirationYear = String.valueOf(DUMMY_DATE.addYears(1).year());
-        authorizedGiftResponse.cardData.expirationMonth = String.valueOf(DUMMY_DATE.addYears(1).month());
-        authorizedGiftResponse.cardData.last4 = DUMMY_CARD_LAST_4;
-        authorizedGiftResponse.cardData.brand = DUMMY_CARD_NETWORK;
-        authorizedGiftResponse.gatewayId = DUMMY_ID;
-        authorizedGiftResponse.gatewayTransactionId = DUMMY_ID;
-        authorizedGiftResponse.authorizedAt = DUMMY_DATE;
+    private static ElevateBatchItemCreateResponse createAuthorizedGiftResponse() {
+        ElevateBatchItemCreateResponse authorizedGiftResponse = new ElevateBatchItemCreateResponse();
+        authorizedGiftResponse.purchaseResponse.cardData = new ElevateBatchItemCreateResponse.CardData();
+        authorizedGiftResponse.purchaseResponse.id = DUMMY_ID;
+        authorizedGiftResponse.purchaseResponse.authExpiresAt = System.today().addDays(1);
+        authorizedGiftResponse.purchaseResponse.gatewayTransactionId = DUMMY_ID;
+        authorizedGiftResponse.purchaseResponse.paymentType = DUMMY_PAYMENT_TYPE;
+        authorizedGiftResponse.purchaseResponse.originalTransactionId = DUMMY_ID;
+        authorizedGiftResponse.purchaseResponse.batchId = DUMMY_ID;
+        authorizedGiftResponse.purchaseResponse.status = ElevateTransactionStatus.AUTHORIZED;
+        authorizedGiftResponse.purchaseResponse.cardData.expirationYear = String.valueOf(DUMMY_DATE.addYears(1).year());
+        authorizedGiftResponse.purchaseResponse.cardData.expirationMonth = String.valueOf(DUMMY_DATE.addYears(1).month());
+        authorizedGiftResponse.purchaseResponse.cardData.last4 = DUMMY_CARD_LAST_4;
+        authorizedGiftResponse.purchaseResponse.cardData.brand = DUMMY_CARD_NETWORK;
+        authorizedGiftResponse.purchaseResponse.gatewayId = DUMMY_ID;
+        authorizedGiftResponse.purchaseResponse.gatewayTransactionId = DUMMY_ID;
+        authorizedGiftResponse.purchaseResponse.authorizedAt = DUMMY_DATE;
         return authorizedGiftResponse;
     }
 }
