@@ -28,7 +28,7 @@
  *     POSSIBILITY OF SUCH DAMAGE.
  */
 @IsTest
-public with sharing class ElevateBatchServiceValidRequest extends ElevateBatchService {
+public class ElevateBatchServiceValidRequest extends ElevateBatchService {
 
     public override ElevateBatchItem addToElevateBatch(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
         ElevateAuthorizedGiftResponse giftResponse = addOneTimePurchaseToBatchSuccessMessage();
