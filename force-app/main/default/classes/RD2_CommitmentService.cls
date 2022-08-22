@@ -60,7 +60,7 @@ public without sharing class RD2_CommitmentService {
 
         PS_CommitmentRequest.RequestBody requestBody = new PS_CommitmentRequest().getPauseRequestBody(schedule);
 
-        response = sendRequest(rd.getRecord()?.CommitmentId__c, JSON.serialize(requestBody),
+        response = sendRequest(rd.getSObject()?.CommitmentId__c, JSON.serialize(requestBody),
             PS_Request.ElevateEndpoint.COMMITMENT_PAUSE);
 
         System.debug(JSON.serializePretty(response));
@@ -179,7 +179,7 @@ public without sharing class RD2_CommitmentService {
         if (isCommitmentSuccess(response)) {
             return;
         }
-        npe03__Recurring_Donation__c rd = donation.getRecord();
+        npe03__Recurring_Donation__c rd = donation.getSObject();
         Id recordId = rd.Id != null
             ? rd.Id
             : rd.npe03__Contact__c != null

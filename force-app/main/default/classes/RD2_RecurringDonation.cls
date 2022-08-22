@@ -89,10 +89,6 @@ public inherited sharing class RD2_RecurringDonation {
         this(rd, rd?.npe03__Donations__r);
     }
 
-    public npe03__Recurring_Donation__c getRecord (){
-        return rd;
-    }
-
     /**
     * @description Constructor
     * @param rd Recurring Donation record

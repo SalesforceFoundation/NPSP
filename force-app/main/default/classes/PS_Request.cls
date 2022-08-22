@@ -262,7 +262,7 @@ public inherited sharing class PS_Request {
                 }
             } else if (endpoint == ElevateEndpoint.COMMITMENT_PAUSE) {
                 value = String.format(
-                    ENDPOINT_COMMITMENT_CANCEL,
+                    ENDPOINT_COMMITMENT_PAUSE,
                     new String[]{
                         commitmentId
                     }
