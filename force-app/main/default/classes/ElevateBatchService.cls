@@ -45,11 +45,10 @@ public virtual with sharing class ElevateBatchService {
         UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
                 addRequest(tokenizedGift, elevateBatchId)
         );
-        ElevateBatchItemCreateResponse authorizedGiftResponse = (ElevateBatchItemCreateResponse)JSON.deserialize
-                (response.body, ElevateBatchItemCreateResponse.class);
-        checkForBatchItemErrorsIn(authorizedGiftResponse);
+        ElevateBatchItemCreateResponse batchItemCreateResponse = ElevateBatchItemCreateResponse.parse(response.body);
+        checkForBatchItemErrorsIn(batchItemCreateResponse);
 
-        return new ElevateBatchItem(tokenizedGift, authorizedGiftResponse);
+        return new ElevateBatchItem(tokenizedGift, batchItemCreateResponse);
     }
 
     public ElevateBatchItem sendRemoveRequest(String elevatePaymentId, String elevateBatchId) {
