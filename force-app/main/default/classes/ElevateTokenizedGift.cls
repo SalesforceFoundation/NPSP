@@ -33,6 +33,7 @@ public with sharing class ElevateTokenizedGift {
     @AuraEnabled public String lastName {get; set;}
     @AuraEnabled public String paymentMethodToken {get; set;}
     @AuraEnabled public String currencyCode {get; set;}
+    @AuraEnabled public Map<String, Object> recurringSchedule {get; set;}
 
     public String merchantId;
     public String gatewayId;

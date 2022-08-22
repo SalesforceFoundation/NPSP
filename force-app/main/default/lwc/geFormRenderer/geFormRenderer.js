@@ -838,9 +838,9 @@ export default class GeFormRenderer extends LightningElement{
                         this.cardholderNames,
                         getCurrencyLowestCommonDenominator(
                             this.getFieldValueFromFormState(DONATION_AMOUNT)
-                        )
+                        ),
+                        this.giftInView.schedule
                     );
-
                     this.updateFormState(await tokenizedGift.tokenize(sectionsList));
                 }
             } catch(ex) {
