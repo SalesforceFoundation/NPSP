@@ -12275,7 +12275,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Refund Information</shortDescription>
-        <value>Refund the following payment:</value>
+        <value>Please review and enter the amount to refund:</value>
     </labels>
     <labels>
         <fullName>pmtRefundProcessing</fullName>
@@ -12300,6 +12300,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Refund Payment Title</shortDescription>
         <value>Refund Payment?</value>
+    </labels>
+    <labels>
+        <fullName>pmtRemainingBalance</fullName>
+        <categories>Payment, Refund</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Remaining Balance</shortDescription>
+        <value>Remaining Balance</value>
     </labels>
     <labels>
         <fullName>pmtUnpaidPaymentScheduledDateRequired</fullName>
