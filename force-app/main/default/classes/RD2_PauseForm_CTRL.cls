@@ -199,21 +199,23 @@ public with sharing class RD2_PauseForm_CTRL {
      */
     @AuraEnabled
     public static void savePause(String jsonPauseData) {
+        Boolean hasScheduleChanged = false;
         try {
             PauseData pause = (PauseData) JSON.deserialize(jsonPauseData, PauseData.class);
-
             RD2_RecurringDonation rd = getRecurringDonation(pause.rdId);
 
             if (isOnlineRecurringDonationRecord(rd)) {
                 UTIL_Http.Response response = pauseElevateRDsFor(pause);
                 if (commitmentService.isCommitmentSuccess(response)) {
                     processPauseScheduleFor(pause);
+                    hasScheduleChanged = true;
                 }
             } else {
                 processPauseScheduleFor(pause);
+                hasScheduleChanged = true;
             }
 
-            RD2_QueueableService.enqueueOppEvalService(pause.rdId, true);
+            RD2_QueueableService.enqueueOppEvalService(pause.rdId, hasScheduleChanged);
 
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
