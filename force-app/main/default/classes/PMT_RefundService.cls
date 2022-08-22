@@ -292,7 +292,7 @@ public inherited sharing class PMT_RefundService {
         }
     }
 
-    public class RequestBody {
+    public inherited sharing class RequestBody {
         @TestVisible
         String transactionId;
 
@@ -301,7 +301,7 @@ public inherited sharing class PMT_RefundService {
         }
     }
 
-    public class RefundInfo {
+    public inherited sharing class RefundInfo {
         public npe01__OppPayment__c originalPayment;
         public Decimal remainingBalance;
 
