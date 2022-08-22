@@ -944,31 +944,31 @@ export default class GeFormRenderer extends LightningElement{
             try {
                 this.loadingText = this.CUSTOM_LABELS.geAuthorizingCreditCard;
     
-                const authorizedGift = await this.currentElevateBatch.add(tokenizedGift);
-                const isAuthorized = authorizedGift.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED
-                    || authorizedGift.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING;
+                const elevateBatchItem = await this.currentElevateBatch.add(tokenizedGift);
+                const isAuthorized = elevateBatchItem.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED
+                    || elevateBatchItem.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING;
 
                 if (isAuthorized) {
                     this.updateFormState({
                         [apiNameFor(PAYMENT_ELEVATE_ELEVATE_BATCH_ID)]: this.currentElevateBatch.elevateBatchId,
-                        [apiNameFor(PAYMENT_ELEVATE_ID)]: authorizedGift.paymentId,
+                        [apiNameFor(PAYMENT_ELEVATE_ID)]: elevateBatchItem.paymentId,
                         [apiNameFor(PAYMENT_STATUS)]: this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED,
-                        [apiNameFor(PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID)]: authorizedGift.originalTransactionId,
-                        [apiNameFor(PAYMENT_DECLINED_REASON)]: authorizedGift.declineReason,
-                        [apiNameFor(PAYMENT_LAST_4)]: authorizedGift.cardLast4,
-                        [apiNameFor(PAYMENT_CARD_NETWORK)]: authorizedGift.cardNetwork,
-                        [apiNameFor(PAYMENT_EXPIRATION_MONTH)]: authorizedGift.cardExpirationMonth,
-                        [apiNameFor(PAYMENT_EXPIRATION_YEAR)]: authorizedGift.cardExpirationYear,
-                        [apiNameFor(PAYMENT_AUTHORIZED_AT)]: authorizedGift.authorizedAt,
-                        [apiNameFor(PAYMENT_GATEWAY_ID)]: authorizedGift.gatewayId,
-                        [apiNameFor(PAYMENT_GATEWAY_TRANSACTION_ID)]: authorizedGift.gatewayTransactionId,
+                        [apiNameFor(PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID)]: elevateBatchItem.originalTransactionId,
+                        [apiNameFor(PAYMENT_DECLINED_REASON)]: elevateBatchItem.declineReason,
+                        [apiNameFor(PAYMENT_LAST_4)]: elevateBatchItem.cardLast4,
+                        [apiNameFor(PAYMENT_CARD_NETWORK)]: elevateBatchItem.cardNetwork,
+                        [apiNameFor(PAYMENT_EXPIRATION_MONTH)]: elevateBatchItem.cardExpirationMonth,
+                        [apiNameFor(PAYMENT_EXPIRATION_YEAR)]: elevateBatchItem.cardExpirationYear,
+                        [apiNameFor(PAYMENT_AUTHORIZED_AT)]: elevateBatchItem.authorizedAt,
+                        [apiNameFor(PAYMENT_GATEWAY_ID)]: elevateBatchItem.gatewayId,
+                        [apiNameFor(PAYMENT_GATEWAY_TRANSACTION_ID)]: elevateBatchItem.gatewayTransactionId,
                         [apiNameFor(PAYMENT_DECLINED_REASON)]: null,
                         [apiNameFor(STATUS_FIELD)]: null
                     });
 
                     dataImportFromFormState = this.saveableFormState();
                 } else {
-                    await this.handleAuthorizationFailure(authorizedGift.declineReason);
+                    await this.handleAuthorizationFailure(elevateBatchItem.declineReason);
                     return;
                 }
             } catch (ex) {
