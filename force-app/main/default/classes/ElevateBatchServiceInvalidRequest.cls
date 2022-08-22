@@ -49,7 +49,7 @@ public class ElevateBatchServiceInvalidRequest extends ElevateBatchService {
             addToElevateBatchErrorResponse());
         elevateBatchService.checkForBatchItemErrorsIn(giftResponse);
 
-        return new ElevateBatchItem(tokenizedGift, giftResponse);
+        return new ElevateBatchItem(giftResponse);
     }
 
     public override ElevateBatch createElevateBatch() {

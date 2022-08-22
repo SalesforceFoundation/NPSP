@@ -48,7 +48,7 @@ public virtual with sharing class ElevateBatchService {
         ElevateBatchItemCreateResponse batchItemCreateResponse = ElevateBatchItemCreateResponse.parse(response.body);
         checkForBatchItemErrorsIn(batchItemCreateResponse);
 
-        return new ElevateBatchItem(tokenizedGift, batchItemCreateResponse);
+        return new ElevateBatchItem(batchItemCreateResponse);
     }
 
     public ElevateBatchItem sendRemoveRequest(String elevatePaymentId, String elevateBatchId) {
@@ -60,7 +60,7 @@ public virtual with sharing class ElevateBatchService {
                 (response.body, ElevateBatchItemCreateResponse.class);
         checkForBatchItemErrorsIn(authorizedGiftResponse);
 
-        return new ElevateBatchItem(null, authorizedGiftResponse);
+        return new ElevateBatchItem(authorizedGiftResponse);
     }
 
     public ElevateBatch getElevateBatch() {

@@ -68,7 +68,7 @@ public class ElevateBatchServiceValidRequest extends ElevateBatchService {
             giftResponse = ElevateBatchItemCreateResponse.parse(commitmentResponse);
         }
 
-        return new ElevateBatchItem(tokenizedGift, giftResponse);
+        return new ElevateBatchItem(giftResponse);
     }
 
     public override ElevateBatch createElevateBatch() {
