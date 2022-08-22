@@ -144,6 +144,15 @@ public with sharing class RD2_OpportunityService {
         Map<Id, List<RecurringDonationSchedule__c>> rdSchedules = scheduleService.getExistingSchedules(rds);
         List<RecurringDonationSchedule__c> schedulesToUpdate = new List<RecurringDonationSchedule__c>();
         for (npe03__Recurring_Donation__c rd : rds) {
+            Booelan updateSchedule = false;
+            RecurringDonationSchedule__c schedule = rdSchedules.get(rd.Id)[0];
+            if(schedule.NextPaymentAmount__c != null) {
+                schedule.NextPaymentAmount__c = null;
+                // Prevent the Next Payment Amount from being used in later steps of this process
+                rd.RecurringDonationSchedules__r[0].NextPaymentAmount__c = null;
+                updateSchedule = true;
+            }
+
             RD2_OpportunityMatcher.Record nextDonationDateRecord = scheduleService.getNextDonationDateRecord(
                 RD2_ScheduleService.currentDate, new RD2_RecurringDonation(rd), rd.RecurringDonationSchedules__r
             );
@@ -157,11 +166,8 @@ public with sharing class RD2_OpportunityService {
 
             oppsToCreate.add(buildOpportunity(rd, nextDonationDateRecord.getInstallment()));
             installmentsByRDId.put(rd.Id, new List<RD2_ScheduleService.Installment>{ nextDonationDateRecord.getInstallment() });
-            
-            // Clear the Next Payment Amount on the Schedule record
-            RecurringDonationSchedule__c schedule = rdSchedules.get(rd.Id)[0];
-            if(schedule.NextPaymentAmount__c != null) {
-                schedule.NextPaymentAmount__c = null;
+            // We only want to update the schedule if a new Opportuntiy is being created
+            if (updateSchedule) {
                 schedulesToUpdate.add(schedule);
             }
         }

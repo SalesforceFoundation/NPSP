@@ -874,6 +874,8 @@ private with sharing class RD2_OpportunityService_TEST {
         rds = new RD2_QueryService()
             .getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
 
+        System.assertEquals(NEXT_PAYMENT_AMOUNT, rds[0].RecurringDonationSchedules__r[0].NextPaymentAmount__c, 
+            'The Next Payment Amount should still be set');
         System.assertEquals(1, rds[0].npe03__Donations__r.size(), 'There should only be 1 Opportunity');
         System.assertEquals(1, rds[0].RecurringDonationSchedules__r.size(), 'There should be 1 schedule');
 
@@ -892,6 +894,10 @@ private with sharing class RD2_OpportunityService_TEST {
             .getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
 
         System.assertEquals(2, rds[0].npe03__Donations__r.size(), 'There should be 2 Opportunities');
+
+        Opportunity newOpportunity = rds[0].npe03__Donations__r[1];
+
+        System.assertEquals(RD_AMOUNT, newOpportunity.Amount, 'The new Opp Amount should be the RD Amount');
         System.assertEquals(1, rds[0].RecurringDonationSchedules__r.size(), 'There should be 1 schedule');
         System.assertEquals(null, rds[0].RecurringDonationSchedules__r[0].NextPaymentAmount__c, 
             'The Next Payment Amount should be cleared');
