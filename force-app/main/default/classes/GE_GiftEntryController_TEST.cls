@@ -36,6 +36,9 @@
 */
 @IsTest
 public with sharing class GE_GiftEntryController_TEST {
+    private static final String TEST_PAYMENT_METHOD_CARD = 'CARD';
+    private static final String TEST_PAYMENT_METHOD_ACH = 'ACH';
+
     @IsTest
     static void shouldReturn2OpenDonationsForTheGivenDonor() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -123,28 +126,7 @@ public with sharing class GE_GiftEntryController_TEST {
     }
 
     @IsTest
-    static void createCreditCardElevateBatchShouldReturnFailureResponse() {
-        GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceInvalidRequest();
-        String errorMessage = new ElevateBatchServiceInvalidRequest().createElevateBatchErrorMessage()
-                .errors()[0].message;
-        AuraHandledException auraException;
-
-        Test.startTest();
-            try {
-                GE_GiftEntryController.createElevateBatch();
-            } catch (AuraHandledException ex) {
-                auraException = ex;
-            }
-        Test.stopTest();
-
-        System.assertEquals(errorMessage,
-                auraException.getMessage(), 'The error message in the elevate batch response ' +
-                    'should throw an exception and the message should be the create elevate batch error ' +
-                    'message specified in the invalid request data type.');
-    }
-
-    @IsTest
-    static void createCreditCardElevateBatchShouldReturnSuccessResponse() {
+    static void createElevateBatchShouldReturnSuccessResponse() {
         GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceValidRequest();
         AuraHandledException auraException;
         ElevateBatch elevateBatch;
@@ -166,8 +148,32 @@ public with sharing class GE_GiftEntryController_TEST {
     }
 
     @IsTest
-    static void addCommitmentToElevateBatchShouldReturnSuccessResponse() {
-        GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceValidRequest();
+    static void createElevateBatchShouldReturnFailureResponse() {
+        GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceInvalidRequest();
+        String errorMessage = ElevateBatchResponse.parse(new ElevateBatchServiceInvalidRequest()
+                .createElevateBatchErrorResponse())
+                .errors()[0].message;
+        AuraHandledException auraException;
+
+        Test.startTest();
+        try {
+            GE_GiftEntryController.createElevateBatch();
+        } catch (AuraHandledException ex) {
+            auraException = ex;
+        }
+        Test.stopTest();
+
+        System.assertEquals(errorMessage,
+                auraException.getMessage(), 'The error message in the elevate batch response ' +
+                        'should throw an exception and the message should be the create elevate batch error ' +
+                        'message specified in the invalid request data type.');
+    }
+
+    @IsTest
+    static void addCardCommitmentToElevateBatchShouldReturnSuccessResponse() {
+        GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceValidRequest(
+            ElevateBatchItemType.COMMITMENT, TEST_PAYMENT_METHOD_CARD);
+
         AuraHandledException auraException;
         ElevateBatchItem elevateBatchItem;
 
@@ -184,20 +190,47 @@ public with sharing class GE_GiftEntryController_TEST {
                 ' occurred with a valid request.');
         System.assertEquals(null, auraException, 'The aura exception object should be null since no error should have' +
                 ' occurred with a valid request.');
-        System.assertEquals('test-valid-id', elevateBatchItem.paymentId(),
+        System.assertEquals('test-valid-id', elevateBatchItem.elevateBatchId(),
                 'The elevate batch id should be populated on a successful response.');
     }
 
     @IsTest
-    static void addCreditCardElevateBatchShouldReturnSuccessResponse() {
-        GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceValidRequest();
+    static void addACHCommitmentToElevateBatchShouldReturnSuccessResponse() {
+        GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceValidRequest(
+                ElevateBatchItemType.COMMITMENT, TEST_PAYMENT_METHOD_ACH);
+
         AuraHandledException auraException;
-        ElevateBatchItem authorizedGift;
+        ElevateBatchItem elevateBatchItem;
+
+        Test.startTest();
+        try {
+            elevateBatchItem = GE_GiftEntryController.addToElevateBatch(new ElevateTokenizedGift(),
+                    'test-valid-id');
+        } catch (AuraHandledException ex) {
+            auraException = ex;
+        }
+        Test.stopTest();
+
+        System.assertEquals(null, auraException, 'The aura exception object should be null since no error should have' +
+                ' occurred with a valid request.');
+        System.assertEquals(null, auraException, 'The aura exception object should be null since no error should have' +
+                ' occurred with a valid request.');
+        System.assertEquals('test-valid-id', elevateBatchItem.elevateBatchId(),
+                'The elevate batch id should be populated on a successful response.');
+    }
+
+    @IsTest
+    static void addOneTimeCardToElevateBatchShouldReturnSuccessResponse() {
+        GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceValidRequest(
+ElevateBatchItemType.ONE_TIME, TEST_PAYMENT_METHOD_CARD);
+
+        AuraHandledException auraException;
+        ElevateBatchItem elevateBatchItem;
 
         Test.startTest();
             try {
-                authorizedGift = GE_GiftEntryController.addToElevateBatch(new ElevateTokenizedGift(),
-                        'test-valid-id');
+                elevateBatchItem = GE_GiftEntryController.addToElevateBatch(new ElevateTokenizedGift(),
+                    'test-valid-id');
             } catch (AuraHandledException ex) {
                 auraException = ex;
             }
@@ -207,31 +240,33 @@ public with sharing class GE_GiftEntryController_TEST {
                 ' occurred with a valid request.');
         System.assertEquals(null, auraException, 'The aura exception object should be null since no error should have' +
                 ' occurred with a valid request.');
-        System.assertEquals('test-valid-id', authorizedGift.paymentId(),
+        System.assertEquals('test-valid-id', elevateBatchItem.elevateBatchId(),
                 'The elevate batch id should be populated on a successful response.');
     }
 
     @IsTest
-    static void addCreditCardElevateBatchShouldReturnFailureResponse() {
-        GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceInvalidRequest();
-        String errorMessage = new ElevateBatchServiceInvalidRequest().addElevateBatchErrorMessage()
-                .errors()[0].message;
+    static void addOneTimeACHToElevateBatchShouldReturnSuccessResponse() {
+        GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceValidRequest(
+                ElevateBatchItemType.ONE_TIME, TEST_PAYMENT_METHOD_ACH);
+
         AuraHandledException auraException;
+        ElevateBatchItem elevateBatchItem;
 
         Test.startTest();
-            try {
-                GE_GiftEntryController.addToElevateBatch(new ElevateTokenizedGift(), 'test-valid-group-id');
-            } catch (AuraHandledException ex) {
-                auraException = ex;
-            }
+        try {
+            elevateBatchItem = GE_GiftEntryController.addToElevateBatch(new ElevateTokenizedGift(),
+                    'test-valid-id');
+        } catch (AuraHandledException ex) {
+            auraException = ex;
+        }
         Test.stopTest();
 
-        System.assert(auraException != null, 'The aura handled exception should not be null since an invalid request ' +
-                'has been sent.');
-        System.assertEquals(errorMessage,
-                auraException.getMessage(), 'The error message in the elevate batch response ' +
-                        'should throw an exception and the message should be the create elevate batch error ' +
-                        'message specified in the invalid request data type.');
+        System.assertEquals(null, auraException, 'The aura exception object should be null since no error should have' +
+                ' occurred with a valid request.');
+        System.assertEquals(null, auraException, 'The aura exception object should be null since no error should have' +
+                ' occurred with a valid request.');
+        System.assertEquals('test-valid-id', elevateBatchItem.elevateBatchId(),
+                'The elevate batch id should be populated on a successful response.');
     }
 
     /***
@@ -252,6 +287,30 @@ public with sharing class GE_GiftEntryController_TEST {
         Test.stopTest();
 
         System.assertEquals(UTIL_Http.STATUS_CODE_CREATED, response.statusCode, 'Response status should match: ' + response);
+    }
+
+    @IsTest
+    static void addBatchItemToElevateBatchShouldReturnFailureResponse() {
+        GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceInvalidRequest();
+        String errorMessage = ElevateBatchItemCreateResponse.parse(new ElevateBatchServiceInvalidRequest()
+                .addToElevateBatchErrorResponse())
+                .errors()[0].message;
+        AuraHandledException auraException;
+
+        Test.startTest();
+        try {
+            GE_GiftEntryController.addToElevateBatch(new ElevateTokenizedGift(), 'test-valid-group-id');
+        } catch (AuraHandledException ex) {
+            auraException = ex;
+        }
+        Test.stopTest();
+
+        System.assert(auraException != null, 'The aura handled exception should not be null since an invalid request ' +
+                'has been sent.');
+        System.assertEquals(errorMessage,
+                auraException.getMessage(), 'The error message in the elevate batch response ' +
+                        'should throw an exception and the message should be the create elevate batch error ' +
+                        'message specified in the invalid request data type.');
     }
 
     /***
