@@ -136,6 +136,7 @@ describe('c-ge-batch-gift-entry-header', () => {
 
             expect(handler).toHaveBeenCalled();
             expect(handler.mock.calls[0][0].type).toBe('processbatch');
+
             expect(buttons[0].disabled).toBe(true);
             expect(buttons[1].disabled).toBe(true);
             expect(buttons[2].disabled).toBe(true);
