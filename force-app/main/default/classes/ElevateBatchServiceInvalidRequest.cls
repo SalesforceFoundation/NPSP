@@ -30,7 +30,7 @@
 /**
 * @description Used to mock invalid elevate batch requests for unit tests
  */
-@isTest
+@IsTest
 public class ElevateBatchServiceInvalidRequest extends ElevateBatchService {
 
     @TestVisible
@@ -45,43 +45,39 @@ public class ElevateBatchServiceInvalidRequest extends ElevateBatchService {
     }
 
     public override ElevateBatchItem addToElevateBatch(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
-        ElevateBatchItemCreateResponse giftResponse = addElevateBatchErrorMessage();
+        ElevateBatchItemCreateResponse giftResponse = ElevateBatchItemCreateResponse
+                .parse(addToElevateBatchErrorResponse());
         elevateBatchService.checkForAuthorizedGiftErrorsIn(giftResponse);
 
         return new ElevateBatchItem(tokenizedGift, giftResponse);
     }
 
     public override ElevateBatch createElevateBatch() {
-        ElevateBatchResponse elevateBatchResponse = createElevateBatchErrorMessage();
+        ElevateBatchResponse elevateBatchResponse = ElevateBatchResponse.parse(createElevateBatchErrorResponse());
         elevateBatchService.checkForElevateBatchErrorsIn(elevateBatchResponse);
 
-        ElevateBatch elevateBatch = new ElevateBatch();
-
-        return elevateBatch;
+        return new ElevateBatch();
     }
 
-    public ElevateBatchItemCreateResponse addElevateBatchErrorMessage() {
-        return (ElevateBatchItemCreateResponse)JSON.deserialize('{\n' +
+    public String addToElevateBatchErrorResponse() {
+        return '{\n' +
                 '  "errors": [\n' +
                 '    {\n' +
-                '      "message": "authorize failed",\n' +
-                '      "localizedPaymentsMessage": "Bad Request",\n' +
-                '      "detailedMessage": "create failed"\n' +
+                '      "message": "add to batch failed",\n' +
+                '      "failure_reason": "test_failure"\n' +
                 '    }\n' +
                 '  ]\n' +
-                '}', ElevateBatchItemCreateResponse.class);
+                '}';
     }
 
-    public ElevateBatchResponse createElevateBatchErrorMessage() {
-        return (ElevateBatchResponse)JSON.deserialize('{\n' +
+    public String createElevateBatchErrorResponse() {
+        return '{\n' +
                 '  "errors": [\n' +
                 '    {\n' +
                 '      "message": "create failed",\n' +
-                '      "localizedPaymentsMessage": "Bad Request",\n' +
-                '      "detailedMessage": "create failed"\n' +
-                '    }\n' +
-                '  ]\n' +
-                '}', ElevateBatchResponse.class);
+                '      "failure_reason": "test_failure"\n' +
+                '    }]' +
+                '}';
     }
 
 }
