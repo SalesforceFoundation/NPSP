@@ -28,7 +28,6 @@
  *     POSSIBILITY OF SUCH DAMAGE.
  */
 public with sharing class ElevateBatchItem {
-    @AuraEnabled public ElevateTokenizedGift tokenizedGift;
     @AuraEnabled public String paymentId {get; set;}
     @AuraEnabled public DateTime authExpiration;
     @AuraEnabled public String status;
@@ -44,10 +43,7 @@ public with sharing class ElevateBatchItem {
     @AuraEnabled public String gatewayTransactionId;
     @AuraEnabled public String gatewayId;
 
-    public ElevateBatchItem(ElevateTokenizedGift tokenizedGift,
-                            ElevateBatchItemCreateResponse createBatchItemResponse) {
-
-        this.tokenizedGift = tokenizedGift;
+    public ElevateBatchItem(ElevateBatchItemCreateResponse createBatchItemResponse) {
         this.paymentId = createBatchItemResponse.id();
         this.authExpiration = createBatchItemResponse.authExpiration();
         this.status = createBatchItemResponse.status().name();
