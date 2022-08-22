@@ -80,7 +80,7 @@ public inherited sharing class PS_Request {
     public static String ENDPOINT_COMMITMENT_CANCEL = '/v1/payments/verified/commitments/{0}/cancel';
     public static String ENDPOINT_COMMITMENT_UPDATE_BULK = '/v1/payments/verified/commitments/update/bulk';
     public static String ENDPOINT_CREATE_ELEVATE_BATCH = '/v1/payments/verified/batch';
-    public static String ENDPOINT_ADD_TO_ELEVATE_BATCH = '/v1/payments/verified/batch/{0}/add';
+    public static String ENDPOINT_ADD_TO_ELEVATE_BATCH = '/v1/payments/verified/batch/{0}/items';
     public static String ENDPOINT_CHARGE_ELEVATE_BATCH = '/v1/payments/verified/batch/{0}/capture';
     public static String ENDPOINT_REMOVE_FROM_ELEVATE_BATCH = '/v1/payments/verified/batch/{0}/remove/{1}';
 
