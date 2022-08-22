@@ -45,23 +45,24 @@ public with sharing class ElevateBatchItem {
     @AuraEnabled public String gatewayId;
 
     public ElevateBatchItem(ElevateTokenizedGift tokenizedGift,
-                                 ElevateBatchItemCreateResponse authorizedGiftResponse) {
+                            ElevateBatchItemCreateResponse createBatchItemResponse) {
+
         this.tokenizedGift = tokenizedGift;
-        this.paymentId = authorizedGiftResponse.id();
-        this.authExpiration = authorizedGiftResponse.authExpiration();
-        this.status = authorizedGiftResponse.status().name();
-        this.gatewayTransactionId = authorizedGiftResponse.gatewayTransactionId();
-        this.paymentMethod = authorizedGiftResponse.paymentMethod();
-        this.elevateBatchId  = authorizedGiftResponse.elevateBatchId();
-        this.originalTransactionId = authorizedGiftResponse.originalTransactionId();
-        this.declineReason = authorizedGiftResponse.declineReason();
-        this.cardLast4 = authorizedGiftResponse.last4();
-        this.cardNetwork = authorizedGiftResponse.brand();
-        this.cardExpirationMonth = authorizedGiftResponse.expirationMonth();
-        this.cardExpirationYear = authorizedGiftResponse.expirationYear();
-        this.authorizedAt = authorizedGiftResponse.authorizedAt();
-        this.gatewayId = authorizedGiftResponse.gatewayId();
-        this.gatewayTransactionId = authorizedGiftResponse.gatewayTransactionId();
+        this.paymentId = createBatchItemResponse.id();
+        this.authExpiration = createBatchItemResponse.authExpiration();
+        this.status = createBatchItemResponse.status().name();
+        this.gatewayTransactionId = createBatchItemResponse.gatewayTransactionId();
+        this.paymentMethod = createBatchItemResponse.paymentMethod();
+        this.elevateBatchId  = createBatchItemResponse.elevateBatchId();
+        this.originalTransactionId = createBatchItemResponse.originalTransactionId();
+        this.declineReason = createBatchItemResponse.declineReason();
+        this.cardLast4 = createBatchItemResponse.last4();
+        this.cardNetwork = createBatchItemResponse.brand();
+        this.cardExpirationMonth = createBatchItemResponse.expirationMonth();
+        this.cardExpirationYear = createBatchItemResponse.expirationYear();
+        this.authorizedAt = createBatchItemResponse.authorizedAt();
+        this.gatewayId = createBatchItemResponse.gatewayId();
+        this.gatewayTransactionId = createBatchItemResponse.gatewayTransactionId();
     }
 
     public ElevateBatchItem() {}
