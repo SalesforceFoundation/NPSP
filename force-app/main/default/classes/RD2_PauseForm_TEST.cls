@@ -185,6 +185,48 @@ public with sharing class RD2_PauseForm_TEST {
             'The Exception message should match.');
     }
 
+    @IsTest
+    private static void shouldSavePauseWhenRDIsElevateRecord() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        Test.startTest();
+        mockRecordCreatedCalloutResponse();
+
+        npe03__Recurring_Donation__c recurringDonation = rdGateway.getRecords()[0];
+        recurringDonation.CommitmentId__c = 'TEST COMMITMENT';
+        recurringDonation.PaymentMethod__c = RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD;
+        update recurringDonation;
+
+        RD2_PauseForm_CTRL.PauseData pause = new RD2_PauseForm_CTRL.PauseData();
+        pause.rdId = recurringDonation.Id;
+        pause.startDate = START_DATE.addMonths(3);
+        pause.resumeAfterDate = START_DATE.addMonths(6);
+        pause.pausedReason = new RD2_PauseForm_CTRL.PausedReason();
+        pause.pausedReason.value = 'Unknown';
+
+        RD2_PauseForm_CTRL.savePause(JSON.serialize(pause));
+
+        Test.stopTest();
+
+        RecurringDonationSchedule__c schedule = [SELECT Id FROM RecurringDonationSchedule__c][0];
+
+        System.assertNotEquals(null, schedule, 'The Commitment response should be returned');
+    }
+
+    private static void mockRecordCreatedCalloutResponse() {
+        UTIL_Http_TEST.mockRecordCreatedCalloutResponse(mockSuccessResponseBody());
+    }
+
+
+    private static String mockSuccessResponseBody() {
+        return '{' +
+            '"startTimestamp":"' + System.today()  +'",' +
+            '"endTimestamp":"' + System.today().addDays(5) + '",' +
+            '"reason":"' + PAUSED_REASON_VALUE +
+            '"}' ;
+    }
+
     /****
     * @description Verifies the existing pause is deactivated when a new one is created
     */
@@ -644,6 +686,8 @@ public with sharing class RD2_PauseForm_TEST {
         System.assertEquals(nextDonationDate, oppById.get(openOpp.Id).CloseDate, 
             'Close Date on the open Opp should be changed to the new Next Donation Date');
     }
+
+
 
 
 

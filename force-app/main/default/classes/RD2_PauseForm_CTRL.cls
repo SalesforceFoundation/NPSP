@@ -260,6 +260,7 @@ public with sharing class RD2_PauseForm_CTRL {
      * @param pause PauseData
      * @return RecurringDonationSchedule__c
      */
+    @TestVisible
     private static RecurringDonationSchedule__c buildPauseSchedule(PauseData pause) {
         return pauseHandler.createPauseSchedule(
             pause.pausedReason?.value,
