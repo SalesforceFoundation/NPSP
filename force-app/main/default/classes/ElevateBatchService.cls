@@ -47,7 +47,7 @@ public virtual with sharing class ElevateBatchService {
         );
         ElevateBatchItemCreateResponse authorizedGiftResponse = (ElevateBatchItemCreateResponse)JSON.deserialize
                 (response.body, ElevateBatchItemCreateResponse.class);
-        checkForAuthorizedGiftErrorsIn(authorizedGiftResponse);
+        checkForBatchItemErrorsIn(authorizedGiftResponse);
 
         return new ElevateBatchItem(tokenizedGift, authorizedGiftResponse);
     }
@@ -59,7 +59,7 @@ public virtual with sharing class ElevateBatchService {
 
         ElevateBatchItemCreateResponse authorizedGiftResponse = (ElevateBatchItemCreateResponse)JSON.deserialize
                 (response.body, ElevateBatchItemCreateResponse.class);
-        checkForAuthorizedGiftErrorsIn(authorizedGiftResponse);
+        checkForBatchItemErrorsIn(authorizedGiftResponse);
 
         return new ElevateBatchItem(null, authorizedGiftResponse);
     }
@@ -113,25 +113,25 @@ public virtual with sharing class ElevateBatchService {
     }
 
     @TestVisible
-    private void checkForAuthorizedGiftErrorsIn(ElevateBatchItemCreateResponse authorizedGiftResponse) {
-        if (hasAuthorizedGiftErrors(authorizedGiftResponse)) {
+    private void checkForBatchItemErrorsIn(ElevateBatchItemCreateResponse authorizedGiftResponse) {
+        if (hasBatchItemErrors(authorizedGiftResponse)) {
             UTIL_AuraEnabledCommon.throwAuraHandledException(authorizedGiftResponse.errors()[0].message);
         }
     }
 
-    private Boolean hasAuthorizedGiftErrors(ElevateBatchItemCreateResponse authorizedGiftResponse) {
+    private Boolean hasBatchItemErrors(ElevateBatchItemCreateResponse authorizedGiftResponse) {
         return authorizedGiftResponse.errors() != null &&
                !authorizedGiftResponse.errors().isEmpty();
     }
 
     @TestVisible
     private void checkForElevateBatchErrorsIn(ElevateBatchResponse ElevateBatchResponse) {
-        if (hasElevateBatchErrors(ElevateBatchResponse)) {
+        if (hasBatchErrors(ElevateBatchResponse)) {
             UTIL_AuraEnabledCommon.throwAuraHandledException(ElevateBatchResponse.errors()[0].message);
         }
     }
 
-    private Boolean hasElevateBatchErrors(ElevateBatchResponse ElevateBatchResponse) {
+    private Boolean hasBatchErrors(ElevateBatchResponse ElevateBatchResponse) {
         return ElevateBatchResponse.errors() != null &&
                !ElevateBatchResponse.errors().isEmpty();
     }
