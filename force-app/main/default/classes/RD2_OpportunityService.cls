@@ -144,7 +144,7 @@ public with sharing class RD2_OpportunityService {
         Map<Id, List<RecurringDonationSchedule__c>> rdSchedules = scheduleService.getExistingSchedules(rds);
         List<RecurringDonationSchedule__c> schedulesToUpdate = new List<RecurringDonationSchedule__c>();
         for (npe03__Recurring_Donation__c rd : rds) {
-            Booelan updateSchedule = false;
+            Boolean updateSchedule = false;
             RecurringDonationSchedule__c schedule = rdSchedules.get(rd.Id)[0];
             if(schedule.NextPaymentAmount__c != null) {
                 schedule.NextPaymentAmount__c = null;

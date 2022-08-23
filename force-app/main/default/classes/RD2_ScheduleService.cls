@@ -84,6 +84,17 @@ public without sharing class RD2_ScheduleService {
     * @return List<RecurringDonationSchedule__c>
     */
     public List<RecurringDonationSchedule__c> buildNewSchedules(npe03__Recurring_Donation__c rd) {
+        return buildNewSchedules(rd, null);
+    }
+
+    /***
+    * @description Builds new recurring donation schedule(s) for recurring donation
+    * @param rd Recurring donation record
+    * @param nextPaymentAmount the Next Payment Amount to set on the schedule
+    * @return List<RecurringDonationSchedule__c>
+    */
+    public List<RecurringDonationSchedule__c> buildNewSchedules(npe03__Recurring_Donation__c rd,
+            Decimal nextPaymentAmount) {
         List<RecurringDonationSchedule__c> newSchedules = new List<RecurringDonationSchedule__c>();
 
         if (new RD2_RecurringDonation(rd).isClosed()) {
@@ -95,6 +106,9 @@ public without sharing class RD2_ScheduleService {
         schedule.Campaign__c = rd.npe03__Recurring_Donation_Campaign__c;
 
         schedule.InstallmentAmount__c = rd.npe03__Amount__c;
+        if(nextPaymentAmount != null) {
+            schedule.NextPaymentAmount__c = nextPaymentAmount;
+        }
         schedule.InstallmentFrequency__c = rd.InstallmentFrequency__c;
         schedule.InstallmentPeriod__c = rd.npe03__Installment_Period__c;
         schedule.PaymentMethod__c = rd.PaymentMethod__c;

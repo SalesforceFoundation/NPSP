@@ -620,6 +620,41 @@ private with sharing class RD2_EntryFormController_TEST {
                 'The response status should match: ' + response);
     }
 
+    /***
+    * @description Verifies Recurring Donation should be validate and handle any error before calling Elevate API
+    */
+    @IsTest
+    private static void shouldReturnSuccessWhenUpdatingRdNextPaymentAmount() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        npe03__Recurring_Donation__c rd = buildRecurringDonation();
+
+        rd.CommitmentId__c = COMMITMENT_ID;
+        rd.npe03__Amount__c = 1;
+        insert rd;
+
+        Decimal nextPaymentAmount = 10.11;
+        UTIL_Http.Response response;
+
+        Test.startTest();
+        RD2_EntryFormController.CommitmentService service = new RD2_EntryFormController.CommitmentService();
+
+        try {
+            UTIL_Http_TEST.mockRecordUpdateCalloutResponse(mockSuccessResponseBody());
+            response = service.handleNextPaymentAmount(rd, nextPaymentAmount);
+        } catch(Exception ex) {
+        }
+
+        Test.stopTest();
+
+        System.assertNotEquals(null, response, 'Expected to receive a response from handleCommitment');
+        System.assertEquals(UTIL_Http.STATUS_CODE_OK, response.statusCode,
+                'The response status code should match: ' + response.statusCode);
+        System.assertEquals(UTIL_Http.STATUS_OK, response.status,
+                'The response status should match: ' + response.status);
+    }
+
     /**
     * @description Verifies commitment success response is returned upon successful campaign update
     */

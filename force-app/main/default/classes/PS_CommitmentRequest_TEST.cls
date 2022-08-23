@@ -162,6 +162,49 @@ private with sharing class PS_CommitmentRequest_TEST {
     }
 
     /**
+    * @description Verifies that the update next payment amount request body is built based on the Recurring Donation and Schedule fields
+    */
+    @isTest
+    private static void shouldBuildUpdateNextPaymentAmountRequestBody() {
+        RD2_ScheduleService.currentDate = CURRENT_DATE;
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(contact.Id)
+            .withInstallmentFrequency(INSTALLMENT_FREQUENCY)
+            .withCommitmentId(COMMITMENT_ID)
+            .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
+            .build();
+
+        insert rd;
+
+        npe03__Recurring_Donation__c oldRd = rd.clone();
+
+        PS_CommitmentRequest request = new PS_CommitmentRequest();
+
+        Decimal nextPaymentAmount = 10.11;
+
+        Test.startTest();
+        PS_CommitmentRequest.RequestBody requestBody = request.getUpdateScheduleRequestBody(rd, nextPaymentAmount);
+        Test.stopTest();
+
+        System.assertEquals(UserInfo.getDefaultCurrency(), requestBody.currencyCode, 'Currency Code should match');
+        System.assertEquals(rd.CommitmentId__c, requestBody.id, 'Commitment Id should match');
+        System.assertEquals(true, requestBody.deactivateAllExistingSchedules, 'Deactivate Existing Schedules Boolean should set to true');
+        System.assertEquals(1, requestBody.schedules.size(),
+            'One schedule should be passed to the API: ' + requestBody.schedules);
+
+        PS_CommitmentRequest.Schedule schedule = requestBody.schedules[0];
+        System.assertEquals(AMOUNT * USD_CURRENCY_MULTIPLIER, schedule.amount, 'Recurring Amount should match');
+        System.assertEquals(nextPaymentAmount * USD_CURRENCY_MULTIPLIER, schedule.nextPaymentAmount, 'Next Payment Amount should match');
+        System.assertEquals('MONTH', schedule.frequency, 'Donation should be made monthly');
+        System.assertEquals(INSTALLMENT_FREQUENCY, schedule.frequencyInterval, 'Donation frequency should match');
+        System.assertEquals(FIRST_PAYMENT_DATE.formatGMT('yyyy-MM-dd\'T\'HH:mm:ss\'Z\''), schedule.firstOccurrenceOnTimestamp, 'First Payment Date should match');
+    }
+
+    /**
     * @description Verify update request when changing payment method to ACH
     */
     @isTest

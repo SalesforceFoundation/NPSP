@@ -387,6 +387,22 @@ public with sharing class RD2_EntryFormController {
         }
 
         /**
+        * @description Handles validation and Elevate recurring commitment creation
+        * @param rd Recurring Donation
+        * @param nextPaymentAmount The Next Payment Amount to set on the Schedule
+        * @return UTIL_Http.Response Payments API response
+        */
+        public UTIL_Http.Response handleNextPaymentAmount(npe03__Recurring_Donation__c rd, Decimal nextPaymentAmount) {
+            UTIL_Http.Response response;
+
+            PS_CommitmentRequest.RequestBody requestBody = new PS_CommitmentRequest().getUpdateScheduleRequestBody(rd, nextPaymentAmount);
+            response = sendRequest(rd.CommitmentId__c, JSON.serialize(requestBody));
+            processResponse(rd, response);
+
+            return response;
+        }
+
+        /**
         * @description Constructs Recurring Donation record from received fields specified in the JSON string,
         * updates defaults that are otherwise updated in the trigger context, and
         * validates user entered values for a new or existing RD record.

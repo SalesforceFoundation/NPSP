@@ -279,6 +279,27 @@ public inherited sharing class PS_CommitmentRequest {
         return reqBody;
     }
 
+    /***
+    * @description Constructs the edit commitment schedule request body for the specified Recurring Donation.
+    * @param rd Recurring Donation record
+    * @param nextPaymentAmount Payment Method Token
+    * @param token Payment Method Token
+    * @return RequestBody
+    */
+    public RequestBody getUpdateScheduleRequestBody(npe03__Recurring_Donation__c rd, Decimal nextPaymentAmount) {
+        RequestBody reqBody = new RequestBody()
+            .withCommitmentId(rd.CommitmentId__c);
+
+        String currencyCode = UserInfo.isMultiCurrencyOrganization()
+            ? (String) rd.get('CurrencyIsoCode')
+            : UserInfo.getDefaultCurrency();
+
+        reqBody.deactivateOldSchedules();
+        setSchedules(reqBody, scheduleService.buildNewSchedules(rd, nextPaymentAmount), currencyCode);
+
+        return reqBody;
+    }
+
     private Map<String, Object> buildUpdatedProductMetadata(npe03__Recurring_Donation__c rd) {
         Map<String, Object> existingProductMetadata = getExistingProductMetadata(rd.CommitmentId__c);
         PS_ProductMetadata productMetadata = new PS_ProductMetadata()
@@ -663,6 +684,7 @@ public inherited sharing class PS_CommitmentRequest {
      */
     public class Schedule {
         public Integer amount;
+        public Integer nextPaymentAmount;
         public String frequency;
         public Integer frequencyInterval;
         public String firstOccurrenceOnTimestamp;
@@ -686,6 +708,11 @@ public inherited sharing class PS_CommitmentRequest {
         public Schedule(RecurringDonationSchedule__c rdSchedule, Integer currencyMultiplier, Boolean isUpdate) {
             Double amount = rdSchedule.InstallmentAmount__c * currencyMultiplier;
             this.amount = amount == null ? null : Integer.valueOf(amount);
+
+            Double nextPaymentAmount = rdSchedule.NextPaymentAmount__c;
+            this.nextPaymentAmount = nextPaymentAmount == null 
+                ? null 
+                : Integer.valueOf(nextPaymentAmount * currencyMultiplier);
 
             this.frequency = frequencyByInstallmentPeriod.get(rdSchedule.InstallmentPeriod__c);
             this.frequencyInterval = rdSchedule.InstallmentFrequency__c == null
