@@ -35,22 +35,73 @@ public with sharing class ElevateTokenizedGift {
     @AuraEnabled public String currencyCode {get; set;}
     @AuraEnabled public Map<String, Object> recurringSchedule {get; set;}
 
-    public String merchantId;
-    public String gatewayId;
+    public String batchItemType;
+    public CommitmentInfo commitmentInfo;
+    public PurchaseInfo purchaseInfo;
+
     public PS_IntegrationServiceConfig.Service configService;
-    public String productMetadataSchemaUri;
     /***
      * Optional properties
      */
     public Map<String, Object> productMetadata;
 
     public ElevateTokenizedGift() {
+        setBatchItemType();
         this.currencyCode = UserInfo.getDefaultCurrency();
-        setConfigServiceInstance();
-        setGatewayId();
-        setMerchantId();
         setProductMetadata();
         setProductMetadataSchemaUri();
+    }
+
+    public class CommitmentInfo {
+        public String currencyCode;
+        public String email;
+        public String firstName;
+        public String lastName;
+        public String gatewayId;
+        public String merchantId;
+        public String paymentMethodToken;
+        public String paymentMethodType;
+        public Metadata productMetadata;
+        public List<Schedules> schedules;
+        public String type;
+    }
+    public class Schedules {
+        public Integer amount;
+        public String firstOccurrenceOnTimestamp;
+        public String frequency;
+        public Integer frequencyInterval;
+    }
+
+    public class PurchaseInfo {
+        public String merchantId;
+        public String gatewayId;
+        public String currencyCode;
+        public Integer amount;
+        public String firstName;
+        public String lastName;
+        public AchData achData;
+        public String email;
+        public String paymentMethodToken;
+        public String paymentMethodType;
+        public Metadata productMetadata;
+    }
+
+    public class AchData {
+        public String achCode;
+        public String bankType;
+        public String checkNumber;
+        public String consent;
+        public String type;
+    }
+
+    public class Metadata {}
+
+    private void setBatchItemType() {
+        if (recurringSchedule == null || recurringSchedule.isEmpty()) {
+            batchItemType = ElevateBatchItemType.ONE_TIME.name();
+        } else {
+            batchItemType = ElevateBatchItemType.COMMITMENT.name();
+        }
     }
 
     private void setProductMetadata() {
@@ -62,49 +113,5 @@ public with sharing class ElevateTokenizedGift {
 
     private void setProductMetadataSchemaUri() {
         this.productMetadataSchemaUri = PS_Request.PRODUCT_METADATA_SCHEMA_URI;
-    }
-
-    private void setMerchantId() {
-        if (String.isBlank(merchantId)) {
-            merchantId = configService.getMerchantIds();
-        }
-    }
-
-    private void setGatewayId() {
-        if (String.isBlank(gatewayId)) {
-            gatewayId = configService.getGatewayIds();
-        }
-    }
-
-    private void setConfigServiceInstance() {
-        configService = new PS_IntegrationServiceConfig.Service();
-    }
-
-    public virtual Integer amount() {
-        return amount;
-    }
-
-    public virtual String firstName() {
-        return firstName;
-    }
-
-    public String lastName() {
-        return lastName;
-    }
-
-    public String currencyCode() {
-        return currencyCode;
-    }
-
-    public String gatewayId() {
-        return gatewayId;
-    }
-
-    public String merchantId() {
-        return merchantId;
-    }
-
-    public String token() {
-        return paymentMethodToken;
     }
 }
