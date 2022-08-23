@@ -1393,7 +1393,7 @@ private with sharing class ALLO_Allocations_TEST {
             createOppAllocation(gau1.Id, opps[0].Id, null, 50)
         );
 
-        // Fix Amount Allocation for $0 to GAU 2
+        // Fix Amount Allocation for $10 to GAU 2
         newAllos.add(
             createOppAllocation(gau2.Id, opps[0].Id, 10, null)
         );
@@ -1402,7 +1402,62 @@ private with sharing class ALLO_Allocations_TEST {
             insert newAllos;
             System.assert(false, 'Expected an exception due to Opportunity being Overallocated.');
         } catch (Exception e) {
-            System.assert(e.getMessage().contains(Label.alloTotalExceedsOppAmt), 'Expected Exception Text: ' + Label.alloExceedsOppAmount + '; Actual: ' + e.getMessage());
+            System.assert(e.getMessage().contains(Label.alloTotalExceedsOppAmt), 'Expected Exception Text: ' + Label.alloTotalExceedsOppAmt + '; Actual: ' + e.getMessage());
+        }
+
+        Test.stopTest();
+    }
+
+    /*******************************************************************************************************
+    * @description Tests that no error is generated if Opportunity Amount becomes 0 and a non zero fixed
+    * Amount Allocation exists
+    ********************************************************************************************************/
+    @isTest
+    private static void testFixupForNonZeroFixedAmountAllocationIfOpportunityAmountIsZero() {
+        List<General_Accounting_Unit__c> gaus = new List<General_Accounting_Unit__c>();
+
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='General');
+        gaus.add(defaultGAU);
+        General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name = 'GAU 1');
+        gaus.add(gau1);
+
+        insert gaus;
+
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.Id));
+
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
+
+        insert accs;
+
+        List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForAccountList(accs, null, UTIL_UnitTestData_TEST.getClosedWonStage(), System.today(), 10, null, null);
+
+        insert opps;
+        Opportunity opportunity = opps[0];
+
+        Test.startTest();
+
+        List<Allocation__c> newAllos = new List<Allocation__c>();
+
+        // Fix Amount Allocation for $10 to GAU 1
+        newAllos.add(
+            createOppAllocation(gau1.Id, opportunity.Id, 10, null)
+        );
+
+        insert newAllos;
+
+        try {
+            opportunity.Amount = 5;
+            update opportunity;
+            System.assert(false, 'Expected an exception due to Opportunity being Overallocated.');
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains(Label.alloExceedsOppAmount), 'Expected Exception Text: ' + Label.alloExceedsOppAmount + '; Actual: ' + e.getMessage());
+        }
+
+        opportunity.Amount = 0;
+        update opportunity;
+        Map<Id, Allocation__c> oppAllos = getOpportunityAllocationsByGAU(opportunity.Id);
+        for(Id gauId : oppAllos.keySet()) {
+            System.assertEquals(0, oppAllos.get(gauId).Amount__c, 'Allocaiton Amount should be 0');
         }
 
         Test.stopTest();
