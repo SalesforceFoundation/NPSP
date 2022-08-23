@@ -43,7 +43,13 @@
                         </lightning-formatted-date-time>
                     </lightning-layout-item>
                     <lightning-layout-item size="4">
-                        <lightning-input class="slds-p-top_large" type="number" name="input7" label="Number field with currency formatter" value="123.45" formatter="currency" step="0.01"></lightning-input>
+                        <lightning-input class="slds-p-top_large"
+                        type="number"
+                        name="refundAmount"
+                        label={labels.refundAmount}
+                        value={remainingBalance}
+                        step="0.01"
+                        field-level-help={labels.refundAllocationHelpText}></lightning-input>
                     </lightning-layout-item>
                 </lightning-layout>
             </div>

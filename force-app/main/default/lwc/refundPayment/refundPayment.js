@@ -10,6 +10,7 @@ import refundPaymentConfirmButton from "@salesforce/label/c.pmtRefundPaymentConf
 import cancelButtonLabel from "@salesforce/label/c.stgBtnCancel";
 import commonRefreshPage from "@salesforce/label/c.commonRefreshPage";
 import noRefundPermissionMessage from "@salesforce/label/c.pmtNoRefundPermissionMessage";
+import refundAllocationHelpText from "@salesforce/label/c.pmtRefundAllocationHelpText";
 import refundPaymentErrorMessage from "@salesforce/label/c.pmtRefundPaymentErrorMessage";
 import refundPaymentSuccessMessage from "@salesforce/label/c.pmtRefundPaymentSuccessMessage";
 import refundPaymentMessage from "@salesforce/label/c.pmtRefundPaymentMessage";
@@ -30,6 +31,7 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
         cancelButtonLabel,
         commonRefreshPage,
         noRefundPermissionMessage,
+        refundAllocationHelpText,
         refundPaymentMessage,
         refundAmount,
         refundPaymentDate,
