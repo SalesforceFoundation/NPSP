@@ -168,7 +168,7 @@ public with sharing class PMT_RefundController {
         }
     }
 
-    public class RefundView {
+    public inherited sharing class RefundView {
         @AuraEnabled public Boolean hasRequiredPermissions;
         @AuraEnabled public Boolean isSuccess;
         @AuraEnabled public Id redirectToPaymentId;
