@@ -53,6 +53,11 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
+        <editable>true</editable>
+        <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%ClosedReason__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
         <editable>false</editable>
         <field>npe03__Recurring_Donation__c.%%%NAMESPACE%%%CommitmentId__c</field>
         <readable>true</readable>
