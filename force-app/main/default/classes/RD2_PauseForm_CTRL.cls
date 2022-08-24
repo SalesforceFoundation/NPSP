@@ -209,6 +209,8 @@ public with sharing class RD2_PauseForm_CTRL {
                 if (commitmentService.isCommitmentSuccess(response)) {
                     processPauseScheduleFor(pause);
                     hasScheduleChanged = true;
+                } else {
+                    throwAuraHandledException(response.getErrorMessages());
                 }
             } else {
                 processPauseScheduleFor(pause);

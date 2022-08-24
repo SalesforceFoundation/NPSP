@@ -87,7 +87,7 @@ export default class Rd2PauseForm extends LightningElement {
     */
     init = async () => {
         try {
-            this.loadInstallments();
+            await this.loadInstallments();
             await this.loadPauseData();
 
         } catch (error) {
