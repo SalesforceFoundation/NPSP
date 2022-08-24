@@ -39,17 +39,8 @@ public with sharing class ElevateTokenizedGift {
     public CommitmentInfo commitmentInfo;
     public PurchaseInfo purchaseInfo;
 
-    public PS_IntegrationServiceConfig.Service configService;
-    /***
-     * Optional properties
-     */
-    public Map<String, Object> productMetadata;
-
     public ElevateTokenizedGift() {
         setBatchItemType();
-        this.currencyCode = UserInfo.getDefaultCurrency();
-        setProductMetadata();
-        setProductMetadataSchemaUri();
     }
 
     public class CommitmentInfo {
@@ -61,13 +52,94 @@ public with sharing class ElevateTokenizedGift {
         public String merchantId;
         public String paymentMethodToken;
         public String paymentMethodType;
-        public Metadata productMetadata;
-        public List<Schedules> schedules;
+        public Map<String, Object> productMetadata;
+        public List<Schedule> schedules;
         public String type;
+
+        public CommitmentInfo() {
+            this.productMetadata = getProductMetadata();
+            this.type = 'SUSTAINER';
+        }
+
+        public CommitmentInfo withCurrencyCode(String currencyCode) {
+            this.currencyCode = currencyCode;
+            return this;
+        }
+
+        public CommitmentInfo withEmail(String commitmentEmail) {
+            this.email = commitmentEmail;
+            return this;
+        }
+
+        public CommitmentInfo withFirstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public CommitmentInfo withLastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public CommitmentInfo withGatewayId(String gatewayId) {
+            this.gatewayId = gatewayId;
+            return this;
+        }
+
+        public CommitmentInfo withMerchantId(String merchantId) {
+            this.merchantId = merchantId;
+            return this;
+        }
+
+        public CommitmentInfo withPaymentMethodToken(String paymentMethodToken) {
+            this.paymentMethodToken = paymentMethodToken;
+            return this;
+        }
+
+        public CommitmentInfo withPaymentMethodType(String paymentMethodType) {
+            this.paymentMethodType = paymentMethodType;
+            return this;
+        }
+
+        public CommitmentInfo withSchedules(Map<String, Object> schedulesUntyped) {
+            List<Schedule> schedules = new List<Schedule>();
+            for (String field : schedulesUntyped.keySet()) {
+                Schedule newSchedule = new Schedule();
+
+                String amountFieldName = String.valueOf(
+                        npe03__Recurring_Donation__c.npe03__Amount__c);
+                String installmentPeriodFieldName = String.valueOf(
+                    npe03__Recurring_Donation__c.npe03__Installment_Period__c);
+                String dayOfMonthFieldName = String.valueOf(
+                        npe03__Recurring_Donation__c.Day_of_Month__c);
+                String startDateFieldName = String.valueOf(
+                        npe03__Recurring_Donation__c.StartDate__c);
+
+                newSchedule.amount = Decimal.valueOf(
+                    String.valueOf(schedulesUntyped?.get(
+                        amountFieldName))
+                );
+
+                newSchedule.frequency = String.valueOf(
+                    schedulesUntyped?.get(installmentPeriodFieldName)
+                );
+
+                newSchedule.frequencyInterval = Integer.valueOf(
+                    schedulesUntyped?.get(dayOfMonthFieldName)
+                );
+
+                newSchedule.firstOccurrenceOnTimestamp = Date.valueOf(
+                    schedulesUntyped?.get(startDateFieldName)
+                );
+
+            }
+            return this;
+        }
+
     }
-    public class Schedules {
-        public Integer amount;
-        public String firstOccurrenceOnTimestamp;
+    public class Schedule {
+        public Decimal amount;
+        public Date firstOccurrenceOnTimestamp;
         public String frequency;
         public Integer frequencyInterval;
     }
@@ -83,7 +155,7 @@ public with sharing class ElevateTokenizedGift {
         public String email;
         public String paymentMethodToken;
         public String paymentMethodType;
-        public Metadata productMetadata;
+        public Map<String, Object> productMetadata;
     }
 
     public class AchData {
@@ -94,8 +166,6 @@ public with sharing class ElevateTokenizedGift {
         public String type;
     }
 
-    public class Metadata {}
-
     private void setBatchItemType() {
         if (recurringSchedule == null || recurringSchedule.isEmpty()) {
             batchItemType = ElevateBatchItemType.ONE_TIME.name();
@@ -104,14 +174,14 @@ public with sharing class ElevateTokenizedGift {
         }
     }
 
-    private void setProductMetadata() {
+    private static Map<String, Object> getProductMetadata() {
         PS_ProductMetadata productMetadata = new PS_ProductMetadata()
             .withOrigin(PS_Request.OriginType.CRM.name());    
 
-        this.productMetadata = productMetadata.toUntypedMap();
+        return productMetadata.toUntypedMap();
     }
 
-    private void setProductMetadataSchemaUri() {
-        this.productMetadataSchemaUri = PS_Request.PRODUCT_METADATA_SCHEMA_URI;
-    }
+//    private void setProductMetadataSchemaUri() {
+//        this.productMetadataSchemaUri = PS_Request.PRODUCT_METADATA_SCHEMA_URI;
+//    }
 }
