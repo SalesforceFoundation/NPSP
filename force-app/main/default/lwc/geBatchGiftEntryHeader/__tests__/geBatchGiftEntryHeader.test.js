@@ -122,7 +122,7 @@ describe('c-ge-batch-gift-entry-header', () => {
             expect(handler.mock.calls[0][0].type).toBe('batchdryrun');
         });
 
-        it('should dispatch expected custom event when process batch button is clicked', async () => {
+        it('should dispatch expected custom event and disable header buttons when process batch button is clicked', async () => {
             const batchHeader = setupComponentWithDummy({});
             const handler = jest.fn();
             batchHeader.addEventListener('processbatch', handler);
@@ -136,6 +136,10 @@ describe('c-ge-batch-gift-entry-header', () => {
 
             expect(handler).toHaveBeenCalled();
             expect(handler.mock.calls[0][0].type).toBe('processbatch');
+
+            expect(buttons[0].disabled).toBe(true);
+            expect(buttons[1].disabled).toBe(true);
+            expect(buttons[2].disabled).toBe(true);
         });
 
         it('should dispatch expected custom event when edit button is clicked', async () => {
