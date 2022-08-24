@@ -59,7 +59,7 @@ public class ElevateBatchServiceValidRequest extends ElevateBatchService {
         this.paymentMethod = paymentMethod;
     }
 
-    public override ElevateBatchItem addToElevateBatch(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
+    public override ElevateBatchItem addToElevateBatch(ElevateCreateBatchItemRequestDTO createBatchItemRequestDTO, String elevateBatchId) {
         ElevateBatchItemCreateResponse giftResponse;
 
         if (batchItemType == ElevateBatchItemType.ONE_TIME) {

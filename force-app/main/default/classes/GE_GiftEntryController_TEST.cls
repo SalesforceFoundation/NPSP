@@ -179,7 +179,7 @@ public with sharing class GE_GiftEntryController_TEST {
 
         Test.startTest();
             try {
-                elevateBatchItem = GE_GiftEntryController.addToElevateBatch(new ElevateTokenizedGift(),
+                elevateBatchItem = GE_GiftEntryController.addToElevateBatch(new ElevateCreateBatchItemRequestDTO(),
                         'test-valid-id');
             } catch (AuraHandledException ex) {
                 auraException = ex;
@@ -204,7 +204,7 @@ public with sharing class GE_GiftEntryController_TEST {
 
         Test.startTest();
         try {
-            elevateBatchItem = GE_GiftEntryController.addToElevateBatch(new ElevateTokenizedGift(),
+            elevateBatchItem = GE_GiftEntryController.addToElevateBatch(new ElevateCreateBatchItemRequestDTO(),
                     'test-valid-id');
         } catch (AuraHandledException ex) {
             auraException = ex;
@@ -229,7 +229,7 @@ ElevateBatchItemType.ONE_TIME, TEST_PAYMENT_METHOD_CARD);
 
         Test.startTest();
             try {
-                elevateBatchItem = GE_GiftEntryController.addToElevateBatch(new ElevateTokenizedGift(),
+                elevateBatchItem = GE_GiftEntryController.addToElevateBatch(new ElevateCreateBatchItemRequestDTO(),
                     'test-valid-id');
             } catch (AuraHandledException ex) {
                 auraException = ex;
@@ -254,7 +254,7 @@ ElevateBatchItemType.ONE_TIME, TEST_PAYMENT_METHOD_CARD);
 
         Test.startTest();
         try {
-            elevateBatchItem = GE_GiftEntryController.addToElevateBatch(new ElevateTokenizedGift(),
+            elevateBatchItem = GE_GiftEntryController.addToElevateBatch(new ElevateCreateBatchItemRequestDTO(),
                     'test-valid-id');
         } catch (AuraHandledException ex) {
             auraException = ex;
@@ -299,7 +299,7 @@ ElevateBatchItemType.ONE_TIME, TEST_PAYMENT_METHOD_CARD);
 
         Test.startTest();
         try {
-            GE_GiftEntryController.addToElevateBatch(new ElevateTokenizedGift(), 'test-valid-group-id');
+            GE_GiftEntryController.addToElevateBatch(new ElevateCreateBatchItemRequestDTO(), 'test-valid-group-id');
         } catch (AuraHandledException ex) {
             auraException = ex;
         }
