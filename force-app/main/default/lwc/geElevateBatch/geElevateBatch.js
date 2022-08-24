@@ -21,7 +21,7 @@ class ElevateBatch {
             }
 
             return await apexAddToElevateBatch(
-                {tokenizedGift: tokenizedGift, elevateBatchId: this.elevateBatchId}
+                {batchItemRequestDTO: tokenizedGift, elevateBatchId: this.elevateBatchId}
             );
         } catch (exception) {
             if (retryOnFailure) {

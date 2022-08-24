@@ -29,8 +29,16 @@
  */
 public virtual with sharing class ElevateBatchService {
 
-    public virtual ElevateBatchItem addToElevateBatch(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
-        return new ElevateBatch(elevateBatchId).add(tokenizedGift);
+    public virtual ElevateBatchItem addToElevateBatch(ElevateCreateBatchItemRequestDTO batchItemRequestDTO, String
+            elevateBatchId) {
+        return new ElevateBatch(elevateBatchId).add(
+            buildBatchItemRequestFrom(batchItemRequestDTO)
+        );
+    }
+
+    private static ElevateTokenizedGift buildBatchItemRequestFrom(ElevateCreateBatchItemRequestDTO
+            batchItemRequestDTO) {
+        return new ElevateTokenizedGift();
     }
 
     public virtual ElevateBatchItem removeFromElevateBatch(ElevateBatchItem authorizedGift) {
@@ -40,6 +48,7 @@ public virtual with sharing class ElevateBatchService {
     public virtual ElevateBatch createElevateBatch() {
         return new ElevateBatch().create();
     }
+
 
     public ElevateBatchItem sendAddRequest(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
         UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
