@@ -985,6 +985,25 @@ public without sharing class RD2_ScheduleService {
         return nextActive;
     }
 
+    public List<RecurringDonationSchedule__c> getSchedulesWithClearedNextPaymentAmount(List<npe03__Recurring_Donation__c> rds) {        
+        Map<Id, List<RecurringDonationSchedule__c>> scheduleMap = getExistingSchedules(rds);
+        List<RecurringDonationSchedule__c> scheduleList = new List<RecurringDonationSchedule__c>();
+        List<RecurringDonationSchedule__c> schedulesToUpdate = new List<RecurringDonationSchedule__c>();
+        
+        for(Id rdId : scheduleMap.keySet()){
+            scheduleList.addAll(scheduleMap.get(rdId));
+        }
+
+        for (RecurringDonationSchedule__c schedule : scheduleList) {
+            if(schedule.NextPaymentAmount__c != null) {
+                schedule.NextPaymentAmount__c = null;
+                schedulesToUpdate.add(schedule);
+            }
+        }
+
+        return schedulesToUpdate;
+    }
+
     /***
     * @description Wrapper class for Recurring Donation Installment data
     */

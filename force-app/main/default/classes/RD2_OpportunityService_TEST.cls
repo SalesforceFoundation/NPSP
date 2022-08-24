@@ -816,6 +816,10 @@ private with sharing class RD2_OpportunityService_TEST {
     @isTest
     private static void shouldUseNextPaymentAmountOnNextOpp() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_QueryService queryService = new RD2_QueryService();
+        RD2_OpportunityService oppService = new RD2_OpportunityService(
+            TODAY, new RD2_DatabaseService(), new RD2_CustomFieldMapper()
+        );
 
         setUpConfiguration();
 
@@ -828,27 +832,44 @@ private with sharing class RD2_OpportunityService_TEST {
 
         // Set Next Payment Amount on the schedule
         rds[0].RecurringDonationSchedules__r[0].NextPaymentAmount__c = NEXT_PAYMENT_AMOUNT;
+        update rds[0].RecurringDonationSchedules__r[0];
 
-        new RD2_OpportunityService(
-            TODAY, new RD2_DatabaseService(), new RD2_CustomFieldMapper()
-        ).updateOpportunities(rds);
+        oppService.updateOpportunities(rds);
 
-        rds = new RD2_QueryService()
-            .getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
+        rds = queryService.getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
+        rd = rds[0];
 
-        System.assertEquals(1, rds[0].npe03__Donations__r.size(), 'There should only be 1 Opportunity');
+        System.assertEquals(1, rd.npe03__Donations__r.size(), 'There should only be 1 Opportunity');
 
-        Opportunity nextOpportunity = rds[0].npe03__Donations__r[0];
+        Opportunity nextOpportunity = rd.npe03__Donations__r[0];
         System.assertEquals(NEXT_PAYMENT_AMOUNT, nextOpportunity.Amount, 
             'Opportunity Amount should match Next Payment Amount: ' + NEXT_PAYMENT_AMOUNT);
+
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
+        Opportunity offCycleOpportunity = oppBuilder
+            .withCloseDate(START_DATE.addDays(10))
+            .withClosedWonStage()
+            .build();
+        insert offCycleOpportunity;
+
+        // Verify that a new Opportunity is not created and the Schedule retains Next Payment Amount
+        oppService.createOpportunities(rds);
+
+        rds = queryService.getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
+
+        System.assertEquals(NEXT_PAYMENT_AMOUNT, rds[0].RecurringDonationSchedules__r[0].NextPaymentAmount__c, 
+            'The Next Payment Amount should still be set');
+        System.assertEquals(2, rds[0].npe03__Donations__r.size(), 'There should only be 2 Opportunities');
+        System.assertEquals(1, rds[0].RecurringDonationSchedules__r.size(), 'There should be 1 schedule');
     }
 
     /***
     * @description Verify that the Next Payment Amount is cleared after a Donation closes
     */
     @isTest
-    private static void shouldClearNextPaymentAmountWhenOppIsClosed() {
+    private static void shouldClearNextPaymentAmountWhenNextOppIsCreated() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_QueryService queryService = new RD2_QueryService();
 
         setUpConfiguration();
 
@@ -871,8 +892,7 @@ private with sharing class RD2_OpportunityService_TEST {
             TODAY, new RD2_DatabaseService(), new RD2_CustomFieldMapper()
         ).updateOpportunities(rds);
 
-        rds = new RD2_QueryService()
-            .getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
+        rds = queryService.getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
 
         System.assertEquals(NEXT_PAYMENT_AMOUNT, rds[0].RecurringDonationSchedules__r[0].NextPaymentAmount__c, 
             'The Next Payment Amount should still be set');
@@ -890,8 +910,7 @@ private with sharing class RD2_OpportunityService_TEST {
         update nextOpportunity;
         Test.stopTest();
 
-        rds = new RD2_QueryService()
-            .getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
+        rds = queryService.getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
 
         System.assertEquals(2, rds[0].npe03__Donations__r.size(), 'There should be 2 Opportunities');
 

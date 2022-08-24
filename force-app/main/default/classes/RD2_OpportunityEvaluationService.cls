@@ -398,7 +398,9 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         List<npe03__Recurring_Donation__c> updateOppRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> closeOppRds = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> updateElevateRds = new List<npe03__Recurring_Donation__c>();
+        List<npe03__Recurring_Donation__c> checkNextPaymentScheduleRds = new List<npe03__Recurring_Donation__c>();
         List<RD2_RecurringDonation> rdRecords = new List<RD2_RecurringDonation>();
+        List<RecurringDonationSchedule__c> schedulesToUpdate = new List<RecurringDonationSchedule__c>();
 
         setOldRdListIfNull();
 
@@ -445,7 +447,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             }
             else {
                 if (isNewOpportunityCandidate(rdRecord)) {
+                    // Prevent the Next Payment Amount from being used in later steps of this process
+                    rd.RecurringDonationSchedules__r[0].NextPaymentAmount__c = null;
                     newOppRDs.add(rd);
+                    checkNextPaymentScheduleRds.add(rd);
                 }
 
                 if (hasOpenOpportunity(rdRecord)) {
@@ -453,7 +458,15 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 }
             }
             // TODO Handle Past Due Installment
+
+            // Add Elevate RDs that need Schedule checks
+            if (rdRecord.needsNextPaymentScheduleCheck()) {
+                checkNextPaymentScheduleRds.add(rd);
+            }
         }
+
+        schedulesToUpdate = scheduleService.getSchedulesWithClearedNextPaymentAmount(checkNextPaymentScheduleRds);
+        dbService.updateRecords(schedulesToUpdate);
 
         toggleTriggerState(false);
         commitmentBulkService
