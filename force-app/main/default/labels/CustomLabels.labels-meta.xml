@@ -12235,7 +12235,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Refund Amount Allocation help text</shortDescription>
-        <value>Any partial refund amount will be proportionally adjusted for the allocated amounts.</value>
+        <value>Fixed GAU Allocations are changed to percentages to adjust for this refund.</value>
     </labels>
     <labels>
         <fullName>pmtRefundAmount</fullName>

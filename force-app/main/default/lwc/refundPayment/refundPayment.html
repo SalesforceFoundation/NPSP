@@ -18,11 +18,6 @@
         </div>
         <div if:false={isLoading}>
             <div if:false={hasError}>
-                <span>
-                    {labels.refundPaymentMessage}
-                </span>
-                <br/>
-                <br/>
                 <lightning-layout multiple-rows="true">
                     <lightning-layout-item size="12">
                         <label class="slds-text-title_bold slds-p-right_small" for="remaining-balance">
@@ -34,13 +29,6 @@
                             currency-code={currencyCode}
                             currency-display-as="symbol">
                         </lightning-formatted-number>
-                    </lightning-layout-item>
-                    <lightning-layout-item size="12">
-                        <label class="slds-text-title_bold slds-p-right_small" for="refund-date">
-                            {labels.refundPaymentDate}:
-                        </label>
-                        <lightning-formatted-date-time id="refund-date" value={paymentDate}>
-                        </lightning-formatted-date-time>
                     </lightning-layout-item>
                     <lightning-layout-item size="4">
                         <lightning-input class="slds-p-top_large"
