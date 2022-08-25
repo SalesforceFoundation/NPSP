@@ -29,9 +29,6 @@ describe('c-refund-payment', () => {
         processRefund.mockResolvedValue(mockRefundView);
         document.body.appendChild(component);
         await flushPromises();
-        const refundMessage = component.shadowRoot.querySelector('span');
-        expect(refundMessage).not.toBeNull();
-        expect(refundMessage.textContent).toBe('c.pmtRefundPaymentMessage');
         expect(cancelButton(component).title).toBe('c.stgBtnCancel');
         expect(refundButton(component).title).toBe('c.pmtRefundPaymentConfirmedButton');
     });
