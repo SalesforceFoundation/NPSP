@@ -142,6 +142,21 @@ describe('c-ge-batch-gift-entry-header', () => {
             expect(buttons[2].disabled).toBe(true);
         });
 
+        it('should load process batch spinner when process batch button is clicked', async () => {
+            const batchHeader = setupComponentWithDummy({});
+            const handler = jest.fn();
+
+            const buttons = batchHeader.shadowRoot.querySelectorAll('lightning-button');
+            const processBatchButton = buttons[1];
+            expect(processBatchButton.getAttribute('data-action')).toBe('PROCESS_BATCH');
+            processBatchButton.click();
+
+            batchHeader.addEventListener('processbatch', handler);
+
+            const spinner = batchHeader.shadowRoot.querySelectorAll('lightning-spinner');
+            expect(spinner).toBeTruthy();
+        });
+
         it('should dispatch expected custom event when edit button is clicked', async () => {
             const batchHeader = setupComponentWithDummy({ id: 'DUMMY_ID' });
             batchHeader.batchId = 'DUMMY_ID';
