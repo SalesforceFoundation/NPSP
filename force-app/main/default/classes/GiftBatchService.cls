@@ -165,7 +165,7 @@ public with sharing class GiftBatchService {
         }
     }
 
-    private class GiftBatchServicePrivilegedHelper {
+    private inherited sharing class GiftBatchServicePrivilegedHelper {
         private DataImportBatch__c batch;
         private AsyncApexJob asyncApexJob;
         private final String JOB_TYPE_BATCH = 'BatchApex';
