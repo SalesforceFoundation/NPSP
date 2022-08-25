@@ -35,6 +35,7 @@
 */
 public inherited sharing class PMT_RefundService {
     public static final String FULL_REFUND = 'Refund';
+    public static final String PARTIAL_REFUND = 'Partial Refund';
 
     private Boolean isMultiCurrencyEnabled {
         get {
@@ -176,17 +177,6 @@ public inherited sharing class PMT_RefundService {
         return response;
     }
 
-    public void processNonElevateRefunds() {
-        // Boolean shouldBuildRefundRecord = this.refundRecords == null;
- 
-        // for (npe01__OppPayment__c originalPayment : this.originalPayments) {
-        //     if (shouldBuildRefundRecord) {
-        //         buildRefundRecord(originalPayment, null);
-        //     }
-        //     updateParentOpportunity(originalPayment);
-        // }
-    }
-
     public void processDML() {
         Savepoint sp = Database.setSavepoint();
         try {
@@ -232,7 +222,9 @@ public inherited sharing class PMT_RefundService {
             npe01__Payment_Amount__c = -1 * refundAmount,
             npe01__Opportunity__c = originalPayment.npe01__Opportunity__c,
             OriginalPayment__c = originalPayment.Id,
-            DebitType__c = PMT_RefundService.FULL_REFUND
+            DebitType__c = (originalPayment.npe01__Payment_Amount__c == refundAmount)
+                ? PMT_RefundService.FULL_REFUND
+                : PMT_RefundService.PARTIAL_REFUND
         );
         
         if (isMultiCurrencyEnabled) {
