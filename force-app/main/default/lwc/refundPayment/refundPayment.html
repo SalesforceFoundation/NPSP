@@ -46,10 +46,13 @@
                         <lightning-input class="slds-p-top_large"
                         type="number"
                         name="refundAmount"
-                        label={labels.refundAmount}
+                        label={labels.refundAmountField}
                         value={remainingBalance}
                         step="0.01"
-                        field-level-help={labels.refundAllocationHelpText}></lightning-input>
+                        field-level-help={labels.refundAllocationHelpText}
+                        onchange={handleRefundAmountChanged}
+                        min="0"
+                        max={remainingBalance}></lightning-input>
                     </lightning-layout-item>
                 </lightning-layout>
             </div>

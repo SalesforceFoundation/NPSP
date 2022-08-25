@@ -3,7 +3,7 @@ import { CloseActionScreenEvent } from 'lightning/actions';
 import { NavigationMixin } from 'lightning/navigation';
 import { constructErrorMessage, showToast} from "c/utilCommon";
 import refundPaymentTitle from "@salesforce/label/c.pmtRefundPaymentTitle";
-import refundAmount from "@salesforce/label/c.pmtRefundAmount";
+import refundAmountField from "@salesforce/label/c.pmtRefundAmount";
 import remainingBalance from "@salesforce/label/c.pmtRemainingBalance";
 import refundPaymentDate from "@salesforce/label/c.pmtRefundPaymentDate";
 import refundPaymentConfirmButton from "@salesforce/label/c.pmtRefundPaymentConfirmedButton";
@@ -33,7 +33,7 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
         noRefundPermissionMessage,
         refundAllocationHelpText,
         refundPaymentMessage,
-        refundAmount,
+        refundAmountField,
         refundPaymentDate,
         refundProcessing,
         refundPaymentErrorMessage,
@@ -43,7 +43,7 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
         spinnerAltText
     });
     refundView;
-    paymentAmount;
+    refundAmount;
     remainingBalance;
     paymentDate;
     currencyCode;
@@ -60,7 +60,7 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
                     return;
                 }
                 this.remainingBalance = response.remainingBalance;
-                this.paymentAmount = response.paymentAmount;
+                this.refundAmount = response.refundAmount;
                 this.paymentDate = response.paymentDate;
                 this.currencyCode = response.currencyCode;
                 this.isLoading = false;
@@ -77,7 +77,8 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
     handleRefund() {
         this.isLoading = true;
         processRefund({
-            paymentId: this.recordId
+            paymentId: this.recordId,
+            refundAmount: this.refundAmount
         }) 
             .then((response) => {
                 this.processResponse(response);
@@ -90,6 +91,10 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
 
     handleClose(){
         this.dispatchEvent( new CloseActionScreenEvent() );
+    }
+
+    handleRefundAmountChanged(event) {
+        this.refundAmount = event.detail.value;
     }
 
     processResponse(response) {

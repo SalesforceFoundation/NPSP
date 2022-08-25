@@ -177,14 +177,14 @@ public inherited sharing class PMT_RefundService {
     }
 
     public void processNonElevateRefunds() {
-        Boolean shouldBuildRefundRecord = this.refundRecords == null;
+        // Boolean shouldBuildRefundRecord = this.refundRecords == null;
  
-        for (npe01__OppPayment__c originalPayment : this.originalPayments) {
-            if (shouldBuildRefundRecord) {
-                buildRefundRecord(originalPayment);
-            }
-            updateParentOpportunity(originalPayment);
-        }
+        // for (npe01__OppPayment__c originalPayment : this.originalPayments) {
+        //     if (shouldBuildRefundRecord) {
+        //         buildRefundRecord(originalPayment, null);
+        //     }
+        //     updateParentOpportunity(originalPayment);
+        // }
     }
 
     public void processDML() {
@@ -226,9 +226,10 @@ public inherited sharing class PMT_RefundService {
         );
     }
 
-    private void buildRefundRecord(npe01__OppPayment__c originalPayment) {
+    public npe01__OppPayment__c buildRefundRecord(npe01__OppPayment__c originalPayment, Decimal refundAmount) {
+        refundAmount = (refundAmount == null) ? originalPayment.npe01__Payment_Amount__c : refundAmount; 
         npe01__OppPayment__c refund = new npe01__OppPayment__c(
-            npe01__Payment_Amount__c = -1 * originalPayment.npe01__Payment_Amount__c,
+            npe01__Payment_Amount__c = -1 * refundAmount,
             npe01__Opportunity__c = originalPayment.npe01__Opportunity__c,
             OriginalPayment__c = originalPayment.Id,
             DebitType__c = PMT_RefundService.FULL_REFUND
@@ -241,10 +242,12 @@ public inherited sharing class PMT_RefundService {
         if (this.refundRecords == null) {
             this.refundRecords = new List<npe01__OppPayment__c>();
         }
+
         this.refundRecords.add(refund);
+        return refund;
     }
 
-    private void updateParentOpportunity(npe01__OppPayment__c originalPayment) {
+    public void updateParentOpportunity(npe01__OppPayment__c originalPayment, Decimal refundAmount) {
         if (this.opportunityMap == null) {
             this.opportunityMap = new Map<Id,Opportunity>();
         }
@@ -257,7 +260,8 @@ public inherited sharing class PMT_RefundService {
                     : originalPayment.npe01__Opportunity__r.Amount
             );
         }
-        opportunity.Amount = opportunity.Amount - originalPayment.npe01__Payment_Amount__c;
+
+        opportunity.Amount = opportunity.Amount - refundAmount;
 
         this.opportunityMap.put(opportunity.Id, opportunity);
     }

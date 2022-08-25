@@ -117,9 +117,9 @@ public with sharing class PMT_RefundService_TEST {
         );
   
         Test.startTest();
-        refundService.withOriginalPayments( new List<npe01__OppPayment__c>{originalPayment} )
-            .processNonElevateRefunds();
-
+        refundService.withOriginalPayments( new List<npe01__OppPayment__c>{originalPayment} );
+        refundService.buildRefundRecord(originalPayment, null);
+        refundService.updateParentOpportunity(originalPayment, originalPayment.npe01__Payment_Amount__c);
         Test.stopTest();
 
         npe01__OppPayment__c refundRecord = refundService.getRefundRecords()?.get(0);
@@ -160,8 +160,9 @@ public with sharing class PMT_RefundService_TEST {
         );
   
         Test.startTest();
-        refundService.withOriginalPayments( new List<npe01__OppPayment__c>{originalPayment} )
-            .processNonElevateRefunds();
+        refundService.withOriginalPayments( new List<npe01__OppPayment__c>{originalPayment} );
+        refundService.buildRefundRecord(originalPayment, null);
+        refundService.updateParentOpportunity(originalPayment, originalPayment.npe01__Payment_Amount__c);
         Test.stopTest();
 
         npe01__OppPayment__c refundRecord = refundService.getRefundRecords()?.get(0);
@@ -230,6 +231,8 @@ public with sharing class PMT_RefundService_TEST {
                     return errors;
                 } when 'getRefundInfoFor' {
                     return refundInfo;
+                } when 'buildRefundRecord' {
+                    return refundRecords[0];
                 } when else {
                     return null;
                 }

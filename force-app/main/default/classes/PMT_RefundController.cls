@@ -71,7 +71,7 @@ public with sharing class PMT_RefundController {
     }
 
     @AuraEnabled 
-    public static RefundView processRefund(Id paymentId) {
+    public static RefundView processRefund(Id paymentId, Decimal refundAmount) {
         RefundView refundView = new RefundView();
         setPermissionData(refundView);
 
@@ -94,7 +94,7 @@ public with sharing class PMT_RefundController {
         if (isElevatePayment(refundInfo.originalPayment.Elevate_Payment_ID__c)) {
             processElevateRefund(refundInfo.originalPayment, refundView);
         } else {
-            processNonElevateRefund(refundInfo.originalPayment, refundView);
+            processNonElevateRefund(refundInfo.originalPayment, refundView, refundAmount);
         }
 
         return refundView;
@@ -120,12 +120,9 @@ public with sharing class PMT_RefundController {
         refundView.redirectToPaymentId = originalPayment.Id;
     }
 
-    private static void processNonElevateRefund(npe01__OppPayment__c originalPayment, RefundView refundView) {
+    private static void processNonElevateRefund(npe01__OppPayment__c originalPayment, RefundView refundView, Decimal refundAmount) {
         refundService.withOriginalPayments(new List<npe01__OppPayment__c>{originalPayment});
-        refundService.processNonElevateRefunds();
-
-        npe01__OppPayment__c refundRecord = refundService.getRefundRecords()[0];
-
+        npe01__OppPayment__c refundRecord = refundService.buildRefundRecord(originalPayment, refundAmount);
         List<ErrorRecord> errorRecords = new PMT_ValidationService()
             .validateRefund(refundRecord, refundService.getRefundInfoFor(refundRecord.OriginalPayment__c))
             .getErrors();
@@ -133,6 +130,9 @@ public with sharing class PMT_RefundController {
             handleError(refundView, errorRecords[0].getFirstError());
             return;
         }
+
+        refundService.updateParentOpportunity(originalPayment, refundAmount);
+       
 
         refundService.processDML();
 
