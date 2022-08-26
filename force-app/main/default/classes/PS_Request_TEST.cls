@@ -144,6 +144,7 @@ private with sharing class PS_Request_TEST {
 
             } else if (endpoint == PS_Request.ElevateEndpoint.COMMITMENT
                 || endpoint == PS_Request.ElevateEndpoint.COMMITMENT_CANCEL
+                || endpoint == PS_Request.ElevateEndpoint.COMMITMENT_PAUSE
                 || endpoint == PS_Request.ElevateEndpoint.COMMITMENT_UPDATE_BULK) {
 
                 roles = PS_Request.ROLE_PAYMENT_COMMITMENTS;
