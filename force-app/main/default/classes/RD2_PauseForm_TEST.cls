@@ -188,10 +188,8 @@ public with sharing class RD2_PauseForm_TEST {
     @IsTest
     private static void shouldSavePauseWhenRDIsElevateRecord() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ElevateIntegrationService_TEST.enableElevateUserPermissions();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
-
-        Test.startTest();
-        mockRecordCreatedCalloutResponse();
 
         npe03__Recurring_Donation__c recurringDonation = rdGateway.getRecords()[0];
         recurringDonation.CommitmentId__c = 'TEST COMMITMENT';
@@ -205,12 +203,22 @@ public with sharing class RD2_PauseForm_TEST {
         pause.pausedReason = new RD2_PauseForm_CTRL.PausedReason();
         pause.pausedReason.value = 'Unknown';
 
-        RD2_PauseForm_CTRL.savePause(JSON.serialize(pause));
+        Test.startTest();
+
+        mockRecordCreatedCalloutResponse();
+
+        Exception auraEx;
+
+        try {
+            RD2_PauseForm_CTRL.savePause(JSON.serialize(pause));
+        } catch (Exception ex) {
+            auraEx = ex;
+        }
 
         Test.stopTest();
 
         RecurringDonationSchedule__c schedule = [SELECT Id FROM RecurringDonationSchedule__c][0];
-
+        System.assertEquals(null, auraEx, 'No exception was thrown as a result of the callout');
         System.assertNotEquals(null, schedule, 'The Commitment response should be returned');
     }
 
