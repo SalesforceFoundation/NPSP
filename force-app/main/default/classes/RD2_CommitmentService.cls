@@ -63,8 +63,6 @@ public without sharing class RD2_CommitmentService {
         response = sendRequest(rd.getSObject()?.CommitmentId__c, JSON.serialize(requestBody),
             PS_Request.ElevateEndpoint.COMMITMENT_PAUSE);
 
-        System.debug(JSON.serializePretty(response));
-
         processResponse(rd, response);
 
         return response;
