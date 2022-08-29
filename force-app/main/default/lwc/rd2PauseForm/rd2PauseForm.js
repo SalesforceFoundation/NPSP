@@ -123,16 +123,16 @@ export default class Rd2PauseForm extends LightningElement {
         getPauseData({ rdId: this.recordId })
             .then(response => {
                 const pauseData = JSON.parse(response);
-
                 this.permissions.hasAccess = pauseData.hasAccess;
                 this.permissions.isBlocked = pauseData.isRDClosed;
-                this.pausedReason = pauseData.pausedReason;
-                this.scheduleId = pauseData.scheduleId;
-
                 if (!this.permissions.hasAccess) {
                     this.error.detail = this.labels.permissionRequired;
                     this.handleErrorDisplay();
+                } else {
+                    this.pausedReason = pauseData.pausedReason;
+                    this.scheduleId = pauseData.scheduleId;
                 }
+
                 if (this.permissions.isBlocked) {
                     this.permissions.blockedReason = this.labels.rdClosedMessage;
                 }

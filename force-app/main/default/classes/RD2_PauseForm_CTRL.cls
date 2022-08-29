@@ -80,17 +80,18 @@ public with sharing class RD2_PauseForm_CTRL {
             PauseData pause = new PauseData();
             pause.rdId = rdId;
             pause.hasAccess = hasAccess();
-            pause.isElevateRecord = pause.hasAccess
-                ? RD2_ElevateIntegrationService.isIntegrationEnabled() && rd.isElevateRecord()
-                : null;
-            pause.isRDClosed = pause.hasAccess ? rd.isClosed() : null;
+            if (hasAccess()) {
+                pause.isElevateRecord = pause.hasAccess
+                    ? RD2_ElevateIntegrationService.isIntegrationEnabled() && rd.isElevateRecord()
+                    : false;
+                pause.isRDClosed = pause.hasAccess ? rd.isClosed() : false;
 
-            if (!pause.isRDClosed) {
-                pause.pausedReason = buildPausedReason();
-                populateScheduleData(pause, rdId);
-               
+                if (!pause.isRDClosed) {
+                    pause.pausedReason = buildPausedReason();
+                    populateScheduleData(pause, rdId);
+
+                }
             }
-
             jsonData = JSON.serialize(pause);
 
         } catch (Exception e) {
@@ -107,8 +108,7 @@ public with sharing class RD2_PauseForm_CTRL {
     private static Boolean hasAccess() {
         String rdObjectName = Schema.SObjectType.npe03__Recurring_Donation__c.getName();
 
-        return UTIL_Permissions.canRead(rdObjectName, false) &&
-            UTIL_Permissions.canCreate(rdObjectName, false) &&
+        return UTIL_Permissions.canCreate(rdObjectName, false) &&
             UTIL_Permissions.canUpdate(rdObjectName, false);
     }
 
@@ -207,13 +207,13 @@ public with sharing class RD2_PauseForm_CTRL {
             if (isOnlineRecurringDonationRecord(rd)) {
                 UTIL_Http.Response response = pauseElevateRDsFor(pause);
                 if (commitmentService.isCommitmentSuccess(response)) {
-                    processPauseScheduleFor(pause);
+                    pauseHandler.savePauseSchedule(pause.rdId, buildPauseSchedule(pause));
                     hasScheduleChanged = true;
                 } else {
                     throwAuraHandledException(response.getErrorMessages());
                 }
             } else {
-                processPauseScheduleFor(pause);
+                pauseHandler.savePauseSchedule(pause.rdId, buildPauseSchedule(pause));
                 hasScheduleChanged = true;
             }
 
@@ -222,17 +222,6 @@ public with sharing class RD2_PauseForm_CTRL {
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
         }
-    }
-
-    @TestVisible
-    private static void processPauseScheduleFor(PauseData pause) {
-
-        pauseHandler.cancelPauseSchedule(pause.rdId);
-
-        if (isNewPause(pause)) {
-            pauseHandler.savePauseSchedule(pause.rdId, buildPauseSchedule(pause));
-        }
-
     }
 
     private static UTIL_Http.Response pauseElevateRDsFor(PauseData pause) {
@@ -253,9 +242,7 @@ public with sharing class RD2_PauseForm_CTRL {
         return RD2_ElevateIntegrationService.isIntegrationEnabled() && rd.isElevateRecord();
     }
 
-    private static Boolean isNewPause(PauseData pause) {
-        return pause.startDate != null && pause.resumeAfterDate != null;
-    }
+
 
     /**
      * @description Constructs schedule to be inserted for the new pause

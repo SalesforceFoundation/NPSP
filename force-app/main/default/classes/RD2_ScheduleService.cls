@@ -1114,11 +1114,21 @@ public without sharing class RD2_ScheduleService {
         public void savePauseSchedule(Id rdId, RecurringDonationSchedule__c pauseSchedule) {
             Savepoint sp = Database.setSavepoint();
             try {
-                insert pauseSchedule;
+                cancelPauseSchedule(rdId);
+
+                if (isNewPause(pauseSchedule)) {
+                    insert pauseSchedule;
+                }
+
             } catch (Exception e) {
                 Database.rollback(sp);
                 throw new ScheduleException(e.getMessage());
             }
+        }
+
+
+        private Boolean isNewPause(RecurringDonationSchedule__c pauseSchedule) {
+            return pauseSchedule.StartDate__c != null && pauseSchedule.EndDate__c != null;
         }
 
         /***
