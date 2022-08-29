@@ -120,11 +120,8 @@ public with sharing class RD2_VisualizeScheduleController {
         Integer counter = 1;
         scheduleService.evaluateScheduleEndDate(rd, rd.getSobject().RecurringDonationSchedules__r);
 
-        Date startDate = rd.getSobject().npe03__Next_Payment_Date__c != null ?
-            rd.getSobject().npe03__Next_Payment_Date__c : RD2_ScheduleService.currentDate;
-
         for (RD2_ScheduleService.Installment installment : scheduleService.getAllVisualizedInstallments(
-            startDate, displayNum, rd.getSobject().RecurringDonationSchedules__r
+            RD2_ScheduleService.currentDate, displayNum, rd.getSobject().RecurringDonationSchedules__r
         )) {
             dataTable.addRecord(new Installment(counter++, installment));
         }

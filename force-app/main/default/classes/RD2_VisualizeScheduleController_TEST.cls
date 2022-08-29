@@ -634,7 +634,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
 
         RD2_VisualizeScheduleController.DataTable dataTable = RD2_VisualizeScheduleController.buildScheduleDataTable(rd);
 
-        System.assertEquals(9, dataTable.getColumns().size(), 'Number of columns should match');
+        System.assertEquals(10, dataTable.getColumns().size(), 'Number of columns should match');
 
         RD2_VisualizeScheduleController.DataTableColumn column = dataTable.getColumn(SCHEDULE_IS_CURRENT);
         System.assertNotEquals(null, column, 'IsCurrent column should exist in data table');
@@ -671,6 +671,10 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         column = dataTable.getColumn(SCHEDULE_DAY_OF_MONTH);
         System.assertNotEquals(null, column, 'DayOfMonth column should exist in data table');
         System.assertEquals(DATA_TYPE_TEXT, column.type, 'DayOfMonth type should match');
+
+        column = dataTable.getColumn(SCHEDULE_NEXT_AMOUNT);
+        System.assertNotEquals(null, column, 'NextPaymentAmount column should exist in data table');
+        System.assertEquals(DATA_TYPE_CURRENCY, column.type, 'NextPaymentAmount type should match');
     }
 
     /***
