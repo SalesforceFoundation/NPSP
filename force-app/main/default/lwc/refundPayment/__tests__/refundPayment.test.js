@@ -31,6 +31,8 @@ describe('c-refund-payment', () => {
         await flushPromises();
         expect(cancelButton(component).title).toBe('c.stgBtnCancel');
         expect(refundButton(component).title).toBe('c.pmtRefundPaymentConfirmedButton');
+        expect(refundAmountInput(component)).not.toBeNull();
+        expect(refundAmountInput(component).label).toBe('c.pmtRefundAmount');
     });
 
     it('The screen should be closed on Cancel', async () => {
@@ -65,6 +67,7 @@ describe('c-refund-payment', () => {
         component.addEventListener(CloseScreenEventName, actionHandler);
         refundButton(component).click();
         await flushPromises();
+
         expect(actionHandler).toHaveBeenCalled();
     });
 });
@@ -75,4 +78,7 @@ const cancelButton = (component) => {
 const refundButton = (component) => {
     const button = component.shadowRoot.querySelector('lightning-button[data-id="refundButton"]');
     return button;
+}
+const refundAmountInput = (component) => {
+    return component.shadowRoot.querySelector('lightning-input');
 }
