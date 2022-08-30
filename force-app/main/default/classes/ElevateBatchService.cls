@@ -36,9 +36,9 @@ public virtual with sharing class ElevateBatchService {
         );
     }
 
-    private static ElevateTokenizedGift buildBatchItemRequestFrom(ElevateCreateBatchItemRequestDTO
+    private static ElevateCreateBatchItemRequest buildBatchItemRequestFrom(ElevateCreateBatchItemRequestDTO
             batchItemRequestDTO) {
-        return new ElevateTokenizedGift();
+        return new ElevateCreateBatchItemRequest();
     }
 
     public virtual ElevateBatchItem removeFromElevateBatch(ElevateBatchItem authorizedGift) {
@@ -50,7 +50,7 @@ public virtual with sharing class ElevateBatchService {
     }
 
 
-    public ElevateBatchItem sendAddRequest(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
+    public ElevateBatchItem sendAddRequest(ElevateCreateBatchItemRequest tokenizedGift, String elevateBatchId) {
         UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
                 addRequest(tokenizedGift, elevateBatchId)
         );
@@ -81,7 +81,7 @@ public virtual with sharing class ElevateBatchService {
         return new ElevateBatch(ElevateBatchResponse);
     }
 
-    private HttpRequest addRequest(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
+    private HttpRequest addRequest(ElevateCreateBatchItemRequest tokenizedGift, String elevateBatchId) {
         return new PS_Request.Builder()
                 .withMethod(UTIL_Http.Method.POST)
                 .withElevateBatchId(elevateBatchId)

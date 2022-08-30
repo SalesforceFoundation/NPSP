@@ -27,7 +27,7 @@
  *     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *     POSSIBILITY OF SUCH DAMAGE.
  */
-public with sharing class ElevateTokenizedGift {
+public with sharing class ElevateCreateBatchItemRequest {
     @AuraEnabled public Integer amount {get; set;}
     @AuraEnabled public String firstName {get; set;}
     @AuraEnabled public String lastName {get; set;}
@@ -39,7 +39,7 @@ public with sharing class ElevateTokenizedGift {
     public CommitmentInfo commitmentInfo;
     public PurchaseInfo purchaseInfo;
 
-    public ElevateTokenizedGift() {
+    public ElevateCreateBatchItemRequest() {
         setBatchItemType();
     }
 
