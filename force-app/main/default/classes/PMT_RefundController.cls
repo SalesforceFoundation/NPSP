@@ -132,7 +132,6 @@ public with sharing class PMT_RefundController {
         }
 
         refundService.updateParentOpportunity(originalPayment, refundAmount);
-       
 
         refundService.processDML();
 
