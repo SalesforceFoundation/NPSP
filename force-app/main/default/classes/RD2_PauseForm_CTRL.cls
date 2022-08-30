@@ -49,6 +49,19 @@ public with sharing class RD2_PauseForm_CTRL {
     }
 
     /**
+    * @description Handles commitment request creation, response parsing and RD Commitment Id update
+    */
+    private static RD2_CommitmentService commitmentService {
+        get {
+            if (commitmentService == null) {
+                commitmentService = new RD2_CommitmentService();
+            }
+            return commitmentService;
+        }
+        set;
+    }
+
+    /**
      * @description Returns PauseData to the LWC so the page can be initialized and rendered.
      * Determines if the user has the access to create/update the pause
      * as well as determines if the Recurring Donation is closed.
@@ -67,17 +80,18 @@ public with sharing class RD2_PauseForm_CTRL {
             PauseData pause = new PauseData();
             pause.rdId = rdId;
             pause.hasAccess = hasAccess();
-            pause.isElevateRecord = pause.hasAccess
-                ? RD2_ElevateIntegrationService.isIntegrationEnabled() && rd.isElevateRecord()
-                : null; 
-            pause.isRDClosed = pause.hasAccess ? rd.isClosed() : null;
+            if (hasAccess()) {
+                pause.isElevateRecord = pause.hasAccess
+                    ? RD2_ElevateIntegrationService.isIntegrationEnabled() && rd.isElevateRecord()
+                    : false;
+                pause.isRDClosed = pause.hasAccess ? rd.isClosed() : false;
 
-            if (pause.isRDClosed == false && pause.isElevateRecord == false) {
-                pause.pausedReason = buildPausedReason();
-                populateScheduleData(pause, rdId);
-               
+                if (!pause.isRDClosed) {
+                    pause.pausedReason = buildPausedReason();
+                    populateScheduleData(pause, rdId);
+
+                }
             }
-
             jsonData = JSON.serialize(pause);
 
         } catch (Exception e) {
@@ -94,8 +108,7 @@ public with sharing class RD2_PauseForm_CTRL {
     private static Boolean hasAccess() {
         String rdObjectName = Schema.SObjectType.npe03__Recurring_Donation__c.getName();
 
-        return UTIL_Permissions.canRead(rdObjectName, false) &&
-            UTIL_Permissions.canCreate(rdObjectName, false) &&
+        return UTIL_Permissions.canCreate(rdObjectName, false) &&
             UTIL_Permissions.canUpdate(rdObjectName, false);
     }
 
@@ -107,6 +120,8 @@ public with sharing class RD2_PauseForm_CTRL {
     private static RD2_RecurringDonation getRecurringDonation(Id rdId) {
         return new RD2_RecurringDonation([
             SELECT Status__c,
+                npe03__Contact__c,
+                npe03__Organization__c,
                 CommitmentId__c
             FROM npe03__Recurring_Donation__c
             WHERE Id = :rdId
@@ -184,42 +199,63 @@ public with sharing class RD2_PauseForm_CTRL {
      */
     @AuraEnabled
     public static void savePause(String jsonPauseData) {
+        Boolean hasScheduleChanged = false;
         try {
             PauseData pause = (PauseData) JSON.deserialize(jsonPauseData, PauseData.class);
-            
             RD2_RecurringDonation rd = getRecurringDonation(pause.rdId);
-            if (RD2_ElevateIntegrationService.isIntegrationEnabled() && rd.isElevateRecord()) {
-                throw new PauseException(System.Label.RD2_ElevateNotSupported);
-            }
-    
-            Boolean isNewPause = pause.startDate != null && pause.resumeAfterDate != null;
-            if (isNewPause) {
-                //deactivate the current pause (if any) and create a new one
+
+            if (isOnlineRecurringDonationRecord(rd)) {
+                UTIL_Http.Response response = pauseElevateRDsFor(pause);
+                if (commitmentService.isCommitmentSuccess(response)) {
+                    pauseHandler.savePauseSchedule(pause.rdId, buildPauseSchedule(pause));
+                    hasScheduleChanged = true;
+                } else {
+                    throwAuraHandledException(response.getErrorMessages());
+                }
+            } else {
                 pauseHandler.savePauseSchedule(pause.rdId, buildPauseSchedule(pause));
-
-            } else {//deactivate the current pause (if any)
-                pauseHandler.cancelPauseSchedule(pause.rdId);
+                hasScheduleChanged = true;
             }
 
-            Boolean isScheduleChanged = true;
-            RD2_QueueableService.enqueueOppEvalService(pause.rdId, isScheduleChanged);
+            RD2_QueueableService.enqueueOppEvalService(pause.rdId, hasScheduleChanged);
 
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
         }
     }
 
+    private static UTIL_Http.Response pauseElevateRDsFor(PauseData pause) {
+        RD2_RecurringDonation rd = getRecurringDonation(pause.rdId);
+
+        try {
+            UTIL_Http.Response response = commitmentService.handleCommitmentPause(buildPauseSchedule(pause), rd);
+            return response;
+
+        } catch (Exception ex) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
+        }
+
+        return null;
+    }
+
+    private static Boolean isOnlineRecurringDonationRecord(RD2_RecurringDonation rd) {
+        return RD2_ElevateIntegrationService.isIntegrationEnabled() && rd.isElevateRecord();
+    }
+
+
+
     /**
      * @description Constructs schedule to be inserted for the new pause
      * @param pause PauseData
      * @return RecurringDonationSchedule__c
      */
+    @TestVisible
     private static RecurringDonationSchedule__c buildPauseSchedule(PauseData pause) {
         return pauseHandler.createPauseSchedule(
-                pause.pausedReason?.value,
-                pause.startDate,
-                pause.resumeAfterDate,
-                pause.rdId
+            pause.pausedReason?.value,
+            pause.startDate,
+            pause.resumeAfterDate,
+            pause.rdId
         );
     }
 
