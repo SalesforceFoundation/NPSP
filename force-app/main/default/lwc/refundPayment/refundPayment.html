@@ -32,6 +32,7 @@
                     </lightning-layout-item>
                     <lightning-layout-item size="4">
                         <lightning-input class="slds-p-top_large"
+                        data-id="RefundAmountInput"
                         type="number"
                         name="refundAmount"
                         label={labels.refundAmountField}
@@ -39,8 +40,11 @@
                         step="0.01"
                         field-level-help={labels.refundAllocationHelpText}
                         onchange={handleRefundAmountChanged}
-                        min="0"
-                        max={remainingBalance}></lightning-input>
+                        min="0.01"
+                        max={remainingBalance}
+                        message-when-range-underflow={labels.refundAmountTooLow}
+                        message-when-range-overflow={refundAmountTooHighErrorString}
+                        required></lightning-input>
                     </lightning-layout-item>
                 </lightning-layout>
             </div>
@@ -50,7 +54,7 @@
             variant="neutral" class="slds-m-right_small" onclick={handleClose} data-id="cancelButton" disabled={isLoading}>
             </lightning-button>
             <lightning-button label={labels.refundPaymentConfirmButton} title={labels.refundPaymentConfirmButton}
-                variant="brand" onclick={handleRefund} data-id="refundButton" disabled={isLoading}>
+                variant="brand" onclick={handleRefund} data-id="refundButton" disabled={isSaveDisabled}>
             </lightning-button>
         </div>
     </lightning-quick-action-panel>

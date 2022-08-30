@@ -12278,6 +12278,22 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>There was an error processing the refund.</value>
     </labels>
     <labels>
+        <fullName>pmtRefundAmountTooHigh</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when refund amount is too high</shortDescription>
+        <value>Refund can&apos;t be more than {{AMOUNT}}.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundAmountTooLow</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when refund amount is too low</shortDescription>
+        <value>Enter a refund that&apos;s more than 0.</value>
+    </labels> 
+    <labels>
         <fullName>pmtRefundPaymentMessage</fullName>
         <categories>Payment</categories>
         <language>en_US</language>

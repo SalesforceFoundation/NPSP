@@ -13,6 +13,8 @@ import noRefundPermissionMessage from "@salesforce/label/c.pmtNoRefundPermission
 import refundAllocationHelpText from "@salesforce/label/c.pmtRefundAllocationHelpText";
 import refundPaymentErrorMessage from "@salesforce/label/c.pmtRefundPaymentErrorMessage";
 import refundPaymentSuccessMessage from "@salesforce/label/c.pmtRefundPaymentSuccessMessage";
+import refundAmountTooLow from "@salesforce/label/c.pmtRefundAmountTooLow";
+import refundAmountTooHigh from "@salesforce/label/c.pmtRefundAmountTooHigh";
 import refundPaymentMessage from "@salesforce/label/c.pmtRefundPaymentMessage";
 import refundProcessing from "@salesforce/label/c.pmtRefundProcessing";
 import loadingMessage from "@salesforce/label/c.labelMessageLoading";
@@ -24,6 +26,7 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
     _recordId;
     hasError = false;
     isLoading = false;
+    isSaveDisabled = false;
     errorMessage;
     labels = Object.freeze({
         refundPaymentTitle,
@@ -38,6 +41,7 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
         refundProcessing,
         refundPaymentErrorMessage,
         refundPaymentSuccessMessage,
+        refundAmountTooLow,
         remainingBalance,
         loadingMessage,
         spinnerAltText
@@ -51,6 +55,7 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
     @api set recordId(value) {
         this._recordId = value;
         this.isLoading = true;
+        this.isSaveDisabled = this.isLoading;
         getInitialView({
             paymentId: this.recordId
         }) 
@@ -64,6 +69,8 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
                 this.paymentDate = response.paymentDate;
                 this.currencyCode = response.currencyCode;
                 this.isLoading = false;
+                this.isSaveDisabled = this.isLoading;
+
         })
         .catch((error) => {
             this.displayErrorMessage(constructErrorMessage(error).detail);
@@ -74,8 +81,13 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
         return this._recordId;
     }
 
+    get refundAmountTooHighErrorString() {
+        return refundAmountTooHigh.replace('{{AMOUNT}}', this.remainingBalance);
+    }
+
     handleRefund() {
         this.isLoading = true;
+        this.isSaveDisabled = this.isLoading;
         processRefund({
             paymentId: this.recordId,
             refundAmount: this.refundAmount
@@ -83,6 +95,7 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
             .then((response) => {
                 this.processResponse(response);
                 this.isLoading = false;
+                this.isSaveDisabled = this.isLoading;
         })
         .catch((error) => {
             this.displayErrorMessage(constructErrorMessage(error).detail);
@@ -95,6 +108,7 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
 
     handleRefundAmountChanged(event) {
         this.refundAmount = event.detail.value;
+        this.isSaveDisabled = !this.refundAmountInputField().reportValidity();
     }
 
     processResponse(response) {
@@ -131,5 +145,10 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
         this.hasError = true;
         this.errorMessage = errorMessage;
         this.isLoading = false;
+        this.isSaveDisabled = this.isLoading;
+    }
+
+    refundAmountInputField() {
+        return this.template.querySelector("lightning-input[data-id=RefundAmountInput]");
     }
 }
