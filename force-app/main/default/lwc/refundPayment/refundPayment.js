@@ -15,7 +15,6 @@ import refundPaymentErrorMessage from "@salesforce/label/c.pmtRefundPaymentError
 import refundPaymentSuccessMessage from "@salesforce/label/c.pmtRefundPaymentSuccessMessage";
 import refundAmountTooLow from "@salesforce/label/c.pmtRefundAmountTooLow";
 import refundAmountTooHigh from "@salesforce/label/c.pmtRefundAmountTooHigh";
-import refundPaymentMessage from "@salesforce/label/c.pmtRefundPaymentMessage";
 import refundProcessing from "@salesforce/label/c.pmtRefundProcessing";
 import loadingMessage from "@salesforce/label/c.labelMessageLoading";
 import spinnerAltText from "@salesforce/label/c.geAssistiveSpinner";
@@ -35,7 +34,6 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
         commonRefreshPage,
         noRefundPermissionMessage,
         refundAllocationHelpText,
-        refundPaymentMessage,
         refundAmountField,
         refundPaymentDate,
         refundProcessing,

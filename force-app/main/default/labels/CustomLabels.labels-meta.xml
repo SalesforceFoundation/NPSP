@@ -12292,14 +12292,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Error message when refund amount is too low</shortDescription>
         <value>Enter a refund that&apos;s more than 0.</value>
-    </labels> 
-    <labels>
-        <fullName>pmtRefundPaymentMessage</fullName>
-        <categories>Payment</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Refund Information</shortDescription>
-        <value>Please review and enter the amount to refund:</value>
     </labels>
     <labels>
         <fullName>pmtRefundProcessing</fullName>
