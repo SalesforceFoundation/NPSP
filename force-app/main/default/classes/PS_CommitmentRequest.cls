@@ -277,8 +277,7 @@ public inherited sharing class PS_CommitmentRequest {
 
         if (isElevateScheduleFieldsChanged(rd, oldRd)) {
             // If the schedule has a Next Payment Amount, we need to send it
-            List<RecurringDonationSchedule__c> rdSchedules = scheduleService.getExistingSchedules(rd);
-            Decimal nextPaymentAmount = rdSchedules.size() > 0 ? rdSchedules[0].NextPaymentAmount__c : null;
+            Decimal nextPaymentAmount = scheduleService.getNextPaymentAmount(rd);
             reqBody.deactivateOldSchedules();
             setSchedules(reqBody, scheduleService.buildNewSchedules(rd, nextPaymentAmount), currencyCode);
         }

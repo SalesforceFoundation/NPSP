@@ -638,7 +638,7 @@ private with sharing class RD2_EntryFormController_TEST {
         UTIL_Http.Response response;
 
         Test.startTest();
-        RD2_EntryFormController.CommitmentService service = new RD2_EntryFormController.CommitmentService();
+        RD2_CommitmentService service = new RD2_CommitmentService();
 
         try {
             UTIL_Http_TEST.mockRecordUpdateCalloutResponse(mockSuccessResponseBody());

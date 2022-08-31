@@ -200,11 +200,7 @@ public without sharing class RD2_ScheduleService {
         }
 
         //Add new schedules
-        List<RecurringDonationSchedule__c> newSchedules = buildNewSchedules(rd);
-        for (RecurringDonationSchedule__c newSchedule : newSchedules) {
-            newSchedule.StartDate__c = newStartDate;
-            newSchedule.NextPaymentAmount__c = nextPaymentAmount;
-        }
+        List<RecurringDonationSchedule__c> newSchedules = buildNewSchedules(rd, nextPaymentAmount);
 
         scheduleChanges.objectsToInsert.addAll(newSchedules);
 
@@ -1002,6 +998,23 @@ public without sharing class RD2_ScheduleService {
         }
 
         return schedulesToUpdate;
+    }
+
+    /**
+    * @description Get the Next Payment Amount for this Recurring Donation, if is set
+    * @param rd Recurring Donation
+    * @return Decimal Next Payment Amount
+    */
+    public Decimal getNextPaymentAmount(npe03__Recurring_Donation__c rd) {
+        List<RecurringDonationSchedule__c> rdSchedules = getExistingSchedules(rd);
+        Decimal nextPaymentAmount;
+        for (RecurringDonationSchedule__c schedule : rdSchedules) {
+            if (schedule.NextPaymentAmount__c != null) {
+                nextPaymentAmount = schedule.NextPaymentAmount__c;
+                break;
+            }
+        }
+        return nextPaymentAmount;
     }
 
     /***

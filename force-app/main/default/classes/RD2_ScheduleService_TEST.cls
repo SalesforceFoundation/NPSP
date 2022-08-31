@@ -1959,6 +1959,29 @@ public with sharing class RD2_ScheduleService_TEST {
     }
 
     /***
+    * @description Verifies the Next Payment Amount is returned with multiple Active schedules
+    */
+    @isTest
+    private static void shouldReturnNextPaymentAmount() {
+        Decimal nextPaymentAmount = 500;
+        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
+        npe03__Recurring_Donation__c rd = getRecurringDonationFirstAndFifteenthBuilder()
+            .build();
+        insert rd;
+
+        RD2_ScheduleService service = new RD2_ScheduleService();
+        List<RecurringDonationSchedule__c> schedules = service.buildNewSchedules(rd);
+        schedules[1].NextPaymentAmount__c = nextPaymentAmount;
+        insert schedules;
+
+        createPauseSchedule(rd.Id, schedules[0].StartDate__c, schedules[0].StartDate__c.addDays(45));
+
+        Decimal scheduleNextPaymentAmount = service.getNextPaymentAmount(rd);
+        System.assertEquals(nextPaymentAmount, scheduleNextPaymentAmount, 
+            'Next Payment Amount should be returned' + nextPaymentAmount);
+    }
+
+    /***
     * @description Verifies the first installment is set to Next Payment Amount when not null
     */
     @isTest
