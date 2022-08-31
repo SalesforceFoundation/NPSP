@@ -45,6 +45,7 @@ public with sharing class ElevateBatchItem {
 
     public ElevateBatchItem(ElevateBatchItemCreateResponse createBatchItemResponse) {
         this.paymentId = createBatchItemResponse.id();
+        this.authorizedAt = createBatchItemResponse.authorizedAt();
         this.authExpiration = createBatchItemResponse.authExpiration();
         this.status = createBatchItemResponse.status();
         this.gatewayTransactionId = createBatchItemResponse.gatewayTransactionId();
@@ -56,9 +57,7 @@ public with sharing class ElevateBatchItem {
         this.cardNetwork = createBatchItemResponse.brand();
         this.cardExpirationMonth = createBatchItemResponse.expirationMonth();
         this.cardExpirationYear = createBatchItemResponse.expirationYear();
-        this.authorizedAt = createBatchItemResponse.authorizedAt();
         this.gatewayId = createBatchItemResponse.gatewayId();
-        this.gatewayTransactionId = createBatchItemResponse.gatewayTransactionId();
     }
 
     public ElevateBatchItem() {}
