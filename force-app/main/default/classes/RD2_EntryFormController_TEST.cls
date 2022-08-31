@@ -262,7 +262,7 @@ private with sharing class RD2_EntryFormController_TEST {
         Test.startTest();
         mockRecordCreatedCalloutResponse();
 
-        RD2_EntryFormController.CommitmentService service = new RD2_EntryFormController.CommitmentService();
+        RD2_CommitmentService service = new RD2_CommitmentService();
 
         UTIL_Http.Response response = service.handleCommitment(rd, null, PAYMENT_METHOD_TOKEN);
         Test.stopTest();
