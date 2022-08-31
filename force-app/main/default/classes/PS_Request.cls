@@ -204,7 +204,10 @@ public inherited sharing class PS_Request {
             HttpRequest request = new HttpRequest();
 
             request.setEndpoint(getEndpoint(endpoint, commitmentId));
-            request.setMethod(method.name());
+            String method = method.name() == UTIL_Http.Method.DEL.name()
+                ? 'DELETE'
+                : method.name();
+            request.setMethod(method);
             setHeader(request, endpoint);
 
             // Default timeout is 10s if the value is not specified

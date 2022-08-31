@@ -56,7 +56,7 @@ public without sharing class UTIL_Http {
     public static final String TIMED_OUT_MESSAGE = 'timed out';
 
     public enum Method {
-        GET, POST, PATCH
+        GET, POST, PATCH, DEL
     }
 
     /***
