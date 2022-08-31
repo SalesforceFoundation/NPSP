@@ -87,7 +87,7 @@ public inherited sharing class PS_CommitmentRequest {
     /***
      * @description Translates the Installment Period into the Elevate API frequency value
      */
-    private static final Map<String, String> frequencyByInstallmentPeriod = new Map<String, String>{
+    public static final Map<String, String> frequencyByInstallmentPeriod = new Map<String, String>{
         RD2_Constants.INSTALLMENT_PERIOD_YEARLY => Frequency.YEAR.name(),
         RD2_Constants.INSTALLMENT_PERIOD_MONTHLY => Frequency.MONTH.name(),
         RD2_Constants.INSTALLMENT_PERIOD_WEEKLY => Frequency.WEEK.name(),
