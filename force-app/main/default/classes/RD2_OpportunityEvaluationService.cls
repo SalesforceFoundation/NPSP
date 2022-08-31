@@ -447,8 +447,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             }
             else {
                 if (isNewOpportunityCandidate(rdRecord)) {
-                    // Prevent the Next Payment Amount from being used in later steps of this process
-                    rd.RecurringDonationSchedules__r[0].NextPaymentAmount__c = null;
                     newOppRDs.add(rd);
                     checkNextPaymentScheduleRds.add(rd);
                 }

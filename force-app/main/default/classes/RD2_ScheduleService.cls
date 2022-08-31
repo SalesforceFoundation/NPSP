@@ -333,6 +333,7 @@ public without sharing class RD2_ScheduleService {
             : numInstallments;
 
         Date referenceDate = startDate == null ? currentDate : startDate;
+        Boolean setNextPaymentAmount = true;
         while (installments.size() < numInstallments) {
             Installment inst = getNextInstallment(referenceDate, schedules);
 
@@ -341,8 +342,9 @@ public without sharing class RD2_ScheduleService {
             }
 
             if (isIncludeSkipped || !inst.isSkipped) {
-                if(installments.size() == 0 && inst.nextPaymentAmount != null) {
+                if(!inst.isSkipped && inst.nextPaymentAmount != null && setNextPaymentAmount) {
                     inst.installmentAmount = inst.nextPaymentAmount;
+                    setNextPaymentAmount = false;
                 }
                 installments.add(inst);
             }
@@ -981,19 +983,15 @@ public without sharing class RD2_ScheduleService {
         return nextActive;
     }
 
-    public List<RecurringDonationSchedule__c> getSchedulesWithClearedNextPaymentAmount(List<npe03__Recurring_Donation__c> rds) {        
-        Map<Id, List<RecurringDonationSchedule__c>> scheduleMap = getExistingSchedules(rds);
-        List<RecurringDonationSchedule__c> scheduleList = new List<RecurringDonationSchedule__c>();
+    public List<RecurringDonationSchedule__c> getSchedulesWithClearedNextPaymentAmount(List<npe03__Recurring_Donation__c> rds) {
         List<RecurringDonationSchedule__c> schedulesToUpdate = new List<RecurringDonationSchedule__c>();
-        
-        for(Id rdId : scheduleMap.keySet()){
-            scheduleList.addAll(scheduleMap.get(rdId));
-        }
 
-        for (RecurringDonationSchedule__c schedule : scheduleList) {
-            if(schedule.NextPaymentAmount__c != null) {
-                schedule.NextPaymentAmount__c = null;
-                schedulesToUpdate.add(schedule);
+        for (npe03__Recurring_Donation__c rd : rds) {
+            for (RecurringDonationSchedule__c schedule : rd.RecurringDonationSchedules__r) {
+                if (schedule.NextPaymentAmount__c != null) {
+                    schedule.NextPaymentAmount__c = null;
+                    schedulesToUpdate.add(schedule);
+                }
             }
         }
 
