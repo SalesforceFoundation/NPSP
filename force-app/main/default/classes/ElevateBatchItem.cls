@@ -46,7 +46,7 @@ public with sharing class ElevateBatchItem {
     public ElevateBatchItem(ElevateBatchItemCreateResponse createBatchItemResponse) {
         this.paymentId = createBatchItemResponse.id();
         this.authExpiration = createBatchItemResponse.authExpiration();
-        this.status = createBatchItemResponse.status().name();
+        this.status = createBatchItemResponse.status();
         this.gatewayTransactionId = createBatchItemResponse.gatewayTransactionId();
         this.paymentMethod = createBatchItemResponse.paymentMethod();
         this.elevateBatchId  = createBatchItemResponse.elevateBatchId();

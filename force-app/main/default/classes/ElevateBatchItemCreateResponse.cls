@@ -83,7 +83,7 @@ public class ElevateBatchItemCreateResponse {
         public String salutation;
         public List<Schedules> schedules;
         public String state;
-        public ElevateTransactionStatus status;
+        public String status;
         public String statusReason;
         public String statusReasonComment;
         public String suffix;
@@ -135,7 +135,7 @@ public class ElevateBatchItemCreateResponse {
         public Integer remainingBalance;
         public String salutation;
         public String state;
-        public ElevateTransactionStatus status;
+        public String status;
         public String submittedAt;
         public String suffix;
         public Integer totalFee;
@@ -209,7 +209,7 @@ public class ElevateBatchItemCreateResponse {
                 purchaseResponse.cardData?.expirationMonth;
     }
 
-    public ElevateTransactionStatus status() {
+    public String status() {
         return commitmentResponse != null ? commitmentResponse.status : purchaseResponse.status;
     }
 
