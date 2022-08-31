@@ -54,8 +54,10 @@ public with sharing class ElevateBatch {
         return elevateBatchService.getElevateBatch();
     }
 
-    public ElevateBatchItem add(ElevateCreateBatchItemRequest tokenizedGift) {
-        return elevateBatchService.sendAddRequest(tokenizedGift, elevateBatchId());
+    public ElevateBatchItem add(ElevateCreateBatchItemRequestDTO batchItemRequestDTO) {
+        return elevateBatchService.sendAddRequest(
+                elevateBatchService.buildBatchItemRequestFrom(batchItemRequestDTO),
+                elevateBatchId());
     }
 
     public ElevateBatchItem remove(String elevateTransactionId) {

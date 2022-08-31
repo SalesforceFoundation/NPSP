@@ -28,19 +28,61 @@
  *     POSSIBILITY OF SUCH DAMAGE.
  */
 public with sharing class ElevateCreateBatchItemRequest {
-    @AuraEnabled public Integer amount {get; set;}
-    @AuraEnabled public String firstName {get; set;}
-    @AuraEnabled public String lastName {get; set;}
-    @AuraEnabled public String paymentMethodToken {get; set;}
-    @AuraEnabled public String currencyCode {get; set;}
-    @AuraEnabled public Map<String, Object> recurringSchedule {get; set;}
+    //TODO: If we choose to support ACH we will need to explicitly pass paymentMethodType or the callout will fail
 
-    public String batchItemType;
+    public ElevateBatchItemType batchItemType;
     public CommitmentInfo commitmentInfo;
     public PurchaseInfo purchaseInfo;
 
-    public ElevateCreateBatchItemRequest() {
-        setBatchItemType();
+    public ElevateCreateBatchItemRequest(ElevateCreateBatchItemRequestDTO batchItemRequestDTO) {
+        if (batchItemRequestDTO.schedule == null || batchItemRequestDTO.schedule.isEmpty()) {
+            batchItemType = ElevateBatchItemType.ONE_TIME;
+        } else {
+            batchItemType = ElevateBatchItemType.COMMITMENT;
+        }
+
+        buildRequestBody(batchItemRequestDTO);
+    }
+
+    private void buildRequestBody(ElevateCreateBatchItemRequestDTO batchItemRequestDTO) {
+        PS_IntegrationServiceConfig.Service configService = new PS_IntegrationServiceConfig.Service();
+
+        if (batchItemType == ElevateBatchItemType.COMMITMENT) {
+            buildCommitmentInfoBody(batchItemRequestDTO, configService);
+        } else {
+            buildPurchaseInfoBody(batchItemRequestDTO, configService);
+        }
+    }
+
+    private void buildPurchaseInfoBody(ElevateCreateBatchItemRequestDTO batchItemRequestDTO,
+                                       PS_IntegrationServiceConfig.Service configService) {
+        purchaseInfo = new ElevateCreateBatchItemRequest.PurchaseInfo();
+        purchaseInfo.merchantId = configService.getMerchantIds();
+        purchaseInfo.gatewayId = configService.getGatewayIds();
+
+        purchaseInfo.currencyCode = UserInfo.getDefaultCurrency();
+        purchaseInfo.amount = Integer.valueOf(batchItemRequestDTO.amount);
+        purchaseInfo.firstName = batchItemRequestDTO.firstName;
+        purchaseInfo.lastName = batchItemRequestDTO.lastName;
+        purchaseInfo.paymentMethodToken = batchItemRequestDTO.paymentMethodToken;
+    }
+
+    private void buildCommitmentInfoBody(ElevateCreateBatchItemRequestDTO batchItemRequestDTO,
+                                         PS_IntegrationServiceConfig.Service configService) {
+
+        commitmentInfo = new ElevateCreateBatchItemRequest.CommitmentInfo();
+        commitmentInfo.gatewayId = configService.getGatewayIds();
+        commitmentInfo.merchantId = configService.getMerchantIds();
+
+        commitmentInfo.currencyCode = UserInfo.getDefaultCurrency();
+        commitmentInfo.firstName = batchItemRequestDTO.firstName;
+        commitmentInfo.lastName = batchItemRequestDTO.lastName;
+        commitmentInfo.schedules = new List<Schedule>{
+            commitmentInfo.buildTypedSchedule(batchItemRequestDTO.schedule, Integer.valueOf(
+                batchItemRequestDTO.amount))
+        };
+        commitmentInfo.paymentMethodToken = batchItemRequestDTO.paymentMethodToken;
+        commitmentInfo.productMetadataSchemaUri = PS_Request.PRODUCT_METADATA_SCHEMA_URI;
     }
 
     public class CommitmentInfo {
@@ -51,63 +93,25 @@ public with sharing class ElevateCreateBatchItemRequest {
         public String gatewayId;
         public String merchantId;
         public String paymentMethodToken;
-        public String paymentMethodType;
         public Map<String, Object> productMetadata;
+        public String productMetadataSchemaUri;
         public List<Schedule> schedules;
         public String type;
 
         public CommitmentInfo() {
             this.productMetadata = getProductMetadata();
+            this.productMetadataSchemaUri = PS_Request.PRODUCT_METADATA_SCHEMA_URI;
             this.type = 'SUSTAINER';
         }
 
-        public CommitmentInfo withCurrencyCode(String currencyCode) {
-            this.currencyCode = currencyCode;
-            return this;
-        }
+        public Schedule buildTypedSchedule(Map<String, Object> scheduleUntyped, Integer amount) {
+            Map<String, String> elevateFrequencyByInstallmentPeriod = PS_CommitmentRequest.frequencyByInstallmentPeriod;
+            Schedule schedule = new Schedule();
 
-        public CommitmentInfo withEmail(String commitmentEmail) {
-            this.email = commitmentEmail;
-            return this;
-        }
+            schedule.recurringPaymentAmount = amount;
 
-        public CommitmentInfo withFirstName(String firstName) {
-            this.firstName = firstName;
-            return this;
-        }
+            for (String field : scheduleUntyped.keySet()) {
 
-        public CommitmentInfo withLastName(String lastName) {
-            this.lastName = lastName;
-            return this;
-        }
-
-        public CommitmentInfo withGatewayId(String gatewayId) {
-            this.gatewayId = gatewayId;
-            return this;
-        }
-
-        public CommitmentInfo withMerchantId(String merchantId) {
-            this.merchantId = merchantId;
-            return this;
-        }
-
-        public CommitmentInfo withPaymentMethodToken(String paymentMethodToken) {
-            this.paymentMethodToken = paymentMethodToken;
-            return this;
-        }
-
-        public CommitmentInfo withPaymentMethodType(String paymentMethodType) {
-            this.paymentMethodType = paymentMethodType;
-            return this;
-        }
-
-        public CommitmentInfo withSchedules(Map<String, Object> schedulesUntyped) {
-            List<Schedule> schedules = new List<Schedule>();
-            for (String field : schedulesUntyped.keySet()) {
-                Schedule newSchedule = new Schedule();
-
-                String amountFieldName = String.valueOf(
-                        npe03__Recurring_Donation__c.npe03__Amount__c);
                 String installmentPeriodFieldName = String.valueOf(
                     npe03__Recurring_Donation__c.npe03__Installment_Period__c);
                 String dayOfMonthFieldName = String.valueOf(
@@ -115,31 +119,29 @@ public with sharing class ElevateCreateBatchItemRequest {
                 String startDateFieldName = String.valueOf(
                         npe03__Recurring_Donation__c.StartDate__c);
 
-                newSchedule.amount = Decimal.valueOf(
-                    String.valueOf(schedulesUntyped?.get(
-                        amountFieldName))
+
+                schedule.frequency =
+                    elevateFrequencyByInstallmentPeriod?.get(
+                        String.valueOf(scheduleUntyped?.get(installmentPeriodFieldName))
+                    );
+
+                schedule.frequencyInterval = Integer.valueOf(
+                    scheduleUntyped?.get(dayOfMonthFieldName)
                 );
 
-                newSchedule.frequency = String.valueOf(
-                    schedulesUntyped?.get(installmentPeriodFieldName)
+                Date startDate = Date.valueOf(
+                    String.valueOf(scheduleUntyped?.get(startDateFieldName))
                 );
-
-                newSchedule.frequencyInterval = Integer.valueOf(
-                    schedulesUntyped?.get(dayOfMonthFieldName)
-                );
-
-                newSchedule.firstOccurrenceOnTimestamp = Date.valueOf(
-                    schedulesUntyped?.get(startDateFieldName)
-                );
-
+                Datetime startDateTime = Datetime.newInstance(startDate.year(), startDate.month(), startDate.day());
+                schedule.firstOccurrenceOnTimestamp = startDateTime.formatGmt('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
             }
-            return this;
+            return schedule;
         }
 
     }
     public class Schedule {
-        public Decimal amount;
-        public Date firstOccurrenceOnTimestamp;
+        public Integer recurringPaymentAmount;
+        public String firstOccurrenceOnTimestamp;
         public String frequency;
         public Integer frequencyInterval;
     }
@@ -151,11 +153,15 @@ public with sharing class ElevateCreateBatchItemRequest {
         public Integer amount;
         public String firstName;
         public String lastName;
-        public AchData achData;
         public String email;
         public String paymentMethodToken;
-        public String paymentMethodType;
         public Map<String, Object> productMetadata;
+        public String productMetadataSchemaUri;
+
+        public PurchaseInfo() {
+            this.productMetadata = getProductMetadata();
+            this.productMetadataSchemaUri = PS_Request.PRODUCT_METADATA_SCHEMA_URI;
+        }
     }
 
     public class AchData {
@@ -166,22 +172,10 @@ public with sharing class ElevateCreateBatchItemRequest {
         public String type;
     }
 
-    private void setBatchItemType() {
-        if (recurringSchedule == null || recurringSchedule.isEmpty()) {
-            batchItemType = ElevateBatchItemType.ONE_TIME.name();
-        } else {
-            batchItemType = ElevateBatchItemType.COMMITMENT.name();
-        }
-    }
-
     private static Map<String, Object> getProductMetadata() {
         PS_ProductMetadata productMetadata = new PS_ProductMetadata()
             .withOrigin(PS_Request.OriginType.CRM.name());    
 
         return productMetadata.toUntypedMap();
     }
-
-//    private void setProductMetadataSchemaUri() {
-//        this.productMetadataSchemaUri = PS_Request.PRODUCT_METADATA_SCHEMA_URI;
-//    }
 }

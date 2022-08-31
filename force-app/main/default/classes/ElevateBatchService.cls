@@ -31,14 +31,12 @@ public virtual with sharing class ElevateBatchService {
 
     public virtual ElevateBatchItem addToElevateBatch(ElevateCreateBatchItemRequestDTO batchItemRequestDTO, String
             elevateBatchId) {
-        return new ElevateBatch(elevateBatchId).add(
-            buildBatchItemRequestFrom(batchItemRequestDTO)
-        );
+        return new ElevateBatch(elevateBatchId).add(batchItemRequestDTO);
     }
 
-    private static ElevateCreateBatchItemRequest buildBatchItemRequestFrom(ElevateCreateBatchItemRequestDTO
+    public ElevateCreateBatchItemRequest buildBatchItemRequestFrom(ElevateCreateBatchItemRequestDTO
             batchItemRequestDTO) {
-        return new ElevateCreateBatchItemRequest();
+        return new ElevateCreateBatchItemRequest(batchItemRequestDTO);
     }
 
     public virtual ElevateBatchItem removeFromElevateBatch(ElevateBatchItem authorizedGift) {
