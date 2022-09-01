@@ -29,7 +29,7 @@
  */
 public class ElevateBatchItemCreateResponse {
     private List<Errors> errors;
-    public String batchItemType;
+    public ElevateBatchItemType batchItemType;
     public CommitmentResponse commitmentResponse;
     public PurchaseResponse purchaseResponse;
 
@@ -169,6 +169,10 @@ public class ElevateBatchItemCreateResponse {
     public class Errors {
         public String message;
         public String failure_reason;
+    }
+
+    public ElevateBatchItemType batchItemType() {
+        return batchItemType;
     }
 
     public String gatewayId() {
