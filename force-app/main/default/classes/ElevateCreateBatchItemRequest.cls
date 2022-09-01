@@ -107,7 +107,6 @@ public with sharing class ElevateCreateBatchItemRequest {
         public Schedule buildTypedSchedule(Map<String, Object> scheduleUntyped, Integer amount) {
             Map<String, String> elevateFrequencyByInstallmentPeriod = PS_CommitmentRequest.frequencyByInstallmentPeriod;
             Schedule schedule = new Schedule();
-
             schedule.recurringPaymentAmount = amount;
 
             for (String field : scheduleUntyped.keySet()) {
