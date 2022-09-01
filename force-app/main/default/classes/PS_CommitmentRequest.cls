@@ -121,7 +121,7 @@ public inherited sharing class PS_CommitmentRequest {
         Account.SObjectType => ElevateBankAccountType.BUSINESS
     };
 
-    private static final Map<String, String> ELEVATE_PAUSED_REASONS = new Map<String, String>{
+    private static final Map<String, String> ELEVATE_PAUSE_REASONS = new Map<String, String>{
         'Financial Difficulty' => 'FINANCIAL_DIFFICULTY',
         'Donor Cancelled' => 'DONOR_CANCELED',
         'Card Expired' => 'CARD_EXPIRED',
@@ -227,7 +227,7 @@ public inherited sharing class PS_CommitmentRequest {
        return new RequestBody()
            .withStartTimestamp(schedule.StartDate__c)
            .withEndTimestamp(schedule.EndDate__c)
-           .withReason(ELEVATE_PAUSED_REASONS.get(schedule.StatusReason__c));
+           .withReason(ELEVATE_PAUSE_REASONS.get(schedule.StatusReason__c));
     }
 
     /***
