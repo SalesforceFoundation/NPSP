@@ -29,25 +29,44 @@
  */
 public with sharing class ElevateBatchItem {
     @AuraEnabled public String paymentId {get; set;}
-    @AuraEnabled public DateTime authExpiration;
-    @AuraEnabled public String status;
-    @AuraEnabled public String paymentMethod;
-    @AuraEnabled public String originalTransactionId;
+    @AuraEnabled public DateTime authExpiration {get; set;}
+    @AuraEnabled public String status {get; set;}
+    @AuraEnabled public String paymentMethod {get; set;}
+    @AuraEnabled public String originalTransactionId {get; set;}
     @AuraEnabled public String elevateBatchId {get; set;}
-    @AuraEnabled public String declineReason;
-    @AuraEnabled public String cardLast4;
-    @AuraEnabled public String cardNetwork;
-    @AuraEnabled public String cardExpirationMonth;
-    @AuraEnabled public String cardExpirationYear;
-    @AuraEnabled public DateTime authorizedAt;
-    @AuraEnabled public String gatewayTransactionId;
-    @AuraEnabled public String gatewayId;
+    @AuraEnabled public String declineReason {get; set;}
+    @AuraEnabled public String cardLast4 {get; set;}
+    @AuraEnabled public String cardNetwork {get; set;}
+    @AuraEnabled public String cardExpirationMonth {get; set;}
+    @AuraEnabled public String cardExpirationYear {get; set;}
+    @AuraEnabled public DateTime authorizedAt {get; set;}
+    @AuraEnabled public String gatewayTransactionId {get; set;}
+    @AuraEnabled public String gatewayId {get; set;}
+    @AuraEnabled public ElevateBatchItemType batchItemType {get; set;
+    }
+    private static final Map<String,String> RD_STATUSES_BY_COMMITMENT_STATUS {
+        get {
+            return new Map<String,String> {
+                    'ACTIVE' => 'Active',
+                    'INACTIVE' => 'Active',
+                    'NEW' => 'Active',
+                    'FAILING' => 'Active',
+                    'LAPSED' => 'Lapsed'
+            };
+        }
+        set;
+    }
 
     public ElevateBatchItem(ElevateBatchItemCreateResponse createBatchItemResponse) {
+        this.batchItemType = createBatchItemResponse.batchItemType();
         this.paymentId = createBatchItemResponse.id();
         this.authorizedAt = createBatchItemResponse.authorizedAt();
         this.authExpiration = createBatchItemResponse.authExpiration();
-        this.status = createBatchItemResponse.status();
+
+        this.status = (batchItemType == ElevateBatchItemType.COMMITMENT) ?
+            RD_STATUSES_BY_COMMITMENT_STATUS.get(createBatchItemResponse.status()) :
+            createBatchItemResponse.status();
+
         this.gatewayTransactionId = createBatchItemResponse.gatewayTransactionId();
         this.paymentMethod = createBatchItemResponse.paymentMethod();
         this.elevateBatchId  = createBatchItemResponse.elevateBatchId();
@@ -103,6 +122,9 @@ public with sharing class ElevateBatchItem {
     }
 
     public String status() {
+        if (batchItemType == ElevateBatchItemType.COMMITMENT) {
+            return RD_STATUSES_BY_COMMITMENT_STATUS.get(status);
+        }
         return status;
     }
 
