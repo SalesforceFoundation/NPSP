@@ -945,14 +945,15 @@ export default class GeFormRenderer extends LightningElement{
                 this.loadingText = this.CUSTOM_LABELS.geAuthorizingCreditCard;
     
                 const elevateBatchItem = await this.currentElevateBatch.add(tokenizedGift);
-                const isAuthorized = elevateBatchItem.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED
-                    || elevateBatchItem.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING;
+                const isSuccessful = elevateBatchItem.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED
+                    || elevateBatchItem.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING
+                    || elevateBatchItem.status === 'Active';
 
-                if (isAuthorized) {
+                if (isSuccessful) {
                     this.updateFormState({
                         [apiNameFor(PAYMENT_ELEVATE_ELEVATE_BATCH_ID)]: this.currentElevateBatch.elevateBatchId,
                         [apiNameFor(PAYMENT_ELEVATE_ID)]: elevateBatchItem.paymentId,
-                        [apiNameFor(PAYMENT_STATUS)]: this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED,
+                        [apiNameFor(PAYMENT_STATUS)]: elevateBatchItem.status,
                         [apiNameFor(PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID)]: elevateBatchItem.originalTransactionId,
                         [apiNameFor(PAYMENT_DECLINED_REASON)]: elevateBatchItem.declineReason,
                         [apiNameFor(PAYMENT_LAST_4)]: elevateBatchItem.cardLast4,
