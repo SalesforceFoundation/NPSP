@@ -1586,6 +1586,22 @@
         <value>Enter a valid Amount. The Amount cannot be zero, negative, or blank.</value>
     </labels>
     <labels>
+        <fullName>RD2_ChangeNextInstallmentAmount</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Change Next Installment Amount Modal Title</shortDescription>
+        <value>Change Next Installment Amount</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ChangeNextInstallmentSuccess</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Change Next Installment Amount Modal Success</shortDescription>
+        <value>The installment was updated.</value>
+    </labels>
+    <labels>
         <fullName>RD2_ContactChangeIsRestricted</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -2619,6 +2635,46 @@
         <protected>true</protected>
         <shortDescription>Detail for the next payment charging date</shortDescription>
         <value>The donor&apos;s ACH payment information will be sent to their bank on {{DATE}}. Payments begin after the bank verifies and processes the information.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_NextInstallment</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Next Installment Table Title</shortDescription>
+        <value>Next Installment</value>
+    </labels>
+    <labels>
+        <fullName>RD2_NewInstallmentAmount</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>New Installment Amount Field Label</shortDescription>
+        <value>New Installment Amount</value>
+    </labels>
+    <labels>
+        <fullName>RD2_NewInstallmentAmountHelp</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>New Installment Amount Field Help Text</shortDescription>
+        <value>Fixed GAU Allocations are changed to percentages to adjust for this new installment amount.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_NewInstallmentAmountValidation</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>New Installment Amount Validation Error</shortDescription>
+        <value>Enter an amount more than 0.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_NewInstallmentConfirmation</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Change Next Installment Confirmation Message</shortDescription>
+        <value>The next installment on {0} will be {1}.</value>
     </labels>
     <labels>
         <fullName>RD2_NumberInstallmentsRequiredWhenFixed</fullName>
