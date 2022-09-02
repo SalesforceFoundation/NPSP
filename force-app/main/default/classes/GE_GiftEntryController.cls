@@ -93,7 +93,6 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled
     public static void addGiftTo(Id dataImportBatchId, InboundGiftDTO inboundGift) {
         try {
-            // TODO: currency validity check should happen inside the GiftBatch.add(gift) method
             if (areCurrenciesValid(dataImportBatchId)) {
                 GiftBatchId giftBatchId = new GiftBatchId(dataImportBatchId);
                 giftBatchService.add(giftBatchId, inboundGift);
