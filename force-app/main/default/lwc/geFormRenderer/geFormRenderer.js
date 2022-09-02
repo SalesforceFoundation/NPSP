@@ -684,7 +684,7 @@ export default class GeFormRenderer extends LightningElement{
         this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
     }
 
-    continueBatchGiftEntrySave(dataImportRecord, formControls, isCreditCardAuth) {
+    continueBatchGiftEntrySave(dataImportRecord, formControls, tokenizedGift) {
         // reset function for callback
         const reset = () => this.reset();
         // handle error on callback from promise
@@ -698,7 +698,7 @@ export default class GeFormRenderer extends LightningElement{
                     formControls.toggleSpinner();
                     reset();
 
-                    const toastMessage = isCreditCardAuth
+                    const toastMessage = this.isCreditCardAuth(tokenizedGift)
                         ? this.CUSTOM_LABELS.geAuthorizedCreditCardSuccess
                         : bgeGridGiftSaved;
 
@@ -717,6 +717,10 @@ export default class GeFormRenderer extends LightningElement{
                 }
             }
         }));
+    }
+
+    isCreditCardAuth(tokenizedGift) {
+        return !this.hasSchedule && this.selectedPaymentMethod() === PAYMENT_METHOD_CREDIT_CARD && tokenizedGift;
     }
 
     handleCatchOnSave( error ) {
@@ -942,7 +946,7 @@ export default class GeFormRenderer extends LightningElement{
     async prepareForBatchGiftSave(dataImportFromFormState, formControls, tokenizedGift) {
         if (tokenizedGift) {
             try {
-                this.loadingText = this.CUSTOM_LABELS.geAuthorizingCreditCard;
+                this.loadingText = this.isCreditCardAuth() ? this.CUSTOM_LABELS.geAuthorizingCreditCard : null;
     
                 const elevateBatchItem = await this.currentElevateBatch.add(tokenizedGift);
                 const isSuccessful = elevateBatchItem.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED
@@ -978,7 +982,7 @@ export default class GeFormRenderer extends LightningElement{
             }
         }
 
-        this.continueBatchGiftEntrySave(dataImportFromFormState, formControls, !!tokenizedGift);
+        this.continueBatchGiftEntrySave(dataImportFromFormState, formControls, tokenizedGift);
     }
 
     async handleAuthorizationFailure(declineReason) {
