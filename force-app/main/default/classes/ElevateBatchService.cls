@@ -40,7 +40,7 @@ public virtual with sharing class ElevateBatchService {
     }
 
     public virtual ElevateBatchItem removeFromElevateBatch(ElevateBatchItem authorizedGift) {
-        return new ElevateBatch(authorizedGift.elevateBatchId).remove(authorizedGift.paymentId);
+        return new ElevateBatch(authorizedGift.elevateBatchId).remove(authorizedGift.id());
     }
 
     public virtual ElevateBatch createElevateBatch() {
