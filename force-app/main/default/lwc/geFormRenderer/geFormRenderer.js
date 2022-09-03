@@ -88,8 +88,14 @@ import DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID
     from '@salesforce/schema/DataImport__c.Recurring_Donation_Elevate_Recurring_ID__c';
 import DATA_IMPORT_RECURRING_DONATION_PAYMENT_METHOD
     from '@salesforce/schema/DataImport__c.Recurring_Donation_Payment_Method__c';
-import RECURRING_DONATION_RECURRING_AMOUNT from '@salesforce/schema/DataImport__c.Recurring_Donation_Amount__c';
-import RECURRING_DONATION_DATE_ESTABLISHED from '@salesforce/schema/DataImport__c.Recurring_Donation_Date_Established__c';
+import DATA_IMPORT_RECURRING_DONATION_RECURRING_AMOUNT from '@salesforce/schema/DataImport__c.Recurring_Donation_Amount__c';
+import DATA_IMPORT_RECURRING_DONATION_DATE_ESTABLISHED from '@salesforce/schema/DataImport__c.Recurring_Donation_Date_Established__c';
+import DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_MONTH
+    from '@salesforce/schema/DataImport__c.Recurring_Donation_Card_Expiration_Month__c';
+import DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_YEAR
+    from '@salesforce/schema/DataImport__c.Recurring_Donation_Card_Expiration_Year__c';
+import DATA_IMPORT_RECURRING_DONATION_CARD_LAST_4
+    from '@salesforce/schema/DataImport__c.Recurring_Donation_Card_Last_4__c';
 import DATA_IMPORT_RECURRING_DONATION_STATUS
     from '@salesforce/schema/DataImport__c.Recurring_Donation_Status__c';
 
@@ -988,6 +994,17 @@ export default class GeFormRenderer extends LightningElement{
                 [apiNameFor(DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID)]: elevateBatchItem.id,
                 [apiNameFor(DATA_IMPORT_RECURRING_DONATION_STATUS)]: elevateBatchItem.status,
             });
+
+            if (this.selectedPaymentMethod() === PAYMENT_METHOD_CREDIT_CARD) {
+                this.updateFormState({
+                    [apiNameFor(DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_MONTH)]:
+                        elevateBatchItem.cardExpirationMonth,
+                    [apiNameFor(DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_YEAR)]:
+                    elevateBatchItem.cardExpirationYear,
+                    [apiNameFor(DATA_IMPORT_RECURRING_DONATION_CARD_LAST_4)]:
+                    elevateBatchItem.cardLast4,
+                });
+            }
         }
     }
 
@@ -1946,20 +1963,7 @@ export default class GeFormRenderer extends LightningElement{
         fields = this.removeFieldsNotUpdatableInFormState(fields);
 
         if (this.hasSchedule) {
-            if (Object.hasOwn(fields, apiNameFor(DATA_IMPORT_DONATION_AMOUNT))) {
-                fields[apiNameFor(RECURRING_DONATION_RECURRING_AMOUNT)] =
-                    fields[apiNameFor(DATA_IMPORT_DONATION_AMOUNT)];
-            }
-
-            if (Object.hasOwn(fields, apiNameFor(DATA_IMPORT_DONATION_DATE))) {
-                fields[apiNameFor(RECURRING_DONATION_DATE_ESTABLISHED)] =
-                    fields[apiNameFor(DATA_IMPORT_DONATION_DATE)];
-            }
-
-            if (Object.hasOwn(fields, apiNameFor(PAYMENT_METHOD))) {
-                fields[apiNameFor(DATA_IMPORT_RECURRING_DONATION_PAYMENT_METHOD)] =
-                    fields[apiNameFor(PAYMENT_METHOD)];
-            }
+            fields = this.syncDonationFormStateFieldsToRDFields(fields);
         }
 
         if (Object.hasOwn(fields, apiNameFor(DATA_IMPORT_DONATION_RECORD_TYPE_NAME))) {
@@ -1972,6 +1976,24 @@ export default class GeFormRenderer extends LightningElement{
 
         const formStateChangeEvent = new CustomEvent('formstatechange', { detail: deepClone(fields) });
         this.dispatchEvent(formStateChangeEvent);
+    }
+
+    syncDonationFormStateFieldsToRDFields(fields) {
+        if (Object.hasOwn(fields, apiNameFor(DATA_IMPORT_DONATION_AMOUNT))) {
+            fields[apiNameFor(DATA_IMPORT_RECURRING_DONATION_RECURRING_AMOUNT)] =
+                fields[apiNameFor(DATA_IMPORT_DONATION_AMOUNT)];
+        }
+
+        if (Object.hasOwn(fields, apiNameFor(DATA_IMPORT_DONATION_DATE))) {
+            fields[apiNameFor(DATA_IMPORT_RECURRING_DONATION_DATE_ESTABLISHED)] =
+                fields[apiNameFor(DATA_IMPORT_DONATION_DATE)];
+        }
+
+        if (Object.hasOwn(fields, apiNameFor(PAYMENT_METHOD))) {
+            fields[apiNameFor(DATA_IMPORT_RECURRING_DONATION_PAYMENT_METHOD)] =
+                fields[apiNameFor(PAYMENT_METHOD)];
+        }
+        return fields;
     }
 
     removeFieldsNotUpdatableInFormState(fieldsToUpdate) {
