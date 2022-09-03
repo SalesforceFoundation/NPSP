@@ -1966,7 +1966,7 @@ export default class GeFormRenderer extends LightningElement{
             fields = this.syncDonationFormStateFieldsToRDFields(fields);
         }
 
-        if (Object.hasOwn(fields, apiNameFor(DATA_IMPORT_DONATION_RECORD_TYPE_NAME))) {
+        if (fields.hasOwnProperty(apiNameFor(DATA_IMPORT_DONATION_RECORD_TYPE_NAME))) {
             fields = this.updateFormStateForDonationRecordType(fields);
         }
 
@@ -1979,17 +1979,17 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     syncDonationFormStateFieldsToRDFields(fields) {
-        if (Object.hasOwn(fields, apiNameFor(DATA_IMPORT_DONATION_AMOUNT))) {
+        if (fields.hasOwnProperty(apiNameFor(DATA_IMPORT_DONATION_AMOUNT))) {
             fields[apiNameFor(DATA_IMPORT_RECURRING_DONATION_RECURRING_AMOUNT)] =
                 fields[apiNameFor(DATA_IMPORT_DONATION_AMOUNT)];
         }
 
-        if (Object.hasOwn(fields, apiNameFor(DATA_IMPORT_DONATION_DATE))) {
+        if (fields.hasOwnProperty(apiNameFor(DATA_IMPORT_DONATION_DATE))) {
             fields[apiNameFor(DATA_IMPORT_RECURRING_DONATION_DATE_ESTABLISHED)] =
                 fields[apiNameFor(DATA_IMPORT_DONATION_DATE)];
         }
 
-        if (Object.hasOwn(fields, apiNameFor(PAYMENT_METHOD))) {
+        if (fields.hasOwnProperty(apiNameFor(PAYMENT_METHOD))) {
             fields[apiNameFor(DATA_IMPORT_RECURRING_DONATION_PAYMENT_METHOD)] =
                 fields[apiNameFor(PAYMENT_METHOD)];
         }
