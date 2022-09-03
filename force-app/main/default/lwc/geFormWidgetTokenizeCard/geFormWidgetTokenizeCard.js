@@ -592,8 +592,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
      */
     resolveToken = (token) => {
         return {
-            [DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName]: token,
-            [DATA_IMPORT_PAYMENT_STATUS_FIELD.fieldApiName]: this.paymentTransactionStatusValues.PENDING
+            [DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName]: token
         }
     }
 
