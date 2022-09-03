@@ -89,6 +89,7 @@ import DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID
 import DATA_IMPORT_RECURRING_DONATION_PAYMENT_METHOD
     from '@salesforce/schema/DataImport__c.Recurring_Donation_Payment_Method__c';
 import RECURRING_DONATION_RECURRING_AMOUNT from '@salesforce/schema/DataImport__c.Recurring_Donation_Amount__c';
+import RECURRING_DONATION_DATE_ESTABLISHED from '@salesforce/schema/DataImport__c.Recurring_Donation_Date_Established__c';
 import DATA_IMPORT_RECURRING_DONATION_STATUS
     from '@salesforce/schema/DataImport__c.Recurring_Donation_Status__c';
 
@@ -1948,6 +1949,16 @@ export default class GeFormRenderer extends LightningElement{
             if (Object.hasOwn(fields, apiNameFor(DATA_IMPORT_DONATION_AMOUNT))) {
                 fields[apiNameFor(RECURRING_DONATION_RECURRING_AMOUNT)] =
                     fields[apiNameFor(DATA_IMPORT_DONATION_AMOUNT)];
+            }
+
+            if (Object.hasOwn(fields, apiNameFor(DATA_IMPORT_DONATION_DATE))) {
+                fields[apiNameFor(RECURRING_DONATION_DATE_ESTABLISHED)] =
+                    fields[apiNameFor(DATA_IMPORT_DONATION_DATE)];
+            }
+
+            if (Object.hasOwn(fields, apiNameFor(PAYMENT_METHOD))) {
+                fields[apiNameFor(DATA_IMPORT_RECURRING_DONATION_PAYMENT_METHOD)] =
+                    fields[apiNameFor(PAYMENT_METHOD)];
             }
         }
 
