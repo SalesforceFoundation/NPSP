@@ -45,7 +45,7 @@ public class ElevateBatchItemCreateResponse {
         public String merchantId;
         public String modifiedAt;
         public Integer nextPaymentAmount;
-        public String nextPaymentDate;
+        public Date nextPaymentDate;
         public String nextPaymentTimestamp;
         public String previousId;
         public String recentTransactionId;
@@ -64,7 +64,7 @@ public class ElevateBatchItemCreateResponse {
         public String city;
         public String commitmentType;
         public String country;
-        public String createdAt;
+        public Datetime createdAt;
         public String currencyCode;
         public String email;
         public String firstName;
@@ -109,7 +109,7 @@ public class ElevateBatchItemCreateResponse {
         public String city;
         public String commitmentId;
         public String country;
-        public String createdAt;
+        public Datetime createdAt;
         public String currencyCode;
         public String declineReason;
         public String email;
@@ -175,6 +175,18 @@ public class ElevateBatchItemCreateResponse {
         return batchItemType;
     }
 
+    public Date nextPaymentDate() {
+        return commitmentResponse?.schedules[0]?.nextPaymentDate;
+    }
+
+    public String frequency() {
+        return commitmentResponse?.schedules[0]?.frequency;
+    }
+
+    public Datetime createdAt() {
+        return commitmentResponse != null ? commitmentResponse.createdAt : purchaseResponse.createdAt;
+    }
+
     public String gatewayId() {
         return commitmentResponse != null ? commitmentResponse.gatewayId : purchaseResponse.gatewayId;
     }
@@ -185,6 +197,14 @@ public class ElevateBatchItemCreateResponse {
 
     public String id() {
         return commitmentResponse != null ? commitmentResponse.id : purchaseResponse.id;
+    }
+
+    public Integer frequencyInterval() {
+        return commitmentResponse?.schedules[0]?.frequencyInterval;
+    }
+
+    public Integer version() {
+        return commitmentResponse != null ? commitmentResponse.version : purchaseResponse.version;
     }
 
     public Datetime authorizedAt() {
