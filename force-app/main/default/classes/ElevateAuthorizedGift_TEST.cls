@@ -54,7 +54,7 @@ public with sharing class ElevateAuthorizedGift_TEST {
         Test.stopTest();
 
         System.assertEquals(DUMMY_PAYMENT_TYPE, batchItem.paymentMethod());
-        System.assertEquals(DUMMY_ID, batchItem.paymentId());
+        System.assertEquals(DUMMY_ID, batchItem.id());
         System.assertEquals(DUMMY_ID, batchItem.gatewayTransactionId());
         System.assertEquals(DUMMY_ID, batchItem.originalTransactionId());
         System.assertEquals(DUMMY_ID, batchItem.elevateBatchId());
@@ -79,7 +79,7 @@ public with sharing class ElevateAuthorizedGift_TEST {
         createBatchItemResponse.purchaseResponse.paymentType = DUMMY_PAYMENT_TYPE;
         createBatchItemResponse.purchaseResponse.originalTransactionId = DUMMY_ID;
         createBatchItemResponse.purchaseResponse.batchId = DUMMY_ID;
-        createBatchItemResponse.purchaseResponse.status = ElevateTransactionStatus.AUTHORIZED;
+        createBatchItemResponse.purchaseResponse.status = ElevateTransactionStatus.AUTHORIZED.name();
         createBatchItemResponse.purchaseResponse.cardData.expirationYear = String.valueOf(DUMMY_DATE.addYears(1).year());
         createBatchItemResponse.purchaseResponse.cardData.expirationMonth = String.valueOf(DUMMY_DATE.addYears(1).month());
         createBatchItemResponse.purchaseResponse.cardData.last4 = DUMMY_CARD_LAST_4;
