@@ -113,8 +113,9 @@ public with sharing class ElevateCreateBatchItemRequest {
 
                 String installmentPeriodFieldName = String.valueOf(
                     npe03__Recurring_Donation__c.npe03__Installment_Period__c);
-                String dayOfMonthFieldName = String.valueOf(
-                        npe03__Recurring_Donation__c.Day_of_Month__c);
+                String installmentFrequencyFieldName = String.valueOf(
+                    npe03__Recurring_Donation__c.InstallmentFrequency__c
+                );
                 String startDateFieldName = String.valueOf(
                         npe03__Recurring_Donation__c.StartDate__c);
 
@@ -122,6 +123,9 @@ public with sharing class ElevateCreateBatchItemRequest {
                     elevateFrequencyByInstallmentPeriod?.get(
                         String.valueOf(scheduleUntyped?.get(installmentPeriodFieldName))
                     );
+
+                Integer installmentFrequency = Integer.valueOf(scheduleUntyped?.get(installmentFrequencyFieldName));
+                schedule.frequencyInterval = installmentFrequency > 0 ? installmentFrequency : 1;
 
                 Date startDate = Date.valueOf(
                     String.valueOf(scheduleUntyped?.get(startDateFieldName))
