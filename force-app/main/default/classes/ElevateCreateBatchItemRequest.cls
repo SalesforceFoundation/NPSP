@@ -118,19 +118,15 @@ public with sharing class ElevateCreateBatchItemRequest {
                 String startDateFieldName = String.valueOf(
                         npe03__Recurring_Donation__c.StartDate__c);
 
-
                 schedule.frequency =
                     elevateFrequencyByInstallmentPeriod?.get(
                         String.valueOf(scheduleUntyped?.get(installmentPeriodFieldName))
                     );
 
-                schedule.frequencyInterval = Integer.valueOf(
-                    scheduleUntyped?.get(dayOfMonthFieldName)
-                );
-
                 Date startDate = Date.valueOf(
                     String.valueOf(scheduleUntyped?.get(startDateFieldName))
                 );
+
                 Datetime startDateTime = Datetime.newInstance(startDate.year(), startDate.month(), startDate.day());
                 schedule.firstOccurrenceOnTimestamp = startDateTime.formatGmt('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
             }
