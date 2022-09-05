@@ -1015,7 +1015,7 @@ export default class GeFormRenderer extends LightningElement{
         if (isAuthorized) {
             this.updateFormState({
                 [apiNameFor(PAYMENT_ELEVATE_ELEVATE_BATCH_ID)]: this.currentElevateBatch.elevateBatchId,
-                [apiNameFor(PAYMENT_ELEVATE_ID)]: elevateBatchItem.paymentId,
+                [apiNameFor(PAYMENT_ELEVATE_ID)]: elevateBatchItem.id,
                 [apiNameFor(PAYMENT_STATUS)]: elevateBatchItem.status,
                 [apiNameFor(PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID)]: elevateBatchItem.originalTransactionId,
                 [apiNameFor(PAYMENT_DECLINED_REASON)]: elevateBatchItem.declineReason,
