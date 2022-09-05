@@ -130,9 +130,8 @@ class Gift {
     }
 
     forSave() {
-        let dataImportRecord = this.asDataImport();
         return {
-            fields: dataImportRecord,
+            fields: this.asDataImport(),
             softCredits: [ ...this._softCredits.forSave() ],
             schedule: this._schedule
         }
