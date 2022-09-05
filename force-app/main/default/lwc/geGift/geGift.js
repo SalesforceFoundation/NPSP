@@ -131,9 +131,6 @@ class Gift {
 
     forSave() {
         let dataImportRecord = this.asDataImport();
-        if (this.hasSchedule()) {
-            dataImportRecord[apiNameFor(PAYMENT_METHOD)] = null;
-        }
         return {
             fields: dataImportRecord,
             softCredits: [ ...this._softCredits.forSave() ],
