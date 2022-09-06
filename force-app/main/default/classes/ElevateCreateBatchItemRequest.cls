@@ -101,7 +101,7 @@ public with sharing class ElevateCreateBatchItemRequest {
         public CommitmentInfo() {
             this.productMetadata = getProductMetadata();
             this.productMetadataSchemaUri = PS_Request.PRODUCT_METADATA_SCHEMA_URI;
-            this.type = 'SUSTAINER';
+            this.type = PS_CommitmentRequest.CommitmentType.SUSTAINER.name();
         }
 
         public Schedule buildTypedSchedule(Map<String, Object> scheduleUntyped, Integer amount) {
