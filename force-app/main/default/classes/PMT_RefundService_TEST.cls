@@ -118,7 +118,7 @@ public with sharing class PMT_RefundService_TEST {
   
         Test.startTest();
         refundService.withOriginalPayments( new List<npe01__OppPayment__c>{originalPayment} );
-        refundService.buildRefundRecord(originalPayment, null);
+        refundService.buildRefundRecord(originalPayment, originalPayment.npe01__Payment_Amount__c);
         refundService.updateParentOpportunity(originalPayment, originalPayment.npe01__Payment_Amount__c);
         Test.stopTest();
 
@@ -197,7 +197,7 @@ public with sharing class PMT_RefundService_TEST {
   
         Test.startTest();
         refundService.withOriginalPayments( new List<npe01__OppPayment__c>{originalPayment} );
-        refundService.buildRefundRecord(originalPayment, null);
+        refundService.buildRefundRecord(originalPayment, originalPayment.npe01__Payment_Amount__c);
         refundService.updateParentOpportunity(originalPayment, originalPayment.npe01__Payment_Amount__c);
         Test.stopTest();
 
