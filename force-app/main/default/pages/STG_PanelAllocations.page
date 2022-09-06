@@ -28,7 +28,7 @@
             <apex:commandButton id="editAllo" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
         <c:UTIL_PageMessages />
-        <div style="{!IF(!stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:block', 'display:none')}">
+        <div style="display:block">
             <div class="slds-section">
                 <div class="slds-section-title_divider">{!$Label.stgLabelAllocationsRollupSettings}</div>
             </div>
