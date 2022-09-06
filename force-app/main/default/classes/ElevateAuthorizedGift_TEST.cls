@@ -72,6 +72,8 @@ public with sharing class ElevateAuthorizedGift_TEST {
 
     private static ElevateBatchItemCreateResponse createAuthorizedGiftResponse() {
         ElevateBatchItemCreateResponse createBatchItemResponse = new ElevateBatchItemCreateResponse();
+        createBatchItemResponse.batchItemType = ElevateBatchItemType.ONE_TIME;
+        createBatchItemResponse.purchaseResponse = new ElevateBatchItemCreateResponse.PurchaseResponse();
         createBatchItemResponse.purchaseResponse.cardData = new ElevateBatchItemCreateResponse.CardData();
         createBatchItemResponse.purchaseResponse.id = DUMMY_ID;
         createBatchItemResponse.purchaseResponse.authExpiresAt = System.today().addDays(1);

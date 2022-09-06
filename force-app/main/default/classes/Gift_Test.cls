@@ -92,8 +92,7 @@ private class Gift_Test {
         // Assert
         System.assert(dataImport.Donation_Amount__c == null);
         System.assert(dataImport.Donation_Date__c == null);
-        System.assert(dataImport.Recurring_Donation_Amount__c == 25.00);
-        System.assert(dataImport.Recurring_Donation_Date_Established__c == today);
+        System.assert(dataImport.DonationImported__c == null);
         System.assert(dataImport.Recurring_Donation_Installment_Period__c == 'Monthly');
         System.assert(dataImport.Recurring_Donation_Effective_Date__c == today);
         System.assert(dataImport.Recurring_Donation_Recurring_Type__c == 'Open');
