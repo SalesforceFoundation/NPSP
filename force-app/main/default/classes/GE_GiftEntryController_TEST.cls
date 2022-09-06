@@ -169,6 +169,56 @@ public with sharing class GE_GiftEntryController_TEST {
                         'message specified in the invalid request data type.');
     }
 
+    @isTest
+    static void batchItemRequestIsCorrectlyBuiltFromDTOValues() {
+        ElevateCreateBatchItemRequestDTO dto = new ElevateCreateBatchItemRequestDTO();
+        dto.amount = '2000';
+        dto.firstName = 'test';
+        dto.lastName = 'donor';
+        dto.currencyCode = 'USD';
+        dto.paymentMethodToken = '12345';
+        dto.schedule = new Map<String,Object> {
+            String.valueOf(npe03__Recurring_Donation__c.npe03__Installment_Period__c) => 'Monthly',
+            String.valueOf(npe03__Recurring_Donation__c.InstallmentFrequency__c) => '1',
+            String.valueOf(npe03__Recurring_Donation__c.StartDate__c) => String.valueOf(Date.today())
+        };
+        Test.startTest();
+            ElevateCreateBatchItemRequest request = new ElevateBatchService().buildBatchItemRequestFrom(dto);
+        Test.stopTest();
+
+        System.assertEquals(ElevateBatchItemType.COMMITMENT, request.batchItemType, 'The request batch item type ' +
+                'should be COMMITMENT');
+        System.assertEquals(null, request.purchaseInfo, 'The request purchase info object should be null.');
+        System.assert(request.commitmentInfo != null, 'The request commitment info object should not be null.');
+        System.assertEquals('USD', request.commitmentInfo.currencyCode, 'The request currency code should match the ' +
+                'DTO.');
+        System.assertEquals('test', request.commitmentInfo.firstName, 'The request first name should match the ' +
+                'DTO.');
+        System.assertEquals('donor', request.commitmentInfo.lastName, 'The request last name should match the ' +
+                'DTO.');
+        System.assertEquals('SUSTAINER', request.commitmentInfo.type, 'The request type equal SUSTAINER.');
+
+        PS_ProductMetadata.Origin metadataOrigin = (PS_ProductMetadata.Origin)
+                request.commitmentInfo.productMetadata.get('origin');
+        System.assertEquals('CRM', metadataOrigin.type, 'The request should have an Origin value of CRM' +
+                'set in product metadata.');
+
+        System.assertEquals(PS_Request.PRODUCT_METADATA_SCHEMA_URI, request.commitmentInfo.productMetadataSchemaUri,
+                'The request should have the correct product metadata schema Uri set.');
+        System.assertEquals(PS_CommitmentRequest.frequencyByInstallmentPeriod.get('Monthly'),
+                request.commitmentInfo.schedules[0].frequency, 'The Elevate converted request frequency should match ' +
+                        'the DTO schedule installment period.');
+        System.assertEquals(1, request.commitmentInfo.schedules[0].frequencyInterval, 'The request frequency interval' +
+                ' should match the DTO schedule installment frequency');
+        System.assertEquals(2000, request.commitmentInfo.schedules[0].recurringPaymentAmount, 'The request ' +
+                'recurring amount (in cents) should match the converted DTO amount (in cents).');
+
+        Datetime startDateTime = Datetime.newInstance(Date.today().year(), Date.today().month(), Date.today().day());
+        System.assertEquals(startDateTime.formatGmt('yyyy-MM-dd\'T\'HH:mm:ss\'Z\''),
+                request.commitmentInfo.schedules[0].firstOccurrenceOnTimestamp, 'The request first occurrence ' +
+                'timestamp should should match the DTO and be converted to ISO 8601 format.');
+    }
+
     @IsTest
     static void addCardCommitmentToElevateBatchShouldReturnSuccessResponse() {
         GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceValidRequest(
