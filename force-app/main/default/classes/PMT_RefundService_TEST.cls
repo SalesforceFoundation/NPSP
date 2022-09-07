@@ -117,9 +117,9 @@ public with sharing class PMT_RefundService_TEST {
         );
   
         Test.startTest();
-        refundService.withOriginalPayments( new List<npe01__OppPayment__c>{originalPayment} )
-            .processNonElevateRefunds();
-
+        refundService.withOriginalPayments( new List<npe01__OppPayment__c>{originalPayment} );
+        refundService.buildRefundRecord(originalPayment, originalPayment.npe01__Payment_Amount__c);
+        refundService.updateParentOpportunity(originalPayment, originalPayment.npe01__Payment_Amount__c);
         Test.stopTest();
 
         npe01__OppPayment__c refundRecord = refundService.getRefundRecords()?.get(0);
@@ -135,6 +135,42 @@ public with sharing class PMT_RefundService_TEST {
             'The original payment refund type should be set to: ' + PMT_RefundService.FULL_REFUND);
         System.assertNotEquals(null, parentOpp, 'The parent opportunity should be proccessed');
         System.assertEquals(0, parentOpp.Amount, 'The opporunity amount should be set to 0 after the refund');
+    }
+
+    @isTest
+    private static void verifyAPaymentCanBePartiallyRefunded() {
+        npe01__OppPayment__c originalPayment = getPaymentRecord ();
+        Decimal originalAmount = originalPayment.npe01__Payment_Amount__c;
+        Decimal refundAmount = originalPayment.npe01__Payment_Amount__c / 2;
+        PaymentSelector_TEST.Stub selectorStub = new PaymentSelector_TEST.Stub();
+        selectorStub.paymentRecords = new List<npe01__OppPayment__c>{ originalPayment };
+
+        PMT_RefundService refundService = new PMT_RefundService(); 
+        refundService.paymentSelector = (PaymentSelector) Test.createStub(
+            PaymentSelector.class,
+            selectorStub
+        );
+  
+        Test.startTest();
+        refundService.withOriginalPayments( new List<npe01__OppPayment__c>{originalPayment} );
+        refundService.buildRefundRecord(originalPayment, refundAmount);
+        refundService.updateParentOpportunity(originalPayment, refundAmount);
+        Test.stopTest();
+
+        npe01__OppPayment__c refundRecord = refundService.getRefundRecords()?.get(0);
+        Opportunity parentOpp = refundService.opportunityMap.values()?.get(0);
+
+        System.assertEquals(1,refundService.getRefundRecords().size(),
+            'A refund record should be created');
+        System.assertEquals(refundAmount, -1 * refundRecord.npe01__Payment_Amount__c,
+            'The amount on the refund record should match the original payment amont but negative');
+        System.assertEquals(originalPayment.Id, refundRecord.originalPayment__c,
+            'The refund record should map to the original payment record');
+        System.assertEquals(PMT_RefundService.PARTIAL_REFUND, refundRecord.DebitType__c,
+            'The refund type should be set to: ' + PMT_RefundService.PARTIAL_REFUND);
+        System.assertNotEquals(null, parentOpp, 'The parent opportunity should be proccessed');
+        System.assertEquals(originalAmount - refundAmount, parentOpp.Amount,
+            'Partial Refund Amount should be deducted from the opportunity amount');
     }
 
     @isTest
@@ -160,8 +196,9 @@ public with sharing class PMT_RefundService_TEST {
         );
   
         Test.startTest();
-        refundService.withOriginalPayments( new List<npe01__OppPayment__c>{originalPayment} )
-            .processNonElevateRefunds();
+        refundService.withOriginalPayments( new List<npe01__OppPayment__c>{originalPayment} );
+        refundService.buildRefundRecord(originalPayment, originalPayment.npe01__Payment_Amount__c);
+        refundService.updateParentOpportunity(originalPayment, originalPayment.npe01__Payment_Amount__c);
         Test.stopTest();
 
         npe01__OppPayment__c refundRecord = refundService.getRefundRecords()?.get(0);
@@ -230,6 +267,8 @@ public with sharing class PMT_RefundService_TEST {
                     return errors;
                 } when 'getRefundInfoFor' {
                     return refundInfo;
+                } when 'buildRefundRecord' {
+                    return refundRecords[0];
                 } when else {
                     return null;
                 }

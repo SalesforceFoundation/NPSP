@@ -70,7 +70,54 @@ public with sharing class PMT_ValidationService_TEST {
         Test.stopTest();
 
         System.assertEquals(0, errorRecords.size(),
-            'Expecting no error collection to be returned');
+            'Expected no error to be returned.');
+    }
+
+    @IsTest
+    private static void verifyNoErrorWillBeAddedOnCorrectPartialRefund() {
+        npe01__OppPayment__c originalPayment = new npe01__OppPayment__c(
+            Id = UTIL_UnitTestData_TEST.mockId(npe01__OppPayment__c.SObjectType),
+            npe01__Payment_Amount__c = 100,
+            npe01__Paid__c = true
+        );
+
+        List<npe01__OppPayment__c> refunds = new List<npe01__OppPayment__c> {
+            new npe01__OppPayment__c(
+                Id = UTIL_UnitTestData_TEST.mockId(npe01__OppPayment__c.SObjectType),
+                npe01__Payment_Amount__c = -40,
+                DebitType__c = PMT_RefundService.PARTIAL_REFUND,
+                OriginalPayment__c = originalPayment.Id
+            )
+        };
+
+        originalPayment = addRefundRelatedList(originalPayment, refunds);
+
+        npe01__OppPayment__c newRefund = new npe01__OppPayment__c(
+            npe01__Payment_Amount__c = -50,
+            DebitType__c = PMT_RefundService.PARTIAL_REFUND,
+            OriginalPayment__c = originalPayment.Id
+        );
+        PMT_ValidationService validationService = new PMT_ValidationService(
+            new List<npe01__OppPayment__c>{newRefund},
+            null,
+            TDTM_Runnable.Action.BeforeInsert
+        );
+
+        validationService.isEnforceAccountingDataConsistency = false;
+        PMT_RefundService refundService = new PMT_RefundService()
+            .withOriginalPayments(new List<npe01__OppPayment__c>{originalPayment});
+    
+        refundService.originalPaymentWithRefunds.put(
+            originalPayment.Id, new PMT_RefundService.RefundInfo(originalPayment)
+        );
+        validationService.RefundService = refundService;
+
+        Test.startTest();
+        List<ErrorRecord> errorRecords = validationService.validate().getErrors();
+        Test.stopTest();
+
+        System.assertEquals(0, errorRecords.size(),
+            'Expected no error to be returned.');
     }
 
     @IsTest
@@ -178,7 +225,7 @@ public with sharing class PMT_ValidationService_TEST {
     }
 
     @IsTest
-    private static void verifyFullRefundHasToRefundWholePayment() {
+    private static void verifyCanNotRefundMoreThanRemainingBalance() {
         npe01__OppPayment__c originalPayment = new npe01__OppPayment__c(
             Id = UTIL_UnitTestData_TEST.mockId(npe01__OppPayment__c.SObjectType),
             npe01__Payment_Amount__c = 10,
@@ -258,6 +305,61 @@ public with sharing class PMT_ValidationService_TEST {
     }
 
     @IsTest
+    private static void verifyPartialRefundCannotExceedRemainingBalance() {
+        npe01__OppPayment__c originalPayment = new npe01__OppPayment__c(
+            Id = UTIL_UnitTestData_TEST.mockId(npe01__OppPayment__c.SObjectType),
+            npe01__Payment_Amount__c = 100,
+            npe01__Paid__c = true
+        );
+
+        List<npe01__OppPayment__c> refunds = new List<npe01__OppPayment__c> {
+            new npe01__OppPayment__c(
+                Id = UTIL_UnitTestData_TEST.mockId(npe01__OppPayment__c.SObjectType),
+                npe01__Payment_Amount__c = -40,
+                DebitType__c = PMT_RefundService.PARTIAL_REFUND,
+                OriginalPayment__c = originalPayment.Id
+            ),
+            new npe01__OppPayment__c(
+                Id = UTIL_UnitTestData_TEST.mockId(npe01__OppPayment__c.SObjectType),
+                npe01__Payment_Amount__c = -40,
+                DebitType__c = PMT_RefundService.PARTIAL_REFUND,
+                OriginalPayment__c = originalPayment.Id
+            )
+        };
+
+        originalPayment = addRefundRelatedList(originalPayment, refunds);
+
+        npe01__OppPayment__c newRefund = new npe01__OppPayment__c(
+            npe01__Payment_Amount__c = -21,
+            DebitType__c = PMT_RefundService.PARTIAL_REFUND,
+            OriginalPayment__c = originalPayment.Id
+        );
+        PMT_ValidationService validationService = new PMT_ValidationService(
+            new List<npe01__OppPayment__c>{newRefund},
+            null,
+            TDTM_Runnable.Action.BeforeInsert
+        );
+
+        validationService.isEnforceAccountingDataConsistency = false;
+        PMT_RefundService refundService = new PMT_RefundService()
+            .withOriginalPayments(new List<npe01__OppPayment__c>{originalPayment});
+    
+        refundService.originalPaymentWithRefunds.put(
+            originalPayment.Id, new PMT_RefundService.RefundInfo(originalPayment)
+        );
+        validationService.RefundService = refundService;
+
+        Test.startTest();
+        List<ErrorRecord> errorRecords = validationService.validate().getErrors();
+        Test.stopTest();
+
+        System.assertEquals(1, errorRecords.size(),
+            'Expecting an error collection to be returned');
+        System.assertEquals(System.Label.pmtRefundAmountInvalid, errorRecords[0].getFirstError(),
+            'Refund cannot be processed when the payment is fully refunded');
+    }
+
+    @IsTest
     private static void verifyElevatePaymenCanBeModifiedWithIntegrationUserPermission() {
         npe01__OppPayment__c payment = new npe01__OppPayment__c(
             Id = UTIL_UnitTestData_TEST.mockId(npe01__OppPayment__c.SObjectType),
@@ -329,7 +431,6 @@ public with sharing class PMT_ValidationService_TEST {
             'Cannot update Elevate payment without integrationPermission');
     }
 
-
     private static npe01__OppPayment__c addRefundRelatedList(npe01__OppPayment__c payment, List<SObject> records) {
         String paymentRecord = JSON.serialize(payment);
         paymentRecord = paymentRecord.left(paymentRecord.length()-1);
@@ -341,6 +442,4 @@ public with sharing class PMT_ValidationService_TEST {
 
         return (npe01__OppPayment__c)JSON.deserialize(paymentRecord, npe01__OppPayment__c.class);
     }
-
-
 }

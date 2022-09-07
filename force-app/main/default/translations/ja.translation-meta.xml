@@ -6243,10 +6243,6 @@
         <label>返金額</label>
     </customLabels>
     <customLabels>
-        <name>pmtRefundPaymentMessage</name>
-        <label>次の支払を返金します:</label>
-    </customLabels>
-    <customLabels>
         <name>pmtRefundProcessing</name>
         <label>返金は処理のために送信されました。返金された支払は商談レコードで確認してください。</label>
     </customLabels>
