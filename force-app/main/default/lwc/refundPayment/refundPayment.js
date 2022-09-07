@@ -63,7 +63,7 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
                     return;
                 }
                 this.remainingBalance = response.remainingBalance;
-                this.refundAmount = response.refundAmount;
+                this.refundAmount = response.remainingBalance;
                 this.paymentDate = response.paymentDate;
                 this.currencyCode = response.currencyCode;
                 this.isLoading = false;
