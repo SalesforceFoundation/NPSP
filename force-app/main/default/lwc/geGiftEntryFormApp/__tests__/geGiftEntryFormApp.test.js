@@ -169,7 +169,7 @@ describe('c-ge-gift-entry-form-app', () => {
             expect(batchTable).toBeTruthy();
         });
 
-        it('should render processing batch spinner if batch is still processing', async () => {
+        it('should render processing batch spinner if batch is still processing then spinner should hide once all promises are completed', async () => {
             const formApp = setupForBatchMode({gifts: [], totals: { TOTAL: 1, PROCESSING: 1 }});
 
             document.body.appendChild(formApp);
@@ -178,8 +178,7 @@ describe('c-ge-gift-entry-form-app', () => {
 
             await flushPromises();
 
-            expect(spinner(formApp)).toBeTruthy();
-            expect(batchProcessingText(formApp).innerHTML).toBe(PROCESSING_BATCH_MESSAGE);
+            expect(spinner(formApp)).toBeFalsy();
         });
 
         it('should render batch table in Batch mode', async () => {
@@ -669,6 +668,7 @@ describe('c-ge-gift-entry-form-app', () => {
 
             await flushPromises();
 
+            expect(spinner(formApp)).toBeFalsy();
             expect(handleErrorSpy).toHaveBeenCalled();
             expect(handleErrorSpy.mock.calls[0][0]).toBe('c.geBatchGiftsExpectedCountOrTotalMessage');
         });
@@ -692,6 +692,7 @@ describe('c-ge-gift-entry-form-app', () => {
 
             await flushPromises();
 
+            expect(spinner(formApp)).toBeFalsy();
             expect(handleErrorSpy).toHaveBeenCalled();
             expect(handleErrorSpy.mock.calls[0][0]).toBe('c.geBatchGiftsExpectedTotalsMessage');
         });

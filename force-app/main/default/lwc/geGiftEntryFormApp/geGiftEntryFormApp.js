@@ -44,7 +44,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     @api recordId;
     @api sObjectName;
-    @api triggerSpinner;
 
     @track isPermissionError;
     @track loadingText = this.CUSTOM_LABELS.geTextSaving;
@@ -55,7 +54,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     dataImportRecord = {};
     errorCallback;
     _isBatchProcessing = false;
-    loadSpinner = false;
+    shouldLoadSpinner = false;
     isElevateCustomer = false;
     openedGiftDonationId;
 
@@ -236,7 +235,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     shouldDisplayElevateDeregistrationWarning() {
         return !this.isElevateCustomer
-            && this._hasDisplayedElevateDisconnectedModal === false
+            && !this._hasDisplayedElevateDisconnectedModal
             && this.giftBatchState.authorizedPaymentsCount > 0;
     }
 
@@ -399,10 +398,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     async handleProcessBatch() {
         if (this.isProcessable()) {
             try {
-                this.loadSpinner = true
+                this.shouldLoadSpinner = true
                 await this.refreshBatchTotals();
             } catch (error) {
-                this.loadSpinner = false
+                this.shouldLoadSpinner = false
                 handleError(error);
             } finally {
                 await this.startBatchProcessing();
@@ -479,8 +478,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     async handleProcessedBatch() {
-        this.giftBatchState = await this.giftBatch.init(this.recordId);
         this.isFormCollapsed = true;
+        this._isBatchProcessing = this.giftBatchState.isProcessingGifts;
+        this.shouldLoadSpinner = this._isBatchProcessing
         showToast(
             this.CUSTOM_LABELS.PageMessagesConfirm,
             GeLabelService.format(
@@ -490,7 +490,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             'dismissible',
             null
         );
-        this.loadSpinner = false;
     }
 
     async refreshBatchTotals() {
@@ -501,12 +500,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             this.giftBatchState = await this.giftBatch.refreshTotals();
 
             const finishedProcessingDuringThisRefresh =
-                wasProcessing && this.giftBatchState.isProcessingGifts === false;
+                wasProcessing && !this.giftBatchState.isProcessingGifts;
             if (finishedProcessingDuringThisRefresh) {
                 await this.handleProcessedBatch();
             }
-
-            this._isBatchProcessing = this.giftBatchState.isProcessingGifts;
         } catch(error) {
             handleError(error);
         }
