@@ -44,6 +44,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     @api recordId;
     @api sObjectName;
+    @api triggerSpinner;
 
     @track isPermissionError;
     @track loadingText = this.CUSTOM_LABELS.geTextSaving;
@@ -54,6 +55,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     dataImportRecord = {};
     errorCallback;
     _isBatchProcessing = false;
+    loadSpinner = false;
     isElevateCustomer = false;
     openedGiftDonationId;
 
@@ -397,8 +399,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     async handleProcessBatch() {
         if (this.isProcessable()) {
             try {
+                this.loadSpinner = true
                 await this.refreshBatchTotals();
             } catch (error) {
+                this.loadSpinner = false
                 handleError(error);
             } finally {
                 await this.startBatchProcessing();
@@ -486,6 +490,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             'dismissible',
             null
         );
+        this.loadSpinner = false;
     }
 
     async refreshBatchTotals() {
