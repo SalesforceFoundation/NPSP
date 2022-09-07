@@ -220,7 +220,6 @@ public with sharing class RD2_PauseForm_CTRL {
             RD2_QueueableService.enqueueOppEvalService(pause.rdId, hasScheduleChanged);
 
         } catch (Exception e) {
-            System.debug(e.getMessage());
             throwAuraHandledException(e.getMessage());
         }
     }

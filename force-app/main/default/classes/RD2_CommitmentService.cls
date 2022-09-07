@@ -218,8 +218,7 @@ public without sharing class RD2_CommitmentService {
     */
     public Boolean isCommitmentSuccess(UTIL_Http.Response response) {
         return response.statusCode == UTIL_Http.STATUS_CODE_CREATED
-            || response.statusCode == UTIL_Http.STATUS_CODE_OK
-            || response.statusCode == UTIL_Http.STATUS_CODE_NO_CONTENT;
+            || response.statusCode == UTIL_Http.STATUS_CODE_OK;
     }
 
     /**
