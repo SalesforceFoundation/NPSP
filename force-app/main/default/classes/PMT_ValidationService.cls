@@ -148,13 +148,11 @@ public inherited sharing class PMT_ValidationService {
     }
 
     private void validateRefund(npe01__OppPayment__c payment) {
-        if (payment.DebitType__c != PMT_RefundService.FULL_REFUND) {
-            return;
+        if (payment.DebitType__c == PMT_RefundService.FULL_REFUND
+            || payment.DebitType__c == PMT_RefundService.PARTIAL_REFUND) {
+            PMT_RefundService.RefundInfo refundInfo = refundService.getRefundInfoFor(payment.OriginalPayment__c);
+            validateRefund(payment, refundInfo);
         }
-
-        PMT_RefundService.RefundInfo refundInfo = refundService.getRefundInfoFor(payment.OriginalPayment__c);
-
-        validateRefund(payment, refundInfo);
     }
 
     public PMT_ValidationService validateRefund(npe01__OppPayment__c refund, PMT_RefundService.RefundInfo refundInfo) {
@@ -167,19 +165,23 @@ public inherited sharing class PMT_ValidationService {
             addError(refund, System.Label.pmtOriginalPaymentNotPaid);
         }
 
-        if (refundInfo.originalPayment.DebitType__c == PMT_RefundService.FULL_REFUND) {
+        if (refundInfo.originalPayment.DebitType__c == PMT_RefundService.FULL_REFUND
+            || refundInfo.originalPayment.DebitType__c == PMT_RefundService.PARTIAL_REFUND) {
             addError(refund, System.Label.pmtPaymentNotRefundable);
         }
 
-        if (refund.npe01__Payment_Amount__c + refundInfo.originalPayment.npe01__Payment_Amount__c < 0) {
+        if (refundInfo.remainingBalance == 0) {
+            AddError(refund, System.Label.pmtPaymentNotRefundable);
+            return this;
+        }
+
+        Decimal remainingBalance = refundInfo.getNewRemiaingBalanceWith(refund);
+        if (remainingBalance < 0) {
             addError(refund, System.Label.pmtRefundAmountInvalid);
+            return this;
         }
 
-        refundInfo.updateRefundAmount(refund);
-        if (refundInfo.remainingBalance < 0) {
-            addError(refund, System.Label.pmtPaymentNotRefundable);
-        }
-
+        refundInfo.updateRemainingBalance(refund);
         return this;
     }
 

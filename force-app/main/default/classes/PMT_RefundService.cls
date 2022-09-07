@@ -312,19 +312,26 @@ public inherited sharing class PMT_RefundService {
             }
         }
 
-        public void updateRefundAmount(npe01__OppPayment__c currentRefund) {
+        public void updateRemainingBalance(npe01__OppPayment__c currentRefund) {
+            this.remainingBalance = getNewRemiaingBalanceWith(currentRefund);
+        }
+
+        public Decimal getNewRemiaingBalanceWith(npe01__OppPayment__c currentRefund) {
+            Decimal tempBalance = this.remainingBalance;
             if (currentRefund.Id == null || this.originalPayment.Refunds__r == null) {
-                this.remainingBalance += currentRefund.npe01__Payment_Amount__c;
+                tempBalance += currentRefund.npe01__Payment_Amount__c;
                
             } else {
                 for (npe01__OppPayment__c previousRefund : originalPayment.Refunds__r) {
                     if (previousRefund.Id == currentRefund.Id) {
-                        this.remainingBalance -= previousRefund.npe01__Payment_Amount__c;
+                        tempBalance -= previousRefund.npe01__Payment_Amount__c;
                         break;
                     }
                 }
-                this.remainingBalance += currentRefund.npe01__Payment_Amount__c;
+                tempBalance += currentRefund.npe01__Payment_Amount__c;
             }
+
+            return tempBalance;
         }
     }
 }
