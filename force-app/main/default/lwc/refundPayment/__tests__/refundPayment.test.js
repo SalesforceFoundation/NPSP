@@ -27,12 +27,16 @@ describe('c-refund-payment', () => {
 
         getInitialView.mockResolvedValue(mockRefundView);
         processRefund.mockResolvedValue(mockRefundView);
+        component.recordId = 'dummyId';
         document.body.appendChild(component);
         await flushPromises();
+
         expect(cancelButton(component).title).toBe('c.stgBtnCancel');
         expect(refundButton(component).title).toBe('c.pmtRefundPaymentConfirmedButton');
         expect(refundAmountInput(component)).not.toBeNull();
         expect(refundAmountInput(component).label).toBe('c.pmtRefundAmount');
+        expect(remainingBalanceDisplay(component).value).toBe(mockRefundView.remainingBalance);
+        expect(refundAmountInput(component).value).toBe(mockRefundView.paymentAmount);
     });
 
     it('The screen should be closed on Cancel', async () => {
@@ -81,4 +85,7 @@ const refundButton = (component) => {
 }
 const refundAmountInput = (component) => {
     return component.shadowRoot.querySelector('lightning-input');
+}
+const remainingBalanceDisplay = (component) => {
+    return component.shadowRoot.querySelector('lightning-formatted-number[id="remaining-balance"]');
 }
