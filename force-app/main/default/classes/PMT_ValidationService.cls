@@ -166,12 +166,9 @@ public inherited sharing class PMT_ValidationService {
         }
 
         if (refundInfo.originalPayment.DebitType__c == PMT_RefundService.FULL_REFUND
-            || refundInfo.originalPayment.DebitType__c == PMT_RefundService.PARTIAL_REFUND) {
+            || refundInfo.originalPayment.DebitType__c == PMT_RefundService.PARTIAL_REFUND
+            || refundInfo.remainingBalance <= 0) {
             addError(refund, System.Label.pmtPaymentNotRefundable);
-        }
-
-        if (refundInfo.remainingBalance == 0) {
-            AddError(refund, System.Label.pmtPaymentNotRefundable);
             return this;
         }
 

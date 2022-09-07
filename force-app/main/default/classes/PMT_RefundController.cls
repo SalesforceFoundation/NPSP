@@ -58,7 +58,6 @@ public with sharing class PMT_RefundController {
         PMT_RefundService.RefundInfo refundInfo = refundService.getRefundInfoFor(paymentId);
 
         refundView.paymentDate = refundInfo.originalPayment.npe01__Payment_Date__c;
-        refundView.paymentAmount = refundInfo.originalPayment.npe01__Payment_Amount__c;
         refundView.remainingBalance = refundInfo.remainingBalance;
 
         if (UserInfo.isMultiCurrencyOrganization()) {
@@ -172,7 +171,6 @@ public with sharing class PMT_RefundController {
         @AuraEnabled public Boolean isSuccess;
         @AuraEnabled public Id redirectToPaymentId;
         @AuraEnabled public String errorMessage;
-        @AuraEnabled public Decimal paymentAmount;
         @AuraEnabled public Decimal remainingBalance;
         @AuraEnabled public String currencyCode;
         @AuraEnabled public Date paymentDate;
