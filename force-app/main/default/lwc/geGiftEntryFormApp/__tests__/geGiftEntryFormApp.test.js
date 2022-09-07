@@ -178,7 +178,8 @@ describe('c-ge-gift-entry-form-app', () => {
 
             await flushPromises();
 
-            expect(spinner(formApp)).toBeFalsy();
+            expect(spinner(formApp)).toBeTruthy();
+            expect(batchProcessingText(formApp).innerHTML).toBe(PROCESSING_BATCH_MESSAGE);
         });
 
         it('should render batch table in Batch mode', async () => {

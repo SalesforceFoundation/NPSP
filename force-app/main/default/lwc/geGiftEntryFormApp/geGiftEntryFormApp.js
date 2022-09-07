@@ -220,6 +220,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             this.displayElevateDeregistrationWarning();
         }
         this._isBatchProcessing = this.giftBatchState.isProcessingGifts;
+        this.shouldLoadSpinner = this._isBatchProcessing
         this.isLoading = false;
         if (!this._isBatchProcessing) return;
         await this.startPolling();
