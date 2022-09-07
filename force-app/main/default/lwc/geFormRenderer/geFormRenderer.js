@@ -1003,6 +1003,7 @@ export default class GeFormRenderer extends LightningElement{
                     elevateBatchItem.cardExpirationYear,
                     [apiNameFor(DATA_IMPORT_RECURRING_DONATION_CARD_LAST_4)]:
                     elevateBatchItem.cardLast4,
+                    [apiNameFor(PAYMENT_ELEVATE_ELEVATE_BATCH_ID)]: this.currentElevateBatch.elevateBatchId
                 });
             }
         }
