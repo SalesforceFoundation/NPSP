@@ -988,7 +988,7 @@ public without sharing class RD2_ScheduleService {
 
         for (npe03__Recurring_Donation__c rd : rds) {
             for (RecurringDonationSchedule__c schedule : rd.RecurringDonationSchedules__r) {
-                if (schedule.NextPaymentAmount__c != null) {
+                if (schedule.NextPaymentAmount__c != null && schedule.Active__c) {
                     schedule.NextPaymentAmount__c = null;
                     schedulesToUpdate.add(schedule);
                 }

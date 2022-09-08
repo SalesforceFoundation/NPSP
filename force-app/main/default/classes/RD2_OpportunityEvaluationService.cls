@@ -448,7 +448,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             else {
                 if (isNewOpportunityCandidate(rdRecord)) {
                     newOppRDs.add(rd);
-                    checkNextPaymentScheduleRds.add(rd);
                 }
 
                 if (hasOpenOpportunity(rdRecord)) {
@@ -457,7 +456,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             }
             // TODO Handle Past Due Installment
 
-            // Add Elevate RDs that need Schedule checks
             if (rdRecord.needsNextPaymentScheduleCheck()) {
                 checkNextPaymentScheduleRds.add(rd);
             }

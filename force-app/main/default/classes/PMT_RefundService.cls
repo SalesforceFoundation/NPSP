@@ -35,6 +35,7 @@
 */
 public inherited sharing class PMT_RefundService {
     public static final String FULL_REFUND = 'Refund';
+    public static final String PARTIAL_REFUND = 'Partial Refund';
 
     private Boolean isMultiCurrencyEnabled {
         get {
@@ -176,17 +177,6 @@ public inherited sharing class PMT_RefundService {
         return response;
     }
 
-    public void processNonElevateRefunds() {
-        Boolean shouldBuildRefundRecord = this.refundRecords == null;
- 
-        for (npe01__OppPayment__c originalPayment : this.originalPayments) {
-            if (shouldBuildRefundRecord) {
-                buildRefundRecord(originalPayment);
-            }
-            updateParentOpportunity(originalPayment);
-        }
-    }
-
     public void processDML() {
         Savepoint sp = Database.setSavepoint();
         try {
@@ -226,12 +216,15 @@ public inherited sharing class PMT_RefundService {
         );
     }
 
-    private void buildRefundRecord(npe01__OppPayment__c originalPayment) {
+    public npe01__OppPayment__c buildRefundRecord(npe01__OppPayment__c originalPayment, Decimal refundAmount) {
+        refundAmount = (refundAmount == null) ? originalPayment.npe01__Payment_Amount__c : refundAmount; 
         npe01__OppPayment__c refund = new npe01__OppPayment__c(
-            npe01__Payment_Amount__c = -1 * originalPayment.npe01__Payment_Amount__c,
+            npe01__Payment_Amount__c = -1 * refundAmount,
             npe01__Opportunity__c = originalPayment.npe01__Opportunity__c,
             OriginalPayment__c = originalPayment.Id,
-            DebitType__c = PMT_RefundService.FULL_REFUND
+            DebitType__c = (originalPayment.npe01__Payment_Amount__c == refundAmount)
+                ? PMT_RefundService.FULL_REFUND
+                : PMT_RefundService.PARTIAL_REFUND
         );
         
         if (isMultiCurrencyEnabled) {
@@ -241,10 +234,12 @@ public inherited sharing class PMT_RefundService {
         if (this.refundRecords == null) {
             this.refundRecords = new List<npe01__OppPayment__c>();
         }
+
         this.refundRecords.add(refund);
+        return refund;
     }
 
-    private void updateParentOpportunity(npe01__OppPayment__c originalPayment) {
+    public void updateParentOpportunity(npe01__OppPayment__c originalPayment, Decimal refundAmount) {
         if (this.opportunityMap == null) {
             this.opportunityMap = new Map<Id,Opportunity>();
         }
@@ -257,7 +252,8 @@ public inherited sharing class PMT_RefundService {
                     : originalPayment.npe01__Opportunity__r.Amount
             );
         }
-        opportunity.Amount = opportunity.Amount - originalPayment.npe01__Payment_Amount__c;
+
+        opportunity.Amount = opportunity.Amount - refundAmount;
 
         this.opportunityMap.put(opportunity.Id, opportunity);
     }
@@ -316,19 +312,26 @@ public inherited sharing class PMT_RefundService {
             }
         }
 
-        public void updateRefundAmount(npe01__OppPayment__c currentRefund) {
+        public void updateRemainingBalance(npe01__OppPayment__c currentRefund) {
+            this.remainingBalance = getNewRemiaingBalanceWith(currentRefund);
+        }
+
+        public Decimal getNewRemiaingBalanceWith(npe01__OppPayment__c currentRefund) {
+            Decimal tempBalance = this.remainingBalance;
             if (currentRefund.Id == null || this.originalPayment.Refunds__r == null) {
-                this.remainingBalance += currentRefund.npe01__Payment_Amount__c;
+                tempBalance += currentRefund.npe01__Payment_Amount__c;
                
             } else {
                 for (npe01__OppPayment__c previousRefund : originalPayment.Refunds__r) {
                     if (previousRefund.Id == currentRefund.Id) {
-                        this.remainingBalance -= previousRefund.npe01__Payment_Amount__c;
+                        tempBalance -= previousRefund.npe01__Payment_Amount__c;
                         break;
                     }
                 }
-                this.remainingBalance += currentRefund.npe01__Payment_Amount__c;
+                tempBalance += currentRefund.npe01__Payment_Amount__c;
             }
+
+            return tempBalance;
         }
     }
 }

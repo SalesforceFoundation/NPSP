@@ -6247,10 +6247,6 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
         <label>Erstattungsbetrag</label>
     </customLabels>
     <customLabels>
-        <name>pmtRefundPaymentMessage</name>
-        <label>Rückerstattung der folgenden Zahlung:</label>
-    </customLabels>
-    <customLabels>
         <name>pmtRefundProcessing</name>
         <label>Die Rückerstattung wurde zur Bearbeitung eingereicht. Prüfen Sie, ob die erstattete Zahlung im Opportunity-Datensatz enthalten ist.</label>
     </customLabels>
