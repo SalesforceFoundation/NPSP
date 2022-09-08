@@ -12214,38 +12214,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>A paid Payment must have a Payment Date.</value>
     </labels>
     <labels>
-        <fullName>pmtRefundPaymentDate</fullName>
-        <categories>Payment</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Payment Date</shortDescription>
-        <value>Payment Date</value>
-    </labels>
-    <labels>
-        <fullName>pmtRefundPaymentErrorMessage</fullName>
-        <categories>Payment</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Error message title for refund</shortDescription>
-        <value>There was an error processing the refund.</value>
-    </labels>
-    <labels>
-        <fullName>pmtRefundAmountInvalid</fullName>
-        <categories>Payment</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Refund error when the refund amount is invalid</shortDescription>
-        <value>Enter a refund that&apos;s less than or equal to the remaining balance.</value>
-    </labels>
-    <labels>
-        <fullName>pmtRefundPaymentSuccessMessage</fullName>
-        <categories>Payment</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Success message for refund</shortDescription>
-        <value>Refund was successful.</value>
-    </labels>
-    <labels>
         <fullName>pmtPaymentNotFound</fullName>
         <categories>Payment</categories>
         <language>en_US</language>
@@ -12262,6 +12230,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>This payment has already been refunded, or is a refund itself.</value>
     </labels>
     <labels>
+        <fullName>pmtRefundAllocationHelpText</fullName>
+        <categories>Payment, Refund</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund Amount Allocation help text</shortDescription>
+        <value>Fixed GAU Allocations are changed to percentages to adjust for this refund.</value>
+    </labels>
+    <labels>
         <fullName>pmtRefundAmount</fullName>
         <categories>Payment</categories>
         <language>en_US</language>
@@ -12270,20 +12246,12 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Refund Amount</value>
     </labels>
     <labels>
-        <fullName>pmtRefundPaymentMessage</fullName>
+        <fullName>pmtRefundAmountInvalid</fullName>
         <categories>Payment</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Refund Information</shortDescription>
-        <value>Refund the following payment:</value>
-    </labels>
-    <labels>
-        <fullName>pmtRefundProcessing</fullName>
-        <categories>Payment</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Refund submitted for processing.</shortDescription>
-        <value>Refund submitted for processing. Check for the refunded Payment on the Opportunity record.</value>
+        <shortDescription>Refund error when the refund amount is invalid</shortDescription>
+        <value>Enter a refund that&apos;s less than or equal to the remaining balance.</value>
     </labels>
     <labels>
         <fullName>pmtRefundPaymentConfirmedButton</fullName>
@@ -12294,12 +12262,68 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Refund Payment</value>
     </labels>
     <labels>
+        <fullName>pmtRefundPaymentDate</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Payment Date</shortDescription>
+        <value>Payment Date</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentErrorMessage</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message title for refund</shortDescription>
+        <value>There was an error processing the refund.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundAmountTooHigh</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when refund amount is too high</shortDescription>
+        <value>Refund can&apos;t be more than {{AMOUNT}}.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundAmountTooLow</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when refund amount is too low</shortDescription>
+        <value>Enter a refund that&apos;s more than 0.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundProcessing</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund submitted for processing.</shortDescription>
+        <value>Refund submitted for processing. Check for the refunded Payment on the Opportunity record.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentSuccessMessage</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Success message for refund</shortDescription>
+        <value>Refund was successful.</value>
+    </labels>
+    <labels>
         <fullName>pmtRefundPaymentTitle</fullName>
         <categories>Payment, Refund</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Refund Payment Title</shortDescription>
         <value>Refund Payment?</value>
+    </labels>
+    <labels>
+        <fullName>pmtRemainingBalance</fullName>
+        <categories>Payment, Refund</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Remaining Balance</shortDescription>
+        <value>Remaining Balance</value>
     </labels>
     <labels>
         <fullName>pmtUnpaidPaymentScheduledDateRequired</fullName>

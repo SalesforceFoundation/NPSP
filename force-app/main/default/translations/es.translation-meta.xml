@@ -6240,10 +6240,6 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <label>Reembolsar importe</label>
     </customLabels>
     <customLabels>
-        <name>pmtRefundPaymentMessage</name>
-        <label>Reembolsar el siguiente pago:</label>
-    </customLabels>
-    <customLabels>
         <name>pmtRefundProcessing</name>
         <label>Reembolso enviado para procesamiento. Consulte el pago reembolsado en el registro Oportunidad.</label>
     </customLabels>
