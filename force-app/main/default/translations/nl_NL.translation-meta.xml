@@ -6246,10 +6246,6 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
         <label>Terugbetalingsbedrag</label>
     </customLabels>
     <customLabels>
-        <name>pmtRefundPaymentMessage</name>
-        <label>Betaal de volgende betaling terug:</label>
-    </customLabels>
-    <customLabels>
         <name>pmtRefundProcessing</name>
         <label>Terugbetaling ter verwerking ingediend. Controleer of de terugbetaalde betaling wordt weergegeven op de opportunityrecord.</label>
     </customLabels>
