@@ -152,7 +152,7 @@ describe('c-ge-gift-entry-form-app', () => {
         });
 
         it('should not render page blocker if the gift batch is accessible to the current user', async () => {
-            const formApp = setupForBatchMode({gifts: [], totals: { TOTAL: 1, PROCESSING: 1}});
+            const formApp = setupForBatchMode({gifts: [], totals: { TOTAL: 1, IMPORTED: 1 }});
 
             await flushPromises();
 
@@ -170,7 +170,7 @@ describe('c-ge-gift-entry-form-app', () => {
         });
 
         it('should render processing batch spinner if batch is still processing', async () => {
-            const formApp = setupForBatchMode({gifts: [], totals: { TOTAL: 1, PROCESSING: 1}});
+            const formApp = setupForBatchMode({gifts: [], totals: { TOTAL: 1, PROCESSING: 1 }});
 
             document.body.appendChild(formApp);
 
