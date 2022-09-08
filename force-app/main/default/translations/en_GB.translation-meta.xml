@@ -6247,10 +6247,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <label>Refund Amount</label>
     </customLabels>
     <customLabels>
-        <name>pmtRefundPaymentMessage</name>
-        <label>Refund the following payment:</label>
-    </customLabels>
-    <customLabels>
         <name>pmtRefundProcessing</name>
         <label>Refund submitted for processing. Check for the refunded Payment on the Opportunity record.</label>
     </customLabels>

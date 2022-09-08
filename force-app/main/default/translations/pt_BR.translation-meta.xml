@@ -6247,10 +6247,6 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
         <label>Valor do reembolso</label>
     </customLabels>
     <customLabels>
-        <name>pmtRefundPaymentMessage</name>
-        <label>Reembolsar o seguinte pagamento:</label>
-    </customLabels>
-    <customLabels>
         <name>pmtRefundProcessing</name>
         <label>Reembolso enviado para processamento. Verifique o pagamento reembolsado no registro Oportunidade.</label>
     </customLabels>
