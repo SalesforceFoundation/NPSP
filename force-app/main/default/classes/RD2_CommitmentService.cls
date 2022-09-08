@@ -78,7 +78,7 @@ public without sharing class RD2_CommitmentService {
         UTIL_Http.Response response;
 
         PS_CommitmentRequest.RequestBody requestBody = new PS_CommitmentRequest().getUpdateScheduleRequestBody(rd, nextPaymentAmount);
-        response = sendRequest(rd.CommitmentId__c, JSON.serialize(requestBody),
+        response = sendRequest(rd?.CommitmentId__c, JSON.serialize(requestBody),
             PS_Request.ElevateEndpoint.COMMITMENT);
         processResponse(rd, response);
 

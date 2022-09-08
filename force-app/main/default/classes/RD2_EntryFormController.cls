@@ -324,6 +324,45 @@ public with sharing class RD2_EntryFormController {
         return null;
     }
 
+    /**
+    * @description Handles validation and Elevate recurring commitment creation
+    * @param rd Recurring Donation
+    * @param nextPaymentAmount The Next Payment Amount to set on the Schedule
+    * @return UTIL_Http.Response Payments API response
+    */
+    @AuraEnabled
+    public static UTIL_Http.Response handleNextPaymentAmount(String jsonRecord, Decimal nextPaymentAmount) {
+        try {
+            npe03__Recurring_Donation__c rd = (npe03__Recurring_Donation__c) JSON.deserialize(
+                jsonRecord, npe03__Recurring_Donation__c.class
+            );
+            
+            UTIL_Http.Response response;
+            List<npe03__Recurring_Donation__c> rdList = new List<npe03__Recurring_Donation__c>{rd};
+    
+            System.debug(rdList); 
+    
+            if (rd.CommitmentId__c != null) {
+                response = commitmentService.handleNextPaymentAmount(rd, nextPaymentAmount);
+            } else {
+                RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+                List<RecurringDonationSchedule__c> revisedSchedules = 
+                    scheduleService.setSchedulesWithNextPaymentAmount(rdList, nextPaymentAmount);
+    
+                UTIL_DMLService.updateRecords(revisedSchedules);
+    
+                RD2_QueueableService.enqueueOppEvalService(rd.Id, true);
+            }
+
+            return response;
+
+        } catch (Exception ex) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
+        }
+
+        return null;
+    }
+
     /***
     * @description Logs an error when a Recurring Donation cannot be created/updated
     * @param recordId A Recurring Donation, or a donor (Contact/Account) Id

@@ -2,12 +2,12 @@
 
     <header class="slds-modal__header slds-clearfix slds-align_absolute-center" data-qa-locator="heading">
         <h2
-            class="slds-text-heading_medium slds-text-heading--medium slds-hyphenate header-string slds-p-top_large slds-p-horizontal_medium">
+            class="slds-text-heading_medium slds-text-heading_medium slds-hyphenate header-string slds-var-p-top_large slds-var-p-horizontal_medium">
             {labels.changeNextInstallmentAmount}
         </h2>
     </header>
 
-    <div class="slds-p-horizontal_small" if:true={error.detail}>
+    <div class="slds-var-p-horizontal_small" if:true={error.detail}>
         <c-util-page-level-message title={error.header} subtitle={error.detail} variant="error"
             icon-name="utility:error" icon-size="x-small" icon-variant="inverse"
             subtitle-class-override="slds-p-horizontal_medium slds-p-vertical_xx-small" data-id="error"
@@ -29,7 +29,7 @@
 
         <template if:false={isLoading}>
             <template if:true={permissions.isBlocked}>
-                <div class="slds-p-around_medium">
+                <div class="slds-var-p-around_medium">
                     <lightning-formatted-rich-text value={permissions.blockedReason} data-id="blockedReason"
                         data-qa-locator="richtext Blocked Reason">
                     </lightning-formatted-rich-text>
@@ -39,12 +39,12 @@
             <template if:false={permissions.isBlocked}>
                 <template if:true={permissions.hasAccess}>
                     <lightning-layout multiple-rows="true">
-                        <lightning-layout-item padding="horizontal-large" class="slds-p-top_medium" size="12">
+                        <lightning-layout-item padding="horizontal-large" class="slds-var-p-top_medium" size="12">
                             <p class="slds-text-title_bold">{labels.nextInstallment}</p>
                         </lightning-layout-item>
                     </lightning-layout>
 
-                    <div class="installments slds-p-left_medium slds-p-top_large slds-p-right_medium"
+                    <div class="installments slds-var-p-left_medium slds-var-p-top_large slds-var-p-right_medium"
                         if:true={installments}>
                         <lightning-datatable key-field="installmentNumber" data={installments} columns={columns}
                             is-loading={isLoading} resize-column-disabled 
@@ -53,14 +53,14 @@
                     </div>
 
                     <lightning-layout multiple-rows="true">
-                        <lightning-layout-item padding="horizontal-large" class="slds-p-top_large" size="12">
+                        <lightning-layout-item padding="horizontal-large" class="slds-var-p-top_large" size="12">
                             <lightning-input type="number" formatter="currency" step="0.01"
                                 label={labels.newInstallmentAmountLabel} value={nextPaymentAmount}
                                 onchange={handleNextPaymentAmountChange} data-id="nextPaymentAmount">
                             </lightning-input>
                         </lightning-layout-item>
 
-                        <lightning-layout-item padding="horizontal-large" class="slds-p-top_large" size="12">
+                        <lightning-layout-item padding="horizontal-large" class="slds-var-p-top_large" size="12">
                             <template if:true={changeInstallmentSummary}>
                                 <em><lightning-formatted-rich-text value={changeInstallmentSummary} data-id="rowSummary"
                                         data-qa-locator="richtext Row Summary">
@@ -72,17 +72,17 @@
                 </template>
             </template>
 
-            <div class="slds-p-bottom_large"></div>
+            <div class="slds-var-p-bottom_large"></div>
         </template>
     </div>
 
     <div if:false={isLoading}>
         <footer class="slds-modal__footer slds-clearfix">
-            <div class="slds-x-small-buttons_horizontal slds-float_right">
+            <div class="slds-float_right">
 
                 <template if:true={isSaveDisplayed}>
                     <lightning-button label={labels.cancelButton} title={labels.cancelButton} variant="neutral"
-                        class="slds-m-right_small" onclick={handleCancel} data-id="cancelButton"
+                        class="slds-var-m-right_small" onclick={handleCancel} data-id="cancelButton"
                         data-qa-locator="button Cancel">
                     </lightning-button>
                     <lightning-button label={labels.saveButton} title={labels.saveButton} variant="brand"

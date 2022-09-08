@@ -998,6 +998,21 @@ public without sharing class RD2_ScheduleService {
         return schedulesToUpdate;
     }
 
+    public List<RecurringDonationSchedule__c> setSchedulesWithNextPaymentAmount(List<npe03__Recurring_Donation__c> rds, 
+            Decimal nextPaymentAmount) {
+        Map<Id, List<RecurringDonationSchedule__c>> schedulesByRDId = getExistingSchedules(rds);
+        List<RecurringDonationSchedule__c> schedulesToUpdate = new List<RecurringDonationSchedule__c>();
+
+        for (Id rdId : schedulesByRDId.keySet()) {
+            for (RecurringDonationSchedule__c schedule : schedulesByRDId.get(rdId)) {
+                schedule.NextPaymentAmount__c = nextPaymentAmount;
+                schedulesToUpdate.add(schedule);
+            }
+        }
+
+        return schedulesToUpdate;
+    }
+
     /**
     * @description Get the Next Payment Amount for this Recurring Donation, if is set
     * @param rd Recurring Donation

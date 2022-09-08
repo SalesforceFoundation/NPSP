@@ -1,7 +1,8 @@
 import { LightningElement, api, track } from 'lwc';
-import { showToast, constructErrorMessage, isNull } from 'c/utilCommon';
+import { showToast, constructErrorMessage, isEmpty } from 'c/utilCommon';
 import { CloseActionScreenEvent } from 'lightning/actions';
-import { getNumberAsLocalizedCurrency } from 'c/utilNumberFormatter';
+import { getNumberAsLocalizedCurrency, getDateAsLocalizedFormat } from 'c/utilNumberFormatter';
+import { Rd2Service } from "c/rd2Service";
 
 import header from '@salesforce/label/c.RD2_PauseHeader';
 import description from '@salesforce/label/c.RD2_PauseDescription';
@@ -30,7 +31,7 @@ import changeNextInstallmentSuccess from '@salesforce/label/c.RD2_ChangeNextInst
 
 import getPauseData from '@salesforce/apex/RD2_PauseForm_CTRL.getPauseData';
 import getInstallments from '@salesforce/apex/RD2_PauseForm_CTRL.getInstallments';
-import savePause from '@salesforce/apex/RD2_PauseForm_CTRL.savePause';
+import handleNextPaymentAmount from '@salesforce/apex/RD2_EntryFormController.handleNextPaymentAmount';
 
 export default class Rd2UpdateNextPayment extends LightningElement {
 
@@ -63,6 +64,8 @@ export default class Rd2UpdateNextPayment extends LightningElement {
     _recordId;
     recordName;
     donationDate;
+    isElevateRd = false;
+    commitmentId;
 
     @track isLoading = true;
     @track permissions = {
@@ -71,7 +74,7 @@ export default class Rd2UpdateNextPayment extends LightningElement {
         blockedReason: ''
     };
     @track isSaveDisplayed;
-    @track isSaveDisabled = false;
+    @track isSaveDisabled = true;
     @track pageHeader = '';
     @track nextPaymentAmount;
     validAmount = false;
@@ -83,6 +86,7 @@ export default class Rd2UpdateNextPayment extends LightningElement {
     maxRowDisplay = 1;
     @track changeInstallmentSummary = '';
 
+    rd2Service = new Rd2Service();
     @track error = {};
 
     @api set recordId(value) {
@@ -215,35 +219,22 @@ export default class Rd2UpdateNextPayment extends LightningElement {
             this.isSaveDisplayed = false;
             this.hasAccess = false;
         }
-
-        // TODO: Figure out if this is needed
-        // this.refreshSaveButton();
     }
-
-    /***
-     * @description Rechecks if the [Save] button should be displayed
-     */
-    // refreshSaveButton() {
-    //     this.isSaveDisabled = !this.validAmount;
-    // }
 
     /***
     * @description Save pause: Inserts new pause (if any) and deactivates the old one.
     */
     handleSave() {
         this.clearError();
-
-        const pausedReasonField = this.template.querySelector("[data-id='pausedReason']");
-        if (pausedReasonField && !pausedReasonField.reportValidity()) {
-            return;
-        }
-
         this.isLoading = true;
         try {
-            // TODO: Need to call RD2 Entry Form Method from here
-            const jsonData = JSON.stringify(this.constructNextPaymentAmountData());
+            const rd = this.rd2Service
+                .constructRecurringDonation(this.recordId, this.commitmentId);
 
-            savePause({ jsonPauseData: jsonData })
+            handleNextPaymentAmount({
+                jsonRecord: rd.asJSON(), 
+                nextPaymentAmount: this.nextPaymentAmount 
+            })
                 .then(() => {
                     this.handleSaveSuccess();
                 })
@@ -273,25 +264,21 @@ export default class Rd2UpdateNextPayment extends LightningElement {
     handleNextPaymentAmountChange(event) {
         this.nextPaymentAmount = event.detail.value;
         const nextPaymentAmountField = this.template.querySelector("[data-id='nextPaymentAmount']");
-        if (isNull(this.nextPaymentAmount) || this.nextPaymentAmount < 0) {
-            nextPaymentAmountField.setCustomValidity(this.labels.newInstallmentAmountValidation);
+        let validityMessage = '';
+        if (isEmpty(this.nextPaymentAmount) || this.nextPaymentAmount < 0) {
+            validityMessage = this.labels.newInstallmentAmountValidation;
             this.isSaveDisabled = true;
             this.changeInstallmentSummary = '';
         } else {
-            nextPaymentAmountField.reportValidity();
             this.isSaveDisabled = false;
-
-            // TODO Figure out how to keep this in its timezone
-            // new Date defaults to UTC, but local Date converts it
-            // Are there Utils out there?
-            let dateString = new Date(this.donationDate).toLocaleDateString();
+            let dateString = getDateAsLocalizedFormat(this.donationDate);
             let currencyAmount = getNumberAsLocalizedCurrency(this.nextPaymentAmount);
             this.changeInstallmentSummary = 
                 this.labels.newInstallmentConfirmation.replace('{0}', dateString)
                 .replace('{1}', currencyAmount);
         }
-
-        // this.refreshSaveButton();
+        nextPaymentAmountField.setCustomValidity(validityMessage);
+        nextPaymentAmountField.reportValidity();
     }
 
     /***
