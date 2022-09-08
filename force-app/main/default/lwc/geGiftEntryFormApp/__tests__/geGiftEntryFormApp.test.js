@@ -152,7 +152,7 @@ describe('c-ge-gift-entry-form-app', () => {
         });
 
         it('should not render page blocker if the gift batch is accessible to the current user', async () => {
-            const formApp = setupForBatchMode({gifts: [], totals: { TOTAL: 1, IMPORTED: 1 }});
+            const formApp = setupForBatchMode({gifts: [], totals: { TOTAL: 1, PROCESSING: 1}});
 
             await flushPromises();
 
@@ -169,8 +169,8 @@ describe('c-ge-gift-entry-form-app', () => {
             expect(batchTable).toBeTruthy();
         });
 
-        it('should render processing batch spinner if batch is still processing then spinner should hide once all promises are completed', async () => {
-            const formApp = setupForBatchMode({gifts: [], totals: { TOTAL: 1, PROCESSING: 1 }});
+        it('should render processing batch spinner if batch is still processing', async () => {
+            const formApp = setupForBatchMode({gifts: [], totals: { TOTAL: 1, PROCESSING: 1}});
 
             document.body.appendChild(formApp);
 
@@ -656,6 +656,19 @@ describe('c-ge-gift-entry-form-app', () => {
     });
 
     describe('batch processing', () => {
+        it('should load process batch spinner when processbatch event occurs', async () => {
+            const formApp = setupForBatchMode({gifts: [], totals: { TOTAL: 1 }});
+            await flushPromises();
+
+            const geBatchGiftEntryHeader = shadowQuerySelector(formApp, 'c-ge-batch-gift-entry-header');
+            const processEvent = new CustomEvent('processbatch');
+            geBatchGiftEntryHeader.dispatchEvent(processEvent);
+
+            await flushPromises();
+
+            expect(spinner(formApp)).toBeTruthy();
+            expect(batchProcessingText(formApp).innerHTML).toBe(PROCESSING_BATCH_MESSAGE);
+        });
 
         it('should not allow batch processing if total count of gifts is required and totals do not match', async () => {
             const formApp = setupForBatchMode({ requireTotalMatch: true, expectedCountOfGifts: 5, gifts: [], totals: { TOTAL: 1 }});
