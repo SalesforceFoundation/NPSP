@@ -41,7 +41,7 @@ public with sharing class PMT_RefundController_TEST {
 
         System.runAs(readOnlyUser) {
             PMT_RefundController.RefundView initialRefundView = PMT_RefundController.getInitialView(null);
-            PMT_RefundController.RefundView afterRefundView = PMT_RefundController.processRefund(null);
+            PMT_RefundController.RefundView afterRefundView = PMT_RefundController.processRefund(null, null);
 
             System.assertEquals(false, initialRefundView.hasRequiredPermissions, 'Read-only user should not have access to refund');
             System.assertEquals(false, afterRefundView.hasRequiredPermissions, 'Read-only user should not be able to refund');
@@ -64,7 +64,7 @@ public with sharing class PMT_RefundController_TEST {
         UTIL_Http_TEST.CalloutMock calloutMock = UTIL_Http_TEST.mockSuccessCalloutResponse(null);
 
         Test.startTest();
-        PMT_RefundController.RefundView refundView = PMT_RefundController.processRefund(payment.Id);
+        PMT_RefundController.RefundView refundView = PMT_RefundController.processRefund(payment.Id, payment.npe01__Payment_Amount__c);
         Test.stopTest();
 
         System.assertEquals(1, calloutMock.getCalloutCounter(),
@@ -90,7 +90,7 @@ public with sharing class PMT_RefundController_TEST {
         PMT_RefundController.RefundService = refundService;
 
         Test.startTest();
-        PMT_RefundController.RefundView refundView = PMT_RefundController.processRefund(payment.Id);
+        PMT_RefundController.RefundView refundView = PMT_RefundController.processRefund(payment.Id, payment.npe01__Payment_Amount__c);
         Test.stopTest();
 
         System.assertEquals(1, calloutMock.getCalloutCounter(),
@@ -115,7 +115,7 @@ public with sharing class PMT_RefundController_TEST {
         );
 
         Test.startTest();
-        PMT_RefundController.RefundView refundView = PMT_RefundController.processRefund(payment.Id);
+        PMT_RefundController.RefundView refundView = PMT_RefundController.processRefund(payment.Id, payment.npe01__Payment_Amount__c);
         Test.stopTest();
 
         System.assertEquals(refund.Id, refundView.redirectToPaymentId,
@@ -138,7 +138,7 @@ public with sharing class PMT_RefundController_TEST {
         );
 
         Test.startTest();
-        PMT_RefundController.RefundView refundView = PMT_RefundController.processRefund(payment.Id);
+        PMT_RefundController.RefundView refundView = PMT_RefundController.processRefund(payment.Id, payment.npe01__Payment_Amount__c);
         Test.stopTest();
 
         System.assertEquals(false, refundView.isSuccess,
