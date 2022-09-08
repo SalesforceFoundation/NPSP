@@ -30,6 +30,15 @@ import DATA_IMPORT_CONTACT_LASTNAME from '@salesforce/schema/DataImport__c.Conta
 import DATA_IMPORT_DONATION_DONOR from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 import DATA_IMPORT_ACCOUNT_NAME from '@salesforce/schema/DataImport__c.Account1_Name__c';
 import DATA_IMPORT_PARENT_BATCH_LOOKUP from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
+import DATA_IMPORT_RECURRING_DONATION_STATUS from '@salesforce/schema/DataImport__c.Recurring_Donation_Status__c';
+import DATA_IMPORT_RECURRING_DONATION_CARD_LAST_4
+    from '@salesforce/schema/DataImport__c.Recurring_Donation_Card_Last_4__c';
+import DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_YEAR
+    from '@salesforce/schema/DataImport__c.Recurring_Donation_Card_Expiration_Year__c';
+import DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_MONTH
+    from '@salesforce/schema/DataImport__c.Recurring_Donation_Card_Expiration_Month__c';
+import DATA_IMPORT_RECURRING_DONATION_INSTALLMENT_PERIOD
+    from '@salesforce/schema/DataImport__c.Recurring_Donation_Installment_Period__c';
 import PAYMENT_EXPIRATION_YEAR from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Year__c';
 import PAYMENT_EXPIRATION_MONTH from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Month__c';
 import PAYMENT_LAST_4 from '@salesforce/schema/DataImport__c.Payment_Card_Last_4__c';
@@ -103,7 +112,12 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     @wire(getRecord, {
         recordId: '$dataImportId', optionalFields: [
-            PAYMENT_LAST_4, PAYMENT_EXPIRATION_MONTH, PAYMENT_EXPIRATION_YEAR]
+            PAYMENT_LAST_4,
+            PAYMENT_EXPIRATION_MONTH,
+            PAYMENT_EXPIRATION_YEAR,
+            DATA_IMPORT_RECURRING_DONATION_CARD_LAST_4,
+            DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_MONTH,
+            DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_YEAR]
     })
     wiredDataImportRecord(response) {
         this._readOnlyData = response;
@@ -169,7 +183,8 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     get shouldDisplayEditPaymentInformation() {
         return Settings.isElevateCustomer()
             && this.isReadOnly
-            && (this.isExpiredTransaction || this.isPaymentStatusAuthorized());
+            && (this.isExpiredTransaction || this.isPaymentStatusAuthorized() ||
+                this._widgetDataFromState[apiNameFor(DATA_IMPORT_RECURRING_DONATION_INSTALLMENT_PERIOD)]);
     }
 
     get shouldDisplayDoNotEnterPaymentInformation() {
@@ -417,19 +432,38 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     setReadOnlyData(data) {
-        this._cardLast4 = getFieldValue(data, PAYMENT_LAST_4);
-        const hasExpiryDateValue =
-            getFieldValue(data, PAYMENT_EXPIRATION_MONTH)
-            && getFieldValue(data, PAYMENT_EXPIRATION_YEAR);
+        let cardExpirationMonth = this.cardExpirationMonthFrom(data);
+        let cardExpirationYear = this.cardExpirationYearFrom(data);
+        this._cardLast4 = this.cardLast4From(data);
+
+        const hasExpiryDateValue = cardExpirationMonth && cardExpirationYear;
         if (hasExpiryDateValue) {
             this._cardExpirationDate =
-                getFieldValue(data, PAYMENT_EXPIRATION_MONTH)
+                cardExpirationMonth
                 + '/' +
-                getFieldValue(data, PAYMENT_EXPIRATION_YEAR);
+                cardExpirationYear;
         }
         if (this._cardLast4 && this._cardExpirationDate) {
             this.display.transitionTo('readOnly');
         }
+    }
+
+    cardLast4From(data) {
+        let paymentCardLast4 = getFieldValue(data, PAYMENT_LAST_4);
+        return paymentCardLast4 ? paymentCardLast4 :
+            getFieldValue(data, DATA_IMPORT_RECURRING_DONATION_CARD_LAST_4)
+    }
+
+    cardExpirationYearFrom(data) {
+        let paymentCardExpirationYear = getFieldValue(data, PAYMENT_EXPIRATION_YEAR);
+        return paymentCardExpirationYear ? paymentCardExpirationYear :
+            getFieldValue(data, DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_YEAR)
+    }
+
+    cardExpirationMonthFrom(data) {
+        let paymentCardExpirationMonth = getFieldValue(data, PAYMENT_EXPIRATION_MONTH);
+        return paymentCardExpirationMonth ? paymentCardExpirationMonth :
+            getFieldValue(data, DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_MONTH)
     }
 
     setCurrentPaymentMethod() {
@@ -439,7 +473,8 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     shouldHandleWidgetDataChange() {
-        return (this.isInBatchGiftEntry() && isNotEmpty(this.paymentStatus())
+        return (this.isInBatchGiftEntry() && (isNotEmpty(
+            this.paymentStatus() || isNotEmpty(this.recurringDonationStatus())))
             || isEmpty(this.paymentStatus()));
     }
 
@@ -454,6 +489,10 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     paymentStatus() {
         return this.widgetDataFromState && this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_STATUS_FIELD)];
+    }
+
+    recurringDonationStatus() {
+        return this.widgetDataFromState && this.widgetDataFromState[apiNameFor(DATA_IMPORT_RECURRING_DONATION_STATUS)];
     }
 
     hasReadOnlyStatus() {
