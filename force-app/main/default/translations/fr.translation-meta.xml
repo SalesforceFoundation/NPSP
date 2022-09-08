@@ -6248,10 +6248,6 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <label>Montant du remboursement</label>
     </customLabels>
     <customLabels>
-        <name>pmtRefundPaymentMessage</name>
-        <label>Remboursez le paiement suivant :</label>
-    </customLabels>
-    <customLabels>
         <name>pmtRefundProcessing</name>
         <label>Remboursement soumis pour traitement. Recherchez le paiement remboursé dans l’enregistrement de l’opportunité.</label>
     </customLabels>

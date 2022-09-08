@@ -1,4 +1,5 @@
 <template>
+    <!-- sldsValidatorIgnoreNextLine -->
     <lightning-quick-action-panel header={labels.refundPaymentTitle}>
         <div class="slds-m-around_medium" if:true={hasError}>
             <span class="slds-text-color_error">
@@ -17,23 +18,35 @@
         </div>
         <div if:false={isLoading}>
             <div if:false={hasError}>
-                <span>{labels.refundPaymentMessage}</span>
-                <div class="slds-form slds-p-top_medium" role="list">
-                    <div class="slds-form-element slds-form-element_horizontal slds-p-left_none slds-" role="listitem">
-                        <label class="slds-form-element__label slds-text-title_bold slds-p-top_none" for="refund-amount">{labels.refundAmount}</label>
-                        <div class="slds-form-element__control">
-                            <lightning-formatted-number id="refund-amount" value={paymentAmount} format-style="currency" currency-code={currencyCode} currency-display-as="symbol">
-                            </lightning-formatted-number>
-                        </div>
-                    </div>
-                    <div class="slds-form-element slds-form-element_horizontal slds-p-left_none" role="listitem">
-                        <label class="slds-form-element__label slds-text-title_bold slds-p-top_none" for="refund-date">{labels.refundPaymentDate}</label>
-                        <div class="slds-form-element__control">
-                            <lightning-formatted-date-time id="refund-date" value={paymentDate}>
-                            </lightning-formatted-date-time>
-                        </div>
-                    </div>
-                </div>
+                <lightning-layout multiple-rows="true">
+                    <lightning-layout-item size="12">
+                        <label class="slds-text-title_bold slds-p-right_small" for="remaining-balance">
+                            {labels.remainingBalance}:
+                        </label>
+                        <lightning-formatted-number id="remaining-balance"
+                            value={remainingBalance}
+                            format-style="currency"
+                            currency-code={currencyCode}
+                            currency-display-as="symbol">
+                        </lightning-formatted-number>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="4">
+                        <lightning-input class="slds-p-top_large"
+                        data-id="RefundAmountInput"
+                        type="number"
+                        name="refundAmount"
+                        label={labels.refundAmountField}
+                        value={refundAmount}
+                        step="0.01"
+                        field-level-help={labels.refundAllocationHelpText}
+                        onchange={handleRefundAmountChanged}
+                        min="0.01"
+                        max={remainingBalance}
+                        message-when-range-underflow={labels.refundAmountTooLow}
+                        message-when-range-overflow={refundAmountTooHighErrorString}
+                        required></lightning-input>
+                    </lightning-layout-item>
+                </lightning-layout>
             </div>
         </div>
         <div slot="footer">
@@ -41,7 +54,7 @@
             variant="neutral" class="slds-m-right_small" onclick={handleClose} data-id="cancelButton" disabled={isLoading}>
             </lightning-button>
             <lightning-button label={labels.refundPaymentConfirmButton} title={labels.refundPaymentConfirmButton}
-                variant="brand" onclick={handleRefund} data-id="refundButton" disabled={isLoading}>
+                variant="brand" onclick={handleRefund} data-id="refundButton" disabled={isSaveDisabled}>
             </lightning-button>
         </div>
     </lightning-quick-action-panel>
