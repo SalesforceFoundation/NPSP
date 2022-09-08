@@ -153,7 +153,6 @@ public with sharing class RD2_PauseForm_TEST {
 
     @IsTest
     private static void shouldSavePauseWhenRDIsElevateRecord() {
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ElevateIntegrationService_TEST.enableElevateUserPermissions();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
@@ -220,9 +219,10 @@ public with sharing class RD2_PauseForm_TEST {
 
         Test.stopTest();
 
-        RecurringDonationSchedule__c schedule = [SELECT Id FROM RecurringDonationSchedule__c][0];
+        RecurringDonationSchedule__c schedule = [SELECT Id, EndDate__c FROM RecurringDonationSchedule__c][0];
         System.assertEquals(null, auraEx, 'No exception was thrown as a result of the callout');
         System.assertNotEquals(null, schedule, 'The Commitment response should be returned');
+        System.assertEquals(START_DATE.addDays(-1), schedule.EndDate__c, 'The End Date should be backdated');
     }
 
     private static void mockRecordCreatedCalloutResponse() {
