@@ -650,25 +650,9 @@ describe('c-ge-gift-entry-form-app', () => {
             expect(pElement.textContent).toBe(accountDonorSelectionMismatch);
 
         });
-
-
-
     });
 
     describe('batch processing', () => {
-        it('should load process batch spinner when processbatch event occurs', async () => {
-            const formApp = setupForBatchMode({gifts: [], totals: { TOTAL: 1 }});
-            await flushPromises();
-
-            const geBatchGiftEntryHeader = shadowQuerySelector(formApp, 'c-ge-batch-gift-entry-header');
-            const processEvent = new CustomEvent('processbatch');
-            geBatchGiftEntryHeader.dispatchEvent(processEvent);
-
-            await flushPromises();
-
-            expect(spinner(formApp)).toBeTruthy();
-            expect(batchProcessingText(formApp).innerHTML).toBe(PROCESSING_BATCH_MESSAGE);
-        });
 
         it('should not allow batch processing if total count of gifts is required and totals do not match', async () => {
             const formApp = setupForBatchMode({ requireTotalMatch: true, expectedCountOfGifts: 5, gifts: [], totals: { TOTAL: 1 }});
@@ -721,6 +705,21 @@ describe('c-ge-gift-entry-form-app', () => {
                 totalDonationsAmount: 100
             });
             processGiftsFor.mockResolvedValue({});
+
+            await flushPromises();
+
+            const geBatchGiftEntryHeader = shadowQuerySelector(formApp, 'c-ge-batch-gift-entry-header');
+            const processEvent = new CustomEvent('processbatch');
+            geBatchGiftEntryHeader.dispatchEvent(processEvent);
+
+            await flushPromises();
+
+            expect(spinner(formApp)).toBeTruthy();
+            expect(batchProcessingText(formApp).innerHTML).toBe(PROCESSING_BATCH_MESSAGE);
+        });
+
+        it('should load process batch spinner when processbatch event occurs', async () => {
+            const formApp = setupForBatchMode({gifts: [], totals: { TOTAL: 1 }});
 
             await flushPromises();
 
