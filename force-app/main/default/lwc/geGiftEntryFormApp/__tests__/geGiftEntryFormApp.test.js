@@ -650,9 +650,6 @@ describe('c-ge-gift-entry-form-app', () => {
             expect(pElement.textContent).toBe(accountDonorSelectionMismatch);
 
         });
-
-
-
     });
 
     describe('batch processing', () => {
@@ -669,6 +666,7 @@ describe('c-ge-gift-entry-form-app', () => {
 
             await flushPromises();
 
+            expect(spinner(formApp)).toBeFalsy();
             expect(handleErrorSpy).toHaveBeenCalled();
             expect(handleErrorSpy.mock.calls[0][0]).toBe('c.geBatchGiftsExpectedCountOrTotalMessage');
         });
@@ -692,6 +690,7 @@ describe('c-ge-gift-entry-form-app', () => {
 
             await flushPromises();
 
+            expect(spinner(formApp)).toBeFalsy();
             expect(handleErrorSpy).toHaveBeenCalled();
             expect(handleErrorSpy.mock.calls[0][0]).toBe('c.geBatchGiftsExpectedTotalsMessage');
         });
@@ -706,6 +705,21 @@ describe('c-ge-gift-entry-form-app', () => {
                 totalDonationsAmount: 100
             });
             processGiftsFor.mockResolvedValue({});
+
+            await flushPromises();
+
+            const geBatchGiftEntryHeader = shadowQuerySelector(formApp, 'c-ge-batch-gift-entry-header');
+            const processEvent = new CustomEvent('processbatch');
+            geBatchGiftEntryHeader.dispatchEvent(processEvent);
+
+            await flushPromises();
+
+            expect(spinner(formApp)).toBeTruthy();
+            expect(batchProcessingText(formApp).innerHTML).toBe(PROCESSING_BATCH_MESSAGE);
+        });
+
+        it('should load process batch spinner when processbatch event occurs', async () => {
+            const formApp = setupForBatchMode({gifts: [], totals: { TOTAL: 1 }});
 
             await flushPromises();
 
