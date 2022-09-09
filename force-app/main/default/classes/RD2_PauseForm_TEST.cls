@@ -153,6 +153,7 @@ public with sharing class RD2_PauseForm_TEST {
 
     @IsTest
     private static void shouldSavePauseWhenRDIsElevateRecord() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ElevateIntegrationService_TEST.enableElevateUserPermissions();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
