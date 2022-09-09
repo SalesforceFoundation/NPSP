@@ -68,6 +68,17 @@ public without sharing class RD2_CommitmentService {
         return response;
     }
 
+    public UTIL_Http.Response handleRemoveCommitmentPause(RD2_RecurringDonation rd) {
+        UTIL_Http.Response response;
+
+        response = sendDeleteRequest(rd.getSObject()?.CommitmentId__c, PS_Request.ElevateEndpoint.COMMITMENT_PAUSE);
+
+        processResponse(rd, response);
+
+        return response;
+    }
+
+
     /**
     * @description Handles validation and Elevate recurring commitment creation
     * @param rd Recurring Donation
@@ -173,6 +184,22 @@ public without sharing class RD2_CommitmentService {
         return response;
     }
 
+    private UTIL_Http.Response sendDeleteRequest(String commitmentId, PS_Request.ElevateEndpoint endpoint) {
+        UTIL_Http.Response response;
+
+        try {
+            HttpRequest request = PS_CommitmentRequest.buildRequest(commitmentId,
+                UTIL_Http.Method.DEL, endpoint);
+
+            response = requestService.sendRequest(request);
+
+        } catch (Exception ex) {
+            response = requestService.buildErrorResponse(ex);
+        }
+
+        return response;
+    }
+
     /**
     * @description Logs an error record on an commitment error response
     * @param rd Recurring Donation record
@@ -218,7 +245,8 @@ public without sharing class RD2_CommitmentService {
     */
     public Boolean isCommitmentSuccess(UTIL_Http.Response response) {
         return response.statusCode == UTIL_Http.STATUS_CODE_CREATED
-            || response.statusCode == UTIL_Http.STATUS_CODE_OK;
+            || response.statusCode == UTIL_Http.STATUS_CODE_OK
+            || response.statusCode == UTIL_Http.STATUS_CODE_NO_CONTENT;
     }
 
     /**
