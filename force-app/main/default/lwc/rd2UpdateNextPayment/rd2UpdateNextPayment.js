@@ -64,8 +64,8 @@ export default class Rd2UpdateNextPayment extends LightningElement {
     _recordId;
     recordName;
     donationDate;
-    isElevateRd = false;
-    commitmentId;
+    isElevateRecord = false;
+    paymentToken;
 
     @track isLoading = true;
     @track permissions = {
@@ -107,7 +107,7 @@ export default class Rd2UpdateNextPayment extends LightningElement {
     init = async () => {
         try {
             this.loadInstallments();
-            await this.loadPauseData();
+            await this.loadDonationData();
         } catch (error) {
             this.handleError(error);
         }
@@ -120,10 +120,6 @@ export default class Rd2UpdateNextPayment extends LightningElement {
     loadInstallments = async () => {
         getInstallments({ recordId: this.recordId, numberOfInstallments: this.numberOfInstallments })
             .then(response => {
-                console.log(response); 
-
-                // TODO: Set nextPaymentAmount if its entered
-
                 this.handleRecords(response);
                 this.handleColumns(response);
             })
@@ -134,10 +130,6 @@ export default class Rd2UpdateNextPayment extends LightningElement {
                     this.handleError(error);
                 }
             });
-            // .finally(() => {
-            //     this.isLoading = false;
-            //     this.handleButtonsDisplay();
-            // });
     }
 
     /***
@@ -145,18 +137,16 @@ export default class Rd2UpdateNextPayment extends LightningElement {
     * Sets Paused Reason field.
     * If the user does not have permission to create/edit RD, then pause details are not rendered.
     */
-    loadPauseData = async () => {
-        // TODO: Update this to a new call?
+    loadDonationData = async () => {
         getPauseData({ rdId: this.recordId })
             .then(response => {
-                const pauseData = JSON.parse(response);
-                this.permissions.hasAccess = pauseData.hasAccess;
-                this.permissions.isBlocked = pauseData.isRDClosed;
+                const donationData = JSON.parse(response);
+                this.permissions.hasAccess = donationData.hasAccess;
+                this.permissions.isBlocked = donationData.isRDClosed;
+                this.isElevateRecord = donationData.isElevateRecord;
                 if (!this.permissions.hasAccess) {
                     this.error.detail = this.labels.permissionRequired;
                     this.handleErrorDisplay();
-                } else {
-                    this.pausedReason = pauseData.pausedReason;
                 }
 
                 if (this.permissions.isBlocked) {
@@ -178,11 +168,10 @@ export default class Rd2UpdateNextPayment extends LightningElement {
     handleRecords(response) {
         if (response && response.dataTable) {
             this.installments = [];
-            console.log(response.dataTable.records); 
-            
             for (let i in response.dataTable.records) {
                 if (!response.dataTable.records[i].isSkipped) {
                     this.donationDate = response.dataTable.records[i].donationDate;
+                    this.nextPaymentAmount = response.dataTable.records[i].nextPaymentAmount;
                     this.installments.push(response.dataTable.records[i]);
                     break;
                 }
@@ -200,7 +189,6 @@ export default class Rd2UpdateNextPayment extends LightningElement {
 
             for (let i = 0; i < tempColumns.length; i++) {
                 if (tempColumns[i].fieldName !== "pauseStatus") {
-                    console.log(tempColumns[i]); 
                     this.columns.push(tempColumns[i]);
                 }
             }
@@ -222,18 +210,37 @@ export default class Rd2UpdateNextPayment extends LightningElement {
     }
 
     /***
-    * @description Save pause: Inserts new pause (if any) and deactivates the old one.
+    * @description Save Next Payment Amount: Updates Schedule with Next Payment Amount
     */
     handleSave() {
         this.clearError();
         this.isLoading = true;
+        if (this.isElevateRecord) {
+            console.log('Get Token'); 
+            this.prepareCommitmentSubmit();
+        } else {
+            this.handleSubmit();
+        }
+    }
+
+    async prepareCommitmentSubmit() {
+        const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
+        this.paymentToken = await elevateWidget.returnToken().payload;
+
+        console.log(this.paymentToken); 
+
+        this.handleSubmit();
+    }
+
+    handleSubmit() {
         try {
-            const rd = this.rd2Service
-                .constructRecurringDonation(this.recordId, this.commitmentId);
+
+            console.log(this.paymentToken); 
 
             handleNextPaymentAmount({
-                jsonRecord: rd.asJSON(), 
-                nextPaymentAmount: this.nextPaymentAmount 
+                rdId: this.recordId,
+                nextPaymentAmount: this.nextPaymentAmount,
+                paymentMethodToken: this.paymentToken
             })
                 .then(() => {
                     this.handleSaveSuccess();
@@ -247,7 +254,7 @@ export default class Rd2UpdateNextPayment extends LightningElement {
     }
 
     /***
-    * @description Displays message that the pause save has been successful
+    * @description Displays message that the save has been successful
     * and closes the modal.
     */
     handleSaveSuccess() {
@@ -258,7 +265,7 @@ export default class Rd2UpdateNextPayment extends LightningElement {
     }
 
     /***
-    * @description Records the latest Paused Reason value
+    * @description Records the latest Next Payment Amount value
     * and checks if the [Save] button should be enabled.
     */
     handleNextPaymentAmountChange(event) {

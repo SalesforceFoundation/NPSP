@@ -324,6 +324,8 @@ public with sharing class RD2_EntryFormController {
         return null;
     }
 
+    // TODO: Separate method for non-Elevate?
+
     /**
     * @description Handles validation and Elevate recurring commitment creation
     * @param rd Recurring Donation
@@ -331,20 +333,17 @@ public with sharing class RD2_EntryFormController {
     * @return UTIL_Http.Response Payments API response
     */
     @AuraEnabled
-    public static UTIL_Http.Response handleNextPaymentAmount(String jsonRecord, Decimal nextPaymentAmount) {
+    public static UTIL_Http.Response handleNextPaymentAmount(Id rdId, Decimal nextPaymentAmount,
+            String paymentMethodToken) {
         try {
-            npe03__Recurring_Donation__c rd = (npe03__Recurring_Donation__c) JSON.deserialize(
-                jsonRecord, npe03__Recurring_Donation__c.class
-            );
-            
             UTIL_Http.Response response;
-            List<npe03__Recurring_Donation__c> rdList = new List<npe03__Recurring_Donation__c>{rd};
-    
-            System.debug(rdList); 
-    
-            if (rd.CommitmentId__c != null) {
-                response = commitmentService.handleNextPaymentAmount(rd, nextPaymentAmount);
+            npe03__Recurring_Donation__c rd = selector.getRecurringDonationForUI(rdId);
+
+            if (rd?.CommitmentId__c != null) {
+                // Check for paymentMethodToken?
+                response = commitmentService.handleNextPaymentAmount(rd, nextPaymentAmount, paymentMethodToken);
             } else {
+                List<npe03__Recurring_Donation__c> rdList = new List<npe03__Recurring_Donation__c>{rd};
                 RD2_ScheduleService scheduleService = new RD2_ScheduleService();
                 List<RecurringDonationSchedule__c> revisedSchedules = 
                     scheduleService.setSchedulesWithNextPaymentAmount(rdList, nextPaymentAmount);

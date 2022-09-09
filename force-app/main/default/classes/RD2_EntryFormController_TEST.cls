@@ -871,11 +871,11 @@ private with sharing class RD2_EntryFormController_TEST {
         Test.startTest();
 
         UTIL_Http_TEST.mockRecordUpdateCalloutResponse(mockSuccessResponseBody());
-        response = RD2_EntryFormController.handleNextPaymentAmount(JSON.serialize(rd), NEXT_PAYMENT_AMOUNT);
+        response = RD2_EntryFormController.handleNextPaymentAmount(rd.Id, NEXT_PAYMENT_AMOUNT, PAYMENT_METHOD_TOKEN);
 
         Test.stopTest();
 
-        System.assertNotEquals(null, response, 'Expected to receive a response from handleCommitment');
+        System.assertNotEquals(null, response, 'Expected to receive a response from handleNextPaymentAmount');
         System.assertEquals(UTIL_Http.STATUS_CODE_OK, response.statusCode,
                 'The response status code should match: ' + response.statusCode);
         System.assertEquals(UTIL_Http.STATUS_OK, response.status,
@@ -897,7 +897,7 @@ private with sharing class RD2_EntryFormController_TEST {
 
         Test.startTest();
 
-        response = RD2_EntryFormController.handleNextPaymentAmount(JSON.serialize(rd), NEXT_PAYMENT_AMOUNT);
+        response = RD2_EntryFormController.handleNextPaymentAmount(rd.Id, NEXT_PAYMENT_AMOUNT, null);
 
         Test.stopTest();
 

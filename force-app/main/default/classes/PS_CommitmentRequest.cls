@@ -293,13 +293,17 @@ public inherited sharing class PS_CommitmentRequest {
     /***
     * @description Constructs the edit commitment schedule request body for the specified Recurring Donation.
     * @param rd Recurring Donation record
-    * @param nextPaymentAmount Payment Method Token
+    * @param nextPaymentAmount Next Payment Amount for Active Schedules
     * @param token Payment Method Token
     * @return RequestBody
     */
-    public RequestBody getUpdateScheduleRequestBody(npe03__Recurring_Donation__c rd, Decimal nextPaymentAmount) {
+    public RequestBody getUpdateScheduleRequestBody(npe03__Recurring_Donation__c rd, Decimal nextPaymentAmount,
+            String token) {
         RequestBody reqBody = new RequestBody()
-            .withCommitmentId(rd.CommitmentId__c);
+            .withCommitmentId(rd.CommitmentId__c)
+            .withPaymentMethodToken(token);
+
+        System.debug(reqBody); 
 
         String currencyCode = UserInfo.isMultiCurrencyOrganization()
             ? (String) rd.get('CurrencyIsoCode')
