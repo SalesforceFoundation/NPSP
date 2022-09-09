@@ -88,6 +88,7 @@ public inherited sharing class PS_Request {
 
     public static String PRODUCT_METADATA_SCHEMA_URI = 'https://payments-js.elevate.salesforce.org/schema/productMetadata/donation-v1.1.0';
     private static Integer RECOMMENDED_TIMEOUT_MS = 20000;
+    private static String DELETE_HTTP_VERB = 'DELETE';
 
     /***
     * @description Returns payments service endpoint URL
@@ -204,7 +205,10 @@ public inherited sharing class PS_Request {
             HttpRequest request = new HttpRequest();
 
             request.setEndpoint(getEndpoint(endpoint, commitmentId));
-            request.setMethod(method.name());
+            String method = method == UTIL_Http.Method.DEL
+                ? DELETE_HTTP_VERB
+                : method.name();
+            request.setMethod(method);
             setHeader(request, endpoint);
 
             // Default timeout is 10s if the value is not specified

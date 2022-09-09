@@ -178,7 +178,7 @@ public with sharing class RD2_PauseForm_CTRL {
         }
         return options;
     }
-    
+
     /**
      * @description Returns future projected installments for the Recurring Donation
      * @param recordId Record Id
@@ -224,11 +224,21 @@ public with sharing class RD2_PauseForm_CTRL {
         }
     }
 
+    private static Boolean isPauseRemoved (PauseData pause) {
+        return pause.startDate == null && pause.resumeAfterDate == null;
+    }
+
     private static UTIL_Http.Response pauseElevateRDsFor(PauseData pause) {
         RD2_RecurringDonation rd = getRecurringDonation(pause.rdId);
 
         try {
-            UTIL_Http.Response response = commitmentService.handleCommitmentPause(buildPauseSchedule(pause), rd);
+            UTIL_Http.Response response;
+            if (isPauseRemoved(pause)) {
+                response = commitmentService.handleRemoveCommitmentPause(rd);
+            } else {
+                response = commitmentService.handleCommitmentPause(buildPauseSchedule(pause), rd);
+            }
+
             return response;
 
         } catch (Exception ex) {
