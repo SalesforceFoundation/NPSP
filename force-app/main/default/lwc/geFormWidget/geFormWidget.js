@@ -140,7 +140,11 @@ export default class GeFormWidget extends LightningElement {
     get paymentToken() {
         const thisWidget = this.widgetComponent;
         if (this.isValid) {
-            return thisWidget.paymentToken;
+            let tokenPayload = thisWidget.paymentToken;
+            if (!this.giftInViewHasSchedule) {
+                tokenPayload[DATA_IMPORT_PAYMENT_STATUS] = this.paymentTransactionStatusValues.PENDING;
+            }
+            return tokenPayload;
         }
     }
 

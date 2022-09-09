@@ -27,44 +27,11 @@
  *     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *     POSSIBILITY OF SUCH DAMAGE.
  */
-public with sharing class ElevateBatch {
-    @AuraEnabled public String elevateBatchId;
-
-    @TestVisible
-    private ElevateBatchService elevateBatchService {
-        get {
-            if (elevateBatchService == null) {
-                elevateBatchService = new ElevateBatchService();
-            }
-            return elevateBatchService;
-        }
-        set;
-    }
-    public ElevateBatch() {}
-
-    public ElevateBatch(String elevateBatchId) {
-        this.elevateBatchId = elevateBatchId;
-    }
-
-    public ElevateBatch(ElevateBatchResponse elevateBatchResponse) {
-        this.elevateBatchId = elevateBatchResponse.id();
-    }
-
-    public ElevateBatch create() {
-        return elevateBatchService.getElevateBatch();
-    }
-
-    public ElevateBatchItem add(ElevateCreateBatchItemRequestDTO batchItemRequestDTO) {
-        return elevateBatchService.sendAddRequest(
-                elevateBatchService.buildBatchItemRequestFrom(batchItemRequestDTO),
-                elevateBatchId());
-    }
-
-    public ElevateBatchItem remove(String elevateTransactionId) {
-        return elevateBatchService.sendRemoveRequest(elevateTransactionId, elevateBatchId());
-    }
-
-    public String elevateBatchId() {
-        return elevateBatchId;
-    }
+/**
+* @author Salesforce.org
+* @description Enum corresponding to the batch item type in the Elevate batch API.
+*/
+public enum ElevateBatchItemType {
+    COMMITMENT,
+    ONE_TIME
 }
