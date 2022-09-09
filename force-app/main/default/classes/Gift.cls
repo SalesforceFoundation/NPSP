@@ -184,8 +184,6 @@ public with sharing class Gift {
     }
 
     public void preprocessForRecurringGift() {
-        this.dataImport.Recurring_Donation_Amount__c = this.dataImport.Donation_Amount__c;
-        this.dataImport.Recurring_Donation_Date_Established__c = this.dataImport.Donation_Date__c;
         this.dataImport.Donation_Amount__c = null;
         this.dataImport.Donation_Date__c = null;
         this.dataImport.DonationImported__c = null;

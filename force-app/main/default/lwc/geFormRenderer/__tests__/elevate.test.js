@@ -42,7 +42,7 @@ describe('elevate-elevate-batch', () => {
 
         expect(apexAddToElevateBatch).toHaveBeenLastCalledWith({
             "elevateBatchId": "fake-elevate-batch-id",
-            tokenizedGift: tokenizableGift
+            batchItemRequestDTO: tokenizableGift
         });
 
     });
@@ -52,9 +52,8 @@ describe('elevate-elevate-batch', () => {
 
 const getDummyGift = () => {
     return new ElevateTokenizeableGift(
-        'DummyFirstName',
-        'DummyLastName',
+        'DummyFirstName DummyLastName',
         5.00,
-        'USD'
+        {'scheduleTest': 'testVal1', 'scheduleTest2': 'testVal2'}
     );
 }

@@ -7,10 +7,12 @@ import DONATION_IMPORTED from '@salesforce/schema/DataImport__c.DonationImported
 import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Payment_Status__c';
 import PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
+import PAYMENT_METHOD from '@salesforce/schema/DataImport__c.Payment_Method__c';
 
 import SoftCredits from './geSoftCredits';
 import GiftScheduleService from './geScheduleService';
 import { GIFT_STATUSES, PAYMENT_STATUSES } from 'c/geConstants';
+import {apiNameFor} from "c/utilCommon";
 
 class Gift {
     _softCredits = new SoftCredits();
