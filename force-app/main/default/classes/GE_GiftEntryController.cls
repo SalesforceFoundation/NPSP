@@ -93,7 +93,6 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled
     public static void addGiftTo(Id dataImportBatchId, InboundGiftDTO inboundGift) {
         try {
-            // TODO: currency validity check should happen inside the GiftBatch.add(gift) method
             if (areCurrenciesValid(dataImportBatchId)) {
                 GiftBatchId giftBatchId = new GiftBatchId(dataImportBatchId);
                 giftBatchService.add(giftBatchId, inboundGift);
@@ -326,18 +325,19 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
-    public static ElevateAuthorizedGift addToElevateBatch(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
-        ElevateAuthorizedGift authorizedGift;
+    public static ElevateBatchItem addToElevateBatch(ElevateCreateBatchItemRequestDTO batchItemRequestDTO,
+                                                     String elevateBatchId) {
+        ElevateBatchItem batchItem;
         try {
-            authorizedGift = elevateBatchService.addToElevateBatch(tokenizedGift, elevateBatchId);
+            batchItem = elevateBatchService.addToElevateBatch(batchItemRequestDTO, elevateBatchId);
         } catch (AuraHandledException ex) {
           UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
         }
-        return authorizedGift;
+        return batchItem;
     }
 
     @AuraEnabled
-    public static ElevateAuthorizedGift removeFromElevateBatch(ElevateAuthorizedGift authorizedGift) {
+    public static ElevateBatchItem removeFromElevateBatch(ElevateBatchItem authorizedGift) {
         try {
            elevateBatchService.removeFromElevateBatch(authorizedGift);
         } catch (AuraHandledException ex) {
