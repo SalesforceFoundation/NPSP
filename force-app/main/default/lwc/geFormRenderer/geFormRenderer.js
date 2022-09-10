@@ -994,6 +994,7 @@ export default class GeFormRenderer extends LightningElement{
                 [apiNameFor(DATA_IMPORT_RECURRING_DONATION_EVENT_VERSION)]: elevateBatchItem.version,
                 [apiNameFor(DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID)]: elevateBatchItem.id,
                 [apiNameFor(DATA_IMPORT_RECURRING_DONATION_STATUS)]: elevateBatchItem.status,
+                [apiNameFor(PAYMENT_ELEVATE_ELEVATE_BATCH_ID)]: this.currentElevateBatch.elevateBatchId
             });
 
             if (this.selectedPaymentMethod() === PAYMENT_METHOD_CREDIT_CARD) {
@@ -1001,10 +1002,9 @@ export default class GeFormRenderer extends LightningElement{
                     [apiNameFor(DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_MONTH)]:
                         elevateBatchItem.cardExpirationMonth,
                     [apiNameFor(DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_YEAR)]:
-                    elevateBatchItem.cardExpirationYear,
+                        elevateBatchItem.cardExpirationYear,
                     [apiNameFor(DATA_IMPORT_RECURRING_DONATION_CARD_LAST_4)]:
-                    elevateBatchItem.cardLast4,
-                    [apiNameFor(PAYMENT_ELEVATE_ELEVATE_BATCH_ID)]: this.currentElevateBatch.elevateBatchId
+                        elevateBatchItem.cardLast4,
                 });
             }
         }
