@@ -993,7 +993,6 @@ export default class GeFormRenderer extends LightningElement{
             this.updateFormState({
                 [apiNameFor(DATA_IMPORT_RECURRING_DONATION_EVENT_VERSION)]: elevateBatchItem.version,
                 [apiNameFor(DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID)]: elevateBatchItem.id,
-                [apiNameFor(DATA_IMPORT_RECURRING_DONATION_STATUS)]: elevateBatchItem.status,
                 [apiNameFor(PAYMENT_ELEVATE_ELEVATE_BATCH_ID)]: this.currentElevateBatch.elevateBatchId
             });
 
