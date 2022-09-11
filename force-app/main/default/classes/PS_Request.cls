@@ -46,7 +46,8 @@ public inherited sharing class PS_Request {
         CREATE_ELEVATE_BATCH,
         ADD_TO_ELEVATE_BATCH,
         CHARGE_ELEVATE_BATCH,
-        REMOVE_FROM_ELEVATE_BATCH
+        REMOVE_FROM_ELEVATE_BATCH,
+        MERCHANTS
     }
 
     public enum ProductType {
@@ -66,6 +67,7 @@ public inherited sharing class PS_Request {
     public static String ROLE_PAYMENT_REFUND = 'Payments.Refund';
     public static String ROLE_PAYMENT_COMMITMENTS = 'Payments.Commitments';
     public static String ROLE_PAYMENT_BATCH = 'Payments.Batch';
+    public static String ROLE_PAYMENT_MERCHANTS = 'Payments.Merchants';
 
     public static String JWT_ISSUER_PARAM = 'iss';
     public static String JWT_EXPIRES_AT_PARAM = 'exp';
@@ -85,6 +87,7 @@ public inherited sharing class PS_Request {
     public static String ENDPOINT_CHARGE_ELEVATE_BATCH = '/v1/payments/verified/batch/{0}/capture';
     public static String ENDPOINT_REMOVE_FROM_ELEVATE_BATCH = '/v1/payments/verified/batch/{0}/remove/{1}';
     public static String ENDPOINT_COMMITMENT_PAUSE = '/v1/payments/verified/commitments/{0}/pause';
+    public static String ENDPOINT_GATEWAYS_BY_MERCHANT = '/v1/payments/verified/merchants/{0}/gateways';
 
     public static String PRODUCT_METADATA_SCHEMA_URI = 'https://payments-js.elevate.salesforce.org/schema/productMetadata/donation-v1.1.0';
     private static Integer RECOMMENDED_TIMEOUT_MS = 20000;
@@ -299,7 +302,14 @@ public inherited sharing class PS_Request {
                         ENDPOINT_REMOVE_FROM_ELEVATE_BATCH,
                         new String[] {
                             elevateBatchId,
-                            elevatePaymentId     
+                            elevatePaymentId
+                        }
+                );
+            } else if (endpoint == ElevateEndpoint.MERCHANTS) {
+                value = String.format(
+                        ENDPOINT_GATEWAYS_BY_MERCHANT,
+                        new String[] {
+                            configService.getMerchantIds()
                         }
                 );
             }
@@ -411,6 +421,8 @@ public inherited sharing class PS_Request {
                 value = ROLE_PAYMENT_BATCH;
             } else if (isRefundEndpoint()) {
                 value = ROLE_PAYMENT_REFUND;
+            } else if (isMerchantEndpoint()) {
+                value = ROLE_PAYMENT_MERCHANTS;
             }
             return value;
         }
@@ -439,6 +451,10 @@ public inherited sharing class PS_Request {
 
         private Boolean isRefundEndpoint() {
             return endpoint == ElevateEndpoint.REFUND;
+        }
+
+        private Boolean isMerchantEndpoint() {
+            return endpoint == ElevateEndpoint.MERCHANTS;
         }
     }
 }
