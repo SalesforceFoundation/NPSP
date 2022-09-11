@@ -30,6 +30,17 @@
 
 public with sharing class PS_GatewayManagement {
 
+    @TestVisible
+    private static GE_GatewayService gatewayService {
+        get {
+            if (gatewayService == null) {
+                gatewayService = new GE_GatewayService();
+            }
+            return gatewayService;
+        }
+        set;
+    }
+
     @AuraEnabled
     public static void setGatewayId(String gatewayId) {
         Map<String, List<Map<String, String>>> gatewayConfig = new Map<String, List<Map<String, String>>> {
@@ -62,4 +73,10 @@ public with sharing class PS_GatewayManagement {
     public static Boolean isSystemAdmin() {
         return STG_Panel.runningUserIsAdmin();
     }
+
+    @AuraEnabled
+    public static String getGatewaysFromElevate() {
+        return gatewayService.getGatewaysByMerchant();
+    }
+
 }
