@@ -83,7 +83,7 @@ public inherited sharing class PS_Request {
     public static String ENDPOINT_COMMITMENT_CANCEL = '/v1/payments/verified/commitments/{0}/cancel';
     public static String ENDPOINT_COMMITMENT_UPDATE_BULK = '/v1/payments/verified/commitments/update/bulk';
     public static String ENDPOINT_CREATE_ELEVATE_BATCH = '/v1/payments/verified/batch';
-    public static String ENDPOINT_ADD_TO_ELEVATE_BATCH = '/v1/payments/verified/batch/{0}/add';
+    public static String ENDPOINT_ADD_TO_ELEVATE_BATCH = '/v1/payments/verified/batch/{0}/items';
     public static String ENDPOINT_CHARGE_ELEVATE_BATCH = '/v1/payments/verified/batch/{0}/capture';
     public static String ENDPOINT_REMOVE_FROM_ELEVATE_BATCH = '/v1/payments/verified/batch/{0}/remove/{1}';
     public static String ENDPOINT_COMMITMENT_PAUSE = '/v1/payments/verified/commitments/{0}/pause';
@@ -91,6 +91,7 @@ public inherited sharing class PS_Request {
 
     public static String PRODUCT_METADATA_SCHEMA_URI = 'https://payments-js.elevate.salesforce.org/schema/productMetadata/donation-v1.1.0';
     private static Integer RECOMMENDED_TIMEOUT_MS = 20000;
+    private static String DELETE_HTTP_VERB = 'DELETE';
 
     /***
     * @description Returns payments service endpoint URL
@@ -207,7 +208,10 @@ public inherited sharing class PS_Request {
             HttpRequest request = new HttpRequest();
 
             request.setEndpoint(getEndpoint(endpoint, commitmentId));
-            request.setMethod(method.name());
+            String method = method == UTIL_Http.Method.DEL
+                ? DELETE_HTTP_VERB
+                : method.name();
+            request.setMethod(method);
             setHeader(request, endpoint);
 
             // Default timeout is 10s if the value is not specified
