@@ -811,7 +811,7 @@ public with sharing class ADDR_Addresses_TEST {
 
         Address__c overrideAddress = [SELECT Undeliverable__c
                                       FROM Address__c
-                                      WHERE MailingPostalCode__c = 'Zip Override'];
+                                      WHERE MailingState__c = 'Washington'];
 
         Test.startTest();
             overrideAddress.Undeliverable__c = true;
