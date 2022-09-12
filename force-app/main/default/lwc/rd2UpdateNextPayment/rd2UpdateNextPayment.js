@@ -1,8 +1,9 @@
 import { LightningElement, api, track } from 'lwc';
-import { showToast, constructErrorMessage, isEmpty } from 'c/utilCommon';
+import { showToast, constructErrorMessage, isEmpty, isNull } from 'c/utilCommon';
 import { CloseActionScreenEvent } from 'lightning/actions';
 import { getNumberAsLocalizedCurrency, getDateAsLocalizedFormat } from 'c/utilNumberFormatter';
 import { Rd2Service } from "c/rd2Service";
+import { HTTP_CODES } from "c/geConstants";
 
 import header from '@salesforce/label/c.RD2_PauseHeader';
 import description from '@salesforce/label/c.RD2_PauseDescription';
@@ -27,6 +28,7 @@ import newInstallmentAmountLabel from '@salesforce/label/c.RD2_NewInstallmentAmo
 import newInstallmentAmountHelp from '@salesforce/label/c.RD2_NewInstallmentAmountHelp';
 import newInstallmentConfirmation from '@salesforce/label/c.RD2_NewInstallmentConfirmation';
 import newInstallmentAmountValidation from '@salesforce/label/c.RD2_NewInstallmentAmountValidation';
+import newInstallmentRevertLabel from '@salesforce/label/c.RD2_NewInstallmentRevert';
 import changeNextInstallmentSuccess from '@salesforce/label/c.RD2_ChangeNextInstallmentSuccess';
 
 import getPauseData from '@salesforce/apex/RD2_PauseForm_CTRL.getPauseData';
@@ -58,6 +60,7 @@ export default class Rd2UpdateNextPayment extends LightningElement {
         newInstallmentAmountHelp,
         newInstallmentConfirmation,
         newInstallmentAmountValidation,
+        newInstallmentRevertLabel,
         changeNextInstallmentSuccess
     });
 
@@ -65,7 +68,6 @@ export default class Rd2UpdateNextPayment extends LightningElement {
     recordName;
     donationDate;
     isElevateRecord = false;
-    paymentToken;
 
     @track isLoading = true;
     @track permissions = {
@@ -77,6 +79,8 @@ export default class Rd2UpdateNextPayment extends LightningElement {
     @track isSaveDisabled = true;
     @track pageHeader = '';
     @track nextPaymentAmount;
+    @track hasNextPaymentAmount = false;
+    rdAmount;
     validAmount = false;
 
     @track columns = [];
@@ -85,6 +89,7 @@ export default class Rd2UpdateNextPayment extends LightningElement {
     numberOfInstallments = 12;
     maxRowDisplay = 1;
     @track changeInstallmentSummary = '';
+    @track saveButtonLabel = this.labels.saveButton;
 
     rd2Service = new Rd2Service();
     @track error = {};
@@ -171,8 +176,17 @@ export default class Rd2UpdateNextPayment extends LightningElement {
             for (let i in response.dataTable.records) {
                 if (!response.dataTable.records[i].isSkipped) {
                     this.donationDate = response.dataTable.records[i].donationDate;
-                    this.nextPaymentAmount = response.dataTable.records[i].nextPaymentAmount;
+                    this.rdAmount = response.dataTable.records[i].amount;
+                    let existingNextPaymentAmount = response.dataTable.records[i].nextPaymentAmount;
+                    if (!isNull(existingNextPaymentAmount)) {
+                        this.hasNextPaymentAmount = true;
+                        this.nextPaymentAmount = existingNextPaymentAmount;
+                        // In the rare case this is the last installment, use the first instead
+                        let rdAmountIndex = this.numberOfInstallments > i+1 ? i+1 : 0;
+                        this.rdAmount = response.dataTable.records[rdAmountIndex].amount;
+                    }
                     this.installments.push(response.dataTable.records[i]);
+                    
                     break;
                 }
             }
@@ -215,35 +229,23 @@ export default class Rd2UpdateNextPayment extends LightningElement {
     handleSave() {
         this.clearError();
         this.isLoading = true;
-        if (this.isElevateRecord) {
-            console.log('Get Token'); 
-            this.prepareCommitmentSubmit();
-        } else {
-            this.handleSubmit();
-        }
-    }
-
-    async prepareCommitmentSubmit() {
-        const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
-        this.paymentToken = await elevateWidget.returnToken().payload;
-
-        console.log(this.paymentToken); 
-
-        this.handleSubmit();
-    }
-
-    handleSubmit() {
         try {
-
-            console.log(this.paymentToken); 
-
             handleNextPaymentAmount({
                 rdId: this.recordId,
-                nextPaymentAmount: this.nextPaymentAmount,
-                paymentMethodToken: this.paymentToken
+                nextPaymentAmount: this.nextPaymentAmount
             })
-                .then(() => {
-                    this.handleSaveSuccess();
+                .then((jsonResponse) => {
+                    const response = isNull(jsonResponse) ? null : JSON.parse(jsonResponse);
+                    const isSuccess =
+                        isNull(response) ||
+                        response.statusCode === HTTP_CODES.Created ||
+                        response.statusCode === HTTP_CODES.OK;
+                    if (isSuccess) {
+                        this.handleSaveSuccess();
+                    } else {
+                        const message = this.rd2Service.getCommitmentError(response);
+                        this.handleError(message);
+                    }
                 })
                 .catch((error) => {
                     this.handleError(error);
@@ -272,14 +274,24 @@ export default class Rd2UpdateNextPayment extends LightningElement {
         this.nextPaymentAmount = event.detail.value;
         const nextPaymentAmountField = this.template.querySelector("[data-id='nextPaymentAmount']");
         let validityMessage = '';
-        if (isEmpty(this.nextPaymentAmount) || this.nextPaymentAmount < 0) {
+        let nextPaymentAmountIsEmpty = isEmpty(this.nextPaymentAmount);
+        let isEmptyAndNotReverting = (nextPaymentAmountIsEmpty && !this.hasNextPaymentAmount);
+        if (isEmptyAndNotReverting || this.nextPaymentAmount < 0) {
             validityMessage = this.labels.newInstallmentAmountValidation;
             this.isSaveDisabled = true;
             this.changeInstallmentSummary = '';
         } else {
             this.isSaveDisabled = false;
+            let amountToShow = this.nextPaymentAmount;
+            if (nextPaymentAmountIsEmpty) {
+                this.nextPaymentAmount = null;
+                this.saveButtonLabel = this.labels.newInstallmentRevertLabel;
+                amountToShow = this.rdAmount;
+            } else {
+                this.saveButtonLabel = this.labels.saveButton;
+            }
+            let currencyAmount = getNumberAsLocalizedCurrency(amountToShow);
             let dateString = getDateAsLocalizedFormat(this.donationDate);
-            let currencyAmount = getNumberAsLocalizedCurrency(this.nextPaymentAmount);
             this.changeInstallmentSummary = 
                 this.labels.newInstallmentConfirmation.replace('{0}', dateString)
                 .replace('{1}', currencyAmount);

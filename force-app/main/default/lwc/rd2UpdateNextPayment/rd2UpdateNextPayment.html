@@ -68,15 +68,6 @@
                             </template>
                         </lightning-layout-item>
                     </lightning-layout>
-
-                    <!-- <lightning-layout if:true={isElevateRecord}>
-                        <c-rd2-elevate-credit-card-form data-id='elevateWidget'
-                            data-qa-locator="widget Elevate"
-                            is-edit-mode="true"
-                            rd2-record-id={recordId}>
-                        </c-rd2-elevate-credit-card-form>
-                    </lightning-layout> -->
-
                 </template>
             </template>
 
@@ -93,7 +84,7 @@
                         class="slds-var-m-right_small" onclick={handleCancel} data-id="cancelButton"
                         data-qa-locator="button Cancel">
                     </lightning-button>
-                    <lightning-button label={labels.saveButton} title={labels.saveButton} variant="brand"
+                    <lightning-button label={saveButtonLabel} title={saveButtonLabel} variant="brand"
                         onclick={handleSave} disabled={isSaveDisabled} data-id="saveButton"
                         data-qa-locator="button Save">
                     </lightning-button>

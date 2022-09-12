@@ -2677,6 +2677,14 @@
         <value>The next installment on {0} will be {1}.</value>
     </labels>
     <labels>
+        <fullName>RD2_NewInstallmentRevert</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Change Next Installment Revert Amount Label</shortDescription>
+        <value>Revert to Recurring Donation Amount</value>
+    </labels>
+    <labels>
         <fullName>RD2_NumberInstallmentsRequiredWhenFixed</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>

@@ -866,20 +866,34 @@ private with sharing class RD2_EntryFormController_TEST {
         rd.CommitmentId__c = COMMITMENT_ID;
         update rd;
 
-        UTIL_Http.Response response;
-
         Test.startTest();
 
         UTIL_Http_TEST.mockRecordUpdateCalloutResponse(mockSuccessResponseBody());
-        response = RD2_EntryFormController.handleNextPaymentAmount(rd.Id, NEXT_PAYMENT_AMOUNT, PAYMENT_METHOD_TOKEN);
-
+        String response = RD2_EntryFormController.handleNextPaymentAmount(rd.Id, NEXT_PAYMENT_AMOUNT);
         Test.stopTest();
 
+        Integer statusCode;
+        String status;
+        JSONParser parser = JSON.createParser(response);
+
+        while (parser.nextToken() != null) {
+            if(parser.getCurrentToken() == JSONToken.FIELD_NAME) {
+                if (parser.getText() == 'statusCode') {
+                    parser.nextToken();
+                    statusCode = parser.getIntegerValue();
+
+                } else if (parser.getText() == 'status') {
+                    parser.nextToken();
+                    status = parser.getText();
+                }
+            }
+        }
+
         System.assertNotEquals(null, response, 'Expected to receive a response from handleNextPaymentAmount');
-        System.assertEquals(UTIL_Http.STATUS_CODE_OK, response.statusCode,
-                'The response status code should match: ' + response.statusCode);
-        System.assertEquals(UTIL_Http.STATUS_OK, response.status,
-                'The response status should match: ' + response.status);
+        System.assertEquals(UTIL_Http.STATUS_CODE_OK, statusCode,
+                'The response status code should match: ' + statusCode);
+        System.assertEquals(UTIL_Http.STATUS_OK, status,
+                'The response status should match: ' + status);
     }
 
     /***
@@ -893,11 +907,9 @@ private with sharing class RD2_EntryFormController_TEST {
 
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
-        UTIL_Http.Response response;
-
         Test.startTest();
 
-        response = RD2_EntryFormController.handleNextPaymentAmount(rd.Id, NEXT_PAYMENT_AMOUNT, null);
+        String response = RD2_EntryFormController.handleNextPaymentAmount(rd.Id, NEXT_PAYMENT_AMOUNT);
 
         Test.stopTest();
 

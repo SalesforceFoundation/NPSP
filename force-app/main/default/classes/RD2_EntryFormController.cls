@@ -324,42 +324,51 @@ public with sharing class RD2_EntryFormController {
         return null;
     }
 
-    // TODO: Separate method for non-Elevate?
-
     /**
     * @description Handles validation and Elevate recurring commitment creation
     * @param rd Recurring Donation
     * @param nextPaymentAmount The Next Payment Amount to set on the Schedule
-    * @return UTIL_Http.Response Payments API response
+    * @return String Commitment API response
     */
     @AuraEnabled
-    public static UTIL_Http.Response handleNextPaymentAmount(Id rdId, Decimal nextPaymentAmount,
-            String paymentMethodToken) {
+    public static String handleNextPaymentAmount(Id rdId, Decimal nextPaymentAmount) {
         try {
-            UTIL_Http.Response response;
             npe03__Recurring_Donation__c rd = selector.getRecurringDonationForUI(rdId);
+            UTIL_Http.Response response;
 
             if (rd?.CommitmentId__c != null) {
-                // Check for paymentMethodToken?
-                response = commitmentService.handleNextPaymentAmount(rd, nextPaymentAmount, paymentMethodToken);
+                response = commitmentService.handleNextPaymentAmount(rd, nextPaymentAmount);
+
+                if (commitmentService.isCommitmentSuccess(response)) {
+                    updateSchedulesWithNextPaymentAmount(rd, nextPaymentAmount);
+                }
+
+                return JSON.serialize(response);
+
             } else {
-                List<npe03__Recurring_Donation__c> rdList = new List<npe03__Recurring_Donation__c>{rd};
-                RD2_ScheduleService scheduleService = new RD2_ScheduleService();
-                List<RecurringDonationSchedule__c> revisedSchedules = 
-                    scheduleService.setSchedulesWithNextPaymentAmount(rdList, nextPaymentAmount);
-    
-                UTIL_DMLService.updateRecords(revisedSchedules);
-    
+                updateSchedulesWithNextPaymentAmount(rd, nextPaymentAmount);
                 RD2_QueueableService.enqueueOppEvalService(rd.Id, true);
             }
-
-            return response;
-
         } catch (Exception ex) {
             UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
         }
 
         return null;
+    }
+
+    /**
+    * @description Helper method to Update Schedule records with a new Next Payment Amount
+    * @param rd Recurring Donation
+    * @param nextPaymentAmount The Next Payment Amount to set on the Schedule
+    */
+    private static void updateSchedulesWithNextPaymentAmount(npe03__Recurring_Donation__c rd, 
+            Decimal nextPaymentAmount) {
+        List<npe03__Recurring_Donation__c> rdList = new List<npe03__Recurring_Donation__c>{rd};
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+        List<RecurringDonationSchedule__c> revisedSchedules = 
+            scheduleService.setSchedulesWithNextPaymentAmount(rdList, nextPaymentAmount);
+
+        UTIL_DMLService.updateRecords(revisedSchedules);
     }
 
     /***

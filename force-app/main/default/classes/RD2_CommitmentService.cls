@@ -85,18 +85,14 @@ public without sharing class RD2_CommitmentService {
     * @param nextPaymentAmount The Next Payment Amount to set on the Schedule
     * @return UTIL_Http.Response Payments API response
     */
-    public UTIL_Http.Response handleNextPaymentAmount(npe03__Recurring_Donation__c rd, Decimal nextPaymentAmount, String paymentMethodToken) {
+    public UTIL_Http.Response handleNextPaymentAmount(npe03__Recurring_Donation__c rd, Decimal nextPaymentAmount) {
         UTIL_Http.Response response;
 
         PS_CommitmentRequest.RequestBody requestBody = 
-            new PS_CommitmentRequest().getUpdateScheduleRequestBody(rd, nextPaymentAmount, paymentMethodToken);
-        
-        System.debug(requestBody); 
-        
+            new PS_CommitmentRequest().getUpdateScheduleRequestBody(rd, nextPaymentAmount);
+                
         response = sendRequest(rd?.CommitmentId__c, JSON.serialize(requestBody),
             PS_Request.ElevateEndpoint.COMMITMENT);
-        
-        System.debug(response);
 
         processResponse(rd, response);
 
@@ -206,9 +202,6 @@ public without sharing class RD2_CommitmentService {
     * @param response Payments API response
     */
     private void processResponse(npe03__Recurring_Donation__c rd, UTIL_Http.Response response) {
-
-        System.debug(response.statusCode); 
-
         if (isCommitmentSuccess(response)) {
             return;
         }
