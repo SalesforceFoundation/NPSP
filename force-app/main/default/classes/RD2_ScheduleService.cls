@@ -1116,13 +1116,19 @@ public without sharing class RD2_ScheduleService {
             try {
                 cancelPauseSchedule(rdId);
 
-                insert pauseSchedule;
+                if (isNewPause(pauseSchedule)) {
+                    insert pauseSchedule;
+                }
 
             } catch (Exception e) {
                 Database.rollback(sp);
-
                 throw new ScheduleException(e.getMessage());
             }
+        }
+
+
+        private Boolean isNewPause(RecurringDonationSchedule__c pauseSchedule) {
+            return pauseSchedule.StartDate__c != null && pauseSchedule.EndDate__c != null;
         }
 
         /***

@@ -747,8 +747,18 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 } else {
 
                     for (Allocation__c allo : oppWrap.listAllo) {
+                        // if the Opportunity is for $0, we can safely update fixed Allocations to be $0
+                        // This fixes a bug with Elevate refunds when non-default Allocations have fixed (not percent based) Amounts
+                        if (oppWrap.parentAmount == 0 && allo.Percent__c == null) {
+                            oppWrap.totalAmount -= allo.Amount__c;
+                            allo.Amount__c = 0;
+
+                            if (UserInfo.isMultiCurrencyOrganization()) {
+                                allo.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
+                            }
+                            dmlWrapper.objectsToUpdate.add(allo);
                         //if the percentage changed, recalculate the amount
-                        if (allo.Percent__c!=null && allo.Percent__c>0 && allo.Amount__c != (oppWrap.parentAmount * allo.Percent__c * .01).setScale(2)) {
+                        } else if (allo.Percent__c != null && allo.Percent__c > 0 && allo.Amount__c != (oppWrap.parentAmount * allo.Percent__c * .01).setScale(2)) {
                             //remove the previous amount, recalculate the amount, and add it back
                             oppWrap.totalAmount -= allo.Amount__c;
                             allo.Amount__c = (oppWrap.parentAmount * allo.Percent__c * .01).setScale(2);

@@ -65,4 +65,8 @@ public with sharing class ElevateBatchResponse {
         }
         return null;
     }
+
+    public static ElevateBatchResponse parse(String json) {
+        return (ElevateBatchResponse) System.JSON.deserialize(json, ElevateBatchResponse.class);
+    }
 }

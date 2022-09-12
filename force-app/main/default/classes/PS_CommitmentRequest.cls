@@ -87,7 +87,7 @@ public inherited sharing class PS_CommitmentRequest {
     /***
      * @description Translates the Installment Period into the Elevate API frequency value
      */
-    private static final Map<String, String> frequencyByInstallmentPeriod = new Map<String, String>{
+    public static final Map<String, String> frequencyByInstallmentPeriod = new Map<String, String>{
         RD2_Constants.INSTALLMENT_PERIOD_YEARLY => Frequency.YEAR.name(),
         RD2_Constants.INSTALLMENT_PERIOD_MONTHLY => Frequency.MONTH.name(),
         RD2_Constants.INSTALLMENT_PERIOD_WEEKLY => Frequency.WEEK.name(),
@@ -119,6 +119,17 @@ public inherited sharing class PS_CommitmentRequest {
     private static final Map<SObjectType, ElevateBankAccountType> BANK_ACCOUNT_TYPE_MAP = new Map<SObjectType, ElevateBankAccountType>{
         Contact.SObjectType => ElevateBankAccountType.INDIVIDUAL,
         Account.SObjectType => ElevateBankAccountType.BUSINESS
+    };
+
+    private static final Map<String, String> ELEVATE_PAUSE_REASONS = new Map<String, String>{
+        'Financial Difficulty' => 'FINANCIAL_DIFFICULTY',
+        'Donor Cancelled' => 'DONOR_CANCELED',
+        'Card Expired' => 'CARD_EXPIRED',
+        'Commitment Completed' => 'COMMITMENT_COMPLETED',
+        'Deceased Donor' => 'DECEASED_DONOR',
+        'Donor Lapsed' => 'DONOR_LAPSED',
+        'No Longer Interested' => 'NO_LONGER_INTERESTED',
+        'Unknown' => 'OTHER'
     };
 
     /***
@@ -168,29 +179,32 @@ public inherited sharing class PS_CommitmentRequest {
     * @param jsonRequestBody JSON containing parameters for the purchase call request body
     * @return HttpRequest
     */
-    public static HttpRequest buildRequest(String commitmentId, String jsonRequestBody) {
+    public static HttpRequest buildRequest(String commitmentId, String jsonRequestBody,
+        PS_Request.ElevateEndpoint endpoint) {
         UTIL_Http.Method method = String.isBlank(commitmentId)
             ? UTIL_Http.Method.POST
             : UTIL_Http.Method.PATCH;
 
         return new PS_Request.Builder()
             .withMethod(method)
-            .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT)
+            .withEndpoint(endpoint)
+            .withCommitmentId(commitmentId)
             .withRecommendedTimeout()
             .withBody(jsonRequestBody)
             .build();
     }
 
     /**
-    * @description Builds a commitment GET request for the provided commitment Id
+    * @description Builds a HTTP request for the provided commitment Id, Http method and endpoint
     * @param commitmentId Elevate recurring commitment Id
     * @return HttpRequest
     */
-    public static HttpRequest buildGetRequest(String commitmentId) {
+    public static HttpRequest buildRequest(String commitmentId, UTIL_Http.Method method,
+        PS_Request.ElevateEndpoint endpoint) {
         return new PS_Request.Builder()
                 .withCommitmentId(commitmentId)
-                .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT)
-                .withMethod(UTIL_Http.Method.GET)
+                .withEndpoint(endpoint)
+                .withMethod(method)
                 .build();
     }
 
@@ -207,6 +221,13 @@ public inherited sharing class PS_CommitmentRequest {
         return isCreateCommitment
             ? getCreateRequestBody(rd, token)
             : getUpdateRequestBody(rd, oldRd, token);
+    }
+
+    public RequestBody getPauseRequestBody(RecurringDonationSchedule__c schedule) {
+       return new RequestBody()
+           .withStartTimestamp(schedule.StartDate__c)
+           .withEndTimestamp(schedule.EndDate__c)
+           .withReason(ELEVATE_PAUSE_REASONS.get(schedule.StatusReason__c));
     }
 
     /***
@@ -298,7 +319,8 @@ public inherited sharing class PS_CommitmentRequest {
     }
 
     private Map<String, Object> getElevateCommitment(String commitmentId) {
-        HttpRequest commitmentGetRequest = buildGetRequest(commitmentId);
+        HttpRequest commitmentGetRequest = buildRequest(commitmentId, UTIL_Http.Method.GET,
+            PS_Request.ElevateEndpoint.COMMITMENT);
         UTIL_Http.Response response = requestService.sendRequest(commitmentGetRequest);
 
         Map<String, Object> responseBody = (Map<String, Object>) JSON.deserializeUntyped(response.body);
@@ -470,6 +492,11 @@ public inherited sharing class PS_CommitmentRequest {
          * Optional properties
          */
         public Map<String, Object> productMetadata;
+
+        public String startTimestamp;
+        public String endTimestamp;
+        public String reason;
+        public String reasonComment;
 
         /***
          * @description Constructor
@@ -655,6 +682,32 @@ public inherited sharing class PS_CommitmentRequest {
          */
         public Boolean isCommitmentUpdate() {
             return this.id != null;
+        }
+
+        public RequestBody withStartTimestamp(Date startTimestamp) {
+            this.startTimestamp = getISOFormatDateTimeFor(startTimestamp);
+            return this;
+        }
+
+        public RequestBody withEndTimestamp(Date endTimestamp) {
+            this.endTimestamp = getISOFormatDateTimeFor(endTimestamp);
+            return this;
+        }
+
+        public RequestBody withReason(String reason) {
+            this.reason = reason;
+            return this;
+        }
+
+        public RequestBody withReasonComment(String reasonComment) {
+            this.reasonComment = reasonComment;
+            return this;
+        }
+
+        private String getISOFormatDateTimeFor(Date specifiedDate) {
+            Datetime specifiedDateTime = Datetime.newInstance(
+                specifiedDate.year(), specifiedDate.month(), specifiedDate.day());
+            return JSON.serialize(specifiedDateTime);
         }
     }
 
