@@ -31,6 +31,7 @@ public with sharing class ElevateBatchItem {
     @AuraEnabled public String id {get; set;}
     @AuraEnabled public DateTime authExpiration {get; set;}
     @AuraEnabled public String status {get; set;}
+    @AuraEnabled public String statusReason {get; set;}
     @AuraEnabled public String paymentMethod {get; set;}
     @AuraEnabled public String originalTransactionId {get; set;}
     @AuraEnabled public String elevateBatchId {get; set;}
@@ -60,6 +61,7 @@ public with sharing class ElevateBatchItem {
         this.declineReason = createBatchItemResponse.declineReason();
         this.cardLast4 = createBatchItemResponse.last4();
         this.status = createBatchItemResponse.status();
+        this.statusReason = createBatchItemResponse.statusReason();
         this.cardNetwork = createBatchItemResponse.brand();
         this.cardExpirationMonth = createBatchItemResponse.expirationMonth();
         this.cardExpirationYear = createBatchItemResponse.expirationYear();
