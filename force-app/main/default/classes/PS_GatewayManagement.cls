@@ -31,10 +31,10 @@
 public with sharing class PS_GatewayManagement {
 
     @TestVisible
-    private static GE_GatewayService gatewayService {
+    private static PS_GatewayService gatewayService {
         get {
             if (gatewayService == null) {
-                gatewayService = new GE_GatewayService();
+                gatewayService = new PS_GatewayService();
             }
             return gatewayService;
         }
