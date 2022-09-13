@@ -317,7 +317,7 @@ public with sharing class GE_Template {
     }
 
     public class ElevateSettings {
-        @AuraEnabled public String gatewayName;
+        @AuraEnabled public String uniqueKey;
         @AuraEnabled public Boolean isACHEnabled;
         @AuraEnabled public Boolean isCreditCardEnabled;
     }

@@ -88,6 +88,7 @@ public with sharing class PS_GatewayService {
 
     public class ResponseBody {
         public String id;
+        public String alias;
         public GatewaySettings settings;
         public String vendorName;
     }
@@ -98,7 +99,9 @@ public with sharing class PS_GatewayService {
 
     public class GatewayTemplateSetting {
         public String id;
+        public String alias;
         public String vendorName;
+        public String uniqueKey;
         public Boolean isCreditCardEnabled;
         public Boolean isACHEnabled;
         public Boolean isDefault;
@@ -106,17 +109,25 @@ public with sharing class PS_GatewayService {
         public GatewayTemplateSetting() {}
         public GatewayTemplateSetting(ResponseBody rb) {
             this.id = rb.id;
+            this.alias = rb.alias;
             this.vendorName = rb.vendorName;
+            this.uniqueKey = rb.id.left(8) + rb.id.right(12);
+            this.isDefault = false;
             this.isCreditCardEnabled = false;
             this.isACHEnabled = false;
-            this.isDefault = false;
 
-            for (String paymentMethod : rb.settings.enabledPaymentMethods) {
-                if (paymentMethod.equalsIgnoreCase(ElevatePaymentMethod.CARD.name())) {
-                    this.isCreditCardEnabled = true;
-                } else if (paymentMethod.equalsIgnoreCase(ElevatePaymentMethod.ACH.name())) {
-                    this.isACHEnabled = true;
+            if (rb.settings.enabledPaymentMethods != null) {
+                for (String paymentMethod : rb.settings.enabledPaymentMethods) {
+                    if (paymentMethod.equalsIgnoreCase(ElevatePaymentMethod.CARD.name())) {
+                        this.isCreditCardEnabled = true;
+                    } else if (paymentMethod.equalsIgnoreCase(ElevatePaymentMethod.ACH.name())) {
+                        this.isACHEnabled = true;
+                    }
                 }
+            }
+            else {
+                this.isCreditCardEnabled = true;
+                this.isACHEnabled = true;
             }
         }
     }
