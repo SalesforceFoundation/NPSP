@@ -258,18 +258,19 @@ public with sharing class Gifts {
     private void setElevateBatchIds(List<DataImport__c> dataImports) {
         elevateBatchIds = new Set<String>();
         for (DataImport__c dataImport : dataImportsById.values()) {
-            if (authorizedGiftHasCapturableElevateBatchId(dataImport)) {
+            if (hasCapturableElevateBatchId(dataImport)) {
                 elevateBatchIds.add(dataImport.Payment_Elevate_Batch_ID__c);
             }
         }
     }
 
-    private Boolean authorizedGiftHasCapturableElevateBatchId(DataImport__c dataImport) {
+    private Boolean hasCapturableElevateBatchId(DataImport__c dataImport) {
         if (dataImport == null) {
             return false;
         }
         return dataImport?.Status__c == BDI_DataImport_API.bdiDryRunValidated
-            && dataImport?.Payment_Status__c == ElevateTransactionStatus.AUTHORIZED.name();
+            && (dataImport?.Payment_Status__c == ElevateTransactionStatus.AUTHORIZED.name() ||
+                dataImport?.Recurring_Donation_Elevate_Recurring_ID__c != null);
     }
 
     private void populateDataImportsById(List<DataImport__c> dataImports) {
