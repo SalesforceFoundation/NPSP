@@ -16,7 +16,7 @@ import saveSuccessMessage from '@salesforce/label/c.RD2_PauseSaveSuccessMessage'
 import deactivationSuccessMessage from '@salesforce/label/c.RD2_PauseDeactivationSuccessMessage';
 import rdClosedMessage from '@salesforce/label/c.RD2_PauseClosedRDErrorMessage';
 import elevateNotSupported from '@salesforce/label/c.RD2_ElevateNotSupported';
-import permissionRequired from '@salesforce/label/c.RD2_PausePermissionRequired';
+import permissionRequired from '@salesforce/label/c.commonPermissionErrorMessage';
 import insufficientPermissions from '@salesforce/label/c.commonInsufficientPermissions';
 
 import changeNextInstallmentAmount from '@salesforce/label/c.RD2_ChangeNextInstallmentAmount';
@@ -334,7 +334,7 @@ export default class Rd2UpdateNextPayment extends LightningElement {
     handleErrorDisplay() {
         const errorDetail = this.error.detail;
 
-        const isApexClassDisabled = errorDetail && errorDetail.includes("RD2_PauseForm_CTRL");
+        const isApexClassDisabled = errorDetail && errorDetail.includes("RD2_EntryFormController");
         if (isApexClassDisabled) {
             this.permissions.hasAccess = false;
         }
