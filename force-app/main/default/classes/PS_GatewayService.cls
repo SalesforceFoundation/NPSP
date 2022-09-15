@@ -64,6 +64,10 @@ public with sharing class PS_GatewayService {
         Map<String, Object> gatewayResponse;
         gatewayResponse = getGateways();
 
+        // TODO: check for errors here
+        //       return serialized version of response immediately if there are errors
+        //       format message and show a toast in widget
+
         List<Object> gateways = new List<Object>();
         gateways = (List<Object>) gatewayResponse.get('gateways');
 
@@ -90,7 +94,6 @@ public with sharing class PS_GatewayService {
         public String id;
         public String alias;
         public GatewaySettings settings;
-        public String vendorName;
     }
 
     public class GatewaySettings {
@@ -100,7 +103,6 @@ public with sharing class PS_GatewayService {
     public class GatewayTemplateSetting {
         public String id;
         public String alias;
-        public String vendorName;
         public String uniqueKey;
         public Boolean isCreditCardEnabled;
         public Boolean isACHEnabled;
@@ -110,7 +112,6 @@ public with sharing class PS_GatewayService {
         public GatewayTemplateSetting(ResponseBody rb) {
             this.id = rb.id;
             this.alias = rb.alias;
-            this.vendorName = rb.vendorName;
             this.uniqueKey = rb.id.left(8) + rb.id.right(12);
             this.isDefault = false;
             this.isCreditCardEnabled = false;
