@@ -1,0 +1,115 @@
+<template>
+    <lightning-layout-item size="12" style="width: 100%">
+        <template if:true={isGatewayAssignmentEnabled}>
+            <template if:false={isDisplayed}>
+                <div style="padding-top: 0.50rem">
+                    <template if:true={isGatewaySelectionLoading}>
+                        <label class="slds-text-body_regular slds-p-bottom_xx-small widget-label" style="font-weight: bold">
+                            {isGatewayLoadingMessage}
+                        </label>
+                    </template>
+                    <template if:false={isGatewaySelectionLoading}>
+                        <lightning-button variant="base"
+                                          label="Expand Elevate Gateway and Payment Methods"
+                                          onclick={toggleSelectGatewayControls}
+                                          disabled={isGatewaySelectionLoading}
+                                          class='slds-button hide-card-button'>
+                        </lightning-button>
+                        <lightning-button-icon variant="bare"
+                                               icon-name="utility:chevrondown"
+                                               onclick={toggleSelectGatewayControls}
+                                               disabled={isGatewaySelectionLoading}
+                                               class="slds-m-left_xxx-small">
+                        </lightning-button-icon>
+                    </template>
+                </div>
+            </template>
+            <template if:true={isDisplayed}>
+                <div style="padding-top: 0.50rem">
+                    <lightning-button variant="base"
+                                      label="Collapse Elevate Gateway and Payment Methods"
+                                      onclick={toggleSelectGatewayControls}
+                                      class='slds-button hide-card-button'>
+                    </lightning-button>
+                    <lightning-button-icon variant="bare"
+                                           icon-name="utility:chevronup"
+                                           onclick={toggleSelectGatewayControls}
+                                           class="slds-m-left_xxx-small">
+                    </lightning-button-icon>
+                </div>
+                <div style="padding-top: 0.30rem; width: 50%">
+                    <lightning-combobox data-id='inputComponent'
+                                        value={selectedGateway}
+                                        label="Select Payment Gateway"
+                                        options={gatewayOptions}
+                                        onchange={handleGatewaySelectionChange}
+                                        data-qa-locator="gateway-combobox"
+                                        field-level-help="placeholder"
+                                        variant="standard">
+                    </lightning-combobox>
+                </div>
+            </template>
+        </template>
+        <template if:false={isGatewayAssignmentEnabled}>
+            <template if:false={isDisplayed}>
+                <div style="padding-top: 0.50rem">
+                    <lightning-button variant="base"
+                                      label="Expand Elevate Payment Methods"
+                                      onclick={toggleSelectGatewayControls}
+                                      class='slds-button hide-card-button'>
+                    </lightning-button>
+                    <lightning-button-icon variant="bare"
+                                           icon-name="utility:chevrondown"
+                                           onclick={toggleSelectGatewayControls}
+                                           class="slds-m-left_xxx-small">
+                    </lightning-button-icon>
+                </div>
+            </template>
+            <template if:true={isDisplayed}>
+                <div style="padding-top: 0.50rem">
+                    <lightning-button variant="base"
+                                      label="Collapse Elevate Payment Methods"
+                                      onclick={toggleSelectGatewayControls}
+                                      class='slds-button hide-card-button'>
+                    </lightning-button>
+                    <lightning-button-icon variant="bare"
+                                           icon-name="utility:chevronup"
+                                           onclick={toggleSelectGatewayControls}
+                                           class="slds-m-left_xxx-small">
+                    </lightning-button-icon>
+                </div>
+            </template>
+        </template>
+        <template if:true={isDisplayed}>
+            <div style="padding-top: 0.50rem">
+                <label class="slds-form-element__label" >Select Payment Methods
+                </label>
+                <lightning-helptext content="placeholder"></lightning-helptext>
+                <lightning-input aria-label="default value"
+                                 data-id='inputComponent'
+                                 name="checkboxACH"
+                                 label="ACH"
+                                 checked={isACHEnabled}
+                                 disabled={isACHDisabled}
+                                 onchange={handleACHChange}
+                                 data-name="checkboxACH"
+                                 variant="standard"
+                                 type="checkbox"
+                                 data-qa-locator="booga2">
+                </lightning-input>
+                <lightning-input aria-label="default value"
+                                 data-id='inputComponent'
+                                 name="checkboxCreditCard"
+                                 label="Credit Card"
+                                 checked={isCreditCardEnabled}
+                                 disabled={isCreditCardDisabled}
+                                 onchange={handleCreditCardChange}
+                                 data-name="checkboxCreditCard"
+                                 variant="standard"
+                                 type="checkbox"
+                                 data-qa-locator="booga2">
+                </lightning-input>
+            </div>
+        </template>
+    </lightning-layout-item>
+</template>
