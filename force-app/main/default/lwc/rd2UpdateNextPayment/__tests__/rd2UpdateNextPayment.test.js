@@ -204,10 +204,6 @@ class UpdateNextPaymentTestController {
         this.component = component;
     }
 
-    dataTable() {
-        return this.component.shadowRoot.querySelector('lightning-datatable');
-    }
-
     setNextPaymentAmount(value) {
         const field = this.nextPaymentAmount();
         field.value = value;

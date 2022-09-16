@@ -5,20 +5,13 @@ import { getNumberAsLocalizedCurrency, getDateAsLocalizedFormat } from 'c/utilNu
 import { Rd2Service } from "c/rd2Service";
 import { HTTP_CODES } from "c/geConstants";
 
-import header from '@salesforce/label/c.RD2_PauseHeader';
-import description from '@salesforce/label/c.RD2_PauseDescription';
 import loadingMessage from '@salesforce/label/c.labelMessageLoading';
 import cancelButton from '@salesforce/label/c.stgBtnCancel';
 import saveButton from '@salesforce/label/c.stgBtnSave';
 import okButton from '@salesforce/label/c.stgLabelOK';
-import firstDonationDateMessage from '@salesforce/label/c.RD2_PauseFirstDonationDateDynamicText';
-import saveSuccessMessage from '@salesforce/label/c.RD2_PauseSaveSuccessMessage';
-import deactivationSuccessMessage from '@salesforce/label/c.RD2_PauseDeactivationSuccessMessage';
-import rdClosedMessage from '@salesforce/label/c.RD2_PauseClosedRDErrorMessage';
-import elevateNotSupported from '@salesforce/label/c.RD2_ElevateNotSupported';
+import rdClosedMessage from '@salesforce/label/c.RD2_ChangeNextInstallmentClosedError';
 import permissionRequired from '@salesforce/label/c.commonPermissionErrorMessage';
 import insufficientPermissions from '@salesforce/label/c.commonInsufficientPermissions';
-
 import changeNextInstallmentAmount from '@salesforce/label/c.RD2_ChangeNextInstallmentAmount';
 import nextInstallment from '@salesforce/label/c.RD2_NextInstallment';
 import dateColumnHeader from '@salesforce/label/c.RD2_ScheduleVisualizerColumnDate';
@@ -38,17 +31,11 @@ import handleNextPaymentAmount from '@salesforce/apex/RD2_EntryFormController.ha
 export default class Rd2UpdateNextPayment extends LightningElement {
 
     labels = Object.freeze({
-        header,
-        description,
         loadingMessage,
         cancelButton,
-        elevateNotSupported,
         saveButton,
         okButton,
-        saveSuccessMessage,
-        deactivationSuccessMessage,
         rdClosedMessage,
-        firstDonationDateMessage,
         permissionRequired,
         insufficientPermissions,
         changeNextInstallmentAmount,
@@ -77,11 +64,9 @@ export default class Rd2UpdateNextPayment extends LightningElement {
     };
     @track isSaveDisplayed;
     @track isSaveDisabled = true;
-    @track pageHeader = '';
     @track nextPaymentAmount;
     @track hasNextPaymentAmount = false;
     rdAmount;
-    validAmount = false;
 
     @track columns = [];
     @track installments = [];
@@ -320,9 +305,7 @@ export default class Rd2UpdateNextPayment extends LightningElement {
     */
     handleError(error) {
         this.isLoading = false;
-
         this.error = constructErrorMessage(error);
-
         this.handleErrorDisplay();
     }
 

@@ -1594,6 +1594,14 @@
         <value>Change Next Installment Amount</value>
     </labels>
     <labels>
+        <fullName>RD2_ChangeNextInstallmentClosedError</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when trying to change next installment for Closed Donation.</shortDescription>
+        <value>You can&apos;t change the next installment for a closed Recurring Donation</value>
+    </labels>
+    <labels>
         <fullName>RD2_ChangeNextInstallmentSuccess</fullName>
         <categories>Recurring-Donations</categories>
         <language>en_US</language>
