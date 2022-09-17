@@ -8,7 +8,7 @@ import { fireEvent } from 'c/pubsubNoPageRef';
 import { isNotEmpty } from 'c/utilCommon';
 
 export default class GeGatewaySelectWidget extends LightningElement {
-    @track isDisplayed = false;
+    @track isExpanded = false;
     @track selectedGateway = null;
     @track gatewayOptions = [];
     @track preGatewayOptions = [];
@@ -16,8 +16,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
     @track isACHDisabled = false;
     @track isCreditCardEnabled = true;
     @track isCreditCardDisabled = false;
-    @track isGatewaySelectionLoading = true;
-    @track gatewayLoadingMessage;
+    @track isReady = false;
     @track isDefaultTemplate = false;
 
     // TODO: This hard-coded value will be replaced after W-11564934 is complete...
@@ -33,13 +32,12 @@ export default class GeGatewaySelectWidget extends LightningElement {
             return;
         }
 
-        this.gatewayLoadingMessage = 'Retrieving Elevate Gateway information. Please wait...';
         this.resetAllSettingsToDefault;
         if (this.isGatewayAssignmentEnabled) {
             await this.getElevateGateways();
         }
 
-        this.isGatewaySelectionLoading = false;
+        this.isReady = true;
     }
 
     disconnectedCallback() {
@@ -70,18 +68,17 @@ export default class GeGatewaySelectWidget extends LightningElement {
             this._elevateGatewaysByUniqueKey.set(gateway.id, gateway);
             let optionLabel = gateway.isDefault ? gateway.gatewayName + ' (Default)' : gateway.gatewayName;
             this.gatewayOptions.push({label: optionLabel, value: gateway.id});
-            console.log('label:' + optionLabel + ' / uniqueKey:' + gateway.id);
         }
         this.gatewayOptions = this.gatewayOptions.sort((a, b) => a.label >= b.label ? 1 : -1);
     }
 
     async toggleSelectGatewayControls() {
-        if (this.isDisplayed) {
-            this.isDisplayed = false;
+        if (this.isExpanded) {
+            this.isExpanded = false;
         }
         else {
             await this.restoreSavedSettings();
-            this.isDisplayed = true;
+            this.isExpanded = true;
         }
     }
 
@@ -202,9 +199,5 @@ export default class GeGatewaySelectWidget extends LightningElement {
 
     get isCreditCardEnabled() {
         return this.isCreditCardEnabled;
-    }
-
-    get isGatewayLoadingMessage() {
-        return this.gatewayLoadingMessage;
     }
 }
