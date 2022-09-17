@@ -1382,7 +1382,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             this.formTemplate.defaultBatchTableColumns
                 = this.selectedBatchTableColumnOptions;
         }
-        this.formTemplate.elevateSettings = GeGatewaySettings.getElevateSettings();
+        if (GeSettings.isElevateCustomer()) {
+            this.formTemplate.elevateSettings = GeGatewaySettings.getElevateSettings();
+        }
 
         // TODO: Currently hardcoded as we're not providing a way to
         // create custom migrated field mapping sets yet.
