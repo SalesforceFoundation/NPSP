@@ -85,6 +85,11 @@ public with sharing class PS_GatewayManagement {
     }
 
     @AuraEnabled
+    public static Boolean isGatewayAssignmentEnabled() {
+        return GE_GiftEntryController.getGiftEntrySettings().Enable_Gateway_Assignment__c;
+    }
+
+    @AuraEnabled
     public static String encryptGatewayId(String gatewayId) {
         PS_IntegrationServiceConfig.Service integrationService = new PS_IntegrationServiceConfig.Service();
         return EncodingUtil.base64Encode(Crypto.encryptWithManagedIV('AES128',

@@ -2,7 +2,9 @@ import { LightningElement, track } from 'lwc';
 import getGatewaysFromElevate from '@salesforce/apex/PS_GatewayManagement.getGatewaysFromElevate';
 import encryptGatewayId from '@salesforce/apex/PS_GatewayManagement.encryptGatewayId';
 import decryptGatewayId from '@salesforce/apex/PS_GatewayManagement.decryptGatewayId';
+import isGatewayAssignmentEnabled from '@salesforce/apex/PS_GatewayManagement.isGatewayAssignmentEnabled';
 import getDefaultTemplateId from '@salesforce/apex/PS_GatewayManagement.getDefaultTemplateId';
+import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import GeGatewaySettings from 'c/geGatewaySettings';
 import { fireEvent } from 'c/pubsubNoPageRef';
 import { isNotEmpty } from 'c/utilCommon';
@@ -18,9 +20,9 @@ export default class GeGatewaySelectWidget extends LightningElement {
     @track isCreditCardDisabled = false;
     @track isReady = false;
     @track isDefaultTemplate = false;
+    @track isGatewayAssignmentEnabled = false;
 
-    // TODO: This hard-coded value will be replaced after W-11564934 is complete...
-    @track isGatewayAssignmentEnabled = true;
+    CUSTOM_LABELS = { messageLoading };
 
     _elevateGateways = null;
     _elevateGatewaysByUniqueKey = new Map();
@@ -29,10 +31,12 @@ export default class GeGatewaySelectWidget extends LightningElement {
     async connectedCallback() {
         if (GeGatewaySettings.getTemplateRecordId() === await getDefaultTemplateId()) {
             this.isDefaultTemplate = true;
+            this.isReady = true;
             return;
         }
 
         this.resetAllSettingsToDefault;
+        this.isGatewayAssignmentEnabled = await isGatewayAssignmentEnabled();
         if (this.isGatewayAssignmentEnabled) {
             await this.getElevateGateways();
         }
@@ -89,6 +93,8 @@ export default class GeGatewaySelectWidget extends LightningElement {
 
         let elevateSettings = GeGatewaySettings.getElevateSettings();
         if (isNotEmpty(elevateSettings)) {
+            // TODO: check if selected gateway is in return list
+            //       if not, throw error
             this.selectedGateway = await decryptGatewayId({encryptedGatewayId: elevateSettings.uniqueKey});
             this.isACHEnabled = elevateSettings.isACHEnabled;
             this.isCreditCardEnabled = elevateSettings.isCreditCardEnabled;
