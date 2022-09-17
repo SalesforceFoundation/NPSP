@@ -93,6 +93,7 @@ public with sharing class PS_GatewayService {
     public class ResponseBody {
         public String id;
         public String alias;
+        public String vendorName;
         public GatewaySettings settings;
     }
 
@@ -102,8 +103,7 @@ public with sharing class PS_GatewayService {
 
     public class GatewayTemplateSetting {
         public String id;
-        public String alias;
-        public String uniqueKey;
+        public String gatewayName;
         public Boolean isCreditCardEnabled;
         public Boolean isACHEnabled;
         public Boolean isDefault;
@@ -111,8 +111,7 @@ public with sharing class PS_GatewayService {
         public GatewayTemplateSetting() {}
         public GatewayTemplateSetting(ResponseBody rb) {
             this.id = rb.id;
-            this.alias = rb.alias;
-            this.uniqueKey = rb.id.left(8) + rb.id.right(12);
+            this.gatewayName = rb.alias == null ? rb.vendorName : rb.alias;
             this.isDefault = false;
             this.isCreditCardEnabled = false;
             this.isACHEnabled = false;

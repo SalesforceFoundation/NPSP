@@ -335,7 +335,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         }
 
         if (GeSettings.isElevateCustomer()) {
-            GeGatewaySettings.setElevateSettings(this.formTemplate.elevateSettings);
+            GeGatewaySettings.setElevateSettings(this.formTemplate.elevateSettings, this.formTemplateRecordId);
         }
 
         this.clearRecordIdOnClone(queryParameters);

@@ -1,5 +1,8 @@
 import { LightningElement, track } from 'lwc';
 import getGatewaysFromElevate from '@salesforce/apex/PS_GatewayManagement.getGatewaysFromElevate';
+import encryptGatewayId from '@salesforce/apex/PS_GatewayManagement.encryptGatewayId';
+import decryptGatewayId from '@salesforce/apex/PS_GatewayManagement.decryptGatewayId';
+import getDefaultTemplateId from '@salesforce/apex/PS_GatewayManagement.getDefaultTemplateId';
 import GeGatewaySettings from 'c/geGatewaySettings';
 import { fireEvent } from 'c/pubsubNoPageRef';
 import { isNotEmpty } from 'c/utilCommon';
@@ -14,7 +17,8 @@ export default class GeGatewaySelectWidget extends LightningElement {
     @track isCreditCardEnabled = true;
     @track isCreditCardDisabled = false;
     @track isGatewaySelectionLoading = true;
-    @track isGatewayLoadingMessage = 'Retrieving Elevate Gateway information. Please wait...';
+    @track gatewayLoadingMessage;
+    @track isDefaultTemplate = false;
 
     // TODO: This hard-coded value will be replaced after W-11564934 is complete...
     @track isGatewayAssignmentEnabled = true;
@@ -24,10 +28,17 @@ export default class GeGatewaySelectWidget extends LightningElement {
     _firstDisplay = true;
 
     async connectedCallback() {
+        if (GeGatewaySettings.getTemplateRecordId() === await getDefaultTemplateId()) {
+            this.isDefaultTemplate = true;
+            return;
+        }
+
+        this.gatewayLoadingMessage = 'Retrieving Elevate Gateway information. Please wait...';
         this.resetAllSettingsToDefault;
         if (this.isGatewayAssignmentEnabled) {
             await this.getElevateGateways();
         }
+
         this.isGatewaySelectionLoading = false;
     }
 
@@ -41,43 +52,47 @@ export default class GeGatewaySelectWidget extends LightningElement {
         }
 
         this._elevateGateways = JSON.parse(await getGatewaysFromElevate());
-
-        // TODO: check for errors before creating map
-
-        if (this._elevateGateways) {
-            this.buildOptions();
+        if (!this._elevateGateways || this._elevateGateways.errors) {
+            this.handleErrors();
+            return false;
         }
+        this.buildOptions();
 
         return true;
     }
 
+    handleErrors() {
+        console.log('boom!!!');
+    }
+
     buildOptions() {
         for (const gateway of this._elevateGateways) {
-            this._elevateGatewaysByUniqueKey.set(gateway.uniqueKey, gateway);
-            let optionLabel = gateway.isDefault ? gateway.alias + ' (Default)' : gateway.alias;
-            this.gatewayOptions.push({label: optionLabel, value: gateway.uniqueKey});
+            this._elevateGatewaysByUniqueKey.set(gateway.id, gateway);
+            let optionLabel = gateway.isDefault ? gateway.gatewayName + ' (Default)' : gateway.gatewayName;
+            this.gatewayOptions.push({label: optionLabel, value: gateway.id});
+            console.log('label:' + optionLabel + ' / uniqueKey:' + gateway.id);
         }
         this.gatewayOptions = this.gatewayOptions.sort((a, b) => a.label >= b.label ? 1 : -1);
     }
 
-    toggleSelectGatewayControls() {
+    async toggleSelectGatewayControls() {
         if (this.isDisplayed) {
             this.isDisplayed = false;
         }
         else {
+            await this.restoreSavedSettings();
             this.isDisplayed = true;
-            this.restoreSavedSettings();
         }
     }
 
-    restoreSavedSettings() {
+    async restoreSavedSettings() {
         if (!this._firstDisplay) {
             return;
         }
 
         let elevateSettings = GeGatewaySettings.getElevateSettings();
         if (isNotEmpty(elevateSettings)) {
-            this.selectedGateway = elevateSettings.uniqueKey;
+            this.selectedGateway = await decryptGatewayId({encryptedGatewayId: elevateSettings.uniqueKey});
             this.isACHEnabled = elevateSettings.isACHEnabled;
             this.isCreditCardEnabled = elevateSettings.isCreditCardEnabled;
 
@@ -168,9 +183,9 @@ export default class GeGatewaySelectWidget extends LightningElement {
         this.isCreditCardDisabled = false;
     }
 
-    updateElevateSettings() {
+    async updateElevateSettings() {
         let elevateSettings = {
-            uniqueKey: this.selectedGateway,
+            uniqueKey: await encryptGatewayId( {gatewayId: this.selectedGateway}),
             isACHEnabled: this.isACHEnabled,
             isCreditCardEnabled: this.isCreditCardEnabled
         }
@@ -190,6 +205,6 @@ export default class GeGatewaySelectWidget extends LightningElement {
     }
 
     get isGatewayLoadingMessage() {
-        return this.isGatewayLoadingMessage;
+        return this.gatewayLoadingMessage;
     }
 }
