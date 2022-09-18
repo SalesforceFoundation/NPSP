@@ -52,22 +52,39 @@ public with sharing class PS_GatewayService {
                 .build();
     }
 
-    private Map<String, Object> getGateways() {
-        HttpRequest gatewaysByMerchantGetRequest = buildGetGatewaysByMerchantRequest();
-        UTIL_Http.Response response = requestService.sendRequest(gatewaysByMerchantGetRequest);
+    private UTIL_Http.Response getGatewaysResponse() {
+        UTIL_Http.Response response;
 
-        Map<String, Object> gatewayResponse = (Map<String, Object>) JSON.deserializeUntyped(response.body);
-        return gatewayResponse;
+        try {
+            HttpRequest gatewaysByMerchantGetRequest = buildGetGatewaysByMerchantRequest();
+            response = requestService.sendRequest(gatewaysByMerchantGetRequest);
+        }
+
+        catch(Exception e) {
+            response = requestService.buildErrorResponse(e);
+        }
+
+        return response;
     }
 
     public String getGatewaysByMerchant() {
-        Map<String, Object> gatewayResponse;
-        gatewayResponse = getGateways();
+        UTIL_Http.Response gatewayResponse;
+        String jsonResponseBody;
 
-        // TODO: check for errors here
-        //       return serialized version of response immediately if there are errors
-        //       format message and show a toast in widget
+        gatewayResponse = getGatewaysResponse();
+        Map<String, Object> gatewayResponseToPass = (Map<String, Object>) JSON.deserializeUntyped(gatewayResponse.body);
 
+        if (gatewayResponse.statusCode == UTIL_Http.STATUS_CODE_OK) {
+            jsonResponseBody = buildTemplateSettingsJSON(gatewayResponseToPass);
+        }
+        else {
+            jsonResponseBody = JSON.serialize(gatewayResponse.body);
+        }
+
+        return jsonResponseBody;
+    }
+
+    private String buildTemplateSettingsJSON(Map<String, Object> gatewayResponse) {
         List<Object> gateways = new List<Object>();
         gateways = (List<Object>) gatewayResponse.get('gateways');
 
