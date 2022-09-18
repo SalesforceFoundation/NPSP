@@ -50,20 +50,19 @@ export default class GeGatewaySelectWidget extends LightningElement {
 
     async getElevateGateways() {
         if (this._elevateGateways) {
-            return true;
+            return;
         }
 
         this._elevateGateways = JSON.parse(await getGatewaysFromElevate());
-        if (!this._elevateGateways || this._elevateGateways.errors) {
-            this.handleErrors();
-            return false;
-        }
-        this.buildOptions();
 
-        return true;
+        if (this._elevateGateways && !this._elevateGateways.errors) {
+            this.buildOptions();
+        } else {
+            this.handleErrors();
+        }
     }
 
-    handleErrors() {
+    handleErrors(errorMessage) {
         console.log('boom!!!');
     }
 
@@ -93,16 +92,23 @@ export default class GeGatewaySelectWidget extends LightningElement {
 
         let elevateSettings = GeGatewaySettings.getElevateSettings();
         if (isNotEmpty(elevateSettings)) {
-            // TODO: check if selected gateway is in return list
-            //       if not, throw error
-            this.selectedGateway = await decryptGatewayId({encryptedGatewayId: elevateSettings.uniqueKey});
-            this.isACHEnabled = elevateSettings.isACHEnabled;
-            this.isCreditCardEnabled = elevateSettings.isCreditCardEnabled;
+            let savedGatewayId = await decryptGatewayId({encryptedGatewayId: elevateSettings.uniqueKey});
 
-            this.updateDisabledPaymentTypes();
-
-            this._firstDisplay = false;
+            if (this.isValidSavedGatewayId(savedGatewayId)) {
+                this.selectedGateway = savedGatewayId;
+                this.isACHEnabled = elevateSettings.isACHEnabled;
+                this.isCreditCardEnabled = elevateSettings.isCreditCardEnabled;
+                this.updateDisabledPaymentTypes();
+            }
+            else {
+                this.handleErrors('invalid saved gateway');
+            }
         }
+        this._firstDisplay = false;
+    }
+
+    isValidSavedGatewayId(savedGatewayId) {
+        return !!this._elevateGatewaysByUniqueKey.get(savedGatewayId);
     }
 
     handleGatewaySelectionChange(event) {
