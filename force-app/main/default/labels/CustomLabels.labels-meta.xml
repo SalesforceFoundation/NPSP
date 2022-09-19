@@ -12654,6 +12654,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>ACH (bank account)</value>
     </labels>
     <labels>
+        <fullName>psElevateConnectionTimeout</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message for timeout connecting to Elevate.</shortDescription>
+        <value>The connection to Elevate timed out. Try again later.</value>
+    </labels>
+    <labels>
         <fullName>psGatewayDefault</fullName>
         <categories>Payment Gateway Management</categories>
         <language>en_US</language>
@@ -12683,7 +12691,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error message for saved Elevate Payment Gateway not found.</shortDescription>
-        <value>We can&apos;t validate the saved gateway. Select a different gateway.</value>
+        <value>We can&apos;t validate the previously saved gateway. Select a different gateway.</value>
     </labels>
     <labels>
         <fullName>psHideGatewaysAndMethods</fullName>

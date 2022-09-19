@@ -1308,6 +1308,11 @@ public with sharing class GE_GiftEntryController {
         }
     }
 
+    @AuraEnabled
+    public static String getGatewayIdFromConfig() {
+        return PS_GatewayManagement.getGatewayIdFromConfig();
+    }
+
     private class CurrencyMismatchException extends Exception {}
 
     private class BDIException extends Exception {}
