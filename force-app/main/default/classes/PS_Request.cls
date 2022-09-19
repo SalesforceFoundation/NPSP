@@ -39,6 +39,7 @@ public inherited sharing class PS_Request {
         TOKENIZE,
         PURCHASE,
         REFUND,
+        TRANSACTIONS,
         COMMITMENT,
         COMMITMENT_PAUSE,
         COMMITMENT_CANCEL,
@@ -64,6 +65,7 @@ public inherited sharing class PS_Request {
     public static String ROLE_PAYMENT_TOKENS = 'Payments.Tokens';
     public static String ROLE_PAYMENT_PURCHASE = 'Payments.Purchase';
     public static String ROLE_PAYMENT_REFUND = 'Payments.Refund';
+    public static String ROLE_PAYMENT_TRANSACTIONS = 'Payments.Transactions';
     public static String ROLE_PAYMENT_COMMITMENTS = 'Payments.Commitments';
     public static String ROLE_PAYMENT_BATCH = 'Payments.Batch';
 
@@ -77,6 +79,7 @@ public inherited sharing class PS_Request {
     public static String ENDPOINT_TOKENIZE = '/v1/payments/verified/tokens';
     public static String ENDPOINT_PURCHASE = '/v1/payments/verified/purchase';
     public static String ENDPOINT_REFUND = '/v1/payments/verified/refund';
+    public static String ENDPOINT_TRANSACTIONS = '/v1/payments/verified/transactions/{0}';
     public static String ENDPOINT_COMMITMENT = '/v1/payments/verified/commitments';
     public static String ENDPOINT_COMMITMENT_CANCEL = '/v1/payments/verified/commitments/{0}/cancel';
     public static String ENDPOINT_COMMITMENT_UPDATE_BULK = '/v1/payments/verified/commitments/update/bulk';
@@ -258,6 +261,13 @@ public inherited sharing class PS_Request {
                 value = ENDPOINT_PURCHASE;
             } else if (endpoint == ElevateEndpoint.REFUND) {
                 value = ENDPOINT_REFUND;
+            } else if (endpoint == ElevateEndpoint.TRANSACTIONS) {
+                value = String.format(
+                    ENDPOINT_TRANSACTIONS,
+                    new String[]{
+                        commitmentId
+                    }
+                );
             } else if (endpoint == ElevateEndpoint.COMMITMENT) {
                 value = ENDPOINT_COMMITMENT;
 
@@ -415,6 +425,8 @@ public inherited sharing class PS_Request {
                 value = ROLE_PAYMENT_BATCH;
             } else if (isRefundEndpoint()) {
                 value = ROLE_PAYMENT_REFUND;
+            } else if (isTransactionsEnpoint()) {
+                value = ROLE_PAYMENT_TRANSACTIONS;
             }
             return value;
         }
@@ -443,6 +455,10 @@ public inherited sharing class PS_Request {
 
         private Boolean isRefundEndpoint() {
             return endpoint == ElevateEndpoint.REFUND;
+        }
+
+        private Boolean isTransactionsEnpoint() {
+            return endpoint == ElevateEndpoint.TRANSACTIONS;
         }
     }
 }

@@ -105,7 +105,7 @@ public inherited sharing class PS_CommitmentRequest {
     /***
      * @description Default currency multiplier
      */
-    private static final Integer DEFAULT_CURRENCY_MULTIPLIER = 100;
+    public static final Integer DEFAULT_CURRENCY_MULTIPLIER = 100;
 
     /***
      * @description Contains max length for a first/last name passed to the Elevate commitment request

@@ -148,6 +148,10 @@ public inherited sharing class PMT_ValidationService {
     }
 
     private void validateRefund(npe01__OppPayment__c payment) {
+        if (String.isNotBlank(payment.Elevate_Payment_ID__c) && config.isIntegrationEnabled()) {
+            return;
+        }
+
         if (payment.DebitType__c == PMT_RefundService.FULL_REFUND
             || payment.DebitType__c == PMT_RefundService.PARTIAL_REFUND) {
             PMT_RefundService.RefundInfo refundInfo = refundService.getRefundInfoFor(payment.OriginalPayment__c);
