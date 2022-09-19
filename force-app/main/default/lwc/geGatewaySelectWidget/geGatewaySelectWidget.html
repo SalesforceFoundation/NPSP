@@ -1,14 +1,14 @@
 <template>
     <!--                            TODO: css-->
     <lightning-layout-item size="12" style="width: 100%">
-        <template if:false={isReady}>
+        <template if:false={isLoading}>
             <div class='spinner-container'>
                 <lightning-spinner alternative-text={CUSTOM_LABELS.messageLoading}
                                    size='large'>
                 </lightning-spinner>
             </div>
         </template>
-        <template if:true={isReady}>
+        <template if:true={isLoading}>
             <template if:false={isDefaultTemplate}>
                 <template if:true={isGatewayAssignmentEnabled}>
                     <template if:false={isExpanded}>

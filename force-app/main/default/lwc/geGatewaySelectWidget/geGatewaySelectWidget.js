@@ -1,9 +1,9 @@
 import { LightningElement, track } from 'lwc';
-import getGatewaysFromElevate from '@salesforce/apex/PS_GatewayManagement.getGatewaysFromElevate';
-import encryptGatewayId from '@salesforce/apex/PS_GatewayManagement.encryptGatewayId';
-import decryptGatewayId from '@salesforce/apex/PS_GatewayManagement.decryptGatewayId';
-import isGatewayAssignmentEnabled from '@salesforce/apex/PS_GatewayManagement.isGatewayAssignmentEnabled';
-import getDefaultTemplateId from '@salesforce/apex/PS_GatewayManagement.getDefaultTemplateId';
+import getGatewaysFromElevate from '@salesforce/apex/GE_GiftEntryController.getGatewaysFromElevate';
+import encryptGatewayId from '@salesforce/apex/GE_GiftEntryController.encryptGatewayId';
+import decryptGatewayId from '@salesforce/apex/GE_GiftEntryController.decryptGatewayId';
+import isGatewayAssignmentEnabled from '@salesforce/apex/GE_GiftEntryController.isGatewayAssignmentEnabled';
+import getDefaultTemplateId from '@salesforce/apex/GE_GiftEntryController.getDefaultTemplateId';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import psACH from '@salesforce/label/c.psACH';
 import psGatewayHelp from '@salesforce/label/c.psGatewayHelp';
@@ -31,7 +31,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
     @track isACHDisabled = false;
     @track isCreditCardEnabled = true;
     @track isCreditCardDisabled = false;
-    @track isReady = false;
+    @track isLoading = false;
     @track isDefaultTemplate = false;
     @track isGatewayAssignmentEnabled = false;
 
@@ -60,7 +60,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
     async connectedCallback() {
         if (GeGatewaySettings.getTemplateRecordId() === await getDefaultTemplateId()) {
             this.isDefaultTemplate = true;
-            this.isReady = true;
+            this.isLoading = true;
             return;
         }
 
@@ -68,6 +68,9 @@ export default class GeGatewaySelectWidget extends LightningElement {
         this.isGatewayAssignmentEnabled = await isGatewayAssignmentEnabled();
         if (this.isGatewayAssignmentEnabled) {
             await this.getElevateGateways();
+        }
+        else {
+            this.isLoading = true;
         }
     }
 
@@ -84,7 +87,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
 
         if (this._elevateGateways && this._elevateGateways.length > 0 && !(this._elevateGateways.errors)) {
             this.buildOptions();
-            this.isReady = true;
+            this.isLoading = true;
         } else {
             this.handleErrors();
         }
