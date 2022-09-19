@@ -20,16 +20,12 @@
                 <template if:true={isTokenizeCard}>
                     <lightning-layout-item size="12">
                         <label class="slds-text-body_regular widget-label slds-p-bottom_xx-small">{uiTitle}</label>
-<!--                        commonCreditNumber-->
-                        <p class="slds-text-body_regular widget-text">Card number</p>
-<!--                        commonMMYY-->
-                        <p class="slds-text-body_regular widget-text">Expiry date</p>
-<!--                        add-->
-                        <p class="slds-text-body_regular widget-text">Security code</p>
-<!--                        add-->
-                        <p class="slds-text-body_regular widget-text">Routing number</p>
-<!--                        add-->
-                        <p class="slds-text-body_regular widget-text">Account number</p>
+                        <p class="slds-text-body_regular widget-text">{CUSTOM_LABELS.commonCreditNumber}</p>
+                        <p class="slds-text-body_regular widget-text">{CUSTOM_LABELS.commonMMYY}</p>
+                        <p class="slds-text-body_regular widget-text">{CUSTOM_LABELS.commonCVC}</p>
+                        <p class="slds-text-body_regular widget-text">{CUSTOM_LABELS.commonRoutingNumber}</p>
+                        <p class="slds-text-body_regular widget-text">{CUSTOM_LABELS.commonAccountNumber}</p>
+                        <!--                            TODO: properties-->
                         <c-ge-gateway-select-widget data-id='widgetComponent'>
                         </c-ge-gateway-select-widget>
                     </lightning-layout-item>

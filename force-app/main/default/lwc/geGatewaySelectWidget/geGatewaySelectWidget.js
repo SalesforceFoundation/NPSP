@@ -5,6 +5,19 @@ import decryptGatewayId from '@salesforce/apex/PS_GatewayManagement.decryptGatew
 import isGatewayAssignmentEnabled from '@salesforce/apex/PS_GatewayManagement.isGatewayAssignmentEnabled';
 import getDefaultTemplateId from '@salesforce/apex/PS_GatewayManagement.getDefaultTemplateId';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
+import psACH from '@salesforce/label/c.psACH';
+import psGatewayHelp from '@salesforce/label/c.psGatewayHelp';
+import psGatewayDefault from '@salesforce/label/c.psGatewayDefault';
+import psGatewaysNotFound from '@salesforce/label/c.psGatewaysNotFound';
+import psGatewayNotValid from '@salesforce/label/c.psGatewayNotValid';
+import psHideGatewaysAndMethods from '@salesforce/label/c.psHideGatewaysAndMethods';
+import psHidePaymentMethods from '@salesforce/label/c.psHidePaymentMethods';
+import psSelectPaymentGateway from '@salesforce/label/c.psSelectPaymentGateway';
+import psSelectPaymentMethods from '@salesforce/label/c.psSelectPaymentMethods';
+import psShowGatewaysAndMethods from '@salesforce/label/c.psShowGatewaysAndMethods';
+import psShowPaymentMethods from '@salesforce/label/c.psShowPaymentMethods';
+import psUnableToConnect from '@salesforce/label/c.psUnableToConnect';
+import RD2_Credit_Card_Payment_Method_Label from '@salesforce/label/c.RD2_Credit_Card_Payment_Method_Label';
 import GeGatewaySettings from 'c/geGatewaySettings';
 import { fireEvent } from 'c/pubsubNoPageRef';
 import { isNotEmpty, showToast } from 'c/utilCommon';
@@ -22,8 +35,24 @@ export default class GeGatewaySelectWidget extends LightningElement {
     @track isDefaultTemplate = false;
     @track isGatewayAssignmentEnabled = false;
 
-    CUSTOM_LABELS = { messageLoading };
+    CUSTOM_LABELS = Object.freeze({
+        messageLoading,
+        psACH,
+        psGatewayDefault,
+        psGatewayHelp,
+        psGatewaysNotFound,
+        psGatewayNotValid,
+        psHideGatewaysAndMethods,
+        psHidePaymentMethods,
+        psSelectPaymentGateway,
+        psSelectPaymentMethods,
+        psShowGatewaysAndMethods,
+        psShowPaymentMethods,
+        psUnableToConnect,
+        RD2_Credit_Card_Payment_Method_Label
+    });
 
+    _savedGatewayNotFound = false;
     _elevateGateways = null;
     _elevateGatewaysByUniqueKey = new Map();
     _firstDisplay = true;
@@ -64,7 +93,8 @@ export default class GeGatewaySelectWidget extends LightningElement {
     buildOptions() {
         for (const gateway of this._elevateGateways) {
             this._elevateGatewaysByUniqueKey.set(gateway.id, gateway);
-            let optionLabel = gateway.isDefault ? gateway.gatewayName + ' (Default)' : gateway.gatewayName;
+            let optionLabel = gateway.isDefault ? gateway.gatewayName +
+                ' (' + this.CUSTOM_LABELS.psGatewayDefault + ')' : gateway.gatewayName;
             this.gatewayOptions.push({label: optionLabel, value: gateway.id});
         }
         this.gatewayOptions = this.gatewayOptions.sort((a, b) => a.label >= b.label ? 1 : -1);
@@ -96,24 +126,25 @@ export default class GeGatewaySelectWidget extends LightningElement {
                 this.updateDisabledPaymentTypes();
             }
             else {
-                this.handleErrors('invalid saved gateway');
+                this._savedGatewayNotFound = true;
+                this.handleErrors();
             }
         }
         this._firstDisplay = false;
     }
 
-    handleErrors(errorMessage) {
+    handleErrors() {
         let formattedErrorMessage;
         let details;
 
-        if (errorMessage) {
-            formattedErrorMessage = 'We can\'t validate the saved gateway. Select a different gateway.';
+        if (this._savedGatewayNotFound) {
+            formattedErrorMessage = this.CUSTOM_LABELS.psGatewayNotValid;
         }
         else if (!this._elevateGateways || this._elevateGateways.length === 0) {
-            formattedErrorMessage = 'No active Elevate gateways found. Check your Elevate account.';
+            formattedErrorMessage = this.CUSTOM_LABELS.psGatewaysNotFound;
         }
         else {
-            formattedErrorMessage = 'Unable to connect to Elevate. Check your connection and try again.';
+            formattedErrorMessage = this.CUSTOM_LABELS.psUnableToConnect;
             details = this._elevateGateways.errors.map((error) => error.message).join("\n ");
         }
 
