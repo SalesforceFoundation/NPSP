@@ -29,18 +29,6 @@
  */
 
 public with sharing class PS_GatewayManagement {
-
-    @TestVisible
-    private static PS_GatewayService gatewayService {
-        get {
-            if (gatewayService == null) {
-                gatewayService = new PS_GatewayService();
-            }
-            return gatewayService;
-        }
-        set;
-    }
-
     @AuraEnabled
     public static void setGatewayId(String gatewayId) {
         Map<String, List<Map<String, String>>> gatewayConfig = new Map<String, List<Map<String, String>>> {
@@ -72,45 +60,5 @@ public with sharing class PS_GatewayManagement {
     @AuraEnabled
     public static Boolean isSystemAdmin() {
         return STG_Panel.runningUserIsAdmin();
-    }
-
-    @AuraEnabled
-    public static String getGatewaysFromElevate() {
-        return gatewayService.getGatewaysByMerchant();
-    }
-
-    @AuraEnabled
-    public static String getDefaultTemplateId() {
-        return GE_GiftEntryController.getGiftEntrySettings().Default_Gift_Entry_Template__c;
-    }
-
-    @AuraEnabled
-    public static Boolean isGatewayAssignmentEnabled() {
-        return GE_GiftEntryController.getGiftEntrySettings().Enable_Gateway_Assignment__c;
-    }
-
-    @AuraEnabled
-    public static String encryptGatewayId(String gatewayId) {
-        PS_IntegrationServiceConfig.Service integrationService = new PS_IntegrationServiceConfig.Service();
-        try {
-            return EncodingUtil.base64Encode(Crypto.encryptWithManagedIV('AES128',
-                    Blob.valueOf(integrationService.getMerchantIds().left(16)), Blob.valueOf(gatewayId)));
-        }
-        catch (Exception e) {
-            return null;
-        }
-    }
-
-    @AuraEnabled
-    public static String decryptGatewayId(String encryptedGatewayId) {
-        PS_IntegrationServiceConfig.Service integrationService = new PS_IntegrationServiceConfig.Service();
-        try {
-            return (Crypto.decryptWithManagedIV('AES128',
-                    Blob.valueOf(integrationService.getMerchantIds().left(16)),
-                    EncodingUtil.base64Decode(encryptedGatewayId))).toString();
-        }
-        catch (Exception e) {
-            return null;
-        }
     }
 }

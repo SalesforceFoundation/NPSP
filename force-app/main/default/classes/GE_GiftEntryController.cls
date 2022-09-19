@@ -90,6 +90,17 @@ public with sharing class GE_GiftEntryController {
         set;
     }
 
+    @TestVisible
+    private static PS_GatewayService gatewayService {
+        get {
+            if (gatewayService == null) {
+                gatewayService = new PS_GatewayService();
+            }
+            return gatewayService;
+        }
+        set;
+    }
+
     @AuraEnabled
     public static void addGiftTo(Id dataImportBatchId, InboundGiftDTO inboundGift) {
         try {
@@ -1255,6 +1266,46 @@ public with sharing class GE_GiftEntryController {
             .build();
         List<DataImportBatch__c> batches = Database.query(query);
         return (String)batches[0].get(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
+    }
+
+    @AuraEnabled
+    public static String getGatewaysFromElevate() {
+        return gatewayService.getGatewaysByMerchant();
+    }
+
+    @AuraEnabled
+    public static String getDefaultTemplateId() {
+        return GE_GiftEntryController.getGiftEntrySettings().Default_Gift_Entry_Template__c;
+    }
+
+    @AuraEnabled
+    public static Boolean isGatewayAssignmentEnabled() {
+        return GE_GiftEntryController.getGiftEntrySettings().Enable_Gateway_Assignment__c;
+    }
+
+    @AuraEnabled
+    public static String encryptGatewayId(String gatewayId) {
+        PS_IntegrationServiceConfig.Service integrationService = new PS_IntegrationServiceConfig.Service();
+        try {
+            return EncodingUtil.base64Encode(Crypto.encryptWithManagedIV('AES128',
+                    Blob.valueOf(integrationService.getMerchantIds().left(16)), Blob.valueOf(gatewayId)));
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
+
+    @AuraEnabled
+    public static String decryptGatewayId(String encryptedGatewayId) {
+        PS_IntegrationServiceConfig.Service integrationService = new PS_IntegrationServiceConfig.Service();
+        try {
+            return (Crypto.decryptWithManagedIV('AES128',
+                    Blob.valueOf(integrationService.getMerchantIds().left(16)),
+                    EncodingUtil.base64Decode(encryptedGatewayId))).toString();
+        }
+        catch (Exception e) {
+            return null;
+        }
     }
 
     private class CurrencyMismatchException extends Exception {}
