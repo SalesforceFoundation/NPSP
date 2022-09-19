@@ -72,13 +72,13 @@ public with sharing class PS_GatewayService {
         String jsonResponseBody;
 
         gatewayResponse = getGatewaysResponse();
-        Map<String, Object> gatewayResponseToPass = (Map<String, Object>) JSON.deserializeUntyped(gatewayResponse.body);
 
         if (gatewayResponse.statusCode == UTIL_Http.STATUS_CODE_OK) {
-            jsonResponseBody = buildTemplateSettingsJSON(gatewayResponseToPass);
+            jsonResponseBody =
+                buildTemplateSettingsJSON((Map<String, Object>) JSON.deserializeUntyped(gatewayResponse.body));
         }
         else {
-            jsonResponseBody = JSON.serialize(gatewayResponse.body);
+            jsonResponseBody = gatewayResponse.body;
         }
 
         return jsonResponseBody;
@@ -89,8 +89,10 @@ public with sharing class PS_GatewayService {
         gateways = (List<Object>) gatewayResponse.get('gateways');
 
         List<GatewayTemplateSetting> gatewayTemplateSettings = new List<GatewayTemplateSetting>();
-        for (Object gatewayObject : gateways) {
-            gatewayTemplateSettings.add(buildGatewayTemplateSetting(gatewayObject));
+        if (!gateways.isEmpty()) {
+            for (Object gatewayObject : gateways) {
+                gatewayTemplateSettings.add(buildGatewayTemplateSetting(gatewayObject));
+            }
         }
 
         return JSON.serialize(gatewayTemplateSettings);

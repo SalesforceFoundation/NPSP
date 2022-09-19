@@ -92,15 +92,25 @@ public with sharing class PS_GatewayManagement {
     @AuraEnabled
     public static String encryptGatewayId(String gatewayId) {
         PS_IntegrationServiceConfig.Service integrationService = new PS_IntegrationServiceConfig.Service();
-        return EncodingUtil.base64Encode(Crypto.encryptWithManagedIV('AES128',
-                Blob.valueOf(integrationService.getMerchantIds().left(16)), Blob.valueOf(gatewayId)));
+        try {
+            return EncodingUtil.base64Encode(Crypto.encryptWithManagedIV('AES128',
+                    Blob.valueOf(integrationService.getMerchantIds().left(16)), Blob.valueOf(gatewayId)));
+        }
+        catch (Exception e) {
+            return null;
+        }
     }
 
     @AuraEnabled
     public static String decryptGatewayId(String encryptedGatewayId) {
         PS_IntegrationServiceConfig.Service integrationService = new PS_IntegrationServiceConfig.Service();
-        return (Crypto.decryptWithManagedIV('AES128',
-                Blob.valueOf(integrationService.getMerchantIds().left(16)),
-                EncodingUtil.base64Decode(encryptedGatewayId))).toString();
+        try {
+            return (Crypto.decryptWithManagedIV('AES128',
+                    Blob.valueOf(integrationService.getMerchantIds().left(16)),
+                    EncodingUtil.base64Decode(encryptedGatewayId))).toString();
+        }
+        catch (Exception e) {
+            return null;
+        }
     }
 }

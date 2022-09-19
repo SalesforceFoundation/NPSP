@@ -7,7 +7,7 @@ import getDefaultTemplateId from '@salesforce/apex/PS_GatewayManagement.getDefau
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import GeGatewaySettings from 'c/geGatewaySettings';
 import { fireEvent } from 'c/pubsubNoPageRef';
-import { isNotEmpty } from 'c/utilCommon';
+import { isNotEmpty, showToast } from 'c/utilCommon';
 
 export default class GeGatewaySelectWidget extends LightningElement {
     @track isExpanded = false;
@@ -40,8 +40,6 @@ export default class GeGatewaySelectWidget extends LightningElement {
         if (this.isGatewayAssignmentEnabled) {
             await this.getElevateGateways();
         }
-
-        this.isReady = true;
     }
 
     disconnectedCallback() {
@@ -55,15 +53,12 @@ export default class GeGatewaySelectWidget extends LightningElement {
 
         this._elevateGateways = JSON.parse(await getGatewaysFromElevate());
 
-        if (this._elevateGateways && !this._elevateGateways.errors) {
+        if (this._elevateGateways && this._elevateGateways.length > 0 && !(this._elevateGateways.errors)) {
             this.buildOptions();
+            this.isReady = true;
         } else {
             this.handleErrors();
         }
-    }
-
-    handleErrors(errorMessage) {
-        console.log('boom!!!');
     }
 
     buildOptions() {
@@ -105,6 +100,28 @@ export default class GeGatewaySelectWidget extends LightningElement {
             }
         }
         this._firstDisplay = false;
+    }
+
+    handleErrors(errorMessage) {
+        let formattedErrorMessage;
+        let details;
+
+        if (errorMessage) {
+            formattedErrorMessage = 'We can\'t validate the saved gateway. Select a different gateway.';
+        }
+        else if (!this._elevateGateways || this._elevateGateways.length === 0) {
+            formattedErrorMessage = 'No active Elevate gateways found. Check your Elevate account.';
+        }
+        else {
+            formattedErrorMessage = 'Unable to connect to Elevate. Check your connection and try again.';
+            details = this._elevateGateways.errors.map((error) => error.message).join("\n ");
+        }
+
+        this.displayError(formattedErrorMessage, details);
+    }
+
+    displayError(message, details) {
+        showToast(message, details, 'error', 'sticky');
     }
 
     isValidSavedGatewayId(savedGatewayId) {
