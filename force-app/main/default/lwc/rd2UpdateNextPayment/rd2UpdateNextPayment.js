@@ -24,7 +24,7 @@ import newInstallmentAmountValidation from '@salesforce/label/c.RD2_NewInstallme
 import newInstallmentRevertLabel from '@salesforce/label/c.RD2_NewInstallmentRevert';
 import changeNextInstallmentSuccess from '@salesforce/label/c.RD2_ChangeNextInstallmentSuccess';
 
-import getPauseData from '@salesforce/apex/RD2_PauseForm_CTRL.getPauseData';
+import getTableData from '@salesforce/apex/RD2_PauseForm_CTRL.getPauseData';
 import getInstallments from '@salesforce/apex/RD2_PauseForm_CTRL.getInstallments';
 import handleNextPaymentAmount from '@salesforce/apex/RD2_EntryFormController.handleNextPaymentAmount';
 
@@ -54,7 +54,6 @@ export default class Rd2UpdateNextPayment extends LightningElement {
     _recordId;
     recordName;
     donationDate;
-    isElevateRecord = false;
 
     @track isLoading = true;
     @track permissions = {
@@ -128,12 +127,11 @@ export default class Rd2UpdateNextPayment extends LightningElement {
     * If the user does not have permission to create/edit RD, then pause details are not rendered.
     */
     loadDonationData = async () => {
-        getPauseData({ rdId: this.recordId })
+        getTableData({ rdId: this.recordId })
             .then(response => {
                 const donationData = JSON.parse(response);
                 this.permissions.hasAccess = donationData.hasAccess;
                 this.permissions.isBlocked = donationData.isRDClosed;
-                this.isElevateRecord = donationData.isElevateRecord;
                 if (!this.permissions.hasAccess) {
                     this.error.detail = this.labels.permissionRequired;
                     this.handleErrorDisplay();
@@ -167,7 +165,7 @@ export default class Rd2UpdateNextPayment extends LightningElement {
                         this.hasNextPaymentAmount = true;
                         this.nextPaymentAmount = existingNextPaymentAmount;
                         // In the rare case this is the last installment, use the first instead
-                        let rdAmountIndex = this.numberOfInstallments > i+1 ? i+1 : 0;
+                        let rdAmountIndex = this.numberOfInstallments > +i+1 ? +i+1 : 0;
                         this.rdAmount = response.dataTable.records[rdAmountIndex].amount;
                     }
                     this.installments.push(response.dataTable.records[i]);
@@ -261,7 +259,7 @@ export default class Rd2UpdateNextPayment extends LightningElement {
         let validityMessage = '';
         let nextPaymentAmountIsEmpty = isEmpty(this.nextPaymentAmount);
         let isEmptyAndNotReverting = (nextPaymentAmountIsEmpty && !this.hasNextPaymentAmount);
-        if (isEmptyAndNotReverting || this.nextPaymentAmount < 0) {
+        if (isEmptyAndNotReverting || this.nextPaymentAmount <= 0) {
             validityMessage = this.labels.newInstallmentAmountValidation;
             this.isSaveDisabled = true;
             this.changeInstallmentSummary = '';
@@ -325,7 +323,5 @@ export default class Rd2UpdateNextPayment extends LightningElement {
         if (errorDetail && this.permissions.hasAccess === false) {
             this.error.header = this.labels.insufficientPermissions;
         }
-
-        this.template.querySelector(".slds-modal__header").scrollIntoView();
     }
 }

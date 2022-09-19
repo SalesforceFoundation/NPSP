@@ -5,7 +5,6 @@ import { CloseScreenEventName } from 'lightning/actions';
 
 const mockPauseData = require('./data/getPauseData.json');
 const mockGetInstallments = require('./data/getInstallments.json');
-const mockScrollIntoView = jest.fn();
 const mockHandleClose = jest.fn();
 const FAKE_RD2_ID = '00A-fake-rd2-id'
 
@@ -63,7 +62,6 @@ describe('c-rd2-update-next-payment', () => {
         getPauseData.mockResolvedValue(JSON.stringify(mockPauseData));
         component.recordId = FAKE_RD2_ID;
         component.addEventListener(CloseScreenEventName, mockHandleClose);
-        window.HTMLElement.prototype.scrollIntoView = mockScrollIntoView;
     });
 
     afterEach(() => {
