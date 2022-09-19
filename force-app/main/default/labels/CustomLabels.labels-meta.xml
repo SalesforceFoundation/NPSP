@@ -12651,7 +12651,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label for ACH payment method.</shortDescription>
-        <value>ACH</value>
+        <value>ACH (bank account)</value>
     </labels>
     <labels>
         <fullName>psGatewayDefault</fullName>
