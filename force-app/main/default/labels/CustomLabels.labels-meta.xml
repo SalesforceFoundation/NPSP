@@ -12670,14 +12670,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Default</value>
     </labels>
     <labels>
-        <fullName>psGatewayHelp</fullName>
-        <categories>Payment Gateway Management</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Help text for Gateway Selection.</shortDescription>
-        <value>If you select a gateway other than the default for this template, it will be used instead of the default gateway for all gift entries that use this template. Payment methods that aren&apos;t supported by the Elevate gateway are disabled here. The first time a gateway is selected for a template, all supported payment methods are turned on. If a payment method is turned off for use with a template, that setting is saved on the template.</value>
-    </labels>
-    <labels>
         <fullName>psGatewaysNotFound</fullName>
         <categories>Payment Gateway Management</categories>
         <language>en_US</language>

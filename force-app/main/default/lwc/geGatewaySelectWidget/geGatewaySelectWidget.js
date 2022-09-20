@@ -8,7 +8,6 @@ import getGatewayIdFromConfig from '@salesforce/apex/GE_GiftEntryController.getG
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import psACH from '@salesforce/label/c.psACH';
 import psElevateConnectionTimeout from '@salesforce/label/c.psElevateConnectionTimeout';
-import psGatewayHelp from '@salesforce/label/c.psGatewayHelp';
 import psGatewayDefault from '@salesforce/label/c.psGatewayDefault';
 import psGatewaysNotFound from '@salesforce/label/c.psGatewaysNotFound';
 import psGatewayNotValid from '@salesforce/label/c.psGatewayNotValid';
@@ -42,7 +41,6 @@ export default class GeGatewaySelectWidget extends LightningElement {
         psACH,
         psElevateConnectionTimeout,
         psGatewayDefault,
-        psGatewayHelp,
         psGatewaysNotFound,
         psGatewayNotValid,
         psHideGatewaysAndMethods,
@@ -153,7 +151,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
 
     handleErrors() {
         let formattedErrorMessage;
-        let details;
+        let details = null;
 
         if (this._savedGatewayNotFound) {
             formattedErrorMessage = this.CUSTOM_LABELS.psGatewayNotValid;
