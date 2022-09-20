@@ -29,6 +29,7 @@
  */
 
 public with sharing class PS_GatewayManagement {
+
     @AuraEnabled
     public static void setGatewayId(String gatewayId) {
         Map<String, List<Map<String, String>>> gatewayConfig = new Map<String, List<Map<String, String>>> {
