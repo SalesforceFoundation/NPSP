@@ -49,7 +49,7 @@ public with sharing class PMT_RefundController_TEST {
     }
 
     @IsTest
-    private static void verifyCalloutIsMadToRetrieveElevateRefundInformation() {
+    private static void verifyCalloutIsMadeToRetrieveElevateRefundInformation() {
         Decimal refundAmount = 50;
         PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
 
