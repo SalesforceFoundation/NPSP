@@ -12,38 +12,43 @@
                 <template if:true={isGatewayAssignmentEnabled}>
                     <template if:false={isExpanded}>
                         <div class="uniform-top">
-                            <!--                            TODO: properties-->
-                            <lightning-button variant="base"
+                            <lightning-button name="ga-show-button"
+                                              variant="base"
                                               label={CUSTOM_LABELS.psShowGatewaysAndMethods}
                                               onclick={toggleSelectGatewayControls}
-                                              class='slds-button hide-card-button'>
+                                              class="slds-button hide-card-button"
+                                              data-qa-locator="ga-show-button">
                             </lightning-button>
-                            <!--                            TODO: properties-->
-                            <lightning-button-icon variant="bare"
+                            <lightning-button-icon name="ga-show-button-icon"
+                                                   alternative-text={CUSTOM_LABELS.psShowGatewaysAndMethods}
+                                                   variant="bare"
                                                    icon-name="utility:chevrondown"
                                                    onclick={toggleSelectGatewayControls}
-                                                   class="slds-m-left_xxx-small">
+                                                   class="slds-m-left_xxx-small"
+                                                   data-qa-locator="ga-show-button-icon">
                             </lightning-button-icon>
                         </div>
                     </template>
                     <template if:true={isExpanded}>
                         <div class="uniform-top">
-                            <!--                            TODO: properties-->
-                            <lightning-button variant="base"
+                            <lightning-button name="ga-hide-button"
+                                              variant="base"
                                               label={CUSTOM_LABELS.psHideGatewaysAndMethods}
                                               onclick={toggleSelectGatewayControls}
-                                              class='slds-button hide-card-button'>
+                                              class='slds-button hide-card-button'
+                                              data-qa-locator="ga-hide-button">
                             </lightning-button>
-                            <!--                            TODO: properties-->
-                            <lightning-button-icon variant="bare"
+                            <lightning-button-icon name="ga-hide-button-icon"
+                                                   alternative-text={CUSTOM_LABELS.psHideGatewaysAndMethods}
+                                                   variant="bare"
                                                    icon-name="utility:chevronup"
                                                    onclick={toggleSelectGatewayControls}
-                                                   class="slds-m-left_xxx-small">
+                                                   class="slds-m-left_xxx-small"
+                                                   data-qa-locator="ga-hide-button-icon">
                             </lightning-button-icon>
                         </div>
                         <div class="half-reduced">
-                            <!--                            TODO: properties-->
-                            <lightning-combobox data-id='inputComponent'
+                            <lightning-combobox name="gateway-combobox"
                                                 value={selectedGateway}
                                                 label={CUSTOM_LABELS.psSelectPaymentGateway}
                                                 options={gatewayOptions}
@@ -57,45 +62,47 @@
                 <template if:false={isGatewayAssignmentEnabled}>
                     <template if:false={isExpanded}>
                         <div class="uniform-top">
-                            <!--                            TODO: properties-->
-                            <lightning-button variant="base"
+                            <lightning-button name="pm-show-button"
+                                              variant="base"
                                               label={CUSTOM_LABELS.psShowPaymentMethods}
                                               onclick={toggleSelectGatewayControls}
-                                              class='slds-button hide-card-button'>
+                                              class='slds-button hide-card-button'
+                                              data-qa-locator="pm-show-button">
                             </lightning-button>
-                            <!--                            TODO: properties-->
-                            <lightning-button-icon variant="bare"
+                            <lightning-button-icon name="pm-show-button-icon"
+                                                   alternative-text={CUSTOM_LABELS.psShowPaymentMethods}
+                                                   variant="bare"
                                                    icon-name="utility:chevrondown"
                                                    onclick={toggleSelectGatewayControls}
-                                                   class="slds-m-left_xxx-small">
+                                                   class="slds-m-left_xxx-small"
+                                                   data-qa-locator="pm-show-button-icon">
                             </lightning-button-icon>
                         </div>
                     </template>
                     <template if:true={isExpanded}>
                         <div class="uniform-top">
-                            <!--                            TODO: properties-->
-                            <lightning-button variant="base"
+                            <lightning-button name="pm-hide-button"
+                                              variant="base"
                                               label={CUSTOM_LABELS.psHidePaymentMethods}
                                               onclick={toggleSelectGatewayControls}
-                                              class='slds-button hide-card-button'>
+                                              class='slds-button hide-card-button'
+                                              data-qa-locator="pm-hide-button">
                             </lightning-button>
-                            <!--                            TODO: properties-->
-                            <lightning-button-icon variant="bare"
+                            <lightning-button-icon name="pm-hide-button-icon"
+                                                   alternative-text={CUSTOM_LABELS.psHidePaymentMethods}
+                                                   variant="bare"
                                                    icon-name="utility:chevronup"
                                                    onclick={toggleSelectGatewayControls}
-                                                   class="slds-m-left_xxx-small">
+                                                   class="slds-m-left_xxx-small"
+                                                   data-qa-locator="pm-hide-button-icon">
                             </lightning-button-icon>
                         </div>
                     </template>
                 </template>
                 <template if:true={isExpanded}>
                     <div class="uniform-top">
-                        <!--                            TODO: properties-->
                         <label class="slds-form-element__label" >{CUSTOM_LABELS.psSelectPaymentMethods}</label>
-                        <!--                            TODO: properties-->
-                        <lightning-input aria-label="default value"
-                                         data-id='inputComponent'
-                                         name="checkboxACH"
+                        <lightning-input name="checkboxACH"
                                          label={CUSTOM_LABELS.psACH}
                                          checked={isACHEnabled}
                                          disabled={isACHDisabled}
@@ -103,12 +110,9 @@
                                          data-name="checkboxACH"
                                          variant="standard"
                                          type="checkbox"
-                                         data-qa-locator="booga2">
+                                         data-qa-locator="checkboxACH">
                         </lightning-input>
-                        <!--                            TODO: properties-->
-                        <lightning-input aria-label="default value"
-                                         data-id='inputComponent'
-                                         name="checkboxCreditCard"
+                        <lightning-input name="checkboxCreditCard"
                                          label={CUSTOM_LABELS.RD2_Credit_Card_Payment_Method_Label}
                                          checked={isCreditCardEnabled}
                                          disabled={isCreditCardDisabled}
@@ -116,7 +120,7 @@
                                          data-name="checkboxCreditCard"
                                          variant="standard"
                                          type="checkbox"
-                                         data-qa-locator="booga2">
+                                         data-qa-locator="checkboxCreditCard">
                         </lightning-input>
                     </div>
                 </template>
