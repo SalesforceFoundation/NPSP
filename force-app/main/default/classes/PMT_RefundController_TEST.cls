@@ -50,7 +50,7 @@ public with sharing class PMT_RefundController_TEST {
 
     @IsTest
     private static void verifyCalloutIsMadeToRetrieveElevateRefundInformation() {
-        Decimal refundAmount = 50;
+        Decimal refundAmount = 984.21;
         PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
 
         npe01__OppPayment__c payment = getElevatePaymentRecord();
