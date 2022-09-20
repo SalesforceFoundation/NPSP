@@ -118,14 +118,22 @@ export default class GeGatewaySelectWidget extends LightningElement {
         }
 
         let elevateSettings = GeGatewaySettings.getElevateSettings();
-        if (isEmpty(elevateSettings)) {
-            await this.selectDefaultGateway();
+        if (this.isGatewayAssignmentEnabled) {
+            await this.handleInitialGatewaySelection(elevateSettings);
         }
         else {
-            await this.selectSavedGateway(elevateSettings);
+            this.handleInitialPaymentMethodSelections(elevateSettings);
         }
 
         this._firstDisplay = false;
+    }
+
+    async handleInitialGatewaySelection(elevateSettings) {
+        if (isEmpty(elevateSettings)) {
+            await this.selectDefaultGateway();
+        } else {
+            await this.selectSavedGateway(elevateSettings);
+        }
     }
 
     async selectDefaultGateway() {
@@ -146,6 +154,13 @@ export default class GeGatewaySelectWidget extends LightningElement {
         } else {
             this._savedGatewayNotFound = true;
             this.handleErrors();
+        }
+    }
+
+    handleInitialPaymentMethodSelections(elevateSettings) {
+        if (elevateSettings) {
+            this.isACHEnabled = elevateSettings.isACHEnabled;
+            this.isCreditCardEnabled = elevateSettings.isCreditCardEnabled;
         }
     }
 
@@ -197,15 +212,11 @@ export default class GeGatewaySelectWidget extends LightningElement {
 
     handleACHChange(event) {
         this.isACHEnabled = event.target.checked;
-        this.handlePaymentTypeChange();
+        this.updateElevateSettings();
     }
 
     handleCreditCardChange(event) {
         this.isCreditCardEnabled = event.target.checked;
-        this.handlePaymentTypeChange();
-    }
-
-    handlePaymentTypeChange() {
         this.updateElevateSettings();
     }
 
@@ -261,7 +272,8 @@ export default class GeGatewaySelectWidget extends LightningElement {
 
     async updateElevateSettings() {
         let elevateSettings = {
-            uniqueKey: await encryptGatewayId( {gatewayId: this.selectedGateway}),
+            uniqueKey: isGatewayAssignmentEnabled ?
+                await encryptGatewayId( {gatewayId: this.selectedGateway}) : null,
             isACHEnabled: this.isACHEnabled,
             isCreditCardEnabled: this.isCreditCardEnabled
         }
