@@ -237,6 +237,10 @@ public class ElevateBatchItemCreateResponse {
         return commitmentResponse != null ? commitmentResponse.status : purchaseResponse.status;
     }
 
+    public String statusReason() {
+        return commitmentResponse?.statusReason;
+    }
+
     public String declineReason() {
         return purchaseResponse?.declineReason;
     }
