@@ -94,7 +94,7 @@ public with sharing class PMT_RefundController {
             return refundView;
         }
 
-        if (isElevatePayment(refundInfo.originalPayment.Elevate_Payment_ID__c)) {
+        if (isElevatePayment(refundInfo?.originalPayment?.Elevate_Payment_ID__c)) {
             processElevateRefund(refundInfo.originalPayment, refundView, refundAmount);
         } else {
             processNonElevateRefund(refundInfo.originalPayment, refundView, refundAmount);
