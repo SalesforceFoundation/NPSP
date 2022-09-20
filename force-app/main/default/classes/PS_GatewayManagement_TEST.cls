@@ -63,8 +63,8 @@ private with sharing class PS_GatewayManagement_TEST {
 
         System.runAs(adminUser) {
             System.assertEquals(true, PS_GatewayManagement.isSystemAdmin(), 'If the user has a system admin profile ' +
-                    'with the correct admin permissions assigned the method should correctly identify that the user ' +
-                    'has admin permissions.');
+                'with the correct admin permissions assigned the method should correctly identify that the user ' +
+                'has admin permissions.');
         }
     }
 
