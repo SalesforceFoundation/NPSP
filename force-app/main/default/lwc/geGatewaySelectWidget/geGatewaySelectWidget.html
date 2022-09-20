@@ -1,6 +1,5 @@
 <template>
-    <!--                            TODO: css-->
-    <lightning-layout-item size="12" style="width: 100%">
+    <lightning-layout-item size="12">
         <template if:true={isLoading}>
             <div class='spinner-container'>
                 <lightning-spinner alternative-text={CUSTOM_LABELS.messageLoading}
@@ -12,8 +11,7 @@
             <template if:false={isDefaultTemplate}>
                 <template if:true={isGatewayAssignmentEnabled}>
                     <template if:false={isExpanded}>
-                        <!--                            TODO: css-->
-                        <div style="padding-top: 0.50rem">
+                        <div class="uniform-top">
                             <!--                            TODO: properties-->
                             <lightning-button variant="base"
                                               label={CUSTOM_LABELS.psShowGatewaysAndMethods}
@@ -29,8 +27,7 @@
                         </div>
                     </template>
                     <template if:true={isExpanded}>
-                        <!--                            TODO: css-->
-                        <div style="padding-top: 0.50rem">
+                        <div class="uniform-top">
                             <!--                            TODO: properties-->
                             <lightning-button variant="base"
                                               label={CUSTOM_LABELS.psHideGatewaysAndMethods}
@@ -44,8 +41,7 @@
                                                    class="slds-m-left_xxx-small">
                             </lightning-button-icon>
                         </div>
-                        <!--                            TODO: css-->
-                        <div style="padding-top: 0.30rem; width: 50%">
+                        <div class="half-reduced">
                             <!--                            TODO: properties-->
                             <lightning-combobox data-id='inputComponent'
                                                 value={selectedGateway}
@@ -60,8 +56,7 @@
                 </template>
                 <template if:false={isGatewayAssignmentEnabled}>
                     <template if:false={isExpanded}>
-                        <!--                            TODO: css-->
-                        <div style="padding-top: 0.50rem">
+                        <div class="uniform-top">
                             <!--                            TODO: properties-->
                             <lightning-button variant="base"
                                               label={CUSTOM_LABELS.psShowPaymentMethods}
@@ -77,8 +72,7 @@
                         </div>
                     </template>
                     <template if:true={isExpanded}>
-                        <!--                            TODO: css-->
-                        <div style="padding-top: 0.50rem">
+                        <div class="uniform-top">
                             <!--                            TODO: properties-->
                             <lightning-button variant="base"
                                               label={CUSTOM_LABELS.psHidePaymentMethods}
@@ -95,8 +89,7 @@
                     </template>
                 </template>
                 <template if:true={isExpanded}>
-                    <!--                            TODO: css-->
-                    <div style="padding-top: 0.50rem">
+                    <div class="uniform-top">
                         <!--                            TODO: properties-->
                         <label class="slds-form-element__label" >{CUSTOM_LABELS.psSelectPaymentMethods}</label>
                         <!--                            TODO: properties-->

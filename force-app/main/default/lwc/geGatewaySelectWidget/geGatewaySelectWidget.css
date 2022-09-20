@@ -1,3 +1,8 @@
-/**
- * Created by reede.stockton on 8/27/22.
- */
+.uniform-top {
+    padding-top: 0.50rem;
+}
+
+.half-reduced {
+    padding-top: 0.30rem;
+    width: 50%;
+}
