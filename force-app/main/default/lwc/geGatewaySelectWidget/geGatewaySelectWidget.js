@@ -129,7 +129,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
     }
 
     async handleInitialGatewaySelection(elevateSettings) {
-        if (isEmpty(elevateSettings)) {
+        if (isEmpty(elevateSettings) || isEmpty(elevateSettings.uniqueKey)) {
             await this.selectDefaultGateway();
         } else {
             await this.selectSavedGateway(elevateSettings);
@@ -232,7 +232,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
 
     updateCreditCardSettings() {
         if (!this.isCreditCardAvailableFor(this.selectedGateway)) {
-            this.isACHEnabled = false;
+            this.isCreditCardEnabled = false;
             this.isCreditCardDisabled = true;
         }
         else {
