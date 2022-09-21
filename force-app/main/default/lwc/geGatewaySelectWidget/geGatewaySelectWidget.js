@@ -279,16 +279,4 @@ export default class GeGatewaySelectWidget extends LightningElement {
         }
         fireEvent(this, 'updateElevateSettings', elevateSettings);
     }
-
-    get isACHEnabled() {
-        return this.isACHEnabled;
-    }
-
-    get selectedGateway() {
-        return this.selectedGateway;
-    }
-
-    get isCreditCardEnabled() {
-        return this.isCreditCardEnabled;
-    }
 }
