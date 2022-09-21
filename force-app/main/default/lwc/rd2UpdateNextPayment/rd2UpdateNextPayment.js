@@ -1,5 +1,5 @@
 import { LightningElement, api, track } from 'lwc';
-import { showToast, constructErrorMessage, isEmpty, isNull } from 'c/utilCommon';
+import { showToast, constructErrorMessage, isEmpty, isNull, isNumeric } from 'c/utilCommon';
 import { CloseActionScreenEvent } from 'lightning/actions';
 import { getNumberAsLocalizedCurrency, getDateAsLocalizedFormat } from 'c/utilNumberFormatter';
 import { Rd2Service } from "c/rd2Service";
@@ -70,10 +70,11 @@ export default class Rd2UpdateNextPayment extends LightningElement {
     @track columns = [];
     @track installments = [];
 
-    numberOfInstallments = 12;
+    numberOfInstallments = 13;
     maxRowDisplay = 1;
     @track changeInstallmentSummary = '';
     @track saveButtonLabel = this.labels.saveButton;
+    validityMessage = '';
 
     rd2Service = new Rd2Service();
     @track error = {};
@@ -218,17 +219,7 @@ export default class Rd2UpdateNextPayment extends LightningElement {
                 nextPaymentAmount: this.nextPaymentAmount
             })
                 .then((jsonResponse) => {
-                    const response = isNull(jsonResponse) ? null : JSON.parse(jsonResponse);
-                    const isSuccess =
-                        isNull(response) ||
-                        response.statusCode === HTTP_CODES.Created ||
-                        response.statusCode === HTTP_CODES.OK;
-                    if (isSuccess) {
-                        this.handleSaveSuccess();
-                    } else {
-                        const message = this.rd2Service.getCommitmentError(response);
-                        this.handleError(message);
-                    }
+                    this.processSaveResponse(jsonResponse);
                 })
                 .catch((error) => {
                     this.handleError(error);
@@ -236,6 +227,28 @@ export default class Rd2UpdateNextPayment extends LightningElement {
         } catch (error) {
             this.handleError(error);
         }
+    }
+
+    /***
+    * @description Process the response from handleSave
+    */
+    processSaveResponse(jsonResponse) {
+        const response = isNull(jsonResponse) ? null : JSON.parse(jsonResponse);
+        if (this.isSuccess(response)) {
+            this.handleSaveSuccess();
+        } else {
+            const message = this.rd2Service.getCommitmentError(response);
+            this.handleError(message);
+        }
+    }
+
+    /***
+    * @description Helper method to determine if the response was a success
+    */
+    isSuccess(response) {
+        return isNull(response) ||
+            response.statusCode === HTTP_CODES.Created ||
+            response.statusCode === HTTP_CODES.OK;
     }
 
     /***
@@ -254,32 +267,60 @@ export default class Rd2UpdateNextPayment extends LightningElement {
     * and checks if the [Save] button should be enabled.
     */
     handleNextPaymentAmountChange(event) {
-        this.nextPaymentAmount = event.detail.value;
-        const nextPaymentAmountField = this.template.querySelector("[data-id='nextPaymentAmount']");
-        let validityMessage = '';
-        let nextPaymentAmountIsEmpty = isEmpty(this.nextPaymentAmount);
-        let isEmptyAndNotReverting = (nextPaymentAmountIsEmpty && !this.hasNextPaymentAmount);
+        this.nextPaymentAmount = parseFloat(event.detail.value);
+        let isEmptyAndNotReverting = this.isNextPaymentAmountEmpty && !this.hasNextPaymentAmount;
         if (isEmptyAndNotReverting || this.nextPaymentAmount <= 0) {
-            validityMessage = this.labels.newInstallmentAmountValidation;
-            this.isSaveDisabled = true;
-            this.changeInstallmentSummary = '';
+            this.handleInvalidInput();
         } else {
-            this.isSaveDisabled = false;
-            let amountToShow = this.nextPaymentAmount;
-            if (nextPaymentAmountIsEmpty) {
-                this.nextPaymentAmount = null;
-                this.saveButtonLabel = this.labels.newInstallmentRevertLabel;
-                amountToShow = this.rdAmount;
-            } else {
-                this.saveButtonLabel = this.labels.saveButton;
-            }
-            let currencyAmount = getNumberAsLocalizedCurrency(amountToShow);
-            let dateString = getDateAsLocalizedFormat(this.donationDate);
-            this.changeInstallmentSummary = 
-                this.labels.newInstallmentConfirmation.replace('{0}', dateString)
-                .replace('{1}', currencyAmount);
+            this.handleValidInput();
         }
-        nextPaymentAmountField.setCustomValidity(validityMessage);
+    }
+
+    /***
+    * @description Returns true if the next payment amount field is blank
+    */
+    get isNextPaymentAmountEmpty() {
+        return isEmpty(this.nextPaymentAmount) || !isNumeric(this.nextPaymentAmount);
+    }
+
+    /***
+    * @description Helper method when the provided input value is invalid
+    */
+    handleInvalidInput() {
+        this.isSaveDisabled = true;
+        this.validityMessage = this.labels.newInstallmentAmountValidation;
+        this.changeInstallmentSummary = '';
+        this.reportInputValidity();
+    }
+
+    /***
+    * @description Helper method when the provided input value is valid
+    */
+    handleValidInput() {
+        this.isSaveDisabled = false;
+        this.validityMessage = '';
+        let amountToShow = this.nextPaymentAmount;
+        if (this.isNextPaymentAmountEmpty) {
+            this.nextPaymentAmount = null;
+            this.saveButtonLabel = this.labels.newInstallmentRevertLabel;
+            amountToShow = this.rdAmount;
+        } else {
+            this.saveButtonLabel = this.labels.saveButton;
+        }
+        let currencyAmount = getNumberAsLocalizedCurrency(amountToShow);
+        let dateString = getDateAsLocalizedFormat(this.donationDate);
+        this.changeInstallmentSummary = 
+            this.labels.newInstallmentConfirmation.replace('{0}', dateString)
+            .replace('{1}', currencyAmount);
+        this.reportInputValidity();
+    }
+
+    /***
+    * @description Helper method to set the validity of the next payment input
+    */
+    reportInputValidity() {
+        const nextPaymentAmountField = this.template.querySelector("[data-id='nextPaymentAmount']");
+        nextPaymentAmountField.setCustomValidity(this.validityMessage);
         nextPaymentAmountField.reportValidity();
     }
 

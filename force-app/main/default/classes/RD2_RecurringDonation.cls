@@ -160,8 +160,8 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
-    * @description Returns True if the Next Payment Date has changed on an Elevate connected RD
-    * @return Boolean True if the Next Payment Date has changed on an Elevate connected RD
+    * @description Returns True if the Next Payment Date has changed
+    * @return Boolean True if the Next Payment Date has changed
     */
     public Boolean needsNextPaymentScheduleCheck() {
         return changedFields.contains(npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c);
