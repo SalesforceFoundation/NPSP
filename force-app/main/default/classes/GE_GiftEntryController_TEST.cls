@@ -781,13 +781,7 @@ ElevateBatchItemType.ONE_TIME, TEST_PAYMENT_METHOD_CARD);
     @IsTest
     private static void shouldDecryptEncryptedValue() {
         String testGatewayId = '1234-5678-90';
-
-        Payment_Services_Configuration__c merchantConfig = new Payment_Services_Configuration__c(
-            Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
-            Key__c = PS_IntegrationServiceConfig.SFDO_MERCHANTIDS,
-            Value__c = '12345678901245678901234567890'
-        );
-        insert merchantConfig;
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
         String encryptedGatewayId = GE_GiftEntryController.encryptGatewayId(testGatewayId);
         System.assertNotEquals(testGatewayId, encryptedGatewayId, 'Encrypted value should be different than original');

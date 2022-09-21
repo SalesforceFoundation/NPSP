@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2022
-* @group BGE
+* @group Payment Services
 * @description Contains methods to retrieve Elevate gateways
 */
 public with sharing class PS_GatewayService {
