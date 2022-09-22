@@ -39,6 +39,8 @@ public with sharing class GE_GiftEntryController {
 
     public static final String PURCHASE_CALL_TIMEOUT_MESSAGE = System.Label.geErrorRequestTimedout;
     private static final String BOOLEAN_DATA_TYPE = 'BOOLEAN';
+    public static final String ENCRYPTION_ALGORITHM = 'AES128';
+
     @TestVisible
     private static GiftBatchService giftBatchService {
         get {
@@ -1277,7 +1279,7 @@ public with sharing class GE_GiftEntryController {
     public static String encryptGatewayId(String gatewayId) {
         PS_IntegrationServiceConfig.Service integrationService = new PS_IntegrationServiceConfig.Service();
         try {
-            return EncodingUtil.base64Encode(Crypto.encryptWithManagedIV('AES128',
+            return EncodingUtil.base64Encode(Crypto.encryptWithManagedIV(ENCRYPTION_ALGORITHM,
                     Blob.valueOf(integrationService.getMerchantIds().left(16)), Blob.valueOf(gatewayId)));
         }
         catch (Exception e) {
@@ -1289,7 +1291,7 @@ public with sharing class GE_GiftEntryController {
     public static String decryptGatewayId(String encryptedGatewayId) {
         PS_IntegrationServiceConfig.Service integrationService = new PS_IntegrationServiceConfig.Service();
         try {
-            return (Crypto.decryptWithManagedIV('AES128',
+            return (Crypto.decryptWithManagedIV(ENCRYPTION_ALGORITHM,
                     Blob.valueOf(integrationService.getMerchantIds().left(16)),
                     EncodingUtil.base64Decode(encryptedGatewayId))).toString();
         }
@@ -1300,7 +1302,6 @@ public with sharing class GE_GiftEntryController {
 
     @AuraEnabled
     public static String getGatewayAssignmentSettings() {
-        String jsonData;
 
         try {
             GatewayAssignmentSettings gaSettings = new GatewayAssignmentSettings();
@@ -1309,13 +1310,13 @@ public with sharing class GE_GiftEntryController {
             gaSettings.defaultTemplateId = getGiftEntrySettings().Default_Gift_Entry_Template__c;
             gaSettings.gatewayAssignmentEnabled = getGiftEntrySettings().Enable_Gateway_Assignment__c;
 
-            jsonData = JSON.serialize(gaSettings);
+            return JSON.serialize(gaSettings);
 
         } catch (Exception e) {
             UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
         }
 
-        return jsonData;
+        return null;
     }
 
     public class GatewayAssignmentSettings {

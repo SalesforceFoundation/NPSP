@@ -8,7 +8,7 @@ class GeGatewaySettings {
     setElevateSettings(initialSettings, templateRecordId) {
         this.elevateSettings = initialSettings;
         this.templateRecordId = templateRecordId;
-        registerListener('updateElevateSettings', this.handleSettingsUpdate, this);
+        registerListener('updateElevateSettings', this.settings, this);
     }
 
     getElevateSettings() {
@@ -19,7 +19,7 @@ class GeGatewaySettings {
         return this.templateRecordId;
     }
 
-    handleSettingsUpdate(event) {
+    settings(event) {
         this.elevateSettings = event;
     }
 }

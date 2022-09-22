@@ -69,19 +69,14 @@ public with sharing class PS_GatewayService {
 
     public String getGatewaysByMerchant() {
         UTIL_Http.Response gatewayResponse;
-        String jsonResponseBody;
 
         gatewayResponse = getGatewaysResponse();
 
         if (gatewayResponse.statusCode == UTIL_Http.STATUS_CODE_OK) {
-            jsonResponseBody =
-                buildTemplateSettingsJSON((Map<String, Object>) JSON.deserializeUntyped(gatewayResponse.body));
-        }
-        else {
-            jsonResponseBody = gatewayResponse.body;
+            return buildTemplateSettingsJSON((Map<String, Object>) JSON.deserializeUntyped(gatewayResponse.body));
         }
 
-        return jsonResponseBody;
+        return gatewayResponse.body;
     }
 
     private String buildTemplateSettingsJSON(Map<String, Object> gatewayResponse) {

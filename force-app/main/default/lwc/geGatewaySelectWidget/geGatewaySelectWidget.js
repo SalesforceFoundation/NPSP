@@ -282,7 +282,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
 
     async updateElevateSettings() {
         let elevateSettings = {
-            uniqueKey: isGatewayAssignmentEnabled ?
+            uniqueKey: this.isGatewayAssignmentEnabled ?
                 await encryptGatewayId( {gatewayId: this.selectedGateway}) : null,
             isACHEnabled: this.isACHEnabled,
             isCreditCardEnabled: this.isCreditCardEnabled
