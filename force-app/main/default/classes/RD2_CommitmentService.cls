@@ -85,8 +85,13 @@ public without sharing class RD2_CommitmentService {
     * @param nextPaymentAmount The Next Payment Amount to set on the Schedule
     * @return UTIL_Http.Response Payments API response
     */
-    public UTIL_Http.Response handleNextPaymentAmount(npe03__Recurring_Donation__c rd, Decimal nextPaymentAmount) {
+    public UTIL_Http.Response handleCommitmentNextPaymentAmount(npe03__Recurring_Donation__c rd, Decimal nextPaymentAmount) {
         UTIL_Http.Response response;
+
+        // If we want to revert the Next Payment Amount in Elevate, we need to overwrite the value
+        if (nextPaymentAmount == null) {
+            nextPaymentAmount = rd.npe03__Amount__c;
+        }
 
         PS_CommitmentRequest.RequestBody requestBody = 
             new PS_CommitmentRequest().getUpdateScheduleRequestBody(rd, nextPaymentAmount);

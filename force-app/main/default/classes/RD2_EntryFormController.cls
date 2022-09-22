@@ -337,7 +337,7 @@ public with sharing class RD2_EntryFormController {
             UTIL_Http.Response response;
 
             if (rd?.CommitmentId__c != null) {
-                response = commitmentService.handleNextPaymentAmount(rd, nextPaymentAmount);
+                response = commitmentService.handleCommitmentNextPaymentAmount(rd, nextPaymentAmount);
 
                 if (commitmentService.isCommitmentSuccess(response)) {
                     updateSchedulesWithNextPaymentAmount(rd, nextPaymentAmount);
