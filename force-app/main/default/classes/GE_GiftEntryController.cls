@@ -1274,16 +1274,6 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
-    public static String getDefaultTemplateId() {
-        return GE_GiftEntryController.getGiftEntrySettings().Default_Gift_Entry_Template__c;
-    }
-
-    @AuraEnabled
-    public static Boolean isGatewayAssignmentEnabled() {
-        return GE_GiftEntryController.getGiftEntrySettings().Enable_Gateway_Assignment__c;
-    }
-
-    @AuraEnabled
     public static String encryptGatewayId(String gatewayId) {
         PS_IntegrationServiceConfig.Service integrationService = new PS_IntegrationServiceConfig.Service();
         try {
@@ -1309,8 +1299,29 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
-    public static String getGatewayIdFromConfig() {
-        return PS_GatewayManagement.getGatewayIdFromConfig();
+    public static String getGatewayAssignmentSettings() {
+        String jsonData;
+
+        try {
+            GatewayAssignmentSettings gaSettings = new GatewayAssignmentSettings();
+
+            gaSettings.defaultGatewayId = PS_GatewayManagement.getGatewayIdFromConfig();
+            gaSettings.defaultTemplateId = getGiftEntrySettings().Default_Gift_Entry_Template__c;
+            gaSettings.gatewayAssignmentEnabled = getGiftEntrySettings().Enable_Gateway_Assignment__c;
+
+            jsonData = JSON.serialize(gaSettings);
+
+        } catch (Exception e) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
+        }
+
+        return jsonData;
+    }
+
+    public class GatewayAssignmentSettings {
+        String defaultGatewayId;
+        String defaultTemplateId;
+        Boolean gatewayAssignmentEnabled;
     }
 
     private class CurrencyMismatchException extends Exception {}

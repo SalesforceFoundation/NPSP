@@ -2,9 +2,7 @@ import { LightningElement, track } from 'lwc';
 import getGatewaysFromElevate from '@salesforce/apex/GE_GiftEntryController.getGatewaysFromElevate';
 import encryptGatewayId from '@salesforce/apex/GE_GiftEntryController.encryptGatewayId';
 import decryptGatewayId from '@salesforce/apex/GE_GiftEntryController.decryptGatewayId';
-import isGatewayAssignmentEnabled from '@salesforce/apex/GE_GiftEntryController.isGatewayAssignmentEnabled';
-import getDefaultTemplateId from '@salesforce/apex/GE_GiftEntryController.getDefaultTemplateId';
-import getGatewayIdFromConfig from '@salesforce/apex/GE_GiftEntryController.getGatewayIdFromConfig';
+import getGatewayAssignmentSettings from '@salesforce/apex/GE_GiftEntryController.getGatewayAssignmentSettings';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import psACH from '@salesforce/label/c.psACH';
 import psElevateConnectionTimeout from '@salesforce/label/c.psElevateConnectionTimeout';
@@ -57,16 +55,28 @@ export default class GeGatewaySelectWidget extends LightningElement {
     _elevateGateways = null;
     _elevateGatewaysByUniqueKey = new Map();
     _firstDisplay = true;
+    _defaultTemplateId = null;
+    _defaultGatewayId = null;
 
-    async connectedCallback() {
-        if (GeGatewaySettings.getTemplateRecordId() === await getDefaultTemplateId()) {
+    async init() {
+        let gatewayAssignmentSettings = JSON.parse(await getGatewayAssignmentSettings());
+
+        this._defaultTemplateId = gatewayAssignmentSettings.defaultTemplateId;
+        this.isGatewayAssignmentEnabled = gatewayAssignmentSettings.gatewayAssignmentEnabled;
+        this._defaultGatewayId = gatewayAssignmentSettings.defaultGatewayId;
+
+        if (this._defaultTemplateId === GeGatewaySettings.getTemplateRecordId()) {
             this.isDefaultTemplate = true;
             this.isLoading = false;
             return;
         }
 
         this.resetAllSettingsToDefault;
-        this.isGatewayAssignmentEnabled = await isGatewayAssignmentEnabled();
+    }
+
+    async connectedCallback() {
+        await this.init();
+
         if (this.isGatewayAssignmentEnabled) {
             await this.getElevateGateways();
         }
@@ -137,7 +147,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
     }
 
     async selectDefaultGateway() {
-        this.selectedGateway = await getGatewayIdFromConfig();
+        this.selectedGateway = this._defaultGatewayId;
         this.updateACHSettings();
         this.updateCreditCardSettings();
         this.updateDisabledPaymentTypes();
