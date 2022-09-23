@@ -4,6 +4,7 @@ import { format } from 'c/utilCommon';
 // Import custom labels
 import bgeGridNoGiftsBody from '@salesforce/label/c.bgeGridNoGiftsBody';
 import bgeGridNoGiftsHeader from '@salesforce/label/c.bgeGridNoGiftsHeader';
+import commonAccountNumber from '@salesforce/label/c.commonAccountNumber';
 import commonAmount from '@salesforce/label/c.commonAmount';
 import commonAssistiveError from '@salesforce/label/c.commonAssistiveError';
 import commonAssistiveInfo from '@salesforce/label/c.commonAssistiveInfo';
@@ -11,6 +12,7 @@ import commonAssistiveSuccess from '@salesforce/label/c.commonAssistiveSuccess';
 import commonAssistiveWarning from '@salesforce/label/c.commonAssistiveWarning';
 import commonBack from '@salesforce/label/c.commonBack';
 import commonBatches from '@salesforce/label/c.commonBatches';
+import commonCVC from '@salesforce/label/c.commonCVC';
 import commonCVV from '@salesforce/label/c.commonCVV';
 import commonCancel from '@salesforce/label/c.commonCancel';
 import commonCardLast4 from '@salesforce/label/c.commonCardLast4';
@@ -42,6 +44,7 @@ import commonPermissionErrorMessage from '@salesforce/label/c.commonPermissionEr
 import commonReadMore from '@salesforce/label/c.commonReadMore';
 import commonRequired from '@salesforce/label/c.commonRequired';
 import commonReviewForm from '@salesforce/label/c.commonReviewForm';
+import commonRoutingNumber from '@salesforce/label/c.commonRoutingNumber';
 import commonSave from '@salesforce/label/c.commonSave';
 import commonSaveAndClose from '@salesforce/label/c.commonSaveAndClose';
 import commonSoftCredits from '@salesforce/label/c.commonSoftCredits';
@@ -257,6 +260,7 @@ class GeLabelService {
     CUSTOM_LABELS = Object.freeze({
         bgeGridNoGiftsBody,
         bgeGridNoGiftsHeader,
+        commonAccountNumber,
         commonAmount,
         commonAssistiveError,
         commonAssistiveInfo,
@@ -264,6 +268,7 @@ class GeLabelService {
         commonAssistiveWarning,
         commonBack,
         commonBatches,
+        commonCVC,
         commonCVV,
         commonCancel,
         commonCardLast4,
@@ -295,6 +300,7 @@ class GeLabelService {
         commonReadMore,
         commonRequired,
         commonReviewForm,
+        commonRoutingNumber,
         commonSave,
         commonSaveAndClose,
         commonSoftCredits,

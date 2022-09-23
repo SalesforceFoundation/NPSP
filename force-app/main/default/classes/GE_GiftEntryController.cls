@@ -39,6 +39,8 @@ public with sharing class GE_GiftEntryController {
 
     public static final String PURCHASE_CALL_TIMEOUT_MESSAGE = System.Label.geErrorRequestTimedout;
     private static final String BOOLEAN_DATA_TYPE = 'BOOLEAN';
+    public static final String ENCRYPTION_ALGORITHM = 'AES128';
+
     @TestVisible
     private static GiftBatchService giftBatchService {
         get {
@@ -86,6 +88,17 @@ public with sharing class GE_GiftEntryController {
                 geSettingsService = new GE_SettingsService();
             }
             return geSettingsService;
+        }
+        set;
+    }
+
+    @TestVisible
+    private static PS_GatewayService gatewayService {
+        get {
+            if (gatewayService == null) {
+                gatewayService = new PS_GatewayService();
+            }
+            return gatewayService;
         }
         set;
     }
@@ -1255,6 +1268,61 @@ public with sharing class GE_GiftEntryController {
             .build();
         List<DataImportBatch__c> batches = Database.query(query);
         return (String)batches[0].get(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
+    }
+
+    @AuraEnabled
+    public static String getGatewaysFromElevate() {
+        return gatewayService.getGatewaysByMerchant();
+    }
+
+    @AuraEnabled
+    public static String encryptGatewayId(String gatewayId) {
+        PS_IntegrationServiceConfig.Service integrationService = new PS_IntegrationServiceConfig.Service();
+        try {
+            return EncodingUtil.base64Encode(Crypto.encryptWithManagedIV(ENCRYPTION_ALGORITHM,
+                    Blob.valueOf(integrationService.getMerchantIds().left(16)), Blob.valueOf(gatewayId)));
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
+
+    @AuraEnabled
+    public static String decryptGatewayId(String encryptedGatewayId) {
+        PS_IntegrationServiceConfig.Service integrationService = new PS_IntegrationServiceConfig.Service();
+        try {
+            return (Crypto.decryptWithManagedIV(ENCRYPTION_ALGORITHM,
+                    Blob.valueOf(integrationService.getMerchantIds().left(16)),
+                    EncodingUtil.base64Decode(encryptedGatewayId))).toString();
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
+
+    @AuraEnabled
+    public static String getGatewayAssignmentSettings() {
+
+        try {
+            GatewayAssignmentSettings gaSettings = new GatewayAssignmentSettings();
+
+            gaSettings.defaultGatewayId = PS_GatewayManagement.getGatewayIdFromConfig();
+            gaSettings.defaultTemplateId = getGiftEntrySettings().Default_Gift_Entry_Template__c;
+            gaSettings.gatewayAssignmentEnabled = getGiftEntrySettings().Enable_Gateway_Assignment__c;
+
+            return JSON.serialize(gaSettings);
+
+        } catch (Exception e) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
+        }
+
+        return null;
+    }
+
+    public class GatewayAssignmentSettings {
+        String defaultGatewayId;
+        String defaultTemplateId;
+        Boolean gatewayAssignmentEnabled;
     }
 
     private class CurrencyMismatchException extends Exception {}
