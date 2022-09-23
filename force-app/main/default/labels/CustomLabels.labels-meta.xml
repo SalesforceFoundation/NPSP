@@ -6129,6 +6129,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You don&apos;t have the required permissions to perform this action. Contact your system administrator for assistance.</value>
     </labels>
     <labels>
+        <fullName>commonAccountNumber</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for Account Number</shortDescription>
+        <value>Account Number</value>
+    </labels>
+    <labels>
         <fullName>commonActivate</fullName>
         <categories>Auto Number</categories>
         <language>en_US</language>
@@ -6215,6 +6223,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Common label for card last 4</shortDescription>
         <value>Card Last 4</value>
+    </labels>
+    <labels>
+        <fullName>commonCVC</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for CVC code</shortDescription>
+        <value>CVC</value>
     </labels>
     <labels>
         <fullName>commonCVV</fullName>
@@ -6551,6 +6567,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Review Form</shortDescription>
         <value>Review Form</value>
+    </labels>
+    <labels>
+        <fullName>commonRoutingNumber</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for Routing Number</shortDescription>
+        <value>Routing Number</value>
     </labels>
     <labels>
         <fullName>commonAdminPermissionErrorMessage</fullName>
@@ -12622,12 +12646,108 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>A written off Payment must have a Payment Date.</value>
     </labels>
     <labels>
+        <fullName>psACH</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for ACH payment method.</shortDescription>
+        <value>ACH (bank account)</value>
+    </labels>
+    <labels>
+        <fullName>psElevateConnectionTimeout</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message for timeout connecting to Elevate.</shortDescription>
+        <value>The connection to Elevate timed out. Try again later.</value>
+    </labels>
+    <labels>
+        <fullName>psGatewayDefault</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label added to default gateway name.</shortDescription>
+        <value>Default</value>
+    </labels>
+    <labels>
+        <fullName>psGatewaysNotFound</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message for Elevate Payment Gateways not found.</shortDescription>
+        <value>No Payment Gateways were found. Check your Elevate Account.</value>
+    </labels>
+    <labels>
+        <fullName>psGatewayNotValid</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message for saved Elevate Payment Gateway not found.</shortDescription>
+        <value>We can&apos;t validate the previously saved gateway. Select a different gateway.</value>
+    </labels>
+    <labels>
+        <fullName>psHideGatewaysAndMethods</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to hide Elevate Gateways and Payment Methods.</shortDescription>
+        <value>Hide Elevate Gateways and Payment Methods</value>
+    </labels>
+    <labels>
+        <fullName>psHidePaymentMethods</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to hide Payment Methods.</shortDescription>
+        <value>Hide Payment Methods</value>
+    </labels>
+    <labels>
+        <fullName>psSelectPaymentGateway</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to select Payment Gateway.</shortDescription>
+        <value>Select Payment Gateway</value>
+    </labels>
+    <labels>
+        <fullName>psSelectPaymentMethods</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to select Payment Methods.</shortDescription>
+        <value>Select Payment Methods</value>
+    </labels>
+    <labels>
         <fullName>psSelectValidPaymentMethod</fullName>
         <categories>Gift Entry, Recurring Donations</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>How to activate the Elevate field bundle to enter payment information</shortDescription>
         <value>To enter payment, select a valid Payment Method.</value>
+    </labels>
+    <labels>
+        <fullName>psShowGatewaysAndMethods</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to show Elevate Gateways and Payment Methods.</shortDescription>
+        <value>Show Elevate Gateways and Payment Methods</value>
+    </labels>
+    <labels>
+        <fullName>psShowPaymentMethods</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to show Payment Methods.</shortDescription>
+        <value>Show Payment Methods</value>
+    </labels>
+    <labels>
+        <fullName>psUnableToConnect</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message for unable to connect to Elevate.</shortDescription>
+        <value>Unable to connect to Elevate. Check your connection and try again.</value>
     </labels>
     <labels>
         <fullName>ProgressMarkerAssistiveTextProgress</fullName>
