@@ -431,6 +431,54 @@ public with sharing class PMT_ValidationService_TEST {
             'Cannot update Elevate payment without integrationPermission');
     }
 
+    @IsTest
+    private static void verifyElevateRefundWillNotBeValidate() {
+        npe01__OppPayment__c originalPayment = new npe01__OppPayment__c(
+            Id = UTIL_UnitTestData_TEST.mockId(npe01__OppPayment__c.SObjectType),
+            npe01__Payment_Amount__c = 10,
+            npe01__Paid__c = true,
+            Elevate_Payment_ID__c = 'random'
+        );
+
+        npe01__OppPayment__c refund = new npe01__OppPayment__c(
+            npe01__Payment_Amount__c = -11,
+            DebitType__c = PMT_RefundService.FULL_REFUND,
+            OriginalPayment__c = originalPayment.Id,
+            Elevate_Payment_ID__c = 'random'
+        );
+
+        PMT_ValidationService validationService = new PMT_ValidationService(
+            new List<npe01__OppPayment__c>{refund},
+            null,
+            TDTM_Runnable.Action.BeforeInsert
+        );
+
+        validationService.isEnforceAccountingDataConsistency = false;
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+        .withIsIntegrationEnabled(true)
+        .withHasIntegrationPermissions(false);
+
+        PMT_ValidationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+
+        PMT_RefundService refundService = new PMT_RefundService()
+            .withOriginalPayments(new List<npe01__OppPayment__c>{originalPayment});
+    
+        refundService.originalPaymentWithRefunds.put(
+            originalPayment.Id, new PMT_RefundService.RefundInfo(originalPayment)
+        );
+        validationService.RefundService = refundService;
+
+        Test.startTest();
+        List<ErrorRecord> errorRecords = validationService.validate().getErrors();
+        Test.stopTest();
+
+        System.assertEquals(0, errorRecords.size(),
+            'Expecting refund validation should not run against Elevate refund record.');
+    }
+
     private static npe01__OppPayment__c addRefundRelatedList(npe01__OppPayment__c payment, List<SObject> records) {
         String paymentRecord = JSON.serialize(payment);
         paymentRecord = paymentRecord.left(paymentRecord.length()-1);

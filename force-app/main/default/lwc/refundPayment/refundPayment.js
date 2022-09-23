@@ -5,7 +5,6 @@ import { constructErrorMessage, showToast} from "c/utilCommon";
 import refundPaymentTitle from "@salesforce/label/c.pmtRefundPaymentTitle";
 import refundAmountField from "@salesforce/label/c.pmtRefundAmount";
 import remainingBalance from "@salesforce/label/c.pmtRemainingBalance";
-import refundPaymentDate from "@salesforce/label/c.pmtRefundPaymentDate";
 import refundPaymentConfirmButton from "@salesforce/label/c.pmtRefundPaymentConfirmedButton";
 import cancelButtonLabel from "@salesforce/label/c.stgBtnCancel";
 import commonRefreshPage from "@salesforce/label/c.commonRefreshPage";
@@ -35,7 +34,6 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
         noRefundPermissionMessage,
         refundAllocationHelpText,
         refundAmountField,
-        refundPaymentDate,
         refundProcessing,
         refundPaymentErrorMessage,
         refundPaymentSuccessMessage,
@@ -47,7 +45,6 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
     refundView;
     refundAmount;
     remainingBalance;
-    paymentDate;
     currencyCode;
 
     @api set recordId(value) {
@@ -64,7 +61,6 @@ export default class refundPayment extends NavigationMixin(LightningElement) {
                 }
                 this.remainingBalance = response.remainingBalance;
                 this.refundAmount = response.remainingBalance;
-                this.paymentDate = response.paymentDate;
                 this.currencyCode = response.currencyCode;
                 this.isLoading = false;
                 this.isSaveDisabled = this.isLoading;

@@ -57,8 +57,12 @@ public with sharing class PMT_RefundController {
         refundService.withOriginalPaymentIds(new Set<Id>{paymentId});
         PMT_RefundService.RefundInfo refundInfo = refundService.getRefundInfoFor(paymentId);
 
-        refundView.paymentDate = refundInfo.originalPayment.npe01__Payment_Date__c;
-        refundView.remainingBalance = refundInfo.remainingBalance;
+        if (isElevatePayment(refundInfo.originalPayment.Elevate_Payment_ID__c)) {
+            UTIL_Http.Response response = refundService.getElevatePaymentRefundInfo(refundInfo.originalPayment.Elevate_Payment_ID__c);
+            processPaymentInfoResponse(refundView, response);
+        } else {
+            refundView.remainingBalance = refundInfo.remainingBalance;
+        }
 
         if (UserInfo.isMultiCurrencyOrganization()) {
             refundView.currencyCode = (String) refundInfo.originalPayment.get(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
@@ -90,8 +94,8 @@ public with sharing class PMT_RefundController {
             return refundView;
         }
 
-        if (isElevatePayment(refundInfo.originalPayment.Elevate_Payment_ID__c)) {
-            processElevateRefund(refundInfo.originalPayment, refundView);
+        if (isElevatePayment(refundInfo?.originalPayment?.Elevate_Payment_ID__c)) {
+            processElevateRefund(refundInfo.originalPayment, refundView, refundAmount);
         } else {
             processNonElevateRefund(refundInfo.originalPayment, refundView, refundAmount);
         }
@@ -112,9 +116,9 @@ public with sharing class PMT_RefundController {
         return PMT_RefundService.isElevateEnabled() && String.isNotBlank(transactionId);
     }
 
-    private static void processElevateRefund(npe01__OppPayment__c originalPayment, RefundView refundView) {
+    private static void processElevateRefund(npe01__OppPayment__c originalPayment, RefundView refundView, Decimal refundAmount) {
         UTIL_Http.Response response = refundService
-            .processElevateRefund(originalPayment.Elevate_Payment_ID__c);
+            .processElevateRefund(originalPayment.Elevate_Payment_ID__c, refundAmount);
         processResponse(refundView, response);
         refundView.redirectToPaymentId = originalPayment.Id;
     }
@@ -164,6 +168,17 @@ public with sharing class PMT_RefundController {
             refundView.errorMessage = response.getErrorMessages();
 
         }
+    }
+
+    private static void processPaymentInfoResponse(RefundView refundView, UTIL_Http.Response response) {
+        processResponse(refundView, response);
+        if (!refundView.isSuccess) {
+            return;
+        }
+
+        Map<String, Object> paymentInfo = (Map<String, Object>) JSON.deserializeUntyped(response.body);
+        Decimal remainingBalance = (Decimal) paymentInfo.get('remainingBalance');
+        refundView.remainingBalance = remainingBalance / PS_CommitmentRequest.DEFAULT_CURRENCY_MULTIPLIER;
     }
 
     public inherited sharing class RefundView {

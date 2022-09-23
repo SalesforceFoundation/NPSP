@@ -778,6 +778,18 @@ ElevateBatchItemType.ONE_TIME, TEST_PAYMENT_METHOD_CARD);
 
     }
 
+    @IsTest
+    private static void shouldDecryptEncryptedValue() {
+        String testGatewayId = '1234-5678-90';
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        String encryptedGatewayId = GE_GiftEntryController.encryptGatewayId(testGatewayId);
+        System.assertNotEquals(testGatewayId, encryptedGatewayId, 'Encrypted value should be different than original');
+
+        String decryptedGatewayId = GE_GiftEntryController.decryptGatewayId(encryptedGatewayId);
+        System.assertEquals(testGatewayId, decryptedGatewayId, 'Decrypted value should be the same as the original');
+    }
+
 
     // Helpers
     /////////////////
