@@ -53,13 +53,19 @@ class psElevateTokenHandler {
         const url = `https://${domainInfo.orgDomain}--${namespace}.visualforce.com`;
         const alternateUrl = `https://${domainInfo.orgDomain}--${namespace}.${domainInfo.podName}.visual.force.com`;
         const productionEnhancedUrl = `https://${domainInfo.orgDomain}--${namespace}.vf.force.com`;
+        const productionEnhancedUrlLogin = `https://${domainInfo.orgDomain}--${namespace}.my.salesforce.com`;
         const sandboxEnhancedUrl =  `https://${domainInfo.orgDomain}--${namespace}.sandbox.vf.force.com`;
+        const sandboxEnhancedUrlLogin =  `https://${domainInfo.orgDomain}--${namespace}.sandbox.my.salesforce.com`;
+        const sandboxEnhancedUrlExperience =  `https://${domainInfo.orgDomain}--${namespace}.sandbox.my.site.com`;
 
         return [
             {value: url},
             {value: alternateUrl},
             {value: productionEnhancedUrl},
-            {value: sandboxEnhancedUrl}
+            {value: sandboxEnhancedUrl},
+            {value: productionEnhancedUrlLogin},
+            {value: sandboxEnhancedUrlLogin},
+            {value: sandboxEnhancedUrlExperience},
         ];
     }
 
