@@ -125,7 +125,9 @@ import {
     PAYMENT_METHODS, ACH_CODE,
     PAYMENT_METHOD_CREDIT_CARD,
     PAYMENT_UNKNOWN_ERROR_STATUS,
-    FAILED
+    FAILED,
+    COMMITMENT_INACTIVE_STATUS,
+    BATCH_COMMITMENT_CREATED_STATUS_REASON
 } from 'c/geConstants';
 
 
@@ -988,12 +990,13 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     populateFormStateWithRDInfo(elevateBatchItem) {
-        const isSuccessful = elevateBatchItem.status === 'Active';
+        const isSuccessful = elevateBatchItem.status === COMMITMENT_INACTIVE_STATUS &&
+            elevateBatchItem.statusReason === BATCH_COMMITMENT_CREATED_STATUS_REASON;
         if (isSuccessful) {
             this.updateFormState({
                 [apiNameFor(DATA_IMPORT_RECURRING_DONATION_EVENT_VERSION)]: elevateBatchItem.version,
                 [apiNameFor(DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID)]: elevateBatchItem.id,
-                [apiNameFor(DATA_IMPORT_RECURRING_DONATION_STATUS)]: elevateBatchItem.status,
+                [apiNameFor(PAYMENT_ELEVATE_ELEVATE_BATCH_ID)]: this.currentElevateBatch.elevateBatchId
             });
 
             if (this.selectedPaymentMethod() === PAYMENT_METHOD_CREDIT_CARD) {
@@ -1001,10 +1004,9 @@ export default class GeFormRenderer extends LightningElement{
                     [apiNameFor(DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_MONTH)]:
                         elevateBatchItem.cardExpirationMonth,
                     [apiNameFor(DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_YEAR)]:
-                    elevateBatchItem.cardExpirationYear,
+                        elevateBatchItem.cardExpirationYear,
                     [apiNameFor(DATA_IMPORT_RECURRING_DONATION_CARD_LAST_4)]:
-                    elevateBatchItem.cardLast4,
-                    [apiNameFor(PAYMENT_ELEVATE_ELEVATE_BATCH_ID)]: this.currentElevateBatch.elevateBatchId
+                        elevateBatchItem.cardLast4,
                 });
             }
         }
