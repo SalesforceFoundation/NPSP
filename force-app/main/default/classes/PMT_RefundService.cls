@@ -163,8 +163,21 @@ public inherited sharing class PMT_RefundService {
         return refundInfo;
     }
 
-    public UTIL_Http.Response processElevateRefund(String transactionId) {
-        HttpRequest request = buildRefundRequest(transactionId);
+    public UTIL_Http.Response getElevatePaymentRefundInfo(String transactionId) {
+        HttpRequest request = buildTransactionRequest(transactionId);
+
+        UTIL_Http.Response response;
+        try {
+            response = requestService.sendRequest(request);
+        } catch (Exception ex) {
+            response = requestService.buildErrorResponse(ex);
+        }
+
+        return response;
+    }
+
+    public UTIL_Http.Response processElevateRefund(String transactionId, Decimal refundAmount) {
+        HttpRequest request = buildRefundRequest(transactionId, refundAmount);
 
         UTIL_Http.Response response;
         try {
@@ -258,8 +271,17 @@ public inherited sharing class PMT_RefundService {
         this.opportunityMap.put(opportunity.Id, opportunity);
     }
 
-    private HttpRequest buildRefundRequest(String transactionId) {
-        RequestBody reqBody = new RequestBody(transactionId);
+    private HttpRequest buildTransactionRequest(String transactionId) {
+        return new PS_Request.Builder()
+            .withMethod(UTIL_Http.Method.GET)
+            .withEndpoint(PS_Request.ElevateEndpoint.TRANSACTIONS)
+            .withCommitmentId(transactionId)
+            .withRecommendedTimeout()
+            .build();
+    }
+
+    private HttpRequest buildRefundRequest(String transactionId, Decimal refundAmount) {
+        RequestBody reqBody = new RequestBody(transactionId, refundAmount);
 
         return new PS_Request.Builder()
             .withMethod(UTIL_Http.Method.POST)
@@ -291,9 +313,12 @@ public inherited sharing class PMT_RefundService {
     public inherited sharing class RequestBody {
         @TestVisible
         String transactionId;
+        Integer amount;
 
-        public RequestBody(String transactionId) {
+        public RequestBody(String transactionId, Decimal refundAmount) {
             this.transactionId = transactionId;
+            Decimal scaleRefundAmount = refundAmount * PS_CommitmentRequest.DEFAULT_CURRENCY_MULTIPLIER;
+            this.amount = scaleRefundAmount.intValue();
         }
     }
 
