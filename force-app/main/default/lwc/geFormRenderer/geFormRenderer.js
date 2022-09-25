@@ -699,7 +699,7 @@ export default class GeFormRenderer extends LightningElement{
                 showCloseButton: false
             },
             componentProperties
-        };
+        }; 
         this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
     }
 
@@ -915,16 +915,16 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleLogError(error, context) {
-        this.dispatchEvent(new CustomEvent('logerror', {
+        this.dispatchEvent(new CustomEvent('logerror', { 
             detail: {error: error, context: context}
-        }));
+        }));    
     }
 
     async shouldRemoveFromElevateBatch(gift, shouldBeCreditCard) {
         const isCreditCard = (this.selectedPaymentMethod() === PAYMENT_METHOD_CREDIT_CARD);
         if (!gift.id() || !this.isElevateCustomer || isCreditCard !== shouldBeCreditCard) {
             return false;
-        }
+        }    
 
         try {
             await gift.refresh();
@@ -952,7 +952,7 @@ export default class GeFormRenderer extends LightningElement{
             }
         } catch (exception) {
             const errorMsg = GeLabelService.format(
-                this.CUSTOM_LABELS.geErrorElevateUpdate,
+                this.CUSTOM_LABELS.geErrorElevateUpdate, 
                 [this.CUSTOM_LABELS.commonPaymentServices]
             );
             this.handleElevateAPIErrors([{message: errorMsg}]);
@@ -1086,7 +1086,7 @@ export default class GeFormRenderer extends LightningElement{
     isGiftExpired() {
         return this.formState[apiNameFor(PAYMENT_STATUS)] === this.PAYMENT_TRANSACTION_STATUS_ENUM.EXPIRED;
     }
-
+    
     shouldNotNullPaymentFields() {
         return (this.isGiftAuthorized() || this.isGiftExpired());
     }
@@ -2868,7 +2868,7 @@ export default class GeFormRenderer extends LightningElement{
                 'message': this.CUSTOM_LABELS.geErrorCardChargedBDIFailed,
                 'buttons':
                     [{
-                        label: this.CUSTOM_LABELS.commonReviewForm,
+                        label: this.CUSTOM_LABELS.commonReviewForm, 
                         action: () => { fireEvent(this.pageRef, 'geModalCloseEvent', {}) }
                     }]
             });
