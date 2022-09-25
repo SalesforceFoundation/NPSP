@@ -34,7 +34,6 @@ import GeFormElementHelper from './geFormElementHelper'
 import GeFormService from 'c/geFormService';
 import Settings from 'c/geSettings';
 import GeLabelService from 'c/geLabelService';
-import GeGatewaySettings from 'c/geGatewaySettings';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geMakeRecurring from '@salesforce/label/c.geMakeRecurring';
 import btnContinue from '@salesforce/label/c.btnContinue';
@@ -543,7 +542,6 @@ export default class GeFormRenderer extends LightningElement{
             }
 
             if (!this.isSingleGiftEntry) {
-                GeGatewaySettings.setElevateSettings(formTemplate.elevateSettings);
                 this.sections = this.prepareFormForBatchMode(formTemplate.layout.sections);
                 this.dispatchEvent(new CustomEvent('sectionsretrieved'));
             }
@@ -699,7 +697,7 @@ export default class GeFormRenderer extends LightningElement{
             modalProperties: {
                 componentName: modalBodyComponentName,
                 showCloseButton: false
-            }, 
+            },
             componentProperties
         };
         this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
@@ -917,16 +915,16 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleLogError(error, context) {
-        this.dispatchEvent(new CustomEvent('logerror', { 
+        this.dispatchEvent(new CustomEvent('logerror', {
             detail: {error: error, context: context}
-        }));    
+        }));
     }
 
     async shouldRemoveFromElevateBatch(gift, shouldBeCreditCard) {
         const isCreditCard = (this.selectedPaymentMethod() === PAYMENT_METHOD_CREDIT_CARD);
         if (!gift.id() || !this.isElevateCustomer || isCreditCard !== shouldBeCreditCard) {
             return false;
-        }    
+        }
 
         try {
             await gift.refresh();
@@ -954,7 +952,7 @@ export default class GeFormRenderer extends LightningElement{
             }
         } catch (exception) {
             const errorMsg = GeLabelService.format(
-                this.CUSTOM_LABELS.geErrorElevateUpdate, 
+                this.CUSTOM_LABELS.geErrorElevateUpdate,
                 [this.CUSTOM_LABELS.commonPaymentServices]
             );
             this.handleElevateAPIErrors([{message: errorMsg}]);
@@ -1088,7 +1086,7 @@ export default class GeFormRenderer extends LightningElement{
     isGiftExpired() {
         return this.formState[apiNameFor(PAYMENT_STATUS)] === this.PAYMENT_TRANSACTION_STATUS_ENUM.EXPIRED;
     }
-    
+
     shouldNotNullPaymentFields() {
         return (this.isGiftAuthorized() || this.isGiftExpired());
     }
@@ -2868,7 +2866,7 @@ export default class GeFormRenderer extends LightningElement{
                 'variant': 'error',
                 'title': this.CUSTOM_LABELS.commonCriticalError,
                 'message': this.CUSTOM_LABELS.geErrorCardChargedBDIFailed,
-                'buttons': 
+                'buttons':
                     [{
                         label: this.CUSTOM_LABELS.commonReviewForm,
                         action: () => { fireEvent(this.pageRef, 'geModalCloseEvent', {}) }
