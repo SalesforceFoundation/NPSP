@@ -697,9 +697,9 @@ export default class GeFormRenderer extends LightningElement{
             modalProperties: {
                 componentName: modalBodyComponentName,
                 showCloseButton: false
-            },
+            }, 
             componentProperties
-        }; 
+        };
         this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
     }
 
@@ -2866,9 +2866,9 @@ export default class GeFormRenderer extends LightningElement{
                 'variant': 'error',
                 'title': this.CUSTOM_LABELS.commonCriticalError,
                 'message': this.CUSTOM_LABELS.geErrorCardChargedBDIFailed,
-                'buttons':
+                'buttons': 
                     [{
-                        label: this.CUSTOM_LABELS.commonReviewForm, 
+                        label: this.CUSTOM_LABELS.commonReviewForm,
                         action: () => { fireEvent(this.pageRef, 'geModalCloseEvent', {}) }
                     }]
             });
