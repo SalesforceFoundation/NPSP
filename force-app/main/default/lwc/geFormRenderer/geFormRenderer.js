@@ -34,6 +34,7 @@ import GeFormElementHelper from './geFormElementHelper'
 import GeFormService from 'c/geFormService';
 import Settings from 'c/geSettings';
 import GeLabelService from 'c/geLabelService';
+import GeGatewaySettings from 'c/geGatewaySettings';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geMakeRecurring from '@salesforce/label/c.geMakeRecurring';
 import btnContinue from '@salesforce/label/c.btnContinue';
@@ -542,6 +543,7 @@ export default class GeFormRenderer extends LightningElement{
             }
 
             if (!this.isSingleGiftEntry) {
+                GeGatewaySettings.setElevateSettings(formTemplate.elevateSettings);
                 this.sections = this.prepareFormForBatchMode(formTemplate.layout.sections);
                 this.dispatchEvent(new CustomEvent('sectionsretrieved'));
             }
