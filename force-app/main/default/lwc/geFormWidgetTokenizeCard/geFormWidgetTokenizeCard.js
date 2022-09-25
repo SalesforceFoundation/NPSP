@@ -199,8 +199,8 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     get showCancelButton() {
-        return this.isEdit
-            && !this.isExpiredTransaction 
+        return this.isEdit 
+            && !this.isExpiredTransaction
             && !this.isPaymentStatusAuthorized()
             && this.paymentStatus();
     }
