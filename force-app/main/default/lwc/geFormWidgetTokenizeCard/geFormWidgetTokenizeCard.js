@@ -20,6 +20,7 @@ import {
 import ElevateWidgetDisplay from './helpers/elevateWidgetDisplay';
 import GeFormService from 'c/geFormService';
 import Settings from 'c/geSettings';
+import GeGatewaySettings from 'c/geGatewaySettings';
 
 import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import DATA_IMPORT_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_Status__c';
@@ -282,17 +283,38 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     updateDisplayStateWhenInBatchGiftEntry() {
-        if (this.isPaymentStatusAuthorized() && !this.isPaymentMethodCreditCard()) {
+        if (this.isPaymentStatusAuthorized() && !this.isValidBatchElevatePaymentMethod()) {
             this.display.transitionTo('resetToDeactivated');
         }
 
-        if (this.isPaymentStatusAuthorized() && this.isPaymentMethodCreditCard()) {
+        if (this.isPaymentStatusAuthorized() && this.isValidBatchElevatePaymentMethod()) {
             this.display.transitionTo('readOnly');
-        } else if (this.isPaymentMethodCreditCard()) {
+        } else if (this.isValidBatchElevatePaymentMethod()) {
             this.display.transitionTo('charge');
+            if (this.isMounted) {
+                this.requestSetPaymentMethod(this._currentPaymentMethod);
+            }
         } else {
             this.display.transitionTo('deactivated');
         }
+    }
+
+    isValidBatchElevatePaymentMethod() {
+        if (!(this.isPaymentMethodAch() || this.isPaymentMethodCreditCard())) {
+            return false;
+        }
+
+        if (!GeGatewaySettings.getElevateSettings()) {
+            return true;
+        } else if (GeGatewaySettings.getElevateSettings().isACHEnabled && GeGatewaySettings.getElevateSettings().isCreditCardEnabled) {
+            return true;
+        } else if (GeGatewaySettings.getElevateSettings().isCreditCardEnabled && this.isPaymentMethodCreditCard()) {
+            return true;
+        } else if (GeGatewaySettings.getElevateSettings().isACHEnabled && this.isPaymentMethodAch()) {
+            return true;
+        }
+
+        return false;
     }
 
     updateDisplayStateWhenInSingleGiftEntry() {
@@ -503,8 +525,8 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     hasValidPaymentMethod() {
-        if (this.isInBatchGiftEntry() && this._currentPaymentMethod === PAYMENT_METHODS.ACH) {
-            return false;
+        if (this.isInBatchGiftEntry()) {
+            return this.isValidBatchElevatePaymentMethod();
         }
         return this._currentPaymentMethod === PAYMENT_METHODS.ACH
             || this._currentPaymentMethod === PAYMENT_METHOD_CREDIT_CARD;
