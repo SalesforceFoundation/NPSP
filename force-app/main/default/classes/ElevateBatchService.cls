@@ -39,8 +39,8 @@ public virtual with sharing class ElevateBatchService {
         return new ElevateCreateBatchItemRequest(batchItemRequestDTO);
     }
 
-    public virtual ElevateBatchItem removeFromElevateBatch(ElevateBatchItem authorizedGift) {
-        return new ElevateBatch(authorizedGift.elevateBatchId).remove(authorizedGift.id());
+    public virtual ElevateBatchItem removeFromElevateBatch(ElevateBatchItem batchItem) {
+        return new ElevateBatch(batchItem.elevateBatchId).remove(batchItem.id());
     }
 
     public virtual ElevateBatch createElevateBatch() {
