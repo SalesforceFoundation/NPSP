@@ -128,7 +128,8 @@ import {
     PAYMENT_UNKNOWN_ERROR_STATUS,
     FAILED,
     COMMITMENT_INACTIVE_STATUS,
-    BATCH_COMMITMENT_CREATED_STATUS_REASON
+    BATCH_COMMITMENT_CREATED_STATUS_REASON,
+    PAYMENT_METHOD_ACH
 } from 'c/geConstants';
 
 
@@ -925,8 +926,11 @@ export default class GeFormRenderer extends LightningElement{
         }));    
     }
 
-    async shouldRemoveFromElevateBatch(gift) {
-        if (!gift.id() || !this.isElevateCustomer) {
+    async shouldRemoveFromElevateBatch(gift, isTokenizedGift) {
+        const shouldBeTokenized = (
+            this.selectedPaymentMethod() === PAYMENT_METHOD_CREDIT_CARD ||
+            this.selectedPaymentMethod() === PAYMENT_METHOD_ACH );
+        if (!gift.id() || !this.isElevateCustomer || shouldBeTokenized !== isTokenizedGift) {
             return false;
         }    
 
@@ -949,7 +953,7 @@ export default class GeFormRenderer extends LightningElement{
         const result = {hasError: false, wasRemoved: false};
 
         try {
-            if (await this.shouldRemoveFromElevateBatch(gift)) {
+            if (await this.shouldRemoveFromElevateBatch(gift, !!tokenizedGift)) {
                 await this.currentElevateBatch.remove(gift.asDataImport());
                 if (!tokenizedGift) { this.handleNullPaymentFieldsInFormState(); }
                 result.wasRemoved = true;
