@@ -61,6 +61,27 @@ public with sharing class RD2_PauseForm_CTRL {
         set;
     }
 
+    private static RD2_ScheduleService scheduleService {
+        get {
+            if (scheduleService == null) {
+                scheduleService = new RD2_ScheduleService();
+            }
+            return scheduleService;
+        }
+        set;
+    }
+
+    private static RD2_QueryService queryService {
+        get {
+            if (queryService == null) {
+                queryService = new RD2_QueryService();
+            }
+            return queryService;
+        }
+        set;
+    }
+
+
     /**
      * @description Returns PauseData to the LWC so the page can be initialized and rendered.
      * Determines if the user has the access to create/update the pause
@@ -71,7 +92,7 @@ public with sharing class RD2_PauseForm_CTRL {
      * @param rdId Recurring Donation Id
      * @return String JSON string representing PauseData
      */
-    @AuraEnabled(cacheable=false)
+    @AuraEnabled(Cacheable=false)
     public static String getPauseData(Id rdId) {
         String jsonData;
         try {
@@ -118,15 +139,39 @@ public with sharing class RD2_PauseForm_CTRL {
     * @return RD2_RecurringDonation
     */
     private static RD2_RecurringDonation getRecurringDonation(Id rdId) {
-        return new RD2_RecurringDonation([
-            SELECT Status__c,
-                npe03__Contact__c,
-                npe03__Organization__c,
-                CommitmentId__c
-            FROM npe03__Recurring_Donation__c
-            WHERE Id = :rdId
-            LIMIT 1
-        ]);
+
+        Set<String> queryFields = new Set<String>{
+            'Id',
+            'StartDate__c',
+            'InstallmentFrequency__c',
+            'npe03__Installment_Period__c',
+            'npe03__Amount__c',
+            'PaymentMethod__c',
+            'npe03__Recurring_Donation_Campaign__r.Name',
+            'Day_of_Month__c',
+            'Status__c',
+            'RecurringType__c',
+            'npe03__Installments__c',
+            'npe03__Total_Paid_Installments__c',
+            'EndDate__c',
+            'npe03__Contact__c',
+            'npe03__Organization__c',
+            'CommitmentId__c'
+        };
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            queryFields.add('CurrencyIsoCode');
+        }
+
+        RD2_QueryService queryService = new RD2_QueryService();
+        queryFields.add(queryService.getScheduleSubQuery());
+
+        String soql = new UTIL_Query()
+            .withFrom(npe03__Recurring_Donation__c.SObjectType)
+            .withSelectFields(queryFields)
+            .withWhere('Id = :rdId')
+            .build();
+
+        return new RD2_RecurringDonation(Database.query(soql));
     }
 
     /**
@@ -205,6 +250,7 @@ public with sharing class RD2_PauseForm_CTRL {
             RD2_RecurringDonation rd = getRecurringDonation(pause.rdId);
 
             if (isOnlineRecurringDonationRecord(rd)) {
+                validatePause(pause);
                 UTIL_Http.Response response = pauseElevateRDsFor(pause);
                 if (commitmentService.isCommitmentSuccess(response)) {
                     pauseHandler.savePauseSchedule(pause.rdId, buildPauseSchedule(pause));
@@ -221,6 +267,14 @@ public with sharing class RD2_PauseForm_CTRL {
 
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
+        }
+    }
+
+
+    private static void validatePause(PauseData pause) {
+        Date nextInstalmentDate = scheduleService.getNextDonationDate(getRecurringDonation(pause.rdId).getSObject());
+        if (nextInstalmentDate.daysBetween(pause.startDate) <= 1) {
+            throw new PauseException('Invalid Pause');
         }
     }
 

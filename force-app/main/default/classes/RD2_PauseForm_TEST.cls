@@ -188,6 +188,45 @@ public with sharing class RD2_PauseForm_TEST {
         System.assertNotEquals(null, schedule, 'The Commitment response should be returned');
     }
 
+
+    @IsTest
+    private static void shouldThrowExceptionWhenPauseStartDateIsOnedayFromNextInstallment() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ElevateIntegrationService_TEST.enableElevateUserPermissions();
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        npe03__Recurring_Donation__c recurringDonation = rdGateway.getRecords()[0];
+        recurringDonation.CommitmentId__c = 'TEST COMMITMENT';
+        recurringDonation.PaymentMethod__c = RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD;
+        update recurringDonation;
+
+        RD2_PauseForm_CTRL.PauseData pause = new RD2_PauseForm_CTRL.PauseData();
+        pause.rdId = recurringDonation.Id;
+        pause.startDate = START_DATE.addDays(-1);
+        pause.resumeAfterDate = START_DATE.addMonths(6);
+        pause.pausedReason = new RD2_PauseForm_CTRL.PausedReason();
+        pause.pausedReason.value = 'Unknown';
+
+        Test.startTest();
+
+        mockRecordCreatedCalloutResponse();
+
+        Exception auraEx;
+
+        try {
+            RD2_PauseForm_CTRL.savePause(JSON.serialize(pause));
+        } catch (Exception ex) {
+            auraEx = ex;
+
+        }
+
+        Test.stopTest();
+
+        System.assertEquals('Invalid Pause', auraEx.getMessage(), 'An exception should be thrown');
+
+    }
+
+
     @IsTest
     private static void shouldSavePauseWhenRDIsElevateRecordAndPauseIsRemoved() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
@@ -553,6 +592,7 @@ public with sharing class RD2_PauseForm_TEST {
     /****
     * @description Verifies Pause Data contains property indicating the Recurring Donation is an elevated record
     */
+    @isTest
     private static void shouldReturnPauseDataForRdWithCommitmentIdWhenElevateIsNotEnabled() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
