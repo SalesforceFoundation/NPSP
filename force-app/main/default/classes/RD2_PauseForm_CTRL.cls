@@ -273,7 +273,10 @@ public with sharing class RD2_PauseForm_CTRL {
 
     private static void validatePause(PauseData pause) {
         Date nextInstalmentDate = scheduleService.getNextDonationDate(getRecurringDonation(pause.rdId).getSObject());
-        if (nextInstalmentDate.daysBetween(pause.startDate) <= 1) {
+
+        if (isPauseRemoved(pause)) return;
+
+        if (nextInstalmentDate.addDays(-1).isSameDay(pause.startDate)) {
             throw new PauseException('Invalid Pause');
         }
     }

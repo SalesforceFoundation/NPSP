@@ -58,7 +58,9 @@ public with sharing class RD2_PauseForm_TEST {
         Contact contact = UTIL_UnitTestData_TEST.getContact();
         insert contact;
 
-        insert getRecurringDonationBuilder(contact.Id).build();
+        insert getRecurringDonationBuilder(contact.Id)
+            .withCalculateNextDonationDate()
+            .build();
     }
 
     /****
@@ -194,6 +196,7 @@ public with sharing class RD2_PauseForm_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ElevateIntegrationService_TEST.enableElevateUserPermissions();
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+        RD2_ScheduleService.currentDate = START_DATE.addDays(1);
 
         npe03__Recurring_Donation__c recurringDonation = rdGateway.getRecords()[0];
         recurringDonation.CommitmentId__c = 'TEST COMMITMENT';
@@ -202,7 +205,7 @@ public with sharing class RD2_PauseForm_TEST {
 
         RD2_PauseForm_CTRL.PauseData pause = new RD2_PauseForm_CTRL.PauseData();
         pause.rdId = recurringDonation.Id;
-        pause.startDate = START_DATE.addDays(-1);
+        pause.startDate = START_DATE.addMonths(1).addDays(-1);
         pause.resumeAfterDate = START_DATE.addMonths(6);
         pause.pausedReason = new RD2_PauseForm_CTRL.PausedReason();
         pause.pausedReason.value = 'Unknown';
