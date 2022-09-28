@@ -7553,8 +7553,8 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Credit card(s) will not be processed until batch is processed</shortDescription>
-        <value>The donor&apos;s credit card will be processed when you process the batch.</value>
+        <shortDescription>Payment(s) will not be processed until batch is processed</shortDescription>
+        <value>The donor&apos;s payment will be processed when you process the batch.</value>
     </labels>
     <labels>
         <fullName>geBodyTemplateInfoLeftCol</fullName>

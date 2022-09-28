@@ -283,17 +283,38 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     updateDisplayStateWhenInBatchGiftEntry() {
-        if (this.isPaymentStatusAuthorized() && !this.isPaymentMethodCreditCard()) {
+        if (this.isPaymentStatusAuthorized() && !this.isValidBatchElevatePaymentMethod()) {
             this.display.transitionTo('resetToDeactivated');
         }
 
-        if (this.isPaymentStatusAuthorized() && this.isPaymentMethodCreditCard()) {
+        if (this.isPaymentStatusAuthorized() && this.isValidBatchElevatePaymentMethod()) {
             this.display.transitionTo('readOnly');
-        } else if (this.isPaymentMethodCreditCard()) {
+        } else if (this.isValidBatchElevatePaymentMethod()) {
             this.display.transitionTo('charge');
+            if (this.isMounted) {
+                this.requestSetPaymentMethod(this._currentPaymentMethod);
+            }
         } else {
             this.display.transitionTo('deactivated');
         }
+    }
+
+    isValidBatchElevatePaymentMethod() {
+        if (!(this.isPaymentMethodAch() || this.isPaymentMethodCreditCard())) {
+            return false;
+        }
+
+        if (!GeGatewaySettings.getElevateSettings()) {
+            return true;
+        } else if (GeGatewaySettings.getElevateSettings().isACHEnabled && GeGatewaySettings.getElevateSettings().isCreditCardEnabled) {
+            return true;
+        } else if (GeGatewaySettings.getElevateSettings().isCreditCardEnabled && this.isPaymentMethodCreditCard()) {
+            return true;
+        } else if (GeGatewaySettings.getElevateSettings().isACHEnabled && this.isPaymentMethodAch()) {
+            return true;
+        }
+
+        return false;
     }
 
     updateDisplayStateWhenInSingleGiftEntry() {
@@ -504,6 +525,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     hasValidPaymentMethod() {
+        if (this.isInBatchGiftEntry()) {
+            return this.isValidBatchElevatePaymentMethod();
+        }
         return this._currentPaymentMethod === PAYMENT_METHODS.ACH
             || this._currentPaymentMethod === PAYMENT_METHOD_CREDIT_CARD;
     }
