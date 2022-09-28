@@ -1,4 +1,4 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, api } from 'lwc';
 import getGatewaysFromElevate from '@salesforce/apex/GE_GiftEntryController.getGatewaysFromElevate';
 import encryptGatewayId from '@salesforce/apex/GE_GiftEntryController.encryptGatewayId';
 import decryptGatewayId from '@salesforce/apex/GE_GiftEntryController.decryptGatewayId';
@@ -21,6 +21,9 @@ import GeGatewaySettings from 'c/geGatewaySettings';
 import { fireEvent } from 'c/pubsubNoPageRef';
 import { isEmpty, showToast } from 'c/utilCommon';
 
+const TEMPLATE_CSS_CLASS = 'template-top';
+const GIFT_ENTRY_CSS_CLASS = 'gift-entry-top';
+
 export default class GeGatewaySelectWidget extends LightningElement {
     @track isExpanded = false;
     @track selectedGateway = null;
@@ -33,6 +36,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
     @track isLoading = true;
     @track isDefaultTemplate = false;
     @track isGatewayAssignmentEnabled = false;
+    @track isGatewaySelectionDisabled = false;
 
     CUSTOM_LABELS = Object.freeze({
         messageLoading,
@@ -82,6 +86,10 @@ export default class GeGatewaySelectWidget extends LightningElement {
         }
         else {
             this.isLoading = false;
+        }
+
+        if (GeGatewaySettings.getIsGiftEntryBatch()) {
+            await this.restoreSavedSettings();
         }
     }
 
@@ -133,6 +141,10 @@ export default class GeGatewaySelectWidget extends LightningElement {
         }
         else {
             this.handleInitialPaymentMethodSelections(elevateSettings);
+        }
+
+        if (GeGatewaySettings.getIsGiftEntryBatch()) {
+            this.disableAllControls();
         }
 
         this._firstDisplay = false;
@@ -288,5 +300,25 @@ export default class GeGatewaySelectWidget extends LightningElement {
             isCreditCardEnabled: this.isCreditCardEnabled
         }
         fireEvent(this, 'updateElevateSettings', elevateSettings);
+    }
+
+    disableAllControls() {
+        this.isGatewaySelectionDisabled = true;
+        this.isCreditCardDisabled = true;
+        this.isACHDisabled = true;
+    }
+
+    get hideInGiftEntryBatch() {
+        if (GeGatewaySettings.getIsGiftEntry()) {
+            if (GeGatewaySettings.getIsGiftEntryBatch() && this.isGatewayAssignmentEnabled) {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    get cssClassPrefix() {
+        return GeGatewaySettings.getIsGiftEntry() ? GIFT_ENTRY_CSS_CLASS : TEMPLATE_CSS_CLASS;
     }
 }

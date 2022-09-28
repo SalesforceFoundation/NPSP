@@ -20,6 +20,7 @@ import {
 import ElevateWidgetDisplay from './helpers/elevateWidgetDisplay';
 import GeFormService from 'c/geFormService';
 import Settings from 'c/geSettings';
+import GeGatewaySettings from 'c/geGatewaySettings';
 
 import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import DATA_IMPORT_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_Status__c';
@@ -503,9 +504,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     hasValidPaymentMethod() {
-        if (this.isInBatchGiftEntry() && this._currentPaymentMethod === PAYMENT_METHODS.ACH) {
-            return false;
-        }
         return this._currentPaymentMethod === PAYMENT_METHODS.ACH
             || this._currentPaymentMethod === PAYMENT_METHOD_CREDIT_CARD;
     }
@@ -540,7 +538,14 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     requestMount() {
-        tokenHandler.mount(this.iframe(), this._currentPaymentMethod, this.handleError, this.resolveMount);
+        let gatewayOverride = GeGatewaySettings.getDecryptedGatewayId();
+        tokenHandler.mount(
+            this.iframe(),
+            this._currentPaymentMethod,
+            this.handleError,
+            this.resolveMount,
+            gatewayOverride
+            );
     }
 
     resolveMount = () => {

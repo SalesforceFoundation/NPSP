@@ -339,10 +339,11 @@ public with sharing class GE_GiftEntryController {
 
     @AuraEnabled
     public static ElevateBatchItem addToElevateBatch(ElevateCreateBatchItemRequestDTO batchItemRequestDTO,
-                                                     String elevateBatchId) {
+                                                     String elevateBatchId,
+                                                     String gatewayOverride) {
         ElevateBatchItem batchItem;
         try {
-            batchItem = elevateBatchService.addToElevateBatch(batchItemRequestDTO, elevateBatchId);
+            batchItem = elevateBatchService.addToElevateBatch(batchItemRequestDTO, elevateBatchId, gatewayOverride);
         } catch (AuraHandledException ex) {
           UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
         }

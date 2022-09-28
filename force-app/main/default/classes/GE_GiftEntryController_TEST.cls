@@ -183,7 +183,7 @@ public with sharing class GE_GiftEntryController_TEST {
             String.valueOf(npe03__Recurring_Donation__c.StartDate__c) => String.valueOf(Date.today())
         };
         Test.startTest();
-            ElevateCreateBatchItemRequest request = new ElevateBatchService().buildBatchItemRequestFrom(dto);
+            ElevateCreateBatchItemRequest request = new ElevateBatchService().buildBatchItemRequestFrom(dto, null);
         Test.stopTest();
 
         System.assertEquals(ElevateBatchItemType.COMMITMENT, request.batchItemType, 'The request batch item type ' +
@@ -230,7 +230,7 @@ public with sharing class GE_GiftEntryController_TEST {
         Test.startTest();
             try {
                 elevateBatchItem = GE_GiftEntryController.addToElevateBatch(new ElevateCreateBatchItemRequestDTO(),
-                        'test-valid-id');
+                        'test-valid-id', null);
             } catch (AuraHandledException ex) {
                 auraException = ex;
             }
@@ -255,7 +255,7 @@ public with sharing class GE_GiftEntryController_TEST {
         Test.startTest();
         try {
             elevateBatchItem = GE_GiftEntryController.addToElevateBatch(new ElevateCreateBatchItemRequestDTO(),
-                    'test-valid-id');
+                    'test-valid-id', null);
         } catch (AuraHandledException ex) {
             auraException = ex;
         }
@@ -280,7 +280,7 @@ ElevateBatchItemType.ONE_TIME, TEST_PAYMENT_METHOD_CARD);
         Test.startTest();
             try {
                 elevateBatchItem = GE_GiftEntryController.addToElevateBatch(new ElevateCreateBatchItemRequestDTO(),
-                    'test-valid-id');
+                    'test-valid-id', null);
             } catch (AuraHandledException ex) {
                 auraException = ex;
             }
@@ -305,7 +305,7 @@ ElevateBatchItemType.ONE_TIME, TEST_PAYMENT_METHOD_CARD);
         Test.startTest();
         try {
             elevateBatchItem = GE_GiftEntryController.addToElevateBatch(new ElevateCreateBatchItemRequestDTO(),
-                    'test-valid-id');
+                    'test-valid-id', null);
         } catch (AuraHandledException ex) {
             auraException = ex;
         }
@@ -349,7 +349,7 @@ ElevateBatchItemType.ONE_TIME, TEST_PAYMENT_METHOD_CARD);
 
         Test.startTest();
         try {
-            GE_GiftEntryController.addToElevateBatch(new ElevateCreateBatchItemRequestDTO(), 'test-valid-group-id');
+            GE_GiftEntryController.addToElevateBatch(new ElevateCreateBatchItemRequestDTO(), 'test-valid-group-id', null);
         } catch (AuraHandledException ex) {
             auraException = ex;
         }

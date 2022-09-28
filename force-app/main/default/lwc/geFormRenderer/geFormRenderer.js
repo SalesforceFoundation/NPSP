@@ -34,6 +34,7 @@ import GeFormElementHelper from './geFormElementHelper'
 import GeFormService from 'c/geFormService';
 import Settings from 'c/geSettings';
 import GeLabelService from 'c/geLabelService';
+import GeGatewaySettings from 'c/geGatewaySettings';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geMakeRecurring from '@salesforce/label/c.geMakeRecurring';
 import btnContinue from '@salesforce/label/c.btnContinue';
@@ -542,8 +543,12 @@ export default class GeFormRenderer extends LightningElement{
             }
 
             if (!this.isSingleGiftEntry) {
+                GeGatewaySettings.initDecryptedElevateSettings(formTemplate.elevateSettings);
                 this.sections = this.prepareFormForBatchMode(formTemplate.layout.sections);
                 this.dispatchEvent(new CustomEvent('sectionsretrieved'));
+            }
+            else {
+                GeGatewaySettings.clearDecryptedElevateSettings();
             }
         }
 
@@ -921,6 +926,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     async shouldRemoveFromElevateBatch(gift, shouldBeCreditCard) {
+        // TODO: Review with team. Why are we omitting ACH here?
         const isCreditCard = (this.selectedPaymentMethod() === PAYMENT_METHOD_CREDIT_CARD);
         if (!gift.id() || !this.isElevateCustomer || isCreditCard !== shouldBeCreditCard) {
             return false;
@@ -999,6 +1005,7 @@ export default class GeFormRenderer extends LightningElement{
                 [apiNameFor(PAYMENT_ELEVATE_ELEVATE_BATCH_ID)]: this.currentElevateBatch.elevateBatchId
             });
 
+            // TODO: Review with Daniel. Is there anything that needs to be done for ACH??
             if (this.selectedPaymentMethod() === PAYMENT_METHOD_CREDIT_CARD) {
                 this.updateFormState({
                     [apiNameFor(DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_MONTH)]:
@@ -2509,14 +2516,9 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     hasChargeableTransactionStatus = () => {
-        const nonChargeableForSingleGift = this.selectedPaymentMethod() !== PAYMENT_METHODS.ACH
+        const nonChargeable = this.selectedPaymentMethod() !== PAYMENT_METHODS.ACH
             && this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD;
-        if (this.isSingleGiftEntry && nonChargeableForSingleGift) {
-            return false;
-        }
-
-        const nonChargeableForBatchGift = this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD;
-        if (!this.isSingleGiftEntry && nonChargeableForBatchGift) {
+        if (nonChargeable) {
             return false;
         }
 
