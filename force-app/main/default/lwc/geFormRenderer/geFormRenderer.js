@@ -925,10 +925,8 @@ export default class GeFormRenderer extends LightningElement{
         }));    
     }
 
-    async shouldRemoveFromElevateBatch(gift, shouldBeCreditCard) {
-        // TODO: Review with team. Why are we omitting ACH here?
-        const isCreditCard = (this.selectedPaymentMethod() === PAYMENT_METHOD_CREDIT_CARD);
-        if (!gift.id() || !this.isElevateCustomer || isCreditCard !== shouldBeCreditCard) {
+    async shouldRemoveFromElevateBatch(gift) {
+        if (!gift.id() || !this.isElevateCustomer) {
             return false;
         }    
 
@@ -951,7 +949,7 @@ export default class GeFormRenderer extends LightningElement{
         const result = {hasError: false, wasRemoved: false};
 
         try {
-            if (await this.shouldRemoveFromElevateBatch(gift, !!tokenizedGift)) {
+            if (await this.shouldRemoveFromElevateBatch(gift)) {
                 await this.currentElevateBatch.remove(gift.asDataImport());
                 if (!tokenizedGift) { this.handleNullPaymentFieldsInFormState(); }
                 result.wasRemoved = true;
