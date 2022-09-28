@@ -63,11 +63,11 @@ public virtual with sharing class ElevateBatchService {
                 removeRequest(elevateBatchId, elevatePaymentId)
         );
 
-        ElevateBatchItemCreateResponse authorizedGiftResponse = (ElevateBatchItemCreateResponse)JSON.deserialize
-                (response.body, ElevateBatchItemCreateResponse.class);
-        checkForBatchItemErrorsIn(authorizedGiftResponse);
+        if (response.statusCode != 204) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(response.status);
+        }
 
-        return new ElevateBatchItem(authorizedGiftResponse);
+        return new ElevateBatchItem();
     }
 
     public ElevateBatch getElevateBatch() {
@@ -91,7 +91,7 @@ public virtual with sharing class ElevateBatchService {
 
     private HttpRequest removeRequest(String elevateBatchId, String elevatePaymentId) {
         return new PS_Request.Builder()
-                .withMethod(UTIL_Http.Method.POST)
+                .withMethod(UTIL_Http.Method.DEL)
                 .withElevateBatchId(elevateBatchId)
                 .withElevatePaymentId(elevatePaymentId)
                 .withRecommendedTimeout()
@@ -119,9 +119,9 @@ public virtual with sharing class ElevateBatchService {
     }
 
     @TestVisible
-    private void checkForBatchItemErrorsIn(ElevateBatchItemCreateResponse authorizedGiftResponse) {
-        if (hasBatchItemErrors(authorizedGiftResponse)) {
-            UTIL_AuraEnabledCommon.throwAuraHandledException(authorizedGiftResponse.errors()[0].message);
+    private void checkForBatchItemErrorsIn(ElevateBatchItemCreateResponse batchItemCreateResponse) {
+        if (hasBatchItemErrors(batchItemCreateResponse)) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(batchItemCreateResponse.errors()[0].message);
         }
     }
 

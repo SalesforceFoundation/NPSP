@@ -350,9 +350,9 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
-    public static ElevateBatchItem removeFromElevateBatch(ElevateBatchItem authorizedGift) {
+    public static ElevateBatchItem removeFromElevateBatch(ElevateBatchItem batchItem) {
         try {
-           elevateBatchService.removeFromElevateBatch(authorizedGift);
+           elevateBatchService.removeFromElevateBatch(batchItem);
         } catch (AuraHandledException ex) {
           UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
         }

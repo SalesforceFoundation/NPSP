@@ -40,9 +40,9 @@ class ElevateBatch {
 
     async remove(authorizedGift) {
         return await apexRemoveFromElevateBatch({
-            authorizedGift: {
+            batchItem: {
                 elevateBatchId: authorizedGift[PAYMENT_ELEVATE_ELEVATE_BATCH_ID.fieldApiName],
-                paymentId: authorizedGift[PAYMENT_ELEVATE_ID.fieldApiName]
+                id: authorizedGift[PAYMENT_ELEVATE_ID.fieldApiName]
             }
         });
     }
