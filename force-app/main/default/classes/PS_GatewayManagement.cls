@@ -43,6 +43,20 @@ public with sharing class PS_GatewayManagement {
         };
         PS_IntegrationService.setConfiguration(gatewayConfig);
     }
+    @AuraEnabled
+    public static void setGatewayAssignmentEnabled(Boolean gatewayAssignmentEnabled) {
+        Gift_Entry_Settings__c giftEntrySettings = UTIL_CustomSettingsFacade.getGiftEntrySettings();
+        giftEntrySettings.Enable_Gateway_Assignment__c = gatewayAssignmentEnabled;
+
+        upsert giftEntrySettings;       
+    }
+
+    @AuraEnabled
+    public static Boolean isGatewayAssignmentEnabled() {
+        Gift_Entry_Settings__c giftEntrySettings = UTIL_CustomSettingsFacade.getGiftEntrySettings();
+
+        return giftEntrySettings.Enable_Gateway_Assignment__c;
+    }
 
     @AuraEnabled
     public static String getGatewayIdFromConfig() {

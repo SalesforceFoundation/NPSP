@@ -27,18 +27,22 @@
  *     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *     POSSIBILITY OF SUCH DAMAGE.
  */
-import { LightningElement } from 'lwc';
+import { LightningElement, track } from 'lwc';
 import { buildErrorMessage } from 'c/utilTemplateBuilder';
 import { isEmpty } from 'c/utilCommon';
 
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import insufficientPermissions from '@salesforce/label/c.commonInsufficientPermissions';
 import commonAdminPermissionErrorMessage from '@salesforce/label/c.commonAdminPermissionErrorMessage';
+import psEnableGatewayAssignment from '@salesforce/label/c.psEnableGatewayAssignment';
+
 
 import setGatewayId from '@salesforce/apex/PS_GatewayManagement.setGatewayId';
 import getGatewayIdFromConfig from '@salesforce/apex/PS_GatewayManagement.getGatewayIdFromConfig';
 import checkForElevateCustomer from '@salesforce/apex/PS_GatewayManagement.isElevateCustomer';
 import checkForSystemAdmin from '@salesforce/apex/PS_GatewayManagement.isSystemAdmin';
+import isGatewayAssignmentEnabled from '@salesforce/apex/PS_GatewayManagement.isGatewayAssignmentEnabled';
+import setGatewayAssignmentEnabled from '@salesforce/apex/PS_GatewayManagement.setGatewayAssignmentEnabled';
 
 export default class GePaymentGatewayManagement extends LightningElement {
 
@@ -52,7 +56,9 @@ export default class GePaymentGatewayManagement extends LightningElement {
     isSystemAdmin;
     hasAccess;
 
-    CUSTOM_LABELS = { messageLoading, insufficientPermissions, commonAdminPermissionErrorMessage };
+    @track gatewayAssignmentEnabled;
+
+    CUSTOM_LABELS = { messageLoading, insufficientPermissions, commonAdminPermissionErrorMessage, psEnableGatewayAssignment };
 
     async connectedCallback() {
         try {
@@ -67,6 +73,7 @@ export default class GePaymentGatewayManagement extends LightningElement {
 
         if (this.hasAccess) {
             this.gatewayId = await getGatewayIdFromConfig();
+            this.gatewayAssignmentEnabled = await isGatewayAssignmentEnabled();
         }
     }
 
@@ -128,6 +135,22 @@ export default class GePaymentGatewayManagement extends LightningElement {
             await setGatewayId({ gatewayId: gatewayId});
 
             this.isReadOnly = true;
+            this.isSuccess = true;
+            this.showSpinner = false;
+        } catch(ex) {
+            this.errorMessage = buildErrorMessage(ex);
+            this.showSpinner = false;
+            this.isError = true;
+        }
+    }
+
+    async handleToggle(event) {
+
+        this.showSpinner = true;
+        let gatewayAssignmentEnabled = this.template.querySelector("[data-id='enableGatewayAssignment']");
+
+        try {
+            await setGatewayAssignmentEnabled({ gatewayAssignmentEnabled: gatewayAssignmentEnabled.checked});
             this.isSuccess = true;
             this.showSpinner = false;
         } catch(ex) {

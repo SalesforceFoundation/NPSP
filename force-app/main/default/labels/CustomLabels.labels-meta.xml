@@ -12734,6 +12734,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Show Elevate Gateways and Payment Methods</value>
     </labels>
     <labels>
+        <fullName>psEnableGatewayAssignment</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to show Gateway Assignment is enabled.</shortDescription>
+        <value>Enable Gateway Assignment</value>
+    </labels>
+    <labels>
         <fullName>psShowPaymentMethods</fullName>
         <categories>Payment Gateway Management</categories>
         <language>en_US</language>

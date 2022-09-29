@@ -68,6 +68,17 @@
             <lightning-layout-item size="12">
                 <h1 class="slds-text-heading_medium slds-p-top-medium">Elevate Gateway Management</h1>
             </lightning-layout-item>
+            <lightning-layout-item size="12" class="slds-text-align_center">
+                <lightning-input 
+                    type="toggle"
+                    data-id="enableGatewayAssignment"  
+                    label={CUSTOM_LABELS.psEnableGatewayAssignment} 
+                    onchange={handleToggle} 
+                    checked={gatewayAssignmentEnabled}
+                    message-toggle-active="Enabled" 
+                    message-toggle-inactive="Disabled">
+                </lightning-input>
+            </lightning-layout-item>
             <lightning-layout-item size="12">
                 <!-- Temporary Hardcoded Text until this functionality is moved out of NPSP entirely -->
                 <p class="slds-text-body_regular slds-p-vertical_medium">
