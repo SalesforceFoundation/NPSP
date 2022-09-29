@@ -12686,6 +12686,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>We can&apos;t validate the previously saved gateway. Select a different gateway.</value>
     </labels>
     <labels>
+        <fullName>psHideGateways</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to hide Elevate Gateways.</shortDescription>
+        <value>Hide Elevate Gateways</value>
+    </labels>
+    <labels>
         <fullName>psHideGatewaysAndMethods</fullName>
         <categories>Payment Gateway Management</categories>
         <language>en_US</language>
@@ -12724,6 +12732,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>How to activate the Elevate field bundle to enter payment information</shortDescription>
         <value>To enter payment, select a valid Payment Method.</value>
+    </labels>
+    <labels>
+        <fullName>psShowGateways</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to show Elevate Gateways.</shortDescription>
+        <value>Show Elevate Gateways</value>
     </labels>
     <labels>
         <fullName>psShowGatewaysAndMethods</fullName>
