@@ -12,6 +12,8 @@ class GeGatewaySettings {
     isGiftEntry = false;
 
     setElevateSettings(initialSettings, templateRecordId) {
+        this.isGiftEntry = false;
+        this.isGiftEntryBatch = false;
         this.elevateSettings = initialSettings;
         this.templateRecordId = templateRecordId;
         registerListener('updateElevateSettings', this.settings, this);
