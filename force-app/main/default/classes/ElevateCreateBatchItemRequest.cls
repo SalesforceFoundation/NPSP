@@ -28,7 +28,6 @@
  *     POSSIBILITY OF SUCH DAMAGE.
  */
 public with sharing class ElevateCreateBatchItemRequest {
-    //TODO: If we choose to support ACH we will need to explicitly pass paymentMethodType or the callout will fail
 
     public ElevateBatchItemType batchItemType;
     public CommitmentInfo commitmentInfo;
@@ -71,6 +70,14 @@ public with sharing class ElevateCreateBatchItemRequest {
         purchaseInfo.firstName = batchItemRequestDTO.firstName;
         purchaseInfo.lastName = batchItemRequestDTO.lastName;
         purchaseInfo.paymentMethodToken = batchItemRequestDTO.paymentMethodToken;
+        purchaseInfo.paymentMethodType = batchItemRequestDTO.paymentMethodType;
+
+        ElevateCreateBatchItemRequest.AchData achData = new ElevateCreateBatchItemRequest.AchData();
+        achData.achCode = PS_CommitmentRequest.ACH_CODE_WEB;
+        achData.bankType = PS_CommitmentRequest.ACH_BANK_TYPE_CHECKING;
+        achData.type = PS_CommitmentRequest.ACH_CONSENT_MESSAGE;
+
+        purchaseInfo.achData = achData;
     }
 
     private void buildCommitmentInfoBody(ElevateCreateBatchItemRequestDTO batchItemRequestDTO,
@@ -95,6 +102,14 @@ public with sharing class ElevateCreateBatchItemRequest {
         };
         commitmentInfo.paymentMethodToken = batchItemRequestDTO.paymentMethodToken;
         commitmentInfo.productMetadataSchemaUri = PS_Request.PRODUCT_METADATA_SCHEMA_URI;
+        commitmentInfo.paymentMethodType = batchItemRequestDTO.paymentMethodType;
+
+        ElevateCreateBatchItemRequest.AchData achData = new ElevateCreateBatchItemRequest.AchData();
+        achData.achCode = PS_CommitmentRequest.ACH_CODE_WEB;
+        achData.bankType = PS_CommitmentRequest.ACH_BANK_TYPE_CHECKING;
+        achData.type = PS_CommitmentRequest.ACH_CONSENT_MESSAGE;
+
+        commitmentInfo.achData = achData;
     }
 
     public class CommitmentInfo {
@@ -105,10 +120,12 @@ public with sharing class ElevateCreateBatchItemRequest {
         public String gatewayId;
         public String merchantId;
         public String paymentMethodToken;
+        public String paymentMethodType;
         public Map<String, Object> productMetadata;
         public String productMetadataSchemaUri;
         public List<Schedule> schedules;
         public String type;
+        public AchData achData;
 
         public CommitmentInfo() {
             this.productMetadata = getProductMetadata();
@@ -166,8 +183,10 @@ public with sharing class ElevateCreateBatchItemRequest {
         public String lastName;
         public String email;
         public String paymentMethodToken;
+        public String paymentMethodType;
         public Map<String, Object> productMetadata;
         public String productMetadataSchemaUri;
+        public AchData achData;
 
         public PurchaseInfo() {
             this.productMetadata = getProductMetadata();

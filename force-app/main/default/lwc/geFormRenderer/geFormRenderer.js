@@ -868,7 +868,9 @@ export default class GeFormRenderer extends LightningElement{
                         getCurrencyLowestCommonDenominator(
                             this.getFieldValueFromFormState(DATA_IMPORT_DONATION_AMOUNT)
                         ),
-                        this.giftInView.schedule
+                        this.giftInView.schedule,
+                        this.selectedPaymentMethod(),
+                        this.accountHolderType()
                     );
                     this.updateFormState(await tokenizedGift.tokenize(sectionsList));
                 }
@@ -998,6 +1000,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     populateFormStateWithRDInfo(elevateBatchItem) {
+        // TODO: Will need to review status...
         const isSuccessful = elevateBatchItem.status === COMMITMENT_INACTIVE_STATUS &&
             elevateBatchItem.statusReason === BATCH_COMMITMENT_CREATED_STATUS_REASON;
         if (isSuccessful) {
@@ -1007,7 +1010,7 @@ export default class GeFormRenderer extends LightningElement{
                 [apiNameFor(PAYMENT_ELEVATE_ELEVATE_BATCH_ID)]: this.currentElevateBatch.elevateBatchId
             });
 
-            // TODO: Review with Daniel. Is there anything that needs to be done for ACH??
+            // TODO: Will need some adjustment - last 4 certainly and maybe others...
             if (this.selectedPaymentMethod() === PAYMENT_METHOD_CREDIT_CARD) {
                 this.updateFormState({
                     [apiNameFor(DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_MONTH)]:
@@ -1025,6 +1028,7 @@ export default class GeFormRenderer extends LightningElement{
         const isAuthorized = elevateBatchItem.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED
             || elevateBatchItem.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING
 
+        // TODO: Will need some adjustment - last 4 certainly and maybe others...
         if (isAuthorized) {
             this.updateFormState({
                 [apiNameFor(PAYMENT_ELEVATE_ELEVATE_BATCH_ID)]: this.currentElevateBatch.elevateBatchId,
