@@ -128,8 +128,7 @@ import {
     PAYMENT_UNKNOWN_ERROR_STATUS,
     FAILED,
     COMMITMENT_INACTIVE_STATUS,
-    BATCH_COMMITMENT_CREATED_STATUS_REASON,
-    PAYMENT_METHOD_ACH
+    BATCH_COMMITMENT_CREATED_STATUS_REASON
 } from 'c/geConstants';
 
 
@@ -926,11 +925,9 @@ export default class GeFormRenderer extends LightningElement{
         }));    
     }
 
-    async shouldRemoveFromElevateBatch(gift, isTokenizedGift) {
-        const shouldBeTokenized = (
-            this.selectedPaymentMethod() === PAYMENT_METHOD_CREDIT_CARD ||
-            this.selectedPaymentMethod() === PAYMENT_METHOD_ACH );
-        if (!gift.id() || !this.isElevateCustomer || shouldBeTokenized !== isTokenizedGift) {
+    async shouldRemoveFromElevateBatch(gift, shouldBeCreditCard) {
+        const isCreditCard = (this.selectedPaymentMethod() === PAYMENT_METHOD_CREDIT_CARD);
+        if (!gift.id() || !this.isElevateCustomer || isCreditCard !== shouldBeCreditCard) {
             return false;
         }    
 
@@ -1007,7 +1004,6 @@ export default class GeFormRenderer extends LightningElement{
                 [apiNameFor(PAYMENT_ELEVATE_ELEVATE_BATCH_ID)]: this.currentElevateBatch.elevateBatchId
             });
 
-            // TODO: Review with Daniel. Is there anything that needs to be done for ACH??
             if (this.selectedPaymentMethod() === PAYMENT_METHOD_CREDIT_CARD) {
                 this.updateFormState({
                     [apiNameFor(DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_MONTH)]:
@@ -2518,9 +2514,14 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     hasChargeableTransactionStatus = () => {
-        const nonChargeable = this.selectedPaymentMethod() !== PAYMENT_METHODS.ACH
+        const nonChargeableForSingleGift = this.selectedPaymentMethod() !== PAYMENT_METHODS.ACH
             && this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD;
-        if (nonChargeable) {
+        if (this.isSingleGiftEntry && nonChargeableForSingleGift) {
+            return false;
+        }
+
+        const nonChargeableForBatchGift = this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD;
+        if (!this.isSingleGiftEntry && nonChargeableForBatchGift) {
             return false;
         }
 

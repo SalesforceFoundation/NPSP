@@ -1,4 +1,4 @@
-import { LightningElement, track, api } from 'lwc';
+import { LightningElement, track } from 'lwc';
 import getGatewaysFromElevate from '@salesforce/apex/GE_GiftEntryController.getGatewaysFromElevate';
 import encryptGatewayId from '@salesforce/apex/GE_GiftEntryController.encryptGatewayId';
 import decryptGatewayId from '@salesforce/apex/GE_GiftEntryController.decryptGatewayId';

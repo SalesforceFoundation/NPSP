@@ -504,6 +504,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     hasValidPaymentMethod() {
+        if (this.isInBatchGiftEntry() && this._currentPaymentMethod === PAYMENT_METHODS.ACH) {
+            return false;
+        }
         return this._currentPaymentMethod === PAYMENT_METHODS.ACH
             || this._currentPaymentMethod === PAYMENT_METHOD_CREDIT_CARD;
     }
