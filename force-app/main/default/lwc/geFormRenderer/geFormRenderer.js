@@ -869,7 +869,7 @@ export default class GeFormRenderer extends LightningElement{
                             this.getFieldValueFromFormState(DATA_IMPORT_DONATION_AMOUNT)
                         ),
                         this.giftInView.schedule,
-                        this.selectedPaymentMethod(),
+                        this.selectedPaymentMethod() === 'ACH' ? 'ACH' : 'CARD',
                         this.accountHolderType()
                     );
                     this.updateFormState(await tokenizedGift.tokenize(sectionsList));
