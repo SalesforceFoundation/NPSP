@@ -80,34 +80,6 @@ public with sharing class UTIL_HtmlOutput_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Verifies a string with allowed url is returned without escaping
-    */
-    @isTest
-    private static void shouldReturnOriginalUrl() {
-        String html = '<a href="https://powerofus.force.com/NPSP_Documentation">';
-        UTIL_HtmlOutput_CTRL controller = new UTIL_HtmlOutput_CTRL();
-
-        controller.unsafeHtml = html;
-        controller.hasUrl = true;
-
-        System.assertEquals(html, controller.getSafeHtml());
-    }
-
-    /*******************************************************************************************************
-    * @description Verifies a string with allowed url with extra space is returned without escaping
-    */
-    @isTest
-    private static void shouldReturnOriginalUrlWithSpace() {
-        String html = '<a href="https://powerofus.force.com/NPSP_Documentation" >';
-        UTIL_HtmlOutput_CTRL controller = new UTIL_HtmlOutput_CTRL();
-
-        controller.unsafeHtml = html;
-        controller.hasUrl = true;
-
-        System.assertEquals(html, controller.getSafeHtml());
-    }
-
-    /*******************************************************************************************************
     * @description Verifies a string with a url that is not allowed is returned escaped
     */
     @isTest
@@ -122,37 +94,4 @@ public with sharing class UTIL_HtmlOutput_TEST {
         System.assert(actualHtml.startsWith('&lt;'));
         System.assertNotEquals(html, actualHtml);
     }
-
-    /*******************************************************************************************************
-    * @description Verifies that non-allowed javascript event code is stripped from url
-    */
-    @isTest
-    private static void shouldStripJavaScriptFromUrl() {
-        String html = '<a href="https://powerofus.force.com/NPSP_Documentation" onanyjavascriptevent="alert(\'gotcha\')">';
-        String cleanHtml = '<a href="https://powerofus.force.com/NPSP_Documentation" >';
-        UTIL_HtmlOutput_CTRL controller = new UTIL_HtmlOutput_CTRL();
-
-        controller.unsafeHtml = html;
-        controller.hasUrl = true;
-
-        System.assertEquals(cleanHtml, controller.getSafeHtml());
-    }
-
-    /*******************************************************************************************************
-    * @description Verifies that non-allowed javascript event code is stripped from url, regardless of
-    * the text case of the javascript
-    */
-    @isTest
-    private static void shouldStripJavaScriptFromUrlRegardlessOfCase() {
-        String html = 
-            '<a href="https://powerofus.force.com/NPSP_Documentation" oNanyjavascriptevent="alert(\'gotcha\')">';
-        String cleanHtml = '<a href="https://powerofus.force.com/NPSP_Documentation" >';
-        UTIL_HtmlOutput_CTRL controller = new UTIL_HtmlOutput_CTRL();
-
-        controller.unsafeHtml = html;
-        controller.hasUrl = true;
-
-        System.assertEquals(cleanHtml, controller.getSafeHtml());
-    }
-
 }
