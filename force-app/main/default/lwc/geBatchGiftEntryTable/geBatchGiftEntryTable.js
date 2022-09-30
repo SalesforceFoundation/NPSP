@@ -292,6 +292,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                 this.dispatchEvent(new CustomEvent('delete', {
                     detail: event.detail.row
                 }));
+                this.isLoading = true;
                 break;
         }
     }
