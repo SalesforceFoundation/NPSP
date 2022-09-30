@@ -72,12 +72,15 @@ public with sharing class ElevateCreateBatchItemRequest {
         purchaseInfo.paymentMethodToken = batchItemRequestDTO.paymentMethodToken;
         purchaseInfo.paymentMethodType = batchItemRequestDTO.paymentMethodType;
 
-        ElevateCreateBatchItemRequest.AchData achData = new ElevateCreateBatchItemRequest.AchData();
-        achData.achCode = PS_CommitmentRequest.ACH_CODE_WEB;
-        achData.bankType = PS_CommitmentRequest.ACH_BANK_TYPE_CHECKING;
-        achData.type = PS_CommitmentRequest.ACH_CONSENT_MESSAGE;
+        if (batchItemRequestDTO.paymentMethodType == 'ACH') {
+            ElevateCreateBatchItemRequest.AchData achData = new ElevateCreateBatchItemRequest.AchData();
+            achData.achCode = PS_CommitmentRequest.ACH_CODE_WEB;
+            achData.bankType = PS_CommitmentRequest.ACH_BANK_TYPE_CHECKING;
+            achData.consent = PS_CommitmentRequest.ACH_CONSENT_MESSAGE;
+            achData.type = batchItemRequestDTO.type;
 
-        purchaseInfo.achData = achData;
+            purchaseInfo.achData = achData;
+        }
     }
 
     private void buildCommitmentInfoBody(ElevateCreateBatchItemRequestDTO batchItemRequestDTO,
@@ -104,12 +107,15 @@ public with sharing class ElevateCreateBatchItemRequest {
         commitmentInfo.productMetadataSchemaUri = PS_Request.PRODUCT_METADATA_SCHEMA_URI;
         commitmentInfo.paymentMethodType = batchItemRequestDTO.paymentMethodType;
 
-        ElevateCreateBatchItemRequest.AchData achData = new ElevateCreateBatchItemRequest.AchData();
-        achData.achCode = PS_CommitmentRequest.ACH_CODE_WEB;
-        achData.bankType = PS_CommitmentRequest.ACH_BANK_TYPE_CHECKING;
-        achData.type = PS_CommitmentRequest.ACH_CONSENT_MESSAGE;
+        if (batchItemRequestDTO.paymentMethodType == 'ACH') {
+            ElevateCreateBatchItemRequest.AchData achData = new ElevateCreateBatchItemRequest.AchData();
+            achData.achCode = PS_CommitmentRequest.ACH_CODE_WEB;
+            achData.bankType = PS_CommitmentRequest.ACH_BANK_TYPE_CHECKING;
+            achData.consent = PS_CommitmentRequest.ACH_CONSENT_MESSAGE;
+            achData.type = batchItemRequestDTO.type;
 
-        commitmentInfo.achData = achData;
+            commitmentInfo.achData = achData;
+        }
     }
 
     public class CommitmentInfo {
