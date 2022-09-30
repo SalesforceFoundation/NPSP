@@ -5783,7 +5783,7 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
     </customLabels>
     <customLabels>
         <name>healthSolutionTriggerHandlerMismatch</name>
-        <label>Wijzigen aan triggers kunnen op onverwachte wijze invloed hebben op kernfunctionaliteit van NPSP, en moeten grondig worden getest voordat ze op productie worden uitgerold. Als deze wijzigingen onbedoeld zijn, moet u de triggerhandlers opnieuw instellen om ze te laten overeenkomen met de standaardconfiguratie voor NPSP. Raadpleeg het artikel Triggerhandlers beheren voor meer informatie: https://powerofus.force.com/NPSP_Manage_Trigger_Handlers</label>
+        <label>Wijzigen aan triggers kunnen op onverwachte wijze invloed hebben op kernfunctionaliteit van NPSP, en moeten grondig worden getest voordat ze op productie worden uitgerold. Als deze wijzigingen onbedoeld zijn, moet u de triggerhandlers opnieuw instellen om ze te laten overeenkomen met de standaardconfiguratie voor NPSP. Raadpleeg het artikel Triggerhandlers beheren voor meer informatie: https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Manage_Trigger_Handlers.htm</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionUnsupportedPicklistValue</name>
@@ -6842,7 +6842,7 @@ Door Standaard NPSP-taken niet automatisch plannen te selecteren, laat u NPSP we
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMapping3</name>
-        <label>Zoek &lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;hier&lt;/a&gt; naar de volledige set-updocumentatie voor Geavanceerd toewijzen.</label>
+        <label>Zoek &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Advanced_Mapping.htm&quot; target=&quot;_blank&quot;&gt;hier&lt;/a&gt; naar de volledige set-updocumentatie voor Geavanceerd toewijzen.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMapping4</name>
