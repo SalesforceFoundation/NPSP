@@ -296,27 +296,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         }
     }
 
-    deleteDIRow(rowToDelete) {
-        const isRowToDelete = row => row.Id === rowToDelete.Id;
-        const index = this.data.findIndex(isRowToDelete);
-        this.data.splice(index, 1);
-        this.data = this.data.splice(0);
-        this.dispatchEvent(new CustomEvent('delete', {
-            detail: {
-                amount: rowToDelete[DONATION_AMOUNT.fieldApiName]
-            }
-        }));
-        this.notifyGiftBatchHeaderOfTableChange();
-        this.requestFormRendererReset();
-        showToast(
-            this.CUSTOM_LABELS.PageMessagesConfirm,
-            bgeGridGiftDeleted,
-            'success',
-            'dismissible',
-            null
-        );
-    }
-
     handleLoadMoreGifts() {
         if (this.hasAllExistingGifts() || this.isLoading) {
             return;
