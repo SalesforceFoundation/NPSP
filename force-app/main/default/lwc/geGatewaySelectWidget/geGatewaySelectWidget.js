@@ -28,7 +28,6 @@ export default class GeGatewaySelectWidget extends LightningElement {
     @track isExpanded = false;
     @track selectedGateway = null;
     @track gatewayOptions = [];
-    @track preGatewayOptions = [];
     @track isACHEnabled = true;
     @track isACHDisabled = false;
     @track isCreditCardEnabled = true;
