@@ -9,11 +9,11 @@ import psElevateConnectionTimeout from '@salesforce/label/c.psElevateConnectionT
 import psGatewayDefault from '@salesforce/label/c.psGatewayDefault';
 import psGatewaysNotFound from '@salesforce/label/c.psGatewaysNotFound';
 import psGatewayNotValid from '@salesforce/label/c.psGatewayNotValid';
-import psHideGatewaysAndMethods from '@salesforce/label/c.psHideGateways';
+import psHideGatewaysAndMethods from '@salesforce/label/c.psHideGatewaysAndMethods';
 import psHidePaymentMethods from '@salesforce/label/c.psHidePaymentMethods';
 import psSelectPaymentGateway from '@salesforce/label/c.psSelectPaymentGateway';
 import psSelectPaymentMethods from '@salesforce/label/c.psSelectPaymentMethods';
-import psShowGatewaysAndMethods from '@salesforce/label/c.psShowGateways';
+import psShowGatewaysAndMethods from '@salesforce/label/c.psShowGatewaysAndMethods';
 import psShowPaymentMethods from '@salesforce/label/c.psShowPaymentMethods';
 import psUnableToConnect from '@salesforce/label/c.psUnableToConnect';
 import RD2_Credit_Card_Payment_Method_Label from '@salesforce/label/c.RD2_Credit_Card_Payment_Method_Label';
@@ -61,7 +61,6 @@ export default class GeGatewaySelectWidget extends LightningElement {
     _firstDisplay = true;
     _defaultTemplateId = null;
     _defaultGatewayId = null;
-    _achInBatch = false;
 
     async init() {
         let gatewayAssignmentSettings = JSON.parse(await getGatewayAssignmentSettings());
