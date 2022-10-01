@@ -352,7 +352,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             isElevateWidgetDisabled: false
         });
 
-        if (this.isInBatchGiftEntry() && !this.isPaymentMethodCreditCard()) {
+        if (this.isInBatchGiftEntry() && !this.isValidBatchElevatePaymentMethod()) {
             this.display.transitionTo('userOriginatedDeactivated');
         } else {
             this.display.transitionTo('userOriginatedCharge');
@@ -409,7 +409,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     resetForBatch() {
-        if (this.isPaymentMethodCreditCard()) {
+        if (this.isValidBatchElevatePaymentMethod()) {
             this.display.transitionTo('resetToCharge');
         } else {
             this.display.transitionTo('resetToDeactivated');
