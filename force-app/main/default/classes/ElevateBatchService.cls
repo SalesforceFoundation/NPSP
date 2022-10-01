@@ -29,14 +29,14 @@
  */
 public virtual with sharing class ElevateBatchService {
 
-    public virtual ElevateBatchItem addToElevateBatch(ElevateCreateBatchItemRequestDTO batchItemRequestDTO, String
-            elevateBatchId) {
-        return new ElevateBatch(elevateBatchId).add(batchItemRequestDTO);
+    public virtual ElevateBatchItem addToElevateBatch(ElevateCreateBatchItemRequestDTO batchItemRequestDTO,
+                                                      String elevateBatchId, String gatewayOverride) {
+        return new ElevateBatch(elevateBatchId).add(batchItemRequestDTO, gatewayOverride);
     }
 
-    public ElevateCreateBatchItemRequest buildBatchItemRequestFrom(ElevateCreateBatchItemRequestDTO
-            batchItemRequestDTO) {
-        return new ElevateCreateBatchItemRequest(batchItemRequestDTO);
+    public ElevateCreateBatchItemRequest buildBatchItemRequestFrom(ElevateCreateBatchItemRequestDTO batchItemRequestDTO,
+                                                                   String gatewayOverride) {
+        return new ElevateCreateBatchItemRequest(batchItemRequestDTO, gatewayOverride);
     }
 
     public virtual ElevateBatchItem removeFromElevateBatch(ElevateBatchItem authorizedGift) {

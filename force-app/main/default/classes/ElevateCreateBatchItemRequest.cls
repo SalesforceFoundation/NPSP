@@ -28,50 +28,72 @@
  *     POSSIBILITY OF SUCH DAMAGE.
  */
 public with sharing class ElevateCreateBatchItemRequest {
-    //TODO: If we choose to support ACH we will need to explicitly pass paymentMethodType or the callout will fail
 
     public ElevateBatchItemType batchItemType;
     public CommitmentInfo commitmentInfo;
     public PurchaseInfo purchaseInfo;
 
-    public ElevateCreateBatchItemRequest(ElevateCreateBatchItemRequestDTO batchItemRequestDTO) {
+    public ElevateCreateBatchItemRequest(ElevateCreateBatchItemRequestDTO batchItemRequestDTO, String gatewayOverride) {
         if (batchItemRequestDTO.schedule == null || batchItemRequestDTO.schedule.isEmpty()) {
             batchItemType = ElevateBatchItemType.ONE_TIME;
         } else {
             batchItemType = ElevateBatchItemType.COMMITMENT;
         }
 
-        buildRequestBody(batchItemRequestDTO);
+        buildRequestBody(batchItemRequestDTO, gatewayOverride);
     }
 
-    private void buildRequestBody(ElevateCreateBatchItemRequestDTO batchItemRequestDTO) {
+    private void buildRequestBody(ElevateCreateBatchItemRequestDTO batchItemRequestDTO, String gatewayOverride) {
         PS_IntegrationServiceConfig.Service configService = new PS_IntegrationServiceConfig.Service();
 
         if (batchItemType == ElevateBatchItemType.COMMITMENT) {
-            buildCommitmentInfoBody(batchItemRequestDTO, configService);
+            buildCommitmentInfoBody(batchItemRequestDTO, configService, gatewayOverride);
         } else {
-            buildPurchaseInfoBody(batchItemRequestDTO, configService);
+            buildPurchaseInfoBody(batchItemRequestDTO, configService, gatewayOverride);
         }
     }
 
     private void buildPurchaseInfoBody(ElevateCreateBatchItemRequestDTO batchItemRequestDTO,
-                                       PS_IntegrationServiceConfig.Service configService) {
+                                       PS_IntegrationServiceConfig.Service configService,
+                                       String gatewayOverride) {
         purchaseInfo = new ElevateCreateBatchItemRequest.PurchaseInfo();
         purchaseInfo.merchantId = configService.getMerchantIds();
-        purchaseInfo.gatewayId = configService.getGatewayIds();
+        if (String.isNotBlank(gatewayOverride)) {
+            purchaseInfo.gatewayId = gatewayOverride;
+        }
+        else {
+            purchaseInfo.gatewayId = configService.getGatewayIds();
+        }
 
         purchaseInfo.currencyCode = UserInfo.getDefaultCurrency();
         purchaseInfo.amount = Integer.valueOf(batchItemRequestDTO.amount);
         purchaseInfo.firstName = batchItemRequestDTO.firstName;
         purchaseInfo.lastName = batchItemRequestDTO.lastName;
         purchaseInfo.paymentMethodToken = batchItemRequestDTO.paymentMethodToken;
+        purchaseInfo.paymentMethodType = batchItemRequestDTO.paymentMethodType;
+
+        if (batchItemRequestDTO.paymentMethodType == 'ACH') {
+            ElevateCreateBatchItemRequest.AchData achData = new ElevateCreateBatchItemRequest.AchData();
+            achData.achCode = PS_CommitmentRequest.ACH_CODE_WEB;
+            achData.bankType = PS_CommitmentRequest.ACH_BANK_TYPE_CHECKING;
+            achData.consent = PS_CommitmentRequest.ACH_CONSENT_MESSAGE;
+            achData.type = batchItemRequestDTO.type;
+
+            purchaseInfo.achData = achData;
+        }
     }
 
     private void buildCommitmentInfoBody(ElevateCreateBatchItemRequestDTO batchItemRequestDTO,
-                                         PS_IntegrationServiceConfig.Service configService) {
+                                         PS_IntegrationServiceConfig.Service configService,
+                                         String gatewayOverride) {
 
         commitmentInfo = new ElevateCreateBatchItemRequest.CommitmentInfo();
-        commitmentInfo.gatewayId = configService.getGatewayIds();
+        if (String.isNotBlank(gatewayOverride)) {
+            commitmentInfo.gatewayId = gatewayOverride;
+        }
+        else {
+            commitmentInfo.gatewayId = configService.getGatewayIds();
+        }
         commitmentInfo.merchantId = configService.getMerchantIds();
 
         commitmentInfo.currencyCode = UserInfo.getDefaultCurrency();
@@ -83,6 +105,17 @@ public with sharing class ElevateCreateBatchItemRequest {
         };
         commitmentInfo.paymentMethodToken = batchItemRequestDTO.paymentMethodToken;
         commitmentInfo.productMetadataSchemaUri = PS_Request.PRODUCT_METADATA_SCHEMA_URI;
+        commitmentInfo.paymentMethodType = batchItemRequestDTO.paymentMethodType;
+
+        if (batchItemRequestDTO.paymentMethodType == 'ACH') {
+            ElevateCreateBatchItemRequest.AchData achData = new ElevateCreateBatchItemRequest.AchData();
+            achData.achCode = PS_CommitmentRequest.ACH_CODE_WEB;
+            achData.bankType = PS_CommitmentRequest.ACH_BANK_TYPE_CHECKING;
+            achData.consent = PS_CommitmentRequest.ACH_CONSENT_MESSAGE;
+            achData.type = batchItemRequestDTO.type;
+
+            commitmentInfo.achData = achData;
+        }
     }
 
     public class CommitmentInfo {
@@ -93,10 +126,12 @@ public with sharing class ElevateCreateBatchItemRequest {
         public String gatewayId;
         public String merchantId;
         public String paymentMethodToken;
+        public String paymentMethodType;
         public Map<String, Object> productMetadata;
         public String productMetadataSchemaUri;
         public List<Schedule> schedules;
         public String type;
+        public AchData achData;
 
         public CommitmentInfo() {
             this.productMetadata = getProductMetadata();
@@ -154,8 +189,10 @@ public with sharing class ElevateCreateBatchItemRequest {
         public String lastName;
         public String email;
         public String paymentMethodToken;
+        public String paymentMethodType;
         public Map<String, Object> productMetadata;
         public String productMetadataSchemaUri;
+        public AchData achData;
 
         public PurchaseInfo() {
             this.productMetadata = getProductMetadata();

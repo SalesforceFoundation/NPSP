@@ -3,13 +3,15 @@ import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Au
 
 class ElevateTokenizeabledGift {
 
-    constructor(fullName, amount, schedule) {
+    constructor(fullName, amount, schedule, paymentMethod, type) {
         this.amount = amount;
         this.firstName = fullName.firstName;
         this.lastName = fullName.lastName;
         this.currencyCode = CURRENCY;
         this.paymentMethodToken = null;
         this.schedule = schedule;
+        this.paymentMethodType = paymentMethod;
+        this.type = type;
     }
 
     async tokenize(sections) {
