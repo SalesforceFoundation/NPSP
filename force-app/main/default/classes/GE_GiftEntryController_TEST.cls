@@ -178,12 +178,12 @@ public with sharing class GE_GiftEntryController_TEST {
         dto.currencyCode = 'USD';
         dto.paymentMethodToken = '12345';
         dto.schedule = new Map<String,Object> {
-                String.valueOf(npe03__Recurring_Donation__c.npe03__Installment_Period__c) => 'Monthly',
-                String.valueOf(npe03__Recurring_Donation__c.InstallmentFrequency__c) => '1',
-                String.valueOf(npe03__Recurring_Donation__c.StartDate__c) => String.valueOf(Date.today())
+            String.valueOf(npe03__Recurring_Donation__c.npe03__Installment_Period__c) => 'Monthly',
+            String.valueOf(npe03__Recurring_Donation__c.InstallmentFrequency__c) => '1',
+            String.valueOf(npe03__Recurring_Donation__c.StartDate__c) => String.valueOf(Date.today())
         };
         Test.startTest();
-        ElevateCreateBatchItemRequest request = new ElevateBatchService().buildBatchItemRequestFrom(dto, null);
+            ElevateCreateBatchItemRequest request = new ElevateBatchService().buildBatchItemRequestFrom(dto, null);
         Test.stopTest();
 
         System.assertEquals(ElevateBatchItemType.COMMITMENT, request.batchItemType, 'The request batch item type ' +
@@ -216,7 +216,7 @@ public with sharing class GE_GiftEntryController_TEST {
         Datetime startDateTime = Datetime.newInstance(Date.today().year(), Date.today().month(), Date.today().day());
         System.assertEquals(startDateTime.formatGmt('yyyy-MM-dd\'T\'HH:mm:ss\'Z\''),
                 request.commitmentInfo.schedules[0].firstOccurrenceOnTimestamp, 'The request first occurrence ' +
-                        'timestamp should should match the DTO and be converted to ISO 8601 format.');
+                'timestamp should should match the DTO and be converted to ISO 8601 format.');
     }
 
     @isTest

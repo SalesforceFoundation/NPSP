@@ -347,6 +347,7 @@ public with sharing class GE_GiftEntryController {
         } catch (AuraHandledException ex) {
           UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
         }
+
         return batchItem;
     }
 

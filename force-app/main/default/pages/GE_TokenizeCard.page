@@ -88,7 +88,7 @@
 
         function handleMounting(paymentMethod, gatewayOverride) {
             if (isValidPaymentMethod(paymentMethod)) {
-                const mountGateway = gatewayOverride ? gatewayOverride : '{!gatewayIds}';
+                const mountGateway = !!gatewayOverride ? gatewayOverride : '{!gatewayIds}';
                 const config = {
                     id: 'payments',
                     clientId: '{!clientId}',
