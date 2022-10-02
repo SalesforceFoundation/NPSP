@@ -543,9 +543,12 @@ export default class GeFormRenderer extends LightningElement{
             }
 
             if (!this.isSingleGiftEntry) {
-                GeGatewaySettings.setElevateSettings(formTemplate.elevateSettings);
+                GeGatewaySettings.initDecryptedElevateSettings(formTemplate.elevateSettings);
                 this.sections = this.prepareFormForBatchMode(formTemplate.layout.sections);
                 this.dispatchEvent(new CustomEvent('sectionsretrieved'));
+            }
+            else {
+                GeGatewaySettings.clearDecryptedElevateSettings();
             }
         }
 

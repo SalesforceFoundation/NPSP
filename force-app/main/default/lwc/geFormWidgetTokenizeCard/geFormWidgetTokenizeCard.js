@@ -562,7 +562,14 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     requestMount() {
-        tokenHandler.mount(this.iframe(), this._currentPaymentMethod, this.handleError, this.resolveMount);
+        let gatewayOverride = GeGatewaySettings.getDecryptedGatewayId();
+        tokenHandler.mount(
+            this.iframe(),
+            this._currentPaymentMethod,
+            this.handleError,
+            this.resolveMount,
+            gatewayOverride
+            );
     }
 
     resolveMount = () => {

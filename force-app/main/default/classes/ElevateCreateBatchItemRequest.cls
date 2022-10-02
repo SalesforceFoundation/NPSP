@@ -34,31 +34,37 @@ public with sharing class ElevateCreateBatchItemRequest {
     public CommitmentInfo commitmentInfo;
     public PurchaseInfo purchaseInfo;
 
-    public ElevateCreateBatchItemRequest(ElevateCreateBatchItemRequestDTO batchItemRequestDTO) {
+    public ElevateCreateBatchItemRequest(ElevateCreateBatchItemRequestDTO batchItemRequestDTO, String gatewayOverride) {
         if (batchItemRequestDTO.schedule == null || batchItemRequestDTO.schedule.isEmpty()) {
             batchItemType = ElevateBatchItemType.ONE_TIME;
         } else {
             batchItemType = ElevateBatchItemType.COMMITMENT;
         }
 
-        buildRequestBody(batchItemRequestDTO);
+        buildRequestBody(batchItemRequestDTO, gatewayOverride);
     }
 
-    private void buildRequestBody(ElevateCreateBatchItemRequestDTO batchItemRequestDTO) {
+    private void buildRequestBody(ElevateCreateBatchItemRequestDTO batchItemRequestDTO, String gatewayOverride) {
         PS_IntegrationServiceConfig.Service configService = new PS_IntegrationServiceConfig.Service();
 
         if (batchItemType == ElevateBatchItemType.COMMITMENT) {
-            buildCommitmentInfoBody(batchItemRequestDTO, configService);
+            buildCommitmentInfoBody(batchItemRequestDTO, configService, gatewayOverride);
         } else {
-            buildPurchaseInfoBody(batchItemRequestDTO, configService);
+            buildPurchaseInfoBody(batchItemRequestDTO, configService, gatewayOverride);
         }
     }
 
     private void buildPurchaseInfoBody(ElevateCreateBatchItemRequestDTO batchItemRequestDTO,
-                                       PS_IntegrationServiceConfig.Service configService) {
+                                       PS_IntegrationServiceConfig.Service configService,
+                                       String gatewayOverride) {
         purchaseInfo = new ElevateCreateBatchItemRequest.PurchaseInfo();
         purchaseInfo.merchantId = configService.getMerchantIds();
-        purchaseInfo.gatewayId = configService.getGatewayIds();
+        if (String.isNotBlank(gatewayOverride)) {
+            purchaseInfo.gatewayId = gatewayOverride;
+        }
+        else {
+            purchaseInfo.gatewayId = configService.getGatewayIds();
+        }
 
         purchaseInfo.currencyCode = UserInfo.getDefaultCurrency();
         purchaseInfo.amount = Integer.valueOf(batchItemRequestDTO.amount);
@@ -68,10 +74,16 @@ public with sharing class ElevateCreateBatchItemRequest {
     }
 
     private void buildCommitmentInfoBody(ElevateCreateBatchItemRequestDTO batchItemRequestDTO,
-                                         PS_IntegrationServiceConfig.Service configService) {
+                                         PS_IntegrationServiceConfig.Service configService,
+                                         String gatewayOverride) {
 
         commitmentInfo = new ElevateCreateBatchItemRequest.CommitmentInfo();
-        commitmentInfo.gatewayId = configService.getGatewayIds();
+        if (String.isNotBlank(gatewayOverride)) {
+            commitmentInfo.gatewayId = gatewayOverride;
+        }
+        else {
+            commitmentInfo.gatewayId = configService.getGatewayIds();
+        }
         commitmentInfo.merchantId = configService.getMerchantIds();
 
         commitmentInfo.currencyCode = UserInfo.getDefaultCurrency();
