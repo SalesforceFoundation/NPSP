@@ -23,6 +23,7 @@ import { isEmpty, showToast } from 'c/utilCommon';
 
 const TEMPLATE_CSS_CLASS = 'template-top';
 const GIFT_ENTRY_CSS_CLASS = 'gift-entry-top';
+const TOKENIZE_ID = 'TOKENIZE';
 
 export default class GeGatewaySelectWidget extends LightningElement {
     @track isExpanded = false;
@@ -37,7 +38,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
     @track isGatewayAssignmentEnabled = false;
     @track isGatewaySelectionDisabled = false;
 
-    @api parentIsGE = false;
+    @api parentId = '';
 
     CUSTOM_LABELS = Object.freeze({
         messageLoading,
@@ -95,7 +96,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
             this.isLoading = false;
         }
 
-        if (this.parentIsGE) {
+        if (this.parentId === TOKENIZE_ID) {
             await this.restoreSavedSettings();
         }
     }
@@ -156,7 +157,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
             this.handleInitialPaymentMethodSelections(elevateSettings);
         }
 
-        if (this.parentIsGE) {
+        if (this.parentId === TOKENIZE_ID) {
             this.disableAllControls();
         }
 
@@ -323,7 +324,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
     }
 
     get hideInGiftEntryBatch() {
-        if (this.parentIsGE) {
+        if (this.parentId === TOKENIZE_ID) {
             if (GeGatewaySettings.getIsGiftEntryBatch() && this.isGatewayAssignmentEnabled) {
                 return false;
             }
@@ -333,6 +334,6 @@ export default class GeGatewaySelectWidget extends LightningElement {
     }
 
     get cssClassPrefix() {
-        return this.parentIsGE ? GIFT_ENTRY_CSS_CLASS : TEMPLATE_CSS_CLASS;
+        return this.parentId === TOKENIZE_ID ? GIFT_ENTRY_CSS_CLASS : TEMPLATE_CSS_CLASS;
     }
 }
