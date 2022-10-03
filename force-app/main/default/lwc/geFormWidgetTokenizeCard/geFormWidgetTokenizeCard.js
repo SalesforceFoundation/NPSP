@@ -60,6 +60,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     alert = {};
     dataImportId;
     isMounted = false;
+    parentIsGE = true;
 
     _displayState;
     _showSpinner = true;
