@@ -62,11 +62,17 @@ export default class GeGatewaySelectWidget extends LightningElement {
     _defaultGatewayId = null;
 
     async init() {
-        let gatewayAssignmentSettings = JSON.parse(await getGatewayAssignmentSettings());
+        try {
+            let gatewayAssignmentSettings = JSON.parse(await getGatewayAssignmentSettings());
 
-        this._defaultTemplateId = gatewayAssignmentSettings.defaultTemplateId;
-        this.isGatewayAssignmentEnabled = gatewayAssignmentSettings.gatewayAssignmentEnabled;
-        this._defaultGatewayId = gatewayAssignmentSettings.defaultGatewayId;
+            this._defaultTemplateId = gatewayAssignmentSettings.defaultTemplateId;
+            this.isGatewayAssignmentEnabled = gatewayAssignmentSettings.gatewayAssignmentEnabled;
+            this._defaultGatewayId = gatewayAssignmentSettings.defaultGatewayId;
+        }
+        catch (e) {
+            this._firstDisplay = false;
+            this.handleErrors();
+        }
 
         if (this._defaultTemplateId === GeGatewaySettings.getTemplateRecordId()) {
             this.isDefaultTemplate = true;
@@ -101,7 +107,13 @@ export default class GeGatewaySelectWidget extends LightningElement {
             return;
         }
 
-        this._elevateGateways = JSON.parse(await getGatewaysFromElevate());
+        try {
+            this._elevateGateways = JSON.parse(await getGatewaysFromElevate());
+        }
+        catch (e) {
+            this._firstDisplay = false;
+            this.handleErrors();
+        }
 
         if (this._elevateGateways && this._elevateGateways.length > 0 && !(this._elevateGateways.errors)) {
             this.buildOptions();
