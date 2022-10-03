@@ -12742,6 +12742,30 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Enable Gateway Assignment</value>
     </labels>
     <labels>
+        <fullName>psEnableGatewayAssignmentHeader</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Gateway Assignment Header.</shortDescription>
+        <value>Enable Gateway Assignment</value>
+    </labels>
+    <labels>
+        <fullName>psEnableGatewayAssignmentHelp</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Gateway Assignment Help Message.</shortDescription>
+        <value>Enabling gateway assignment will allow you to select the payment gateway and respective payment methods when modifying Gift Entry Templates.</value>
+    </labels>
+    <labels>
+        <fullName>psGatewayManagementHelp</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Gateway Management Help Message.</shortDescription>
+        <value>These settings manage the payment gateways for Elevate transactions.</value>
+    </labels>
+    <labels>
         <fullName>psShowPaymentMethods</fullName>
         <categories>Payment Gateway Management</categories>
         <language>en_US</language>

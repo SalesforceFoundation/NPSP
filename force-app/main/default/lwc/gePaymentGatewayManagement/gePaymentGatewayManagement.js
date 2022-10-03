@@ -35,7 +35,9 @@ import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import insufficientPermissions from '@salesforce/label/c.commonInsufficientPermissions';
 import commonAdminPermissionErrorMessage from '@salesforce/label/c.commonAdminPermissionErrorMessage';
 import psEnableGatewayAssignment from '@salesforce/label/c.psEnableGatewayAssignment';
-
+import psEnableGatewayAssignmentHeader from '@salesforce/label/c.psEnableGatewayAssignmentHeader';
+import psEnableGatewayAssignmentHelp from '@salesforce/label/c.psEnableGatewayAssignmentHelp';
+import psGatewayManagementHelp from '@salesforce/label/c.psGatewayManagementHelp';
 
 import setGatewayId from '@salesforce/apex/PS_GatewayManagement.setGatewayId';
 import getGatewayIdFromConfig from '@salesforce/apex/PS_GatewayManagement.getGatewayIdFromConfig';
@@ -58,7 +60,15 @@ export default class GePaymentGatewayManagement extends LightningElement {
 
     @track gatewayAssignmentEnabled;
 
-    CUSTOM_LABELS = { messageLoading, insufficientPermissions, commonAdminPermissionErrorMessage, psEnableGatewayAssignment };
+    CUSTOM_LABELS = {
+        commonAdminPermissionErrorMessage,
+        insufficientPermissions,
+        messageLoading,
+        psEnableGatewayAssignment,
+        psEnableGatewayAssignmentHeader,
+        psEnableGatewayAssignmentHelp,
+        psGatewayManagementHelp
+    };
 
     async connectedCallback() {
         try {
@@ -147,7 +157,7 @@ export default class GePaymentGatewayManagement extends LightningElement {
     async handleToggle(event) {
 
         this.showSpinner = true;
-        let gatewayAssignmentEnabled = this.template.querySelector("[data-id='enableGatewayAssignment']");
+        const gatewayAssignmentEnabled = this.template.querySelector("[data-id='enableGatewayAssignment']");
 
         try {
             await setGatewayAssignmentEnabled({ gatewayAssignmentEnabled: gatewayAssignmentEnabled.checked});
