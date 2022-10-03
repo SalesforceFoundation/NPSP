@@ -340,10 +340,32 @@ ElevateBatchItemType.ONE_TIME, TEST_PAYMENT_METHOD_CARD);
     }
 
     @IsTest
+    static void removeBatchItemFromElevateBatchReturnsErrorResponse() {
+        AuraHandledException auraException;
+
+        Test.startTest();
+        try {
+            ElevateBatch elevateBatch = new ElevateBatch('test-batch-id');
+            elevateBatch.elevateBatchService = new ElevateBatchServiceInvalidRequest();
+            elevateBatch.elevateBatchService.removeFromElevateBatch(elevateBatch, new ElevateBatchItem());
+        } catch (AuraHandledException ex) {
+            auraException = ex;
+        }
+        Test.stopTest();
+
+        System.assert(auraException != null, 'The aura handled exception should not be null since an invalid request ' +
+                'has been sent.');
+        System.assertEquals('Bad Request',
+                auraException.getMessage(), 'The error message in the elevate batch response ' +
+                        'should throw an exception and the message should be the create elevate batch error ' +
+                        'message specified in the invalid request data type.');
+    }
+
+    @IsTest
     static void addBatchItemToElevateBatchShouldReturnFailureResponse() {
         GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceInvalidRequest();
         String errorMessage = ElevateBatchItemCreateResponse.parse(new ElevateBatchServiceInvalidRequest()
-                .addToElevateBatchErrorResponse())
+                .elevateBatchErrorResponse())
                 .errors()[0].message;
         AuraHandledException auraException;
 
@@ -362,6 +384,8 @@ ElevateBatchItemType.ONE_TIME, TEST_PAYMENT_METHOD_CARD);
                         'should throw an exception and the message should be the create elevate batch error ' +
                         'message specified in the invalid request data type.');
     }
+
+
 
     /***
      * @description Verifies the purchase request response throws an excpetion

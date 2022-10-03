@@ -29,6 +29,17 @@
  */
 public virtual with sharing class ElevateBatchService {
 
+    @TestVisible
+    private ElevateBatch elevateBatch {
+        get {
+            if (elevateBatch == null) {
+                elevateBatch = new ElevateBatch();
+            }
+            return elevateBatch;
+        }
+        set;
+    }
+
     public virtual ElevateBatchItem addToElevateBatch(ElevateCreateBatchItemRequestDTO batchItemRequestDTO, String
             elevateBatchId) {
         return new ElevateBatch(elevateBatchId).add(batchItemRequestDTO);
@@ -41,6 +52,11 @@ public virtual with sharing class ElevateBatchService {
 
     public virtual ElevateBatchItem removeFromElevateBatch(ElevateBatchItem batchItem) {
         return new ElevateBatch(batchItem.elevateBatchId).remove(batchItem.id());
+    }
+
+    @TestVisible
+    private virtual ElevateBatchItem removeFromElevateBatch(ElevateBatch elevateBatch, ElevateBatchItem batchItem) {
+        return elevateBatch.remove(batchItem.id());
     }
 
     public virtual ElevateBatch createElevateBatch() {
@@ -58,25 +74,26 @@ public virtual with sharing class ElevateBatchService {
         return new ElevateBatchItem(batchItemCreateResponse);
     }
 
-    public ElevateBatchItem sendRemoveRequest(String elevatePaymentId, String elevateBatchId) {
-        UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
-                removeRequest(elevateBatchId, elevatePaymentId)
-        );
+    public virtual UTIL_Http.Response sendRemoveRequest(String elevatePaymentId, String elevateBatchId) {
+        return new UTIL_Http.RequestService().sendRequest(
+                removeRequest(elevateBatchId, elevatePaymentId));
+    }
 
+    public virtual void handleRemoveResponse(UTIL_Http.Response response) {
         if (response.statusCode != 204) {
             UTIL_AuraEnabledCommon.throwAuraHandledException(response.status);
         }
-
-        return new ElevateBatchItem();
     }
 
     public ElevateBatch getElevateBatch() {
         UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
                 createRequest()
         );
-        ElevateBatchResponse ElevateBatchResponse = (ElevateBatchResponse)JSON.deserialize(
+        ElevateBatchResponse elevateBatchResponse = (ElevateBatchResponse)JSON.deserialize(
                 response.body, ElevateBatchResponse.class);
-        return new ElevateBatch(ElevateBatchResponse);
+        checkForElevateBatchErrorsIn(elevateBatchResponse);
+
+        return new ElevateBatch(elevateBatchResponse);
     }
 
     private HttpRequest addRequest(ElevateCreateBatchItemRequest tokenizedGift, String elevateBatchId) {
