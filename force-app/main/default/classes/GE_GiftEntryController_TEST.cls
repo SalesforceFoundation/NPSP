@@ -178,12 +178,12 @@ public with sharing class GE_GiftEntryController_TEST {
         dto.currencyCode = 'USD';
         dto.paymentMethodToken = '12345';
         dto.schedule = new Map<String,Object> {
-                String.valueOf(npe03__Recurring_Donation__c.npe03__Installment_Period__c) => 'Monthly',
-                String.valueOf(npe03__Recurring_Donation__c.InstallmentFrequency__c) => '1',
-                String.valueOf(npe03__Recurring_Donation__c.StartDate__c) => String.valueOf(Date.today())
+            String.valueOf(npe03__Recurring_Donation__c.npe03__Installment_Period__c) => 'Monthly',
+            String.valueOf(npe03__Recurring_Donation__c.InstallmentFrequency__c) => '1',
+            String.valueOf(npe03__Recurring_Donation__c.StartDate__c) => String.valueOf(Date.today())
         };
         Test.startTest();
-        ElevateCreateBatchItemRequest request = new ElevateBatchService().buildBatchItemRequestFrom(dto, null);
+            ElevateCreateBatchItemRequest request = new ElevateBatchService().buildBatchItemRequestFrom(dto, null);
         Test.stopTest();
 
         System.assertEquals(ElevateBatchItemType.COMMITMENT, request.batchItemType, 'The request batch item type ' +
