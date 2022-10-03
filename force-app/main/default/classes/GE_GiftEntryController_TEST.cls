@@ -216,7 +216,7 @@ public with sharing class GE_GiftEntryController_TEST {
         Datetime startDateTime = Datetime.newInstance(Date.today().year(), Date.today().month(), Date.today().day());
         System.assertEquals(startDateTime.formatGmt('yyyy-MM-dd\'T\'HH:mm:ss\'Z\''),
                 request.commitmentInfo.schedules[0].firstOccurrenceOnTimestamp, 'The request first occurrence ' +
-                        'timestamp should should match the DTO and be converted to ISO 8601 format.');
+                    'timestamp should should match the DTO and be converted to ISO 8601 format.');
     }
 
     @isTest
