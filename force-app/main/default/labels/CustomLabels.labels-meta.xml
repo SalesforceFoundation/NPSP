@@ -13834,13 +13834,6 @@ Before starting this process, we recommend disabling the following when they aff
 Once the process is 100% complete, you can safely leave or refresh this page.</value>
     </labels>
     <labels>
-        <fullName>stgHelpCustomizableRollupsEnable1</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>stgHelpCustomizableRollupsEnable1</shortDescription>
-    </labels>
-    <labels>
         <fullName>stgHelpCustomizableRollupsEnable2</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -14007,13 +14000,6 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <protected>false</protected>
         <shortDescription>stgHelpHHOCROn</shortDescription>
         <value>When selected, NPSP automatically creates Contact Roles on Individual gifts for Household members of the Opportunity&apos;s Primary Contact.</value>
-    </labels>
-    <labels>
-        <fullName>stgHelpHHObjectOverview</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgHelpHHObjectOverview</shortDescription>
     </labels>
     <labels>
         <fullName>stgHelpHHRules</fullName>

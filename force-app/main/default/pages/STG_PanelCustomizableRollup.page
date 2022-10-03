@@ -17,10 +17,6 @@
             <!-- BEGIN INTRO TEXT AND TOGGLE -->
             <div class="slds-grid {!IF(showCRLPSettings, '', 'slds-hide')}">
                 <apex:outputPanel rendered="{! !isPolling }">
-                    <div class="slds-m-vertical_medium">
-                        <c:UTIL_HtmlOutput html="{!$Label.stgHelpCustomizableRollupsEnable1}" hasLink="true" styleClass="slds-text-body_small" />
-                    </div>
-
                     <label class="slds-checkbox_toggle slds-grid slds-m-vertical_small">
                         <span class="slds-form-element__label slds-m-bottom_none">{!$Label.CRLP_RollupSummary}</span>
                         <apex:inputCheckbox onClick="onToggle(); return false;" id="enableCRLPToggle" html-name="checkbox-toggle-2" value="{!stgService.stgCRLP.Customizable_Rollups_Enabled__c}"
