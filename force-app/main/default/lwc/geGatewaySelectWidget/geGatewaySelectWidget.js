@@ -1,4 +1,4 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, api } from 'lwc';
 import getGatewaysFromElevate from '@salesforce/apex/GE_GiftEntryController.getGatewaysFromElevate';
 import encryptGatewayId from '@salesforce/apex/GE_GiftEntryController.encryptGatewayId';
 import decryptGatewayId from '@salesforce/apex/GE_GiftEntryController.decryptGatewayId';
@@ -36,6 +36,8 @@ export default class GeGatewaySelectWidget extends LightningElement {
     @track isDefaultTemplate = false;
     @track isGatewayAssignmentEnabled = false;
     @track isGatewaySelectionDisabled = false;
+
+    @api parentIsGE = false;
 
     CUSTOM_LABELS = Object.freeze({
         messageLoading,
@@ -93,7 +95,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
             this.isLoading = false;
         }
 
-        if (GeGatewaySettings.getIsGiftEntryBatch()) {
+        if (this.parentIsGE) {
             await this.restoreSavedSettings();
         }
     }
@@ -154,7 +156,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
             this.handleInitialPaymentMethodSelections(elevateSettings);
         }
 
-        if (GeGatewaySettings.getIsGiftEntryBatch()) {
+        if (this.parentIsGE) {
             this.disableAllControls();
         }
 
@@ -321,7 +323,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
     }
 
     get hideInGiftEntryBatch() {
-        if (GeGatewaySettings.getIsGiftEntry()) {
+        if (this.parentIsGE) {
             if (GeGatewaySettings.getIsGiftEntryBatch() && this.isGatewayAssignmentEnabled) {
                 return false;
             }
@@ -331,6 +333,6 @@ export default class GeGatewaySelectWidget extends LightningElement {
     }
 
     get cssClassPrefix() {
-        return GeGatewaySettings.getIsGiftEntry() ? GIFT_ENTRY_CSS_CLASS : TEMPLATE_CSS_CLASS;
+        return this.parentIsGE ? GIFT_ENTRY_CSS_CLASS : TEMPLATE_CSS_CLASS;
     }
 }

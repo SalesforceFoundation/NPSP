@@ -9,10 +9,8 @@ class GeGatewaySettings {
     templateRecordId = null;
     decryptedGatewayId = null;
     isGiftEntryBatch = false;
-    isGiftEntry = false;
 
     setElevateSettings(initialSettings, templateRecordId) {
-        this.isGiftEntry = false;
         this.isGiftEntryBatch = false;
         this.elevateSettings = initialSettings;
         this.templateRecordId = templateRecordId;
@@ -20,7 +18,6 @@ class GeGatewaySettings {
     }
 
     initDecryptedElevateSettings(elevateSettings) {
-        this.isGiftEntry = true;
         this.isGiftEntryBatch = true;
         this.elevateSettings = elevateSettings;
         if (this.elevateSettings?.uniqueKey) {
@@ -33,7 +30,6 @@ class GeGatewaySettings {
     }
 
     clearDecryptedElevateSettings() {
-        this.isGiftEntry = true;
         this.isGiftEntryBatch = false;
         this.elevateSettings = {};
         this.decryptedGatewayId = null;
@@ -49,10 +45,6 @@ class GeGatewaySettings {
 
     getDecryptedGatewayId() {
         return this.decryptedGatewayId;
-    }
-
-    getIsGiftEntry() {
-        return this.isGiftEntry;
     }
 
     getIsGiftEntryBatch() {
