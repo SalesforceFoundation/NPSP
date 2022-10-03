@@ -1610,6 +1610,14 @@
         <value>Valid Payment Methods for an active Elevate-connected Recurring Donation are Credit Card or ACH.</value>
     </labels>
     <labels>
+        <fullName>RD2_ElevatePauseInstallmentDateErrorMessage</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when trying to pause an RD a day from instalment date</shortDescription>
+        <value>We can&apos;t pause an Elevate-connected Recurring Donation less than two days before the installment date.</value>
+    </labels>
+    <labels>
         <fullName>RD2_CurrencyChangeIsRestrictedOnRD</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>

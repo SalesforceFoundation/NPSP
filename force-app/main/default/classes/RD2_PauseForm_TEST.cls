@@ -225,7 +225,8 @@ public with sharing class RD2_PauseForm_TEST {
 
         Test.stopTest();
 
-        System.assertEquals('Invalid Pause', auraEx.getMessage(), 'An exception should be thrown');
+        System.assertEquals(System.Label.RD2_ElevatePauseInstallmentDateErrorMessage,
+            auraEx.getMessage(), 'An exception should be thrown');
 
     }
 

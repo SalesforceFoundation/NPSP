@@ -277,7 +277,7 @@ public with sharing class RD2_PauseForm_CTRL {
         if (isPauseRemoved(pause)) return;
 
         if (nextInstalmentDate.addDays(-1).isSameDay(pause.startDate)) {
-            throw new PauseException('Invalid Pause');
+            throw new PauseException(System.Label.RD2_ElevatePauseInstallmentDateErrorMessage);
         }
     }
 
