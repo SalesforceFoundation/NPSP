@@ -37,6 +37,8 @@ import commonAdminPermissionErrorMessage from '@salesforce/label/c.commonAdminPe
 import psEnableGatewayAssignment from '@salesforce/label/c.psEnableGatewayAssignment';
 import psEnableGatewayAssignmentHeader from '@salesforce/label/c.psEnableGatewayAssignmentHeader';
 import psEnableGatewayAssignmentHelp from '@salesforce/label/c.psEnableGatewayAssignmentHelp';
+import psGatewayIDHeader from '@salesforce/label/c.psGatewayIdHeader';
+import psGatewayIDHelp from '@salesforce/label/c.psGatewayIdHelp';
 import psGatewayManagementHelp from '@salesforce/label/c.psGatewayManagementHelp';
 
 import setGatewayId from '@salesforce/apex/PS_GatewayManagement.setGatewayId';
@@ -67,6 +69,8 @@ export default class GePaymentGatewayManagement extends LightningElement {
         psEnableGatewayAssignment,
         psEnableGatewayAssignmentHeader,
         psEnableGatewayAssignmentHelp,
+        psGatewayIDHeader,
+        psGatewayIDHelp,
         psGatewayManagementHelp
     };
 
