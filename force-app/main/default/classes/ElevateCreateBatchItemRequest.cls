@@ -65,6 +65,18 @@ public with sharing class ElevateCreateBatchItemRequest {
         purchaseInfo.firstName = batchItemRequestDTO.firstName;
         purchaseInfo.lastName = batchItemRequestDTO.lastName;
         purchaseInfo.paymentMethodToken = batchItemRequestDTO.paymentMethodToken;
+        purchaseInfo.paymentMethodType = batchItemRequestDTO.paymentMethodType;
+
+        if (batchItemRequestDTO.paymentMethodType == 'ACH') {
+            ElevateCreateBatchItemRequest.AchData achData = new ElevateCreateBatchItemRequest.AchData();
+            achData.achCode = PS_CommitmentRequest.ACH_CODE_WEB;
+            achData.bankType = PS_CommitmentRequest.ACH_BANK_TYPE_CHECKING;
+            achData.consent = PS_CommitmentRequest.ACH_CONSENT_MESSAGE;
+            achData.consentDetails.consentType = PS_CommitmentRequest.ACH_CONSENT_TYPE;
+            achData.type = batchItemRequestDTO.type;
+
+            purchaseInfo.achData = achData;
+        }
     }
 
     private void buildCommitmentInfoBody(ElevateCreateBatchItemRequestDTO batchItemRequestDTO,
@@ -83,6 +95,18 @@ public with sharing class ElevateCreateBatchItemRequest {
         };
         commitmentInfo.paymentMethodToken = batchItemRequestDTO.paymentMethodToken;
         commitmentInfo.productMetadataSchemaUri = PS_Request.PRODUCT_METADATA_SCHEMA_URI;
+        commitmentInfo.paymentMethodType = batchItemRequestDTO.paymentMethodType;
+
+        if (batchItemRequestDTO.paymentMethodType == 'ACH') {
+            ElevateCreateBatchItemRequest.AchData achData = new ElevateCreateBatchItemRequest.AchData();
+            achData.achCode = PS_CommitmentRequest.ACH_CODE_WEB;
+            achData.bankType = PS_CommitmentRequest.ACH_BANK_TYPE_CHECKING;
+            achData.consent = PS_CommitmentRequest.ACH_CONSENT_MESSAGE;
+            achData.consentDetails.consentType = PS_CommitmentRequest.ACH_CONSENT_TYPE;
+            achData.type = batchItemRequestDTO.type;
+
+            commitmentInfo.achData = achData;
+        }
     }
 
     public class CommitmentInfo {
@@ -169,6 +193,11 @@ public with sharing class ElevateCreateBatchItemRequest {
         public String checkNumber;
         public String consent;
         public String type;
+        public ConsentDetails consentDetails = new ConsentDetails();
+    }
+
+    public class ConsentDetails {
+        public String consentType;
     }
 
     private static Map<String, Object> getProductMetadata() {
