@@ -175,8 +175,6 @@ export default class GePaymentGatewayManagement extends LightningElement {
     }
 
     validateGatewayId() {
-        // Temporary Hardcoded Text until this functionality is moved out of NPSP entirely
-
         let gatewayIdField = this.template.querySelector("[data-id='gatewayIdField']");
 
         if (isEmpty(gatewayIdField.value)) {
