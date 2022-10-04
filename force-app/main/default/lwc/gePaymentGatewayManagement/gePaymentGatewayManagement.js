@@ -36,9 +36,11 @@ import insufficientPermissions from '@salesforce/label/c.commonInsufficientPermi
 import commonAdminPermissionErrorMessage from '@salesforce/label/c.commonAdminPermissionErrorMessage';
 
 import setGatewayId from '@salesforce/apex/PS_GatewayManagement.setGatewayId';
-import getGatewayIdFromConfig from '@salesforce/apex/PS_GatewayManagement.getGatewayIdFromConfig';
 import checkForElevateCustomer from '@salesforce/apex/PS_GatewayManagement.isElevateCustomer';
 import checkForSystemAdmin from '@salesforce/apex/PS_GatewayManagement.isSystemAdmin';
+import { fireEvent, registerListener } from 'c/pubsubNoPageRef';
+
+const PARENT_ID = 'MANAGEMENT';
 
 export default class GePaymentGatewayManagement extends LightningElement {
 
@@ -51,6 +53,8 @@ export default class GePaymentGatewayManagement extends LightningElement {
     isElevateCustomer;
     isSystemAdmin;
     hasAccess;
+
+    parentId = PARENT_ID;
 
     CUSTOM_LABELS = { messageLoading, insufficientPermissions, commonAdminPermissionErrorMessage };
 
@@ -66,7 +70,7 @@ export default class GePaymentGatewayManagement extends LightningElement {
         }
 
         if (this.hasAccess) {
-            this.gatewayId = await getGatewayIdFromConfig();
+            registerListener('updateSelectedGateway', this.updateSelectedGateway, this);
         }
     }
 
@@ -102,34 +106,33 @@ export default class GePaymentGatewayManagement extends LightningElement {
 
     handleEdit() {
         this.isReadOnly = false;
+        fireEvent(this, 'editGatewayManagement', null);
     }
 
     handleCancel() {
-        this.template.querySelector("[data-id='gatewayIdField']").value = this.gatewayId;
-        this.resetAlert();
-        this.clearFieldErrors();
+        fireEvent(this, 'noEditGatewayManagement', null);
 
+        this.resetAlert();
         this.isReadOnly = true;
     }
 
     async handleSave(event) {
         this.resetAlert();
 
-        let gatewayId = this.validateGatewayId();
-
-        if (isEmpty(gatewayId)) {
+        if (isEmpty(this.gatewayId)) {
             return;
         }
 
         this.showSpinner = true;
 
         try {
-
-            await setGatewayId({ gatewayId: gatewayId});
+            await setGatewayId({ gatewayId: this.gatewayId });
 
             this.isReadOnly = true;
             this.isSuccess = true;
             this.showSpinner = false;
+
+            fireEvent(this, 'noEditGatewayManagement', null);
         } catch(ex) {
             this.errorMessage = buildErrorMessage(ex);
             this.showSpinner = false;
@@ -137,32 +140,8 @@ export default class GePaymentGatewayManagement extends LightningElement {
         }
     }
 
-    validateGatewayId() {
-        // Temporary Hardcoded Text until this functionality is moved out of NPSP entirely
-
-        let gatewayIdField = this.template.querySelector("[data-id='gatewayIdField']");
-
-        if (isEmpty(gatewayIdField.value)) {
-
-            gatewayIdField.setCustomValidity('Invalid Gateway ID.');
-            gatewayIdField.reportValidity();
-
-
-            this.errorMessage = 'Enter a valid gateway ID.'
-            this.isError = true;
-        } else {
-            this.clearFieldErrors();
-
-            return gatewayIdField.value;
-        }
-    }
-
-    clearFieldErrors() {
-        let gatewayIdField = this.template.querySelector("[data-id='gatewayIdField']");
-        if (!gatewayIdField.valid) {
-            gatewayIdField.setCustomValidity('');
-            gatewayIdField.reportValidity();
-        }
+    updateSelectedGateway(event) {
+        this.gatewayId = event;
     }
 
     resetAlert() {

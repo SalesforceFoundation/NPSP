@@ -77,8 +77,15 @@
                     Elevate Admin Console | Gateway Management.
                 </p>
             </lightning-layout-item>
+
+            <lightning-layout-item size='12' class='slds-p-left_small slds-p-top_none slds-p-bottom_large'>
+                <c-ge-gateway-select-widget data-id='gatewaySelectWidget'
+                                            parent-id={parentId}>
+                </c-ge-gateway-select-widget>
+            </lightning-layout-item>
+
             <template if:true={isReadOnly}>
-                <lightning-layout-item size="12" class="slds-text-align_center">
+                <lightning-layout-item size="12" class="slds-p-left_small slds-text-align_left">
                     <lightning-button
                             label="Edit"
                             data-id="editGatewayButton"
@@ -87,16 +94,7 @@
                     </lightning-button>
                 </lightning-layout-item>
             </template>
-            <lightning-layout-item size="4">
-                <!-- Temporary Hardcoded Text until this functionality is moved out of NPSP entirely -->
-                <lightning-input variant="label-inline"
-                                 read-only={isReadOnly}
-                                 label="Gateway ID"
-                                 value={gatewayId}
-                                 type="text"
-                                 data-id="gatewayIdField"
-                                 data-qa-locator="input gateway id field">
-                </lightning-input>
+            <lightning-layout-item size="12" class="slds-p-left_small slds-text-align_left">
                 <template if:false={isReadOnly}>
                     <lightning-button-group>
                         <!-- Temporary Hardcoded Text until this functionality is moved out of NPSP entirely -->
