@@ -54,6 +54,7 @@ public virtual with sharing class ElevateBatchService {
         return new ElevateBatch(batchItem.elevateBatchId).remove(batchItem.id());
     }
 
+    // Method is used for dependency injection in test classes
     @TestVisible
     private virtual ElevateBatchItem removeFromElevateBatch(ElevateBatch elevateBatch, ElevateBatchItem batchItem) {
         return elevateBatch.remove(batchItem.id());

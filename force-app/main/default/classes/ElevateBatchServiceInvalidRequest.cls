@@ -63,7 +63,7 @@ public class ElevateBatchServiceInvalidRequest extends ElevateBatchService {
         return (UTIL_Http.Response) JSON.deserialize(removeFromBatchErrorResponse(), UTIL_Http.Response.class);
     }
 
-    public String removeFromBatchErrorResponse() {
+    private String removeFromBatchErrorResponse() {
         return '{\n' +
                 '"statusCode": "400",\n' +
                 '"status": "Bad Request"\n' +
