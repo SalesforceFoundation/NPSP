@@ -1,4 +1,4 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, api } from 'lwc';
 import getGatewaysFromElevate from '@salesforce/apex/GE_GiftEntryController.getGatewaysFromElevate';
 import encryptGatewayId from '@salesforce/apex/GE_GiftEntryController.encryptGatewayId';
 import decryptGatewayId from '@salesforce/apex/GE_GiftEntryController.decryptGatewayId';
@@ -21,11 +21,14 @@ import GeGatewaySettings from 'c/geGatewaySettings';
 import { fireEvent } from 'c/pubsubNoPageRef';
 import { isEmpty, showToast } from 'c/utilCommon';
 
+const TEMPLATE_CSS_CLASS = 'template-top';
+const GIFT_ENTRY_CSS_CLASS = 'gift-entry-top';
+const TOKENIZE_ID = 'TOKENIZE';
+
 export default class GeGatewaySelectWidget extends LightningElement {
     @track isExpanded = false;
     @track selectedGateway = null;
     @track gatewayOptions = [];
-    @track preGatewayOptions = [];
     @track isACHEnabled = true;
     @track isACHDisabled = false;
     @track isCreditCardEnabled = true;
@@ -33,6 +36,9 @@ export default class GeGatewaySelectWidget extends LightningElement {
     @track isLoading = true;
     @track isDefaultTemplate = false;
     @track isGatewayAssignmentEnabled = false;
+    @track isGatewaySelectionDisabled = false;
+
+    @api parentId = '';
 
     CUSTOM_LABELS = Object.freeze({
         messageLoading,
@@ -59,11 +65,17 @@ export default class GeGatewaySelectWidget extends LightningElement {
     _defaultGatewayId = null;
 
     async init() {
-        let gatewayAssignmentSettings = JSON.parse(await getGatewayAssignmentSettings());
+        try {
+            let gatewayAssignmentSettings = JSON.parse(await getGatewayAssignmentSettings());
 
-        this._defaultTemplateId = gatewayAssignmentSettings.defaultTemplateId;
-        this.isGatewayAssignmentEnabled = gatewayAssignmentSettings.gatewayAssignmentEnabled;
-        this._defaultGatewayId = gatewayAssignmentSettings.defaultGatewayId;
+            this._defaultTemplateId = gatewayAssignmentSettings.defaultTemplateId;
+            this.isGatewayAssignmentEnabled = gatewayAssignmentSettings.gatewayAssignmentEnabled;
+            this._defaultGatewayId = gatewayAssignmentSettings.defaultGatewayId;
+        }
+        catch (e) {
+            this._firstDisplay = false;
+            this.handleErrors();
+        }
 
         if (this._defaultTemplateId === GeGatewaySettings.getTemplateRecordId()) {
             this.isDefaultTemplate = true;
@@ -83,6 +95,10 @@ export default class GeGatewaySelectWidget extends LightningElement {
         else {
             this.isLoading = false;
         }
+
+        if (this.parentId === TOKENIZE_ID) {
+            await this.restoreSavedSettings();
+        }
     }
 
     disconnectedCallback() {
@@ -94,7 +110,13 @@ export default class GeGatewaySelectWidget extends LightningElement {
             return;
         }
 
-        this._elevateGateways = JSON.parse(await getGatewaysFromElevate());
+        try {
+            this._elevateGateways = JSON.parse(await getGatewaysFromElevate());
+        }
+        catch (e) {
+            this._firstDisplay = false;
+            this.handleErrors();
+        }
 
         if (this._elevateGateways && this._elevateGateways.length > 0 && !(this._elevateGateways.errors)) {
             this.buildOptions();
@@ -133,6 +155,10 @@ export default class GeGatewaySelectWidget extends LightningElement {
         }
         else {
             this.handleInitialPaymentMethodSelections(elevateSettings);
+        }
+
+        if (this.parentId === TOKENIZE_ID) {
+            this.disableAllControls();
         }
 
         this._firstDisplay = false;
@@ -278,6 +304,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
         this.isACHDisabled = false;
         this.isCreditCardEnabled = true;
         this.isCreditCardDisabled = false;
+        this.isGatewaySelectionDisabled = false;
     }
 
     async updateElevateSettings() {
@@ -288,5 +315,25 @@ export default class GeGatewaySelectWidget extends LightningElement {
             isCreditCardEnabled: this.isCreditCardEnabled
         }
         fireEvent(this, 'updateElevateSettings', elevateSettings);
+    }
+
+    disableAllControls() {
+        this.isGatewaySelectionDisabled = true;
+        this.isCreditCardDisabled = true;
+        this.isACHDisabled = true;
+    }
+
+    get hideInGiftEntryBatch() {
+        if (this.parentId === TOKENIZE_ID) {
+            if (GeGatewaySettings.getIsGiftEntryBatch() && this.isGatewayAssignmentEnabled) {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    get cssClassPrefix() {
+        return this.parentId === TOKENIZE_ID ? GIFT_ENTRY_CSS_CLASS : TEMPLATE_CSS_CLASS;
     }
 }
