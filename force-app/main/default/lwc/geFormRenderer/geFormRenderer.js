@@ -187,6 +187,7 @@ export default class GeFormRenderer extends LightningElement{
     @api pageLevelErrorMessageList = [];
     @api batchCurrencyIsoCode;
     @api isElevateCustomer = false;
+    @api saveDisabled = false;
 
     @track isPermissionError = false;
     @track permissionErrorTitle;
@@ -1378,7 +1379,8 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     get isUpdateActionDisabled() {
-        return this.getFieldValueFromFormState(STATUS_FIELD) === 'Imported';
+        return this.getFieldValueFromFormState(STATUS_FIELD) === 'Imported' ||
+               this.saveDisabled;
     }
 
     get cardholderNames() {

@@ -62,6 +62,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     isLoading = true;
     isFormRendering = false;
     isFormCollapsed = false;
+    isFormSaveDisabled = false;
 
     giftBatch = new GiftBatch();
     elevateBatch = new ElevateBatch();
@@ -540,6 +541,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     async handleDelete(event) {
         try {
+            this.isFormSaveDisabled = true;
             const gift = new Gift({fields: event.detail});
             const isRemovedFromElevate = await this.removeFromElevateBatch(gift);
 
@@ -556,7 +558,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 'dismissible',
                 null
             );
+            this.isFormSaveDisabled = false;
         } catch(error) {
+            this.isFormSaveDisabled = false;
             handleError(error);
         }
     }
