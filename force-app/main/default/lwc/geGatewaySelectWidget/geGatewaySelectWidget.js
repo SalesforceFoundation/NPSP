@@ -18,12 +18,13 @@ import psShowPaymentMethods from '@salesforce/label/c.psShowPaymentMethods';
 import psUnableToConnect from '@salesforce/label/c.psUnableToConnect';
 import RD2_Credit_Card_Payment_Method_Label from '@salesforce/label/c.RD2_Credit_Card_Payment_Method_Label';
 import GeGatewaySettings from 'c/geGatewaySettings';
-import { fireEvent } from 'c/pubsubNoPageRef';
+import { fireEvent, registerListener } from 'c/pubsubNoPageRef';
 import { isEmpty, showToast } from 'c/utilCommon';
 
 const TEMPLATE_CSS_CLASS = 'template-top';
 const GIFT_ENTRY_CSS_CLASS = 'gift-entry-top';
 const TOKENIZE_ID = 'TOKENIZE';
+const MANAGEMENT_ID = 'MANAGEMENT';
 
 export default class GeGatewaySelectWidget extends LightningElement {
     @track isExpanded = false;
@@ -89,7 +90,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
     async connectedCallback() {
         await this.init();
 
-        if (this.isGatewayAssignmentEnabled) {
+        if (this.isGatewayAssignmentEnabled || this.parentId === MANAGEMENT_ID) {
             await this.getElevateGateways();
         }
         else {
@@ -98,6 +99,12 @@ export default class GeGatewaySelectWidget extends LightningElement {
 
         if (this.parentId === TOKENIZE_ID) {
             await this.restoreSavedSettings();
+        }
+
+        if (this.parentId === MANAGEMENT_ID) {
+            registerListener('editGatewayManagement', this.enableGatewaySelection, this);
+            registerListener('noEditGatewayManagement', this.disableGatewaySelection, this);
+            await this.toggleSelectGatewayControls();
         }
     }
 
@@ -150,15 +157,20 @@ export default class GeGatewaySelectWidget extends LightningElement {
         }
 
         let elevateSettings = GeGatewaySettings.getElevateSettings();
-        if (this.isGatewayAssignmentEnabled) {
+        if (this.isGatewayAssignmentEnabled || this.parentId === MANAGEMENT_ID) {
             await this.handleInitialGatewaySelection(elevateSettings);
         }
         else {
             this.handleInitialPaymentMethodSelections(elevateSettings);
         }
 
-        if (this.parentId === TOKENIZE_ID) {
+        if (this.parentId === TOKENIZE_ID || this.parentId === MANAGEMENT_ID) {
             this.disableAllControls();
+        }
+
+        if (this.parentId === MANAGEMENT_ID) {
+            this.isExpanded = true;
+            fireEvent(this, 'updateSelectedGateway', this.selectedGateway);
         }
 
         this._firstDisplay = false;
@@ -307,14 +319,27 @@ export default class GeGatewaySelectWidget extends LightningElement {
         this.isGatewaySelectionDisabled = false;
     }
 
+    enableGatewaySelection() {
+        this.isGatewaySelectionDisabled = false;
+    }
+
+    disableGatewaySelection() {
+        this.isGatewaySelectionDisabled = true;
+    }
+
     async updateElevateSettings() {
-        let elevateSettings = {
-            uniqueKey: this.isGatewayAssignmentEnabled ?
-                await encryptGatewayId( {gatewayId: this.selectedGateway}) : null,
-            isACHEnabled: this.isACHEnabled,
-            isCreditCardEnabled: this.isCreditCardEnabled
+        if (this.parentId !== MANAGEMENT_ID) {
+            let elevateSettings = {
+                uniqueKey: this.isGatewayAssignmentEnabled ?
+                    await encryptGatewayId({gatewayId: this.selectedGateway}) : null,
+                isACHEnabled: this.isACHEnabled,
+                isCreditCardEnabled: this.isCreditCardEnabled
+            };
+            fireEvent(this, 'updateElevateSettings', elevateSettings);
         }
-        fireEvent(this, 'updateElevateSettings', elevateSettings);
+        else {
+            fireEvent(this, 'updateSelectedGateway', this.selectedGateway);
+        }
     }
 
     disableAllControls() {
@@ -335,5 +360,17 @@ export default class GeGatewaySelectWidget extends LightningElement {
 
     get cssClassPrefix() {
         return this.parentId === TOKENIZE_ID ? GIFT_ENTRY_CSS_CLASS : TEMPLATE_CSS_CLASS;
+    }
+
+    get shouldShowGateways() {
+        return this.isGatewayAssignmentEnabled || this.parentId === MANAGEMENT_ID;
+    }
+
+    get shouldShowPaymentMethods() {
+        return this.parentId !== MANAGEMENT_ID;
+    }
+
+    get shouldShowExpandControls() {
+        return this.parentId !== MANAGEMENT_ID;
     }
 }
