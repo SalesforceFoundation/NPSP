@@ -44,8 +44,12 @@ class Gift {
         return Object.keys(this._schedule).length > 0;
     }
 
+    isImported() {
+        return this._fields[STATUS.fieldApiName] === GIFT_STATUSES.IMPORTED;
+    }
+
     hasCommitmentId() {
-        return !!this._fields[DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID];
+        return !!this._fields[DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID.fieldApiName];
     }
 
     addSchedule(scheduleData) {

@@ -614,7 +614,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     shouldRemoveFromElevateBatch(gift) {
         return gift &&
             this.isElevateCustomer &&
-            (gift.isAuthorized() || gift.hasCommitmentId());
+            !gift.isImported() &&
+            gift.hasCommitmentId() ||
+            gift.isAuthorized();
     }
 
     async deleteFromElevateBatch(gift) {
