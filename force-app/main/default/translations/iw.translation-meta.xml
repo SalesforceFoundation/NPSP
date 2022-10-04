@@ -6672,7 +6672,7 @@
         <name>stgHelpPaymentsEnabled</name>
     </customLabels>
     <customLabels>
-        <label>שאלות? ל-HUb יש תשובות! נסה את הקבוצה של &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;ערכת ההצלחה למלכ&quot;רים&lt;/a&gt; לתשובות בנושא NPSP ואת קבוצת &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;מנהלי המערכת&lt;/a&gt; לתשובות בנושא ניהול והגדרת התצורה של Salesforce‏.&lt;br/&gt;&lt;br/&gt;הישאר מעודכן בהערות המוצר החדשות ביותר של NPSP בקבוצת &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;הודעות המוצר של NPSP‏&lt;/a&gt;.</label>
+        <label>שאלות? ל-HUb יש תשובות! נסה את הקבוצה של &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;ערכת ההצלחה למלכ&quot;רים&lt;/a&gt; לתשובות בנושא NPSP ואת קבוצת &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;מנהלי המערכת&lt;/a&gt; לתשובות בנושא ניהול והגדרת התצורה של Salesforce‏.&lt;br/&gt;&lt;br/&gt;הישאר מעודכן בהערות המוצר החדשות ביותר של NPSP בקבוצת &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;הודעות המוצר של NPSP‏&lt;/a&gt;.</label>
         <name>stgHelpTrailHeadHub</name>
     </customLabels>
     <customLabels>
