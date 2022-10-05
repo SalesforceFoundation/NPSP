@@ -977,6 +977,57 @@ public with sharing class GE_GiftEntryController {
             formTemplates.add(deserializedFormTemplate);
         }
 
+        if (!getGiftEntrySettings().Enable_Gateway_Assignment__c) {
+            return formTemplates;
+        }
+
+        return getMappedGateways(formTemplates);
+    }
+
+    private static GE_Template.Template[] getMappedGateways(GE_Template.Template[] formTemplates) {
+        // TODO: refactor
+
+        List<PS_GatewayService.GatewayTemplateSetting> gatewayTemplateSettings =
+                new List<PS_GatewayService.GatewayTemplateSetting>();
+
+        try {
+            PS_GatewayService gatewayService = new PS_GatewayService();
+            gatewayTemplateSettings = (List<PS_GatewayService.GatewayTemplateSetting>)
+                JSON.deserialize(gatewayService.getGatewaysByMerchant(),
+                    List<PS_GatewayService.GatewayTemplateSetting>.class);
+        }
+        catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+
+        Map<String, String> gatewayNameById = new Map<String, String>();
+        for (PS_GatewayService.GatewayTemplateSetting gatewayTemplateSetting : gatewayTemplateSettings) {
+            gatewayNameById.put(gatewayTemplateSetting.id, gatewayTemplateSetting.gatewayName);
+        }
+
+        String defaultGatewayId = new PS_IntegrationServiceConfig.Service().getGatewayIds();
+        for (GE_Template.Template formTemplate : formTemplates) {
+            if (String.isNotBlank(formTemplate.elevateSettings?.uniqueKey)) {
+
+                try {
+                    formTemplate.elevateSettings.gatewayName =
+                        gatewayNameById.get(decryptGatewayId(formTemplate.elevateSettings.uniqueKey));
+                    if (String.isBlank(formTemplate.elevateSettings.gatewayName)) {
+                        // TODO: Convert to label
+                        formTemplate.elevateSettings.gatewayName = 'Gateway not found';
+                    }
+
+                } catch (Exception e) {
+                    throw new AuraHandledException(e.getMessage());
+                }
+
+            } else {
+                if (formTemplate.elevateSettings != null) {
+                    formTemplate.elevateSettings.gatewayName = gatewayNameById.get(defaultGatewayId);
+                }
+            }
+        }
+
         return formTemplates;
     }
 
