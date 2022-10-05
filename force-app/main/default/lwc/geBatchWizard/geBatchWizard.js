@@ -73,6 +73,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     templatesById = {};
     templateOptions;
     isLoaded = false;
+    gatewayName;
 
     headers = {
         0: this.CUSTOM_LABELS.geHeaderBatchSelectTemplate,
@@ -316,6 +317,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
 
     handleTemplateChange(event) {
         this.selectedTemplateId = event.detail.value;
+        this.gatewayName = this.selectedTemplate.elevateSettings?.gatewayName;
         this.selectedBatchHeaderFields = [];
 
         this.selectedBatchHeaderFields = addKeyToCollectionItems(this.selectedTemplate.batchHeaderFields);
@@ -512,6 +514,13 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     resetValidations() {
         this.hasInvalidBatchFields = false;
         this.missingBatchHeaderFieldLabels = [];
+    }
+
+    get gatewayNameMessage() {
+        if (!!this.gatewayName) {
+            return 'Payment Gateway: ' + this.gatewayName;
+        }
+        return '';
     }
 
     /*******************************************************************************
