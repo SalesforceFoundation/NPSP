@@ -7213,7 +7213,7 @@ BELANGRIJK: Beide velden moeten van hetzelfde gegevenstype zijn.</label>
         <label>Wanneer ingeschakeld, maakt Salesforce automatisch Betalingen voor nieuwe Opportunities (Donaties).</label>
     </customLabels>
     <customLabels>
-        <name>stgHelpTrailHeadHub</name>
+        <name>stgHelpPowerOfUsHub</name>
         <label>Hebt u vragen? Probeer de groep &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; uit voor vragen over NPSP en de groep &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;Systeembeheerders&lt;/a&gt; voor vragen over Salesforce-administratie en -configuratie.&lt;br/&gt;&lt;br/&gt;Zorg dat u altijd op de hoogte bent dankzij de notities bij de nieuwste NPSP-releases in de groep &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&sort=LAST_MODIFIED_DATE_DESC&quot;target=&quot;_blank&quot;&gt;Aankondigingen NPSP-release&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>

@@ -7209,7 +7209,7 @@
         <label>新しい商談で作成される自動支払を有効にします。</label>
     </customLabels>
     <customLabels>
-        <name>stgHelpTrailHeadHub</name>
+        <name>stgHelpPowerOfUsHub</name>
         <label>質問を受けましたか? NPSP に関する質問には、&lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;「Nonprofit Success Pack」&lt;/a&gt;グループをお試しください。Salesforce の管理と設定に関する質問には、&lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;「System Administrators」&lt;/a&gt;グループをお試しください。&lt;br/&gt;&lt;br/&gt;最新の NPSP リリースノートについては、&lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;「NPSP Release Announcements」&lt;/a&gt;グループで確認できます。</label>
     </customLabels>
     <customLabels>
@@ -8032,7 +8032,7 @@
         <label>商談を作成すると、デフォルトの命名規則を使用して名前が自動的に入力されます。カスタム商談名を作成することで、命名規則をカスタマイズできます。</label>
     </customLabels>
     <customLabels>
-        <name>stgHelpTrailHeadHub</name>
+        <name>stgPowerOfUsHub</name>
         <label>Trailblazer Community</label>
     </customLabels>
     <customLabels>

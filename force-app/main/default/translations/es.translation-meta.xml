@@ -7203,7 +7203,7 @@ IMPORTANTE: Ambos campos deben ser del mismo tipo de datos.</label>
         <label>Habilita la creación automática de pagos para nuevas oportunidades/donaciones.</label>
     </customLabels>
     <customLabels>
-        <name>stgHelpTrailHeadHub</name>
+        <name>stgHelpPowerOfUsHub</name>
         <label>¿Tiene preguntas? Pruebe el grupo &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; para formular preguntas sobre NPSP y el grupo &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; para formular preguntas sobre la administración y configuración de Salesforce.&lt;br/&gt;&lt;br/&gt;Manténgase al día con las notas de la versión de NPSP más recientes en el grupo &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;Nonprofit Release Readiness&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
@@ -8026,7 +8026,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <label>Cuando crea una oportunidad, el nombre se cumplimenta automáticamente empleando una convención de nombres predeterminada. Puede personalizar la convención de nombres creando nombres de oportunidades personalizados.</label>
     </customLabels>
     <customLabels>
-        <name>stgHelpTrailHeadHub</name>
+        <name>stgPowerOfUsHub</name>
         <label>Trailblazer Community</label>
     </customLabels>
     <customLabels>

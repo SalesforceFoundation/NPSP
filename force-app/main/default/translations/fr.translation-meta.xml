@@ -7215,7 +7215,7 @@ IMPORTANT : ces deux champs doivent avoir le même type de données.</label>
         <label>Si cette option est activée, Salesforce crée automatiquement des paiements pour les nouvelles opportunités (dons).</label>
     </customLabels>
     <customLabels>
-        <name>stgHelpTrailHeadHub</name>
+        <name>stgHelpPowerOfUsHub</name>
         <label>Vous avez des questions ? Essayez le groupe &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; pour des questions sur NPSP et le groupe &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;Administrateurs système&lt;/a&gt; pour des questions sur l’administration et la configuration de Salesforce.&lt;br/&gt;&lt;br/&gt;Et pour vous tenir au courant des dernières notes de version de NPSP, consultez le groupe &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;Notes de publication NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
@@ -8038,7 +8038,7 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
         <label>Lorsque vous créez une opportunité, son nom est défini automatiquement en suivant une convention de dénomination par défaut. Pour pouvez personnaliser la convention de dénomination en créant des noms d’opportunités personnalisés.</label>
     </customLabels>
     <customLabels>
-        <name>stgHelpTrailHeadHub</name>
+        <name>stgPowerOfUsHub</name>
         <label>Trailblazer Community</label>
     </customLabels>
     <customLabels>

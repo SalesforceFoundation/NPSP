@@ -6673,7 +6673,7 @@
     </customLabels>
     <customLabels>
         <label>שאלות? ל-HUb יש תשובות! נסה את הקבוצה של &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;ערכת ההצלחה למלכ&quot;רים&lt;/a&gt; לתשובות בנושא NPSP ואת קבוצת &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;מנהלי המערכת&lt;/a&gt; לתשובות בנושא ניהול והגדרת התצורה של Salesforce‏.&lt;br/&gt;&lt;br/&gt;הישאר מעודכן בהערות המוצר החדשות ביותר של NPSP בקבוצת &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;הודעות המוצר של NPSP‏&lt;/a&gt;.</label>
-        <name>stgHelpTrailHeadHub</name>
+        <name>stgHelpPowerOfUsHub</name>
     </customLabels>
     <customLabels>
         <label>&lt;b&gt;אזהרה:&lt;/b&gt; לחיצה על לחצן זה תפעיל עדכון הזדמנויות באצווה לרענון שדה איש הקשר הראשי. מערכת Salesforce תעדכן רשומות הזדמנות שבהן הערך של שדה איש הקשר הראשי אינו זהה לערך של רשומת איש הקשר הראשי בהזדמנות, המסומן כראשי.&lt;br/&gt;&lt;br/&gt;
@@ -7471,8 +7471,8 @@
         <name>stgOppNamingDescription</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpTrailHeadHub--></label>
-        <name>stgHelpTrailHeadHub</name>
+        <label><!-- stgPowerOfUsHub --></label>
+        <name>stgPowerOfUsHub</name>
     </customLabels>
     <customLabels>
         <label><!-- Recurring Donation Auto Naming Description --></label>

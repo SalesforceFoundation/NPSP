@@ -7215,7 +7215,7 @@ IMPORTANTE: ambos os campos precisam ter o mesmo tipo de dados.</label>
         <label>Se habilitado, o Salesforce cria automaticamente Pagamentos para novas Oportunidades (Doações).</label>
     </customLabels>
     <customLabels>
-        <name>stgHelpTrailHeadHub</name>
+        <name>stgHelpPowerOfUsHub</name>
         <label>Tem dúvidas? Experimente o grupo &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;Pacote de sucesso para organizações sem fins lucrativos&lt;/a&gt; para  perguntas sobre o NPSP e o grupo &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;Administradores do sistema&lt;/a&gt; para perguntas sobre administração e configuração do Salesforce.&lt;br/&gt;&lt;br/&gt;Acompanhe as últimas notas de versão do NPSP no grupo &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;Anúncios de versão do NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>

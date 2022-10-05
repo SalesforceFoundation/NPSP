@@ -14286,12 +14286,12 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <value>If enabled, Salesforce automatically creates Payments for new Opportunities (Donations).</value>
     </labels>
     <labels>
-        <fullName>stgHelpTrailHeadHub</fullName>
+        <fullName>stgHelpPowerOfUsHub</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>stgHelpTrailHeadHub</shortDescription>
-        <value>Got questions? Try the &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; group for questions about NPSP and the &lt;a href=&quot;https://trailhead.salesforce.com/fr/trailblazer-community/groups/0F94S000000kHiLSAU?sort=LAST_MODIFIED_DATE_DESC&amp;tab=discussion&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; group for questions about Salesforce administration and configuration.&lt;br/&gt;&lt;br/&gt;Keep up with the latest NPSP release notes in the &lt;a href=&quot;https://trailhead.salesforce.com/fr/trailblazer-community/groups/0F94S000000kHOXSA2?sort=LAST_MODIFIED_DATE_DESC&amp;tab=discussion&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt; group.</value>
+        <shortDescription>stgHelpPowerOfUsHub</shortDescription>
+        <value>Got questions? Try the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; group for questions about NPSP and the &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; group for questions about Salesforce administration and configuration.&lt;br/&gt;&lt;br/&gt;Keep up with the latest NPSP release notes in the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt; group.</value>
     </labels>
     <labels>
         <fullName>stgHelpPrimaryContactBatch</fullName>
@@ -15900,11 +15900,11 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>When you create an Opportunity, the Name is automatically populated using a default naming convention. You can customize the naming convention by creating custom Opportunity Names.</value>
     </labels>
     <labels>
-        <fullName>stgHelpTrailHeadHub</fullName>
+        <fullName>stgPowerOfUsHub</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>stgHelpTrailHeadHub</shortDescription>
+        <shortDescription>stgPowerOfUsHub</shortDescription>
         <value>Trailblazer Community</value>
     </labels>
     <labels>
