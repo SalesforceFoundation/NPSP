@@ -200,6 +200,7 @@ private with sharing class PS_CommitmentRequest_TEST {
         System.assertEquals(AMOUNT * USD_CURRENCY_MULTIPLIER, schedule.amount, 'Recurring Amount should match');
         System.assertEquals(nextPaymentAmount * USD_CURRENCY_MULTIPLIER, schedule.nextPaymentAmount, 'Next Payment Amount should match');
         System.assertEquals('MONTH', schedule.frequency, 'Donation should be made monthly');
+        System.assertEquals('CREATE', schedule.operation, 'Schedule should be Created, not Updated');
         System.assertEquals(INSTALLMENT_FREQUENCY, schedule.frequencyInterval, 'Donation frequency should match');
         System.assertEquals(FIRST_PAYMENT_DATE.formatGMT('yyyy-MM-dd\'T\'HH:mm:ss\'Z\''), schedule.firstOccurrenceOnTimestamp, 'First Payment Date should match');
     }

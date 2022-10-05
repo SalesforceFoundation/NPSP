@@ -874,6 +874,11 @@ private with sharing class RD2_OpportunityService_TEST {
         setUpConfiguration();
 
         npe03__Recurring_Donation__c rd = createRecurringDonation();
+        Integer monthsLeftInYear = 12 - CLOSE_DATE.month();
+        rd.CurrentYearValue__c =(RD_AMOUNT * monthsLeftInYear) + NEXT_PAYMENT_AMOUNT;
+        rd.NextYearValue__c = RD_AMOUNT * 12;
+        update rd;
+
         TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
         Opportunity nextOpportunity = oppBuilder
             .withCloseDate(CLOSE_DATE)

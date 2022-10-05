@@ -398,9 +398,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         List<npe03__Recurring_Donation__c> updateOppRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> closeOppRds = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> updateElevateRds = new List<npe03__Recurring_Donation__c>();
-        List<npe03__Recurring_Donation__c> checkNextPaymentScheduleRds = new List<npe03__Recurring_Donation__c>();
         List<RD2_RecurringDonation> rdRecords = new List<RD2_RecurringDonation>();
-        List<RecurringDonationSchedule__c> schedulesToUpdate = new List<RecurringDonationSchedule__c>();
 
         setOldRdListIfNull();
 
@@ -456,13 +454,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             }
             // TODO Handle Past Due Installment
 
-            if (rdRecord.needsNextPaymentScheduleCheck()) {
-                checkNextPaymentScheduleRds.add(rd);
-            }
         }
-
-        schedulesToUpdate = scheduleService.getSchedulesWithClearedNextPaymentAmount(checkNextPaymentScheduleRds);
-        dbService.updateRecords(schedulesToUpdate);
 
         toggleTriggerState(false);
         commitmentBulkService
@@ -496,6 +488,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         //in order to calculate the Current/Next Year Values
         rds = null;
 
+        List<npe03__Recurring_Donation__c> checkNextPaymentScheduleRds = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> outdatedRDs = new List<npe03__Recurring_Donation__c>();
         for (RD2_RecurringDonation rdRecord : rdRecords) {
             //revise the Year Values only since other other values such as
@@ -508,9 +501,15 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             ) {
                 outdatedRDs.add(rdRecord.getUpdate());
             }
+
+            if (rdRecord.needsNextPaymentScheduleCheck()) {
+                checkNextPaymentScheduleRds.add(rdRecord.getSObject());
+            }
         }
 
         dbService.updateRecords(outdatedRDs);
+
+        dbService.updateRecords(scheduleService.getSchedulesWithClearedNextPaymentAmount(checkNextPaymentScheduleRds));
 
         return this;
     }

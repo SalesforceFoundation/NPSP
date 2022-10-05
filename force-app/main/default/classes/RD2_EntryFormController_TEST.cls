@@ -45,6 +45,7 @@ private with sharing class RD2_EntryFormController_TEST {
     private static final String CARD_EXPIRATION_YEAR = '2019';
     private static final String EVENT_VERSION = '1';
     private static final String NO_CREATE_PERMISSION = 'NoCreate';
+    private static final Decimal NEXT_PAYMENT_AMOUNT = 10.11;
 
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
@@ -620,41 +621,6 @@ private with sharing class RD2_EntryFormController_TEST {
                 'The response status should match: ' + response);
     }
 
-    /***
-    * @description Verifies Recurring Donation should be validate and handle any error before calling Elevate API
-    */
-    @IsTest
-    private static void shouldReturnSuccessWhenUpdatingRdNextPaymentAmount() {
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
-
-        npe03__Recurring_Donation__c rd = buildRecurringDonation();
-
-        rd.CommitmentId__c = COMMITMENT_ID;
-        rd.npe03__Amount__c = 1;
-        insert rd;
-
-        Decimal nextPaymentAmount = 10.11;
-        UTIL_Http.Response response;
-
-        Test.startTest();
-        RD2_CommitmentService service = new RD2_CommitmentService();
-
-        try {
-            UTIL_Http_TEST.mockRecordUpdateCalloutResponse(mockSuccessResponseBody());
-            response = service.handleNextPaymentAmount(rd, nextPaymentAmount);
-        } catch(Exception ex) {
-        }
-
-        Test.stopTest();
-
-        System.assertNotEquals(null, response, 'Expected to receive a response from handleCommitment');
-        System.assertEquals(UTIL_Http.STATUS_CODE_OK, response.statusCode,
-                'The response status code should match: ' + response.statusCode);
-        System.assertEquals(UTIL_Http.STATUS_OK, response.status,
-                'The response status should match: ' + response.status);
-    }
-
     /**
     * @description Verifies commitment success response is returned upon successful campaign update
     */
@@ -885,6 +851,79 @@ private with sharing class RD2_EntryFormController_TEST {
         System.assertEquals(false, result.success, 'Expected RD2SaveResult success to be false');
         System.assertEquals(null, result.recordId, 'Expected empty record Id');
         System.assertEquals(Label.RD2_AmountMustBeValid, result.errors[0].message, 'Wrong error message');
+    }
+
+    /***
+    * @description Verifies Recurring Donation should be validate and handle any error before calling Elevate API
+    */
+    @IsTest
+    private static void shouldReturnSuccessWhenUpdatingRdNextPaymentAmount() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+
+        rd.CommitmentId__c = COMMITMENT_ID;
+        update rd;
+
+        Test.startTest();
+
+        UTIL_Http_TEST.mockRecordUpdateCalloutResponse(mockSuccessResponseBody());
+        String response = RD2_EntryFormController.handleNextPaymentAmount(rd.Id, NEXT_PAYMENT_AMOUNT);
+        Test.stopTest();
+
+        Integer statusCode;
+        String status;
+        JSONParser parser = JSON.createParser(response);
+
+        while (parser.nextToken() != null) {
+            if(parser.getCurrentToken() == JSONToken.FIELD_NAME) {
+                if (parser.getText() == 'statusCode') {
+                    parser.nextToken();
+                    statusCode = parser.getIntegerValue();
+
+                } else if (parser.getText() == 'status') {
+                    parser.nextToken();
+                    status = parser.getText();
+                }
+            }
+        }
+
+        System.assertNotEquals(null, response, 'Expected to receive a response from handleNextPaymentAmount');
+        System.assertEquals(UTIL_Http.STATUS_CODE_OK, statusCode,
+                'The response status code should match: ' + statusCode);
+        System.assertEquals(UTIL_Http.STATUS_OK, status,
+                'The response status should match: ' + status);
+    }
+
+    /***
+    * @description Verifies Recurring Donation should be validate and handle any error before calling Elevate API
+    */
+    @IsTest
+    private static void shouldUpdateScheduleWhenUpdatingRdNextPaymentAmount() {
+        RD2_QueryService queryService = new RD2_QueryService();
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+
+        Test.startTest();
+
+        String response = RD2_EntryFormController.handleNextPaymentAmount(rd.Id, NEXT_PAYMENT_AMOUNT);
+
+        Test.stopTest();
+
+        System.assertEquals(null, response, 'Expected to receive a null response');
+
+        List<npe03__Recurring_Donation__c> rds = 
+            queryService.getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
+
+        rd = rds[0];
+        System.assertEquals(1, rd.RecurringDonationSchedules__r.size(), 'There should be 1 schedule');
+        System.assertEquals(true, rd.RecurringDonationSchedules__r[0].Active__c, 
+            'The schedule should be Active');
+        System.assertEquals(NEXT_PAYMENT_AMOUNT, rd.RecurringDonationSchedules__r[0].NextPaymentAmount__c, 
+            'The Next Payment Amount should be set');
     }
 
     // Helpers

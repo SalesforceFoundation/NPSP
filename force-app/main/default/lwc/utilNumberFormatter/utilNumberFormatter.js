@@ -47,8 +47,20 @@ const getCurrencyLowestCommonDenominator = (number) => {
     return number * multiplier;
 }
 
+/*******************************************************************************
+* @description Format the provided date string into a localized date string
+*
+* @param {integer} dateString: UTC Date string to format
+*/
+const getDateAsLocalizedFormat = (dateString) => {
+    let date = new Date(dateString);
+    const options = {timeZone: 'UTC'};
+    return new Intl.DateTimeFormat(LOCALE, options).format(date);
+}
+
 export {
     getNumberAsLocalizedCurrency,
     getNumberAsCurrencyByCode,
-    getCurrencyLowestCommonDenominator
+    getCurrencyLowestCommonDenominator,
+    getDateAsLocalizedFormat
 }
