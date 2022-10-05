@@ -3,7 +3,6 @@
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import UtilDescribe from './utilDescribe';
 import unknownErrorLabel from '@salesforce/label/c.commonUnknownError';
-import errorLabel from '@salesforce/label/c.commonError';
 import commonLabelNone from '@salesforce/label/c.stgLabelNone';
 import NAMESPACED_OBJECT from '@salesforce/schema/DataImport__c';
 const FUNCTION = 'function';
@@ -506,7 +505,7 @@ const constructErrorMessage = (error) => {
     }
 
     return {
-        header: header || errorLabel,
+        header: header || unknownErrorLabel,
         detail: message || unknownErrorLabel
     };
 }
