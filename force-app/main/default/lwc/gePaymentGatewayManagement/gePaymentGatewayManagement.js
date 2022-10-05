@@ -40,7 +40,7 @@ import checkForElevateCustomer from '@salesforce/apex/PS_GatewayManagement.isEle
 import checkForSystemAdmin from '@salesforce/apex/PS_GatewayManagement.isSystemAdmin';
 import { fireEvent, registerListener } from 'c/pubsubNoPageRef';
 
-const PARENT_ID = 'MANAGEMENT';
+const GATEWAY_MANAGEMENT_MODE = 'MANAGEMENT';
 
 export default class GePaymentGatewayManagement extends LightningElement {
 
@@ -54,7 +54,7 @@ export default class GePaymentGatewayManagement extends LightningElement {
     isSystemAdmin;
     hasAccess;
 
-    parentId = PARENT_ID;
+    parentContext = GATEWAY_MANAGEMENT_MODE;
 
     CUSTOM_LABELS = { messageLoading, insufficientPermissions, commonAdminPermissionErrorMessage };
 
