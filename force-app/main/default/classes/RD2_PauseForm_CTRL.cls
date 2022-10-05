@@ -272,11 +272,12 @@ public with sharing class RD2_PauseForm_CTRL {
 
 
     private static void validatePause(PauseData pause) {
-        Date nextInstalmentDate = scheduleService.getNextDonationDate(getRecurringDonation(pause.rdId).getSObject());
-
         if (isPauseRemoved(pause)) return;
 
-        if (nextInstalmentDate.addDays(-1).isSameDay(pause.startDate)) {
+        Date nextInstallmentDate = scheduleService.getNextDonationDate(getRecurringDonation(pause.rdId).getSObject());
+
+        if (nextInstallmentDate.addDays(-1).isSameDay(pause.startDate)
+            || nextInstallmentDate.isSameDay(pause.startDate)) {
             throw new PauseException(System.Label.RD2_ElevatePauseInstallmentDateErrorMessage);
         }
     }
