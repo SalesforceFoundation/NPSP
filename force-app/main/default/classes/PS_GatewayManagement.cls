@@ -51,29 +51,50 @@ public with sharing class PS_GatewayManagement {
         upsert giftEntrySettings;       
     }
 
-    @AuraEnabled
     public static Boolean isGatewayAssignmentEnabled() {
         Gift_Entry_Settings__c giftEntrySettings = UTIL_CustomSettingsFacade.getGiftEntrySettings();
 
         return giftEntrySettings.Enable_Gateway_Assignment__c;
     }
 
-    @AuraEnabled
     public static String getGatewayIdFromConfig() {
         PS_IntegrationServiceConfig.Service configService = new PS_IntegrationServiceConfig.Service();
 
         return configService.getGatewayIds();
     }
 
-    @AuraEnabled
     public static Boolean isElevateCustomer() {
         PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
 
         return ps.isIntegrationEnabled();
     }
 
-    @AuraEnabled
     public static Boolean isSystemAdmin() {
         return STG_Panel.runningUserIsAdmin();
+    }
+    
+    @AuraEnabled
+    public static String getGatewayManagementSettings() {
+
+        try {
+            GatewayManagementSettings gmSettings = new GatewayManagementSettings();
+
+            gmSettings.isElevateCustomer = isElevateCustomer();
+            gmSettings.isGatewayAssignmentEnabled = isGatewayAssignmentEnabled();
+            gmSettings.isSystemAdmin = isSystemAdmin();
+
+            return JSON.serialize(gmSettings);
+
+        } catch (Exception e) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
+        }
+
+        return null;
+    }
+
+    public class GatewayManagementSettings {
+        Boolean isElevateCustomer;
+        Boolean isGatewayAssignmentEnabled;
+        Boolean isSystemAdmin;
     }
 }

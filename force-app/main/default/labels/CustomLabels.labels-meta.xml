@@ -12755,7 +12755,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label for Gateway Assignment Help Message.</shortDescription>
-        <value>Enabling gateway assignment will allow you to select the payment gateway and respective payment methods when modifying Gift Entry Templates.</value>
+        <value>Enabling gateway assignment allows you to select the payment gateway and respective payment methods when modifying Gift Entry Templates.</value>
     </labels>
     <labels>
         <fullName>psGatewayManagementHelp</fullName>

@@ -42,11 +42,8 @@ import psGatewayIDHelp from '@salesforce/label/c.psGatewayIdHelp';
 import psGatewayManagementHelp from '@salesforce/label/c.psGatewayManagementHelp';
 
 import setGatewayId from '@salesforce/apex/PS_GatewayManagement.setGatewayId';
-import getGatewayIdFromConfig from '@salesforce/apex/PS_GatewayManagement.getGatewayIdFromConfig';
-import checkForElevateCustomer from '@salesforce/apex/PS_GatewayManagement.isElevateCustomer';
-import checkForSystemAdmin from '@salesforce/apex/PS_GatewayManagement.isSystemAdmin';
-import isGatewayAssignmentEnabled from '@salesforce/apex/PS_GatewayManagement.isGatewayAssignmentEnabled';
 import setGatewayAssignmentEnabled from '@salesforce/apex/PS_GatewayManagement.setGatewayAssignmentEnabled';
+import getGatewayManagementSettings from '@salesforce/apex/PS_GatewayManagement.getGatewayManagementSettings';
 
 export default class GePaymentGatewayManagement extends LightningElement {
 
@@ -60,7 +57,7 @@ export default class GePaymentGatewayManagement extends LightningElement {
     isSystemAdmin;
     hasAccess;
 
-    @track gatewayAssignmentEnabled;
+    @track isGatewayAssignmentEnabled;
 
     CUSTOM_LABELS = {
         commonAdminPermissionErrorMessage,
@@ -76,18 +73,19 @@ export default class GePaymentGatewayManagement extends LightningElement {
 
     async connectedCallback() {
         try {
-            this.isSystemAdmin = await checkForSystemAdmin();
-            this.isElevateCustomer = await checkForElevateCustomer();
+            const gatewayManagementSettings = JSON.parse(await getGatewayManagementSettings());
+
+            this.isSystemAdmin = gatewayManagementSettings.isSystemAdmin;
+            this.isElevateCustomer = gatewayManagementSettings.isElevateCustomer;
 
             this.hasAccess = !!(this.isElevateCustomer && this.isSystemAdmin);
+
+            if (this.hasAccess) {
+            this.isGatewayAssignmentEnabled = await gatewayManagementSettings.isGatewayAssignmentEnabled;
+            }
         } catch(ex) {
             this.errorMessage = buildErrorMessage(ex);
             this.isError = true;
-        }
-
-        if (this.hasAccess) {
-            this.gatewayId = await getGatewayIdFromConfig();
-            this.gatewayAssignmentEnabled = await isGatewayAssignmentEnabled();
         }
     }
 
