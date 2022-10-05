@@ -57,7 +57,7 @@ export default class GePaymentGatewayManagement extends LightningElement {
     isSystemAdmin;
     hasAccess;
 
-    @track isGatewayAssignmentEnabled;
+    isGatewayAssignmentEnabled;
 
     CUSTOM_LABELS = {
         commonAdminPermissionErrorMessage,

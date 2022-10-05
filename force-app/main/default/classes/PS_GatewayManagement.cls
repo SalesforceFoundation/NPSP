@@ -51,7 +51,8 @@ public with sharing class PS_GatewayManagement {
         upsert giftEntrySettings;       
     }
 
-    public static Boolean isGatewayAssignmentEnabled() {
+    @TestVisible
+    private static Boolean isGatewayAssignmentEnabled() {
         Gift_Entry_Settings__c giftEntrySettings = UTIL_CustomSettingsFacade.getGiftEntrySettings();
 
         return giftEntrySettings.Enable_Gateway_Assignment__c;
@@ -63,13 +64,13 @@ public with sharing class PS_GatewayManagement {
         return configService.getGatewayIds();
     }
 
-    public static Boolean isElevateCustomer() {
+    private static Boolean isElevateCustomer() {
         PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
 
         return ps.isIntegrationEnabled();
     }
 
-    public static Boolean isSystemAdmin() {
+    private static Boolean isSystemAdmin() {
         return STG_Panel.runningUserIsAdmin();
     }
     
