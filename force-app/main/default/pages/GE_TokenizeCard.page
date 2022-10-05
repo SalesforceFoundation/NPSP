@@ -216,7 +216,7 @@
             if (siteBaseURL.length > 0) {
                 return siteBaseURL;
             } else {
-                return `https://${domain}.lightning.force.com`;
+                return `https://${domain}.sandbox.lightning.force.com`;
             }
         }
 
