@@ -39,6 +39,21 @@ class GeGatewaySettings {
         this.decryptedGatewayId = await decryptGatewayId({encryptedGatewayId: this.elevateSettings.uniqueKey});
     }
 
+    isValidElevatePaymentMethod(paymentMethod) {
+
+        if (!this.getElevateSettings()) {
+            return true;
+        } else if (this.getElevateSettings().isACHEnabled && this.getElevateSettings().isCreditCardEnabled) {
+            return true;
+        } else if (this.getElevateSettings().isCreditCardEnabled && paymentMethod === 'Credit Card') {
+            return true;
+        } else if (this.getElevateSettings().isACHEnabled && paymentMethod === 'ACH') {
+            return true;
+        }
+
+        return false;
+    }
+
     getElevateSettings() {
         return this.elevateSettings;
     }

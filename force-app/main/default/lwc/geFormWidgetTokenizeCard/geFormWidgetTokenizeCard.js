@@ -304,17 +304,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             return false;
         }
 
-        if (!GeGatewaySettings.getElevateSettings()) {
-            return true;
-        } else if (GeGatewaySettings.getElevateSettings().isACHEnabled && GeGatewaySettings.getElevateSettings().isCreditCardEnabled) {
-            return true;
-        } else if (GeGatewaySettings.getElevateSettings().isCreditCardEnabled && this.isPaymentMethodCreditCard()) {
-            return true;
-        } else if (GeGatewaySettings.getElevateSettings().isACHEnabled && this.isPaymentMethodAch()) {
-            return true;
-        }
-
-        return false;
+        return GeGatewaySettings.isValidElevatePaymentMethod(this.paymentMethod());
     }
 
     updateDisplayStateWhenInSingleGiftEntry() {
