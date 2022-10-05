@@ -62,10 +62,6 @@ class GeGatewaySettings {
         return this.decryptedGatewayId;
     }
 
-    getIsGiftEntryBatch() {
-        return this.isGiftEntryBatch;
-    }
-
     getTemplateRecordId() {
         return this.templateRecordId;
     }
