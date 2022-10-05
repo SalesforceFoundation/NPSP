@@ -985,25 +985,8 @@ public with sharing class GE_GiftEntryController {
     }
 
     private static GE_Template.Template[] getMappedGateways(GE_Template.Template[] formTemplates) {
-        // TODO: refactor
-
-        List<PS_GatewayService.GatewayTemplateSetting> gatewayTemplateSettings =
-                new List<PS_GatewayService.GatewayTemplateSetting>();
-
-        try {
-            PS_GatewayService gatewayService = new PS_GatewayService();
-            gatewayTemplateSettings = (List<PS_GatewayService.GatewayTemplateSetting>)
-                JSON.deserialize(gatewayService.getGatewaysByMerchant(),
-                    List<PS_GatewayService.GatewayTemplateSetting>.class);
-        }
-        catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
-        }
-
-        Map<String, String> gatewayNameById = new Map<String, String>();
-        for (PS_GatewayService.GatewayTemplateSetting gatewayTemplateSetting : gatewayTemplateSettings) {
-            gatewayNameById.put(gatewayTemplateSetting.id, gatewayTemplateSetting.gatewayName);
-        }
+        List<PS_GatewayService.GatewayTemplateSetting> gatewayTemplateSettings = getGatewayTemplateSettings();
+        Map<String, String> gatewayNameById = getGatewayNameById(gatewayTemplateSettings);
 
         String defaultGatewayId = new PS_IntegrationServiceConfig.Service().getGatewayIds();
         for (GE_Template.Template formTemplate : formTemplates) {
@@ -1029,6 +1012,30 @@ public with sharing class GE_GiftEntryController {
         }
 
         return formTemplates;
+    }
+
+    private static Map<String, String> getGatewayNameById(List<PS_GatewayService.GatewayTemplateSetting> gatewayTemplateSettings) {
+        Map<String, String> gatewayNameById = new Map<String, String>();
+        for (PS_GatewayService.GatewayTemplateSetting gatewayTemplateSetting : gatewayTemplateSettings) {
+            gatewayNameById.put(gatewayTemplateSetting.id, gatewayTemplateSetting.gatewayName);
+        }
+        return gatewayNameById;
+    }
+
+    private static List<PS_GatewayService.GatewayTemplateSetting> getGatewayTemplateSettings() {
+        List<PS_GatewayService.GatewayTemplateSetting> gatewayTemplateSettings =
+                new List<PS_GatewayService.GatewayTemplateSetting>();
+
+        try {
+            PS_GatewayService gatewayService = new PS_GatewayService();
+            gatewayTemplateSettings = (List<PS_GatewayService.GatewayTemplateSetting>)
+                    JSON.deserialize(gatewayService.getGatewaysByMerchant(),
+                            List<PS_GatewayService.GatewayTemplateSetting>.class);
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+
+        return gatewayTemplateSettings;
     }
 
     /*******************************************************************************************************
