@@ -70,6 +70,7 @@ public with sharing class PS_GatewayManagement {
         return ps.isIntegrationEnabled();
     }
 
+    @TestVisible
     private static Boolean isSystemAdmin() {
         return STG_Panel.runningUserIsAdmin();
     }
