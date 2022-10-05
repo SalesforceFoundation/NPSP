@@ -50,7 +50,6 @@ import commonPaymentServices from '@salesforce/label/c.commonPaymentServices';
 import geElevateWidgetPaymentServiceUnavailable from '@salesforce/label/c.geElevateWidgetPaymentServiceUnavailable';
 
 const CONTACT_DONOR_TYPE = 'Contact1';
-const PARENT_ID = 'TOKENIZE';
 
 export default class geFormWidgetTokenizeCard extends LightningElement {
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
@@ -61,7 +60,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     alert = {};
     dataImportId;
     isMounted = false;
-    parentId = PARENT_ID;
 
     _displayState;
     _showSpinner = true;
