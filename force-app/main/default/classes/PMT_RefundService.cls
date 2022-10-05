@@ -69,6 +69,17 @@ public inherited sharing class PMT_RefundService {
     }
 
     @TestVisible
+    private AllocationSelector allocationSelector {
+        get {
+            if (allocationSelector == null) {
+                allocationSelector = new AllocationSelector();
+            }
+            return allocationSelector;
+        }
+        set;
+    }
+
+    @TestVisible
     private List<npe01__OppPayment__c> originalPayments {
         get {
             if (originalPayments == null && originalPaymentIds != null) {
@@ -104,9 +115,13 @@ public inherited sharing class PMT_RefundService {
         set;
     }
 
+    public static Allocations_Settings__c allocationSettings = UTIL_CustomSettingsFacade.getAllocationsSettings();
+
+
     private List<npe01__OppPayment__c> refundRecords;
     @TestVisible
     private Map<Id, Opportunity> opportunityMap;
+    private List<Allocation__c> allocationsToUpdate;
     private ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
 
     @TestVisible
@@ -196,7 +211,9 @@ public inherited sharing class PMT_RefundService {
             if (!this.refundRecords.isEmpty()) {
                 insert this.refundRecords;
             }
-            
+            if (!this.allocationsToUpdate.isEmpty()) {
+                update this.allocationsToUpdate;
+            }
             if (!this.opportunityMap.isEmpty()) {
                 update this.opportunityMap.values();
             }
@@ -269,6 +286,65 @@ public inherited sharing class PMT_RefundService {
         opportunity.Amount = opportunity.Amount - refundAmount;
 
         this.opportunityMap.put(opportunity.Id, opportunity);
+    }
+
+    public void processAllocations() {
+        Set<Id> partialRefundOppIds = new Set<Id>();
+        for (npe01__OppPayment__c refund : this.refundRecords) {
+            if (refund.DebitType__c == PARTIAL_REFUND) {
+                partialRefundOppIds.add(refund.npe01__Opportunity__c);
+            }
+        }
+        List<Allocation__c> allocations = allocationSelector.getOpportunityAllocations(partialRefundOppIds);
+        Map<Id, List<Allocation__c>> allocationsGroupByOpp = new Map<Id, List<Allocation__c>>();
+
+        for (Allocation__c allocation : allocations) {
+            if (allocationSettings.Default_Allocations_Enabled__c && allocation.General_Accounting_Unit__c == allocationSettings.default__c) {
+                continue;
+            }
+          
+            List<Allocation__c> groupedAllocations = allocationsGroupByOpp.get(allocation.Opportunity__c);
+            
+            if(groupedAllocations == null) {
+                groupedAllocations = new List<Allocation__c>();
+                allocationsGroupByOpp.put(allocation.Opportunity__c, groupedAllocations);
+            }
+
+            groupedAllocations.add(allocation);
+        }
+
+        for (List<Allocation__c> groupedAllocations : allocationsGroupByOpp.values()) {
+            convertFixedAmountAllocationsToPercentage(groupedAllocations);
+        }
+    }
+
+    private void convertFixedAmountAllocationsToPercentage(List<Allocation__c> allocations) {
+        if (allocations == null || allocations.isEmpty()) {
+            return;
+        }
+        if (this.allocationsToUpdate == null) {
+            this.allocationsToUpdate = new List<Allocation__c>();
+        }
+
+        List<Allocation__c> toUpdate = new List<Allocation__c>();
+
+        Decimal oppAmount = allocations[0].Opportunity__r.Amount;
+        Double percentage = 0.0;
+        for (Allocation__c allocation : allocations) {
+            if (allocation.Percent__c == null) {
+                Decimal calculatedPercentage = allocation.Amount__c / oppAmount * 100;
+                allocation.Percent__c = calculatedPercentage.setScale(2, RoundingMode.HALF_UP);
+                toUpdate.add(allocation);
+            }
+
+            percentage += allocation.Percent__c;
+        }
+
+        if (percentage > 100) {
+            toUpdate[0].Percent__c = toUpdate[0].Percent__c - (percentage - 100);
+        }
+
+        this.allocationsToUpdate.addAll(toUpdate);
     }
 
     private HttpRequest buildTransactionRequest(String transactionId) {

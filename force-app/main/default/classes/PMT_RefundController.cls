@@ -134,6 +134,7 @@ public with sharing class PMT_RefundController {
             return;
         }
 
+        refundService.processAllocations();
         refundService.updateParentOpportunity(originalPayment, refundAmount);
 
         refundService.processDML();
