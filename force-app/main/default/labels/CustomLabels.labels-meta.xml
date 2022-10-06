@@ -12742,6 +12742,54 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Show Elevate Gateways and Payment Methods</value>
     </labels>
     <labels>
+        <fullName>psEnableGatewayAssignment</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to show Gateway Assignment is enabled.</shortDescription>
+        <value>Enable Gateway Assignment</value>
+    </labels>
+    <labels>
+        <fullName>psEnableGatewayAssignmentHeader</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Gateway Assignment Header.</shortDescription>
+        <value>Enable Gateway Assignment</value>
+    </labels>
+    <labels>
+        <fullName>psEnableGatewayAssignmentHelp</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Gateway Assignment Help Message.</shortDescription>
+        <value>Enabling gateway assignment allows you to select the payment gateway and respective payment methods when modifying Gift Entry Templates.</value>
+    </labels>
+    <labels>
+        <fullName>psGatewayManagementHelp</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Gateway Management Help Message.</shortDescription>
+        <value>These settings manage the payment gateways for Elevate transactions.</value>
+    </labels>
+    <labels>
+        <fullName>psGatewayIDHeader</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Gateway ID Header.</shortDescription>
+        <value>Gateway ID</value>
+    </labels>
+    <labels>
+        <fullName>psGatewayIDHelp</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Gateway ID Help Message.</shortDescription>
+        <value>NPSP uses the gateway that was added to Elevate most recently unless you override it. To change the gateway NPSP usess, click Edit, enter the gateway ID, and save your work. Find the gateway ID in the Elevate Admin Console | Gateway Management.</value>
+    </labels>
+    <labels>
         <fullName>psShowPaymentMethods</fullName>
         <categories>Payment Gateway Management</categories>
         <language>en_US</language>
