@@ -4,7 +4,7 @@
 
 * <a href="https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&sort=LAST_MODIFIED_DATE_DESC" target="_blank">Ask questions or get help</a>
 * <a href="https://github.com/SalesforceFoundation/NPSP/issues/new" target="_blank">Log a confirmed Issue</a> or <a href="https://ideas.salesforce.com/s/search#t=All&sort=relevancy" target="_blank">Feature Request</a>
-* <a href="https://powerofus.force.com/NPSP_Documentation" target="_blank">User Documentation</a>
+* <a href="https://help.salesforce.com/s/articleView?id=sfdo.Nonprofit_Success_Pack.htm&type=5" target="_blank">Nonprofit Success Pack (NPSP) Documentation</a>
 * Check out existing <a href="https://github.com/SalesforceFoundation/NPSP/labels/bug" target="_blank">bugs</a> and <a href="https://ideas.salesforce.com/s/search#t=All&sort=relevancy&f:@sfcategoryfull=[Nonprofit%7CNonprofit%20Success%20Pack]" target="_blank">feature and enhancement requests.</a>
 * <a href="https://github.com/SalesforceFoundation/NPSP/releases" target="_blank">Release Notes and Beta Releases</a>
 
