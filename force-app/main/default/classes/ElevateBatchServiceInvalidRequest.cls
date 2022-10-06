@@ -45,7 +45,7 @@ public class ElevateBatchServiceInvalidRequest extends ElevateBatchService {
     }
 
     public override ElevateBatchItem addToElevateBatch(ElevateCreateBatchItemRequestDTO createBatchItemRequestDTO,
-                                                       String elevateBatchId, String gatewayOverride) {
+                                                       String elevateBatchId) {
         ElevateBatchItemCreateResponse giftResponse = ElevateBatchItemCreateResponse.parse(addToElevateBatchErrorResponse());
         elevateBatchService.checkForBatchItemErrorsIn(giftResponse);
 
