@@ -48,6 +48,16 @@ public with sharing class RD2_PauseForm_CTRL {
         } set;
     }
 
+    @TestVisible
+    private static Date currentDate {
+        get {
+            if (currentDate == null) {
+                currentDate = Date.today();
+            }
+            return currentDate;
+        } set;
+    }
+
     /**
     * @description Handles commitment request creation, response parsing and RD Commitment Id update
     */
@@ -276,8 +286,8 @@ public with sharing class RD2_PauseForm_CTRL {
 
         Date nextInstallmentDate = scheduleService.getNextDonationDate(getRecurringDonation(pause.rdId).getSObject());
 
-        if (nextInstallmentDate.addDays(-1).isSameDay(pause.startDate)
-            || nextInstallmentDate.isSameDay(pause.startDate)) {
+        if (nextInstallmentDate.addDays(-1).isSameDay(currentDate)
+            || nextInstallmentDate.isSameDay(currentDate)) {
             throw new PauseException(System.Label.RD2_ElevatePauseInstallmentDateErrorMessage);
         }
     }
