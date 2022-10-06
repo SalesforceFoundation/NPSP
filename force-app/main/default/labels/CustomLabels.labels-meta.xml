@@ -12670,6 +12670,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Default</value>
     </labels>
     <labels>
+        <fullName>psGatewaySelectionLabel</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Gateway selection in settings.</shortDescription>
+        <value>NPSP uses the gateway that was added to Elevate most recently unless you override it.</value>
+    </labels>
+    <labels>
         <fullName>psGatewaysNotFound</fullName>
         <categories>Payment Gateway Management</categories>
         <language>en_US</language>
