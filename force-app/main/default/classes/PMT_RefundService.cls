@@ -133,6 +133,7 @@ public inherited sharing class PMT_RefundService {
     private List<npe01__OppPayment__c> oldRefundRecords;
     @TestVisible
     private Map<Id, Opportunity> opportunityMap;
+    @TestVisible
     private List<Allocation__c> allocationsToUpdate = new List<Allocation__c>();
     private Map<Id, ErrorRecord> paymentIdToErrorRecord = new Map<Id, ErrorRecord>();
 
@@ -343,6 +344,7 @@ public inherited sharing class PMT_RefundService {
         }
         List<Allocation__c> allocations = allocationSelector.getOpportunityAllocations(partialRefundOppIds);
         Map<Id, List<Allocation__c>> allocationsGroupByOpp = new Map<Id, List<Allocation__c>>();
+
         for (Allocation__c allocation : allocations) {
             if (allocationSettings.Default_Allocations_Enabled__c && allocation.General_Accounting_Unit__c == allocationSettings.default__c) {
                 continue;
