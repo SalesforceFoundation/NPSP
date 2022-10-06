@@ -38,7 +38,7 @@
     </template>
     <template if:true={hasAccess}>
         <template if:true={isSuccess}>
-            <div class="slds-m-bottom_medium">
+            <div class="slds-var-m-bottom_medium">
                 <c-util-alert-banner theme="success"
                                      icon="utility:success"
                                      size="small"
@@ -48,7 +48,7 @@
             </div>
         </template>
         <template if:true={isError}>
-            <div class="slds-m-bottom_medium">
+            <div class="slds-var-m-bottom_medium">
                 <c-util-alert-banner theme="error"
                                      icon="utility:error"
                                      size="small"
@@ -57,7 +57,7 @@
                 </c-util-alert-banner>
             </div>
         </template>
-        <lightning-layout multiple-rows="true">
+        <lightning-layout multiple-rows="true" class="slds-var-m-around_x-large">
             <div if:true={showSpinner}
                  class='spinner-container'>
                 <lightning-spinner alternative-text={CUSTOM_LABELS.messageLoading}
@@ -66,26 +66,22 @@
                 <p class='loading-text slds-text-heading_medium'>{loadingText}</p>
             </div>
             <lightning-layout-item size="12">
-                <h1 class="slds-text-heading_medium slds-p-top-medium">Elevate Gateway Management</h1>
+                <h1 class="slds-text-heading_medium">Elevate Gateway Management</h1>
             </lightning-layout-item>
             <lightning-layout-item size="12">
-                <!-- Temporary Hardcoded Text until this functionality is moved out of NPSP entirely -->
-                <p class="slds-text-body_regular slds-p-vertical_medium">
-                    NPSP uses the gateway that was added to Elevate
-                    most recently unless you override it. To change the gateway NPSP uses, click Edit, enter the
-                    gateway ID, and save your work. Find the gateway ID in the
-                    Elevate Admin Console | Gateway Management.
+                <p class="slds-text-body_regular slds-var-p-vertical_medium">
+                    {CUSTOM_LABELS.gatewaySelectionLabel}
                 </p>
             </lightning-layout-item>
 
-            <lightning-layout-item size='12' class='slds-p-left_small slds-p-top_none slds-p-bottom_large'>
+            <lightning-layout-item size='12' class='slds-var-p-left_small slds-p-top_none slds-var-p-bottom_large'>
                 <c-ge-gateway-select-widget data-id='gatewaySelectWidget'
                                             parent-context={parentContext}>
                 </c-ge-gateway-select-widget>
             </lightning-layout-item>
 
             <template if:true={isReadOnly}>
-                <lightning-layout-item size="12" class="slds-p-left_small slds-text-align_left">
+                <lightning-layout-item size="12" class="slds-var-p-left_small slds-text-align_left">
                     <lightning-button
                             label="Edit"
                             data-id="editGatewayButton"
@@ -94,7 +90,7 @@
                     </lightning-button>
                 </lightning-layout-item>
             </template>
-            <lightning-layout-item size="12" class="slds-p-left_small slds-text-align_left">
+            <lightning-layout-item size="12" class="slds-var-p-left_small slds-text-align_left">
                 <template if:false={isReadOnly}>
                     <lightning-button-group>
                         <!-- Temporary Hardcoded Text until this functionality is moved out of NPSP entirely -->
