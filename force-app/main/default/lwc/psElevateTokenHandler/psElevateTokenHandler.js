@@ -56,6 +56,7 @@ class psElevateTokenHandler {
         const sandboxEnhancedUrlLogin =  `https://${domainInfo.orgDomain}--${namespace}.sandbox.my.salesforce.com`;
         const sandboxEnhancedUrlExperience =  `https://${domainInfo.orgDomain}--${namespace}.sandbox.my.site.com`;
         const sandboxDomainTest =  `https://${domainInfo.orgDomain}--${namespace}.sandbox.lightning.force.com`;
+        const sandboxDomainLightning =  `https://${domainInfo.orgDomain}--${namespace}.lightning.force.com`;
 
         const originURLs = [
             {value: url},
@@ -66,6 +67,7 @@ class psElevateTokenHandler {
             {value: sandboxEnhancedUrlLogin},
             {value: sandboxEnhancedUrlExperience},
             {value: sandboxDomainTest},
+            {value: sandboxDomainLightning},
         ];
         if (!isBlank(domainInfo.communityBaseURL)) {
             return [...originURLs, { value: domainInfo.communityBaseURL }];
