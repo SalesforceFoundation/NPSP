@@ -21,12 +21,14 @@ class GeGatewaySettings {
         this.isGiftEntryBatch = true;
         this.elevateSettings = elevateSettings;
         if (this.elevateSettings?.uniqueKey) {
-            this.decryptElevateGateway().then(error => {
-                if (this.elevateSettings?.uniqueKey && !this.decryptedGatewayId) {
-                    showToast(psGatewayNotValid, details, 'error', 'sticky');
-                }
+            this.decryptElevateGateway().catch((error) => {
+                this.handleError(psGatewayNotValid, error);
             });
         }
+    }
+
+    handleError(message, error) {
+        showToast(message, error, 'error', 'sticky');
     }
 
     clearDecryptedElevateSettings() {
@@ -37,6 +39,10 @@ class GeGatewaySettings {
 
     async decryptElevateGateway() {
         this.decryptedGatewayId = await decryptGatewayId({encryptedGatewayId: this.elevateSettings.uniqueKey});
+
+        if (this.elevateSettings?.uniqueKey && !this.decryptedGatewayId) {
+            this.handleError(psGatewayNotValid);
+        }
     }
 
     isValidElevatePaymentMethod(paymentMethod) {
