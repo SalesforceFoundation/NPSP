@@ -53,7 +53,7 @@ public with sharing class UTIL_HtmlOutput_CTRL {
 
     /** @description The map of allowed urls and their temporary substitution values */
     private static final Map<String, String> SUBSTITUTION_BY_ALLOWED_URL = new Map<String, String> {
-        '<a href="https://powerofus.force.com/' => '|hubURL|',
+        '<a href="https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE' => '|hubURL|',
         '<a href="https://help.salesforce.com/' => '|helpURL|',
         '<a href="/lightning/setup/' => '|lightningSetupURL|',
         '<a href="/setup/' => '|setupURL|',

@@ -25,7 +25,6 @@ import bdiFMUITarget from '@salesforce/label/c.bdiFMUITarget';
 import bdiFMUITryAgain from '@salesforce/label/c.bdiFMUITryAgain';
 import bdiFMUIUnsuccessful from '@salesforce/label/c.bdiFMUIUnsuccessful';
 import bdiFMUIUpdate from '@salesforce/label/c.bdiFMUIUpdate';
-import stgHelpAdvancedMapping3 from '@salesforce/label/c.stgHelpAdvancedMapping3';
 import stgLabelObject from '@salesforce/label/c.stgLabelObject';
 import stgUnknownError from '@salesforce/label/c.stgUnknownError';
 
@@ -72,7 +71,6 @@ export default class bdiFieldMappings extends LightningElement {
         bdiFMUINoFieldMappings,
         bdiFMUISourceObject,
         bdiFMUITarget,
-        stgHelpAdvancedMapping3,
         stgLabelObject,
         bdiOMUIFieldMappingProblemHeader,
         bdiOMUIFieldMappingProblemMessagePart1,

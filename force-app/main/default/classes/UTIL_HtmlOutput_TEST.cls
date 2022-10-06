@@ -84,7 +84,7 @@ public with sharing class UTIL_HtmlOutput_TEST {
     */
     @isTest
     private static void shouldReturnOriginalUrl() {
-        String html = '<a href="https://powerofus.force.com/NPSP_Documentation">';
+        String html = '<a href="https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE">';
         UTIL_HtmlOutput_CTRL controller = new UTIL_HtmlOutput_CTRL();
 
         controller.unsafeHtml = html;
@@ -98,7 +98,7 @@ public with sharing class UTIL_HtmlOutput_TEST {
     */
     @isTest
     private static void shouldReturnOriginalUrlWithSpace() {
-        String html = '<a href="https://powerofus.force.com/NPSP_Documentation" >';
+        String html = '<a href="https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE" >';
         UTIL_HtmlOutput_CTRL controller = new UTIL_HtmlOutput_CTRL();
 
         controller.unsafeHtml = html;
@@ -128,8 +128,8 @@ public with sharing class UTIL_HtmlOutput_TEST {
     */
     @isTest
     private static void shouldStripJavaScriptFromUrl() {
-        String html = '<a href="https://powerofus.force.com/NPSP_Documentation" onanyjavascriptevent="alert(\'gotcha\')">';
-        String cleanHtml = '<a href="https://powerofus.force.com/NPSP_Documentation" >';
+        String html = '<a href="https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE" onanyjavascriptevent="alert(\'gotcha\')">';
+        String cleanHtml = '<a href="https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE" >';
         UTIL_HtmlOutput_CTRL controller = new UTIL_HtmlOutput_CTRL();
 
         controller.unsafeHtml = html;
@@ -144,9 +144,9 @@ public with sharing class UTIL_HtmlOutput_TEST {
     */
     @isTest
     private static void shouldStripJavaScriptFromUrlRegardlessOfCase() {
-        String html = 
-            '<a href="https://powerofus.force.com/NPSP_Documentation" oNanyjavascriptevent="alert(\'gotcha\')">';
-        String cleanHtml = '<a href="https://powerofus.force.com/NPSP_Documentation" >';
+        String html =
+            '<a href="https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE" oNanyjavascriptevent="alert(\'gotcha\')">';
+        String cleanHtml = '<a href="https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE" >';
         UTIL_HtmlOutput_CTRL controller = new UTIL_HtmlOutput_CTRL();
 
         controller.unsafeHtml = html;

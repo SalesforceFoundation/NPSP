@@ -13,7 +13,6 @@
     </fields>
     <fields>
         <fullName>Do_Not_Automatically_Create_Payment__c</fullName>
-        <description>https://powerofus.force.com/NPSP_Documentation</description>
         <externalId>false</externalId>
         <inlineHelpText>Opportunity.npe01__Do_Not_Automatically_Create_Payment__c</inlineHelpText>
         <label>Do Not Automatically Create Payment</label>
