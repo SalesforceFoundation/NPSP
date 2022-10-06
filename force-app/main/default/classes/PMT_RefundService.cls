@@ -129,8 +129,8 @@ public inherited sharing class PMT_RefundService {
     public static Allocations_Settings__c allocationSettings = UTIL_CustomSettingsFacade.getAllocationsSettings();
 
 
-    private List<npe01__OppPayment__c> refundRecords;
-    private List<npe01__OppPayment__c> oldRefundRecords;
+    private List<npe01__OppPayment__c> refundRecords = new List<npe01__OppPayment__c>();
+    private List<npe01__OppPayment__c> oldRefundRecords = new List<npe01__OppPayment__c>();
     @TestVisible
     private Map<Id, Opportunity> opportunityMap;
     @TestVisible
@@ -225,7 +225,6 @@ public inherited sharing class PMT_RefundService {
     }
 
     public npe01__OppPayment__c buildRefundRecord(npe01__OppPayment__c originalPayment, Decimal refundAmount) {
-        refundAmount = (refundAmount == null) ? originalPayment.npe01__Payment_Amount__c : refundAmount; 
         npe01__OppPayment__c refund = new npe01__OppPayment__c(
             npe01__Payment_Amount__c = -1 * refundAmount,
             npe01__Opportunity__c = originalPayment.npe01__Opportunity__c,
@@ -237,10 +236,6 @@ public inherited sharing class PMT_RefundService {
         
         if (isMultiCurrencyEnabled) {
             refund.put(UTIL_Currency.CURRENCY_ISO_CODE_FIELD, originalPayment.get(UTIL_Currency.CURRENCY_ISO_CODE_FIELD));
-        }
-
-        if (this.refundRecords == null) {
-            this.refundRecords = new List<npe01__OppPayment__c>();
         }
 
         this.refundRecords.add(refund);
@@ -374,13 +369,18 @@ public inherited sharing class PMT_RefundService {
         for (Integer i = 0; i < this.refundRecords.size(); i++) {
             Opportunity parentOpp = this.opportunityMap.get(this.refundRecords[i].npe01__Opportunity__c);
             parentOpp.Amount = (parentOpp.Amount == null) ? 0 : parentOpp.Amount;
-            parentOpp.Amount += this.refundRecords[i].npe01__Payment_Amount__c;
-
-            if (this.oldRefundRecords != null && !this.oldRefundRecords.isEmpty()) {
-                parentOpp.Amount -= this.oldRefundRecords[i].npe01__Payment_Amount__c;
-            }
+            parentOpp.Amount += getAdjustedRefundAmount(i);
         }
 
+    }
+
+    private Decimal getAdjustedRefundAmount(Integer index) {
+       Decimal oldRefundAmount = (isUpdatingRefund()) ? this.oldRefundRecords[index].npe01__Payment_Amount__c : 0;
+       return this.refundRecords[index].npe01__Payment_Amount__c - oldRefundAmount;
+    }
+
+    private Boolean isUpdatingRefund() {
+        return !this.oldRefundRecords.isEmpty();
     }
 
     private void convertFixedAmountAllocationsToPercentage(List<Allocation__c> allocations) {
@@ -394,14 +394,15 @@ public inherited sharing class PMT_RefundService {
         Double percentage = 0.0;
         for (Allocation__c allocation : allocations) {
             if (allocation.Percent__c == null) {
-                Decimal calculatedPercentage = allocation.Amount__c / oppAmount * 100;
-                allocation.Percent__c = calculatedPercentage.setScale(2, RoundingMode.HALF_UP);
+                allocation.Percent__c = allocation.Amount__c / oppAmount * 100;
                 toUpdate.add(allocation);
             }
 
             percentage += allocation.Percent__c;
         }
 
+        //There is a edge case where the total percentage will go over 100%. In this rare case,
+        //the first adjusted allocation percentage will be deduct to match 100%
         if (percentage > 100) {
             toUpdate[0].Percent__c = toUpdate[0].Percent__c - (percentage - 100);
         }
