@@ -10,6 +10,7 @@ class ElevateTokenizeabledGift {
         this.currencyCode = CURRENCY;
         this.paymentMethodToken = null;
         this.schedule = schedule;
+        this.gatewayOverride = null;
     }
 
     async tokenize(sections) {

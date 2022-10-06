@@ -60,7 +60,7 @@ public class ElevateBatchServiceValidRequest extends ElevateBatchService {
     }
 
     public override ElevateBatchItem addToElevateBatch(ElevateCreateBatchItemRequestDTO createBatchItemRequestDTO,
-                                                       String elevateBatchId, String gatewayOverride) {
+                                                       String elevateBatchId) {
         ElevateBatchItemCreateResponse giftResponse;
 
         if (batchItemType == ElevateBatchItemType.ONE_TIME) {

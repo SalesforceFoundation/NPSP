@@ -22,8 +22,7 @@ class ElevateBatch {
             }
 
             return await apexAddToElevateBatch({batchItemRequestDTO: tokenizedGift,
-                                                elevateBatchId: this.elevateBatchId,
-                                                gatewayOverride: GeGatewaySettings.getDecryptedGatewayId()}
+                                                       elevateBatchId: this.elevateBatchId}
             );
         } catch (exception) {
             if (retryOnFailure) {

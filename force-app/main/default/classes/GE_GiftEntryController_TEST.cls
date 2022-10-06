@@ -183,7 +183,7 @@ public with sharing class GE_GiftEntryController_TEST {
             String.valueOf(npe03__Recurring_Donation__c.StartDate__c) => String.valueOf(Date.today())
         };
         Test.startTest();
-            ElevateCreateBatchItemRequest request = new ElevateBatchService().buildBatchItemRequestFrom(dto, null);
+            ElevateCreateBatchItemRequest request = new ElevateBatchService().buildBatchItemRequestFrom(dto);
         Test.stopTest();
 
         System.assertEquals(ElevateBatchItemType.COMMITMENT, request.batchItemType, 'The request batch item type ' +
@@ -232,7 +232,7 @@ public with sharing class GE_GiftEntryController_TEST {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
         Test.startTest();
-        ElevateCreateBatchItemRequest request = new ElevateBatchService().buildBatchItemRequestFrom(dto, null);
+        ElevateCreateBatchItemRequest request = new ElevateBatchService().buildBatchItemRequestFrom(dto);
         Test.stopTest();
 
         System.assertEquals(ElevateBatchItemType.ONE_TIME, request.batchItemType, 'The request batch item type ' +
@@ -253,11 +253,12 @@ public with sharing class GE_GiftEntryController_TEST {
         dto.lastName = 'donor';
         dto.currencyCode = 'USD';
         dto.paymentMethodToken = '12345';
+        dto.gatewayOverride = gatewayOverride;
 
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
         Test.startTest();
-        ElevateCreateBatchItemRequest request = new ElevateBatchService().buildBatchItemRequestFrom(dto, gatewayOverride);
+        ElevateCreateBatchItemRequest request = new ElevateBatchService().buildBatchItemRequestFrom(dto);
         Test.stopTest();
 
         System.assertEquals(ElevateBatchItemType.ONE_TIME, request.batchItemType, 'The request batch item type ' +
@@ -280,7 +281,7 @@ public with sharing class GE_GiftEntryController_TEST {
         Test.startTest();
             try {
                 elevateBatchItem = GE_GiftEntryController.addToElevateBatch(new ElevateCreateBatchItemRequestDTO(),
-                        'test-valid-id', null);
+                        'test-valid-id');
             } catch (AuraHandledException ex) {
                 auraException = ex;
             }
@@ -305,7 +306,7 @@ public with sharing class GE_GiftEntryController_TEST {
         Test.startTest();
         try {
             elevateBatchItem = GE_GiftEntryController.addToElevateBatch(new ElevateCreateBatchItemRequestDTO(),
-                    'test-valid-id', null);
+                    'test-valid-id');
         } catch (AuraHandledException ex) {
             auraException = ex;
         }
@@ -330,7 +331,7 @@ ElevateBatchItemType.ONE_TIME, TEST_PAYMENT_METHOD_CARD);
         Test.startTest();
             try {
                 elevateBatchItem = GE_GiftEntryController.addToElevateBatch(new ElevateCreateBatchItemRequestDTO(),
-                    'test-valid-id', null);
+                    'test-valid-id');
             } catch (AuraHandledException ex) {
                 auraException = ex;
             }
@@ -355,7 +356,7 @@ ElevateBatchItemType.ONE_TIME, TEST_PAYMENT_METHOD_CARD);
         Test.startTest();
         try {
             elevateBatchItem = GE_GiftEntryController.addToElevateBatch(new ElevateCreateBatchItemRequestDTO(),
-                    'test-valid-id', null);
+                    'test-valid-id');
         } catch (AuraHandledException ex) {
             auraException = ex;
         }
@@ -399,7 +400,7 @@ ElevateBatchItemType.ONE_TIME, TEST_PAYMENT_METHOD_CARD);
 
         Test.startTest();
         try {
-            GE_GiftEntryController.addToElevateBatch(new ElevateCreateBatchItemRequestDTO(), 'test-valid-group-id', null);
+            GE_GiftEntryController.addToElevateBatch(new ElevateCreateBatchItemRequestDTO(), 'test-valid-group-id');
         } catch (AuraHandledException ex) {
             auraException = ex;
         }

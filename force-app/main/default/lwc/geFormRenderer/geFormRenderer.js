@@ -543,11 +543,13 @@ export default class GeFormRenderer extends LightningElement{
             }
 
             if (!this.isSingleGiftEntry) {
-                GeGatewaySettings.initDecryptedElevateSettings(formTemplate.elevateSettings);
+                if (Settings.isElevateCustomer) {
+                    GeGatewaySettings.initDecryptedElevateSettings(formTemplate.elevateSettings);
+                }
                 this.sections = this.prepareFormForBatchMode(formTemplate.layout.sections);
                 this.dispatchEvent(new CustomEvent('sectionsretrieved'));
             }
-            else {
+            else if (Settings.isElevateCustomer) {
                 GeGatewaySettings.clearDecryptedElevateSettings();
             }
         }
@@ -862,6 +864,7 @@ export default class GeFormRenderer extends LightningElement{
             let tokenizedGift = null;
             try {
                 if (this.shouldTokenizeCard()) {
+                    // TODO: Should only get gateway override if gateway assignment enabled...
                     tokenizedGift = new ElevateTokenizeableGift(
                         this.cardholderNames,
                         getCurrencyLowestCommonDenominator(
