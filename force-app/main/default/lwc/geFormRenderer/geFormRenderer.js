@@ -96,8 +96,6 @@ import DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_YEAR
     from '@salesforce/schema/DataImport__c.Recurring_Donation_Card_Expiration_Year__c';
 import DATA_IMPORT_RECURRING_DONATION_CARD_LAST_4
     from '@salesforce/schema/DataImport__c.Recurring_Donation_Card_Last_4__c';
-import DATA_IMPORT_RECURRING_DONATION_STATUS
-    from '@salesforce/schema/DataImport__c.Recurring_Donation_Status__c';
 
 import DATA_IMPORT_ADDITIONAL_OBJECT_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c'
 import DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.Account1Imported__c';
@@ -189,6 +187,7 @@ export default class GeFormRenderer extends LightningElement{
     @api pageLevelErrorMessageList = [];
     @api batchCurrencyIsoCode;
     @api isElevateCustomer = false;
+    @api saveDisabled = false;
 
     @track isPermissionError = false;
     @track permissionErrorTitle;
@@ -1380,7 +1379,8 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     get isUpdateActionDisabled() {
-        return this.getFieldValueFromFormState(STATUS_FIELD) === 'Imported';
+        return this.getFieldValueFromFormState(STATUS_FIELD) === 'Imported' ||
+               this.saveDisabled;
     }
 
     get cardholderNames() {

@@ -60,8 +60,16 @@ public with sharing class ElevateBatch {
                 elevateBatchId());
     }
 
-    public ElevateBatchItem remove(String elevateTransactionId) {
-        return elevateBatchService.sendRemoveRequest(elevateTransactionId, elevateBatchId());
+    public ElevateBatchItem remove(String elevateBatchItemId) {
+        UTIL_Http.Response removeResponse = elevateBatchService.sendRemoveRequest(
+            elevateBatchItemId, elevateBatchId());
+        elevateBatchService.handleRemoveResponse(removeResponse);
+
+        ElevateBatchItem batchItem = new ElevateBatchItem();
+        batchItem.id = elevateBatchItemId;
+        batchItem.elevateBatchId = elevateBatchId;
+
+        return batchItem;
     }
 
     public String elevateBatchId() {
