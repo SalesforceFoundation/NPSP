@@ -284,10 +284,8 @@ public with sharing class RD2_PauseForm_CTRL {
     private static void validatePause(PauseData pause) {
         if (isPauseRemoved(pause)) return;
 
-        Date nextInstallmentDate = scheduleService.getNextDonationDate(getRecurringDonation(pause.rdId).getSObject());
-
-        if (nextInstallmentDate.addDays(-1).isSameDay(currentDate)
-            || nextInstallmentDate.isSameDay(currentDate)) {
+        if (pause.startDate.addDays(-1).isSameDay(currentDate)
+            || pause.startDate.isSameDay(currentDate)) {
             throw new PauseException(System.Label.RD2_ElevatePauseInstallmentDateErrorMessage);
         }
     }
