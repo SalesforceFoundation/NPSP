@@ -134,17 +134,14 @@ public with sharing class PMT_RefundController {
             return;
         }
 
-        refundService.processAllocations();
-        refundService.updateParentOpportunity(originalPayment, refundAmount);
+        refundService.insertRefunds();
 
-        refundService.processDML();
-
-        ERR_Handler.Errors errors = refundService.getErrors();
-        if (!errors.errorRecords.isEmpty()) {
-            handleError(refundView, errors.errorRecords[0].Full_Message__c);
-        } else {
+        List<ErrorRecord> errors = refundService.getErrors();
+        if (errors == null || errors.isEmpty()) {
             refundView.redirectToPaymentId = refundService.getRefundRecords()[0].Id;
             refundView.isSuccess = true;
+        } else {
+            handleError(refundView, errors[0].getFirstError());
         }
     }
 

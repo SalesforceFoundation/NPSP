@@ -80,6 +80,17 @@ public inherited sharing class PMT_RefundService {
     }
 
     @TestVisible
+    private OpportunitySelector opportunitySelector {
+        get {
+            if (opportunitySelector == null) {
+                opportunitySelector = new OpportunitySelector();
+            }
+            return opportunitySelector;
+        }
+        set;
+    }
+
+    @TestVisible
     private List<npe01__OppPayment__c> originalPayments {
         get {
             if (originalPayments == null && originalPaymentIds != null) {
@@ -119,10 +130,11 @@ public inherited sharing class PMT_RefundService {
 
 
     private List<npe01__OppPayment__c> refundRecords;
+    private List<npe01__OppPayment__c> oldRefundRecords;
     @TestVisible
     private Map<Id, Opportunity> opportunityMap;
-    private List<Allocation__c> allocationsToUpdate;
-    private ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
+    private List<Allocation__c> allocationsToUpdate = new List<Allocation__c>();
+    private Map<Id, ErrorRecord> paymentIdToErrorRecord = new Map<Id, ErrorRecord>();
 
     @TestVisible
     private static PS_IntegrationServiceConfig config {
@@ -148,8 +160,14 @@ public inherited sharing class PMT_RefundService {
         this.originalPaymentIds = originalPaymentIds;
         return this;
     }
+
     public PMT_RefundService withRefundRecords(List<npe01__OppPayment__c> refundRecords) {
         this.refundRecords = refundRecords;
+        return this;
+    }
+
+        public PMT_RefundService withOldRefundRecords(List<npe01__OppPayment__c> oldRefundRecords) {
+        this.oldRefundRecords = oldRefundRecords;
         return this;
     }
 
@@ -157,8 +175,8 @@ public inherited sharing class PMT_RefundService {
         return this.refundRecords;
     }
 
-    public ERR_Handler.Errors getErrors() {
-        return errorResult;
+    public List<ErrorRecord> getErrors() {
+        return this.paymentIdToErrorRecord.values();
     }
 
     public RefundInfo getRefundInfoFor(Id originalPaymentId) {
@@ -205,47 +223,6 @@ public inherited sharing class PMT_RefundService {
         return response;
     }
 
-    public void processDML() {
-        Savepoint sp = Database.setSavepoint();
-        try {
-            if (!this.refundRecords.isEmpty()) {
-                insert this.refundRecords;
-            }
-            if (!this.allocationsToUpdate.isEmpty()) {
-                update this.allocationsToUpdate;
-            }
-            if (!this.opportunityMap.isEmpty()) {
-                update this.opportunityMap.values();
-            }
-        } catch (DmlException ex) {
-            Database.rollback(sp);
-            processError(ex);
-        }
-    }
-
-    private Map<Id, RefundInfo> getOriginalPaymentWithRefundInfo(List<npe01__OppPayment__c> originalPayments) {
-        Map<Id, RefundInfo> paymentIdToRefundabInfo = new Map<Id, RefundInfo>();
-
-        for (npe01__OppPayment__c originalPayment : originalPayments) {
-            RefundInfo refundInfo = new refundInfo(originalPayment);
-
-            paymentIdToRefundabInfo.put(originalPayment.Id, refundInfo);
-        }
-
-        return paymentIdToRefundabInfo;
-    }
-
-    private void processError(DMLException ex) {
-        if (ex == null) {
-            return;
-        }
-        ERR_Handler.Errors dmlErrors = ERR_Handler.getErrorsOnly(ex, ERR_Handler_API.Context.PMT);
-
-        errorResult.errorRecords.addAll(
-            dmlErrors.errorRecords
-        );
-    }
-
     public npe01__OppPayment__c buildRefundRecord(npe01__OppPayment__c originalPayment, Decimal refundAmount) {
         refundAmount = (refundAmount == null) ? originalPayment.npe01__Payment_Amount__c : refundAmount; 
         npe01__OppPayment__c refund = new npe01__OppPayment__c(
@@ -269,26 +246,95 @@ public inherited sharing class PMT_RefundService {
         return refund;
     }
 
-    public void updateParentOpportunity(npe01__OppPayment__c originalPayment, Decimal refundAmount) {
-        if (this.opportunityMap == null) {
-            this.opportunityMap = new Map<Id,Opportunity>();
-        }
-        Opportunity opportunity = this.opportunityMap.get(originalPayment.npe01__Opportunity__c);
-        if (opportunity == null) {
-            opportunity = new Opportunity(
-                Id = originalPayment.npe01__Opportunity__c,
-                Amount = (originalPayment.npe01__Opportunity__r.Amount == null)
-                    ? 0
-                    : originalPayment.npe01__Opportunity__r.Amount
-            );
-        }
-
-        opportunity.Amount = opportunity.Amount - refundAmount;
-
-        this.opportunityMap.put(opportunity.Id, opportunity);
+    public PMT_RefundService adjustAllocationsAndOpportunities() {
+        processAllocations();
+        processOpportunities();
+        return this;
     }
 
-    public void processAllocations() {
+    public void insertRefunds() {
+        List<Database.SaveResult> saveResults = Database.insert(this.refundRecords, false);
+        for (Integer i = 0; i < this.refundRecords.size(); i++) {
+            if (!saveResults[i].isSuccess()) {
+                processError(
+                    new List<npe01__OppPayment__c>{this.refundRecords[i]},
+                    saveResults[i].getErrors()[0].getMessage()
+                );
+            }
+        }
+    }
+
+    public void updateAllocationsAndOpportunities() {
+        List<Database.SaveResult> allocationResults;
+        List<Database.SaveResult> opportunityResults;
+
+        if (!this.allocationsToUpdate.isEmpty()) {
+            allocationResults = Database.update(this.allocationsToUpdate, false);
+        }
+        if (!this.opportunityMap.isEmpty()) {
+            opportunityResults = Database.update(this.opportunityMap.values(), false);
+        }
+
+        Map<Id, List<npe01__OppPayment__c>> refundsGroupByOpps = groupRefundsByOpp();
+
+        for (Integer i = 0; i < this.allocationsToUpdate.size(); i++) {
+            if (!allocationResults[i].isSuccess()) {
+                processError(
+                    refundsGroupByOpps.get(this.allocationsToUpdate[i].Opportunity__c),
+                    allocationResults[i].getErrors()[0].getMessage()
+                );
+            }
+        }
+
+        for (Integer i = 0; i < this.opportunityMap.values().size(); i++) {
+            if (!opportunityResults[i].isSuccess()) {
+                processError(
+                    refundsGroupByOpps.get(this.opportunityMap.values()[i].Id),
+                    opportunityResults[i].getErrors()[0].getMessage()
+                );
+            }
+        }
+    }
+
+    private void processError(List<npe01__oppPayment__c> refunds, String errorMessage) {
+        for (npe01__OppPayment__c refund : refunds ){
+            ErrorRecord error = this.paymentIdToErrorRecord.get(refund.Id);
+            if (error == null) {
+                error = new ErrorRecord(refund);
+                this.paymentIdToErrorRecord.put(refund.Id, error);
+            }
+            error.addError(errorMessage);
+        }
+    }
+
+    private Map<Id, List<npe01__OppPayment__c>> groupRefundsByOpp() {
+        Map<Id, List<npe01__OppPayment__c>> refundsGroupByOpp = new Map<Id, List<npe01__OppPayment__c>>();
+        for (npe01__OppPayment__c refund : this.refundRecords) {
+            List<npe01__OppPayment__c> oppRefunds = refundsGroupByOpp.get(refund.npe01__Opportunity__c);
+
+            if (oppRefunds == null) {
+                oppRefunds = new List<npe01__OppPayment__c>();
+                refundsGroupByOpp.put(refund.npe01__Opportunity__c, oppRefunds);
+            }
+            oppRefunds.add(refund);
+        }
+
+        return refundsGroupByOpp;
+    }
+
+    private Map<Id, RefundInfo> getOriginalPaymentWithRefundInfo(List<npe01__OppPayment__c> originalPayments) {
+        Map<Id, RefundInfo> paymentIdToRefundabInfo = new Map<Id, RefundInfo>();
+
+        for (npe01__OppPayment__c originalPayment : originalPayments) {
+            RefundInfo refundInfo = new refundInfo(originalPayment);
+
+            paymentIdToRefundabInfo.put(originalPayment.Id, refundInfo);
+        }
+
+        return paymentIdToRefundabInfo;
+    }
+
+    private void processAllocations() {
         Set<Id> partialRefundOppIds = new Set<Id>();
         for (npe01__OppPayment__c refund : this.refundRecords) {
             if (refund.DebitType__c == PARTIAL_REFUND) {
@@ -297,7 +343,6 @@ public inherited sharing class PMT_RefundService {
         }
         List<Allocation__c> allocations = allocationSelector.getOpportunityAllocations(partialRefundOppIds);
         Map<Id, List<Allocation__c>> allocationsGroupByOpp = new Map<Id, List<Allocation__c>>();
-
         for (Allocation__c allocation : allocations) {
             if (allocationSettings.Default_Allocations_Enabled__c && allocation.General_Accounting_Unit__c == allocationSettings.default__c) {
                 continue;
@@ -318,12 +363,27 @@ public inherited sharing class PMT_RefundService {
         }
     }
 
+    private void processOpportunities() {
+        this.opportunityMap = new Map<Id, Opportunity>(
+            opportunitySelector.getRefundOpportunities(
+                UTIL_SObject.extractId(this.refundRecords, npe01__OppPayment__c.npe01__Opportunity__c))
+        );
+
+        for (Integer i = 0; i < this.refundRecords.size(); i++) {
+            Opportunity parentOpp = this.opportunityMap.get(this.refundRecords[i].npe01__Opportunity__c);
+            parentOpp.Amount = (parentOpp.Amount == null) ? 0 : parentOpp.Amount;
+            parentOpp.Amount += this.refundRecords[i].npe01__Payment_Amount__c;
+
+            if (this.oldRefundRecords != null && !this.oldRefundRecords.isEmpty()) {
+                parentOpp.Amount -= this.oldRefundRecords[i].npe01__Payment_Amount__c;
+            }
+        }
+
+    }
+
     private void convertFixedAmountAllocationsToPercentage(List<Allocation__c> allocations) {
         if (allocations == null || allocations.isEmpty()) {
             return;
-        }
-        if (this.allocationsToUpdate == null) {
-            this.allocationsToUpdate = new List<Allocation__c>();
         }
 
         List<Allocation__c> toUpdate = new List<Allocation__c>();
