@@ -29,9 +29,7 @@
             </h3>
             <div>
                 <ul>
-                    <li><a href="https://powerofus.force.com/NPSP_Documentation" target="_blank" >{!$Label.stgHelpNPSPDoc}</a></li>
                     <li><a href="https://developer.salesforce.com/trailhead/trail/nonprofit_fundraising" target="_blank" >{!$Label.stgNPSPWorkbook}</a></li>
-                    <li><a href="https://powerofus.force.com/NPSP_Import_Data" target="_blank" >{!$Label.stgNPSPGuideImportData}</a></li>
                 </ul>
             </div>
         </div>
