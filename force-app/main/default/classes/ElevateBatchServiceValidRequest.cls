@@ -76,6 +76,17 @@ public class ElevateBatchServiceValidRequest extends ElevateBatchService {
         return new ElevateBatch(elevateBatchResponse);
     }
 
+    public override UTIL_Http.Response sendRemoveRequest(String elevatePaymentId, String elevateBatchId) {
+        return (UTIL_Http.Response) JSON.deserialize(removeBatchItemSuccessResponse(), UTIL_Http.Response.class);
+    }
+
+    private static String removeBatchItemSuccessResponse() {
+        return '{\n' +
+                '"statusCode": "204",\n' +
+                '"status": "Remove successful"\n' +
+                '}';
+    }
+
     private static String oneTimeCardSuccessResponse() {
         return '{\n' +
                 '  "batchItemType": "ONE_TIME",\n' +
