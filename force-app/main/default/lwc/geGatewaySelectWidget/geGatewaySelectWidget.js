@@ -66,7 +66,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
 
     async init() {
         try {
-            let gatewayAssignmentSettings = JSON.parse(await getGatewayAssignmentSettings());
+            const gatewayAssignmentSettings = JSON.parse(await getGatewayAssignmentSettings());
 
             this._defaultTemplateId = gatewayAssignmentSettings.defaultTemplateId;
             this.isGatewayAssignmentEnabled = gatewayAssignmentSettings.gatewayAssignmentEnabled;
@@ -100,7 +100,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
     async connectedCallback() {
         await this.init();
 
-        if (this._widgetMode !== PAYMENT_METHOD_MODE) {
+        if (this.shouldShowGateways) {
             await this.getElevateGateways();
         }
         else {
@@ -342,7 +342,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
 
     async updateElevateSettings() {
         if (this._widgetMode !== GATEWAY_MANAGEMENT_MODE) {
-            let elevateSettings = {
+            const elevateSettings = {
                 uniqueKey: this.isGatewayAssignmentEnabled ?
                     await encryptGatewayId({gatewayId: this.selectedGateway}) : null,
                 isACHEnabled: this.isACHEnabled,
