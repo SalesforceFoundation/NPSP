@@ -31,6 +31,7 @@ public with sharing class ElevateBatchItem {
     @AuraEnabled public String id {get; set;}
     @AuraEnabled public DateTime authExpiration {get; set;}
     @AuraEnabled public String status {get; set;}
+    @AuraEnabled public String statusReason {get; set;}
     @AuraEnabled public String paymentMethod {get; set;}
     @AuraEnabled public String originalTransactionId {get; set;}
     @AuraEnabled public String elevateBatchId {get; set;}
@@ -48,14 +49,6 @@ public with sharing class ElevateBatchItem {
     @AuraEnabled public String batchItemType {get; set;}
     @AuraEnabled public Integer version {get; set;}
 
-    private final Map<String,String> RD_STATUSES_BY_COMMITMENT_STATUS = new Map<String,String>{
-        'ACTIVE' => 'Active',
-        'INACTIVE' => 'Active',
-        'NEW' => 'Active',
-        'FAILING' => 'Active',
-        'LAPSED' => 'Lapsed'
-    };
-
     public ElevateBatchItem(ElevateBatchItemCreateResponse createBatchItemResponse) {
         this.batchItemType = createBatchItemResponse.batchItemType().name();
         this.id = createBatchItemResponse.id();
@@ -67,23 +60,17 @@ public with sharing class ElevateBatchItem {
         this.originalTransactionId = createBatchItemResponse.originalTransactionId();
         this.declineReason = createBatchItemResponse.declineReason();
         this.cardLast4 = createBatchItemResponse.last4();
+        this.status = createBatchItemResponse.status();
+        this.statusReason = createBatchItemResponse.statusReason();
         this.cardNetwork = createBatchItemResponse.brand();
         this.cardExpirationMonth = createBatchItemResponse.expirationMonth();
         this.cardExpirationYear = createBatchItemResponse.expirationYear();
         this.gatewayId = createBatchItemResponse.gatewayId();
         this.createdAt = createBatchItemResponse.createdAt();
         this.version = createBatchItemResponse.version();
-
-        this.status = convertStatus(createBatchItemResponse);
     }
 
     public ElevateBatchItem() {}
-
-    private String convertStatus(ElevateBatchItemCreateResponse createBatchItemResponse) {
-        return (batchItemType == ElevateBatchItemType.COMMITMENT.name()) ?
-                RD_STATUSES_BY_COMMITMENT_STATUS.get(createBatchItemResponse.status()) :
-                createBatchItemResponse.status();
-    }
 
     public String elevateBatchId() {
         return elevateBatchId;
@@ -126,9 +113,6 @@ public with sharing class ElevateBatchItem {
     }
 
     public String status() {
-        if (batchItemType == ElevateBatchItemType.COMMITMENT.name()) {
-            return RD_STATUSES_BY_COMMITMENT_STATUS.get(status);
-        }
         return status;
     }
 

@@ -4,6 +4,8 @@ import storeFormTemplate from '@salesforce/apex/GE_GiftEntryController.storeForm
 import retrieveFormTemplateById from '@salesforce/apex/GE_GiftEntryController.retrieveFormTemplateById';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
+import GeSettings from 'c/geSettings';
+import GeGatewaySettings from 'c/geGatewaySettings';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import {
     dispatch,
@@ -115,7 +117,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         name: null,
         description: null,
         batchHeaderFields: [],
-        layout: null
+        layout: null,
+        elevateSettings: null
     };
     formLayout = {
         fieldMappingSetDevName: null,
@@ -329,6 +332,10 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 [] : formTemplate.defaultBatchTableColumns;
 
             this.catalogFieldsForTemplateEdit();
+        }
+
+        if (GeSettings.isElevateCustomer()) {
+            GeGatewaySettings.setElevateSettings(this.formTemplate.elevateSettings, this.formTemplateRecordId);
         }
 
         this.clearRecordIdOnClone(queryParameters);
@@ -1375,12 +1382,15 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             this.formTemplate.defaultBatchTableColumns
                 = this.selectedBatchTableColumnOptions;
         }
+        if (GeSettings.isElevateCustomer()) {
+            this.formTemplate.elevateSettings = GeGatewaySettings.getElevateSettings();
+        }
 
         // TODO: Currently hardcoded as we're not providing a way to
         // create custom migrated field mapping sets yet.
         this.formTemplate.layout.fieldMappingSetDevName
             = DEFAULT_FIELD_MAPPING_SET;
-       this.stripPermissionsData();
+        this.stripPermissionsData();
 
         return  {
             id: this.formTemplateRecordId || null,

@@ -49,6 +49,36 @@ public with sharing class PMT_RefundController_TEST {
     }
 
     @IsTest
+    private static void verifyCalloutIsMadeToRetrieveElevateRefundInformation() {
+        Decimal refundAmount = 984.21;
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
+
+        npe01__OppPayment__c payment = getElevatePaymentRecord();
+        PMT_RefundService refundService = new PMT_RefundService()
+        .withOriginalPayments(new List<npe01__OppPayment__c>{payment});
+
+        refundService.originalPaymentWithRefunds.put(
+            payment.Id, new PMT_RefundService.RefundInfo(payment)
+        );
+        PMT_RefundController.RefundService = refundService;
+        Map<String, Object> successResponseBody = new Map<String, Object> {
+            'remainingBalance' => refundAmount * PS_CommitmentRequest.DEFAULT_CURRENCY_MULTIPLIER
+        };
+        UTIL_Http_TEST.CalloutMock calloutMock = UTIL_Http_TEST.mockSuccessCalloutResponse(JSON.serialize(successResponseBody));
+
+        Test.startTest();
+        PMT_RefundController.RefundView refundView = PMT_RefundController.getInitialView(payment.Id);
+        Test.stopTest();
+
+        System.assertEquals(1, calloutMock.getCalloutCounter(),
+            '1 callout should be made when the refund callout is made');
+        System.assertEquals(
+            refundAmount,
+            refundView.remainingBalance,
+            'Remaining Balance should be stored into refund view and is converted to displayed format');
+    }
+
+    @IsTest
     private static void verifyRefundCalloutIsMadeWhenPaymentIsAnElevateRecord() {
         PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
 
