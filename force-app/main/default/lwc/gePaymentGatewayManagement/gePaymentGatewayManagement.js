@@ -45,8 +45,6 @@ import psGatewayManagementHelp from '@salesforce/label/c.psGatewayManagementHelp
 import setGatewayId from '@salesforce/apex/PS_GatewayManagement.setGatewayId';
 import setGatewayAssignmentEnabled from '@salesforce/apex/PS_GatewayManagement.setGatewayAssignmentEnabled';
 import getGatewayManagementSettings from '@salesforce/apex/PS_GatewayManagement.getGatewayManagementSettings';
-import checkForElevateCustomer from '@salesforce/apex/PS_GatewayManagement.isElevateCustomer';
-import checkForSystemAdmin from '@salesforce/apex/PS_GatewayManagement.isSystemAdmin';
 import { fireEvent, registerListener } from 'c/pubsubNoPageRef';
 
 const GATEWAY_MANAGEMENT_MODE = 'MANAGEMENT';
@@ -65,12 +63,11 @@ export default class GePaymentGatewayManagement extends LightningElement {
 
     parentContext = GATEWAY_MANAGEMENT_MODE;
 
-    CUSTOM_LABELS = { messageLoading, insufficientPermissions,
-        commonAdminPermissionErrorMessage, gatewaySelectionLabel };
     isGatewayAssignmentEnabled;
 
     CUSTOM_LABELS = {
         commonAdminPermissionErrorMessage,
+        gatewaySelectionLabel,
         insufficientPermissions,
         messageLoading,
         psEnableGatewayAssignment,
@@ -185,7 +182,6 @@ export default class GePaymentGatewayManagement extends LightningElement {
 
         try {
             await setGatewayAssignmentEnabled({ gatewayAssignmentEnabled: gatewayAssignmentEnabled.checked});
-            this.isSuccess = true;
             this.showSpinner = false;
         } catch(ex) {
             this.errorMessage = buildErrorMessage(ex);

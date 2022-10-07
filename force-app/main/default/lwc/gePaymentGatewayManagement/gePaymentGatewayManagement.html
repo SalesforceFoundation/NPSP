@@ -38,7 +38,7 @@
     </template>
     <template if:true={hasAccess}>
         <template if:true={isSuccess}>
-            <div class="slds-var-m-bottom_medium">
+            <div class="slds-m-bottom_medium">
                 <c-util-alert-banner theme="success"
                                      icon="utility:success"
                                      size="small"
@@ -48,7 +48,7 @@
             </div>
         </template>
         <template if:true={isError}>
-            <div class="slds-var-m-bottom_medium">
+            <div class="slds-m-bottom_medium">
                 <c-util-alert-banner theme="error"
                                      icon="utility:error"
                                      size="small"
@@ -66,7 +66,14 @@
                 <p class='loading-text slds-text-heading_medium'>{loadingText}</p>
             </div>
             <lightning-layout-item size="12">
-                <h1 class="slds-text-heading_medium">Elevate Gateway Management</h1>
+                <h1 class="slds-text-heading_medium slds-p-top-medium">Elevate Gateway Management</h1>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" class="slds-p-top_large">
+                <h3 class="slds-section__title slds-theme_shade">
+                    <span class="slds-section-title_divider" title="psGatewayIDHeader">
+                        {CUSTOM_LABELS.psGatewayIDHeader}
+                    </span>
+                </h3>
             </lightning-layout-item>
             <lightning-layout-item size="12">
                 <p class="slds-text-body_regular slds-var-p-vertical_medium">
@@ -74,14 +81,14 @@
                 </p>
             </lightning-layout-item>
 
-            <lightning-layout-item size='12' class='slds-var-p-left_small slds-p-top_none slds-var-p-bottom_large'>
+            <lightning-layout-item size='12' class='slds-p-top_none slds-var-p-bottom_large'>
                 <c-ge-gateway-select-widget data-id='gatewaySelectWidget'
                                             parent-context={parentContext}>
                 </c-ge-gateway-select-widget>
             </lightning-layout-item>
 
             <template if:true={isReadOnly}>
-                <lightning-layout-item size="12" class="slds-var-p-left_small slds-text-align_left">
+                <lightning-layout-item size="12" class="slds-text-align_left">
                     <lightning-button
                             label="Edit"
                             data-id="editGatewayButton"
@@ -90,17 +97,16 @@
                     </lightning-button>
                 </lightning-layout-item>
             </template>
-            <lightning-layout-item size="12" class="slds-var-p-left_small slds-text-align_left">
+
+            <lightning-layout-item size="4" class="slds-var-p-right_x-large">
                 <template if:false={isReadOnly}>
                     <lightning-button-group>
-                        <!-- Temporary Hardcoded Text until this functionality is moved out of NPSP entirely -->
                         <lightning-button
                                 label="Save"
                                 variant="brand"
                                 onclick={handleSave}
                                 data-qa-locator="button gateway management save">
                         </lightning-button>
-                        <!-- Temporary Hardcoded Text until this functionality is moved out of NPSP entirely -->
                         <lightning-button label="Cancel"
                                           onclick={handleCancel}
                                           data-qa-locator="button gateway management cancel">
@@ -108,20 +114,20 @@
                     </lightning-button-group>
                 </template>
             </lightning-layout-item>
-            <lightning-layout-item size="12" class="slds-var-p-left_x-large slds-var-p-right_x-large">
+            <lightning-layout-item size="12" class="slds-var-p-top_xx-large">
                 <h3 class="slds-section__title slds-theme_shade">
                     <span class="slds-section-title_divider" title="psEnableGatewayAssignment">
                         {CUSTOM_LABELS.psEnableGatewayAssignment}
                     </span>
                 </h3>
             </lightning-layout-item>
-            <lightning-layout-item size="12" class="slds-var-p-left_x-large slds-var-p-right_x-large">
+            <lightning-layout-item size="12" class="slds-var-p-right_x-large">
                 <p class="slds-text-body_regular slds-p-vertical_medium">
                     {CUSTOM_LABELS.psEnableGatewayAssignmentHelp}
                 </p>
             </lightning-layout-item>
-            <lightning-layout-item size="12" class="slds-var-p-left_x-large slds-var-p-right_x-large">
-                <lightning-input type="toggle" disabled={isReadOnly} data-id="enableGatewayAssignment"
+            <lightning-layout-item size="12" class="slds-var-p-right_x-large">
+                <lightning-input type="toggle" data-id="enableGatewayAssignment"
                     label={CUSTOM_LABELS.psEnableGatewayAssignment} onchange={handleToggle} checked={isGatewayAssignmentEnabled}
                     message-toggle-active="On" message-toggle-inactive="Off">
                 </lightning-input>
