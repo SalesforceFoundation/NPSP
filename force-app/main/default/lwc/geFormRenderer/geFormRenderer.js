@@ -980,6 +980,7 @@ export default class GeFormRenderer extends LightningElement{
                 this.loadingText = this.isCreditCardAuth(tokenizedGift) ? this.CUSTOM_LABELS.geAuthorizingCreditCard :
                     this.CUSTOM_LABELS.geTextSaving;
 
+                tokenizedGift.gatewayOverride = GeGatewaySettings.getDecryptedGatewayId();
                 elevateBatchItem = await this.currentElevateBatch.add(tokenizedGift);
 
                 if (elevateBatchItem.batchItemType === 'ONE_TIME') {
