@@ -140,6 +140,22 @@ public with sharing class GE_PaymentServices {
     }
 
     /**
+     * @description Returns salesforce org url
+     * @return String JSON of org URL
+     */
+    public String getOrgUrl() {
+        return System.Url.getOrgDomainURL().toExternalForm();
+    }
+
+    /**
+     * @description Returns salesforce base url
+     * @return String JSON of salesforce base URL
+     */
+    public String getSFBaseUrl() {
+        return System.Url.getSalesforceBaseURL().toExternalForm();
+    }
+
+    /**
      * @description Returns purchase request body
      * @param jsonRequestBody: JSON containing parameters for the purchase call request body
      * @return PurchaseCallBody
