@@ -211,14 +211,10 @@
             const siteBaseURL = '{!$Site.BaseUrl}';
             let orgUrl = '{!OrgUrl}';
             const sforceBaseUrl = '{!SFBaseUrl}';
-            console.log("orgURL", orgUrl);
-            console.log("sforceURL", sforceBaseUrl);
 
             if(sforceBaseUrl.includes("vf.force.com")){
-                orgUrl = orgUrl.replace(".my.", ".lightning.");
-                orgUrl = orgUrl.replace(".salesforce.", ".force.");
+                orgUrl = orgUrl.replace(".my.", ".lightning.").replace(".salesforce.", ".force.");
             }
-            console.log("post change", orgUrl)
             if (siteBaseURL.length > 0) {
                 return siteBaseURL;
             } else {
