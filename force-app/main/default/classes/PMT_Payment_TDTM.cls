@@ -331,7 +331,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         List<npe01__OppPayment__c> refunds = new List<npe01__OppPayment__c>();
         List<npe01__OppPayment__c> oldRefunds = new List<npe01__OppPayment__c>();
         for (Integer i = 0; i < newList.size(); i++) {
-            if (newList[i].npe01__Payment_Amount__c < 0 && String.isNotBlank(newList[i].Elevate_Payment_ID__c)) {
+            if (newList[i].npe01__Payment_Amount__c < 0 && String.isBlank(newList[i].Elevate_Payment_ID__c)) {
                 refunds.add(newList[i]);
                 if ( oldList != null) {
                     oldRefunds.add(oldList[i]);
