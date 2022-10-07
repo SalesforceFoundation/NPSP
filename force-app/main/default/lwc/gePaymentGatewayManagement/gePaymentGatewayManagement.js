@@ -34,6 +34,7 @@ import { isEmpty } from 'c/utilCommon';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import insufficientPermissions from '@salesforce/label/c.commonInsufficientPermissions';
 import commonAdminPermissionErrorMessage from '@salesforce/label/c.commonAdminPermissionErrorMessage';
+import gatewaySelectionLabel from '@salesforce/label/c.psGatewaySelectionLabel';
 
 import setGatewayId from '@salesforce/apex/PS_GatewayManagement.setGatewayId';
 import checkForElevateCustomer from '@salesforce/apex/PS_GatewayManagement.isElevateCustomer';
@@ -56,7 +57,8 @@ export default class GePaymentGatewayManagement extends LightningElement {
 
     parentContext = GATEWAY_MANAGEMENT_MODE;
 
-    CUSTOM_LABELS = { messageLoading, insufficientPermissions, commonAdminPermissionErrorMessage };
+    CUSTOM_LABELS = { messageLoading, insufficientPermissions, 
+        commonAdminPermissionErrorMessage, gatewaySelectionLabel };
 
     async connectedCallback() {
         try {
