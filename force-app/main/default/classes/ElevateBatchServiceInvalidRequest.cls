@@ -44,9 +44,9 @@ public class ElevateBatchServiceInvalidRequest extends ElevateBatchService {
         set;
     }
 
-    public override ElevateBatchItem addToElevateBatch(ElevateCreateBatchItemRequestDTO createBatchItemRequestDTO,
-                                                       String elevateBatchId) {
-        ElevateBatchItemCreateResponse giftResponse = ElevateBatchItemCreateResponse.parse(addToElevateBatchErrorResponse());
+    public override ElevateBatchItem addToElevateBatch(ElevateCreateBatchItemRequestDTO createBatchItemRequestDTO, String elevateBatchId) {
+        ElevateBatchItemCreateResponse giftResponse = ElevateBatchItemCreateResponse.parse(
+            elevateBatchErrorResponse());
         elevateBatchService.checkForBatchItemErrorsIn(giftResponse);
 
         return new ElevateBatchItem(giftResponse);
@@ -59,11 +59,22 @@ public class ElevateBatchServiceInvalidRequest extends ElevateBatchService {
         return new ElevateBatch();
     }
 
-    public String addToElevateBatchErrorResponse() {
+    public override UTIL_Http.Response sendRemoveRequest(String elevatePaymentId, String elevateBatchId) {
+        return (UTIL_Http.Response) JSON.deserialize(removeFromBatchErrorResponse(), UTIL_Http.Response.class);
+    }
+
+    private String removeFromBatchErrorResponse() {
+        return '{\n' +
+                '"statusCode": "400",\n' +
+                '"status": "Bad Request"\n' +
+                '}';
+    }
+
+    public String elevateBatchErrorResponse() {
         return '{\n' +
                 '  "errors": [\n' +
                 '    {\n' +
-                '      "message": "add to batch failed",\n' +
+                '      "message": "failure",\n' +
                 '      "failure_reason": "test_failure"\n' +
                 '    }\n' +
                 '  ]\n' +

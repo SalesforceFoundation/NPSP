@@ -108,6 +108,24 @@
                     </lightning-button-group>
                 </template>
             </lightning-layout-item>
+            <lightning-layout-item size="12" class="slds-var-p-left_x-large slds-var-p-right_x-large">
+                <h3 class="slds-section__title slds-theme_shade">
+                    <span class="slds-section-title_divider" title="psEnableGatewayAssignment">
+                        {CUSTOM_LABELS.psEnableGatewayAssignment}
+                    </span>
+                </h3>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" class="slds-var-p-left_x-large slds-var-p-right_x-large">
+                <p class="slds-text-body_regular slds-p-vertical_medium">
+                    {CUSTOM_LABELS.psEnableGatewayAssignmentHelp}
+                </p>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" class="slds-var-p-left_x-large slds-var-p-right_x-large">
+                <lightning-input type="toggle" disabled={isReadOnly} data-id="enableGatewayAssignment"
+                    label={CUSTOM_LABELS.psEnableGatewayAssignment} onchange={handleToggle} checked={isGatewayAssignmentEnabled}
+                    message-toggle-active="On" message-toggle-inactive="Off">
+                </lightning-input>
+            </lightning-layout-item>
         </lightning-layout>
     </template>
 </template>
