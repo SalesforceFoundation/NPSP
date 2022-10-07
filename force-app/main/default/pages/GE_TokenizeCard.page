@@ -13,7 +13,7 @@
     <script src="{!elevateSDKURL}"></script>
     <script>
         const sfdo = new sfdoPaymentsJsSdk();
-        let lightningOrigin = buildLightningOrigin();
+        const lightningOrigin = buildLightningOrigin();
         const DEFAULT_NAME_ON_CARD = '[Not Provided]';
         const postMessageType = 'post__npsp';
         const CREDIT_CARD = 'Credit Card';
