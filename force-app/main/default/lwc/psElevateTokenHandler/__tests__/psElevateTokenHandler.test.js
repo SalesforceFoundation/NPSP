@@ -108,17 +108,17 @@ describe('c-ps-Elevate-Token-Handler', () => {
 
    });
 
-   it('should create five non-namespaced visualforce origin urls', () => {
+   it('should create eight non-namespaced visualforce origin urls', () => {
       const vfURLS = buildVFUrls(mockDomainInfo(), 'c');
-      expect(vfURLS.length).toEqual(5);
+      expect(vfURLS.length).toEqual(8);
       vfURLS.forEach(url => {
          expect(url.value.includes('c')).toBe(true);
       })
    });
 
-   it('should create five namespaced visualforce origin urls', () => {
+   it('should create eight namespaced visualforce origin urls', () => {
       const vfURLS = buildVFUrls(mockDomainInfo(), 'npsp');
-      expect(vfURLS.length).toEqual(5);
+      expect(vfURLS.length).toEqual(8);
       vfURLS.forEach(url => {
          expect(url.value.includes('npsp')).toBe(true);
       })
@@ -168,9 +168,9 @@ describe('c-ps-Elevate-Token-Handler', () => {
 
    });
 
-   it('should create six non-namespaced visualforce origin urls on Experience Sites', () => {
+   it('should create nine non-namespaced visualforce origin urls on Experience Sites', () => {
       const vfURLS = buildVFUrls(mockDomainInfoExperienceSite(), 'c');
-      expect(vfURLS.length).toEqual(6);
+      expect(vfURLS.length).toEqual(9);
       vfURLS.forEach(url => {
          expect(url.value.includes('c')).toBe(true);
       })
