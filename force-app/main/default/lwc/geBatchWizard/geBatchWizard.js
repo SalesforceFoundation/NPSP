@@ -523,7 +523,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     }
 
     get gatewayNameMessage() {
-        if (this.gatewaySettings?.gatewayAssignmentEnabled) {
+        if (this.gatewaySettings?.gatewayAssignmentEnabled && this.selectedTemplateId) {
             let gatewayName = this.gatewayName ? this.gatewayName : this.gatewaySettings?.defaultGatewayName;
             return 'Payment Gateway: ' + gatewayName;
         }
