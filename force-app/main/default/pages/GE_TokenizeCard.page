@@ -13,7 +13,7 @@
     <script src="{!elevateSDKURL}"></script>
     <script>
         const sfdo = new sfdoPaymentsJsSdk();
-        const lightningOrigin = buildLightningOrigin();
+        let lightningOrigin = buildLightningOrigin();
         const DEFAULT_NAME_ON_CARD = '[Not Provided]';
         const postMessageType = 'post__npsp';
         const CREDIT_CARD = 'Credit Card';
@@ -208,15 +208,18 @@
         }
 
         function buildLightningOrigin() {
-            const hostname = window.location.hostname;
-            const arr = hostname.split(".");
-            let domain = arr[0].replace('--npsp', '');
-            domain = domain.replace('--c', '');
             const siteBaseURL = '{!$Site.BaseUrl}';
+            let orgUrl = '{!OrgUrl}';
+            const sforceBaseUrl = '{!SFBaseUrl}';
+
+            if(sforceBaseUrl.includes("vf.force.com")){
+                orgUrl = orgUrl.replace(".my.", ".lightning.");
+                orgUrl = orgUrl.replace(".salesforce.", ".force.");
+            }
             if (siteBaseURL.length > 0) {
                 return siteBaseURL;
             } else {
-                return `https://${domain}.lightning.force.com`;
+                return orgUrl;
             }
         }
 
