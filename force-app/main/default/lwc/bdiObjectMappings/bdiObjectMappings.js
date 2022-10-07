@@ -28,7 +28,6 @@ import bdiOMUIPageDescriptionPt3 from '@salesforce/label/c.bdiOMUIPageDescriptio
 import bdiOMUIViewFieldMappingsLabel from '@salesforce/label/c.bdiOMUIViewFieldMappingsLabel';
 import bgeActionDelete from '@salesforce/label/c.bgeActionDelete';
 import stgBtnEdit from '@salesforce/label/c.stgBtnEdit';
-import stgHelpAdvancedMapping3 from '@salesforce/label/c.stgHelpAdvancedMapping3';
 
 import bdiOMUILongDeployment from '@salesforce/label/c.bdiOMUILongDeployment';
 import bdiFMUILongDeploymentLink from '@salesforce/label/c.bdiFMUILongDeploymentLink';
@@ -74,7 +73,6 @@ export default class bdiObjectMappings extends LightningElement {
         bdiOMUIViewFieldMappingsLabel,
         bgeActionDelete,
         stgBtnEdit,
-        stgHelpAdvancedMapping3,
         bdiOMUILongDeployment,
         bdiFMUILongDeploymentLink,
         bdiFMUILongDeploymentMessage,
