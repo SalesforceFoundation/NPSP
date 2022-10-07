@@ -78,6 +78,9 @@ public with sharing class ElevateCreateBatchItemRequest {
             achData.consent = PS_CommitmentRequest.ACH_CONSENT_MESSAGE;
             achData.type = batchItemRequestDTO.type;
 
+            if (batchItemRequestDTO.type == PS_CommitmentRequest.ElevateBankAccountType.BUSINESS.name()) {
+                purchaseInfo.accountName = batchItemRequestDTO.lastName;
+            }
             purchaseInfo.achData = achData;
         }
     }
@@ -112,7 +115,11 @@ public with sharing class ElevateCreateBatchItemRequest {
             achData.consent = PS_CommitmentRequest.ACH_CONSENT_MESSAGE;
             achData.type = batchItemRequestDTO.type;
 
+            if (batchItemRequestDTO.type == PS_CommitmentRequest.ElevateBankAccountType.BUSINESS.name()) {
+                commitmentInfo.accountName = batchItemRequestDTO.lastName;
+            }
             commitmentInfo.achData = achData;
+
         }
     }
 
@@ -121,6 +128,7 @@ public with sharing class ElevateCreateBatchItemRequest {
         public String email;
         public String firstName;
         public String lastName;
+        public String accountName;
         public String gatewayId;
         public String merchantId;
         public String paymentMethodToken;
@@ -185,6 +193,7 @@ public with sharing class ElevateCreateBatchItemRequest {
         public Integer amount;
         public String firstName;
         public String lastName;
+        public String accountName;
         public String email;
         public String paymentMethodToken;
         public String paymentMethodType;
