@@ -2,6 +2,7 @@ import { registerListener } from 'c/pubsubNoPageRef';
 import decryptGatewayId from '@salesforce/apex/GE_GiftEntryController.decryptGatewayId';
 import { showToast } from 'c/utilCommon';
 import psGatewayNotValid from '@salesforce/label/c.psGatewayNotValid';
+import getGatewayAssignmentSettings from '@salesforce/apex/GE_GiftEntryController.getGatewayAssignmentSettings';
 
 class GeGatewaySettings {
 
@@ -20,10 +21,21 @@ class GeGatewaySettings {
     initDecryptedElevateSettings(elevateSettings) {
         this.isGiftEntryBatch = true;
         this.elevateSettings = elevateSettings;
+
         if (this.elevateSettings?.uniqueKey) {
-            this.decryptElevateGateway().catch((error) => {
-                this.handleError(psGatewayNotValid, error);
-            });
+            getGatewayAssignmentSettings()
+                .then(settingsJson => {
+                    const gatewayAssignmentSettings = JSON.parse(settingsJson);
+                    return gatewayAssignmentSettings?.gatewayAssignmentEnabled;
+                })
+                .then(shouldDecrypt => {
+                    if (shouldDecrypt) {
+                        this.decryptElevateGateway();
+                    }
+                })
+                .catch((error) => {
+                    this.handleError(psGatewayNotValid, error);
+                });
         }
     }
 
