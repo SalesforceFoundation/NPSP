@@ -156,7 +156,9 @@ public with sharing class PMT_RefundController {
             UTIL_Permissions.canUpdate('Opportunity', false) &&
             UTIL_Permissions.canCreate('npe01__oppPayment__c', 'npe01__Payment_Amount__c', false) && 
             UTIL_Permissions.canCreate('npe01__oppPayment__c', String.valueOf(npe01__oppPayment__c.DebitType__c), false) && 
-            UTIL_Permissions.canCreate('npe01__oppPayment__c', String.valueOf(npe01__oppPayment__c.OriginalPayment__c), false);
+            UTIL_Permissions.canCreate('npe01__oppPayment__c', String.valueOf(npe01__oppPayment__c.OriginalPayment__c), false) &&
+            UTIL_Permissions.canCreate('npe01__oppPayment__c', 'npe01__Paid__c', false) &&
+            UTIL_Permissions.canCreate('npe01__oppPayment__c', 'npe01__Payment_Date__c', false);
     }
 
     private static void processResponse(RefundView refundView, UTIL_Http.Response response) {
