@@ -229,6 +229,8 @@ public inherited sharing class PMT_RefundService {
             npe01__Payment_Amount__c = -1 * refundAmount,
             npe01__Opportunity__c = originalPayment.npe01__Opportunity__c,
             OriginalPayment__c = originalPayment.Id,
+            npe01__Paid__c = true,
+            npe01__Payment_Date__c = Date.today(),
             DebitType__c = (originalPayment.npe01__Payment_Amount__c == refundAmount)
                 ? PMT_RefundService.FULL_REFUND
                 : PMT_RefundService.PARTIAL_REFUND
