@@ -1025,11 +1025,12 @@ public with sharing class GE_GiftEntryController {
     private static List<PS_GatewayService.GatewayTemplateSetting> getGatewayTemplateSettings() {
         List<PS_GatewayService.GatewayTemplateSetting> gatewayTemplateSettings =
                 new List<PS_GatewayService.GatewayTemplateSetting>();
+        PS_GatewayService gatewayService = new PS_GatewayService();
+        String gatewaysByMerchant = gatewayService.getGatewaysByMerchant();
 
         try {
-            PS_GatewayService gatewayService = new PS_GatewayService();
             gatewayTemplateSettings = (List<PS_GatewayService.GatewayTemplateSetting>)
-                    JSON.deserialize(gatewayService.getGatewaysByMerchant(),
+                    JSON.deserialize(gatewaysByMerchant,
                             List<PS_GatewayService.GatewayTemplateSetting>.class);
 
         } catch (Exception e) {
