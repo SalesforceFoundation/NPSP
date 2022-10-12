@@ -169,7 +169,16 @@ global with sharing class Callable_API implements System.Callable {
                 // If you do so, your functionality can break without any warning or liability from Salesforce.               
                 return ALLO_AllocationsSettings.getSettings().validatePaymentAllocationsConfiguration();
 
-            } when 'settings.enablecustomizablerollups' {
+             } when 'pmt.procressrefundallocations' {
+                List<npe01__OppPayment__c> refunds = paramService.getSObjects(CallableApiParameters.PARAM_REFUND_RECORDS);
+                PMT_RefundService refundService = new PMT_RefundService()
+                    .withRefundRecords(refunds);
+                    refundService.adjustAllocationsAndOpportunities();
+                    refundService.updateAllocationsAndOpportunities();
+                
+                return null;
+            } 
+            when 'settings.enablecustomizablerollups' {
                 Boolean scheduleJobsWhenComplete = paramService.getBoolean(CallableApiParameters.PARAM_SCHEDULE_JOBS, true);
                 return new CRLP_EnablementService().enable(scheduleJobsWhenComplete);
 
