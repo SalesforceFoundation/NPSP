@@ -112,9 +112,9 @@ public inherited sharing class PS_CommitmentRequest {
      */
     private static final Integer MAX_NAME_LENGTH = 60;
 
-    private static final String ACH_BANK_TYPE_CHECKING = 'CHECKING';
-    private static final String ACH_CODE_WEB = 'WEB';
-    private static final String ACH_CONSENT_MESSAGE = 'true';
+    public static final String ACH_BANK_TYPE_CHECKING = 'CHECKING';
+    public static final String ACH_CODE_WEB = 'WEB';
+    public static final String ACH_CONSENT_MESSAGE = 'true';
 
     private static final Map<SObjectType, ElevateBankAccountType> BANK_ACCOUNT_TYPE_MAP = new Map<SObjectType, ElevateBankAccountType>{
         Contact.SObjectType => ElevateBankAccountType.INDIVIDUAL,

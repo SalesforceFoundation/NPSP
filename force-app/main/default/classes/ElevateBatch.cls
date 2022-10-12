@@ -56,8 +56,7 @@ public with sharing class ElevateBatch {
 
     public ElevateBatchItem add(ElevateCreateBatchItemRequestDTO batchItemRequestDTO) {
         return elevateBatchService.sendAddRequest(
-                elevateBatchService.buildBatchItemRequestFrom(batchItemRequestDTO),
-                elevateBatchId());
+            elevateBatchService.buildBatchItemRequestFrom(batchItemRequestDTO), elevateBatchId());
     }
 
     public ElevateBatchItem remove(String elevateBatchItemId) {
