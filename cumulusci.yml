@@ -1778,6 +1778,10 @@ orgs:
             namespaced: True
         trial:
             config_file: orgs/trial.json
+        metecho_trial:
+            config_file: orgs/enterprise.json
+            days: 30
+            setup_flow: config_trial_org
         enterprise:
             config_file: orgs/enterprise.json
 
