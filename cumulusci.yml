@@ -1783,7 +1783,7 @@ orgs:
             days: 30
             setup_flow: config_trial_org
         enterprise:
-            config_file: orgs/enterprise.json
+            config_file: orgs/dev.json
 
 plans:
     existing_org:
