@@ -183,7 +183,7 @@ public with sharing class GE_GiftEntryController_TEST {
             String.valueOf(npe03__Recurring_Donation__c.StartDate__c) => String.valueOf(Date.today())
         };
         Test.startTest();
-            ElevateCreateBatchItemRequest request = new ElevateBatchService().buildBatchItemRequestFrom(dto, null);
+            ElevateCreateBatchItemRequest request = new ElevateBatchService().buildBatchItemRequestFrom(dto);
         Test.stopTest();
 
         System.assertEquals(ElevateBatchItemType.COMMITMENT, request.batchItemType, 'The request batch item type ' +
@@ -232,7 +232,7 @@ public with sharing class GE_GiftEntryController_TEST {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
         Test.startTest();
-        ElevateCreateBatchItemRequest request = new ElevateBatchService().buildBatchItemRequestFrom(dto, null);
+        ElevateCreateBatchItemRequest request = new ElevateBatchService().buildBatchItemRequestFrom(dto);
         Test.stopTest();
 
         System.assertEquals(ElevateBatchItemType.ONE_TIME, request.batchItemType, 'The request batch item type ' +
@@ -253,11 +253,12 @@ public with sharing class GE_GiftEntryController_TEST {
         dto.lastName = 'donor';
         dto.currencyCode = 'USD';
         dto.paymentMethodToken = '12345';
+        dto.gatewayOverride = gatewayOverride;
 
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
         Test.startTest();
-        ElevateCreateBatchItemRequest request = new ElevateBatchService().buildBatchItemRequestFrom(dto, gatewayOverride);
+        ElevateCreateBatchItemRequest request = new ElevateBatchService().buildBatchItemRequestFrom(dto);
         Test.stopTest();
 
         System.assertEquals(ElevateBatchItemType.ONE_TIME, request.batchItemType, 'The request batch item type ' +
@@ -280,7 +281,7 @@ public with sharing class GE_GiftEntryController_TEST {
         Test.startTest();
             try {
                 elevateBatchItem = GE_GiftEntryController.addToElevateBatch(new ElevateCreateBatchItemRequestDTO(),
-                        'test-valid-id', null);
+                        'test-valid-id');
             } catch (AuraHandledException ex) {
                 auraException = ex;
             }
@@ -305,7 +306,7 @@ public with sharing class GE_GiftEntryController_TEST {
         Test.startTest();
         try {
             elevateBatchItem = GE_GiftEntryController.addToElevateBatch(new ElevateCreateBatchItemRequestDTO(),
-                    'test-valid-id', null);
+                    'test-valid-id');
         } catch (AuraHandledException ex) {
             auraException = ex;
         }
@@ -330,7 +331,7 @@ ElevateBatchItemType.ONE_TIME, TEST_PAYMENT_METHOD_CARD);
         Test.startTest();
             try {
                 elevateBatchItem = GE_GiftEntryController.addToElevateBatch(new ElevateCreateBatchItemRequestDTO(),
-                    'test-valid-id', null);
+                    'test-valid-id');
             } catch (AuraHandledException ex) {
                 auraException = ex;
             }
@@ -355,7 +356,7 @@ ElevateBatchItemType.ONE_TIME, TEST_PAYMENT_METHOD_CARD);
         Test.startTest();
         try {
             elevateBatchItem = GE_GiftEntryController.addToElevateBatch(new ElevateCreateBatchItemRequestDTO(),
-                    'test-valid-id', null);
+                    'test-valid-id');
         } catch (AuraHandledException ex) {
             auraException = ex;
         }
@@ -390,16 +391,66 @@ ElevateBatchItemType.ONE_TIME, TEST_PAYMENT_METHOD_CARD);
     }
 
     @IsTest
+    static void removeBatchItemFromElevateBatchReturnsSuccessResponse() {
+        AuraHandledException auraException;
+        ElevateBatchItem batchItem;
+
+        Test.startTest();
+        try {
+            ElevateBatchItem testBatchItem = new ElevateBatchItem();
+            testBatchItem.id = 'test-batch-item-id';
+
+            ElevateBatch elevateBatch = new ElevateBatch('test-batch-id');
+            elevateBatch.elevateBatchService = new ElevateBatchServiceValidRequest();
+            batchItem = elevateBatch.elevateBatchService.removeFromElevateBatch(elevateBatch, testBatchItem);
+        } catch (AuraHandledException ex) {
+            auraException = ex;
+        }
+        Test.stopTest();
+
+        System.assert(auraException == null, 'The aura handled exception should be null since an valid request ' +
+                'has been sent.');
+        System.assertEquals(batchItem.elevateBatchId, 'test-batch-id', 'the correct batch id is not set for the ' +
+                'removed batch item.');
+        System.assertEquals(batchItem.id, 'test-batch-item-id', 'the correct batch item id is not set for the ' +
+                'removed batch item.');
+    }
+
+    @IsTest
+    static void removeBatchItemFromElevateBatchReturnsErrorResponse() {
+        AuraHandledException auraException;
+        ElevateBatchItem batchItem;
+
+        Test.startTest();
+        try {
+            ElevateBatch elevateBatch = new ElevateBatch('test-batch-id');
+            elevateBatch.elevateBatchService = new ElevateBatchServiceInvalidRequest();
+           batchItem = elevateBatch.elevateBatchService.removeFromElevateBatch(elevateBatch, new ElevateBatchItem());
+        } catch (AuraHandledException ex) {
+            auraException = ex;
+        }
+        Test.stopTest();
+
+        System.assert(auraException != null, 'The aura handled exception should not be null since an invalid request ' +
+                'has been sent.');
+        System.assert(batchItem == null, 'The failed batch item should be null.');
+        System.assertEquals('Bad Request',
+                auraException.getMessage(), 'The error message in the elevate batch response ' +
+                        'should throw an exception and the message should be the create elevate batch error ' +
+                        'message specified in the invalid request data type.');
+    }
+
+    @IsTest
     static void addBatchItemToElevateBatchShouldReturnFailureResponse() {
         GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceInvalidRequest();
         String errorMessage = ElevateBatchItemCreateResponse.parse(new ElevateBatchServiceInvalidRequest()
-                .addToElevateBatchErrorResponse())
+                .elevateBatchErrorResponse())
                 .errors()[0].message;
         AuraHandledException auraException;
 
         Test.startTest();
         try {
-            GE_GiftEntryController.addToElevateBatch(new ElevateCreateBatchItemRequestDTO(), 'test-valid-group-id', null);
+            GE_GiftEntryController.addToElevateBatch(new ElevateCreateBatchItemRequestDTO(), 'test-valid-group-id');
         } catch (AuraHandledException ex) {
             auraException = ex;
         }
@@ -412,6 +463,8 @@ ElevateBatchItemType.ONE_TIME, TEST_PAYMENT_METHOD_CARD);
                         'should throw an exception and the message should be the create elevate batch error ' +
                         'message specified in the invalid request data type.');
     }
+
+
 
     /***
      * @description Verifies the purchase request response throws an excpetion

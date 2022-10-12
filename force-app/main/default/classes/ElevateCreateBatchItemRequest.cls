@@ -33,33 +33,32 @@ public with sharing class ElevateCreateBatchItemRequest {
     public CommitmentInfo commitmentInfo;
     public PurchaseInfo purchaseInfo;
 
-    public ElevateCreateBatchItemRequest(ElevateCreateBatchItemRequestDTO batchItemRequestDTO, String gatewayOverride) {
+    public ElevateCreateBatchItemRequest(ElevateCreateBatchItemRequestDTO batchItemRequestDTO) {
         if (batchItemRequestDTO.schedule == null || batchItemRequestDTO.schedule.isEmpty()) {
             batchItemType = ElevateBatchItemType.ONE_TIME;
         } else {
             batchItemType = ElevateBatchItemType.COMMITMENT;
         }
 
-        buildRequestBody(batchItemRequestDTO, gatewayOverride);
+        buildRequestBody(batchItemRequestDTO);
     }
 
-    private void buildRequestBody(ElevateCreateBatchItemRequestDTO batchItemRequestDTO, String gatewayOverride) {
+    private void buildRequestBody(ElevateCreateBatchItemRequestDTO batchItemRequestDTO) {
         PS_IntegrationServiceConfig.Service configService = new PS_IntegrationServiceConfig.Service();
 
         if (batchItemType == ElevateBatchItemType.COMMITMENT) {
-            buildCommitmentInfoBody(batchItemRequestDTO, configService, gatewayOverride);
+            buildCommitmentInfoBody(batchItemRequestDTO, configService);
         } else {
-            buildPurchaseInfoBody(batchItemRequestDTO, configService, gatewayOverride);
+            buildPurchaseInfoBody(batchItemRequestDTO, configService);
         }
     }
 
     private void buildPurchaseInfoBody(ElevateCreateBatchItemRequestDTO batchItemRequestDTO,
-                                       PS_IntegrationServiceConfig.Service configService,
-                                       String gatewayOverride) {
+                                       PS_IntegrationServiceConfig.Service configService) {
         purchaseInfo = new ElevateCreateBatchItemRequest.PurchaseInfo();
         purchaseInfo.merchantId = configService.getMerchantIds();
-        if (String.isNotBlank(gatewayOverride)) {
-            purchaseInfo.gatewayId = gatewayOverride;
+        if (String.isNotBlank(batchItemRequestDTO.gatewayOverride)) {
+            purchaseInfo.gatewayId = batchItemRequestDTO.gatewayOverride;
         }
         else {
             purchaseInfo.gatewayId = configService.getGatewayIds();
@@ -80,17 +79,19 @@ public with sharing class ElevateCreateBatchItemRequest {
             achData.consentDetails.consentType = PS_CommitmentRequest.ACH_CONSENT_TYPE;
             achData.type = batchItemRequestDTO.type;
 
+            if (batchItemRequestDTO.type == PS_CommitmentRequest.ElevateBankAccountType.BUSINESS.name()) {
+                purchaseInfo.accountName = batchItemRequestDTO.lastName;
+            }
             purchaseInfo.achData = achData;
         }
     }
 
     private void buildCommitmentInfoBody(ElevateCreateBatchItemRequestDTO batchItemRequestDTO,
-                                         PS_IntegrationServiceConfig.Service configService,
-                                         String gatewayOverride) {
+                                         PS_IntegrationServiceConfig.Service configService) {
 
         commitmentInfo = new ElevateCreateBatchItemRequest.CommitmentInfo();
-        if (String.isNotBlank(gatewayOverride)) {
-            commitmentInfo.gatewayId = gatewayOverride;
+        if (String.isNotBlank(batchItemRequestDTO.gatewayOverride)) {
+            commitmentInfo.gatewayId = batchItemRequestDTO.gatewayOverride;
         }
         else {
             commitmentInfo.gatewayId = configService.getGatewayIds();
@@ -116,7 +117,11 @@ public with sharing class ElevateCreateBatchItemRequest {
             achData.consentDetails.consentType = PS_CommitmentRequest.ACH_CONSENT_TYPE;
             achData.type = batchItemRequestDTO.type;
 
+            if (batchItemRequestDTO.type == PS_CommitmentRequest.ElevateBankAccountType.BUSINESS.name()) {
+                commitmentInfo.accountName = batchItemRequestDTO.lastName;
+            }
             commitmentInfo.achData = achData;
+
         }
     }
 
@@ -125,6 +130,7 @@ public with sharing class ElevateCreateBatchItemRequest {
         public String email;
         public String firstName;
         public String lastName;
+        public String accountName;
         public String gatewayId;
         public String merchantId;
         public String paymentMethodToken;
@@ -189,6 +195,7 @@ public with sharing class ElevateCreateBatchItemRequest {
         public Integer amount;
         public String firstName;
         public String lastName;
+        public String accountName;
         public String email;
         public String paymentMethodToken;
         public String paymentMethodType;

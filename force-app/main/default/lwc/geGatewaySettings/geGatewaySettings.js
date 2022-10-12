@@ -2,6 +2,7 @@ import { registerListener } from 'c/pubsubNoPageRef';
 import decryptGatewayId from '@salesforce/apex/GE_GiftEntryController.decryptGatewayId';
 import { showToast } from 'c/utilCommon';
 import psGatewayNotValid from '@salesforce/label/c.psGatewayNotValid';
+import getGatewayAssignmentSettings from '@salesforce/apex/GE_GiftEntryController.getGatewayAssignmentSettings';
 
 class GeGatewaySettings {
 
@@ -20,13 +21,26 @@ class GeGatewaySettings {
     initDecryptedElevateSettings(elevateSettings) {
         this.isGiftEntryBatch = true;
         this.elevateSettings = elevateSettings;
+
         if (this.elevateSettings?.uniqueKey) {
-            this.decryptElevateGateway().then(error => {
-                if (this.elevateSettings?.uniqueKey && !this.decryptedGatewayId) {
-                    showToast(psGatewayNotValid, details, 'error', 'sticky');
-                }
-            });
+            getGatewayAssignmentSettings()
+                .then(settingsJson => {
+                    const gatewayAssignmentSettings = JSON.parse(settingsJson);
+                    return gatewayAssignmentSettings?.gatewayAssignmentEnabled;
+                })
+                .then(shouldDecrypt => {
+                    if (shouldDecrypt) {
+                        this.decryptElevateGateway();
+                    }
+                })
+                .catch((error) => {
+                    this.handleError(psGatewayNotValid, error);
+                });
         }
+    }
+
+    handleError(message, error) {
+        showToast(message, error, 'error', 'sticky');
     }
 
     clearDecryptedElevateSettings() {
@@ -37,6 +51,25 @@ class GeGatewaySettings {
 
     async decryptElevateGateway() {
         this.decryptedGatewayId = await decryptGatewayId({encryptedGatewayId: this.elevateSettings.uniqueKey});
+
+        if (this.elevateSettings?.uniqueKey && !this.decryptedGatewayId) {
+            this.handleError(psGatewayNotValid);
+        }
+    }
+
+    isValidElevatePaymentMethod(paymentMethod) {
+
+        if (!this.getElevateSettings()) {
+            return true;
+        } else if (this.getElevateSettings().isACHEnabled && this.getElevateSettings().isCreditCardEnabled) {
+            return true;
+        } else if (this.getElevateSettings().isCreditCardEnabled && paymentMethod === 'Credit Card') {
+            return true;
+        } else if (this.getElevateSettings().isACHEnabled && paymentMethod === 'ACH') {
+            return true;
+        }
+
+        return false;
     }
 
     getElevateSettings() {
@@ -45,10 +78,6 @@ class GeGatewaySettings {
 
     getDecryptedGatewayId() {
         return this.decryptedGatewayId;
-    }
-
-    getIsGiftEntryBatch() {
-        return this.isGiftEntryBatch;
     }
 
     getTemplateRecordId() {

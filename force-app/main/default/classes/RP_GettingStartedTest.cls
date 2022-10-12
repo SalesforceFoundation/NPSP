@@ -60,10 +60,7 @@ public with sharing class RP_GettingStartedTest {
 
         // Asserting that each property isn't returning null
         System.assertNotEquals(controller.linksData.trailheadLink, null);
-        System.assertNotEquals(controller.linksData.salesforceOrgLink, null);
         System.assertNotEquals(controller.linksData.usLink, null);
-        System.assertNotEquals(controller.linksData.npspLink, null);
-        System.assertNotEquals(controller.linksData.webinarLink, null);
         System.assertNotEquals(controller.linksData.customerJourneyLink, null);
     }
 }
