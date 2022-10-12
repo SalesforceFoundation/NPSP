@@ -74,9 +74,12 @@ public with sharing class PS_GatewayService {
 
         if (gatewayResponse.statusCode == UTIL_Http.STATUS_CODE_OK) {
             return buildTemplateSettingsJSON((Map<String, Object>) JSON.deserializeUntyped(gatewayResponse.body));
+        } else {
+            String errorMessage = gatewayResponse.getErrorMessages();
+            AuraHandledException e = new AuraHandledException(errorMessage);
+            e.setMessage(errorMessage);
+            throw e;
         }
-
-        return gatewayResponse.body;
     }
 
     private String buildTemplateSettingsJSON(Map<String, Object> gatewayResponse) {

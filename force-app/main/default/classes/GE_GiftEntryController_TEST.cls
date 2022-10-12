@@ -219,7 +219,58 @@ public with sharing class GE_GiftEntryController_TEST {
                 'timestamp should should match the DTO and be converted to ISO 8601 format.');
     }
 
-    @IsTest
+    @isTest
+    static void batchItemRequestIncludesDefaultGateway() {
+
+        ElevateCreateBatchItemRequestDTO dto = new ElevateCreateBatchItemRequestDTO();
+        dto.amount = '2000';
+        dto.firstName = 'test';
+        dto.lastName = 'donor';
+        dto.currencyCode = 'USD';
+        dto.paymentMethodToken = '12345';
+
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        Test.startTest();
+        ElevateCreateBatchItemRequest request = new ElevateBatchService().buildBatchItemRequestFrom(dto);
+        Test.stopTest();
+
+        System.assertEquals(ElevateBatchItemType.ONE_TIME, request.batchItemType, 'The request batch item type ' +
+                'should be ONE_TIME');
+        System.assertNotEquals(null, request.purchaseInfo, 'The request purchase info object should not be null.');
+        System.assert(request.commitmentInfo == null, 'The request commitment info object should be null.');
+
+        System.assertEquals(PS_IntegrationServiceConfig_TEST.testGatewayId, request.purchaseInfo.gatewayId,
+                'The gateway Id should be populated with the default gateway when we do not override');
+    }
+
+    @isTest
+    static void batchItemRequestIncludesOverrideGateway() {
+        final String gatewayOverride = 'Override Gateway';
+        ElevateCreateBatchItemRequestDTO dto = new ElevateCreateBatchItemRequestDTO();
+        dto.amount = '2000';
+        dto.firstName = 'test';
+        dto.lastName = 'donor';
+        dto.currencyCode = 'USD';
+        dto.paymentMethodToken = '12345';
+        dto.gatewayOverride = gatewayOverride;
+
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        Test.startTest();
+        ElevateCreateBatchItemRequest request = new ElevateBatchService().buildBatchItemRequestFrom(dto);
+        Test.stopTest();
+
+        System.assertEquals(ElevateBatchItemType.ONE_TIME, request.batchItemType, 'The request batch item type ' +
+                'should be ONE_TIME');
+        System.assertNotEquals(null, request.purchaseInfo, 'The request purchase info object should not be null.');
+        System.assert(request.commitmentInfo == null, 'The request commitment info object should be null.');
+
+        System.assertEquals(gatewayOverride, request.purchaseInfo.gatewayId,
+                'The gateway Id should be populated with the Override Gateway');
+    }
+
+    @isTest
     static void addCardCommitmentToElevateBatchShouldReturnSuccessResponse() {
         GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceValidRequest(
             ElevateBatchItemType.COMMITMENT, TEST_PAYMENT_METHOD_CARD);
