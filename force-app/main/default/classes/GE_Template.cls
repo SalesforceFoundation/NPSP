@@ -320,6 +320,7 @@ public with sharing class GE_Template {
         @AuraEnabled public String uniqueKey;
         @AuraEnabled public Boolean isACHEnabled;
         @AuraEnabled public Boolean isCreditCardEnabled;
+        @AuraEnabled public String gatewayName;
     }
 
     /**

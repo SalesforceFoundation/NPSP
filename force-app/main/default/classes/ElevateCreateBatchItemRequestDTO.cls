@@ -38,5 +38,8 @@ public with sharing class ElevateCreateBatchItemRequestDTO {
     @AuraEnabled public String lastName {get; set;}
     @AuraEnabled public String currencyCode {get; set;}
     @AuraEnabled public String paymentMethodToken {get; set;}
+    @AuraEnabled public String paymentMethodType {get; set;}
+    @AuraEnabled public String type {get; set;}
     @AuraEnabled public Map<String, Object> schedule {get; set;}
+    @AuraEnabled public String gatewayOverride {get; set;}
 }

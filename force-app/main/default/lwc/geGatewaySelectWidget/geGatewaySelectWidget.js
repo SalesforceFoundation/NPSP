@@ -1,4 +1,4 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, api } from 'lwc';
 import getGatewaysFromElevate from '@salesforce/apex/GE_GiftEntryController.getGatewaysFromElevate';
 import encryptGatewayId from '@salesforce/apex/GE_GiftEntryController.encryptGatewayId';
 import decryptGatewayId from '@salesforce/apex/GE_GiftEntryController.decryptGatewayId';
@@ -18,14 +18,16 @@ import psShowPaymentMethods from '@salesforce/label/c.psShowPaymentMethods';
 import psUnableToConnect from '@salesforce/label/c.psUnableToConnect';
 import RD2_Credit_Card_Payment_Method_Label from '@salesforce/label/c.RD2_Credit_Card_Payment_Method_Label';
 import GeGatewaySettings from 'c/geGatewaySettings';
-import { fireEvent } from 'c/pubsubNoPageRef';
+import { fireEvent, registerListener } from 'c/pubsubNoPageRef';
 import { isEmpty, showToast } from 'c/utilCommon';
+
+const PAYMENT_METHOD_MODE = 'PAYMENT';
+const GATEWAY_MANAGEMENT_MODE = 'MANAGEMENT';
 
 export default class GeGatewaySelectWidget extends LightningElement {
     @track isExpanded = false;
     @track selectedGateway = null;
     @track gatewayOptions = [];
-    @track preGatewayOptions = [];
     @track isACHEnabled = true;
     @track isACHDisabled = false;
     @track isCreditCardEnabled = true;
@@ -33,6 +35,9 @@ export default class GeGatewaySelectWidget extends LightningElement {
     @track isLoading = true;
     @track isDefaultTemplate = false;
     @track isGatewayAssignmentEnabled = false;
+    @track isGatewaySelectionDisabled = false;
+
+    @api parentContext = '';
 
     CUSTOM_LABELS = Object.freeze({
         messageLoading,
@@ -57,14 +62,32 @@ export default class GeGatewaySelectWidget extends LightningElement {
     _firstDisplay = true;
     _defaultTemplateId = null;
     _defaultGatewayId = null;
+    _widgetMode;
 
     async init() {
-        let gatewayAssignmentSettings = JSON.parse(await getGatewayAssignmentSettings());
+        try {
+            const gatewayAssignmentSettings = JSON.parse(await getGatewayAssignmentSettings());
 
-        this._defaultTemplateId = gatewayAssignmentSettings.defaultTemplateId;
-        this.isGatewayAssignmentEnabled = gatewayAssignmentSettings.gatewayAssignmentEnabled;
-        this._defaultGatewayId = gatewayAssignmentSettings.defaultGatewayId;
+            this._defaultTemplateId = gatewayAssignmentSettings.defaultTemplateId;
+            this.isGatewayAssignmentEnabled = gatewayAssignmentSettings.gatewayAssignmentEnabled;
+            this._defaultGatewayId = gatewayAssignmentSettings.defaultGatewayId;
+        }
+        catch (error) {
+            this._firstDisplay = false;
+            this.handleErrors(error);
+        }
 
+        this.setWidgetMode();
+
+        if (this._widgetMode === GATEWAY_MANAGEMENT_MODE) {
+            this.disableGatewaySelection();
+        }
+        else {
+            this.initWidgetSettings();
+        }
+    }
+
+    initWidgetSettings() {
         if (this._defaultTemplateId === GeGatewaySettings.getTemplateRecordId()) {
             this.isDefaultTemplate = true;
             this.isLoading = false;
@@ -77,11 +100,17 @@ export default class GeGatewaySelectWidget extends LightningElement {
     async connectedCallback() {
         await this.init();
 
-        if (this.isGatewayAssignmentEnabled) {
+        if (this.shouldShowGateways) {
             await this.getElevateGateways();
         }
         else {
             this.isLoading = false;
+        }
+
+        if (this._widgetMode === GATEWAY_MANAGEMENT_MODE) {
+            registerListener('editGatewayManagement', this.enableGatewaySelection, this);
+            registerListener('noEditGatewayManagement', this.disableGatewaySelection, this);
+            await this.toggleSelectGatewayControls();
         }
     }
 
@@ -89,12 +118,28 @@ export default class GeGatewaySelectWidget extends LightningElement {
         fireEvent(this, 'updateElevateSettings', null);
     }
 
+    setWidgetMode() {
+        if (this.parentContext === GATEWAY_MANAGEMENT_MODE) {
+            this._widgetMode = GATEWAY_MANAGEMENT_MODE;
+        }
+
+        else if (!this.isGatewayAssignmentEnabled) {
+            this._widgetMode = PAYMENT_METHOD_MODE;
+        }
+    }
+
     async getElevateGateways() {
         if (this._elevateGateways) {
             return;
         }
 
-        this._elevateGateways = JSON.parse(await getGatewaysFromElevate());
+        try {
+            this._elevateGateways = JSON.parse(await getGatewaysFromElevate());
+        }
+        catch (error) {
+            this._firstDisplay = false;
+            this.handleErrors(error);
+        }
 
         if (this._elevateGateways && this._elevateGateways.length > 0 && !(this._elevateGateways.errors)) {
             this.buildOptions();
@@ -127,12 +172,16 @@ export default class GeGatewaySelectWidget extends LightningElement {
             return;
         }
 
-        let elevateSettings = GeGatewaySettings.getElevateSettings();
-        if (this.isGatewayAssignmentEnabled) {
-            await this.handleInitialGatewaySelection(elevateSettings);
+        if (this._widgetMode !== PAYMENT_METHOD_MODE) {
+            await this.handleInitialGatewaySelection(GeGatewaySettings.getElevateSettings());
         }
         else {
-            this.handleInitialPaymentMethodSelections(elevateSettings);
+            this.handleInitialPaymentMethodSelections(GeGatewaySettings.getElevateSettings());
+        }
+
+        if (this._widgetMode === GATEWAY_MANAGEMENT_MODE) {
+            this.isExpanded = true;
+            fireEvent(this, 'updateSelectedGateway', this.selectedGateway);
         }
 
         this._firstDisplay = false;
@@ -168,13 +217,13 @@ export default class GeGatewaySelectWidget extends LightningElement {
     }
 
     handleInitialPaymentMethodSelections(elevateSettings) {
-        if (elevateSettings) {
+        if (!!elevateSettings) {
             this.isACHEnabled = elevateSettings.isACHEnabled;
             this.isCreditCardEnabled = elevateSettings.isCreditCardEnabled;
         }
     }
 
-    handleErrors() {
+    handleErrors(error) {
         let formattedErrorMessage;
         let details = null;
 
@@ -186,6 +235,9 @@ export default class GeGatewaySelectWidget extends LightningElement {
         }
         else if (this._elevateGateways.errors.includes('timed out')) {
             formattedErrorMessage = this.CUSTOM_LABELS.psElevateConnectionTimeout;
+        }
+        else if (!!error) {
+            formattedErrorMessage = error;
         }
         else {
             formattedErrorMessage = this.CUSTOM_LABELS.psUnableToConnect;
@@ -280,13 +332,38 @@ export default class GeGatewaySelectWidget extends LightningElement {
         this.isCreditCardDisabled = false;
     }
 
+    enableGatewaySelection() {
+        this.isGatewaySelectionDisabled = false;
+    }
+
+    disableGatewaySelection() {
+        this.isGatewaySelectionDisabled = true;
+    }
+
     async updateElevateSettings() {
-        let elevateSettings = {
-            uniqueKey: this.isGatewayAssignmentEnabled ?
-                await encryptGatewayId( {gatewayId: this.selectedGateway}) : null,
-            isACHEnabled: this.isACHEnabled,
-            isCreditCardEnabled: this.isCreditCardEnabled
+        if (this._widgetMode !== GATEWAY_MANAGEMENT_MODE) {
+            const elevateSettings = {
+                uniqueKey: this.isGatewayAssignmentEnabled ?
+                    await encryptGatewayId({gatewayId: this.selectedGateway}) : null,
+                isACHEnabled: this.isACHEnabled,
+                isCreditCardEnabled: this.isCreditCardEnabled
+            };
+            fireEvent(this, 'updateElevateSettings', elevateSettings);
         }
-        fireEvent(this, 'updateElevateSettings', elevateSettings);
+        else {
+            fireEvent(this, 'updateSelectedGateway', this.selectedGateway);
+        }
+    }
+
+    get shouldShowGateways() {
+        return this._widgetMode !== PAYMENT_METHOD_MODE;
+    }
+
+    get shouldShowPaymentMethods() {
+        return this._widgetMode !== GATEWAY_MANAGEMENT_MODE;
+    }
+
+    get shouldShowExpandControls() {
+        return this._widgetMode !== GATEWAY_MANAGEMENT_MODE;
     }
 }
