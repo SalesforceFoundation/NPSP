@@ -100,13 +100,14 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
 
         validatePayments(newList, oldList, triggerAction);
 
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+            handleAllocationsAndOpportunities(newList, oldList);
+        }
+
         if (UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
             return handleMultiCurrencyPayments(newlist, oldlist, triggerAction, dmlWrapper);
         }
 
-        if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-            handleAllocationsAndOpportunities(newList, oldList);
-        }
         return dmlWrapper;
     }
 
