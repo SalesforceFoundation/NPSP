@@ -115,6 +115,7 @@ public inherited sharing class PS_CommitmentRequest {
     public static final String ACH_BANK_TYPE_CHECKING = 'CHECKING';
     public static final String ACH_CODE_WEB = 'WEB';
     public static final String ACH_CONSENT_MESSAGE = 'true';
+    public static final String ACH_CONSENT_TYPE = 'OFFLINE';
 
     private static final Map<SObjectType, ElevateBankAccountType> BANK_ACCOUNT_TYPE_MAP = new Map<SObjectType, ElevateBankAccountType>{
         Contact.SObjectType => ElevateBankAccountType.INDIVIDUAL,
@@ -464,8 +465,12 @@ public inherited sharing class PS_CommitmentRequest {
         public String consent;
         public String type;
         public String bankType;
+        public ConsentDetails consentDetails = new ConsentDetails();
     }
 
+    public with sharing class ConsentDetails {
+        public String consentType;
+    }
 
     /***
     * @description Assists in constructing the Commitment HttpRequest body.
@@ -588,6 +593,7 @@ public inherited sharing class PS_CommitmentRequest {
             this.achData.achCode = ACH_CODE_WEB;
             this.achData.bankType = ACH_BANK_TYPE_CHECKING;
             this.achData.consent = ACH_CONSENT_MESSAGE;
+            this.achData.consentDetails.consentType = ACH_CONSENT_TYPE;
             this.achData.type = accountHolderType.name();
             return this;
         }
