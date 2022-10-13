@@ -4,6 +4,7 @@ import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import GeFormRenderer from 'c/geFormRenderer';
 import GeLabelService from 'c/geLabelService';
 import Settings from 'c/geSettings';
+import GeGatewaySettings from 'c/geGatewaySettings';
 
 import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
 import retrieveDefaultSGERenderWrapper from '@salesforce/apex/GE_GiftEntryController.retrieveDefaultSGERenderWrapper';
@@ -336,6 +337,8 @@ describe('c-ge-form-renderer', () => {
             });
 
             const element = createElement('c-ge-form-renderer', {is: GeFormRenderer});
+            GeGatewaySettings.isValidElevatePaymentMethod = jest.fn(() => true);
+            element.GeGatewaySettings = GeGatewaySettings;
             document.body.appendChild(element);
 
             getObjectInfo.emit(dataImportObjectInfo, config => {
