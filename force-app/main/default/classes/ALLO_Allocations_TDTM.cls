@@ -226,14 +226,22 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     private void runPaymentTriggerHandler(List<SObject> newlist, List<SObject> oldlist,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
+
+        //do not run if Payment allocations are disabled
+        if (isPaymentAllocationsEnabled()) {
+            processPaymentAllocations(newlist, oldlist, triggerAction);
+        }
+    
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+            handleAllocationsAndOpportunities(newList, oldList);
+        }
+    }
+
+    private void processPaymentAllocations(List<SObject> newlist, List<SObject> oldlist, TDTM_Runnable.Action triggerAction) {
         List<npe01__OppPayment__c> listPmtsForProcessing = new List<npe01__OppPayment__c>();
         List<npe01__OppPayment__c> pmtsWithNullOldAmount = new List<npe01__OppPayment__c>();
         List<npe01__OppPayment__c> pmtsNeedingAllocations = new List<npe01__OppPayment__c>();
 
-        //do not run if Payment allocations are disabled
-        if (!isPaymentAllocationsEnabled()) {
-            return;
-        }
 
         for (integer i=0; i<newList.size(); i++) {
             npe01__OppPayment__c pmt = (npe01__OppPayment__c) newlist[i];
@@ -281,6 +289,41 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
             paymentAmountCurrencyChange(pmts);
             //paymentAmountCurrencyChange(listPmtsForProcessing);
+        }
+    }
+
+    private void handleAllocationsAndOpportunities(
+        List<npe01__OppPayment__c> newList,
+        List<npe01__OppPayment__c> oldList
+    ) {
+        List<npe01__OppPayment__c> refunds = new List<npe01__OppPayment__c>();
+        List<npe01__OppPayment__c> oldRefunds = new List<npe01__OppPayment__c>();
+        for (Integer i = 0; i < newList.size(); i++) {
+            if (newList[i].npe01__Payment_Amount__c < 0 && String.isBlank(newList[i].Elevate_Payment_ID__c)) {
+                refunds.add(newList[i]);
+                if ( oldList != null) {
+                    oldRefunds.add(oldList[i]);
+                }
+            }
+        }
+
+        if (refunds.isEmpty()) {
+            return;
+        }
+
+        PMT_RefundService refundService = new PMT_RefundService()
+            .withRefundRecords(refunds)
+            .withOldRefundRecords(oldRefunds);
+
+        refundService.adjustAllocationsAndOpportunities()
+            .updateAllocationsAndOpportunities();
+
+        List<ErrorRecord> errorRecords = refundService.getErrors();
+
+        for (ErrorRecord error : errorRecords) {
+            if (error.hasError()) {
+                error.getRecord().addError(error.getFirstError());
+            }
         }
     }
 

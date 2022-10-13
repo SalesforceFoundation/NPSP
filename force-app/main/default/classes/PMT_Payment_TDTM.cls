@@ -100,10 +100,6 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
 
         validatePayments(newList, oldList, triggerAction);
 
-        if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-            handleAllocationsAndOpportunities(newList, oldList);
-        }
-
         if (UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
             return handleMultiCurrencyPayments(newlist, oldlist, triggerAction, dmlWrapper);
         }
@@ -317,41 +313,6 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     ) {  
         PMT_ValidationService validationService = new PMT_ValidationService(newlist, oldList, triggerAction);
         List<ErrorRecord> errorRecords = validationService.validate().getErrors();
-
-        for (ErrorRecord error : errorRecords) {
-            if (error.hasError()) {
-                error.getRecord().addError(error.getFirstError());
-            }
-        }
-    }
-
-    private void handleAllocationsAndOpportunities(
-        List<npe01__OppPayment__c> newList,
-        List<npe01__OppPayment__c> oldList
-    ) {
-        List<npe01__OppPayment__c> refunds = new List<npe01__OppPayment__c>();
-        List<npe01__OppPayment__c> oldRefunds = new List<npe01__OppPayment__c>();
-        for (Integer i = 0; i < newList.size(); i++) {
-            if (newList[i].npe01__Payment_Amount__c < 0 && String.isBlank(newList[i].Elevate_Payment_ID__c)) {
-                refunds.add(newList[i]);
-                if ( oldList != null) {
-                    oldRefunds.add(oldList[i]);
-                }
-            }
-        }
-
-        if (refunds.isEmpty()) {
-            return;
-        }
-
-        PMT_RefundService refundService = new PMT_RefundService()
-            .withRefundRecords(refunds)
-            .withOldRefundRecords(oldRefunds);
-
-        refundService.adjustAllocationsAndOpportunities()
-            .updateAllocationsAndOpportunities();
-
-        List<ErrorRecord> errorRecords = refundService.getErrors();
 
         for (ErrorRecord error : errorRecords) {
             if (error.hasError()) {
