@@ -6623,9 +6623,6 @@
         <name>stgHelpOppNamingDateFormat</name>
     </customLabels>
     <customLabels>
-        <name>stgHelpOppNamingFormat</name>
-    </customLabels>
-    <customLabels>
         <label>סוגי רשומות ההזדמנות שעליהם ברצונך להחיל שם הזדמנות זה. כדי לבחור יותר מסוג רשומה אחד, לחץ על לחצן העכבר ועל מקש Control או Command. האפשרות &apos;--ללא--&apos; מחילה את השמות החדשים על כל סוגי הרשומות.</label>
         <name>stgHelpOppNamingRecTypes</name>
     </customLabels>
