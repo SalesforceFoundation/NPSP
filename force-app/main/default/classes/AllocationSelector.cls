@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2020, Salesforce.org
+    Copyright (c) 2022, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,17 +29,28 @@
 */
 /**
 * @author Salesforce.org
-* @description Data transfer object used to receive an Elevate batch item create request object from the batch gift
- * entry form in order to later convert the object to a full Elevate batch item request body.
+* @date 2022
+* @group Allocation
+* @description Selector Class for Allocation__c Sobject
 */
-public with sharing class ElevateCreateBatchItemRequestDTO {
-    @AuraEnabled public String amount {get; set;}
-    @AuraEnabled public String firstName {get; set;}
-    @AuraEnabled public String lastName {get; set;}
-    @AuraEnabled public String currencyCode {get; set;}
-    @AuraEnabled public String paymentMethodToken {get; set;}
-    @AuraEnabled public String paymentMethodType {get; set;}
-    @AuraEnabled public String type {get; set;}
-    @AuraEnabled public Map<String, Object> schedule {get; set;}
-    @AuraEnabled public String gatewayOverride {get; set;}
+public with sharing class AllocationSelector {
+    public List<Allocation__c> getOpportunityAllocations(Set<Id> oppIds) {
+        String soql = new UTIL_Query()
+            .withFrom(Allocation__c.SObjectType)
+            .withSelectFields(getStandardAllocationFields())
+            .withWhere('Opportunity__c IN: oppIds')
+            .build();
+
+        return Database.query(soql);
+    }
+
+    private Set<String> getStandardAllocationFields() {
+        return new Set<String> {
+            String.valueOf(Allocation__c.Percent__c),
+            String.valueOf(Allocation__c.Amount__c),
+            String.valueOf(Allocation__c.Opportunity__c),
+            UTIL_Namespace.StrTokenNSPrefix('Allocation__c.Opportunity__r.Amount'),
+            String.valueOf(Allocation__c.General_Accounting_Unit__c)
+        };
+    }
 }

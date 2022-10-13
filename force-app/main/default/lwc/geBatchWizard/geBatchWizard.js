@@ -28,6 +28,7 @@ import GeLabelService from 'c/geLabelService';
 
 import getAllFormTemplates from '@salesforce/apex/GE_GiftEntryController.getAllFormTemplates';
 import getDonationMatchingValues from '@salesforce/apex/GE_GiftEntryController.getDonationMatchingValues';
+import getGatewayAssignmentSettingsWithDefaultGatewayName from '@salesforce/apex/GE_GiftEntryController.getGatewayAssignmentSettingsWithDefaultGatewayName';
 
 import DATA_IMPORT_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
 import DATA_IMPORT_BATCH_ID_INFO from '@salesforce/schema/DataImportBatch__c.Id';
@@ -73,6 +74,8 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     templatesById = {};
     templateOptions;
     isLoaded = false;
+    gatewayName;
+    gatewaySettings = {};
 
     headers = {
         0: this.CUSTOM_LABELS.geHeaderBatchSelectTemplate,
@@ -274,6 +277,10 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
                 await GeFormService.getFieldMappings();
             }
 
+            if (Settings.isElevateCustomer()) {
+                this.gatewaySettings = JSON.parse(await getGatewayAssignmentSettingsWithDefaultGatewayName());
+            }
+
             if (!this.recordId) {
                 this.templates = await getAllFormTemplates();
                 this.templates = this.templates.sort();
@@ -316,6 +323,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
 
     handleTemplateChange(event) {
         this.selectedTemplateId = event.detail.value;
+        this.gatewayName = this.selectedTemplate.elevateSettings?.gatewayName;
         this.selectedBatchHeaderFields = [];
 
         this.selectedBatchHeaderFields = addKeyToCollectionItems(this.selectedTemplate.batchHeaderFields);
@@ -512,6 +520,14 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     resetValidations() {
         this.hasInvalidBatchFields = false;
         this.missingBatchHeaderFieldLabels = [];
+    }
+
+    get gatewayNameMessage() {
+        if (this.gatewaySettings?.gatewayAssignmentEnabled && this.selectedTemplateId) {
+            let gatewayName = this.gatewayName ? this.gatewayName : this.gatewaySettings?.defaultGatewayName;
+            return 'Payment Gateway: ' + gatewayName;
+        }
+        return '';
     }
 
     /*******************************************************************************

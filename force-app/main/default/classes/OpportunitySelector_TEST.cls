@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2020, Salesforce.org
+    Copyright (c) 2022, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,17 +29,33 @@
 */
 /**
 * @author Salesforce.org
-* @description Data transfer object used to receive an Elevate batch item create request object from the batch gift
- * entry form in order to later convert the object to a full Elevate batch item request body.
+* @date 2022
+* @group Opportunity
+* @description Test and Mock class for OpportunitySelector
 */
-public with sharing class ElevateCreateBatchItemRequestDTO {
-    @AuraEnabled public String amount {get; set;}
-    @AuraEnabled public String firstName {get; set;}
-    @AuraEnabled public String lastName {get; set;}
-    @AuraEnabled public String currencyCode {get; set;}
-    @AuraEnabled public String paymentMethodToken {get; set;}
-    @AuraEnabled public String paymentMethodType {get; set;}
-    @AuraEnabled public String type {get; set;}
-    @AuraEnabled public Map<String, Object> schedule {get; set;}
-    @AuraEnabled public String gatewayOverride {get; set;}
+@isTest
+public with sharing class OpportunitySelector_TEST {
+
+    public class Stub implements System.StubProvider {
+        public List<Opportunity> oppRecords;
+
+        public Object handleMethodCall(
+            Object stubbedObject,
+            String methodName,
+            Type returnType,
+            List<Type> paramTypes,
+            List<String> paramNames,
+            List<Object> args
+        ) {
+            switch on methodName {
+                when 'getRefundOpportunities' {
+                    return oppRecords;
+
+                } when else {
+                    return null;
+                }
+            }
+        }
+    }
 }
+

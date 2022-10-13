@@ -34,6 +34,7 @@ import { isEmpty } from 'c/utilCommon';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import insufficientPermissions from '@salesforce/label/c.commonInsufficientPermissions';
 import commonAdminPermissionErrorMessage from '@salesforce/label/c.commonAdminPermissionErrorMessage';
+import gatewaySelectionLabel from '@salesforce/label/c.psGatewaySelectionLabel';
 import psEnableGatewayAssignment from '@salesforce/label/c.psEnableGatewayAssignment';
 import psEnableGatewayAssignmentHeader from '@salesforce/label/c.psEnableGatewayAssignmentHeader';
 import psEnableGatewayAssignmentHelp from '@salesforce/label/c.psEnableGatewayAssignmentHelp';
@@ -44,6 +45,9 @@ import psGatewayManagementHelp from '@salesforce/label/c.psGatewayManagementHelp
 import setGatewayId from '@salesforce/apex/PS_GatewayManagement.setGatewayId';
 import setGatewayAssignmentEnabled from '@salesforce/apex/PS_GatewayManagement.setGatewayAssignmentEnabled';
 import getGatewayManagementSettings from '@salesforce/apex/PS_GatewayManagement.getGatewayManagementSettings';
+import { fireEvent, registerListener } from 'c/pubsubNoPageRef';
+
+const GATEWAY_MANAGEMENT_MODE = 'MANAGEMENT';
 
 export default class GePaymentGatewayManagement extends LightningElement {
 
@@ -57,10 +61,13 @@ export default class GePaymentGatewayManagement extends LightningElement {
     isSystemAdmin;
     hasAccess;
 
+    parentContext = GATEWAY_MANAGEMENT_MODE;
+
     isGatewayAssignmentEnabled;
 
     CUSTOM_LABELS = {
         commonAdminPermissionErrorMessage,
+        gatewaySelectionLabel,
         insufficientPermissions,
         messageLoading,
         psEnableGatewayAssignment,
@@ -86,6 +93,10 @@ export default class GePaymentGatewayManagement extends LightningElement {
         } catch(ex) {
             this.errorMessage = buildErrorMessage(ex);
             this.isError = true;
+        }
+
+        if (this.hasAccess) {
+            registerListener('updateSelectedGateway', this.updateSelectedGateway, this);
         }
     }
 
@@ -121,39 +132,47 @@ export default class GePaymentGatewayManagement extends LightningElement {
 
     handleEdit() {
         this.isReadOnly = false;
+        fireEvent(this, 'editGatewayManagement', null);
     }
 
     handleCancel() {
-        this.template.querySelector("[data-id='gatewayIdField']").value = this.gatewayId;
-        this.resetAlert();
-        this.clearFieldErrors();
+        fireEvent(this, 'noEditGatewayManagement', null);
 
+        this.resetAlert();
         this.isReadOnly = true;
     }
 
     async handleSave(event) {
         this.resetAlert();
 
-        let gatewayId = this.validateGatewayId();
-
-        if (isEmpty(gatewayId)) {
+        if (isEmpty(this.gatewayId)) {
             return;
         }
 
         this.showSpinner = true;
 
         try {
-
-            await setGatewayId({ gatewayId: gatewayId});
+            await setGatewayId({ gatewayId: this.gatewayId });
 
             this.isReadOnly = true;
             this.isSuccess = true;
             this.showSpinner = false;
+
+            fireEvent(this, 'noEditGatewayManagement', null);
         } catch(ex) {
             this.errorMessage = buildErrorMessage(ex);
             this.showSpinner = false;
             this.isError = true;
         }
+    }
+
+    updateSelectedGateway(event) {
+        this.gatewayId = event;
+    }
+
+    resetAlert() {
+        this.isSuccess = null;
+        this.isError = null;
     }
 
     async handleToggle(event) {
@@ -163,43 +182,11 @@ export default class GePaymentGatewayManagement extends LightningElement {
 
         try {
             await setGatewayAssignmentEnabled({ gatewayAssignmentEnabled: gatewayAssignmentEnabled.checked});
-            this.isSuccess = true;
             this.showSpinner = false;
         } catch(ex) {
             this.errorMessage = buildErrorMessage(ex);
             this.showSpinner = false;
             this.isError = true;
         }
-    }
-
-    validateGatewayId() {
-        let gatewayIdField = this.template.querySelector("[data-id='gatewayIdField']");
-
-        if (isEmpty(gatewayIdField.value)) {
-
-            gatewayIdField.setCustomValidity('Invalid Gateway ID.');
-            gatewayIdField.reportValidity();
-
-
-            this.errorMessage = 'Enter a valid gateway ID.'
-            this.isError = true;
-        } else {
-            this.clearFieldErrors();
-
-            return gatewayIdField.value;
-        }
-    }
-
-    clearFieldErrors() {
-        let gatewayIdField = this.template.querySelector("[data-id='gatewayIdField']");
-        if (!gatewayIdField.valid) {
-            gatewayIdField.setCustomValidity('');
-            gatewayIdField.reportValidity();
-        }
-    }
-
-    resetAlert() {
-        this.isSuccess = null;
-        this.isError = null;
     }
 }
