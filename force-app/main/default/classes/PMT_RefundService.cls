@@ -267,7 +267,9 @@ public inherited sharing class PMT_RefundService {
         List<Database.SaveResult> opportunityResults;
 
         if (!this.allocationsToUpdate.isEmpty()) {
+            ALLO_AllocationsUtil.disableAllocationTriggers();
             allocationResults = Database.update(this.allocationsToUpdate, false);
+            ALLO_AllocationsUtil.enableAllocationTriggers();
         }
         if (!this.opportunityMap.isEmpty()) {
             opportunityResults = Database.update(this.opportunityMap.values(), false);
@@ -397,6 +399,7 @@ public inherited sharing class PMT_RefundService {
         for (Allocation__c allocation : allocations) {
             if (allocation.Percent__c == null) {
                 allocation.Percent__c = allocation.Amount__c / oppAmount * 100;
+                allocation.Amount__c = (oppAmount * allocation.Percent__c / 100).setScale(2);
                 toUpdate.add(allocation);
             }
 

@@ -170,46 +170,78 @@ public with sharing class PMT_RefundService_TEST {
     }
 
     @isTest
-    private static void verifyRefundWillBeMadeInTheSameCurrencyAsTheOriginalPayment() {
+    private static void integrationVerifyRefundCanBeProcessInMultiCurrencyOrg() {
         if (!userInfo.isMultiCurrencyOrganization()) {
             return;
         }
-        Opportunity oppRecord = getOpportunityRecord();
-        npe01__OppPayment__c originalPayment = getPaymentRecord(oppRecord.Id);
-        
-        String isoCode = getDefaultISOCode();
-        oppRecord.put(UTIL_Currency.CURRENCY_ISO_CODE_FIELD, isoCode);
-        originalPayment.put(UTIL_Currency.CURRENCY_ISO_CODE_FIELD, isoCode);
 
-        PMT_RefundService refundService = setupRefundServiceWithStubs(
-            new List<npe01__OppPayment__c>{originalPayment},
-            new List<Opportunity>{oppRecord},
-            new List<Allocation__c>{}
+        String isoCode = getDefaultISOCode();
+
+        Account acc = new Account(Name = 'Testing');
+        insert acc;
+
+        Opportunity oppRecord = new Opportunity(
+            Name = 'Refund Opp',
+            Amount = 1000,
+            AccountId = acc.id,
+            CloseDate = System.today(),
+            StageName = UTIL_UnitTestData_TEST.getOpenStage()
         );
+        oppRecord.put(UTIL_Currency.CURRENCY_ISO_CODE_FIELD, new UTIL_Currency().getOrgDefaultCurrency());
+        insert oppRecord;
+
+
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'TEST_GAU1');
+
+        insert gau;
+
+        List<Allocation__c> allocations = getAllocationRecords(oppRecord);
+        for (Allocation__c allocation : allocations) {
+            allocation.General_Accounting_Unit__c = gau.Id;
+        }
+
+        insert allocations;
+
+        String soql = 'SELECT npe01__Paid__c, CurrencyIsoCode, npe01__Payment_Amount__c, npe01__Opportunity__c FROM npe01__oppPayment__c LIMIT 1';
+        npe01__oppPayment__c originalPayment = database.query(soql);
+
+        originalPayment.npe01__Paid__c = true;
+        originalPayment.npe01__Payment_Date__c = Date.today();
+        update originalPayment;
+
+        Decimal originalAmount = originalPayment.npe01__Payment_Amount__c;
+        Decimal refundAmount = originalAmount / 2;
+        Decimal expectedPercentage = allocations[0].Amount__c / oppRecord.Amount * 100;
 
         Test.startTest();
-        refundService.buildRefundRecord(originalPayment, originalPayment.npe01__Payment_Amount__c);
-        refundService.adjustAllocationsAndOpportunities();
+        npe01__OppPayment__c  refund = new PMT_RefundService().buildRefundRecord(originalPayment, refundAmount);
+        insert refund;
         Test.stopTest();
 
-        npe01__OppPayment__c refundRecord = refundService.getRefundRecords()?.get(0);
-        Opportunity parentOpp = refundService.opportunityMap.values()?.get(0);
+        soql = 'SELECT npe01__Paid__c, CurrencyIsoCode, npe01__Payment_Amount__c, DebitType__c, OriginalPayment__c FROM npe01__oppPayment__c WHERE Id = \'' + refund.Id + '\' LIMIT 1';
+        npe01__oppPayment__c refundRecord = database.query(soql);
 
-        System.assertEquals(1,refundService.getRefundRecords().size(),
-            'A refund record should be created');
-        System.assertEquals(originalPayment.npe01__Payment_Amount__c, -1 * refundRecord.npe01__Payment_Amount__c,
+        soql = 'SELECT Amount, CurrencyIsoCode FROM Opportunity LIMIT 1';
+        oppRecord = database.query(soql);
+
+        List<Allocation__c> updatedAllocations = [SELECT percent__c FROM Allocation__c];
+
+        System.assertEquals(refundAmount, -1 * refundRecord.npe01__Payment_Amount__c,
             'The amount on the refund record should match the original payment amont but negative');
         System.assertEquals(originalPayment.Id, refundRecord.originalPayment__c,
             'The refund record should map to the original payment record');
         System.assertEquals(true, refundRecord.npe01__Paid__c, 'The refund record should be mark as Paid');
-        System.assertEquals(PMT_RefundService.FULL_REFUND, refundRecord.DebitType__c,
+        System.assertEquals(PMT_RefundService.PARTIAL_REFUND, refundRecord.DebitType__c,
             'The original payment refund type should be set to: ' + PMT_RefundService.FULL_REFUND);
-        System.assertNotEquals(null, parentOpp, 'The parent opportunity should be proccessed');
-        System.assertEquals(0, parentOpp.Amount, 'The opporunity amount should be set to 0 after the refund');
+        System.assertEquals(originalAmount - refundAmount, oppRecord.Amount, 'The opporunity amount should be set to 0 after the refund');
         System.assertEquals(
             (String )originalPayment.get(UTIL_Currency.CURRENCY_ISO_CODE_FIELD),
             (String) refundRecord.get(UTIL_Currency.CURRENCY_ISO_CODE_FIELD),
             'Refund record should be set to the same currency as the original payment');
+        for (Allocation__c allo : updatedAllocations) {
+                System.assertEquals(expectedPercentage , allo.Percent__c,
+                    'Fixed Amount should be convet into percentage');
+            }
     }
  
     @isTest
