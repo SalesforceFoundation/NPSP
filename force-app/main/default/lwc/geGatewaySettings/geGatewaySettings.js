@@ -45,7 +45,7 @@ class GeGatewaySettings {
 
     clearDecryptedElevateSettings() {
         this.isGiftEntryBatch = false;
-        this.elevateSettings = {};
+        this.elevateSettings = false;
         this.decryptedGatewayId = null;
     }
 
