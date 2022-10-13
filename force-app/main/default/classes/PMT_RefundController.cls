@@ -134,16 +134,14 @@ public with sharing class PMT_RefundController {
             return;
         }
 
-        refundService.updateParentOpportunity(originalPayment, refundAmount);
+        refundService.insertRefunds();
 
-        refundService.processDML();
-
-        ERR_Handler.Errors errors = refundService.getErrors();
-        if (!errors.errorRecords.isEmpty()) {
-            handleError(refundView, errors.errorRecords[0].Full_Message__c);
-        } else {
+        List<ErrorRecord> errors = refundService.getErrors();
+        if (errors == null || errors.isEmpty()) {
             refundView.redirectToPaymentId = refundService.getRefundRecords()[0].Id;
             refundView.isSuccess = true;
+        } else {
+            handleError(refundView, errors[0].getFirstError());
         }
     }
 
@@ -158,7 +156,9 @@ public with sharing class PMT_RefundController {
             UTIL_Permissions.canUpdate('Opportunity', false) &&
             UTIL_Permissions.canCreate('npe01__oppPayment__c', 'npe01__Payment_Amount__c', false) && 
             UTIL_Permissions.canCreate('npe01__oppPayment__c', String.valueOf(npe01__oppPayment__c.DebitType__c), false) && 
-            UTIL_Permissions.canCreate('npe01__oppPayment__c', String.valueOf(npe01__oppPayment__c.OriginalPayment__c), false);
+            UTIL_Permissions.canCreate('npe01__oppPayment__c', String.valueOf(npe01__oppPayment__c.OriginalPayment__c), false) &&
+            UTIL_Permissions.canCreate('npe01__oppPayment__c', 'npe01__Paid__c', false) &&
+            UTIL_Permissions.canCreate('npe01__oppPayment__c', 'npe01__Payment_Date__c', false);
     }
 
     private static void processResponse(RefundView refundView, UTIL_Http.Response response) {
