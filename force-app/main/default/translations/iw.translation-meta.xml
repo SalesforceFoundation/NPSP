@@ -764,7 +764,6 @@
     <customLabels>
         <label>מערכת Salesforce דיווחה על השגיאות הבאות בזמן ש-NPSP ניסתה לבצע את משימות האצווה שלה, או כאשר לא הייתה לה אפשרות להציג הודעות שגיאה למשתמש באופן ישיר. סביר להניח ש-NPSP ניסתה לעדכן שדות סיכום בחשבונות ואנשי קשר, אך לא הייתה לה אפשרות לשמור רשומות מסוימות. כשל זה עשוי להיגרם עקב גורמים שונים שאינם קשורים ל-NPSP, כגון קוד או כללי התאמה מותאמים אישית.
 
-קרא מאמר זה ב-Power of Us Hub כדי ללמוד כיצד פועלות משימות מתוזמנות אלה: https://powerofus.force.com/NPSP_Scheduled_Jobs
 
 אם אינך בטוח כיצד לפתור שגיאות אלה, פרסם הודעה בקבוצה של &apos;ערכת ההצלחה למלכ&quot;רים&apos; (NPSP) ב-Power of Us Hub‏: https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE</label>
         <name>ErrorEmailMessage</name>
@@ -6624,7 +6623,6 @@
         <name>stgHelpOppNamingDateFormat</name>
     </customLabels>
     <customLabels>
-        <label>התבנית של שם ההזדמנות. בחר &apos;אחר&apos; כדי ליצור תבנית משלך. לפרטים, עיין &lt;a href=&quot;https://powerofus.force.com/NPSP_Opp_Names&quot; target=&quot;_blank&quot;&gt;במסמכי התיעוד של NPSP‏&lt;/a&gt;.</label>
         <name>stgHelpOppNamingFormat</name>
     </customLabels>
     <customLabels>
