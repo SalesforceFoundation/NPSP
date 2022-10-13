@@ -124,7 +124,7 @@ import {
     PAYMENT_METHODS, ACH_CODE,
     PAYMENT_METHOD_CREDIT_CARD,
     PAYMENT_UNKNOWN_ERROR_STATUS,
-    FAILED,
+    FAILED, ACH_CONSENT_TYPE,
     COMMITMENT_INACTIVE_STATUS,
     BATCH_COMMITMENT_CREATED_STATUS_REASON,
     PAYMENT_METHOD_ACH
@@ -2628,6 +2628,9 @@ export default class GeFormRenderer extends LightningElement{
             consent: ACH_CONSENT_MESSAGE,
             type: this.accountHolderType(),
             bankType: ACCOUNT_HOLDER_BANK_TYPES.CHECKING,
+            consentDetails: {
+                consentType: ACH_CONSENT_TYPE
+            }
         }
         const amount = getCurrencyLowestCommonDenominator(
             this.getFieldValueFromFormState(DATA_IMPORT_DONATION_AMOUNT));

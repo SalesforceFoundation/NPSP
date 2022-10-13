@@ -236,6 +236,11 @@ public with sharing class GE_PaymentServices {
         public String consent;
         public String type;
         public String bankType;
+        public ConsentDetails consentDetails = new ConsentDetails();
+    }
+
+    public with sharing class ConsentDetails {
+        public String consentType;
     }
 
     /***

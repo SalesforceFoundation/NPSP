@@ -55,6 +55,7 @@ public with sharing class UTIL_HtmlOutput_CTRL {
     private static final Map<String, String> SUBSTITUTION_BY_ALLOWED_URL = new Map<String, String> {
         '<a href="https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE' => '|hubURL|',
         '<a href="https://help.salesforce.com/' => '|helpURL|',
+        '<a href="https://powerofus.force.com/' => '|powerOfUsURL|',
         '<a href="/lightning/setup/' => '|lightningSetupURL|',
         '<a href="/setup/' => '|setupURL|',
         '<a href="#" onclick="ShowPanel(\'idPanelHealthCheck\');return false;"' => '|showPanelHealthCheck|',
