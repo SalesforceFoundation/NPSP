@@ -13,6 +13,7 @@
     <script src="{!elevateSDKURL}"></script>
     <script>
         const sfdo = new sfdoPaymentsJsSdk();
+        let counterVal = 0;
         const lightningOrigin = buildLightningOrigin();
         const DEFAULT_NAME_ON_CARD = '[Not Provided]';
         const postMessageType = 'post__npsp';
@@ -207,29 +208,16 @@
             return paymentMethod === CREDIT_CARD || paymentMethod === ACH;
         }
 
-        // This function is based on some limitations in extracting the actual window URL.
         function buildLightningOrigin() {
-            const siteBaseURL = '{!$Site.BaseUrl}';
-            let orgUrl = '{!OrgUrl}'; // This value is returned in the canonical format "MyInstance.my.salesforce.com" even if it is a lightning.force.com based URL
-            const sforceBaseUrl = '{!SFBaseUrl}'; // This value is either my.salesforce.com or lightning.force.com or vf.force.com
-
-            //If the Salesforce Base URL is returned with the vf.force.com format, we assume the window URL is lightning.force.com
-            if(sforceBaseUrl.includes("vf.force.com")){ // This is not a guaranteed pattern but the best way we have now to tell if it's lightning.force.com form
-                orgUrl = orgUrl.replace(".my.", ".lightning.").replace(".salesforce.", ".force.");
-            }
-            if (siteBaseURL.length > 0) {
-                return siteBaseURL;
-            } else {
-                return orgUrl;
-            }
+            return '{!VFForceURL}';
         }
 
-        function isReadyToMount() {
+        function setReadyToMount() {
             const message = JSON.stringify({ isReadyToMount: true });
             sendPostMessage(message);
         }
 
-        window.onload = isReadyToMount();
+        window.onload = setReadyToMount();
     </script>
 
 </apex:page>

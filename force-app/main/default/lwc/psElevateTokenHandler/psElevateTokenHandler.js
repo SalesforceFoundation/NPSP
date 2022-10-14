@@ -56,6 +56,9 @@ class psElevateTokenHandler {
         const sandboxEnhancedUrl =  `https://${domainInfo.orgDomain}--${namespace}.sandbox.vf.force.com`;
         const sandboxEnhancedLightning =  `https://${domainInfo.orgDomain}--${namespace}.sandbox.lightning.force.com`;
         const sandboxEnhancedCanon =  `https://${domainInfo.orgDomain}--${namespace}.sandbox.my.salesforce.com`;
+        const scratchMyDomain =  `https://${domainInfo.orgDomain}--${namespace}.scratch.my.salesforce.com`;
+        const scratchLightningDomain =  `https://${domainInfo.orgDomain}--${namespace}.scratch.lightning.force.com`;
+        const scratchVFDomain =  "https://data-efficiency-2769-dev-ed--c.scratch.vf.force.com";
 
         const originURLs = [
             {value: url},
@@ -66,6 +69,9 @@ class psElevateTokenHandler {
             {value: productionEnhancedUrlLogin},
             {value: sandboxEnhancedLightning},
             {value: sandboxEnhancedCanon},
+            {value: scratchMyDomain},
+            {value: scratchLightningDomain},
+            {value: scratchVFDomain},
         ];
         if (!isBlank(domainInfo.communityBaseURL)) {
             return [...originURLs, { value: domainInfo.communityBaseURL }];
