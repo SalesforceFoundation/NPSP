@@ -76,6 +76,7 @@ public with sharing class ElevateCreateBatchItemRequest {
             achData.achCode = PS_CommitmentRequest.ACH_CODE_WEB;
             achData.bankType = PS_CommitmentRequest.ACH_BANK_TYPE_CHECKING;
             achData.consent = PS_CommitmentRequest.ACH_CONSENT_MESSAGE;
+            achData.consentDetails.consentType = PS_CommitmentRequest.ACH_CONSENT_TYPE;
             achData.type = batchItemRequestDTO.type;
 
             if (batchItemRequestDTO.type == PS_CommitmentRequest.ElevateBankAccountType.BUSINESS.name()) {
@@ -113,6 +114,7 @@ public with sharing class ElevateCreateBatchItemRequest {
             achData.achCode = PS_CommitmentRequest.ACH_CODE_WEB;
             achData.bankType = PS_CommitmentRequest.ACH_BANK_TYPE_CHECKING;
             achData.consent = PS_CommitmentRequest.ACH_CONSENT_MESSAGE;
+            achData.consentDetails.consentType = PS_CommitmentRequest.ACH_CONSENT_TYPE;
             achData.type = batchItemRequestDTO.type;
 
             if (batchItemRequestDTO.type == PS_CommitmentRequest.ElevateBankAccountType.BUSINESS.name()) {
@@ -213,6 +215,11 @@ public with sharing class ElevateCreateBatchItemRequest {
         public String checkNumber;
         public String consent;
         public String type;
+        public ConsentDetails consentDetails = new ConsentDetails();
+    }
+
+    public class ConsentDetails {
+        public String consentType;
     }
 
     private static Map<String, Object> getProductMetadata() {
