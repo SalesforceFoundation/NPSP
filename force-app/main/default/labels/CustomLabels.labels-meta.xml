@@ -6141,6 +6141,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Account Number</value>
     </labels>
     <labels>
+        <fullName>commonACHLast4</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for ach last 4</shortDescription>
+        <value>ACH Last 4</value>
+    </labels>
+    <labels>
         <fullName>commonActivate</fullName>
         <categories>Auto Number</categories>
         <language>en_US</language>
