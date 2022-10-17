@@ -35,6 +35,9 @@
 * @description Class holds payment services purchase request related methods.
 */
 public with sharing class GE_PaymentServices {
+
+    @AuraEnabled public String vfHostName = DomainCreator.getVisualforceHostname(null);
+
     @TestVisible class PaymentServicesException extends Exception {}
 
     private static GE_PaymentServices paymentServicesInstance;
@@ -151,8 +154,9 @@ public with sharing class GE_PaymentServices {
      * @description Returns salesforce lightningUrl
      * @return String JSON of org URL
      */
-    public String getVfForceURL() {
-        return Url.getSalesforceBaseUrl().toExternalForm();
+    @AuraEnabled(cacheable=true)
+    public static String getVfForceURL() {
+        return DomainCreator.getVisualforceHostname(null);
     }
 
     /**

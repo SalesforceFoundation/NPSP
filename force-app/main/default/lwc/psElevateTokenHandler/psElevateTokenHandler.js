@@ -3,6 +3,7 @@ import { getNamespace, isFunction, isNull, validateJSONString } from 'c/utilComm
 import PAYMENT_AUTHORIZATION_TOKEN_FIELD from
         '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import tokenRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
+import getVfForceURL from '@salesforce/apex/GE_PaymentServices.getVfForceURL';
 import { isBlank } from 'c/util';
 
 
@@ -22,7 +23,6 @@ const TOKENIZE_TIMEOUT_MS = 10000;
 
 const NON_NAMESPACED_CHARACTER = 'c';
 
-
 /***
  * @description Payment services Elevate credit card tokenization service
  */
@@ -37,7 +37,6 @@ class psElevateTokenHandler {
     _visualforceOriginUrls;
     _visualforceOrigin;
 
-
     /***
      * @description Returns credit card tokenization Visualforce page URL
      */
@@ -47,31 +46,14 @@ class psElevateTokenHandler {
             : `/apex/${TOKENIZE_CARD_PAGE_NAME}`;
     }
 
-    getVisualForceOriginURLs(domainInfo, namespace) {
+    async getVisualForceOriginURLs(domainInfo, namespace) {
         const url = `https://${domainInfo.orgDomain}--${namespace}.visualforce.com`;
-        const alternateUrl = `https://${domainInfo.orgDomain}--${namespace}.${domainInfo.podName}.visual.force.com`;
-        const lightningUrl =  `https://${domainInfo.orgDomain}--${namespace}.lightning.force.com`;
-        const productionEnhancedUrl = `https://${domainInfo.orgDomain}--${namespace}.vf.force.com`;
-        const productionEnhancedUrlLogin = `https://${domainInfo.orgDomain}--${namespace}.my.salesforce.com`;
-        const sandboxEnhancedUrl =  `https://${domainInfo.orgDomain}--${namespace}.sandbox.vf.force.com`;
-        const sandboxEnhancedLightning =  `https://${domainInfo.orgDomain}--${namespace}.sandbox.lightning.force.com`;
-        const sandboxEnhancedCanon =  `https://${domainInfo.orgDomain}--${namespace}.sandbox.my.salesforce.com`;
-        const scratchMyDomain =  `https://${domainInfo.orgDomain}--${namespace}.scratch.my.salesforce.com`;
-        const scratchLightningDomain =  `https://${domainInfo.orgDomain}--${namespace}.scratch.lightning.force.com`;
-        const scratchVFDomain =  "https://data-efficiency-2769-dev-ed--c.scratch.vf.force.com";
+        const vfHostName = await getVfForceURL();
+        const vfURL = `https://${vfHostName}`;
 
         const originURLs = [
             {value: url},
-            {value: alternateUrl},
-            {value: lightningUrl},
-            {value: productionEnhancedUrl},
-            {value: sandboxEnhancedUrl},
-            {value: productionEnhancedUrlLogin},
-            {value: sandboxEnhancedLightning},
-            {value: sandboxEnhancedCanon},
-            {value: scratchMyDomain},
-            {value: scratchLightningDomain},
-            {value: scratchVFDomain},
+            {value: vfURL},
         ];
         if (!isBlank(domainInfo.communityBaseURL)) {
             return [...originURLs, { value: domainInfo.communityBaseURL }];
@@ -84,7 +66,7 @@ class psElevateTokenHandler {
      * @description Builds the Visualforce origin url that we need in order to
      * make sure we're only listening for messages from the correct source.
      */
-    setVisualforceOriginURLs(domainInfo) {
+    async setVisualforceOriginURLs(domainInfo) {
         if (isNull(domainInfo)) {
             return;
         }
@@ -92,7 +74,7 @@ class psElevateTokenHandler {
             ? this.currentNamespace
             : NON_NAMESPACED_CHARACTER;
         this._visualforceOriginUrls =
-            this.getVisualForceOriginURLs(domainInfo, namespace);
+            await this.getVisualForceOriginURLs(domainInfo, namespace);
 
     }
 
