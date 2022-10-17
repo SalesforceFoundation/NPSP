@@ -65,6 +65,17 @@ global with sharing class Callable_API implements System.Callable {
         set;
     }
 
+    @TestVisible
+    PMT_RefundService refundService {
+        get {
+            if (refundService == null) {
+                refundService = new PMT_RefundService();
+            }
+            return refundService;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description call function implementation of the callable Interface will dispatch to the appropriate
     * action handler based on the action text
@@ -171,8 +182,7 @@ global with sharing class Callable_API implements System.Callable {
 
              } when 'pmt.procressrefunds' {
                 List<npe01__OppPayment__c> refunds = paramService.getSObjects(CallableApiParameters.PARAM_REFUND_RECORDS);
-                PMT_RefundService refundService = new PMT_RefundService()
-                    .withRefundRecords(refunds);
+                    refundService.withRefundRecords(refunds);
                     refundService.adjustAllocationsAndOpportunities();
                     refundService.updateAllocationsAndOpportunities();
                 
