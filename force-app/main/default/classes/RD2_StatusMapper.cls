@@ -39,7 +39,8 @@ public with sharing class RD2_StatusMapper {
         RD2_Constants.STATUS_ACTIVE => RD2_Constants.STATUS_ACTIVE,
         RD2_Constants.STATUS_LAPSED => RD2_Constants.STATUS_LAPSED,
         RD2_Constants.STATUS_CLOSED => RD2_Constants.STATUS_CLOSED,
-        RD2_Constants.STATUS_PAUSED => RD2_Constants.STATUS_ACTIVE
+        RD2_Constants.STATUS_PAUSED => RD2_Constants.STATUS_ACTIVE,
+        RD2_Constants.STATUS_FAILING => RD2_Constants.STATUS_ACTIVE
     };
 
     /**
