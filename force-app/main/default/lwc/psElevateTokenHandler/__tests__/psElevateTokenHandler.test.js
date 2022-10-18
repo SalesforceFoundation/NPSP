@@ -39,8 +39,8 @@ const createPostMessageEvent = (type) => {
    }
 }
 
-const buildVFUrls = async (domainInfo, namespace) => {
-   return await psElevateTokenHandler.getVisualForceOriginURLs(domainInfo, namespace);
+const buildVFUrls = (domainInfo, namespace) => {
+   return psElevateTokenHandler.getVisualForceOriginURLs(domainInfo, namespace);
 
 }
 

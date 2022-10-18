@@ -13,7 +13,6 @@
     <script src="{!elevateSDKURL}"></script>
     <script>
         const sfdo = new sfdoPaymentsJsSdk();
-        let counterVal = 0;
         const lightningOrigin = buildLightningOrigin();
         const DEFAULT_NAME_ON_CARD = '[Not Provided]';
         const postMessageType = 'post__npsp';
@@ -209,7 +208,7 @@
         }
 
         function buildLightningOrigin() {
-            return 'https://{!LightningUrl}';
+            return 'https://{!LightningURL}';
         }
 
         function setReadyToMount() {

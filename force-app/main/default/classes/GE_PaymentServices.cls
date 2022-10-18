@@ -143,16 +143,16 @@ public with sharing class GE_PaymentServices {
     }
 
     /**
-     * @description Returns salesforce lightningUrl
-     * @return String JSON of org URL
+     * @description Returns salesforce lightning URL
+     * @return String JSON of lightning URL
      */
-    public String getLightningUrl() {
+    public String getLightningURL() {
         return DomainCreator.getLightningHostname();
     }
 
     /**
-     * @description Returns salesforce lightningUrl
-     * @return String JSON of org URL
+     * @description Returns salesforce visualforce URL
+     * @return String JSON of visualforce URL
      */
     @AuraEnabled(cacheable=true)
     public static String getVfForceURL() {

@@ -23,6 +23,7 @@ const TOKENIZE_TIMEOUT_MS = 10000;
 
 const NON_NAMESPACED_CHARACTER = 'c';
 
+
 /***
 * @description Payment services Elevate credit card tokenization service
 */
@@ -36,6 +37,7 @@ class psElevateTokenHandler {
 
     _visualforceOriginUrls;
     _visualforceOrigin;
+
 
     /***
     * @description Returns credit card tokenization Visualforce page URL
