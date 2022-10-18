@@ -272,7 +272,6 @@
                 {!$Label.stgLabelHHObject}
             </div>
         </div>
-        <p class="slds-text-body_small slds-m-around_large"><c:UTIL_HtmlOutput html="{!$Label.stgHelpHHObjectOverview}" hasLink="true" /></p>
         <div class="slds-form_horizontal slds-p-bottom_large">
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Rules__c.Label}" for="slHR" styleClass="slds-form-element__label" />

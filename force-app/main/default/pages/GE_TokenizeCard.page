@@ -69,7 +69,7 @@
             const action = event.data.action;
             switch (action) {
                 case 'mount':
-                    handleMounting(event.data.paymentMethod);
+                    handleMounting(event.data.paymentMethod, event.data.gatewayId);
                     break;
 
                 case 'setPaymentMethod':
@@ -86,12 +86,13 @@
             }
         }
 
-        function handleMounting(paymentMethod) {
+        function handleMounting(paymentMethod, gatewayOverride) {
             if (isValidPaymentMethod(paymentMethod)) {
+                const mountGateway = !!gatewayOverride ? gatewayOverride : '{!gatewayIds}';
                 const config = {
                     id: 'payments',
                     clientId: '{!clientId}',
-                    gatewayId: '{!gatewayIds}',
+                    gatewayId: mountGateway,
                     merchantId: '{!merchantIds}',
                     designSystem: 'Lightning',
                     paymentMethod: deriveElevatePaymentMethodFrom(paymentMethod),

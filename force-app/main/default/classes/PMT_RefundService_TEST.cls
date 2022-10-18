@@ -106,20 +106,17 @@ public with sharing class PMT_RefundService_TEST {
 
     @isTest
     private static void verifyAPaymentCanBeFullyRefunded() {
-        npe01__OppPayment__c originalPayment = getPaymentRecord ();
-        PaymentSelector_TEST.Stub selectorStub = new PaymentSelector_TEST.Stub();
-        selectorStub.paymentRecords = new List<npe01__OppPayment__c>{ originalPayment };
-
-        PMT_RefundService refundService = new PMT_RefundService(); 
-        refundService.paymentSelector = (PaymentSelector) Test.createStub(
-            PaymentSelector.class,
-            selectorStub
+        Opportunity oppRecord = getOpportunityRecord();
+        npe01__OppPayment__c originalPayment = getPaymentRecord(oppRecord.Id);
+        PMT_RefundService refundService = setupRefundServiceWithStubs(
+            new List<npe01__OppPayment__c>{originalPayment},
+            new List<Opportunity>{oppRecord},
+            new List<Allocation__c>{}
         );
-  
+
         Test.startTest();
-        refundService.withOriginalPayments( new List<npe01__OppPayment__c>{originalPayment} );
         refundService.buildRefundRecord(originalPayment, originalPayment.npe01__Payment_Amount__c);
-        refundService.updateParentOpportunity(originalPayment, originalPayment.npe01__Payment_Amount__c);
+        refundService.adjustAllocationsAndOpportunities();
         Test.stopTest();
 
         npe01__OppPayment__c refundRecord = refundService.getRefundRecords()?.get(0);
@@ -139,22 +136,20 @@ public with sharing class PMT_RefundService_TEST {
 
     @isTest
     private static void verifyAPaymentCanBePartiallyRefunded() {
-        npe01__OppPayment__c originalPayment = getPaymentRecord ();
+        Opportunity oppRecord = getOpportunityRecord();
+        npe01__OppPayment__c originalPayment = getPaymentRecord(oppRecord.Id);
         Decimal originalAmount = originalPayment.npe01__Payment_Amount__c;
         Decimal refundAmount = originalPayment.npe01__Payment_Amount__c / 2;
-        PaymentSelector_TEST.Stub selectorStub = new PaymentSelector_TEST.Stub();
-        selectorStub.paymentRecords = new List<npe01__OppPayment__c>{ originalPayment };
 
-        PMT_RefundService refundService = new PMT_RefundService(); 
-        refundService.paymentSelector = (PaymentSelector) Test.createStub(
-            PaymentSelector.class,
-            selectorStub
+        PMT_RefundService refundService = setupRefundServiceWithStubs(
+            new List<npe01__OppPayment__c>{originalPayment},
+            new List<Opportunity>{oppRecord},
+            new List<Allocation__c>{}
         );
   
         Test.startTest();
-        refundService.withOriginalPayments( new List<npe01__OppPayment__c>{originalPayment} );
         refundService.buildRefundRecord(originalPayment, refundAmount);
-        refundService.updateParentOpportunity(originalPayment, refundAmount);
+        refundService.adjustAllocationsAndOpportunities();
         Test.stopTest();
 
         npe01__OppPayment__c refundRecord = refundService.getRefundRecords()?.get(0);
@@ -166,6 +161,7 @@ public with sharing class PMT_RefundService_TEST {
             'The amount on the refund record should match the original payment amont but negative');
         System.assertEquals(originalPayment.Id, refundRecord.originalPayment__c,
             'The refund record should map to the original payment record');
+            System.assertEquals(true, refundRecord.npe01__Paid__c, 'The refund record should be mark as Paid');
         System.assertEquals(PMT_RefundService.PARTIAL_REFUND, refundRecord.DebitType__c,
             'The refund type should be set to: ' + PMT_RefundService.PARTIAL_REFUND);
         System.assertNotEquals(null, parentOpp, 'The parent opportunity should be proccessed');
@@ -174,68 +170,147 @@ public with sharing class PMT_RefundService_TEST {
     }
 
     @isTest
-    private static void verifyRefundWillBeMadeInTheSameCurrencyAsTheOriginalPayment() {
+    private static void integrationVerifyRefundCanBeProcessInMultiCurrencyOrg() {
         if (!userInfo.isMultiCurrencyOrganization()) {
             return;
         }
 
-        npe01__OppPayment__c originalPayment = getPaymentRecord();
-
         String isoCode = getDefaultISOCode();
-        Opportunity opp = (Opportunity)originalPayment.getSObject(npe01__OppPayment__c.npe01__Opportunity__c);
-        opp.put(UTIL_Currency.CURRENCY_ISO_CODE_FIELD, isoCode);
-        originalPayment.put(UTIL_Currency.CURRENCY_ISO_CODE_FIELD, isoCode);
 
-        PaymentSelector_TEST.Stub selectorStub = new PaymentSelector_TEST.Stub();
-        selectorStub.paymentRecords = new List<npe01__OppPayment__c>{ originalPayment };
+        Account acc = new Account(Name = 'Testing');
+        insert acc;
 
-        PMT_RefundService refundService = new PMT_RefundService(); 
-        refundService.paymentSelector = (PaymentSelector) Test.createStub(
-            PaymentSelector.class,
-            selectorStub
+        Opportunity oppRecord = new Opportunity(
+            Name = 'Refund Opp',
+            Amount = 1000,
+            AccountId = acc.id,
+            CloseDate = System.today(),
+            StageName = UTIL_UnitTestData_TEST.getOpenStage()
         );
-  
+        oppRecord.put(UTIL_Currency.CURRENCY_ISO_CODE_FIELD, new UTIL_Currency().getOrgDefaultCurrency());
+        insert oppRecord;
+
+
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'TEST_GAU1');
+
+        insert gau;
+
+        List<Allocation__c> allocations = getAllocationRecords(oppRecord);
+        for (Allocation__c allocation : allocations) {
+            allocation.General_Accounting_Unit__c = gau.Id;
+        }
+
+        insert allocations;
+
+        String soql = 'SELECT npe01__Paid__c, CurrencyIsoCode, npe01__Payment_Amount__c, npe01__Opportunity__c FROM npe01__oppPayment__c LIMIT 1';
+        npe01__oppPayment__c originalPayment = database.query(soql);
+
+        originalPayment.npe01__Paid__c = true;
+        originalPayment.npe01__Payment_Date__c = Date.today();
+        update originalPayment;
+
+        Decimal originalAmount = originalPayment.npe01__Payment_Amount__c;
+        Decimal refundAmount = originalAmount / 2;
+        Decimal expectedPercentage = allocations[0].Amount__c / oppRecord.Amount * 100;
+
         Test.startTest();
-        refundService.withOriginalPayments( new List<npe01__OppPayment__c>{originalPayment} );
-        refundService.buildRefundRecord(originalPayment, originalPayment.npe01__Payment_Amount__c);
-        refundService.updateParentOpportunity(originalPayment, originalPayment.npe01__Payment_Amount__c);
+        npe01__OppPayment__c  refund = new PMT_RefundService().buildRefundRecord(originalPayment, refundAmount);
+        insert refund;
         Test.stopTest();
 
-        npe01__OppPayment__c refundRecord = refundService.getRefundRecords()?.get(0);
-        Opportunity parentOpp = refundService.opportunityMap.values()?.get(0);
+        soql = 'SELECT npe01__Paid__c, CurrencyIsoCode, npe01__Payment_Amount__c, DebitType__c, OriginalPayment__c FROM npe01__oppPayment__c WHERE Id = \'' + refund.Id + '\' LIMIT 1';
+        npe01__oppPayment__c refundRecord = database.query(soql);
 
-        System.assertEquals(1,refundService.getRefundRecords().size(),
-            'A refund record should be created');
-        System.assertEquals(originalPayment.npe01__Payment_Amount__c, -1 * refundRecord.npe01__Payment_Amount__c,
+        soql = 'SELECT Amount, CurrencyIsoCode FROM Opportunity LIMIT 1';
+        oppRecord = database.query(soql);
+
+        List<Allocation__c> updatedAllocations = [SELECT percent__c FROM Allocation__c];
+
+        System.assertEquals(refundAmount, -1 * refundRecord.npe01__Payment_Amount__c,
             'The amount on the refund record should match the original payment amont but negative');
         System.assertEquals(originalPayment.Id, refundRecord.originalPayment__c,
             'The refund record should map to the original payment record');
-        System.assertEquals(PMT_RefundService.FULL_REFUND, refundRecord.DebitType__c,
+        System.assertEquals(true, refundRecord.npe01__Paid__c, 'The refund record should be mark as Paid');
+        System.assertEquals(PMT_RefundService.PARTIAL_REFUND, refundRecord.DebitType__c,
             'The original payment refund type should be set to: ' + PMT_RefundService.FULL_REFUND);
-        System.assertNotEquals(null, parentOpp, 'The parent opportunity should be proccessed');
-        System.assertEquals(0, parentOpp.Amount, 'The opporunity amount should be set to 0 after the refund');
+        System.assertEquals(originalAmount - refundAmount, oppRecord.Amount, 'The opporunity amount should be set to 0 after the refund');
         System.assertEquals(
             (String )originalPayment.get(UTIL_Currency.CURRENCY_ISO_CODE_FIELD),
             (String) refundRecord.get(UTIL_Currency.CURRENCY_ISO_CODE_FIELD),
             'Refund record should be set to the same currency as the original payment');
-
+        for (Allocation__c allo : updatedAllocations) {
+                System.assertEquals(expectedPercentage , allo.Percent__c,
+                    'Fixed Amount should be convet into percentage');
+            }
     }
+ 
+    @isTest
+    private static void verifyRefundsWillConvertFixedAllocationsIntoToPercentage() {
+        Opportunity oppRecord = getOpportunityRecord();
+        npe01__OppPayment__c originalPayment = getPaymentRecord(oppRecord.Id);
+        List<Allocation__c> allocations = getAllocationRecords(oppRecord);
 
-    private static npe01__OppPayment__c getPaymentRecord() {
-        Opportunity opportunity = new Opportunity(
-            Id = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType),
-            Amount = 1000
+        PMT_RefundService refundService = setupRefundServiceWithStubs(
+            new List<npe01__OppPayment__c>{originalPayment},
+            new List<Opportunity>{oppRecord},
+            allocations
         );
 
+        Decimal refundAmount = originalPayment.npe01__Payment_Amount__c / 2;
+        Decimal expectedPercentage = allocations[0].Amount__c / oppRecord.Amount * 100;
+        Test.startTest();
+        refundService.buildRefundRecord(originalPayment, refundAmount);
+        refundService.adjustAllocationsAndOpportunities();
+        Test.stopTest();
+
+        List<Allocation__c> updatedAllocations = refundService.allocationsToUpdate;
+        for (Allocation__c allo : updatedAllocations) {
+            System.assertEquals(expectedPercentage , allo.Percent__c,
+                'Fixed Amount should be convet into percentage');
+        }
+    }
+
+    private static npe01__OppPayment__c getPaymentRecord(Id oppId) {
         npe01__OppPayment__c payment = new npe01__OppPayment__c(
             Id = UTIL_UnitTestData_TEST.mockId(npe01__OppPayment__c.SObjectType),
-            npe01__Opportunity__c = opportunity.Id,
+            npe01__Opportunity__c = oppId,
             npe01__Paid__c = true,
-            npe01__Payment_Amount__c = 1000,
-            npe01__Opportunity__r = opportunity
+            npe01__Payment_Amount__c = 1000
         );
 
         return payment;
+    }
+
+    private static Opportunity getOpportunityRecord() {
+        return new Opportunity(
+            Id = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType),
+            Amount = 1000
+        );
+    }
+
+    private static List<Allocation__c> getAllocationRecords(Opportunity opp) {
+        return new List<Allocation__c> {
+            new Allocation__c(
+                Opportunity__c = opp.Id,
+                Amount__c = 250,
+                Opportunity__r = opp
+            ),
+            new Allocation__c(
+                Opportunity__c = opp.Id,
+                Amount__c = 250,
+                Opportunity__r = opp
+            ),
+            new Allocation__c(
+                Opportunity__c = opp.Id,
+                Amount__c = 250,
+                Opportunity__r = opp
+            ),
+            new Allocation__c(
+                Opportunity__c = opp.Id,
+                Amount__c = 250,
+                Opportunity__r = opp
+            ) 
+        };
     }
 
     public static String getDefaultISOCode() {
@@ -247,9 +322,39 @@ public with sharing class PMT_RefundService_TEST {
         return 'USD';
     }
 
+    public static PMT_RefundService setupRefundServiceWithStubs(
+        List<npe01__OppPayment__c> paymentRecords, List<Opportunity> oppRecords, List<Allocation__c> allocationRecords
+    ) {
+        PaymentSelector_TEST.Stub paymentSelectorStub = new PaymentSelector_TEST.Stub();
+        OpportunitySelector_TEST.Stub opporunitySelectorStub = new OpportunitySelector_TEST.Stub();
+        AllocationSelector_TEST.Stub allocationSelectorStub = new AllocationSelector_TEST.Stub();
+
+        paymentSelectorStub.paymentRecords = paymentRecords;
+        opporunitySelectorStub.oppRecords = oppRecords;
+        allocationSelectorStub.allocationRecords = allocationRecords;
+
+        PMT_RefundService refundService = new PMT_RefundService(); 
+        refundService.paymentSelector = (PaymentSelector) Test.createStub(
+            PaymentSelector.class,
+            paymentSelectorStub
+        );
+
+        refundService.opportunitySelector = (OpportunitySelector) Test.createStub(
+            OpportunitySelector.class,
+            opporunitySelectorStub
+        );
+
+        refundService.allocationSelector = (AllocationSelector) Test.createStub(
+            AllocationSelector.class,
+            allocationSelectorStub
+        );
+
+        return refundService;
+    }
+
     public class Stub implements System.StubProvider {
         public List<npe01__OppPayment__c> refundRecords;
-        public ERR_Handler.Errors errors = new ERR_Handler.Errors();
+        public List<ErrorRecord> errors = new List<ErrorRecord>();
         public PMT_RefundService.RefundInfo refundInfo;
  
         public Object handleMethodCall(

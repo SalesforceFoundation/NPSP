@@ -2,7 +2,9 @@ import apexAddToElevateBatch from '@salesforce/apex/GE_GiftEntryController.addTo
 import apexCreateElevateBatch from '@salesforce/apex/GE_GiftEntryController.createElevateBatch';
 import apexRemoveFromElevateBatch from '@salesforce/apex/GE_GiftEntryController.removeFromElevateBatch';
 import PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
+import RECURRING_DONATION_ID from '@salesforce/schema/DataImport__c.Recurring_Donation_Elevate_Recurring_ID__c';
 import PAYMENT_ELEVATE_ELEVATE_BATCH_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_Batch_Id__c';
+import GeGatewaySettings from 'c/geGatewaySettings';
 
 class ElevateBatch {
 
@@ -20,8 +22,8 @@ class ElevateBatch {
                 this.elevateBatchId = await this.create();
             }
 
-            return await apexAddToElevateBatch(
-                {batchItemRequestDTO: tokenizedGift, elevateBatchId: this.elevateBatchId}
+            return await apexAddToElevateBatch({batchItemRequestDTO: tokenizedGift,
+                                                       elevateBatchId: this.elevateBatchId}
             );
         } catch (exception) {
             if (retryOnFailure) {
@@ -38,11 +40,12 @@ class ElevateBatch {
         return elevateBatch.elevateBatchId;
     }
 
-    async remove(authorizedGift) {
+    async remove(batchItem) {
         return await apexRemoveFromElevateBatch({
-            authorizedGift: {
-                elevateBatchId: authorizedGift[PAYMENT_ELEVATE_ELEVATE_BATCH_ID.fieldApiName],
-                paymentId: authorizedGift[PAYMENT_ELEVATE_ID.fieldApiName]
+            batchItem: {
+                elevateBatchId: batchItem[PAYMENT_ELEVATE_ELEVATE_BATCH_ID.fieldApiName],
+                id: batchItem[PAYMENT_ELEVATE_ID.fieldApiName] ? batchItem[PAYMENT_ELEVATE_ID.fieldApiName] :
+                    batchItem[RECURRING_DONATION_ID.fieldApiName]
             }
         });
     }

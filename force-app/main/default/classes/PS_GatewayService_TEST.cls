@@ -53,11 +53,16 @@ public with sharing class PS_GatewayService_TEST {
         );
 
         Test.startTest();
-        PS_GatewayService gatewayService = new PS_GatewayService();
-        String jsonString = gatewayService.getGatewaysByMerchant();
+        try {
+            PS_GatewayService gatewayService = new PS_GatewayService();
+            String jsonString = gatewayService.getGatewaysByMerchant();
+            System.assert(false, 'Should throw an Exception');
+        } catch (Exception e) {
+            String error = e.getMessage();
+            System.assert(error.contains(TIMEOUT_MESSAGE), 'Response should include ' + TIMEOUT_MESSAGE);
+        }
         Test.stopTest();
 
-        System.assert(jsonString.contains(TIMEOUT_MESSAGE), 'Response should include ' + TIMEOUT_MESSAGE);
     }
 
     @IsTest

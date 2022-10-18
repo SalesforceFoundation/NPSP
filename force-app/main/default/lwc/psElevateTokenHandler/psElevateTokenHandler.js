@@ -226,7 +226,7 @@ class psElevateTokenHandler {
         return setPaymentMethodPromise;
     }
 
-    mount(iframe, paymentMethod, handleError, resolveMount) {
+    mount(iframe, paymentMethod, handleError, resolveMount, gatewayOverride) {
         if (isNull(iframe)) {
             return;
         }
@@ -243,7 +243,8 @@ class psElevateTokenHandler {
 
         const message = {
             action: MOUNT_IFRAME_EVENT_ACTION,
-            paymentMethod: paymentMethod
+            paymentMethod: paymentMethod,
+            gatewayId: gatewayOverride
         };
         this.sendIframeMessage(iframe, message, this._visualforceOrigin);
 

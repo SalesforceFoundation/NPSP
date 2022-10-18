@@ -25,6 +25,7 @@ import { mockGetIframeReply } from 'c/psElevateTokenHandler';
 
 const pubSub = require('c/pubsubNoPageRef');
 import gift from 'c/geGift';
+import GeGatewaySettings from 'c/geGatewaySettings';
 
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
@@ -865,6 +866,9 @@ describe('c-ge-gift-entry-form-app', () => {
             await flushPromises();
 
             const geFormRenderer = shadowQuerySelector(formApp, 'c-ge-form-renderer');
+            GeGatewaySettings.isValidElevatePaymentMethod = jest.fn(() => true);
+            geFormRenderer.GeGatewaySettings = GeGatewaySettings;
+
             const [firstSection, secondSection, thirdSection, fourthSection] = shadowQuerySelectorAll(geFormRenderer, 'c-ge-form-section');
             const [donorType, accountLookup, contactLookup] = shadowQuerySelectorAll(firstSection, 'c-ge-form-field');
             const [donationDate,
