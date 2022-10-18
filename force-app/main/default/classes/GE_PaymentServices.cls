@@ -131,7 +131,7 @@ public with sharing class GE_PaymentServices {
      * @description Returns Payments Services transaction status values
      * @return String JSON of the transaction status values by name
      */
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled(Cacheable=true)
     public static String getPaymentTransactionStatusValues() {
         Map<String, String> paymentStatusNameByEnum = new Map<String, String>();
 
@@ -154,8 +154,8 @@ public with sharing class GE_PaymentServices {
      * @description Returns salesforce visualforce URL
      * @return String JSON of visualforce URL
      */
-    @AuraEnabled(cacheable=true)
-    public static String getVfForceURL() {
+    @AuraEnabled(Cacheable=true)
+    public static String getVfURL() {
         return DomainCreator.getVisualforceHostname(null);
     }
 

@@ -3,7 +3,7 @@ import { getNamespace, isFunction, isNull, validateJSONString } from 'c/utilComm
 import PAYMENT_AUTHORIZATION_TOKEN_FIELD from
         '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import tokenRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
-import getVfForceURL from '@salesforce/apex/GE_PaymentServices.getVfForceURL';
+import getVfURL from '@salesforce/apex/GE_PaymentServices.getVfURL';
 import { isBlank } from 'c/util';
 
 
@@ -50,7 +50,7 @@ class psElevateTokenHandler {
 
     async getVisualForceOriginURLs(domainInfo, namespace) {
         const url = `https://${domainInfo.orgDomain}--${namespace}.visualforce.com`;
-        const vfHostName = await getVfForceURL();
+        const vfHostName = await getVfURL();
         const vfURL = `https://${vfHostName}`;
 
         const originURLs = [
