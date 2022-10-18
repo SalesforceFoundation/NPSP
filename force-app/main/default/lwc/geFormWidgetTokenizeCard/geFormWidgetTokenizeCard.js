@@ -27,6 +27,7 @@ import DATA_IMPORT_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.P
 import DATA_IMPORT_PAYMENT_METHOD from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import DATA_IMPORT_CONTACT_FIRSTNAME from '@salesforce/schema/DataImport__c.Contact1_Firstname__c';
 import DATA_IMPORT_CONTACT_LASTNAME from '@salesforce/schema/DataImport__c.Contact1_Lastname__c';
+import DATA_IMPORT_STATUS from '@salesforce/schema/DataImport__c.Status__c';
 
 import DATA_IMPORT_DONATION_DONOR from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 import DATA_IMPORT_ACCOUNT_NAME from '@salesforce/schema/DataImport__c.Account1_Name__c';
@@ -191,7 +192,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return Settings.isElevateCustomer()
             && this.isReadOnly
             && (this.isExpiredTransaction || this.isPaymentStatusInReadOnlyMode() ||
-                this._widgetDataFromState[apiNameFor(DATA_IMPORT_RECURRING_DONATION_INSTALLMENT_PERIOD)]);
+                !!this._widgetDataFromState[apiNameFor(DATA_IMPORT_RECURRING_DONATION_INSTALLMENT_PERIOD)]);
     }
 
     get shouldDisplayDoNotEnterPaymentInformation() {
@@ -305,8 +306,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             this.display.transitionTo('resetToDeactivated');
         }
 
-        if (this.isPaymentStatusInReadOnlyMode() && this.isValidBatchElevatePaymentMethod()) {
-            this.display.transitionTo('readOnly');
+        if ((this.isPaymentStatusInReadOnlyMode() && this.isValidBatchElevatePaymentMethod())
+            || this.isDataImportStatusImported()) {
+                this.display.transitionTo('readOnly');
         } else if (this.isValidBatchElevatePaymentMethod()) {
             this.display.transitionTo('charge');
             if (this.isMounted) {
@@ -377,6 +379,10 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     handleUserCancelEdit() {
         this.display.transitionTo('readOnly');
+    }
+
+    isDataImportStatusImported() {
+        return this._widgetDataFromState[apiNameFor(DATA_IMPORT_STATUS)] === 'Imported';
     }
 
     isPaymentStatusInReadOnlyMode() {
