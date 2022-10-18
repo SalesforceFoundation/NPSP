@@ -190,6 +190,7 @@ export default class GeFormRenderer extends LightningElement{
     @api batchCurrencyIsoCode;
     @api isElevateCustomer = false;
     @api saveDisabled = false;
+    @api isMakeRecurringButtonDisabled = false;
 
     @track isPermissionError = false;
     @track permissionErrorTitle;

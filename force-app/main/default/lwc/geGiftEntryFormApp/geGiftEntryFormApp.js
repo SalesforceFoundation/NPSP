@@ -83,6 +83,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         }
     }
 
+    get shouldDisableMakeRecurringButton() {
+        return this.gift.isImported();
+    }
+
     handleLoadData(event) {
         try {
             this.isFormRendering = true;
