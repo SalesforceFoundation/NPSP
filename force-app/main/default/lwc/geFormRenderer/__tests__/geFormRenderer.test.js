@@ -375,12 +375,12 @@ describe('c-ge-form-renderer', () => {
                 "paymentMethodType": "CARD"
             });
             const EXPECTED_UPSERT_DATAIMPORT_FIELDS = {
-                Donation_Donor__c: 'Contact',
-                Contact1Imported__c: '003J000001zoYLGIA2',
-                Contact1_Lastname__c: 'DummyLastName',
-                Donation_Date__c: '2021-02-23',
-                Donation_Amount__c: '0.01',
                 Payment_Method__c: "Credit Card",
+                Donation_Amount__c: '0.01',
+                Contact1Imported__c: '003J000001zoYLGIA2',
+                Donation_Date__c: '2021-02-23',
+                Donation_Donor__c: 'Contact',
+                Contact1_Lastname__c: 'DummyLastName',
             };
             const DUMMY_CONTACT_ID = '003J000001zoYLGIA2';
 
@@ -448,7 +448,7 @@ describe('c-ge-form-renderer', () => {
                 requestBodyParameters: EXPECTED_PURCHASE_BODY_PARAMS
             });
             expect(upsertDataImport).toHaveBeenLastCalledWith({
-                dataImport: expect.objectContaining(EXPECTED_UPSERT_DATAIMPORT_FIELDS)
+                dataImport: JSON.stringify(EXPECTED_UPSERT_DATAIMPORT_FIELDS)
             });
         });
 });
