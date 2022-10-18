@@ -66,7 +66,7 @@ class psElevateTokenHandler {
     * @description Builds the Visualforce origin url that we need in order to
     * make sure we're only listening for messages from the correct source.
     */
-    setVisualforceOriginURLs(domainInfo) {
+    async setVisualforceOriginURLs(domainInfo) {
         if (isNull(domainInfo)) {
             return;
         }

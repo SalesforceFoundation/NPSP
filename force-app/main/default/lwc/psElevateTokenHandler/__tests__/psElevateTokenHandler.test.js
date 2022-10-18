@@ -39,8 +39,9 @@ const createPostMessageEvent = (type) => {
    }
 }
 
-const buildVFUrls  = (domainInfo, namespace) => {
-   return psElevateTokenHandler.getVisualForceOriginURLs(domainInfo, namespace);
+const buildVFUrls = async (domainInfo, namespace) => {
+   return await psElevateTokenHandler.getVisualForceOriginURLs(domainInfo, namespace);
+
 }
 
 const mockDomainInfo = () => {
@@ -64,8 +65,9 @@ describe('c-ps-Elevate-Token-Handler', () => {
       clearDOM();
    });
 
-   it('should handle a valid message', () => {
+   it('should handle a valid message', async() => {
       psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfo());
+      await flushPromises();
       const isMessageHandled =
           psElevateTokenHandler.shouldHandleMessage(
               createPostMessageEvent('valid'));
@@ -108,20 +110,20 @@ describe('c-ps-Elevate-Token-Handler', () => {
 
    });
 
-   it('should create eight non-namespaced visualforce origin urls', () => {
+   it('should create two non-namespaced visualforce origin urls', async () => {
       const vfURLS = buildVFUrls(mockDomainInfo(), 'c');
-      expect(vfURLS.length).toEqual(8);
-      vfURLS.forEach(url => {
-         expect(url.value.includes('c')).toBe(true);
-      })
+      return vfURLS.then(data => {
+         expect(data.length).toEqual(2);
+         expect(data[0].value.includes('c')).toBe(true);
+      });
    });
 
-   it('should create eight namespaced visualforce origin urls', () => {
+   it('should create two namespaced visualforce origin urls', () => {
       const vfURLS = buildVFUrls(mockDomainInfo(), 'npsp');
-      expect(vfURLS.length).toEqual(8);
-      vfURLS.forEach(url => {
-         expect(url.value.includes('npsp')).toBe(true);
-      })
+      return vfURLS.then(data => {
+         expect(data.length).toEqual(2);
+         expect(data[0].value.includes('npsp')).toBe(true);
+      });
    });
 
    it('should handle a valid message on Experience Sites', () => {
@@ -168,12 +170,12 @@ describe('c-ps-Elevate-Token-Handler', () => {
 
    });
 
-   it('should create nine non-namespaced visualforce origin urls on Experience Sites', () => {
+   it('should create three non-namespaced visualforce origin urls on Experience Sites', () => {
       const vfURLS = buildVFUrls(mockDomainInfoExperienceSite(), 'c');
-      expect(vfURLS.length).toEqual(9);
-      vfURLS.forEach(url => {
-         expect(url.value.includes('c')).toBe(true);
-      })
+      return vfURLS.then(data => {
+         expect(data.length).toEqual(3);
+         expect(data[0].value.includes('c')).toBe(true);
+      });
    });
 
 });
