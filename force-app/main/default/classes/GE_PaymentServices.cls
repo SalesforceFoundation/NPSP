@@ -35,7 +35,6 @@
 * @description Class holds payment services purchase request related methods.
 */
 public with sharing class GE_PaymentServices {
-
     @TestVisible class PaymentServicesException extends Exception {}
 
     private static GE_PaymentServices paymentServicesInstance;
