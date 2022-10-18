@@ -445,12 +445,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     shouldDisplayWarningForRecurringGiftModal() {
-        const isReviewingOpportunity = !isEmptyObject(this.giftInView?.fields[DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName]);
-        const isReviewingPayment = !isEmptyObject(this.giftInView?.fields[DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName]);
-        const hasSoftCredits = this.hasSoftCredits();
-        const isGiftAuthorized = this.isGiftAuthorized();
-
-        return isGiftAuthorized || isReviewingOpportunity || isReviewingPayment || hasSoftCredits;
+        return this.hasSoftCredits();
     }
 
     displayWarningForRecurringGiftModal() {
