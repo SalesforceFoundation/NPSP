@@ -64,10 +64,9 @@ class GeGatewaySettings {
     isValidElevatePaymentMethod(paymentMethod) {
 
         if (!this.getElevateSettings()) {
-            return paymentMethod === PAYMENT_METHOD_ACH
-                || paymentMethod === PAYMENT_METHOD_CREDIT_CARD;
+            return this.isPaymentMethodCreditOrAch(paymentMethod);
         } else if (this.getElevateSettings().isACHEnabled && this.getElevateSettings().isCreditCardEnabled) {
-            return true;
+            return this.isPaymentMethodCreditOrAch(paymentMethod);
         } else if (this.getElevateSettings().isCreditCardEnabled && paymentMethod === PAYMENT_METHOD_CREDIT_CARD) {
             return true;
         } else if (this.getElevateSettings().isACHEnabled && paymentMethod === PAYMENT_METHOD_ACH) {
@@ -75,6 +74,11 @@ class GeGatewaySettings {
         }
 
         return false;
+    }
+
+    isPaymentMethodCreditOrAch(paymentMethod) {
+        return paymentMethod === PAYMENT_METHOD_ACH
+            || paymentMethod === PAYMENT_METHOD_CREDIT_CARD;
     }
 
     getElevateSettings() {
