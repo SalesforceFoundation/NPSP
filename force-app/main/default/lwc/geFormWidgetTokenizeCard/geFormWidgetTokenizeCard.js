@@ -15,7 +15,8 @@ import {
     PAYMENT_METHODS,
     TOKENIZE_ACH_EVENT_ACTION,
     TOKENIZE_CREDIT_CARD_EVENT_ACTION,
-    DEFAULT_NAME_ON_CARD
+    DEFAULT_NAME_ON_CARD,
+    GIFT_STATUSES
 } from 'c/geConstants';
 import ElevateWidgetDisplay from './helpers/elevateWidgetDisplay';
 import GeFormService from 'c/geFormService';
@@ -382,7 +383,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     isDataImportStatusImported() {
-        return this._widgetDataFromState[apiNameFor(DATA_IMPORT_STATUS)] === 'Imported';
+        return this._widgetDataFromState[apiNameFor(DATA_IMPORT_STATUS)] === GIFT_STATUSES.IMPORTED
     }
 
     isPaymentStatusInReadOnlyMode() {
