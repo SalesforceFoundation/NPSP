@@ -184,7 +184,6 @@ public with sharing class Gift {
     }
 
     public void preprocessForRecurringGift() {
-        this.dataImport.Donation_Amount__c = null;
         this.dataImport.Donation_Date__c = null;
         this.dataImport.DonationImported__c = null;
         clearNetNewSoftCredits();

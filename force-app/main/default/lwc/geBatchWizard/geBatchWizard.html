@@ -58,30 +58,14 @@
                             </c-util-input>
                         </template>
                         <template if:true={canAllowRecurringDonations}>
-
-                            <c-util-expandable-section label= "Recurring Donations">
-                                <c-util-input data-id='allowRecurringDonationsField'
-                                              type={allowRecurringDonationsField.dataType}
-                                              field-api-name={allowRecurringDonationsField.apiName}
-                                              object-api-name={dataImportBatchName}
-                                              label={allowRecurringDonationsField.label}
-                                              onchangevalue={handleAllowRecurringDonationsOnChange}
-                                              value={allowRecurringDonations}
-                                >
-                                </c-util-input>
-
-                                <c-util-input data-id='allowFirstInstallmentsField'
-                                              type={allowRecurringDonationsField.dataType}
-                                              field-api-name="AllowFirstInstallment__f"
-                                              object-api-name="AllowFirstInstallment__o"
-                                              disabled={allowFirstInstallmentDisabled}
-                                              label="Allow First Installment"
-                                              onchangevalue={handleAllowFirstInstallmentOnChange}
-                                              value={_allowFirstInstallment}
-                                >
-                                </c-util-input>
-
-                            </c-util-expandable-section>
+                            <c-util-input data-id='allowRecurringDonationsField'
+                                          type={allowRecurringDonationsField.dataType}
+                                          field-api-name={allowRecurringDonationsField.apiName}
+                                          object-api-name={dataImportBatchName}
+                                          label={allowRecurringDonationsField.label}
+                                          value={allowRecurringDonations}
+                            >
+                            </c-util-input>
                         </template>
 
                         <div class="slds-p-top_medium">

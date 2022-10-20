@@ -1333,8 +1333,7 @@ public with sharing class GE_GiftEntryController {
         }
     }
 
-    @AuraEnabled(Cacheable= true)
-    public static String retrieveBatchCurrencyIsoCode (Id batchId) {
+    private static String retrieveBatchCurrencyIsoCode (Id batchId) {
         String query = new UTIL_Query()
             .withSelectFields(new Set<String>{UTIL_Currency.CURRENCY_ISO_CODE_FIELD})
             .withFrom(DataImportBatch__c.SObjectType)

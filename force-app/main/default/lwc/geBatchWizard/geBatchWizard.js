@@ -89,9 +89,6 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         third: 2
     }
 
-    _allowFirstInstallment = false;
-    _allowFirstInstallmentDisabled;
-
     get allowRecurringDonations() {
         return this
             ?.dataImportBatchRecord
@@ -106,36 +103,6 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
 
     get canAllowRecurringDonations() {
         return Settings.canMakeGiftsRecurring();
-    }
-
-    calculateAllowFirstInstallmentState() {
-        if (this.allowRecurringDonations) {
-            this._allowFirstInstallmentDisabled = false;
-        } else if (!this.canAllowRecurringDonations || !this.allowRecurringDonations) {
-            this._allowFirstInstallmentDisabled = true;
-        }
-
-        const batchLevelDefaults =
-            JSON.parse(this.dataImportBatchRecord.fields[DATA_IMPORT_BATCH_DEFAULTS_INFO.fieldApiName].value);
-        this._allowFirstInstallment =  batchLevelDefaults['AllowFirstInstallment__f']?.value;
-    }
-
-    handleAllowRecurringDonationsOnChange(event) {
-        const isChecked = event.detail.value
-        if (!isChecked) {
-            this._allowFirstInstallment = false;
-            this._allowFirstInstallmentDisabled = true;
-        } else if (!this._allowFirstInstallment && isChecked) {
-            this._allowFirstInstallmentDisabled = false;
-        }
-    }
-
-    handleAllowFirstInstallmentOnChange(event) {
-        this._allowFirstInstallment = event.detail.value;
-    }
-
-    get allowFirstInstallmentDisabled() {
-        return this._allowFirstInstallmentDisabled;
     }
 
     get showBackButton() {
@@ -240,10 +207,6 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
                     this.builderTemplateComboboxOptions(this.templates);
 
                     this.dataImportBatchRecord = response.data;
-                    this.calculateAllowFirstInstallmentState();
-
-                    console.log(JSON.stringify(this.dataImportBatchRecord));
-
                     let templateId = this
                         .dataImportBatchRecord
                         .fields[DATA_IMPORT_BATCH_FORM_TEMPLATE_INFO.fieldApiName]
@@ -262,14 +225,6 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         }
     }
 
-
-    setAllowFirstInstallmentValue(batchLevelDefaults) {
-        let allowFirstInstallmentElement = this.template.querySelectorAll(
-            '[data-id="allowFirstInstallmentsField"]');
-        allowFirstInstallmentElement.value = batchLevelDefaults['AllowFirstInstallment__f'].value;
-    }
-
-
     setFormFieldsBatchLevelDefaults() {
         let batchLevelDefaults =
             JSON.parse(this.dataImportBatchRecord.fields[DATA_IMPORT_BATCH_DEFAULTS_INFO.fieldApiName].value);
@@ -280,16 +235,9 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
                     if (batchLevelDefaults[element.fieldApiName]) {
                         element.value = batchLevelDefaults[element.fieldApiName].value;
                     }
-
-                    if (batchLevelDefaults[element.fieldApiName] === 'AllowFirstInstallment__f') {
-                        element.value
-                    }
-
                 });
             }
         });
-        this.setAllowFirstInstallmentValue(batchLevelDefaults);
-
     }
 
     appendTrueFalsePicklistToElement() {
