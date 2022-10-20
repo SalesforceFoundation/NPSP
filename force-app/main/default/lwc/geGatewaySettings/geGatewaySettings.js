@@ -3,6 +3,10 @@ import decryptGatewayId from '@salesforce/apex/GE_GiftEntryController.decryptGat
 import { showToast } from 'c/utilCommon';
 import psGatewayNotValid from '@salesforce/label/c.psGatewayNotValid';
 import getGatewayAssignmentSettings from '@salesforce/apex/GE_GiftEntryController.getGatewayAssignmentSettings';
+import {
+    PAYMENT_METHOD_CREDIT_CARD,
+    PAYMENT_METHOD_ACH
+} from 'c/geConstants';
 
 class GeGatewaySettings {
 
@@ -60,16 +64,21 @@ class GeGatewaySettings {
     isValidElevatePaymentMethod(paymentMethod) {
 
         if (!this.getElevateSettings()) {
-            return true;
+            return this.isPaymentMethodCreditOrAch(paymentMethod);
         } else if (this.getElevateSettings().isACHEnabled && this.getElevateSettings().isCreditCardEnabled) {
+            return this.isPaymentMethodCreditOrAch(paymentMethod);
+        } else if (this.getElevateSettings().isCreditCardEnabled && paymentMethod === PAYMENT_METHOD_CREDIT_CARD) {
             return true;
-        } else if (this.getElevateSettings().isCreditCardEnabled && paymentMethod === 'Credit Card') {
-            return true;
-        } else if (this.getElevateSettings().isACHEnabled && paymentMethod === 'ACH') {
+        } else if (this.getElevateSettings().isACHEnabled && paymentMethod === PAYMENT_METHOD_ACH) {
             return true;
         }
 
         return false;
+    }
+
+    isPaymentMethodCreditOrAch(paymentMethod) {
+        return paymentMethod === PAYMENT_METHOD_ACH
+            || paymentMethod === PAYMENT_METHOD_CREDIT_CARD;
     }
 
     getElevateSettings() {

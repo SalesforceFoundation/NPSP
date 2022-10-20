@@ -422,11 +422,12 @@ public with sharing class GE_GiftEntryController {
     * @return The DataImport__c record that was saved
     */
     @AuraEnabled
-    public static DataImport__c upsertDataImport(DataImport__c dataImport) {
+    public static DataImport__c upsertDataImport(String dataImport) {
+        DataImport__c dataImportObject = (DataImport__c)JSON.deserialize(dataImport, DataImport__c.class);
         try {
-            upsert dataImport Id;
+            upsert dataImportObject Id;
 
-            return dataImport;
+            return dataImportObject;
         } catch (Exception e) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
 
