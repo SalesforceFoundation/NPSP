@@ -138,6 +138,7 @@ public with sharing class RD2_StatusMapper {
      * @description Returns Recurring Donation Status picklist field value and labels
      * @return Map<String, String> State value mapped by the status key
      */
+    @TestVisible
     private Map<String, String> getActiveStatusPicklistValues() {
         Map<String, String> labelByValue = new Map<String, String>();
         List<Schema.PicklistEntry> statusEntries = npe03__Recurring_Donation__c.Status__c.getDescribe().getPicklistValues();

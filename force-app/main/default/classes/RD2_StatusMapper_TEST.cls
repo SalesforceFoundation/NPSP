@@ -156,10 +156,14 @@ public with sharing class RD2_StatusMapper_TEST {
     private static void shouldReturnStateWhenStatusIsRequiredReadOnlyMapping() {
         RD2_StatusMapper mapper = new RD2_StatusMapper();
 
+        Map<String,String> activeValuesMap = mapper.getActiveStatusPicklistValues();
+
         for (String status : READ_ONLY_STATUS_VALUES) {
-            System.assertEquals(RD2_StatusMapper.READ_ONLY_STATUS_TO_STATE.get(status), mapper.getState(status),
-                'State should mapped to pre-defined state for required read-only value'
-            );
+            if (activeValuesMap.get(status) != null) {
+                System.assertEquals(RD2_StatusMapper.READ_ONLY_STATUS_TO_STATE.get(status), mapper.getState(status),
+                    'State should mapped to pre-defined state for required read-only value'
+                );
+            }
         }
     }
 
