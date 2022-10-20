@@ -541,11 +541,11 @@ ElevateBatchItemType.ONE_TIME, TEST_PAYMENT_METHOD_CARD);
     @IsTest
     static void shouldUpsertDataImportRecord() {
         DataImport__c inMemoryDataImport = BDI_DataImport_TEST.newDI('First', 'Last', 100);
-        DataImport__c dataImportRecord = GE_GiftEntryController.upsertDataImport(inMemoryDataImport);
+        DataImport__c dataImportRecord = GE_GiftEntryController.upsertDataImport(JSON.serialize(inMemoryDataImport));
         System.assert(dataImportRecord.Id != null);
 
         dataImportRecord.Payment_Authorization_Token__c = 'TEST_TOKEN';
-        DataImport__c updatedDataImportRecord = GE_GiftEntryController.upsertDataImport(dataImportRecord);
+        DataImport__c updatedDataImportRecord = GE_GiftEntryController.upsertDataImport(JSON.serialize(dataImportRecord));
         System.assertEquals(dataImportRecord.Id, updatedDataImportRecord.Id);
         System.assertEquals('TEST_TOKEN', updatedDataImportRecord.Payment_Authorization_Token__c);
     }
