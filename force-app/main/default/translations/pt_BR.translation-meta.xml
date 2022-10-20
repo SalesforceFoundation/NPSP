@@ -1153,8 +1153,7 @@
     <customLabels>
         <name>RD2_EnablementPrepTasks</name>
         <label>&lt;ul&gt;&lt;li&gt;Desabilite fluxos de trabalho, processos, regras de validação e acionadores nos objetos Doações recorrentes, Oportunidades e Pagamentos.&lt;/li&gt;
-&lt;li&gt;Faça backup do seu banco de dados, incluindo todas as Doações recorrentes e seus registros relacionados.&lt;/li&gt;
-&lt;li&gt;Leia a &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentação&lt;/a&gt; sobre Doações recorrentes aprimoradas.&lt;/li&gt;&lt;/ul&gt;</label>
+&lt;li&gt;Faça backup do seu banco de dados, incluindo todas as Doações recorrentes e seus registros relacionados.&lt;/li&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementPrepTitle</name>
@@ -2106,7 +2105,7 @@ Para verificar as configurações de Alocação de GAU, acesse Doações | Aloca
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
-        <label>Em 1º de outubro de 2020, a Entrada de dados em lote será aposentada e não funcionará mais no NPSP. Se você tiver algum lote em andamento no momento, ainda poderá acessar esses registros, mas não poderá processá-los usando a Entrada de dados em lote. Para garantir uma transição suave, ative e use a Entrada de doações antes de 1º de outubro. Saiba mais sobre a Entrada de doações na &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;Documentação do NPSP&lt;/a&gt;.</label>
+        <label>Em 1º de outubro de 2020, a Entrada de dados em lote será aposentada e não funcionará mais no NPSP. Se você tiver algum lote em andamento no momento, ainda poderá acessar esses registros, mas não poderá processá-los usando a Entrada de dados em lote. Para garantir uma transição suave, ative e use a Entrada de doações antes de 1º de outubro.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
@@ -3007,7 +3006,7 @@ Para verificar as configurações de Alocação de GAU, acesse Doações | Aloca
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>Em 13 de julho de 2021, a Entrada de doações em lote será aposentada e não funcionará mais no NPSP. Se você tiver algum lote em andamento no momento, ainda poderá acessar esses registros, mas não poderá processá-los usando a Entrada de doações em lote. Para garantir uma transição suave, ative e use a Entrada de doações mais recente antes de 13 de julho. Saiba mais sobre a Entrada de doações na &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;Documentação do NPSP&lt;/a&gt;.</label>
+        <label>Em 13 de julho de 2021, a Entrada de doações em lote será aposentada e não funcionará mais no NPSP. Se você tiver algum lote em andamento no momento, ainda poderá acessar esses registros, mas não poderá processá-los usando a Entrada de doações em lote. Para garantir uma transição suave, ative e use a Entrada de doações mais recente antes de 13 de julho.</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -6844,7 +6843,7 @@ A escolha de Não agendar automaticamente trabalhos do NPSP padrão diz ao NPSP 
         <label>&lt;b&gt;Esta mensagem não será exibida se você sair desta página! Faça uma captura de tela desta página ou copie as informações na tabela abaixo para acompanhar os mapeamentos do Texto de ajuda que você precisa corrigir. &lt;/b&gt;
             &lt;br/&gt;
             &lt;br/&gt;
-            Não pudemos converter alguns dos seus mapeamentos de Texto de ajuda existentes porque eles são inválidos. &lt;a href=&quot;https://powerofus.force.com/NPSP_Troubleshoot_Help_Text&quot; target=&quot;_blank&quot;&gt;Leia mais sobre problemas comuns de mapeamento de Texto de ajuda&lt;/a&gt;. Recomendamos desativar o Mapeamento avançado, corrigir os mapeamentos inválidos do Texto de ajuda e reativar o Mapeamento avançado. Alternativamente, você pode adicionar esses mapeamentos quando configurar o Mapeamento avançado na próxima tela, mas esses mapeamentos adicionais serão revertidos para o Texto de ajuda original inválido se você desativar o Mapeamento avançado.</label>
+            Não pudemos converter alguns dos seus mapeamentos de Texto de ajuda existentes porque eles são inválidos. Recomendamos desativar o Mapeamento avançado, corrigir os mapeamentos inválidos do Texto de ajuda e reativar o Mapeamento avançado. Alternativamente, você pode adicionar esses mapeamentos quando configurar o Mapeamento avançado na próxima tela, mas esses mapeamentos adicionais serão revertidos para o Texto de ajuda original inválido se você desativar o Mapeamento avançado.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMappingInvalidHelpText</name>
@@ -7144,7 +7143,7 @@ IMPORTANTE: ambos os campos precisam ter o mesmo tipo de dados.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCR</name>
-        <label>Créditos indiretos, Papéis de contato e Doações correspondentes se relacionam entre si de maneiras importantes. Se você não está familiarizado com esses conceitos e como eles interagem, deve ler a &lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;Documentação do NPSP&lt;/a&gt; antes de fazer ajustes nessas configurações.</label>
+        <label>Créditos indiretos, Papéis de contato e Doações correspondentes se relacionam entre si de maneiras importantes. Se você não está familiarizado com esses conceitos e como eles interagem, deve ler a &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Automated_Soft_Credits.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;Documentação do NPSP&lt;/a&gt; antes de fazer ajustes nessas configurações.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCRDefaultRole</name>
