@@ -2602,7 +2602,7 @@ export default class GeFormRenderer extends LightningElement{
             : this.CUSTOM_LABELS.geTextSaving;
         delete dataImportFromFormState[apiNameFor(PAYMENT_AUTHORIZE_TOKEN)];
         const upsertResponse = await upsertDataImport({
-            dataImport: dataImportFromFormState
+            dataImport: JSON.stringify(dataImportFromFormState)
         });
         this.updateFormState(upsertResponse);
     };
