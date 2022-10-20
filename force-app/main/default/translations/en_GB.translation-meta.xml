@@ -2105,7 +2105,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
-        <label>On October 1, 2020, Batch Data Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Data Entry. To ensure a smooth transition, enable and use Gift Entry in advance of October 1st. Learn more about Gift Entry in the &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</label>
+        <label>On October 1, 2020, Batch Data Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Data Entry. To ensure a smooth transition, enable and use Gift Entry in advance of October 1st.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
@@ -3006,7 +3006,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>On July 13, 2021, legacy Batch Gift Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Gift Entry. To ensure a smooth transition, enable and use the newer Gift Entry in advance of July 13th. Learn more about Gift Entry in the &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</label>
+        <label>On July 13, 2021, legacy Batch Gift Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Gift Entry. To ensure a smooth transition, enable and use the newer Gift Entry in advance of July 13th.</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -6843,7 +6843,7 @@ Selecting Don&apos;t Auto Schedule Default NPSP Jobs tells NPSP not to check for
         <label>&lt;b&gt;This message won&apos;t be displayed if you leave this page! Take a screenshot of this page or copy the information in the table below to track the Help Text mappings you need correct. &lt;/b&gt;
             &lt;br/&gt;
             &lt;br/&gt;
-            We couldn&apos;t convert some of your existing Help Text mappings because they&apos;re invalid. &lt;a href=&quot;https://powerofus.force.com/NPSP_Troubleshoot_Help_Text&quot; target=&quot;_blank&quot;&gt;Read more about common Help Text mapping issues&lt;/a&gt;. We recommend disabling Advanced Mapping, correcting the invalid Help Text mappings, then re-enabling Advanced Mapping. Alternatively, you could add these mappings when you configure Advanced Mapping on the next screen, but these additional mappings will revert to the original invalid Help Text if you disable Advanced Mapping.</label>
+            We couldn&apos;t convert some of your existing Help Text mappings because they&apos;re invalid. We recommend disabling Advanced Mapping, correcting the invalid Help Text mappings, then re-enabling Advanced Mapping. Alternatively, you could add these mappings when you configure Advanced Mapping on the next screen, but these additional mappings will revert to the original invalid Help Text if you disable Advanced Mapping.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMappingInvalidHelpText</name>
@@ -7143,7 +7143,7 @@ IMPORTANT: Both of these fields must have the same data type.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCR</name>
-        <label>Soft Credits, Contact Roles, and Matching Gifts relate to each other in important ways. If you&apos;re not familiar with these concepts and how they interact, you should read through the &lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt; before making any adjustments to these settings.</label>
+        <label>Soft Credits, Contact Roles, and Matching Gifts relate to each other in important ways. If you&apos;re not familiar with these concepts and how they interact, you should read through the &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Automated_Soft_Credits.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt; before making any adjustments to these settings.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCRDefaultRole</name>
