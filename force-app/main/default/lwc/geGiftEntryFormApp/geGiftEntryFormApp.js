@@ -154,6 +154,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         await Settings.init();
     }
 
+    get batchCurrencyIsoCode() {
+        return this.giftBatchState.currencyIsoCode;
+    }
+
     disconnectedCallback() {
         unregisterListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
     }
