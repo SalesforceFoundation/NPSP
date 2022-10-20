@@ -3006,7 +3006,7 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>Op 13 juli 2021 wordt de verouderde functie Batchinvoer van giften buiten gebruik gesteld; de functie is dan niet meer beschikbaar in NPSP. Als u op dat moment actieve batches hebt, kunt u de records nog wel openen, maar u kunt ze niet meer verwerken met Batchinvoer van giften. Als u voor een goede overgang wilt zorgen, schakelt u de nieuwere functie Opgave van gift op voorhand in en neemt u deze al in gebruik vóór 13 juli. Meer informatie over Opgave van gift vindt u in de &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-documentatie&lt;/a&gt;.</label>
+        <label>Op 13 juli 2021 wordt de verouderde functie Batchinvoer van giften buiten gebruik gesteld; de functie is dan niet meer beschikbaar in NPSP. Als u op dat moment actieve batches hebt, kunt u de records nog wel openen, maar u kunt ze niet meer verwerken met Batchinvoer van giften. Als u voor een goede overgang wilt zorgen, schakelt u de nieuwere functie Opgave van gift op voorhand in en neemt u deze al in gebruik vóór 13 juli.</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -6842,7 +6842,7 @@ Door Standaard NPSP-taken niet automatisch plannen te selecteren, laat u NPSP we
         <label>&lt;b&gt;Dit bericht wordt niet weergegeven als u deze pagina verlaat. Maak een screenshot van deze pagina of kopieer de gegevens in de onderstaande tabel om de toewijzingen voor Help-tekst bij te houden die u nodig hebt. &lt;/b&gt;
             &lt;br/&gt;
             &lt;br/&gt;
-            We kunnen enkele van uw bestaande toewijzingen voor Help-tekst niet converteren, omdat ze ongeldig zijn. &lt;a href=&quot;https://powerofus.force.com/NPSP_Troubleshoot_Help_Text&quot; target=&quot;_blank&quot;&gt;Meer informatie over veel voorkomende problemen met toewijzingen van Help-tekst&lt;/a&gt;. U wordt aangeraden om Geavanceerd toewijzen uit te schakelen, de ongeldige toewijzingen van Help-tekst te corrigeren en vervolgens Geavanceerd toewijzen opnieuw in te schakelen. Of anders kunt u deze toewijzingen toevoegen wanneer u Geavanceerd toewijzen configureert op het volgende scherm, maar deze extra toewijzingen zetten alles terug naar de oorspronkelijke ongeldig Help-tekst als u Geavanceerd toewijzen uitschakelt.</label>
+            We kunnen enkele van uw bestaande toewijzingen voor Help-tekst niet converteren, omdat ze ongeldig zijn. U wordt aangeraden om Geavanceerd toewijzen uit te schakelen, de ongeldige toewijzingen van Help-tekst te corrigeren en vervolgens Geavanceerd toewijzen opnieuw in te schakelen. Of anders kunt u deze toewijzingen toevoegen wanneer u Geavanceerd toewijzen configureert op het volgende scherm, maar deze extra toewijzingen zetten alles terug naar de oorspronkelijke ongeldig Help-tekst als u Geavanceerd toewijzen uitschakelt.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMappingInvalidHelpText</name>
@@ -7142,7 +7142,7 @@ BELANGRIJK: Beide velden moeten van hetzelfde gegevenstype zijn.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCR</name>
-        <label>Soft Credits, Contactpersoonrollen en Overeenkomende Giften zijn in belangrijke mate met elkaar verbonden. Bent u niet vertrouwd met deze concepten en hoe ze elkaar beïnvloeden, leest u de &lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;NPSP-Documentatie&lt;/a&gt; door voordat u enige wijzigingen aan deze instellingen aanbrengt.</label>
+        <label>Soft Credits, Contactpersoonrollen en Overeenkomende Giften zijn in belangrijke mate met elkaar verbonden. Bent u niet vertrouwd met deze concepten en hoe ze elkaar beïnvloeden, leest u de &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Automated_Soft_Credits.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;NPSP-Documentatie&lt;/a&gt; door voordat u enige wijzigingen aan deze instellingen aanbrengt.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCRDefaultRole</name>
