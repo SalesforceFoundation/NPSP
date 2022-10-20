@@ -56,9 +56,6 @@ class psElevateTokenHandler {
         const sandboxEnhancedUrl =  `https://${domainInfo.orgDomain}--${namespace}.sandbox.vf.force.com`;
         const sandboxEnhancedLightning =  `https://${domainInfo.orgDomain}--${namespace}.sandbox.lightning.force.com`;
         const sandboxEnhancedCanon =  `https://${domainInfo.orgDomain}--${namespace}.sandbox.my.salesforce.com`;
-        const scratchEnhancedUrl =  `https://${domainInfo.orgDomain}--${namespace}.scratch.vf.force.com`;
-        const scratchEnhancedLightning =  `https://${domainInfo.orgDomain}--${namespace}.scratch.lightning.force.com`;
-        const scratchEnhancedCanon =  `https://${domainInfo.orgDomain}--${namespace}.scratch.my.salesforce.com`;
 
         const originURLs = [
             {value: url},
@@ -69,9 +66,6 @@ class psElevateTokenHandler {
             {value: productionEnhancedUrlLogin},
             {value: sandboxEnhancedLightning},
             {value: sandboxEnhancedCanon},
-            {value: scratchEnhancedUrl},
-            {value: scratchEnhancedLightning},
-            {value: scratchEnhancedCanon},
         ];
         if (!isBlank(domainInfo.communityBaseURL)) {
             return [...originURLs, { value: domainInfo.communityBaseURL }];

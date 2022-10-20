@@ -233,12 +233,16 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return tokenHandler.getTokenizeCardPageURL();
     }
 
-    get canViewReadOnlyFields() {
+    get canViewReadOnlyFieldsCreditCard() {
         const fields = this.dataImportObjectDescribe.data.fields;
         return fields?.[apiNameFor(PAYMENT_LAST_4)] !== undefined
             && fields?.[apiNameFor(PAYMENT_EXPIRATION_MONTH)] !== undefined
-            && fields?.[apiNameFor(PAYMENT_EXPIRATION_YEAR)] !== undefined
-            && fields?.[apiNameFor(ACH_PAYMENT_LAST_4)] !== undefined;
+            && fields?.[apiNameFor(PAYMENT_EXPIRATION_YEAR)] !== undefined;
+    }
+
+    get canViewReadOnlyFieldsACH() {
+        const fields = this.dataImportObjectDescribe.data.fields;
+        return fields?.[apiNameFor(ACH_PAYMENT_LAST_4)] !== undefined;
     }
 
     get achLast4() {
@@ -256,10 +260,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     get deactivatedMessage() {
         return this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction
             + ' ' + this.CUSTOM_LABELS.psSelectValidPaymentMethod;
-    }
-
-    get showCreditCardFields() {
-        return this.isPaymentMethodCreditCard();
     }
 
     get showACHFields() {

@@ -122,9 +122,9 @@
                         </template>
 
                         <template if:true={isReadOnly}>
-                            <template if:true={canViewReadOnlyFields}>
-                                <lightning-layout class="read-only-mode">
-                                    <template if:true={showCreditCardFields}>
+                            <lightning-layout class="read-only-mode">
+                                <template if:true={canViewReadOnlyFieldsCreditCard}>
+                                    <template if:false={showACHFields}>
                                         <lightning-layout-item padding="around-small"
                                                             class='fade-in'
                                                             data-qa-locator={qaLocatorLastFourDigits}>
@@ -146,6 +146,8 @@
                                                 {cardExpirationDate}</p>
                                         </lightning-layout-item>
                                     </template>
+                                </template>
+                                <template if:true={canViewReadOnlyFieldsACH}>
                                     <template if:true={showACHFields}>
                                         <lightning-layout-item padding="around-small"
                                                             class='fade-in'
@@ -158,8 +160,8 @@
                                                 {achLast4}</p>
                                         </lightning-layout-item>
                                     </template>
-                                </lightning-layout>
-                            </template>
+                                </template>
+                            </lightning-layout>
                             <template if:false={canViewReadOnlyFields}>
                                 <p class='fade-in'>
                                     {CUSTOM_LABELS.commonPermissionErrorMessage}

@@ -488,7 +488,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleNullPaymentFieldsInFormState() {
-        if (this.shouldNullPaymentRelatedFields() || this.shouldNullFormerAchPayment()) {
+        if (this.shouldNullPaymentRelatedFields()) {
             this.nullPaymentFieldsInFormState([
                 apiNameFor(PAYMENT_AUTHORIZE_TOKEN),
                 apiNameFor(PAYMENT_DECLINED_REASON),
@@ -947,6 +947,10 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     shouldNullPaymentRelatedFields() {
+        return this.shouldNullFormerCreditCardPayment() || this.shouldNullFormerAchPayment();
+    }
+
+    shouldNullFormerCreditCardPayment() {
         return (this.isGiftAuthorized() || this.isGiftExpired())
             && this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD;
     }
