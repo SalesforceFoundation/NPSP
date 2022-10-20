@@ -2105,7 +2105,7 @@ Pour vérifier vos paramètres d’affectations UCG, accédez à Dons | Affectat
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
-        <label>La saisie de données par lots ne sera plus prise en charge à partir du 1er octobre 2020 et ne fonctionnera plus dans NPSP. Si vous avez des lots en cours à cette date, vous pourrez accéder à ces enregistrements, mais vous ne pourrez pas les traiter en utilisant la saisie de données par lots. Pour garantir une transition transparente, activez et utilisez la saisie de dons avant le 1er octobre. Pour plus d’informations sur la saisie de dons, consultez la &lt;a href=’https://powerofus.force.com/NPSP_Documentation’ target=’_blank’&gt;documentation NPSP&lt;/a&gt;.</label>
+        <label>La saisie de données par lots ne sera plus prise en charge à partir du 1er octobre 2020 et ne fonctionnera plus dans NPSP. Si vous avez des lots en cours à cette date, vous pourrez accéder à ces enregistrements, mais vous ne pourrez pas les traiter en utilisant la saisie de données par lots. Pour garantir une transition transparente, activez et utilisez la saisie de dons avant le 1er octobre.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
