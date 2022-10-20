@@ -152,11 +152,12 @@ public with sharing class GE_PaymentServices {
 
     /**
      * @description Returns salesforce visualforce URL
+     * @param namespace: string for namespace in org instance
      * @return String JSON of visualforce URL
      */
     @AuraEnabled(Cacheable=true)
-    public static String getVfURL() {
-        return DomainCreator.getVisualforceHostname(null);
+    public static String getVfURL(String namespace) {
+        return DomainCreator.getVisualforceHostname(namespace);
     }
 
     /**
