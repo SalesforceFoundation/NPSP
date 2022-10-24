@@ -49,7 +49,8 @@ class psElevateTokenHandler {
     }
 
     async getVisualForceOriginURLs(domainInfo, namespace) {
-        const vfHostName = await getVfURL({namespace});
+        const vfHostName = await getVfURL(JSON.parse(JSON.stringify({namespace})));
+        console.log("hostname value", vfHostName);
         const vfURL = `https://${vfHostName}`;
 
         const originURLs = [
