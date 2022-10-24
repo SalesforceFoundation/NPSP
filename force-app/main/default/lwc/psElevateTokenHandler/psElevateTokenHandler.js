@@ -52,6 +52,7 @@ class psElevateTokenHandler {
         const vfHostName = await getVfURL(JSON.parse(JSON.stringify({namespace})));
         console.log("hostname value", vfHostName);
         const vfURL = `https://${vfHostName}`;
+        console.log("VFURL", vfURL)
 
         const originURLs = [
             {value: vfURL},
@@ -59,7 +60,7 @@ class psElevateTokenHandler {
         if (!isBlank(domainInfo.communityBaseURL)) {
             return [...originURLs, { value: domainInfo.communityBaseURL }];
         }
-
+        console.log("originURLS", originURLs)
         return originURLs;
     }
 
