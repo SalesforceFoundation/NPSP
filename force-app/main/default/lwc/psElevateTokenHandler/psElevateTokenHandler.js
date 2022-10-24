@@ -49,7 +49,7 @@ class psElevateTokenHandler {
     }
 
     async getVisualForceOriginURLs(domainInfo, namespace) {
-        const vfHostName = await getVfURL(namespace);
+        const vfHostName = await getVfURL({namespace});
         const vfURL = `https://${vfHostName}`;
 
         const originURLs = [
@@ -118,13 +118,13 @@ class psElevateTokenHandler {
      * @param event
      * @returns {boolean}
      */
-    shouldHandleMessage (event) {
-        return !!(this.isExpectedVisualForceOrigin(event)
+    async shouldHandleMessage (event) {
+        return !!(await this.isExpectedVisualForceOrigin(event)
             && validateJSONString(JSON.stringify(event.data)));
     }
 
-    isExpectedVisualForceOrigin (event) {
-        this._visualforceOrigin = this._visualforceOriginUrls.find(
+    async isExpectedVisualForceOrigin (event) {
+        this._visualforceOrigin = await this._visualforceOriginUrls.find(
             origin => event.origin === origin.value
         );
         this._visualforceOrigin =

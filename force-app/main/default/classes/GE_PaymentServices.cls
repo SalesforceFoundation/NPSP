@@ -35,9 +35,6 @@
 * @description Class holds payment services purchase request related methods.
 */
 public with sharing class GE_PaymentServices {
-
-    @AuraEnabled public String vfHostName = DomainCreator.getVisualforceHostname(null);
-
     @TestVisible class PaymentServicesException extends Exception {}
 
     private static GE_PaymentServices paymentServicesInstance;
@@ -131,7 +128,7 @@ public with sharing class GE_PaymentServices {
      * @description Returns Payments Services transaction status values
      * @return String JSON of the transaction status values by name
      */
-    @AuraEnabled(Cacheable=true)
+    @AuraEnabled(cacheable=true)
     public static String getPaymentTransactionStatusValues() {
         Map<String, String> paymentStatusNameByEnum = new Map<String, String>();
 
@@ -155,7 +152,7 @@ public with sharing class GE_PaymentServices {
      * @param namespace: string for namespace in org instance
      * @return String JSON of visualforce URL
      */
-    @AuraEnabled(Cacheable=true)
+    @AuraEnabled(cacheable=true)
     public static String getVfURL(String namespace) {
         return DomainCreator.getVisualforceHostname(namespace);
     }

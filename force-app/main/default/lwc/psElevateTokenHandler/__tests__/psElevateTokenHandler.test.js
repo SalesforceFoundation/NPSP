@@ -123,6 +123,7 @@ describe('c-ps-Elevate-Token-Handler', () => {
       const vfURLS = buildVFUrls(mockDomainInfoExperienceSite(), 'c');
       return vfURLS.then(data => {
          expect(data.length).toEqual(2);
+         expect(data[1].value.includes('c')).toBe(true);
       });
    });
 
