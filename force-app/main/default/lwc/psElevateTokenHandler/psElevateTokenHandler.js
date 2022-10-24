@@ -118,13 +118,13 @@ class psElevateTokenHandler {
      * @param event
      * @returns {boolean}
      */
-    async shouldHandleMessage (event) {
-        return !!(await this.isExpectedVisualForceOrigin(event)
+    shouldHandleMessage (event) {
+        return !!(this.isExpectedVisualForceOrigin(event)
             && validateJSONString(JSON.stringify(event.data)));
     }
 
-    async isExpectedVisualForceOrigin (event) {
-        this._visualforceOrigin = await this._visualforceOriginUrls.find(
+    isExpectedVisualForceOrigin (event) {
+        this._visualforceOrigin = this._visualforceOriginUrls.find(
             origin => event.origin === origin.value
         );
         this._visualforceOrigin =
