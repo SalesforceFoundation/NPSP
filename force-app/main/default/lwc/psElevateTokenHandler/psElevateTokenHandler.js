@@ -3,6 +3,7 @@ import { getNamespace, isFunction, isNull, validateJSONString } from 'c/utilComm
 import PAYMENT_AUTHORIZATION_TOKEN_FIELD from
         '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import tokenRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
+import getVfURL from '@salesforce/apex/GE_PaymentServices.getVfURL';
 import { isBlank } from 'c/util';
 
 
@@ -47,25 +48,12 @@ class psElevateTokenHandler {
             : `/apex/${TOKENIZE_CARD_PAGE_NAME}`;
     }
 
-    getVisualForceOriginURLs(domainInfo, namespace) {
-        const url = `https://${domainInfo.orgDomain}--${namespace}.visualforce.com`;
-        const alternateUrl = `https://${domainInfo.orgDomain}--${namespace}.${domainInfo.podName}.visual.force.com`;
-        const lightningUrl =  `https://${domainInfo.orgDomain}--${namespace}.lightning.force.com`;
-        const productionEnhancedUrl = `https://${domainInfo.orgDomain}--${namespace}.vf.force.com`;
-        const productionEnhancedUrlLogin = `https://${domainInfo.orgDomain}--${namespace}.my.salesforce.com`;
-        const sandboxEnhancedUrl =  `https://${domainInfo.orgDomain}--${namespace}.sandbox.vf.force.com`;
-        const sandboxEnhancedLightning =  `https://${domainInfo.orgDomain}--${namespace}.sandbox.lightning.force.com`;
-        const sandboxEnhancedCanon =  `https://${domainInfo.orgDomain}--${namespace}.sandbox.my.salesforce.com`;
+    async getVisualForceOriginURLs(domainInfo, namespace) {
+        const vfHostName = await getVfURL({namespace});
+        const vfURL = `https://${vfHostName}`;
 
         const originURLs = [
-            {value: url},
-            {value: alternateUrl},
-            {value: lightningUrl},
-            {value: productionEnhancedUrl},
-            {value: sandboxEnhancedUrl},
-            {value: productionEnhancedUrlLogin},
-            {value: sandboxEnhancedLightning},
-            {value: sandboxEnhancedCanon},
+            {value: vfURL},
         ];
         if (!isBlank(domainInfo.communityBaseURL)) {
             return [...originURLs, { value: domainInfo.communityBaseURL }];
@@ -78,7 +66,7 @@ class psElevateTokenHandler {
     * @description Builds the Visualforce origin url that we need in order to
     * make sure we're only listening for messages from the correct source.
     */
-    setVisualforceOriginURLs(domainInfo) {
+    async setVisualforceOriginURLs(domainInfo) {
         if (isNull(domainInfo)) {
             return;
         }
@@ -86,7 +74,7 @@ class psElevateTokenHandler {
             ? this.currentNamespace
             : NON_NAMESPACED_CHARACTER;
         this._visualforceOriginUrls =
-            this.getVisualForceOriginURLs(domainInfo, namespace);
+            await this.getVisualForceOriginURLs(domainInfo, namespace);
 
     }
 
