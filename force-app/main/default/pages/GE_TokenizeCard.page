@@ -209,8 +209,7 @@
         }
 
         function buildLightningOrigin() {
-            console.log("lightningORigin", JSON.parse(JSON.stringify('https://{!LightningURL}')))
-            return JSON.parse(JSON.stringify('https://{!LightningURL}'));
+            return 'https://{!LightningURL}';
         }
 
         function setReadyToMount() {
