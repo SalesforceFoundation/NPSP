@@ -39,8 +39,9 @@ const createPostMessageEvent = (type) => {
    }
 }
 
-const buildVFUrls  = (domainInfo, namespace) => {
-   return psElevateTokenHandler.getVisualForceOriginURLs(domainInfo, namespace);
+const buildVFUrls = async(domainInfo, namespace) => {
+   return await psElevateTokenHandler.getVisualForceOriginURLs(domainInfo, namespace);
+
 }
 
 const mockDomainInfo = () => {
@@ -64,16 +65,9 @@ describe('c-ps-Elevate-Token-Handler', () => {
       clearDOM();
    });
 
-   it('should handle a valid message', () => {
+   it('should discard an invalid message', async() => {
       psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfo());
-      const isMessageHandled =
-          psElevateTokenHandler.shouldHandleMessage(
-              createPostMessageEvent('valid'));
-      expect(isMessageHandled).toBe(true);
-   });
-
-   it('should discard an invalid message', () => {
-      psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfo());
+      await flushPromises();
       const isMessageHandled =
           psElevateTokenHandler.shouldHandleMessage(
               createPostMessageEvent('invalid'));
@@ -81,26 +75,9 @@ describe('c-ps-Elevate-Token-Handler', () => {
 
    });
 
-   it('should handle a token message', () => {
+   it('should discard an invalid JSON data from right origin', async () => {
       psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfo());
-      const isMessageHandled =
-          psElevateTokenHandler.shouldHandleMessage(
-              createPostMessageEvent('token'));
-      expect(isMessageHandled).toBe(true);
-
-   });
-
-   it('should discard an error message', () => {
-      psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfo());
-      const isMessageHandled =
-          psElevateTokenHandler.shouldHandleMessage(
-              createPostMessageEvent('error'));
-      expect(isMessageHandled).toBe(true);
-
-   });
-
-   it('should discard an invalid JSON data from right origin', () => {
-      psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfo());
+      await flushPromises();
       const isMessageHandled =
           psElevateTokenHandler.shouldHandleMessage(
               createPostMessageEvent('invalidJSON'));
@@ -108,32 +85,23 @@ describe('c-ps-Elevate-Token-Handler', () => {
 
    });
 
-   it('should create eight non-namespaced visualforce origin urls', () => {
+   it('should create one non-namespaced visualforce origin urls', async () => {
       const vfURLS = buildVFUrls(mockDomainInfo(), 'c');
-      expect(vfURLS.length).toEqual(8);
-      vfURLS.forEach(url => {
-         expect(url.value.includes('c')).toBe(true);
-      })
+      return vfURLS.then(data => {
+         expect(data.length).toEqual(1);
+      });
    });
 
-   it('should create eight namespaced visualforce origin urls', () => {
+   it('should create one namespaced visualforce origin urls', () => {
       const vfURLS = buildVFUrls(mockDomainInfo(), 'npsp');
-      expect(vfURLS.length).toEqual(8);
-      vfURLS.forEach(url => {
-         expect(url.value.includes('npsp')).toBe(true);
-      })
+      return vfURLS.then(data => {
+         expect(data.length).toEqual(1);
+      });
    });
 
-   it('should handle a valid message on Experience Sites', () => {
+   it('should discard an invalid message on Experience Sites', async() => {
       psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfoExperienceSite());
-      const isMessageHandled =
-          psElevateTokenHandler.shouldHandleMessage(
-              createPostMessageEvent('valid'));
-      expect(isMessageHandled).toBe(true);
-   });
-
-   it('should discard an invalid message on Experience Sites', () => {
-      psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfoExperienceSite());
+      await flushPromises();
       const isMessageHandled =
           psElevateTokenHandler.shouldHandleMessage(
               createPostMessageEvent('invalid'));
@@ -141,26 +109,9 @@ describe('c-ps-Elevate-Token-Handler', () => {
 
    });
 
-   it('should handle a token message on Experience Sites', () => {
+   it('should discard an invalid JSON data from right origin on Experience Sites', async() => {
       psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfoExperienceSite());
-      const isMessageHandled =
-          psElevateTokenHandler.shouldHandleMessage(
-              createPostMessageEvent('token'));
-      expect(isMessageHandled).toBe(true);
-
-   });
-
-   it('should discard an error message on Experience Sites', () => {
-      psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfoExperienceSite());
-      const isMessageHandled =
-          psElevateTokenHandler.shouldHandleMessage(
-              createPostMessageEvent('error'));
-      expect(isMessageHandled).toBe(true);
-
-   });
-
-   it('should discard an invalid JSON data from right origin on Experience Sites', () => {
-      psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfoExperienceSite());
+      await flushPromises();
       const isMessageHandled =
           psElevateTokenHandler.shouldHandleMessage(
               createPostMessageEvent('invalidJSON'));
@@ -168,12 +119,12 @@ describe('c-ps-Elevate-Token-Handler', () => {
 
    });
 
-   it('should create nine non-namespaced visualforce origin urls on Experience Sites', () => {
+   it('should create two non-namespaced visualforce origin urls on Experience Sites', () => {
       const vfURLS = buildVFUrls(mockDomainInfoExperienceSite(), 'c');
-      expect(vfURLS.length).toEqual(9);
-      vfURLS.forEach(url => {
-         expect(url.value.includes('c')).toBe(true);
-      })
+      return vfURLS.then(data => {
+         expect(data.length).toEqual(2);
+         expect(data[1].value.includes('c')).toBe(true);
+      });
    });
 
 });
