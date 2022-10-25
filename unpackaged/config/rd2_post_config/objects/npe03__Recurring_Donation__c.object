@@ -367,6 +367,11 @@
                     <default>false</default>
                     <label>Paused</label>
                 </value>
+                <value>
+                    <fullName>Failing</fullName>
+                    <default>false</default>
+                    <label>Failing</label>
+                </value>
             </valueSetDefinition>
         </valueSet>
     </fields>
