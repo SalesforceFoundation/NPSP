@@ -270,7 +270,7 @@ public with sharing class PMT_RefundService_TEST {
         }
     }
 
-    private static npe01__OppPayment__c getPaymentRecord(Id oppId) {
+    public static npe01__OppPayment__c getPaymentRecord(Id oppId) {
         npe01__OppPayment__c payment = new npe01__OppPayment__c(
             Id = UTIL_UnitTestData_TEST.mockId(npe01__OppPayment__c.SObjectType),
             npe01__Opportunity__c = oppId,
@@ -281,14 +281,14 @@ public with sharing class PMT_RefundService_TEST {
         return payment;
     }
 
-    private static Opportunity getOpportunityRecord() {
+    public static Opportunity getOpportunityRecord() {
         return new Opportunity(
             Id = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType),
             Amount = 1000
         );
     }
 
-    private static List<Allocation__c> getAllocationRecords(Opportunity opp) {
+    public static List<Allocation__c> getAllocationRecords(Opportunity opp) {
         return new List<Allocation__c> {
             new Allocation__c(
                 Opportunity__c = opp.Id,
