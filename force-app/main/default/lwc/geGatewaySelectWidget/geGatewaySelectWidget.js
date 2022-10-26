@@ -155,6 +155,20 @@ export default class GeGatewaySelectWidget extends LightningElement {
             this.gatewayOptions.push({label: gateway.gatewayName, value: gateway.id});
         }
         this.gatewayOptions = this.gatewayOptions.sort((a, b) => a.label >= b.label ? 1 : -1);
+
+        if (this._widgetMode !== GATEWAY_MANAGEMENT_MODE) {
+            this.addDefaultGatewayOption();
+        }
+    }
+
+    addDefaultGatewayOption() {
+        this._elevateGatewaysByUniqueKey.set(null, {
+            gatewayName: this.CUSTOM_LABELS.psGatewayDefault,
+            id: null,
+            isACHEnabled: true,
+            isCreditCardEnabled: true
+        });
+        this.gatewayOptions.splice(0, 0, {label: this.CUSTOM_LABELS.psGatewayDefault, value: null});
     }
 
     async toggleSelectGatewayControls() {
@@ -188,7 +202,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
     }
 
     async handleInitialGatewaySelection(elevateSettings) {
-        if (isEmpty(elevateSettings) || isEmpty(elevateSettings.uniqueKey)) {
+        if (isEmpty(elevateSettings) || this._widgetMode === GATEWAY_MANAGEMENT_MODE) {
             await this.selectDefaultGateway();
         } else {
             await this.selectSavedGateway(elevateSettings);
@@ -196,7 +210,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
     }
 
     async selectDefaultGateway() {
-        this.selectedGateway = this._defaultGatewayId;
+        this.selectedGateway = this._widgetMode === GATEWAY_MANAGEMENT_MODE ? this._defaultGatewayId : null;
         this.updateACHSettings();
         this.updateCreditCardSettings();
         this.updateDisabledPaymentTypes();

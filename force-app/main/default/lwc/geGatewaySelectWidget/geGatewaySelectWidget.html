@@ -15,7 +15,7 @@
                     <template if:true={shouldShowGateways}>
                         <template if:false={isExpanded}>
                             <template if:true={shouldShowExpandControls}>
-                                <div class={cssClassPrefix}>
+                                <div class="uniform-top">
                                     <lightning-button data-id="ga-show-button"
                                                       variant="base"
                                                       label={CUSTOM_LABELS.psShowGatewaysAndMethods}
@@ -36,7 +36,7 @@
                         </template>
                         <template if:true={isExpanded}>
                             <template if:true={shouldShowExpandControls}>
-                                <div class={cssClassPrefix}>
+                                <div class="uniform-top">
                                     <lightning-button data-id="ga-hide-button"
                                                       variant="base"
                                                       label={CUSTOM_LABELS.psHideGatewaysAndMethods}
