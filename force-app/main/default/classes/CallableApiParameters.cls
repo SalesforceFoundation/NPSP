@@ -56,6 +56,7 @@ public class CallableApiParameters {
     public static final String PARAM_START_DATE = 'StartDate';
     public static final String PARAM_END_DATE = 'EndDate';
     public static final String PARAM_PAUSE_DATA = 'PauseData';
+    public static final String PARAM_REFUND_RECORDS = 'RefundRecords';
 
     private Map<String, Object> params;
 
