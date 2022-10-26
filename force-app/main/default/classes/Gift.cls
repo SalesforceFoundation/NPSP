@@ -183,7 +183,10 @@ public with sharing class Gift {
         return true;
     }
 
-    public void preprocessForRecurringGift() {
+    public void preprocessForRecurringGift(Boolean shouldPayFirstInstallment) {
+        if (shouldPayFirstInstallment) {
+            this.dataImport.Donation_Amount__c = null;
+        }
         this.dataImport.Donation_Date__c = null;
         this.dataImport.DonationImported__c = null;
         clearNetNewSoftCredits();

@@ -37,6 +37,11 @@ public inherited sharing class GiftBatchForQueueable {
     private final Integer CHUNK_LIMIT = 50;
 
     private GiftBatchId giftBatchId;
+
+    private Boolean shouldPayFirstInstallment;
+
+    private GiftBatch giftBatch;
+
     @TestVisible
     private Gifts gifts;
     @TestVisible
@@ -89,6 +94,7 @@ public inherited sharing class GiftBatchForQueueable {
 
     public GiftBatchForQueueable(GiftBatchId giftBatchId) {
         this.giftBatchId = giftBatchId;
+        this.giftBatch = new GiftBatch(this.giftBatchId);
     }
 
     public GiftBatchId id() {
@@ -109,7 +115,7 @@ public inherited sharing class GiftBatchForQueueable {
     }
 
     public void preprocessRecurringGifts() {
-        gifts.preprocessRecurringGifts();
+        gifts.preprocessRecurringGifts(this.giftBatch.shouldPayFirstInstallment());
     }
 
     public void captureElevateBatches() {
