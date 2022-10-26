@@ -45,6 +45,7 @@ private with sharing class Callable_API_TEST {
     private static final String RD2_PAUSE_ACTION = 'rd2.pause';
     private static final String ADVANCED_MAPPING_ACTION = 'settings.enableadvancedmapping';
     private static final String GIFT_ENTRY_ACTION = 'settings.enablegiftentry';
+    private static final String PROCESS_REFUNDS = 'pmt.procressrefunds';
 
     /**
     * @description verify the TDTM Callable action returns an Object
@@ -252,6 +253,45 @@ private with sharing class Callable_API_TEST {
         String expectedErrorMessage = String.format(System.Label.RD2_InvalidRecurringDonationId,
             new List<String> { UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID });
         System.assertEquals(expectedErrorMessage, returnPause.error, 'An error with unexpected Id should be return');
+    }
+
+    @isTest
+    private static void  shouldProcessRefundAllocationsAndOpportunity() {
+        Opportunity oppRecord = PMT_RefundService_TEST.getOpportunityRecord();
+        npe01__OppPayment__c originalPayment = PMT_RefundService_TEST.getPaymentRecord(oppRecord.Id);
+        List<Allocation__c> allocations = PMT_RefundService_TEST.getAllocationRecords(oppRecord);
+
+        PMT_RefundService refundService = PMT_RefundService_TEST.setupRefundServiceWithStubs(
+            new List<npe01__OppPayment__c>{originalPayment},
+            new List<Opportunity>{oppRecord},
+            allocations
+        );
+
+        Callable_API callableApi = new Callable_API();
+        callableApi.refundService = refundService;
+
+        Decimal refundAmount = originalPayment.npe01__Payment_Amount__c / 2;
+        Decimal expectedPercentage = allocations[0].Amount__c / oppRecord.Amount * 100;
+        
+
+        Map<String, Object> args = new Map<String, Object>{
+            'RefundRecords' => new List<npe01__OppPayment__c> {refundService.buildRefundRecord(originalPayment, refundAmount)}
+        };
+        
+
+        Test.startTest();
+        callableApi.call(PROCESS_REFUNDS, args);
+        Test.stopTest();
+
+        List<Allocation__c> updatedAllocations = callableApi.refundService.allocationsToUpdate;
+        Opportunity parentOpp = refundService.opportunityMap.values()?.get(0);
+        for (Allocation__c allo : updatedAllocations) {
+            System.assertEquals(expectedPercentage , allo.Percent__c,
+                'Fixed Amount should be convet into percentage');
+        }
+        System.assertNotEquals(null, parentOpp, 'The parent opportunity should be proccessed');
+        System.assertEquals(originalPayment.npe01__Payment_Amount__c - refundAmount, parentOpp.Amount,
+            'Partial Refund Amount should be deducted from the opportunity amount');
     }
 
     private static GiftEntryEnablementService stubFor(GiftEntryEnablementServiceMock giftEntryEnablementServiceMock) {
