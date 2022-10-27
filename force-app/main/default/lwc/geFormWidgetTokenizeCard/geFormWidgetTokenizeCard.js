@@ -192,7 +192,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     get shouldDisplayEditPaymentInformation() {
         return Settings.isElevateCustomer()
             && this.isReadOnly
-            && (this.isExpiredTransaction || this.isPaymentStatusInReadOnlyMode() ||
+            && (this.isExpiredTransaction || this.hasReadOnlyStatus() ||
                 !!this._widgetDataFromState[apiNameFor(DATA_IMPORT_RECURRING_DONATION_INSTALLMENT_PERIOD)]);
     }
 
@@ -303,11 +303,11 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     updateDisplayStateWhenInBatchGiftEntry() {
-        if (this.isPaymentStatusInReadOnlyMode() && !this.isValidBatchElevatePaymentMethod()) {
+        if (this.hasReadOnlyStatus() && !this.isValidBatchElevatePaymentMethod()) {
             this.display.transitionTo('resetToDeactivated');
         }
 
-        if ((this.isPaymentStatusInReadOnlyMode() && this.isValidBatchElevatePaymentMethod())
+        if ((this.hasReadOnlyStatus() && this.isValidBatchElevatePaymentMethod())
             || this.isDataImportStatusImported()) {
                 this.display.transitionTo('readOnly');
         } else if (this.isValidBatchElevatePaymentMethod()) {
@@ -384,20 +384,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     isDataImportStatusImported() {
         return this._widgetDataFromState[apiNameFor(DATA_IMPORT_STATUS)] === GIFT_STATUSES.IMPORTED
-    }
-
-    isPaymentStatusInReadOnlyMode() {
-        return this.isPaymentStatusAuthorized() || this.isPaymentStatusPending();
-    }
-
-    isPaymentStatusAuthorized() {
-        return this._widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_STATUS_FIELD)]
-            === this.paymentTransactionStatusValues.AUTHORIZED;
-    }
-
-    isPaymentStatusPending() {
-        return this._widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_STATUS_FIELD)]
-            === this.paymentTransactionStatusValues.PENDING;
     }
 
     isPaymentMethodCreditCard() {
@@ -551,10 +537,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     hasReadOnlyStatus() {
-        if (!this.isInBatchGiftEntry()) {
-            return false;
-        }
-        return this.readOnlyStatuses().includes(this.paymentStatus());
+        return !isEmpty(this.paymentStatus()) && this.readOnlyStatuses().includes(this.paymentStatus());
     }
 
     hasValidPaymentMethod() {
@@ -750,6 +733,10 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     get qaLocatorLastFourDigits() {
         return `text Last Four Digits`;
+    }
+
+    get qaLocatorAchLastFourDigits() {
+        return `text ACH Last Four Digits`;
     }
 
     get qaLocatorExpirationDate() {
