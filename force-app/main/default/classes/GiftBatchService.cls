@@ -54,6 +54,12 @@ public with sharing class GiftBatchService {
         String.valueOf(DataImport__c.Account1_Name__c)
     };
 
+    private static final Set<String> FINISH_JOB_STATUS_SET = New Set<String> {
+        'Completed',
+        'Failed',
+        'Aborted'
+    };
+
     // Used to determine whether or not the Gift Batch has recurring gifts and
     // the current user has the proper permissions to open the gift batch.
     public Boolean isGiftBatchAccessible(GiftBatchId giftBatchId) {
@@ -139,6 +145,16 @@ public with sharing class GiftBatchService {
             giftBatch.updateRecords();
         }
 
+    }
+    
+    public Boolean hasActiveRunningJob(GiftBatchId giftBatchId) {
+        Id asyncApexJobId = giftBatchServicePrivilegedHelper.getLatestAsyncApexJobId(giftBatchId);
+        if (asyncApexJob == null) {
+            return false;
+        }
+
+        Status jobStatus = getStatusFor(asyncApexJobId);
+        return !FINISH_JOB_STATUS_SET.contains(jobStatus);
     }
 
     public String getStatusFor(AsyncApexJobId jobId) {
