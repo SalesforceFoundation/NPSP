@@ -46,7 +46,8 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     @TestVisible
     private GiftTemplate giftTemplate;
 
-    private Boolean shouldPayFirstInstallment;
+    private final Boolean shouldPayFirstInstallment;
+    private static final String AllowFirstInstallmentPaid = 'AllowFirstInstallment__f';
 
     @TestVisible
     private GiftBatchSelector giftBatchSelector {
@@ -106,7 +107,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         this.giftTemplate = new GiftTemplate(batch.Form_Template__r.Template_JSON__c);
         this.gifts = new Gifts(giftBatchId, new GiftSelector(giftTemplate));
         this.totals = new GiftBatchTotals(giftBatchId, giftBatchSelector);
-        calculateShouldPayFirstInstallment();
+        this.shouldPayFirstInstallment = calculateShouldPayFirstInstallment();
     }
 
     public GiftBatch(GiftBatchId giftBatchId, List<Id> giftIds) {
@@ -129,13 +130,13 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         return this.shouldPayFirstInstallment;
     }
 
-    private void calculateShouldPayFirstInstallment() {
+    private Boolean calculateShouldPayFirstInstallment() {
         JSONParser parser = JSON.createParser(this.batch.Batch_Defaults__c);
         String shouldPayFirstInstallment;
 
         while (parser.nextToken() != null) {
             if (parser.getCurrentToken() == JSONToken.FIELD_NAME) {
-                if (parser.getText() == 'AllowFirstInstallment__f') {
+                if (parser.getText() == AllowFirstInstallmentPaid) {
                     parser.nextToken();
                     parser.nextToken();
                     parser.nextToken();
@@ -148,7 +149,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
                 break;
             }
         }
-        this.shouldPayFirstInstallment =  Boolean.valueOf(shouldPayFirstInstallment);
+        return shouldPayFirstInstallment != null ? Boolean.valueOf(shouldPayFirstInstallment): false;
     }
 
     public Boolean hasElevateWidget() {
