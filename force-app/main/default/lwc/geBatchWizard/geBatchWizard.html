@@ -59,8 +59,8 @@
                         </template>
                         <template if:true={canAllowRecurringDonations}>
 
-                            <c-util-expandable-section label= "Recurring Donations"
-                                                       id="FakeId">
+                            <c-util-expandable-section label= {CUSTOM_LABELS.recurringDonations}
+                                                       id="recurringDonationsSection">
                                 <c-util-input data-id='allowRecurringDonationsField'
                                               type={allowRecurringDonationsField.dataType}
                                               field-api-name={allowRecurringDonationsField.apiName}
