@@ -90,24 +90,19 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     handleLoadData(event) {
         try {
             this.isFormRendering = true;
+            const giftId = event.detail.Id;
+            const foundGift = this.giftBatch.findGiftBy(giftId);
+            this.gift = new Gift(foundGift.state());
+            this.giftInView = this.gift.state();
+            this.openedGiftDonationId = this.gift.donationId();
 
-            new Promise((resolve,reject) => {
-                setTimeout(()=> {
-                    const giftId = event.detail.Id;
-                    const foundGift = this.giftBatch.findGiftBy(giftId);
-                    this.gift = new Gift(foundGift.state());
-                    this.giftInView = this.gift.state();
-                    this.openedGiftDonationId = this.gift.donationId();
-                    if (this.isFormCollapsed) {
-                        this.isFormCollapsed = false;
-                    }
-                    fireEvent(this, 'resetElevateWidget', {});
-                    resolve();
-                }, 100);
-            })
-            .finally(() => {
-                this.isFormRendering = false;
-            });
+            if (this.isFormCollapsed) {
+                this.isFormCollapsed = false;
+            }
+
+            fireEvent(this, 'resetElevateWidget', {});
+            
+            this.isFormRendering = false;
         } catch(error) {
             handleError(error);
         }
