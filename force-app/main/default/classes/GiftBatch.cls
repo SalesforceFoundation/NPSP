@@ -96,6 +96,10 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     @TestVisible
     private GiftBatch() {}
 
+    public GiftBatch (DataImportBatch__c batch) {
+        this.batch = batch;
+    }
+
     @TestVisible
     private GiftBatch(Gifts gifts) {
         this.gifts = gifts;
