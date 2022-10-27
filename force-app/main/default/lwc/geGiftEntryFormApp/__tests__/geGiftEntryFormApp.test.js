@@ -236,6 +236,23 @@ describe('c-ge-gift-entry-form-app', () => {
     });
 
     describe('event dispatch and handling behavior', () => {
+        it('should disable make recurring returns true when imported gift is loaded', async() => {
+            const formApp = setupForBatchMode({gifts: [{fields: {'Id': 'DUMMY_RECORD_ID', 'Status__c': 'Imported'}}], totals: { TOTAL: 1 }});
+            await flushPromises();
+
+            const batchTable = shadowQuerySelector(formApp, 'c-ge-batch-gift-entry-table');
+            const loadDataEvent = new CustomEvent('loaddata', {
+                detail : {
+                    'Id': 'DUMMY_RECORD_ID'
+                }
+            });
+            batchTable.dispatchEvent(loadDataEvent);
+            await flushPromises();
+
+            const geFormRenderer = shadowQuerySelector(formApp, 'c-ge-form-renderer');
+            expect(geFormRenderer.isMakeRecurringButtonDisabled).toBe(true);
+        });
+
         it('should dispatch edit batch event', async () => {
             const formApp = setupForBatchMode({gifts: [], totals: { TOTAL: 1 }});
 
