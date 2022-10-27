@@ -2856,16 +2856,18 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     get elevateTransactionWarning() {
-        return format('You need to re-enter your payment information before editing the');
+        return format('You need to re-enter your payment information before editing the gift.');
     }
 
     get showElevateTransactionWarning() {
         const paymentStatus = this.getFieldValueFromFormState(PAYMENT_STATUS);
-        return this.hasReadOnlyPaymentStatus(paymentStatus) ||
+        let recurringElevateId = this.getFieldValueFromFormState(DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID);
+        console.log(recurringElevateId);
+        return this.hasUnprocessedReadOnlyPaymentStatus(paymentStatus) ||
                 this.getFieldValueFromFormState(DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID);
     }
 
-    hasReadOnlyPaymentStatus(paymentStatus) {
+    hasUnprocessedReadOnlyPaymentStatus(paymentStatus) {
         return paymentStatus &&
             (paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED
                 || paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.SUBMITTED
