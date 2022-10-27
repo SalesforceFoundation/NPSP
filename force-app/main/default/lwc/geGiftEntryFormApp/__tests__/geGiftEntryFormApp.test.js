@@ -233,23 +233,6 @@ describe('c-ge-gift-entry-form-app', () => {
             expect(spiedEventModalProperties.componentName).toEqual('geModalPrompt');
             expect(spiedEventModalProperties.showCloseButton).toEqual(true);
         });
-
-        it('should render loading spinner when opening an existing gift from the batch table', async () => {
-            const formApp = setupForBatchMode({gifts: [{ fields: { id: 'dummyGiftId' }}], totals: { TOTAL: 1, }});
-            document.body.appendChild(formApp);
-
-            await flushPromises();
-
-            const batchTable = shadowQuerySelector(formApp, 'c-ge-batch-gift-entry-table');
-            expect(batchTable).toBeTruthy();
-            runWithFakeTimer(async () => {
-                batchTable.dispatchEvent(new CustomEvent('loaddata', { detail: { id: 'dummyGiftId' } }));
-                await flushPromises();
-                expect(spinner(formApp)).toBeTruthy();
-            });
-
-            expect(spinner(formApp)).toBeFalsy();
-        });
     });
 
     describe('event dispatch and handling behavior', () => {
