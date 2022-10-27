@@ -39,7 +39,7 @@ const setPaymentMethod = (element, paymentMethod) => {
 
 describe('c-ge-form-widget-tokenize-card', () => {
 
-    afterEach(() => {
+    beforeEach(() => {
         Settings.isElevateCustomer = jest.fn(() => true);
         clearDOM();
     });
@@ -246,7 +246,7 @@ describe('c-ge-form-widget-tokenize-card', () => {
         expect(editPaymentInformationButton(element)).toBeTruthy();
     });
 
-    it('should go into hard read-only mode when ach payment is pending', async () => {
+    it('should go into soft read-only mode when ach payment is pending', async () => {
         const element = createWidgetElement();
         element.hasPaymentMethodFieldInForm = true;
         setPaymentTransactionStatusValues(element);
@@ -263,7 +263,7 @@ describe('c-ge-form-widget-tokenize-card', () => {
 
         await flushPromises();
         expect(getAchLastFourDigits(element)).not.toBe(null);
-        expect(editPaymentInformationButton(element)).toBeFalsy();
+        expect(editPaymentInformationButton(element)).toBeTruthy();
     });
 
     it('should not be able to click cancel on widget when gift is expired', async () => {
@@ -357,6 +357,7 @@ const setPaymentTransactionStatusValues = (element) => {
         CAPTURED: 'CAPTURED',
         SUBMITTED: 'SUBMITTED',
         PENDING: 'PENDING',
-        DECLINED: 'DECLINED'
+        DECLINED: 'DECLINED',
+        EXPIRED: 'EXPIRED'
     }
 }

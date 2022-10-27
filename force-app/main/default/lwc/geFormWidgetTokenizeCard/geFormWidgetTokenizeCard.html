@@ -123,46 +123,42 @@
 
                         <template if:true={isReadOnly}>
                             <lightning-layout class="read-only-mode">
-                                <template if:true={canViewReadOnlyFieldsCreditCard}>
-                                    <template if:false={showACHFields}>
-                                        <lightning-layout-item padding="around-small"
-                                                            class='fade-in'
-                                                            data-qa-locator={qaLocatorLastFourDigits}>
-                                            <p class="slds-form-element__label"
-                                            title="last4">
-                                                {CUSTOM_LABELS.commonCardLast4}
-                                            </p>
-                                            <p class='slds-text-body_regular'>
-                                                {cardLast4}</p>
-                                        </lightning-layout-item>
-                                        <lightning-layout-item padding="around-small"
-                                                            class='fade-in'
-                                                            data-qa-locator={qaLocatorExpirationDate}>
-                                            <p class="slds-form-element__label"
-                                            title="expirationDate">
-                                                {CUSTOM_LABELS.commonMMYY}
-                                            </p>
-                                            <p class='slds-text-body_regular'>
-                                                {cardExpirationDate}</p>
-                                        </lightning-layout-item>
-                                    </template>
+                                <template if:true={showCreditCardReadOnlyFields}>
+                                    <lightning-layout-item padding="around-small"
+                                                        class='fade-in'
+                                                        data-qa-locator={qaLocatorLastFourDigits}>
+                                        <p class="slds-form-element__label"
+                                        title="last4">
+                                            {CUSTOM_LABELS.commonCardLast4}
+                                        </p>
+                                        <p class='slds-text-body_regular'>
+                                            {cardLast4}</p>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item padding="around-small"
+                                                        class='fade-in'
+                                                        data-qa-locator={qaLocatorExpirationDate}>
+                                        <p class="slds-form-element__label"
+                                        title="expirationDate">
+                                            {CUSTOM_LABELS.commonMMYY}
+                                        </p>
+                                        <p class='slds-text-body_regular'>
+                                            {cardExpirationDate}</p>
+                                    </lightning-layout-item>
                                 </template>
-                                <template if:true={canViewReadOnlyFieldsACH}>
-                                    <template if:true={showACHFields}>
-                                        <lightning-layout-item padding="around-small"
-                                                            class='fade-in'
-                                                            data-qa-locator={qaLocatorAchLastFourDigits}>
-                                            <p class="slds-form-element__label"
-                                            title="last4">
-                                                {CUSTOM_LABELS.commonACHLast4}
-                                            </p>
-                                            <p class='slds-text-body_regular'>
-                                                {achLast4}</p>
-                                        </lightning-layout-item>
-                                    </template>
+                                <template if:true={showACHReadOnlyFields}>
+                                    <lightning-layout-item padding="around-small"
+                                                        class='fade-in'
+                                                        data-qa-locator={qaLocatorAchLastFourDigits}>
+                                        <p class="slds-form-element__label"
+                                        title="last4">
+                                            {CUSTOM_LABELS.commonACHLast4}
+                                        </p>
+                                        <p class='slds-text-body_regular'>
+                                            {achLast4}</p>
+                                    </lightning-layout-item>
                                 </template>
                             </lightning-layout>
-                            <template if:false={canViewReadOnlyFields}>
+                            <template if:true={showReadOnlyPermissionError}>
                                 <p class='fade-in'>
                                     {CUSTOM_LABELS.commonPermissionErrorMessage}
                                 </p>

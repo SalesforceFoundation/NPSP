@@ -192,7 +192,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     get shouldDisplayEditPaymentInformation() {
         return Settings.isElevateCustomer()
             && this.isReadOnly
-            && (this.isExpiredTransaction || this.hasReadOnlyStatus() ||
+            && (this.isExpiredTransaction || this.hasEditableReadOnlyStatus ||
                 !!this._widgetDataFromState[apiNameFor(DATA_IMPORT_RECURRING_DONATION_INSTALLMENT_PERIOD)]);
     }
 
@@ -221,6 +221,18 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return this.paymentStatus() === this.paymentTransactionStatusValues.AUTHORIZED;
     }
 
+    get isPendingTransaction() {
+        return this.paymentStatus() === this.paymentTransactionStatusValues.PENDING;
+    }
+
+    get hasReadOnlyStatus() {
+        return !isEmpty(this.paymentStatus()) && this.readOnlyStatuses().includes(this.paymentStatus());
+    }
+
+    get hasEditableReadOnlyStatus() {
+        return this.isAuthorizedTransaction || this.isPendingTransaction;
+    }
+
     get criticalErrorMessage() {
         return this._criticalErrorMessage;
     }
@@ -245,6 +257,18 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return fields?.[apiNameFor(ACH_PAYMENT_LAST_4)] !== undefined;
     }
 
+    get showACHReadOnlyFields() {
+        return this.isPaymentMethodAch() && this.canViewReadOnlyFieldsACH;
+    }
+
+    get showCreditCardReadOnlyFields() {
+        return !this.isPaymentMethodAch() && this.canViewReadOnlyFieldsCreditCard;
+    }
+
+    get showReadOnlyPermissionError() {
+        return !this.showCreditCardReadOnlyFields && !this.showACHReadOnlyFields;
+    }
+
     get achLast4() {
         return this._achLast4;
     }
@@ -260,10 +284,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     get deactivatedMessage() {
         return this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction
             + ' ' + this.CUSTOM_LABELS.psSelectValidPaymentMethod;
-    }
-
-    get showACHFields() {
-        return this.isPaymentMethodAch();
     }
 
     get shouldDisplayCardProcessingGuidanceMessage() {
@@ -303,11 +323,11 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     updateDisplayStateWhenInBatchGiftEntry() {
-        if (this.hasReadOnlyStatus() && !this.isValidBatchElevatePaymentMethod()) {
+        if (this.hasReadOnlyStatus && !this.isValidBatchElevatePaymentMethod()) {
             this.display.transitionTo('resetToDeactivated');
         }
 
-        if ((this.hasReadOnlyStatus() && this.isValidBatchElevatePaymentMethod())
+        if ((this.hasReadOnlyStatus && this.isValidBatchElevatePaymentMethod())
             || this.isDataImportStatusImported()) {
                 this.display.transitionTo('readOnly');
         } else if (this.isValidBatchElevatePaymentMethod()) {
@@ -534,10 +554,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     recurringDonationStatus() {
         return this.widgetDataFromState && this.widgetDataFromState[apiNameFor(DATA_IMPORT_RECURRING_DONATION_STATUS)];
-    }
-
-    hasReadOnlyStatus() {
-        return !isEmpty(this.paymentStatus()) && this.readOnlyStatuses().includes(this.paymentStatus());
     }
 
     hasValidPaymentMethod() {
