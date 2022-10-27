@@ -2856,15 +2856,21 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     get elevateTransactionWarning() {
-        return format(this.CUSTOM_LABELS.gePaymentProcessedWarning, [this.CUSTOM_LABELS.commonPaymentServices]);
+        return format('You need to re-enter your payment information before editing the');
     }
 
     get showElevateTransactionWarning() {
         const paymentStatus = this.getFieldValueFromFormState(PAYMENT_STATUS);
+        return this.hasReadOnlyPaymentStatus(paymentStatus) ||
+                this.getFieldValueFromFormState(DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID);
+    }
+
+    hasReadOnlyPaymentStatus(paymentStatus) {
         return paymentStatus &&
             (paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED
                 || paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.SUBMITTED
-                || paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.SETTLED
+                || paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED
+                || paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.DECLINED
             );
     }
 
