@@ -184,7 +184,7 @@ public with sharing class Gift {
     }
 
     public void preprocessForRecurringGift(Boolean shouldPayFirstInstallment) {
-        if (canPayFirstInstallment(shouldPayFirstInstallment)) {
+        if (!canPayFirstInstallment(shouldPayFirstInstallment)) {
             this.dataImport.Donation_Amount__c = null;
         }
         this.dataImport.Donation_Date__c = null;
@@ -193,11 +193,6 @@ public with sharing class Gift {
     }
 
     private Boolean canPayFirstInstallment(Boolean shouldPayFirstInstallment) {
-
-       /* System.debug('shouldPayFirstInstallment '+ shouldPayFirstInstallment);
-        System.debug('this.dataImport.Recurring_Donation_Elevate_Recurring_ID__c '+ this.dataImport.Recurring_Donation_Elevate_Recurring_ID__c);
-        System.debug('this.dataImport.Payment_Elevate_Batch_ID__c '+ this.dataImport.Payment_Elevate_Batch_ID__c);*/
-
         return this.dataImport.Recurring_Donation_Elevate_Recurring_ID__c == null
                 && this.dataImport.Payment_Elevate_Batch_ID__c == null
                 && shouldPayFirstInstallment;
