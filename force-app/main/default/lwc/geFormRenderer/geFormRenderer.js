@@ -2861,8 +2861,6 @@ export default class GeFormRenderer extends LightningElement{
 
     get showElevateTransactionWarning() {
         const paymentStatus = this.getFieldValueFromFormState(PAYMENT_STATUS);
-        let recurringElevateId = this.getFieldValueFromFormState(DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID);
-        console.log(recurringElevateId);
         return this.hasUnprocessedReadOnlyPaymentStatus(paymentStatus) ||
                 this.getFieldValueFromFormState(DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID);
     }
