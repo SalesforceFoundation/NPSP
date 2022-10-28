@@ -148,12 +148,12 @@ public with sharing class GiftBatchService {
     }
     
     public Boolean hasActiveRunningJob(GiftBatchId giftBatchId) {
-        Id asyncApexJobId = giftBatchServicePrivilegedHelper.getLatestAsyncApexJobId(giftBatchId);
-        if (asyncApexJob == null) {
+        Id jobId = giftBatchServicePrivilegedHelper.getLatestAsyncApexJobId(giftBatchId);
+        if (jobId == null) {
             return false;
         }
 
-        Status jobStatus = getStatusFor(asyncApexJobId);
+        String jobStatus = getStatusFor(new AsyncApexJobId(jobId));
         return !FINISH_JOB_STATUS_SET.contains(jobStatus);
     }
 

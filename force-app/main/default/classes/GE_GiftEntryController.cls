@@ -179,7 +179,7 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled
     public static Boolean hasActiveRunningJob(String batchId) {
         try {
-           return giftBatchService.hasActiveRunningJob(batchId);
+           return giftBatchService.hasActiveRunningJob(new GiftBatchId((Id) batchId));
         }catch (AuraHandledException e) {
             throw new AuraHandledException(e.getMessage());
         }
