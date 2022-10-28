@@ -14,7 +14,7 @@ describe('ge-gift-batch', () => {
 
     it('should initialize with expected properties', async () => {
         getGiftBatchView.mockResolvedValue(giftBatchViewJSON);
-        hasActiveRunningJob.mockResolvedValue(null);
+        hasActiveRunningJob.mockResolvedValue(false);
         isGiftBatchAccessible.mockResolvedValue(true);
         const giftBatch = new GiftBatch();
         await giftBatch.init(giftBatchViewJSON.giftBatchId);
@@ -38,7 +38,7 @@ describe('ge-gift-batch', () => {
 
     it('should be in processing state', async () => {
         getGiftBatchView.mockResolvedValue(giftBatchViewJSON);
-        hasActiveRunningJob.mockResolvedValue('DUMMY_QUEUEABLE_ID');
+        hasActiveRunningJob.mockResolvedValue(true);
         isGiftBatchAccessible.mockResolvedValue(true);
         const giftBatch = new GiftBatch();
         await giftBatch.init(giftBatchViewJSON.giftBatchId);
