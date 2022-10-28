@@ -63,6 +63,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
     _defaultTemplateId = null;
     _defaultGatewayId = null;
     _widgetMode;
+    _initialSelectedGateway = null;
 
     async init() {
         try {
@@ -80,7 +81,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
         this.setWidgetMode();
 
         if (this.onGatewayManagementPage()) {
-            this.disableGatewaySelection();
+            this.handlePaymentGatewayCancel();
         }
         else {
             this.initWidgetSettings();
@@ -109,7 +110,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
 
         if (this.onGatewayManagementPage()) {
             registerListener('editGatewayManagement', this.enableGatewaySelection, this);
-            registerListener('noEditGatewayManagement', this.disableGatewaySelection, this);
+            registerListener('noEditGatewayManagement', this.handlePaymentGatewayCancel, this);
             await this.toggleSelectGatewayControls();
         }
     }
@@ -196,6 +197,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
         if (this.onGatewayManagementPage()) {
             this.isExpanded = true;
             fireEvent(this, 'updateSelectedGateway', this.selectedGateway);
+            registerListener('resetToInitialGateway', this.resetToInitialGateway, this);
         }
 
         this._firstDisplay = false;
@@ -207,6 +209,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
         } else {
             await this.selectSavedGateway(elevateSettings);
         }
+        this._initialSelectedGateway = this.selectedGateway;
     }
 
     async selectDefaultGateway() {
@@ -350,7 +353,8 @@ export default class GeGatewaySelectWidget extends LightningElement {
         this.isGatewaySelectionDisabled = false;
     }
 
-    disableGatewaySelection() {
+    handlePaymentGatewayCancel() {
+        this.resetToInitialGateway();
         this.isGatewaySelectionDisabled = true;
     }
 
@@ -367,6 +371,10 @@ export default class GeGatewaySelectWidget extends LightningElement {
         else {
             fireEvent(this, 'updateSelectedGateway', this.selectedGateway);
         }
+    }
+
+    resetToInitialGateway() {
+        this.selectedGateway = this._initialSelectedGateway;
     }
 
     onGatewayManagementPage() {
