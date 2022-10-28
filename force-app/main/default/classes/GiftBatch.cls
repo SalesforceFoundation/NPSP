@@ -134,6 +134,11 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         return this.shouldPayFirstInstallment;
     }
 
+    /**
+     * Parser for parsing and reading BatchDefaults from the gift batch
+     * using the JSON Parser, looping through all 7 static tokens and reading the boolean value
+     * @return shouldPayFirstInstallment
+     */
     private Boolean calculateShouldPayFirstInstallment() {
         JSONParser parser = JSON.createParser(this.batch.Batch_Defaults__c);
         String shouldPayFirstInstallment;
