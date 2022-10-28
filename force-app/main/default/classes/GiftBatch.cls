@@ -46,7 +46,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     @TestVisible
     private GiftTemplate giftTemplate;
 
-    private final Boolean shouldPayFirstInstallment = false;
+    private Boolean shouldPayFirstInstallment = false;
     private static final String AllowFirstInstallmentPaid = 'AllowFirstInstallment__f';
 
     @TestVisible
