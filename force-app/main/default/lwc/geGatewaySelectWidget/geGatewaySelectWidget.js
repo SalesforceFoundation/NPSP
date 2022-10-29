@@ -110,7 +110,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
 
         if (this.onGatewayManagementPage()) {
             registerListener('editGatewayManagement', this.enableGatewaySelection, this);
-            registerListener('saveGatewayManagement', this.disableGatewaySelection, this);
+            registerListener('saveGatewayManagement', this.handlePaymentGatewaySave, this);
             registerListener('cancelGatewayManagement', this.handlePaymentGatewayCancel, this);
             await this.toggleSelectGatewayControls();
         }
@@ -356,6 +356,11 @@ export default class GeGatewaySelectWidget extends LightningElement {
 
     disableGatewaySelection() {
         this.isGatewaySelectionDisabled = true;
+    }
+
+    handlePaymentGatewaySave(event) {
+        this._initialSelectedGateway = event;
+        this.disableGatewaySelection();
     }
 
     handlePaymentGatewayCancel() {

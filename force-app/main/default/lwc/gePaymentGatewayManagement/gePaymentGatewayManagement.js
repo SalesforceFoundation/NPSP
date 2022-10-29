@@ -158,7 +158,7 @@ export default class GePaymentGatewayManagement extends LightningElement {
             this.isSuccess = true;
             this.showSpinner = false;
 
-            fireEvent(this, 'saveGatewayManagement', null);
+            fireEvent(this, 'saveGatewayManagement', this.gatewayId);
         } catch(ex) {
             this.errorMessage = buildErrorMessage(ex);
             this.showSpinner = false;
