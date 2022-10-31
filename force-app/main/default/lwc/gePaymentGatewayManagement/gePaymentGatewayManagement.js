@@ -136,7 +136,7 @@ export default class GePaymentGatewayManagement extends LightningElement {
     }
 
     handleCancel() {
-        fireEvent(this, 'noEditGatewayManagement', null);
+        fireEvent(this, 'cancelGatewayManagement', null);
 
         this.resetAlert();
         this.isReadOnly = true;
@@ -158,7 +158,7 @@ export default class GePaymentGatewayManagement extends LightningElement {
             this.isSuccess = true;
             this.showSpinner = false;
 
-            fireEvent(this, 'noEditGatewayManagement', null);
+            fireEvent(this, 'saveGatewayManagement', this.gatewayId);
         } catch(ex) {
             this.errorMessage = buildErrorMessage(ex);
             this.showSpinner = false;
