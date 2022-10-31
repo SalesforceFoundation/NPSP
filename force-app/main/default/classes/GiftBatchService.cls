@@ -154,7 +154,7 @@ public with sharing class GiftBatchService {
         }
 
         String jobStatus = getStatusFor(new AsyncApexJobId(jobId));
-        return !FINISH_JOB_STATUS_SET.contains(jobStatus);
+        return !(FINISH_JOB_STATUS_SET.contains(jobStatus) || jobStatus == null);
     }
 
     public String getStatusFor(AsyncApexJobId jobId) {
