@@ -91,7 +91,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
 
     _allowFirstInstallment = false;
     _allowFirstInstallmentDisabled;
-    _allowRecurringDonations;
+    _allowRecurringDonations = false;
 
     get allowRecurringDonations() {
         return this
@@ -122,7 +122,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     }
 
     get allowFirstInstallment () {
-        if (this.isEditMode && this.allowRecurringDonations) {
+        if (this.isEditMode && this._allowRecurringDonations) {
             let batchLevelDefaults =
                 JSON.parse(this.dataImportBatchRecord.fields[DATA_IMPORT_BATCH_DEFAULTS_INFO.fieldApiName].value);
             return batchLevelDefaults['AllowFirstInstallment__f'].value;
@@ -259,6 +259,11 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         }
     }
     setFormFieldsBatchLevelDefaults() {
+        this._allowRecurringDonations =
+            this.dataImportBatchRecord
+            ?.fields[DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS.fieldApiName]
+            ?.value;
+
         let batchLevelDefaults =
             JSON.parse(this.dataImportBatchRecord.fields[DATA_IMPORT_BATCH_DEFAULTS_INFO.fieldApiName].value);
 
