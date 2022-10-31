@@ -12670,8 +12670,8 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Payment Gateway Management</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Label added to default gateway name.</shortDescription>
-        <value>Default</value>
+        <shortDescription>Picklist option label for default gateway.</shortDescription>
+        <value>Always use default gateway</value>
     </labels>
     <labels>
         <fullName>psGatewaySelectionLabel</fullName>
@@ -12679,7 +12679,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label for Gateway selection in settings.</shortDescription>
-        <value>NPSP uses the gateway that was added to Elevate most recently unless you override it.</value>
+        <value>NPSP uses the gateway that was added to Elevate most recently unless you override it. To set a default Elevate payment gateway, select it here.</value>
     </labels>
     <labels>
         <fullName>psGatewaysNotFound</fullName>
@@ -12712,6 +12712,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Label to hide Payment Methods.</shortDescription>
         <value>Hide Payment Methods</value>
+    </labels>
+    <labels>
+        <fullName>psPaymentGateway</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to identify selected Payment Gateway.</shortDescription>
+        <value>Payment Gateway:</value>
     </labels>
     <labels>
         <fullName>psSelectPaymentGateway</fullName>
