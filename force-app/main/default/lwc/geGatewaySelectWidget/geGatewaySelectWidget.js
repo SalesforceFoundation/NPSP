@@ -63,6 +63,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
     _defaultTemplateId = null;
     _defaultGatewayId = null;
     _widgetMode;
+    _initialSelectedGateway = null;
 
     async init() {
         try {
@@ -79,8 +80,8 @@ export default class GeGatewaySelectWidget extends LightningElement {
 
         this.setWidgetMode();
 
-        if (this._widgetMode === GATEWAY_MANAGEMENT_MODE) {
-            this.disableGatewaySelection();
+        if (this.onGatewayManagementPage()) {
+            this.handlePaymentGatewayCancel();
         }
         else {
             this.initWidgetSettings();
@@ -107,9 +108,10 @@ export default class GeGatewaySelectWidget extends LightningElement {
             this.isLoading = false;
         }
 
-        if (this._widgetMode === GATEWAY_MANAGEMENT_MODE) {
+        if (this.onGatewayManagementPage()) {
             registerListener('editGatewayManagement', this.enableGatewaySelection, this);
-            registerListener('noEditGatewayManagement', this.disableGatewaySelection, this);
+            registerListener('saveGatewayManagement', this.handlePaymentGatewaySave, this);
+            registerListener('cancelGatewayManagement', this.handlePaymentGatewayCancel, this);
             await this.toggleSelectGatewayControls();
         }
     }
@@ -155,6 +157,20 @@ export default class GeGatewaySelectWidget extends LightningElement {
             this.gatewayOptions.push({label: gateway.gatewayName, value: gateway.id});
         }
         this.gatewayOptions = this.gatewayOptions.sort((a, b) => a.label >= b.label ? 1 : -1);
+
+        if (!this.onGatewayManagementPage()) {
+            this.addDefaultGatewayOption();
+        }
+    }
+
+    addDefaultGatewayOption() {
+        this._elevateGatewaysByUniqueKey.set(null, {
+            gatewayName: this.CUSTOM_LABELS.psGatewayDefault,
+            id: null,
+            isACHEnabled: true,
+            isCreditCardEnabled: true
+        });
+        this.gatewayOptions.splice(0, 0, {label: this.CUSTOM_LABELS.psGatewayDefault, value: null});
     }
 
     async toggleSelectGatewayControls() {
@@ -172,31 +188,33 @@ export default class GeGatewaySelectWidget extends LightningElement {
             return;
         }
 
-        if (this._widgetMode !== PAYMENT_METHOD_MODE) {
+        if (!this.inPaymentMethodMode()) {
             await this.handleInitialGatewaySelection(GeGatewaySettings.getElevateSettings());
         }
         else {
             this.handleInitialPaymentMethodSelections(GeGatewaySettings.getElevateSettings());
         }
 
-        if (this._widgetMode === GATEWAY_MANAGEMENT_MODE) {
+        if (this.onGatewayManagementPage()) {
             this.isExpanded = true;
             fireEvent(this, 'updateSelectedGateway', this.selectedGateway);
+            registerListener('resetToInitialGateway', this.resetToInitialGateway, this);
         }
 
         this._firstDisplay = false;
     }
 
     async handleInitialGatewaySelection(elevateSettings) {
-        if (isEmpty(elevateSettings) || isEmpty(elevateSettings.uniqueKey)) {
+        if (isEmpty(elevateSettings) || this.onGatewayManagementPage()) {
             await this.selectDefaultGateway();
         } else {
             await this.selectSavedGateway(elevateSettings);
         }
+        this._initialSelectedGateway = this.selectedGateway;
     }
 
     async selectDefaultGateway() {
-        this.selectedGateway = this._defaultGatewayId;
+        this.selectedGateway = this.onGatewayManagementPage() ? this._defaultGatewayId : null;
         this.updateACHSettings();
         this.updateCreditCardSettings();
         this.updateDisabledPaymentTypes();
@@ -340,8 +358,18 @@ export default class GeGatewaySelectWidget extends LightningElement {
         this.isGatewaySelectionDisabled = true;
     }
 
+    handlePaymentGatewaySave(event) {
+        this._initialSelectedGateway = event;
+        this.disableGatewaySelection();
+    }
+
+    handlePaymentGatewayCancel() {
+        this.resetToInitialGateway();
+        this.disableGatewaySelection();
+    }
+
     async updateElevateSettings() {
-        if (this._widgetMode !== GATEWAY_MANAGEMENT_MODE) {
+        if (!this.onGatewayManagementPage()) {
             const elevateSettings = {
                 uniqueKey: this.isGatewayAssignmentEnabled ?
                     await encryptGatewayId({gatewayId: this.selectedGateway}) : null,
@@ -355,15 +383,27 @@ export default class GeGatewaySelectWidget extends LightningElement {
         }
     }
 
+    resetToInitialGateway() {
+        this.selectedGateway = this._initialSelectedGateway;
+    }
+
+    onGatewayManagementPage() {
+        return this._widgetMode === GATEWAY_MANAGEMENT_MODE;
+    }
+
+    inPaymentMethodMode() {
+        return this._widgetMode === PAYMENT_METHOD_MODE;
+    }
+
     get shouldShowGateways() {
-        return this._widgetMode !== PAYMENT_METHOD_MODE;
+        return !this.inPaymentMethodMode();
     }
 
     get shouldShowPaymentMethods() {
-        return this._widgetMode !== GATEWAY_MANAGEMENT_MODE;
+        return !this.onGatewayManagementPage();
     }
 
     get shouldShowExpandControls() {
-        return this._widgetMode !== GATEWAY_MANAGEMENT_MODE;
+        return !this.onGatewayManagementPage();
     }
 }
