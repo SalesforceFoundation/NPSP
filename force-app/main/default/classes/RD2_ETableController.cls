@@ -307,7 +307,7 @@ public with sharing class RD2_ETableController {
         String nextDonation = '';
 		String nextDonationStringDate = String.valueOf(recurringDonation.npe03__Next_Payment_Date__c);
         if(recurringDonation.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED && !String.isEmpty(nextDonationStringDate) ) {
-			nextDonation = System.Label.RD2_PaidInstallments + ' ' + String.valueOf(recurringDonation.npe03__Total_Paid_Installments__c) +'/'+ String.valueOf(recurringDonation.npe03__Installments__c) + ', ' + System.Label.RD2_NextDonationDate + ' ' + recurringDonation.npe03__Next_Payment_Date__c.format();
+			nextDonation = System.Label.RD2_PaidInstallments + ' ' + String.valueOf(recurringDonation.npe03__Total_Paid_Installments__c) +'/'+ String.valueOf(recurringDonation.npe03__Installments__c) + '<br/>' + System.Label.RD2_NextDonationDate + ' ' + recurringDonation.npe03__Next_Payment_Date__c.format();
         } else {
 			nextDonation = (recurringDonation.npe03__Next_Payment_Date__c != null && String.valueOf(recurringDonation.npe03__Next_Payment_Date__c) != '') ? recurringDonation.npe03__Next_Payment_Date__c.format() : null;
         }
