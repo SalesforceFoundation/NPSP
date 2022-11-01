@@ -192,6 +192,7 @@ export default class GeFormRenderer extends LightningElement{
     @api isElevateCustomer = false;
     @api saveDisabled = false;
     @api isMakeRecurringButtonDisabled = false;
+    _isElevateWidgetInDisabledState = false;
 
     @track isPermissionError = false;
     @track permissionErrorTitle;
@@ -203,7 +204,6 @@ export default class GeFormRenderer extends LightningElement{
     @track description = '';
     @track mappingSet = '';
     @track version = '';
-    _isElevateWidgetInDisabledState = false;
     _hasPaymentWidget = false;
     latestElevateBatchId = null;
     cardholderNamesNotInTemplate = {};
@@ -1393,7 +1393,11 @@ export default class GeFormRenderer extends LightningElement{
 
     get isUpdateActionDisabled() {
         return this.getFieldValueFromFormState(STATUS_FIELD) === 'Imported' ||
-               this.saveDisabled;
+               this.saveDisabled ||
+               (
+                   this.shouldShowElevateTransactionWarning &&
+                   this._isElevateWidgetInDisabledState
+               );
     }
 
     get cardholderNames() {
@@ -2860,7 +2864,7 @@ export default class GeFormRenderer extends LightningElement{
         return format('You need to re-enter your payment information before editing the gift.');
     }
 
-    get showElevateTransactionWarning() {
+    get shouldShowElevateTransactionWarning() {
         const paymentStatus = this.getFieldValueFromFormState(PAYMENT_STATUS);
         return  this.getFieldValueFromFormState(STATUS_FIELD) !== GIFT_STATUSES.IMPORTED &&
                 (

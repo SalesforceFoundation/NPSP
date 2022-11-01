@@ -99,7 +99,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             if (this.isFormCollapsed) {
                 this.isFormCollapsed = false;
             }
-
             fireEvent(this, 'resetElevateWidget', {});
             
             this.isFormRendering = false;

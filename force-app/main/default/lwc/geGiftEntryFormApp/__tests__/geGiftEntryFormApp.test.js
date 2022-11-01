@@ -31,6 +31,7 @@ import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
 import FAILURE_INFORMATION from '@salesforce/schema/DataImport__c.FailureInformation__c';
 import accountDonorSelectionMismatch from '@salesforce/label/c.geErrorDonorMismatch';
+import { fireEvent } from '../../pubsubNoPageRef/pubsubNoPageRef';
 
 const PROCESSING_BATCH_MESSAGE = 'c.geProcessingBatch';
 
@@ -236,6 +237,52 @@ describe('c-ge-gift-entry-form-app', () => {
     });
 
     describe('event dispatch and handling behavior', () => {
+        it('should disable update button when widget is read-only with an editable recurring gift', async() => {
+            const formApp = setupForBatchMode({gifts: [{fields: {'Id': 'DUMMY_RECORD_ID',
+                                                                 'Recurring_Donation_Elevate_Recurring_ID__c': 'DUMMY_RECURRING_ID'}}], totals: { TOTAL: 1 }});
+            await flushPromises();
+
+            const batchTable = shadowQuerySelector(formApp, 'c-ge-batch-gift-entry-table');
+            const loadDataEvent = new CustomEvent('loaddata', {
+                detail : {
+                    'Id': 'DUMMY_RECORD_ID'}
+            });
+            batchTable.dispatchEvent(loadDataEvent);
+            await flushPromises();
+
+            const geFormRenderer = shadowQuerySelector(formApp, 'c-ge-form-renderer');
+            const warningMessage = shadowQuerySelector(geFormRenderer, '[data-id="elevateTrnxWarning"]');
+            expect(warningMessage).toBeTruthy();
+
+            pubSub.fireEvent({}, 'widgetStateChange', {state: 'readOnly'});
+            await flushPromises();
+            
+            const saveButton = shadowQuerySelector(geFormRenderer, '[data-id="formSaveButton"]');
+            expect(saveButton.disabled).toBe(true);
+        });
+        it('should disable update button when widget is read-only with an editable status for one-time gift', async() => {
+            const formApp = setupForBatchMode({gifts: [{fields: {'Id': 'DUMMY_RECORD_ID',
+                                                                 'Payment_Status__c': 'AUTHORIZED'}}], totals: { TOTAL: 1 }});
+            await flushPromises();
+
+            const batchTable = shadowQuerySelector(formApp, 'c-ge-batch-gift-entry-table');
+            const loadDataEvent = new CustomEvent('loaddata', {
+                detail : {
+                    'Id': 'DUMMY_RECORD_ID'}
+            });
+            batchTable.dispatchEvent(loadDataEvent);
+            await flushPromises();
+
+            const geFormRenderer = shadowQuerySelector(formApp, 'c-ge-form-renderer');
+            const warningMessage = shadowQuerySelector(geFormRenderer, '[data-id="elevateTrnxWarning"]');
+            expect(warningMessage).toBeTruthy();
+
+            pubSub.fireEvent({}, 'widgetStateChange', {state: 'readOnly'});
+            await flushPromises();
+            
+            const saveButton = shadowQuerySelector(geFormRenderer, '[data-id="formSaveButton"]');
+            expect(saveButton.disabled).toBe(true);
+        });
 
         it('should not display widget warning captured gift is loadeed', async() => {
             const formApp = setupForBatchMode({gifts: [{fields: {'Id': 'DUMMY_RECORD_ID', 'Payment_Status__c': 'CAPTURED'}}], totals: { TOTAL: 1 }});
@@ -269,10 +316,10 @@ describe('c-ge-gift-entry-form-app', () => {
             await flushPromises();
 
             const geFormRenderer = shadowQuerySelector(formApp, 'c-ge-form-renderer');
-            const warningMessage = shadowQuerySelectorAll(geFormRenderer, '[data-id="elevateTrnxWarning"]');
-            expect(warningMessage).toHaveLength(1);
+            const warningMessage = shadowQuerySelector(geFormRenderer, '[data-id="elevateTrnxWarning"]');
+            expect(warningMessage).toBeTruthy();
         });
-        it('should display widget warning when one-time gift read-only status is loadeed', async() => {
+        it('should display widget warning when one-time gift read-only status is loaded', async() => {
             const formApp = setupForBatchMode({gifts: [{fields: {'Id': 'DUMMY_RECORD_ID', 'Payment_Status__c': 'AUTHORIZED'}}], totals: { TOTAL: 1 }});
             await flushPromises();
 

@@ -114,7 +114,7 @@
                             </c-util-illustration>
                         </div>
                     </template>
-                    <template if:true={showElevateTransactionWarning}>
+                    <template if:true={shouldShowElevateTransactionWarning}>
                         <div class="slds-notify slds-notify_alert payment-warn" role="alert">
                             <span class="slds-assistive-text">{CUSTOM_LABELS.commonWarning}</span>
                             <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small">
@@ -244,7 +244,8 @@
                                                           onclick={handleSave}
                                                           class='slds-m-left_x-small'
                                                           disabled={isUpdateActionDisabled}
-                                                          data-qa-locator={qaLocatorSaveButton}>
+                                                          data-qa-locator={qaLocatorSaveButton}
+                                                          data-id="formSaveButton">
                                         </lightning-button>
                                     </div>
                                 </lightning-layout-item>
