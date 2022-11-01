@@ -184,9 +184,8 @@ public with sharing class Gift {
     }
 
     public void preprocessForRecurringGift(Boolean shouldPayFirstInstallment) {
-        if (!canPayFirstInstallment(shouldPayFirstInstallment)) {
-            this.dataImport.Donation_Amount__c = null;
-        }
+        this.dataImport.Donation_Amount__c =
+                !canPayFirstInstallment(shouldPayFirstInstallment) ? null :  this.dataImport.Donation_Amount__c;
         this.dataImport.Donation_Date__c = null;
         this.dataImport.DonationImported__c = null;
         clearNetNewSoftCredits();

@@ -98,6 +98,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
 
     public GiftBatch (DataImportBatch__c batch) {
         this.batch = batch;
+        this.shouldPayFirstInstallment = calculateShouldPayFirstInstallment();
     }
 
     @TestVisible
@@ -111,7 +112,6 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         this.giftTemplate = new GiftTemplate(batch.Form_Template__r.Template_JSON__c);
         this.gifts = new Gifts(giftBatchId, new GiftSelector(giftTemplate));
         this.totals = new GiftBatchTotals(giftBatchId, giftBatchSelector);
-        this.shouldPayFirstInstallment = calculateShouldPayFirstInstallment();
     }
 
     public GiftBatch(GiftBatchId giftBatchId, List<Id> giftIds) {
