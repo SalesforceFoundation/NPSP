@@ -940,7 +940,7 @@ export default class GeFormRenderer extends LightningElement{
             return false;
         }
 
-        return gift.isAuthorized();
+        return gift.hasElevateRemovableStatus();
     }
 
     shouldNullPaymentRelatedFields() {
