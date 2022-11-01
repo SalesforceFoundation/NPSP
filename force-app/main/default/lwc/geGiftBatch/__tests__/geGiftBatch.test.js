@@ -47,4 +47,16 @@ describe('ge-gift-batch', () => {
 
         expect(giftBatch.state().isProcessingGifts).toBeTruthy();
     });
+
+    it('should not be in processing state', async () => {
+        getGiftBatchView.mockResolvedValue(giftBatchViewJSON);
+        hasActiveRunningJob.mockResolvedValue(false);
+        isGiftBatchAccessible.mockResolvedValue(true);
+        const giftBatch = new GiftBatch();
+        await giftBatch.init(giftBatchViewJSON.giftBatchId);
+
+        await flushPromises();
+
+        expect(giftBatch.state().isProcessingGifts).toBeFalsy();
+    });
 });
