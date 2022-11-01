@@ -127,7 +127,8 @@ import {
     FAILED, ACH_CONSENT_TYPE,
     COMMITMENT_INACTIVE_STATUS,
     BATCH_COMMITMENT_CREATED_STATUS_REASON,
-    PAYMENT_METHOD_ACH
+    PAYMENT_METHOD_ACH,
+    GIFT_STATUSES
 } from 'c/geConstants';
 
 
@@ -2861,8 +2862,11 @@ export default class GeFormRenderer extends LightningElement{
 
     get showElevateTransactionWarning() {
         const paymentStatus = this.getFieldValueFromFormState(PAYMENT_STATUS);
-        return this.hasUnprocessedReadOnlyPaymentStatus(paymentStatus) ||
-                this.getFieldValueFromFormState(DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID);
+        return  this.getFieldValueFromFormState(STATUS_FIELD) !== GIFT_STATUSES.IMPORTED &&
+                (
+                    this.hasUnprocessedReadOnlyPaymentStatus(paymentStatus) ||
+                    this.getFieldValueFromFormState(DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID)
+                );
     }
 
     hasUnprocessedReadOnlyPaymentStatus(paymentStatus) {
