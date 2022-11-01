@@ -66,22 +66,23 @@
         }
 
         function handleMessage(event) {
-            const action = event.data.action;
+            const data = JSON.parse(event.data)
+            const action = data.action
             switch (action) {
                 case 'mount':
-                    handleMounting(event.data.paymentMethod, event.data.gatewayId);
+                    handleMounting(data.paymentMethod, data.gatewayId);
                     break;
 
                 case 'setPaymentMethod':
-                    handleSetPaymentMethod(event.data.paymentMethod);
+                    handleSetPaymentMethod(data.paymentMethod);
                     break;
 
                 case 'createToken':
-                    handleTokenCreation(event.data.params);
+                    handleTokenCreation(data.params);
                     break;
 
                 case 'createAchToken':
-                    handleAchTokenCreation(event.data.params);
+                    handleAchTokenCreation(data.params);
                     break;
             }
         }
@@ -101,7 +102,7 @@
 
                 sfdo.mount(config)
                     .then(() => {
-                        const successMessage = JSON.stringify({ type: postMessageType, success: true });
+                        const successMessage = { type: postMessageType, success: true };
                         sendPostMessage(successMessage);
                     })
                     .catch((err) => {
@@ -143,17 +144,17 @@
                 .then((resp) => {
                     if (resp.token) {
                         // Send token to lwc
-                        const successString = JSON.stringify({ type: postMessageType, token: resp.token });
+                        const successString = { type: postMessageType, token: resp.token };
                         sendPostMessage(successString);
 
                     } else if (resp.error) {
                         // Response contains the error, send it to lwc
-                        sendPostMessage(JSON.stringify({ type: postMessageType, ...resp }));
+                        sendPostMessage({ type: postMessageType, ...resp });
                     }
                 })
                 .catch((err) => {
                     // Send error to lwc
-                    const errorString = JSON.stringify({ type: postMessageType, ...err });
+                    const errorString =  {type: postMessageType, ...err };
                     sendPostMessage(errorString);
                 });
         }
@@ -174,7 +175,7 @@
            .then((resp) => {
               if (resp.token) {
                  // Send token to lwc
-                 const successString = JSON.stringify({ type: postMessageType, token: resp.token });
+                 const successString = { type: postMessageType, token: resp.token };
                  sendPostMessage(successString);
 
               } else if (resp.error) {
@@ -213,7 +214,7 @@
         }
 
         function setReadyToMount() {
-            const message = JSON.stringify({ isReadyToMount: true });
+            const message = { isReadyToMount: true };
             sendPostMessage(message);
         }
 
