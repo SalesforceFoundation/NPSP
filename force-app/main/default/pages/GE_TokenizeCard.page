@@ -61,27 +61,29 @@
                 return;
             }
             if (event.data) {
-                handleMessage(event);
+                console.log("chicken", event.data);
+                handleMessage(event, event.data.action);
             }
         }
 
         function handleMessage(event) {
-            const action = event.data.action;
+            const data = JSON.parse(event.data)
+            const action = data.action
             switch (action) {
                 case 'mount':
-                    handleMounting(event.data.paymentMethod);
+                    handleMounting(data.paymentMethod);
                     break;
 
                 case 'setPaymentMethod':
-                    handleSetPaymentMethod(event.data.paymentMethod);
+                    handleSetPaymentMethod(data.paymentMethod);
                     break;
 
                 case 'createToken':
-                    handleTokenCreation(event.data.params);
+                    handleTokenCreation(data.params);
                     break;
 
                 case 'createAchToken':
-                    handleAchTokenCreation(event.data.params);
+                    handleAchTokenCreation(data.params);
                     break;
             }
         }
@@ -100,7 +102,7 @@
 
                 sfdo.mount(config)
                     .then(() => {
-                        const successMessage = JSON.stringify({ type: postMessageType, success: true });
+                        const successMessage = { type: postMessageType, success: true };
                         sendPostMessage(successMessage);
                     })
                     .catch((err) => {
@@ -142,17 +144,17 @@
                 .then((resp) => {
                     if (resp.token) {
                         // Send token to lwc
-                        const successString = JSON.stringify({ type: postMessageType, token: resp.token });
+                        const successString = { type: postMessageType, token: resp.token };
                         sendPostMessage(successString);
 
                     } else if (resp.error) {
                         // Response contains the error, send it to lwc
-                        sendPostMessage(JSON.stringify({ type: postMessageType, ...resp }));
+                        sendPostMessage({ type: postMessageType, ...resp });
                     }
                 })
                 .catch((err) => {
                     // Send error to lwc
-                    const errorString = JSON.stringify({ type: postMessageType, ...err });
+                    const errorString =  {type: postMessageType, ...err };
                     sendPostMessage(errorString);
                 });
         }
@@ -173,7 +175,7 @@
            .then((resp) => {
               if (resp.token) {
                  // Send token to lwc
-                 const successString = JSON.stringify({ type: postMessageType, token: resp.token });
+                 const successString = { type: postMessageType, token: resp.token };
                  sendPostMessage(successString);
 
               } else if (resp.error) {
@@ -194,7 +196,34 @@
         * @param {string} message: String to pass to the LWC
         */
         function sendPostMessage(message) {
-            window.top.postMessage(message, lightningOrigin);
+            safePostMessage(window, message, lightningOrigin);
+        }
+
+        function safePostMessage(window, data, domain) {
+            window.top.postMessage(createSerializableObject(data), domain);
+        }
+
+        const RTF1 = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+
+        function createSerializableObject(obj) {
+            if (typeof obj !== "object" || obj === null || obj === undefined) {
+                return obj;
+            }
+            if (Array.isArray(obj)) {
+                const parts = RTF1.formatToParts(10, "seconds");
+                parts.splice(0, 3); // this emptys the array.
+                obj.forEach(k => {
+                    parts.push(createSerializableObject(k));
+                });
+                return parts;
+            }
+            const o = new Intl.NumberFormat("en").resolvedOptions();
+            Object.keys(o).forEach(k => delete o[k]);
+            const newObj = Object.assign(o, obj);
+            Object.keys(obj).forEach(k => {
+                newObj[k] = createSerializableObject(obj[k]);
+            });
+            return newObj;
         }
 
         function deriveElevatePaymentMethodFrom(paymentMethodValue) {
@@ -216,12 +245,12 @@
             if (siteBaseURL.length > 0) {
                 return siteBaseURL;
             } else {
-                return `https://${domain}.lightning.force.com`;
+                return `https://${domain}.scratch.lightning.force.com`;
             }
         }
 
         function isReadyToMount() {
-            const message = JSON.stringify({ isReadyToMount: true });
+            const message = ({ isReadyToMount: true });
             sendPostMessage(message);
         }
 

@@ -50,7 +50,7 @@ class psElevateTokenHandler {
     getVisualForceOriginURLs(domainInfo, namespace) {
         const url = `https://${domainInfo.orgDomain}--${namespace}.visualforce.com`;
         const alternateUrl = `https://${domainInfo.orgDomain}--${namespace}.${domainInfo.podName}.visual.force.com`;
-        const productionEnhancedUrl = `https://${domainInfo.orgDomain}--${namespace}.vf.force.com`;
+        const productionEnhancedUrl = `https://${domainInfo.orgDomain}--${namespace}.scratch.vf.force.com`;
         const sandboxEnhancedUrl =  `https://${domainInfo.orgDomain}--${namespace}.sandbox.vf.force.com`;
 
         const originURLs = [
@@ -109,7 +109,7 @@ class psElevateTokenHandler {
                 if (typeof event.data === 'object') {
                     component.handleMessage(event.data);
                 } else {
-                    const message = JSON.parse(event.data);
+                    const message = event.data;
                     component.handleMessage(message);
                 }
             }
@@ -123,8 +123,8 @@ class psElevateTokenHandler {
      * @returns {boolean}
      */
     shouldHandleMessage (event) {
-        return !!(this.isExpectedVisualForceOrigin(event)
-            && validateJSONString(JSON.stringify(event.data)));
+        return !!(this.isExpectedVisualForceOrigin(event))
+            // && validateJSONString(JSON.stringify(event.data)));
     }
 
     isExpectedVisualForceOrigin (event) {
@@ -144,8 +144,13 @@ class psElevateTokenHandler {
     */
     handleMessage(message) {
         const isValidMessageType = message.type === 'post__npsp';
+        console.log("message" ,message)
+        console.log("ermkay");
         if (isValidMessageType) {
+            console.log("awlright")
             if (isFunction(this.tokenCallback)) {
+                console.log("yis")
+                console.log("message", message)
                 this.tokenCallback(message);
             }
         }
@@ -199,6 +204,7 @@ class psElevateTokenHandler {
             action: eventAction,
             params: tokenizeParameters,
         };
+        console.log("WHAT THE HECK", message)
         this.sendIframeMessage(iframe, message, this._visualforceOrigin);
 
         return tokenPromise;
@@ -236,7 +242,7 @@ class psElevateTokenHandler {
         const mountPromise = new Promise((resolve, reject) => {
             this.tokenCallback = message => {
                 if (message.error) {
-                    reject(handleError(message));
+                    reject(handleError(JSON.parse(JSON.stringify(message))));
                 } else {
                     resolve(resolveMount());
                 }
@@ -255,7 +261,7 @@ class psElevateTokenHandler {
 
     sendIframeMessage(iframe, message, targetOrigin) {
         iframe.contentWindow.postMessage(
-            message,
+            JSON.stringify(message),
             targetOrigin
         );
     }
