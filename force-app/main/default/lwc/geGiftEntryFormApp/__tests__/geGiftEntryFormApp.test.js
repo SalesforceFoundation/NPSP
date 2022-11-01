@@ -236,6 +236,42 @@ describe('c-ge-gift-entry-form-app', () => {
     });
 
     describe('event dispatch and handling behavior', () => {
+
+        it('should not display widget warning captured gift is loadeed', async() => {
+            const formApp = setupForBatchMode({gifts: [{fields: {'Id': 'DUMMY_RECORD_ID', 'Payment_Status__c': 'CAPTURED'}}], totals: { TOTAL: 1 }});
+            await flushPromises();
+
+            const batchTable = shadowQuerySelector(formApp, 'c-ge-batch-gift-entry-table');
+            const loadDataEvent = new CustomEvent('loaddata', {
+                detail : {
+                    'Id': 'DUMMY_RECORD_ID'
+                }
+            });
+            batchTable.dispatchEvent(loadDataEvent);
+            await flushPromises();
+
+            const geFormRenderer = shadowQuerySelector(formApp, 'c-ge-form-renderer');
+            const warningMessage = shadowQuerySelectorAll(geFormRenderer, '[data-id="elevateTrnxWarning"]');
+            expect(warningMessage).toHaveLength(0);
+        });
+
+        it('should display widget warning when one-time gift read-only status is loadeed', async() => {
+            const formApp = setupForBatchMode({gifts: [{fields: {'Id': 'DUMMY_RECORD_ID', 'Payment_Status__c': 'PENDING'}}], totals: { TOTAL: 1 }});
+            await flushPromises();
+
+            const batchTable = shadowQuerySelector(formApp, 'c-ge-batch-gift-entry-table');
+            const loadDataEvent = new CustomEvent('loaddata', {
+                detail : {
+                    'Id': 'DUMMY_RECORD_ID'
+                }
+            });
+            batchTable.dispatchEvent(loadDataEvent);
+            await flushPromises();
+
+            const geFormRenderer = shadowQuerySelector(formApp, 'c-ge-form-renderer');
+            const warningMessage = shadowQuerySelectorAll(geFormRenderer, '[data-id="elevateTrnxWarning"]');
+            expect(warningMessage).toHaveLength(1);
+        });
         it('should display widget warning when one-time gift read-only status is loadeed', async() => {
             const formApp = setupForBatchMode({gifts: [{fields: {'Id': 'DUMMY_RECORD_ID', 'Payment_Status__c': 'AUTHORIZED'}}], totals: { TOTAL: 1 }});
             await flushPromises();
@@ -273,7 +309,7 @@ describe('c-ge-gift-entry-form-app', () => {
         });
 
         it('should not display widget warning when imported gift is loaded', async() => {
-            const formApp = setupForBatchMode({gifts: [{fields: {'Id': 'DUMMY_RECORD_ID', 'Status__c': 'Imported', 'Payment_Status__c': 'CAPTURED'}}], totals: { TOTAL: 1 }});
+            const formApp = setupForBatchMode({gifts: [{fields: {'Id': 'DUMMY_RECORD_ID', 'Status__c': 'Imported'}}], totals: { TOTAL: 1 }});
             await flushPromises();
 
             const batchTable = shadowQuerySelector(formApp, 'c-ge-batch-gift-entry-table');

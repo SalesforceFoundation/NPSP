@@ -2871,10 +2871,8 @@ export default class GeFormRenderer extends LightningElement{
 
     hasUnprocessedReadOnlyPaymentStatus(paymentStatus) {
         return paymentStatus &&
-            (paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED
-                || paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.SUBMITTED
-                || paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED
-                || paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.DECLINED
+            (paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED ||
+                paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING
             );
     }
 
