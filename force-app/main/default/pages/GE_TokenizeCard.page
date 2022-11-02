@@ -106,7 +106,7 @@
                         sendPostMessage(successMessage);
                     })
                     .catch((err) => {
-                        const errorString = JSON.stringify({ type: postMessageType, ...err });
+                        const errorString = { type: postMessageType, ...err };
                         sendPostMessage(errorString);
                     });
             }
@@ -116,11 +116,11 @@
             if (isValidPaymentMethod(paymentMethod)) {
                 sfdo.setPaymentMethod(deriveElevatePaymentMethodFrom(paymentMethod))
                     .then(() => {
-                        const successMessage = JSON.stringify({ type: postMessageType, success: true });
+                        const successMessage = ({ type: postMessageType, success: true });
                         sendPostMessage(successMessage);
                     })
                     .catch((err) => {
-                        const errorString = JSON.stringify({ type: postMessageType, ...err });
+                        const errorString = ({ type: postMessageType, ...err });
                         sendPostMessage(errorString);
                     });
             }
@@ -180,12 +180,12 @@
 
               } else if (resp.error) {
                  // Response contains the error, send it to lwc
-                 sendPostMessage(JSON.stringify({ type: postMessageType, ...resp }));
+                 sendPostMessage(({ type: postMessageType, ...resp }));
               }
            })
            .catch((err) => {
               // Send error to lwc
-              const errorString = JSON.stringify({ type: postMessageType, ...err });
+              const errorString = ({ type: postMessageType, ...err });
               sendPostMessage(errorString);
            });
         }
