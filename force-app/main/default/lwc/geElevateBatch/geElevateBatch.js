@@ -41,13 +41,14 @@ class ElevateBatch {
     }
 
     async remove(batchItem) {
-        return await apexRemoveFromElevateBatch({
+        let removeResponse = await apexRemoveFromElevateBatch({
             batchItem: {
                 elevateBatchId: batchItem[PAYMENT_ELEVATE_ELEVATE_BATCH_ID.fieldApiName],
-                id: batchItem[PAYMENT_ELEVATE_ID.fieldApiName] ? batchItem[PAYMENT_ELEVATE_ID.fieldApiName] :
-                    batchItem[RECURRING_DONATION_ID.fieldApiName]
+                id: batchItem.idToRemove()
             }
         });
+
+        return removeResponse;
     }
 }
 

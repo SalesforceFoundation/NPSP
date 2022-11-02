@@ -18,6 +18,8 @@ class Gift {
     _softCredits = new SoftCredits();
     _schedule = {};
     _fields = {};
+    _hasConvertedToOneTimeType = false;
+    _hasConvertedToRecurringType = false;
 
     constructor(giftView) {
         this._init(giftView);
@@ -34,6 +36,19 @@ class Gift {
             const giftScheduleService = new GiftScheduleService();
             this._schedule = giftScheduleService.retrieveScheduleFromFields(this._fields);
         }
+    }
+
+    idToRemove() {
+        let id;
+        if (this.hasConvertedToElevateRecurringType()) {
+            id = this._fields[PAYMENT_ELEVATE_ID.fieldApiName];
+        } else if (this.hasConvertedToElevateOneTimeType()) {
+            id = this._fields[DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID.fieldApiName];
+        } else {
+            id = this._fields[PAYMENT_ELEVATE_ID.fieldApiName] ? this._fields[PAYMENT_ELEVATE_ID.fieldApiName] :
+                       this._fields[DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID.fieldApiName]
+        }
+        return id;
     }
 
     id() {
@@ -56,12 +71,16 @@ class Gift {
         this._schedule = scheduleData;
         const giftScheduleService = new GiftScheduleService();
         this._fields = giftScheduleService.addScheduleTo(this._fields, scheduleData);
+        this._hasConvertedToElevateRecurringType = true;
+        this._hasConvertedToElevateOneTimeType = false;
     }
 
     removeSchedule() {
         const giftScheduleService = new GiftScheduleService();
         this._fields = giftScheduleService.removeScheduleFromFields(this._fields);
         this._schedule = {};
+        this._hasConvertedToElevateOneTimeType = true;
+        this._hasConvertedToRecurringType = false;
     }
 
     isFailed() {
@@ -124,6 +143,14 @@ class Gift {
         return this._fields[field];
     }
 
+    hasConvertedToElevateRecurringType() {
+        return this._hasConvertedToRecurringType;
+    }
+
+    hasConvertedToElevateOneTimeType() {
+        return this._hasConvertedToElevateOneTimeType;
+    }
+
     asDataImport() {
         let dataImportRecord = { ...this._fields };
         delete dataImportRecord[undefined];
@@ -160,17 +187,19 @@ class Gift {
             fields: { ...this._fields },
             softCredits: JSON.stringify([ ...this._softCredits.unprocessedSoftCredits() ]),
             processedSoftCredits: JSON.stringify([ ...this._softCredits.processedSoftCredits() ]),
-            schedule: { ...this._schedule }
+            schedule: { ...this._schedule },
+            hasConvertedToRecurringType: this._hasConvertedToRecurringType,
+            hasConvertedToOneTimeType: this._hasConvertedToElevateOneTimeType
         }
     }
 
     hasElevateRemovableStatus() {
         return this.getFieldValue(STATUS.fieldApiName) !== GIFT_STATUSES.IMPORTED && (
-                !!this.getFieldValue(PAYMENT_ELEVATE_ID.fieldApiName) &&
+                this.getFieldValue(PAYMENT_ELEVATE_ID.fieldApiName) &&
                 this.getFieldValue(PAYMENT_STATUS.fieldApiName) === PAYMENT_STATUSES.AUTHORIZED ||
                 this.getFieldValue(PAYMENT_STATUS.fieldApiName) === PAYMENT_STATUSES.PENDING
-            )
-            || this.hasCommitmentId();
+            ) ||
+            this.hasCommitmentId();
     }
 }
 
