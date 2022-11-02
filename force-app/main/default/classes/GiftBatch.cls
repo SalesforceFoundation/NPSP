@@ -140,6 +140,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
      * @return shouldPayFirstInstallment
      */
     private Boolean calculateShouldPayFirstInstallment() {
+        if (this.batch.Batch_Defaults__c == null) return false;
         JSONParser parser = JSON.createParser(this.batch.Batch_Defaults__c);
         String shouldPayFirstInstallment;
 

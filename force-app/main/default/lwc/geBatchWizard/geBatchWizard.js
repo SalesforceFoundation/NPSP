@@ -94,6 +94,11 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     _allowFirstInstallmentDisabled;
     _allowRecurringDonations = false;
 
+    installmentCheckboxMetadata = Object.freeze({
+        objectApiName : 'AllowFirstInstallment__o',
+        fieldApiName : 'AllowFirstInstallment__f'
+    });
+
     get allowRecurringDonations() {
         return this
             ?.dataImportBatchRecord

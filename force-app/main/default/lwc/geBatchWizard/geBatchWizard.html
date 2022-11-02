@@ -73,10 +73,10 @@
 
                                 <c-util-input data-id="allowFirstInstallmentsField"
                                               type={allowRecurringDonationsField.dataType}
-                                              field-api-name="AllowFirstInstallment__f"
-                                              object-api-name="AllowFirstInstallment__o"
+                                              field-api-name= {installmentCheckboxMetadata.fieldApiName}
+                                              object-api-name={installmentCheckboxMetadata.objectApiName}
                                               disabled={allowFirstInstallmentDisabled}
-                                              label="First Installment Paid"
+                                              label= {CUSTOM_LABELS.geRD2FirstInstallmentPaid}
                                               onchangevalue={handleAllowFirstInstallmentOnChange}
                                               value={allowFirstInstallment}
                                 >
