@@ -131,7 +131,9 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         if (this.isEditMode && this._allowRecurringDonations) {
             let batchLevelDefaults =
                 JSON.parse(this.dataImportBatchRecord.fields[DATA_IMPORT_BATCH_DEFAULTS_INFO.fieldApiName].value);
-            return batchLevelDefaults['AllowFirstInstallment__f'].value;
+            return batchLevelDefaults['AllowFirstInstallment__f'] ? 
+                batchLevelDefaults['AllowFirstInstallment__f'].value : 
+                false;
         }
 
         return this._allowFirstInstallment;
