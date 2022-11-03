@@ -161,14 +161,6 @@ public with sharing class GiftBatchService {
         return giftBatchServicePrivilegedHelper.getStatusFor(jobId);
     }
 
-    public Boolean hasQueueableJob(GiftBatchId giftBatchId) {
-        Id asyncApexJob = giftBatchServicePrivilegedHelper.getLatestAsyncApexJobId(giftBatchId);
-        if (asyncApexJob != null) {
-            return true;
-        }
-        return false;
-    }
-
     public void clearLatestJobIdFrom(GiftBatchId giftBatchId) {
         giftBatchServicePrivilegedHelper.updateGiftBatchWith(null, giftBatchId);
     }
