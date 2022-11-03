@@ -148,7 +148,7 @@ class Gift {
     }
 
     hasConvertedToElevateOneTimeType() {
-        return this._hasConvertedToElevateOneTimeType;
+        return this._hasConvertedToOneTimeBatchItemType;
     }
 
     asDataImport() {
