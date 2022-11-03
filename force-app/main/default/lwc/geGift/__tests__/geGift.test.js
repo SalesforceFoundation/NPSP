@@ -102,7 +102,7 @@ describe('ge-gift', () => {
         const gift = new Gift(mockGiftViewTest);
         gift.removeSchedule({});
         
-        expect(gift._hasConvertedToElevateOneTimeType).toEqual(true);
+        expect(gift._hasConvertedToOneTimeBatchItemType).toEqual(true);
         expect(gift.idToRemove()).toEqual('DUMMY_RECURRING_ID');
     });
 
@@ -114,7 +114,7 @@ describe('ge-gift', () => {
         const gift = new Gift(mockGiftViewTest);
         gift.addSchedule({});
 
-        expect(gift._hasConvertedToElevateRecurringType).toEqual(true);
+        expect(gift._hasConvertedToRecurringBatchItemType).toEqual(true);
         expect(gift.idToRemove()).toEqual('DUMMY_PAYMENT_ID');
     });
 
