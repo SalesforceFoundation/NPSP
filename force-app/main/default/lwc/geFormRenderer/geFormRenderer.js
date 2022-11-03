@@ -886,6 +886,12 @@ export default class GeFormRenderer extends LightningElement{
         }
     }
 
+    nullRecurringFieldsInFormState(recurringFields) {
+        recurringFields.forEach(field => {
+            this.updateFormState({ [field]: null });
+        });
+    }
+
     async submitBatch(formControls, tokenizedGift) {
         this.handleNullPaymentFieldsInFormState();
 
@@ -917,6 +923,30 @@ export default class GeFormRenderer extends LightningElement{
             this.disabled = false;
             this.toggleSpinner();
             this.handleCatchOnSave(err);
+        }
+    }
+
+    nullGiftFieldsForTypeConversion() {
+        if (this.giftInView.hasConvertedToRecurringType) {
+            this.nullPaymentFieldsInFormState([
+                apiNameFor(PAYMENT_AUTHORIZE_TOKEN),
+                apiNameFor(PAYMENT_DECLINED_REASON),
+                apiNameFor(PAYMENT_STATUS),
+                apiNameFor(PAYMENT_ELEVATE_ELEVATE_BATCH_ID),
+                apiNameFor(PAYMENT_ELEVATE_ID),
+                apiNameFor(PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID),
+                apiNameFor(PAYMENT_LAST_4),
+                apiNameFor(PAYMENT_CARD_NETWORK),
+                apiNameFor(PAYMENT_EXPIRATION_MONTH),
+                apiNameFor(PAYMENT_EXPIRATION_YEAR),
+                apiNameFor(PAYMENT_AUTHORIZED_AT),
+                apiNameFor(PAYMENT_GATEWAY_ID),
+                apiNameFor(PAYMENT_GATEWAY_TRANSACTION_ID),
+            ]);
+        } else if (this.giftInView.hasConvertedToOneTimeType) {
+            this.nullRecurringFieldsInFormState([
+                apiNameFor(DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID)
+            ]);
         }
     }
 
@@ -962,10 +992,12 @@ export default class GeFormRenderer extends LightningElement{
 
         try {
             if (await this.shouldRemoveFromElevateBatch(gift, !!tokenizedGift)) {
-                await this.currentElevateBatch.remove(gift.asDataImport());
+                await this.currentElevateBatch.remove(gift);
                 if (!tokenizedGift) { this.handleNullPaymentFieldsInFormState(); }
+
                 result.wasRemoved = true;
             }
+            this.nullGiftFieldsForTypeConversion();
         } catch (exception) {
             const errorMsg = GeLabelService.format(
                 this.CUSTOM_LABELS.geErrorElevateUpdate, 

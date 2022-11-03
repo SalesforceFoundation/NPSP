@@ -189,7 +189,7 @@ class Gift {
             processedSoftCredits: JSON.stringify([ ...this._softCredits.processedSoftCredits() ]),
             schedule: { ...this._schedule },
             hasConvertedToRecurringType: this._hasConvertedToRecurringType,
-            hasConvertedToOneTimeType: this._hasConvertedToElevateOneTimeType
+            hasConvertedToOneTimeType: this._hasConvertedToOneTimeType
         }
     }
 
