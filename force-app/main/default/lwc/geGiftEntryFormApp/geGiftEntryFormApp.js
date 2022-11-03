@@ -567,7 +567,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         let isRemovedFromElevate = false;
         if (this.shouldRemoveFromElevateBatch(gift)) {
             try {
-                await this.deleteFromElevateBatch(gift.asDataImport());
+                await this.deleteFromElevateBatch(gift);
                 isRemovedFromElevate = true;
             } catch (exception) {
                 let errorMsg = GeLabelService.format(

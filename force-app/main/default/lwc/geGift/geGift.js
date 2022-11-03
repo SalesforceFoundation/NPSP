@@ -18,8 +18,8 @@ class Gift {
     _softCredits = new SoftCredits();
     _schedule = {};
     _fields = {};
-    _hasConvertedToOneTimeType = false;
-    _hasConvertedToRecurringType = false;
+    _hasConvertedToOneTimeBatchItemType = false;
+    _hasConvertedToRecurringBatchItemType = false;
 
     constructor(giftView) {
         this._init(giftView);
@@ -71,16 +71,16 @@ class Gift {
         this._schedule = scheduleData;
         const giftScheduleService = new GiftScheduleService();
         this._fields = giftScheduleService.addScheduleTo(this._fields, scheduleData);
-        this._hasConvertedToElevateRecurringType = true;
-        this._hasConvertedToElevateOneTimeType = false;
+        this._hasConvertedToOneTimeBatchItemType = false;
+        this._hasConvertedToRecurringBatchItemType = true;
     }
 
     removeSchedule() {
         const giftScheduleService = new GiftScheduleService();
         this._fields = giftScheduleService.removeScheduleFromFields(this._fields);
         this._schedule = {};
-        this._hasConvertedToElevateOneTimeType = true;
-        this._hasConvertedToRecurringType = false;
+        this._hasConvertedToOneTimeBatchItemType = true;
+        this._hasConvertedToRecurringBatchItemType = false;
     }
 
     isFailed() {
@@ -144,7 +144,7 @@ class Gift {
     }
 
     hasConvertedToElevateRecurringType() {
-        return this._hasConvertedToRecurringType;
+        return this._hasConvertedToRecurringBatchItemType;
     }
 
     hasConvertedToElevateOneTimeType() {
@@ -188,8 +188,8 @@ class Gift {
             softCredits: JSON.stringify([ ...this._softCredits.unprocessedSoftCredits() ]),
             processedSoftCredits: JSON.stringify([ ...this._softCredits.processedSoftCredits() ]),
             schedule: { ...this._schedule },
-            hasConvertedToRecurringType: this._hasConvertedToRecurringType,
-            hasConvertedToOneTimeType: this._hasConvertedToOneTimeType
+            hasConvertedToRecurringBatchItemType: this._hasConvertedToRecurringBatchItemType,
+            hasConvertedToElevateOneTimeBatchItemType: this._hasConvertedToOneTimeBatchItemType
         }
     }
 

@@ -927,7 +927,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     nullGiftFieldsForTypeConversion() {
-        if (this.giftInView.hasConvertedToRecurringType) {
+        if (this.giftInView.hasConvertedToRecurringBatchItemType) {
             this.nullPaymentFieldsInFormState([
                 apiNameFor(PAYMENT_AUTHORIZE_TOKEN),
                 apiNameFor(PAYMENT_DECLINED_REASON),
@@ -942,8 +942,9 @@ export default class GeFormRenderer extends LightningElement{
                 apiNameFor(PAYMENT_AUTHORIZED_AT),
                 apiNameFor(PAYMENT_GATEWAY_ID),
                 apiNameFor(PAYMENT_GATEWAY_TRANSACTION_ID),
+                apiNameFor(PAYMENT_METHOD)
             ]);
-        } else if (this.giftInView.hasConvertedToOneTimeType) {
+        } else if (this.giftInView.hasConvertedToElevateOneTimeBatchItemType) {
             this.nullRecurringFieldsInFormState([
                 apiNameFor(DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID)
             ]);
