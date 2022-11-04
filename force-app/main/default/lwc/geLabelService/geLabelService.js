@@ -5,6 +5,7 @@ import { format } from 'c/utilCommon';
 import bgeGridNoGiftsBody from '@salesforce/label/c.bgeGridNoGiftsBody';
 import bgeGridNoGiftsHeader from '@salesforce/label/c.bgeGridNoGiftsHeader';
 import commonAccountNumber from '@salesforce/label/c.commonAccountNumber';
+import commonACHLast4 from '@salesforce/label/c.commonACHLast4';
 import commonAmount from '@salesforce/label/c.commonAmount';
 import commonAssistiveError from '@salesforce/label/c.commonAssistiveError';
 import commonAssistiveInfo from '@salesforce/label/c.commonAssistiveInfo';
@@ -261,6 +262,7 @@ class GeLabelService {
         bgeGridNoGiftsBody,
         bgeGridNoGiftsHeader,
         commonAccountNumber,
+        commonACHLast4,
         commonAmount,
         commonAssistiveError,
         commonAssistiveInfo,

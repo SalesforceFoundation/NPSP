@@ -947,8 +947,16 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     shouldNullPaymentRelatedFields() {
+        return this.shouldNullFormerCreditCardPayment() || this.shouldNullFormerAchPayment();
+    }
+
+    shouldNullFormerCreditCardPayment() {
         return (this.isGiftAuthorized() || this.isGiftExpired())
             && this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD;
+    }
+
+    shouldNullFormerAchPayment() {
+        return this.isGiftPending() && this.selectedPaymentMethod() !== PAYMENT_METHOD_ACH;
     }
 
     async handleRemoveFromElevateBatch(tokenizedGift) {
@@ -1098,12 +1106,12 @@ export default class GeFormRenderer extends LightningElement{
         return this.formState[apiNameFor(PAYMENT_STATUS)] === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED;
     }
 
+    isGiftPending() {
+        return this.formState[apiNameFor(PAYMENT_STATUS)] === this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING;
+    }
+
     isGiftExpired() {
         return this.formState[apiNameFor(PAYMENT_STATUS)] === this.PAYMENT_TRANSACTION_STATUS_ENUM.EXPIRED;
-    }
-    
-    shouldNotNullPaymentFields() {
-        return (this.isGiftAuthorized() || this.isGiftExpired());
     }
 
     shouldTokenizeCard() {
