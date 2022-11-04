@@ -194,6 +194,17 @@ public inherited sharing class PS_CommitmentRequest {
             .withBody(jsonRequestBody)
             .build();
     }
+    public static HttpRequest buildRequest(String commitmentId, String jsonRequestBody,
+            PS_Request.ElevateEndpoint endpoint, UTIL_Http.Method method) {
+
+        return new PS_Request.Builder()
+                .withMethod(method)
+                .withEndpoint(endpoint)
+                .withCommitmentId(commitmentId)
+                .withRecommendedTimeout()
+                .withBody(jsonRequestBody)
+                .build();
+    }
 
     /**
     * @description Builds a HTTP request for the provided commitment Id, Http method and endpoint
@@ -205,6 +216,7 @@ public inherited sharing class PS_CommitmentRequest {
         return new PS_Request.Builder()
                 .withCommitmentId(commitmentId)
                 .withEndpoint(endpoint)
+                .withRecommendedTimeout()
                 .withMethod(method)
                 .build();
     }

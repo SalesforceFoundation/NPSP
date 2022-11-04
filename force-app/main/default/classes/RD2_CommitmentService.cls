@@ -149,7 +149,7 @@ public without sharing class RD2_CommitmentService {
 
         try {
             HttpRequest request = PS_CommitmentRequest.buildRequest(commitmentId, jsonRequestBody,
-                endpoint);
+                endpoint, UTIL_Http.Method.POST);
 
             response = requestService.sendRequest(request);
 
