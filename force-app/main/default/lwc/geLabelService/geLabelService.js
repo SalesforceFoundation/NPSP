@@ -3,6 +3,7 @@ import { format } from 'c/utilCommon';
 
 // Import custom labels
 import bgeGridNoGiftsBody from '@salesforce/label/c.bgeGridNoGiftsBody';
+import bgeEditPaymentInformation from '@salesforce/label/c.bgeEditPaymentInformation';
 import bgeGridNoGiftsHeader from '@salesforce/label/c.bgeGridNoGiftsHeader';
 import commonAccountNumber from '@salesforce/label/c.commonAccountNumber';
 import commonACHLast4 from '@salesforce/label/c.commonACHLast4';
@@ -260,6 +261,7 @@ class GeLabelService {
     CUSTOM_LABELS = Object.freeze({
         bgeGridNoGiftsBody,
         bgeGridNoGiftsHeader,
+        bgeEditPaymentInformation,
         commonAccountNumber,
         commonACHLast4,
         commonAmount,

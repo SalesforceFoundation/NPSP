@@ -2902,7 +2902,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     get elevateTransactionWarning() {
-        return format('You need to re-enter your payment information before editing the gift.');
+        return this.CUSTOM_LABELS.bgeEditPaymentInformation;
     }
 
     get shouldShowElevateTransactionWarning() {
