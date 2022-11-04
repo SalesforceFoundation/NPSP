@@ -193,7 +193,7 @@
         /*******************************************************************************
         * @description Posts messages to a credit card widget LWC
         *
-        * @param {string} message: String to pass to the LWC
+        * @param {object} message: Object to pass to the LWC
         */
         function sendPostMessage(message) {
             window.top.postMessage(message, lightningOrigin);
