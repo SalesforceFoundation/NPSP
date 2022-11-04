@@ -76,4 +76,19 @@ private class GiftBatchService_TEST {
         Integer opportunitiesCount = [SELECT count() FROM Opportunity];
         System.assertEquals(10, opportunitiesCount, 'Should have created 10 opportunities');
     }
+
+    @IsTest
+    private static void shouldReturnFalseWhenLatestApexJobFinishRunningOrNoLongerExist() {
+        DataImportBatch__c dataImportBatch = [SELECT Id FROM DataImportBatch__c][0];
+        dataImportBatch.Latest_Apex_Job_Id__c = UTIL_UnitTestData_TEST.mockId(AsyncApexJob.SObjectType);
+        update dataImportBatch;
+
+        GiftBatchService giftBatchService = new GiftBatchService();
+
+        Test.startTest();
+        Boolean hasActiveRunningJob = giftBatchService.hasActiveRunningJob(new GiftBatchId(dataImportBatch.Id));
+        Test.stopTest();
+
+        System.assertEquals(false, hasActiveRunningJob, 'Should not retrun true when the latest apex job is not in a running status');
+    }
 }
