@@ -86,7 +86,6 @@ describe('c-ps-Elevate-Token-Handler', () => {
           psElevateTokenHandler.shouldHandleMessage(
               createPostMessageEvent('invalidJSON'));
       expect(isMessageHandled).toBe(false);
-
    });
 
    it('should discard an invalid form JSON', async () => {
@@ -96,7 +95,6 @@ describe('c-ps-Elevate-Token-Handler', () => {
           psElevateTokenHandler.shouldHandleMessage(
               createPostMessageEvent('stringifiedJSON'));
       expect(isMessageHandled).toBe(false);
-
    });
 
    it('should create one non-namespaced visualforce origin urls', async () => {
@@ -120,7 +118,6 @@ describe('c-ps-Elevate-Token-Handler', () => {
           psElevateTokenHandler.shouldHandleMessage(
               createPostMessageEvent('invalid'));
       expect(isMessageHandled).toBe(false);
-
    });
 
    it('should discard an invalid JSON data from right origin on Experience Sites', async() => {
@@ -130,7 +127,6 @@ describe('c-ps-Elevate-Token-Handler', () => {
           psElevateTokenHandler.shouldHandleMessage(
               createPostMessageEvent('invalidJSON'));
       expect(isMessageHandled).toBe(false);
-
    });
 
    it('should create two non-namespaced visualforce origin urls on Experience Sites', () => {
