@@ -100,7 +100,7 @@ export default class BatchProgress extends LightningElement {
     * @description Sets the total value as the sum of processed and failed
     */
     setTotalRecords(data) {
-        if(!isNull(data)) {
+        if(!isNull(data) && !isNull(data.summary)) {
             data.summary.total = data.summary.processed + data.summary.failed;
         }
         return data;
