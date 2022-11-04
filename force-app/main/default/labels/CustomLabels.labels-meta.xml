@@ -5849,7 +5849,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Warns users to re-enter payment information when editing Elevate-connected gifts</shortDescription>
-        <value>You can’t edit this Elevate-connected gift until you re-enter the payment information. Select Edit Payment Information.</value>
+        <value>You cant edit this Elevate-connected gift until you re-enter the payment information. Select Edit Payment Information.</value>
     </labels>
     <labels>
         <fullName>bgeRetirementWarningBody</fullName>

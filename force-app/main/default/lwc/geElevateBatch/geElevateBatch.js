@@ -2,7 +2,6 @@ import apexAddToElevateBatch from '@salesforce/apex/GE_GiftEntryController.addTo
 import apexCreateElevateBatch from '@salesforce/apex/GE_GiftEntryController.createElevateBatch';
 import apexRemoveFromElevateBatch from '@salesforce/apex/GE_GiftEntryController.removeFromElevateBatch';
 import PAYMENT_ELEVATE_ELEVATE_BATCH_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_Batch_Id__c';
-import Gift from 'c/geGift';
 
 class ElevateBatch {
 
