@@ -96,6 +96,10 @@ class GeGatewaySettings {
     settings(event) {
         this.elevateSettings = event;
     }
+
+    clearTemplateRecordId() {
+        this.templateRecordId = null;
+    }
 }
 
 export default new GeGatewaySettings();
