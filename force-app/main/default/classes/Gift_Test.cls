@@ -87,7 +87,7 @@ private class Gift_Test {
         Gift gift = new Gift(dataImport);
 
         // Act
-        gift.preprocessForRecurringGift();
+        gift.preprocessForRecurringGift(false);
 
         // Assert
         System.assert(dataImport.Donation_Amount__c == null);
@@ -98,6 +98,36 @@ private class Gift_Test {
         System.assert(dataImport.Recurring_Donation_Recurring_Type__c == 'Open');
         System.assert(dataImport.Recurring_Donation_Day_of_Month__c == '5');
     }
+
+
+    @isTest
+    static void shouldPopulatedRecurringDonationFieldsAndPayFirstInstallment() {
+        // Arrange
+        Date today = Date.today();
+        DataImport__c dataImport = new DataImport__c(
+                Id = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType),
+                Recurring_Donation_Installment_Period__c = 'Monthly',
+                Recurring_Donation_Effective_Date__c = today,
+                Recurring_Donation_Recurring_Type__c = 'Open',
+                Recurring_Donation_Day_of_Month__c = '5',
+                Donation_Amount__c = 25.00,
+                Donation_Date__c = today
+        );
+        Gift gift = new Gift(dataImport);
+
+        // Act
+        gift.preprocessForRecurringGift(true);
+
+        // Assert
+        System.assert(dataImport.Donation_Amount__c != null);
+        System.assert(dataImport.Donation_Date__c == null);
+        System.assert(dataImport.DonationImported__c == null);
+        System.assert(dataImport.Recurring_Donation_Installment_Period__c == 'Monthly');
+        System.assert(dataImport.Recurring_Donation_Effective_Date__c == today);
+        System.assert(dataImport.Recurring_Donation_Recurring_Type__c == 'Open');
+        System.assert(dataImport.Recurring_Donation_Day_of_Month__c == '5');
+    }
+
 
     @isTest
     static void shouldPopulateDonationInGift(){
@@ -335,7 +365,7 @@ private class Gift_Test {
         Gift gift = new Gift(dataImport);
 
         // Act
-        gift.preprocessForRecurringGift();
+        gift.preprocessForRecurringGift(false);
 
         // Assert
         System.assertEquals(0, gift.softCredits().size(),

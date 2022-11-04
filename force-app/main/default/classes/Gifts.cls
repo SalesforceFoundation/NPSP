@@ -159,11 +159,11 @@ public with sharing class Gifts {
         return false;
     }
 
-    public void preprocessRecurringGifts() {
+    public void preprocessRecurringGifts(Boolean shouldPayFirstInstallment) {
         for (DataImport__c dataImport : dataImportsById.values()) {
             Gift gift = new Gift(dataImport);
             if (gift.hasPopulatedRecurringFields()) {
-                gift.preprocessForRecurringGift();
+                gift.preprocessForRecurringGift(shouldPayFirstInstallment);
             }
         }
     }
