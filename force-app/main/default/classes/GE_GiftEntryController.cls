@@ -995,8 +995,7 @@ public with sharing class GE_GiftEntryController {
                     formTemplate.elevateSettings.gatewayName =
                         gatewayNameById.get(decryptGatewayId(formTemplate.elevateSettings.uniqueKey));
                     if (String.isBlank(formTemplate.elevateSettings.gatewayName)) {
-                        // TODO: Convert to label
-                        formTemplate.elevateSettings.gatewayName = 'Gateway not found';
+                        formTemplate.elevateSettings.gatewayName = System.Label.psGatewayNotValid;
                     }
 
                 } catch (Exception e) {
