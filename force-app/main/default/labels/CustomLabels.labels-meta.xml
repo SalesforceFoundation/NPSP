@@ -6213,6 +6213,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Account Number</value>
     </labels>
     <labels>
+        <fullName>commonACHLast4</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for ach last 4</shortDescription>
+        <value>ACH Last 4</value>
+    </labels>
+    <labels>
         <fullName>commonActivate</fullName>
         <categories>Auto Number</categories>
         <language>en_US</language>
@@ -9995,6 +10003,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Failure message if invalid configuration params was provided for onboarding</shortDescription>
         <value>Invalid configuration parameters were provided</value>
+    </labels>
+    <labels>
+        <fullName>geRD2FirstInstallmentPaid</fullName>
+        <categories>Gift Entry, Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for First Installment paid checkbox in BGE</shortDescription>
+        <value>First installment paid</value>
     </labels>
     <labels>
         <fullName>geSearchPlaceholder</fullName>
