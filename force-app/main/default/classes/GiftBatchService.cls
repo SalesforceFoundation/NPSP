@@ -73,7 +73,7 @@ public with sharing class GiftBatchService {
     }
 
     public void processGiftsFor(GiftBatchId giftBatchId) {
-        GiftBatchForQueueable queueableGiftBatch = new GiftBatchForQueueable(giftBatchId);
+        GiftBatchForQueueable queueableGiftBatch = new GiftBatchForQueueable(giftBatchId, new GiftBatchSelector());
         queueableGiftBatch.chunkGiftsThatCanBeProcessed();
         GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(queueableGiftBatch);
 
