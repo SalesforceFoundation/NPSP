@@ -90,6 +90,15 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         third: 2
     }
 
+    _allowFirstInstallment = false;
+    _allowFirstInstallmentDisabled;
+    _allowRecurringDonations = false;
+
+    installmentCheckboxMetadata = Object.freeze({
+        objectApiName : 'AllowFirstInstallment__o',
+        fieldApiName : 'AllowFirstInstallment__f'
+    });
+
     get allowRecurringDonations() {
         return this
             ?.dataImportBatchRecord
@@ -104,6 +113,38 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
 
     get canAllowRecurringDonations() {
         return Settings.canMakeGiftsRecurring();
+    }
+
+    handleAllowRecurringDonationsOnChange(event) {
+        const isChecked = event.detail.value
+        this._allowRecurringDonations = isChecked;
+        if (!isChecked) {
+            this._allowFirstInstallment = false;
+            this._allowFirstInstallmentDisabled = true;
+        } else {
+            this._allowFirstInstallmentDisabled = false;
+        }
+
+    }
+
+    get allowFirstInstallment () {
+        if (this.isEditMode && this._allowRecurringDonations) {
+            let batchLevelDefaults =
+                JSON.parse(this.dataImportBatchRecord.fields[DATA_IMPORT_BATCH_DEFAULTS_INFO.fieldApiName].value);
+            return batchLevelDefaults['AllowFirstInstallment__f'] ? 
+                batchLevelDefaults['AllowFirstInstallment__f'].value : 
+                false;
+        }
+
+        return this._allowFirstInstallment;
+    }
+
+    handleAllowFirstInstallmentOnChange(event) {
+        this._allowFirstInstallment = event.detail.value;
+    }
+
+    get allowFirstInstallmentDisabled() {
+        return this._allowFirstInstallmentDisabled;
     }
 
     get showBackButton() {
@@ -225,8 +266,12 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
                 });
         }
     }
-
     setFormFieldsBatchLevelDefaults() {
+        this._allowRecurringDonations =
+            this.dataImportBatchRecord
+            ?.fields[DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS.fieldApiName]
+            ?.value;
+
         let batchLevelDefaults =
             JSON.parse(this.dataImportBatchRecord.fields[DATA_IMPORT_BATCH_DEFAULTS_INFO.fieldApiName].value);
 
@@ -287,6 +332,9 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
                 this.templates = this.templates.sort();
                 this.builderTemplateComboboxOptions(this.templates);
                 this.isLoading = false;
+            }
+            if (!this.isEditMode) {
+                this._allowFirstInstallmentDisabled = true;
             }
         } catch (error) {
             handleError(error);

@@ -46,6 +46,9 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     @TestVisible
     private GiftTemplate giftTemplate;
 
+    private Boolean shouldPayFirstInstallment = false;
+    private static final String AllowFirstInstallmentPaid = 'AllowFirstInstallment__f';
+
     @TestVisible
     private GiftBatchSelector giftBatchSelector {
         get {
@@ -93,6 +96,11 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     @TestVisible
     private GiftBatch() {}
 
+    public GiftBatch (DataImportBatch__c batch) {
+        this.batch = batch;
+        this.shouldPayFirstInstallment = calculateShouldPayFirstInstallment();
+    }
+
     @TestVisible
     private GiftBatch(Gifts gifts) {
         this.gifts = gifts;
@@ -120,6 +128,38 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         this.giftTemplate = new GiftTemplate(batch.Form_Template__r.Template_JSON__c);
         this.gifts = new Gifts(giftBatchId, new GiftSelector(giftTemplate, giftsLimit, giftsOffset));
         this.totals = new GiftBatchTotals(giftBatchId, giftBatchSelector);
+    }
+
+    public Boolean shouldPayFirstInstallment () {
+        return this.shouldPayFirstInstallment;
+    }
+
+    /**
+     * Parser for parsing and reading BatchDefaults from the gift batch
+     * using the JSON Parser, looping through all 7 static tokens and reading the boolean value
+     * @return shouldPayFirstInstallment
+     */
+    private Boolean calculateShouldPayFirstInstallment() {
+        if (this.batch.Batch_Defaults__c == null) return false;
+        JSONParser parser = JSON.createParser(this.batch.Batch_Defaults__c);
+        String shouldPayFirstInstallment;
+
+        while (parser.nextToken() != null) {
+            if (parser.getCurrentToken() == JSONToken.FIELD_NAME) {
+                if (parser.getText() == AllowFirstInstallmentPaid) {
+                    parser.nextToken();
+                    parser.nextToken();
+                    parser.nextToken();
+                    parser.nextToken();
+                    parser.nextToken();
+                    parser.nextToken();
+                    parser.nextToken();
+                    shouldPayFirstInstallment = parser.getText();
+                }
+                break;
+            }
+        }
+        return shouldPayFirstInstallment != null ? Boolean.valueOf(shouldPayFirstInstallment): false;
     }
 
     public Boolean hasElevateWidget() {

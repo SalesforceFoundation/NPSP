@@ -304,6 +304,28 @@ private class GiftBatchForQueueable_TEST {
         );
     }
 
+    private class GiftBatchSelectorMock implements StubProvider {
+        public Object handleMethodCall(Object stubbedObject,
+                String stubbedMethodName,
+                Type returnType,
+                List<Type> listOfParamTypes,
+                List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'selectGiftBatchBy' {
+                    return new DataImportBatch__c();
+                }
+            }
+            return null;
+        }
+    }
+
+    private static GiftBatchSelector stubFor(GiftBatchSelectorMock giftBatchSelectorMock) {
+        return (GiftBatchSelector) Test.createStub(GiftBatchSelector.class, giftBatchSelectorMock);
+    }
+
+
     public class GiftsMock implements StubProvider {
 
         public List<DataImport__c> gifts = new List<DataImport__c>();
@@ -411,10 +433,11 @@ private class GiftBatchForQueueable_TEST {
     }
 
     private static GiftBatchForQueueable buildGiftBatch(Id dummyId) {
+        GiftBatchSelector mockedGiftBatchSelector = stubFor(new GiftBatchSelectorMock());
         GiftBatchId dummyGiftBatchId =
             new GiftBatchId(dummyId);
         GiftBatchForQueueable dummyGiftBatchForProcessing =
-            new GiftBatchForQueueable(dummyGiftBatchId);
+            new GiftBatchForQueueable(dummyGiftBatchId, mockedGiftBatchSelector);
         return dummyGiftBatchForProcessing;
     }
 
