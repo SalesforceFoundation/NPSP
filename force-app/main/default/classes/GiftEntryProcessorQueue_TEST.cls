@@ -64,7 +64,7 @@ private class GiftEntryProcessorQueue_TEST {
         ));
         insert giftsToInsert;
 
-        GiftBatchForQueueable giftBatchForProcessing = new GiftBatchForQueueable(new GiftBatchId(giftBatch.Id));
+        GiftBatchForQueueable giftBatchForProcessing = new GiftBatchForQueueable(new GiftBatchId(giftBatch.Id), new GiftBatchSelector());
         giftBatchForProcessing.chunkGiftsThatCanBeProcessed();
         GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(giftBatchForProcessing);
 
@@ -122,7 +122,7 @@ private class GiftEntryProcessorQueue_TEST {
         giftsToInsert.addAll(buildAuthorizedGifts(10, BDI_DataImport_API.bdiDryRunValidated, giftBatch.Id, false));
         insert giftsToInsert;
 
-        GiftBatchForQueueable giftBatchForProcessing = new GiftBatchForQueueable(new GiftBatchId(giftBatch.Id));
+        GiftBatchForQueueable giftBatchForProcessing = new GiftBatchForQueueable(new GiftBatchId(giftBatch.Id), new GiftBatchSelector());
         giftBatchForProcessing.chunkGiftsThatCanBeProcessed();
         GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(giftBatchForProcessing);
         GiftBatchServiceMock mockService = new GiftBatchServiceMock();
@@ -151,7 +151,7 @@ private class GiftEntryProcessorQueue_TEST {
         giftsToInsert.addAll(buildGifts(75, BDI_DataImport_API.bdiDryRunValidated, giftBatch.Id, false));
         insert giftsToInsert;
 
-        GiftBatchForQueueable giftBatchForProcessing = new GiftBatchForQueueable(new GiftBatchId(giftBatch.Id));
+        GiftBatchForQueueable giftBatchForProcessing = new GiftBatchForQueueable(new GiftBatchId(giftBatch.Id), new GiftBatchSelector());
         giftBatchForProcessing.chunkGiftsThatCanBeProcessed();
         GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(giftBatchForProcessing);
         GiftBatchServiceMock mockService = new GiftBatchServiceMock();
@@ -179,7 +179,7 @@ private class GiftEntryProcessorQueue_TEST {
         giftsToInsert.addAll(buildGifts(75, BDI_DataImport_API.bdiDryRunValidated, giftBatch.Id, false));
         insert giftsToInsert;
 
-        GiftBatchForQueueable giftBatchForProcessing = new GiftBatchForQueueable(new GiftBatchId(giftBatch.Id));
+        GiftBatchForQueueable giftBatchForProcessing = new GiftBatchForQueueable(new GiftBatchId(giftBatch.Id), new GiftBatchSelector());
         giftBatchForProcessing.chunkGiftsThatCanBeProcessed();
         GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(giftBatchForProcessing);
         GiftBatchServiceMock mockService = new GiftBatchServiceMock();
