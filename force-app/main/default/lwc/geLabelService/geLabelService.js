@@ -217,6 +217,7 @@ import gePaymentRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedO
 import geProcessAnyway from '@salesforce/label/c.geProcessAnyway';
 import geProcessingBatch from '@salesforce/label/c.geProcessingBatch';
 import geProcessingErrors from '@salesforce/label/c.geProcessingErrors';
+import geRD2FirstInstallmentPaid from '@salesforce/label/c.geRD2FirstInstallmentPaid';
 import geSearchPlaceholder from '@salesforce/label/c.geSearchPlaceholder';
 import geSelectBatchTableColumns from '@salesforce/label/c.geSelectBatchTableColumns';
 import geSelectPlaceholder from '@salesforce/label/c.geSelectPlaceholder';
@@ -248,6 +249,7 @@ import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarning
 import labelBooleanFalse from '@salesforce/label/c.labelBooleanFalse';
 import labelBooleanTrue from '@salesforce/label/c.labelBooleanTrue';
 import psSelectValidPaymentMethod from '@salesforce/label/c.psSelectValidPaymentMethod';
+import recurringDonations from '@salesforce/label/c.stgNavRecurringDonations'
 
 class GeLabelService {
 
@@ -474,6 +476,7 @@ class GeLabelService {
         geProcessAnyway,
         geProcessingBatch,
         geProcessingErrors,
+        geRD2FirstInstallmentPaid,
         geSearchPlaceholder,
         geSelectBatchTableColumns,
         geSelectPlaceholder,
@@ -505,6 +508,7 @@ class GeLabelService {
         labelBooleanFalse,
         labelBooleanTrue,
         psSelectValidPaymentMethod,
+        recurringDonations
     });
 
     /*******************************************************************************
