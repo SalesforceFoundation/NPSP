@@ -9932,6 +9932,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Invalid configuration parameters were provided</value>
     </labels>
     <labels>
+        <fullName>geRD2FirstInstallmentPaid</fullName>
+        <categories>Gift Entry, Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for First Installment paid checkbox in BGE</shortDescription>
+        <value>First installment paid</value>
+    </labels>
+    <labels>
         <fullName>geSearchPlaceholder</fullName>
         <language>en_US</language>
         <protected>true</protected>

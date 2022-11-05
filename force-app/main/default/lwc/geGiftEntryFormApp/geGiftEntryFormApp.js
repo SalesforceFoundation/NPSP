@@ -152,6 +152,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         await Settings.init();
     }
 
+    get batchCurrencyIsoCode() {
+        return this.giftBatchState.currencyIsoCode;
+    }
+
     disconnectedCallback() {
         unregisterListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
     }
@@ -478,6 +482,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     async handleProcessedBatch() {
+        await this.refreshBatchTable();
         this.isFormCollapsed = true;
         this._isBatchProcessing = this.giftBatchState.isProcessingGifts;
         this.shouldLoadSpinner = this._isBatchProcessing
@@ -791,4 +796,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         this.gift.removeSchedule();
         this.giftInView = this.gift.state();
     }
+
+
 }
