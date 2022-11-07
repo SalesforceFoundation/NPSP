@@ -95,7 +95,7 @@ public class RD2_QueueableService {
 
         EvaluateInstallmentOpportunities service = new EvaluateInstallmentOpportunities(toProcess, rdIdsWhereScheduleChanged, oldRds);
 
-        if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
+        if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs() && canQueueNamingService()) {
             System.enqueueJob(service);
 
         } else {
