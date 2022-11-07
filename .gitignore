@@ -30,6 +30,7 @@ Referenced Packages
 *.sublime-project
 *.sublime-workspace
 **/.sfdx/
+**/.sf/
 **/.vscode/
 **/.idea/
 **/.mypy_cache/
