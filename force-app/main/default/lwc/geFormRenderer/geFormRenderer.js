@@ -941,8 +941,7 @@ export default class GeFormRenderer extends LightningElement{
                 apiNameFor(PAYMENT_EXPIRATION_YEAR),
                 apiNameFor(PAYMENT_AUTHORIZED_AT),
                 apiNameFor(PAYMENT_GATEWAY_ID),
-                apiNameFor(PAYMENT_GATEWAY_TRANSACTION_ID),
-                apiNameFor(PAYMENT_METHOD)
+                apiNameFor(PAYMENT_GATEWAY_TRANSACTION_ID)
             ]);
         } else if (this.giftInView.hasConvertedToElevateOneTimeBatchItemType) {
             this.nullRecurringFieldsInFormState([
