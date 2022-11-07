@@ -1042,12 +1042,14 @@ public with sharing class GE_GiftEntryController {
 
     @AuraEnabled
     public static String getGatewayAssignmentSettingsWithDefaultGatewayName() {
-        List<PS_GatewayService.GatewayTemplateSetting> gatewayTemplateSettings = getGatewayTemplateSettings();
-        Map<String, String> gatewayNameById = getGatewayNameById(gatewayTemplateSettings);
-
         GatewayAssignmentSettings gaSettings = new GatewayAssignmentSettings();
         gaSettings.gatewayAssignmentEnabled = getGiftEntrySettings().Enable_Gateway_Assignment__c;
-        gaSettings.defaultGatewayName = gatewayNameById.get(new PS_IntegrationServiceConfig.Service().getGatewayIds());
+
+        if (gaSettings.gatewayAssignmentEnabled) {
+            List<PS_GatewayService.GatewayTemplateSetting> gatewayTemplateSettings = getGatewayTemplateSettings();
+            Map<String, String> gatewayNameById = getGatewayNameById(gatewayTemplateSettings);
+            gaSettings.defaultGatewayName = gatewayNameById.get(new PS_IntegrationServiceConfig.Service().getGatewayIds());
+        }
 
         return JSON.serialize(gaSettings);
     }
