@@ -105,7 +105,7 @@ class psElevateTokenHandler {
                 if (typeof event.data === 'object') {
                     component.handleMessage(event.data);
                 } else {
-                    const message = JSON.parse(event.data);
+                    const message = event.data;
                     component.handleMessage(message);
                 }
             }
@@ -252,7 +252,7 @@ class psElevateTokenHandler {
 
     sendIframeMessage(iframe, message, targetOrigin) {
         iframe.contentWindow.postMessage(
-            message,
+            JSON.stringify(message),
             targetOrigin
         );
     }
