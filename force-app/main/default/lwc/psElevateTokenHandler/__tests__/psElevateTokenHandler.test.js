@@ -35,6 +35,11 @@ const createPostMessageEvent = (type) => {
             origin : "https://flow-connect-2738-dev-ed--c.visualforce.com",
             data : undefined
          }
+      case 'stringifiedJSON' :
+         return {
+            origin : "https://flow-connect-2738-dev-ed--c.visualforce.com",
+            data : "{action: mount, error: false}"
+         }
       default:
    }
 }
@@ -72,7 +77,6 @@ describe('c-ps-Elevate-Token-Handler', () => {
           psElevateTokenHandler.shouldHandleMessage(
               createPostMessageEvent('invalid'));
       expect(isMessageHandled).toBe(false);
-
    });
 
    it('should discard an invalid JSON data from right origin', async () => {
@@ -82,7 +86,15 @@ describe('c-ps-Elevate-Token-Handler', () => {
           psElevateTokenHandler.shouldHandleMessage(
               createPostMessageEvent('invalidJSON'));
       expect(isMessageHandled).toBe(false);
+   });
 
+   it('should discard an invalid form JSON', async () => {
+      psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfo());
+      await flushPromises();
+      const isMessageHandled =
+          psElevateTokenHandler.shouldHandleMessage(
+              createPostMessageEvent('stringifiedJSON'));
+      expect(isMessageHandled).toBe(false);
    });
 
    it('should create one non-namespaced visualforce origin urls', async () => {
@@ -106,7 +118,6 @@ describe('c-ps-Elevate-Token-Handler', () => {
           psElevateTokenHandler.shouldHandleMessage(
               createPostMessageEvent('invalid'));
       expect(isMessageHandled).toBe(false);
-
    });
 
    it('should discard an invalid JSON data from right origin on Experience Sites', async() => {
@@ -116,7 +127,6 @@ describe('c-ps-Elevate-Token-Handler', () => {
           psElevateTokenHandler.shouldHandleMessage(
               createPostMessageEvent('invalidJSON'));
       expect(isMessageHandled).toBe(false);
-
    });
 
    it('should create two non-namespaced visualforce origin urls on Experience Sites', () => {
