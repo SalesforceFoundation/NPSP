@@ -64,6 +64,36 @@ describe('c-ge-form-widget-tokenize-card', () => {
         expect(editPaymentInformationLink).toBeFalsy();
     });
 
+    it('should activate the widget when recurring type is changed from Fixed to Open', async() => {
+        const element = createWidgetElement();
+        element.widgetDataFromState = {
+            'Payment_Method__c': 'Credit Card',
+            'Recurring_Donation_Recurring_Type__c': 'Fixed',
+            'NPSP_Data_Import_Batch__c': 'DUMMY_BATCH_ID'
+        };
+        document.body.appendChild(element);
+        await flushPromises();
+
+        const deactivatedMessage = shadowQuerySelector(element, '[data-id="deactivatedMessage"]');
+        const editPaymentInformationLink = shadowQuerySelector(element, '[data-id="editPaymentInformation"]');
+
+        expect(deactivatedMessage.textContent).toBe(RD2_ElevateRDCannotBeFixedLength);
+        expect(editPaymentInformationLink).toBeFalsy();
+
+        element.widgetDataFromState = {
+            'Payment_Method__c': 'Credit Card',
+            'Recurring_Donation_Recurring_Type__c': 'Open',
+            'NPSP_Data_Import_Batch__c': 'DUMMY_BATCH_ID'
+        };
+        await flushPromises();
+
+        const deactivatedMessageReRendered = shadowQuerySelector(element, '[data-id="deactivatedMessage"]');
+        expect(deactivatedMessageReRendered).toBeFalsy();
+
+        const chargeIFrameContainer = shadowQuerySelector(element, '[data-id="chargeIFrameContainer"]');
+        expect(chargeIFrameContainer).toBeTruthy();
+    });
+
     it('should deactivate the widget in read-only mode when a fixed recurring type gift is loaded', async() => {
         const element = createWidgetElement();
         element.widgetDataFromState = {

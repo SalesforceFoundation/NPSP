@@ -80,7 +80,7 @@
                                                  icon={alert.icon}
                                                  message={alert.message}>
                             </c-util-alert-banner>
-                            <div class='iframe-container'>
+                            <div class='iframe-container' data-id="chargeIFrameContainer">
                                 <template if:true={showSpinner}>
                                     <lightning-spinner if:true={isElevateCustomer} alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
                                 </template>
