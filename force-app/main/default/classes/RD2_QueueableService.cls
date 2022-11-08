@@ -94,8 +94,9 @@ public class RD2_QueueableService {
         }
 
         EvaluateInstallmentOpportunities service = new EvaluateInstallmentOpportunities(toProcess, rdIdsWhereScheduleChanged, oldRds);
+        RD2_Settings settings = RD2_Settings.getInstance();
 
-        if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs() && canQueueNamingService()) {
+        if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs() && !settings.isGiftEntryMode) {
             System.enqueueJob(service);
 
         } else {
