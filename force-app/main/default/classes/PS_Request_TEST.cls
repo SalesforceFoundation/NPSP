@@ -107,7 +107,7 @@ private with sharing class PS_Request_TEST {
     }
 
     /**
-    * @description Verifies Cancel Commitment HttpRequest
+    * @description Verifies Get Commitment HttpRequest
     */
     @isTest
     private static void shouldCreateHttpRequestWhenCommitmentEndpointWithId() {
@@ -123,7 +123,7 @@ private with sharing class PS_Request_TEST {
 
         final String jsonRequestBody = '';
         final String expectedEndpoint = PS_IntegrationServiceConfig_TEST.testBaseUrl
-            + PS_Request.ENDPOINT_COMMITMENT + '/' + COMMITMENT_ID;
+            + PS_Request.ENDPOINT_COMMITMENT;
 
         assertRequest(request, expectedEndpoint, UTIL_Http.Method.GET, jsonRequestBody);
     }
