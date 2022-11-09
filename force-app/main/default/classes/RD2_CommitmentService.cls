@@ -58,7 +58,7 @@ public without sharing class RD2_CommitmentService {
     public UTIL_Http.Response handleCommitmentPause(RecurringDonationSchedule__c schedule, RD2_RecurringDonation rd) {
         UTIL_Http.Response response;
 
-        PS_CommitmentRequest.RequestBody requestBody = new PS_CommitmentRequest().getPauseRequestBody(schedule);
+        PS_CommitmentRequest.PauseRequestBody requestBody = new PS_CommitmentRequest().getPauseRequestBody(schedule);
 
         response = sendRequest(rd.getSObject()?.CommitmentId__c, JSON.serialize(requestBody),
             PS_Request.ElevateEndpoint.COMMITMENT_PAUSE);
@@ -148,10 +148,13 @@ public without sharing class RD2_CommitmentService {
         UTIL_Http.Response response;
 
         try {
+            System.debug('jsonRequestBody: '+jsonRequestBody);
+
             HttpRequest request = PS_CommitmentRequest.buildRequest(commitmentId, jsonRequestBody,
                 endpoint, UTIL_Http.Method.POST);
 
-            System.debug('Request: '+request);
+            System.debug('Request: '+request.getBody());
+
 
             response = requestService.sendRequest(request);
 

@@ -236,10 +236,11 @@ public inherited sharing class PS_CommitmentRequest {
             : getUpdateRequestBody(rd, oldRd, token);
     }
 
-    public RequestBody getPauseRequestBody(RecurringDonationSchedule__c schedule) {
-       return new RequestBody()
+    public PauseRequestBody getPauseRequestBody(RecurringDonationSchedule__c schedule) {
+       return new PauseRequestBody()
            .withStartTimestamp(schedule.StartDate__c)
            .withEndTimestamp(schedule.EndDate__c)
+           .withReasonComment(ELEVATE_PAUSE_REASONS.get(schedule.StatusReason__c))
            .withReason(ELEVATE_PAUSE_REASONS.get(schedule.StatusReason__c));
     }
 
@@ -484,6 +485,45 @@ public inherited sharing class PS_CommitmentRequest {
         public String consentType;
     }
 
+    public class PauseRequestBody {
+        public PauseRequestBody() {}
+
+        public String startTimestamp;
+        public String endTimestamp;
+        public String reason;
+        public String reasonComment;
+
+
+        public PauseRequestBody withStartTimestamp(Date startTimestamp) {
+            this.startTimestamp = getISOFormatDateTimeFor(startTimestamp, false);
+            return this;
+        }
+
+        public PauseRequestBody withEndTimestamp(Date endTimestamp) {
+            this.endTimestamp = getISOFormatDateTimeFor(endTimestamp, true);
+            return this;
+        }
+
+        public PauseRequestBody withReason(String reason) {
+            this.reason = reason;
+            return this;
+        }
+
+        public PauseRequestBody withReasonComment(String reasonComment) {
+            this.reasonComment = reasonComment;
+            return this;
+        }
+
+        public String getISOFormatDateTimeFor(Date specifiedDate, Boolean isPauseEndDate) {
+            Datetime donationDatetime = specifiedDate == Datetime.now().date()
+                    ? Datetime.now()
+                    : Datetime.newInstance(specifiedDate.year(), specifiedDate.month(), specifiedDate.day());
+            donationDatetime = isPauseEndDate ? donationDatetime.addHours(1): donationDatetime;
+            return donationDatetime.formatGmt('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
+        }
+
+    }
+
     /***
     * @description Assists in constructing the Commitment HttpRequest body.
     */
@@ -510,10 +550,7 @@ public inherited sharing class PS_CommitmentRequest {
          */
         public Map<String, Object> productMetadata;
 
-        public String startTimestamp;
-        public String endTimestamp;
-        public String reason;
-        public String reasonComment;
+
 
         /***
          * @description Constructor
@@ -700,34 +737,6 @@ public inherited sharing class PS_CommitmentRequest {
          */
         public Boolean isCommitmentUpdate() {
             return this.id != null;
-        }
-
-        public RequestBody withStartTimestamp(Date startTimestamp) {
-            this.startTimestamp = getISOFormatDateTimeFor(startTimestamp, false);
-            return this;
-        }
-
-        public RequestBody withEndTimestamp(Date endTimestamp) {
-            this.endTimestamp = getISOFormatDateTimeFor(endTimestamp, true);
-            return this;
-        }
-
-        public RequestBody withReason(String reason) {
-            this.reason = reason;
-            return this;
-        }
-
-        public RequestBody withReasonComment(String reasonComment) {
-            this.reasonComment = reasonComment;
-            return this;
-        }
-
-        public String getISOFormatDateTimeFor(Date specifiedDate, Boolean isPauseEndDate) {
-            Datetime donationDatetime = specifiedDate == Datetime.now().date()
-                    ? Datetime.now()
-                    : Datetime.newInstance(specifiedDate.year(), specifiedDate.month(), specifiedDate.day());
-            donationDatetime = isPauseEndDate ? donationDatetime.addHours(1): donationDatetime;
-            return donationDatetime.formatGmt('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
         }
     }
 
