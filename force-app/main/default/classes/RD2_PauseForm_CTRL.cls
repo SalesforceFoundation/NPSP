@@ -259,6 +259,8 @@ public with sharing class RD2_PauseForm_CTRL {
             PauseData pause = (PauseData) JSON.deserialize(jsonPauseData, PauseData.class);
             RD2_RecurringDonation rd = getRecurringDonation(pause.rdId);
 
+            System.debug('Pause '+ pause);
+
             if (isOnlineRecurringDonationRecord(rd)) {
                 validatePause(pause);
                 UTIL_Http.Response response = pauseElevateRDsFor(pause);

@@ -703,12 +703,12 @@ public inherited sharing class PS_CommitmentRequest {
         }
 
         public RequestBody withStartTimestamp(Date startTimestamp) {
-            this.startTimestamp = getISOFormatDateTimeFor(startTimestamp);
+            this.startTimestamp = getISOFormatDateTimeFor(startTimestamp, false);
             return this;
         }
 
         public RequestBody withEndTimestamp(Date endTimestamp) {
-            this.endTimestamp = getISOFormatDateTimeFor(endTimestamp);
+            this.endTimestamp = getISOFormatDateTimeFor(endTimestamp, true);
             return this;
         }
 
@@ -722,10 +722,12 @@ public inherited sharing class PS_CommitmentRequest {
             return this;
         }
 
-        private String getISOFormatDateTimeFor(Date specifiedDate) {
-            Datetime specifiedDateTime = Datetime.newInstance(
-                specifiedDate.year(), specifiedDate.month(), specifiedDate.day());
-            return JSON.serialize(specifiedDateTime);
+        public String getISOFormatDateTimeFor(Date specifiedDate, Boolean isPauseEndDate) {
+            Datetime donationDatetime = specifiedDate == Datetime.now().date()
+                    ? Datetime.now()
+                    : Datetime.newInstance(specifiedDate.year(), specifiedDate.month(), specifiedDate.day());
+            donationDatetime = isPauseEndDate ? donationDatetime.addHours(1): donationDatetime;
+            return donationDatetime.formatGmt('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
         }
     }
 
@@ -787,7 +789,7 @@ public inherited sharing class PS_CommitmentRequest {
             Datetime donationDatetime = donationDate == Datetime.now().date()
                 ? Datetime.now()
                 : Datetime.newInstance(donationDate.year(), donationDate.month(), donationDate.day());
-            
+
             return donationDatetime.formatGMT('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
         }
     }
