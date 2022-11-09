@@ -116,14 +116,14 @@ private with sharing class PS_Request_TEST {
         Test.startTest();
         HttpRequest request = new PS_Request.Builder()
             .withMethod(UTIL_Http.Method.GET)
-            .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT)
+            .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT_GET)
             .withCommitmentId(COMMITMENT_ID)
             .build();
         Test.stopTest();
 
         final String jsonRequestBody = '';
         final String expectedEndpoint = PS_IntegrationServiceConfig_TEST.testBaseUrl
-            + PS_Request.ENDPOINT_COMMITMENT;
+            + PS_Request.ENDPOINT_COMMITMENT + '/' + COMMITMENT_ID;
 
         assertRequest(request, expectedEndpoint, UTIL_Http.Method.GET, jsonRequestBody);
     }
@@ -144,6 +144,7 @@ private with sharing class PS_Request_TEST {
 
             } else if (endpoint == PS_Request.ElevateEndpoint.COMMITMENT
                 || endpoint == PS_Request.ElevateEndpoint.COMMITMENT_CANCEL
+                || endpoint == PS_Request.ElevateEndpoint.COMMITMENT_GET
                 || endpoint == PS_Request.ElevateEndpoint.COMMITMENT_PAUSE
                 || endpoint == PS_Request.ElevateEndpoint.COMMITMENT_UPDATE_BULK) {
 
