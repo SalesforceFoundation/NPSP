@@ -334,7 +334,7 @@ public inherited sharing class PS_CommitmentRequest {
 
     private Map<String, Object> getElevateCommitment(String commitmentId) {
         HttpRequest commitmentGetRequest = buildRequest(commitmentId, UTIL_Http.Method.GET,
-            PS_Request.ElevateEndpoint.COMMITMENT);
+            PS_Request.ElevateEndpoint.COMMITMENT_GET);
         UTIL_Http.Response response = requestService.sendRequest(commitmentGetRequest);
 
         Map<String, Object> responseBody = (Map<String, Object>) JSON.deserializeUntyped(response.body);
