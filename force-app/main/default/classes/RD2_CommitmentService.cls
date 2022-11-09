@@ -155,6 +155,8 @@ public without sharing class RD2_CommitmentService {
 
             response = requestService.sendRequest(request);
 
+            System.debug('Response: '+JSON.serializePretty(response));
+
         } catch (Exception ex) {
             response = requestService.buildErrorResponse(ex);
         }
@@ -172,6 +174,8 @@ public without sharing class RD2_CommitmentService {
             System.debug('Delete Request: '+JSON.serializePretty(request));
 
             response = requestService.sendRequest(request);
+
+            System.debug('Delete response: '+JSON.serializePretty(response));
 
         } catch (Exception ex) {
             response = requestService.buildErrorResponse(ex);
