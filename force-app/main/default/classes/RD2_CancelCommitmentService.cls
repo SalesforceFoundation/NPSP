@@ -129,9 +129,9 @@ public without sharing class RD2_CancelCommitmentService {
                 request = PS_CommitmentRequest.buildRequest(closedRecord.rd.CommitmentId__c,
                     UTIL_Http.Method.POST, PS_Request.ElevateEndpoint.COMMITMENT_CANCEL);
             }
-            else if (getRequestType(closedRecord) == PS_Request.ElevateEndpoint.COMMITMENT) {
+            else if (getRequestType(closedRecord) == PS_Request.ElevateEndpoint.COMMITMENT_GET) {
                 request = PS_CommitmentRequest.buildRequest(closedRecord.rd.CommitmentId__c,
-                    UTIL_Http.Method.GET, PS_Request.ElevateEndpoint.COMMITMENT);
+                    UTIL_Http.Method.GET, PS_Request.ElevateEndpoint.COMMITMENT_GET);
             }
             response = requestService.sendRequest(request);
 
@@ -152,7 +152,7 @@ public without sharing class RD2_CancelCommitmentService {
         PS_Request.ElevateEndpoint requestType = PS_Request.ElevateEndpoint.COMMITMENT_CANCEL;
 
         if (hasPreviousTimeoutOrConflict(closedRecord)) {
-            requestType = PS_Request.ElevateEndpoint.COMMITMENT;
+            requestType = PS_Request.ElevateEndpoint.COMMITMENT_GET;
         }
 
         return requestType;
