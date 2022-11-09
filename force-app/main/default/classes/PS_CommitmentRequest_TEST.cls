@@ -333,7 +333,7 @@ private with sharing class PS_CommitmentRequest_TEST {
         Test.stopTest();
 
         final String expectedEndpoint = PS_IntegrationServiceConfig_TEST.testBaseUrl
-            + PS_Request.ENDPOINT_COMMITMENT+'/'+commitmentId;
+            + PS_Request.ENDPOINT_COMMITMENT;
         System.assertEquals(expectedEndpoint, request.getEndpoint(), 'Endpoint should match');
 
         System.assertEquals(UTIL_Http.Method.PATCH.name(), request.getMethod(), 'The HttpRequest method should match');

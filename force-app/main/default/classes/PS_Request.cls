@@ -274,9 +274,6 @@ public inherited sharing class PS_Request {
             } else if (endpoint == ElevateEndpoint.COMMITMENT) {
                 value = ENDPOINT_COMMITMENT;
 
-                if (String.isNotBlank(commitmentId)) {
-                    value += '/' + commitmentId;
-                }
             } else if (endpoint == ElevateEndpoint.COMMITMENT_PAUSE) {
                 value = String.format(
                     ENDPOINT_COMMITMENT_PAUSE,

@@ -168,10 +168,10 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
-    public static Boolean hasQueueableId(String batchId) {
+    public static Boolean hasActiveRunningJob(String batchId) {
         try {
-            return giftBatchService.hasQueueableJob(new GiftBatchId((Id) batchId));
-        } catch (AuraHandledException e) {
+           return giftBatchService.hasActiveRunningJob(new GiftBatchId((Id) batchId));
+        }catch (AuraHandledException e) {
             throw new AuraHandledException(e.getMessage());
         }
     }
@@ -1335,8 +1335,7 @@ public with sharing class GE_GiftEntryController {
         }
     }
 
-    @AuraEnabled(Cacheable= true)
-    public static String retrieveBatchCurrencyIsoCode (Id batchId) {
+    private static String retrieveBatchCurrencyIsoCode (Id batchId) {
         String query = new UTIL_Query()
             .withSelectFields(new Set<String>{UTIL_Currency.CURRENCY_ISO_CODE_FIELD})
             .withFrom(DataImportBatch__c.SObjectType)

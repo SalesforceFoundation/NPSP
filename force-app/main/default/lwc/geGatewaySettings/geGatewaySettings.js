@@ -1,6 +1,6 @@
 import { registerListener } from 'c/pubsubNoPageRef';
 import decryptGatewayId from '@salesforce/apex/GE_GiftEntryController.decryptGatewayId';
-import { showToast } from 'c/utilCommon';
+import { showToast, isEmptyObject } from 'c/utilCommon';
 import psGatewayNotValid from '@salesforce/label/c.psGatewayNotValid';
 import getGatewayAssignmentSettings from '@salesforce/apex/GE_GiftEntryController.getGatewayAssignmentSettings';
 import {
@@ -49,7 +49,7 @@ class GeGatewaySettings {
 
     clearDecryptedElevateSettings() {
         this.isGiftEntryBatch = false;
-        this.elevateSettings = false;
+        this.elevateSettings = {};
         this.decryptedGatewayId = null;
     }
 
@@ -63,7 +63,7 @@ class GeGatewaySettings {
 
     isValidElevatePaymentMethod(paymentMethod) {
 
-        if (!this.getElevateSettings()) {
+        if (isEmptyObject(this.getElevateSettings())) {
             return this.isPaymentMethodCreditOrAch(paymentMethod);
         } else if (this.getElevateSettings().isACHEnabled && this.getElevateSettings().isCreditCardEnabled) {
             return this.isPaymentMethodCreditOrAch(paymentMethod);
