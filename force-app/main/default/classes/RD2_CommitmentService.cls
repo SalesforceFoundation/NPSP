@@ -151,6 +151,8 @@ public without sharing class RD2_CommitmentService {
             HttpRequest request = PS_CommitmentRequest.buildRequest(commitmentId, jsonRequestBody,
                 endpoint, UTIL_Http.Method.POST);
 
+            System.debug('Request: '+JSON.serializePretty(request));
+
             response = requestService.sendRequest(request);
 
         } catch (Exception ex) {
@@ -166,6 +168,8 @@ public without sharing class RD2_CommitmentService {
         try {
             HttpRequest request = PS_CommitmentRequest.buildRequest(commitmentId,
                 UTIL_Http.Method.DEL, endpoint);
+
+            System.debug('Delete Request: '+JSON.serializePretty(request));
 
             response = requestService.sendRequest(request);
 
