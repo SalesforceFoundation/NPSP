@@ -147,6 +147,11 @@ public with sharing class GE_PaymentServices {
         return DomainCreator.getLightningHostname();
     }
 
+    @AuraEnabled(cacheable=true)
+    public static String getLURL() {
+        return DomainCreator.getLightningHostname();
+    }
+
     /**
      * @description Returns salesforce visualforce URL
      * @param namespace: string for namespace in org instance
