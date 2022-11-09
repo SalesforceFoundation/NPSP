@@ -8,8 +8,8 @@ import { isBlank } from 'c/util';
 
 
 /***
-* @description Visualforce page used to handle the payment services credit card tokenization request
-*/
+ * @description Visualforce page used to handle the payment services credit card tokenization request
+ */
 const TOKENIZE_CARD_PAGE_NAME = 'GE_TokenizeCard';
 
 const MOUNT_IFRAME_EVENT_ACTION = 'mount';
@@ -17,20 +17,20 @@ const MOUNT_IFRAME_EVENT_ACTION = 'mount';
 const SET_PAYMENT_METHOD_EVENT_ACTION = 'setPaymentMethod';
 
 /***
-* @description Max number of ms to wait for the response containing a token or an error
-*/
+ * @description Max number of ms to wait for the response containing a token or an error
+ */
 const TOKENIZE_TIMEOUT_MS = 10000;
 
 const NON_NAMESPACED_CHARACTER = 'c';
 
 
 /***
-* @description Payment services Elevate credit card tokenization service
-*/
+ * @description Payment services Elevate credit card tokenization service
+ */
 class psElevateTokenHandler {
     /***
-    * @description Custom labels
-    */
+     * @description Custom labels
+     */
     labels = Object.freeze({
         tokenRequestTimedOut
     });
@@ -40,8 +40,8 @@ class psElevateTokenHandler {
 
 
     /***
-    * @description Returns credit card tokenization Visualforce page URL
-    */
+     * @description Returns credit card tokenization Visualforce page URL
+     */
     getTokenizeCardPageURL() {
         return this.currentNamespace
             ? `/apex/${this.currentNamespace}__${TOKENIZE_CARD_PAGE_NAME}`
@@ -63,9 +63,9 @@ class psElevateTokenHandler {
     }
 
     /***
-    * @description Builds the Visualforce origin url that we need in order to
-    * make sure we're only listening for messages from the correct source.
-    */
+     * @description Builds the Visualforce origin url that we need in order to
+     * make sure we're only listening for messages from the correct source.
+     */
     async setVisualforceOriginURLs(domainInfo) {
         if (isNull(domainInfo)) {
             return;
@@ -79,24 +79,24 @@ class psElevateTokenHandler {
     }
 
     /***
-    * @description Returns the NPSP namespace (if any)
-    */
+     * @description Returns the NPSP namespace (if any)
+     */
     get currentNamespace() {
         return getNamespace(PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName);
     }
 
     /***
-    * @description Dispatches the application event when the Elevate credit card iframe
-    * is displayed or hidden
-    */
+     * @description Dispatches the application event when the Elevate credit card iframe
+     * is displayed or hidden
+     */
     dispatchApplicationEvent(eventName, payload) {
         fireEvent(null, eventName, payload);
     }
 
     /***
-    * @description Listens for a message from the Visualforce iframe.
-    * Rejects any messages from an unknown origin.
-    */
+     * @description Listens for a message from the Visualforce iframe.
+     * Rejects any messages from an unknown origin.
+     */
     registerPostMessageListener(component) {
         const self = this;
 
@@ -135,9 +135,9 @@ class psElevateTokenHandler {
     }
 
     /***
-    * @description Handles messages received from Visualforce page.
-    * @param message Message received from the iframe
-    */
+     * @description Handles messages received from Visualforce page.
+     * @param message Message received from the iframe
+     */
     handleMessage(message) {
         const isValidMessageType = message.type === 'post__npsp';
         if (isValidMessageType) {
@@ -154,12 +154,12 @@ class psElevateTokenHandler {
      * @return Promise A token promise
      */
     requestToken({
-        iframe,
-        handleError,
-        resolveToken,
-        eventAction,
-        tokenizeParameters,
-    } = {}) {
+                     iframe,
+                     handleError,
+                     resolveToken,
+                     eventAction,
+                     tokenizeParameters,
+                 } = {}) {
         if (isNull(iframe)) {
             return;
         }
