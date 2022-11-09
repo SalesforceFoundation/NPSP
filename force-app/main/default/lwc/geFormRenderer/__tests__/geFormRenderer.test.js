@@ -31,6 +31,27 @@ describe('c-ge-form-renderer', () => {
     });
 
     describe('render behavior', () => {
+        it('save button is disabled when schedule recurring type is Fixed for Elevate RD', async() => {
+            retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
+            getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
+
+            const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
+            element.batchId = 'DUMMY_BATCH_ID';
+            element.isElevateCustomer = true;
+            document.body.appendChild(element);
+            await flushPromises();
+
+            element.giftInView = {
+                fields: {
+                    'Recurring_Donation_Recurring_Type__c': 'Fixed'
+                }
+            };
+            await flushPromises();
+
+            const saveButton = element.shadowRoot.querySelector('[data-id="bgeSaveButton"]');
+            expect(saveButton.disabled).toBeTruthy();
+        });
+
         it('renders make recurring button, when in batch mode and feature is enabled', async () => {
             retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
             getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
@@ -308,7 +329,6 @@ describe('c-ge-form-renderer', () => {
         const sections = element.shadowRoot.querySelectorAll('c-ge-form-section');
         expect(sections).toHaveLength(4);
     });
-
 
     it('form when saving without filling anything in should result in a page level error for missing fields', async () => {
         retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);

@@ -97,6 +97,8 @@ import DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_YEAR
     from '@salesforce/schema/DataImport__c.Recurring_Donation_Card_Expiration_Year__c';
 import DATA_IMPORT_RECURRING_DONATION_CARD_LAST_4
     from '@salesforce/schema/DataImport__c.Recurring_Donation_Card_Last_4__c';
+import DATA_IMPORT_RECURRING_TYPE
+    from '@salesforce/schema/DataImport__c.Recurring_Donation_Recurring_Type__c';
 
 import DATA_IMPORT_ADDITIONAL_OBJECT_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c'
 import DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.Account1Imported__c';
@@ -127,7 +129,9 @@ import {
     FAILED, ACH_CONSENT_TYPE,
     COMMITMENT_INACTIVE_STATUS,
     BATCH_COMMITMENT_CREATED_STATUS_REASON,
-    PAYMENT_METHOD_ACH
+    PAYMENT_METHOD_ACH,
+    GIFT_STATUSES,
+    RECURRING_TYPE_FIXED
 } from 'c/geConstants';
 
 
@@ -1403,8 +1407,12 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     get isUpdateActionDisabled() {
-        return this.getFieldValueFromFormState(STATUS_FIELD) === 'Imported' ||
-               this.saveDisabled;
+        return this.getFieldValueFromFormState(STATUS_FIELD) === GIFT_STATUSES.IMPORTED ||
+                this.saveDisabled || (
+
+                this.isElevateCustomer &&
+                this.getFieldValueFromFormState(DATA_IMPORT_RECURRING_TYPE) === RECURRING_TYPE_FIXED
+            )
     }
 
     get cardholderNames() {
