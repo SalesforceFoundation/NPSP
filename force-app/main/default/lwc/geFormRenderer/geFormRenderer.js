@@ -1410,7 +1410,8 @@ export default class GeFormRenderer extends LightningElement{
         return this.getFieldValueFromFormState(STATUS_FIELD) === GIFT_STATUSES.IMPORTED ||
                 this.saveDisabled || (
 
-                this.isElevateCustomer &&
+                Settings.isElevateCustomer &&
+                GeGatewaySettings.isValidElevatePaymentMethod(this.selectedPaymentMethod()) &&
                 this.getFieldValueFromFormState(DATA_IMPORT_RECURRING_TYPE) === RECURRING_TYPE_FIXED
             )
     }
