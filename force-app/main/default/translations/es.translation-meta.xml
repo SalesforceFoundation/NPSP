@@ -4983,10 +4983,6 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <label>Una o más autorizaciones de tarjeta caducaron. Para garantizar que estos pagos se carguen cuando se procese el lote, vuelva a introducir la información de pago para donaciones con un Estado de pago de Elevate de Autorización caducada.</label>
     </customLabels>
     <customLabels>
-        <name>gePaymentProcessedWarning</name>
-        <label>{0} procesó correctamente el pago. Al cambiar el donante, la fecha, el importe o el método de pago dará como resultado registros incoherentes para la misma transacción en {0} y NPSP.</label>
-    </customLabels>
-    <customLabels>
         <name>gePaymentProcessError</name>
         <label>Se produjo un error al procesar el pago. Revise el error e inténtelo de nuevo. De manera alternativa,
             seleccione &quot;No introduzca información de pago.&quot; para introducir una donación sin procesar un pago. {0} errores:
