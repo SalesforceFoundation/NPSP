@@ -83,27 +83,25 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         }
     }
 
+    get shouldDisableMakeRecurringButton() {
+        return this.gift.isImported();
+    }
+
     handleLoadData(event) {
         try {
             this.isFormRendering = true;
+            const giftId = event.detail.Id;
+            const foundGift = this.giftBatch.findGiftBy(giftId);
+            this.gift = new Gift(foundGift.state());
+            this.giftInView = this.gift.state();
+            this.openedGiftDonationId = this.gift.donationId();
 
-            new Promise((resolve,reject) => {
-                setTimeout(()=> {
-                    const giftId = event.detail.Id;
-                    const foundGift = this.giftBatch.findGiftBy(giftId);
-                    this.gift = new Gift(foundGift.state());
-                    this.giftInView = this.gift.state();
-                    this.openedGiftDonationId = this.gift.donationId();
-                    if (this.isFormCollapsed) {
-                        this.isFormCollapsed = false;
-                    }
-                    fireEvent(this, 'resetElevateWidget', {});
-                    resolve();
-                }, 100);
-            })
-            .finally(() => {
-                this.isFormRendering = false;
-            });
+            if (this.isFormCollapsed) {
+                this.isFormCollapsed = false;
+            }
+            fireEvent(this, 'resetElevateWidget', {});
+            
+            this.isFormRendering = false;
         } catch(error) {
             handleError(error);
         }
@@ -574,7 +572,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         let isRemovedFromElevate = false;
         if (this.shouldRemoveFromElevateBatch(gift)) {
             try {
-                await this.deleteFromElevateBatch(gift.asDataImport());
+                await this.deleteFromElevateBatch(gift);
                 isRemovedFromElevate = true;
             } catch (exception) {
                 let errorMsg = GeLabelService.format(
@@ -619,10 +617,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     shouldRemoveFromElevateBatch(gift) {
         return gift &&
             this.isElevateCustomer &&
-            !gift.isImported() && (
-                gift.hasCommitmentId() ||
-                gift.isAuthorized()
-            );
+            gift.hasElevateRemovableStatus();
     }
 
     async deleteFromElevateBatch(gift) {
