@@ -242,7 +242,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     get doNotChargeMessage() {
-        return this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction;
+        return this.shouldDisplayElevateFixedRecurringTypeWarning ?
+            this.CUSTOM_LABELS.RD2_ElevateRDCannotBeFixedLength :
+            this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction;
     }
 
     get tokenizeCardPageUrl() {
@@ -286,12 +288,15 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     get deactivatedMessage() {
-        return this.recurringType === RECURRING_TYPE_FIXED &&
-                GeGatewaySettings.isValidElevatePaymentMethod(this.paymentMethod()) &&
-                !this.isDoNotCharge ?
+        return this.shouldDisplayElevateFixedRecurringTypeWarning ?
                     this.CUSTOM_LABELS.RD2_ElevateRDCannotBeFixedLength :
                     this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction
                     + ' ' + this.CUSTOM_LABELS.psSelectValidPaymentMethod;
+    }
+
+    get shouldDisplayElevateFixedRecurringTypeWarning() {
+        return this.recurringType === RECURRING_TYPE_FIXED &&
+            GeGatewaySettings.isValidElevatePaymentMethod(this.paymentMethod());
     }
 
     get shouldDisplayCardProcessingGuidanceMessage() {

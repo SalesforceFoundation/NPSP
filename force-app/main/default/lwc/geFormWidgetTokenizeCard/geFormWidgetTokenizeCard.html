@@ -172,12 +172,14 @@
                                     <span class='slds-content-message'>
                                         {doNotChargeMessage}
                                     </span>
-                                    <lightning-button variant='base'
-                                                        label={CUSTOM_LABELS.geButtonPaymentAlternate}
-                                                        title={CUSTOM_LABELS.geButtonPaymentAlternate}
-                                                        onclick={handleUserEnterPaymentInformation}
-                                                        class='slds-m-left_xx-small'>
-                                    </lightning-button>
+                                    <template if:false={shouldDisplayElevateFixedRecurringTypeWarning}>
+                                        <lightning-button variant='base'
+                                                            label={CUSTOM_LABELS.geButtonPaymentAlternate}
+                                                            title={CUSTOM_LABELS.geButtonPaymentAlternate}
+                                                            onclick={handleUserEnterPaymentInformation}
+                                                            class='slds-m-left_xx-small'>
+                                        </lightning-button>
+                                    </template>
                                 </p>
                             </template>
                         </template>
