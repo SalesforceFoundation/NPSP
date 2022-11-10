@@ -257,6 +257,7 @@ public with sharing class RD2_PauseForm_CTRL {
         Boolean hasScheduleChanged = false;
         try {
             PauseData pause = (PauseData) JSON.deserialize(jsonPauseData, PauseData.class);
+            System.debug('Pause '+ pause);
             RD2_RecurringDonation rd = getRecurringDonation(pause.rdId);
 
             System.debug('Pause '+ pause);
@@ -301,9 +302,8 @@ public with sharing class RD2_PauseForm_CTRL {
 
         try {
             UTIL_Http.Response response;
-            if (isPauseRemoved(pause)) {
-                response = commitmentService.handleRemoveCommitmentPause(rd);
-            } else {
+            response = commitmentService.handleRemoveCommitmentPause(rd);
+            if (commitmentService.isCommitmentSuccess(response) && !isPauseRemoved(pause)) {
                 response = commitmentService.handleCommitmentPause(
                         pauseHandler.createElevatePauseSchedule(pause, rd), rd);
             }

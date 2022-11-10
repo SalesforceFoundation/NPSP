@@ -1035,12 +1035,10 @@ public without sharing class RD2_ScheduleService {
         public Datetime startDate;
         public Datetime endDate;
         public String statusReason;
-        public Id scheduleId;
         public ElevatePauseSchedule(RD2_RecurringDonation rd, RD2_PauseForm_CTRL.PauseData pause) {
             this.startDate = pause.startDate;
             this.endDate = calculateElevatePauseEndDate(pause.resumeAfterDate, rd);
             this.statusReason = pause.pausedReason?.value;
-            this.scheduleId = pause.scheduleId;
         }
         private Datetime calculateElevatePauseEndDate (Date endDate, RD2_RecurringDonation rd) {
             RD2_ScheduleService rd2ScheduleService = new RD2_ScheduleService();
