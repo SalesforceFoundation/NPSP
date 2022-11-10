@@ -191,6 +191,36 @@ describe('c-ge-form-renderer', () => {
             expect(saveButton.disabled).toBeFalsy();
         });
 
+        it('save button is not disabled when schedule recurring type is Fixed for Elevate RD and widget is not on the form.', async() => {
+            retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
+            getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
+
+            const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
+            element.batchId = 'DUMMY_BATCH_ID';
+
+            Settings.isElevateCustomer = jest.fn(() => true);
+            element.Settings = Settings;
+
+            GeGatewaySettings.isValidElevatePaymentMethod = jest.fn(() => true);
+            element.GeGatewaySettings = GeGatewaySettings;
+
+            element.hasPaymentWidget = false;
+
+            document.body.appendChild(element);
+            await flushPromises();
+
+            element.giftInView = {
+                fields: {
+                    'Recurring_Donation_Recurring_Type__c': 'Fixed',
+                    'Payment_Method__c': 'Credit Card'
+                }
+            };
+            await flushPromises();
+
+            const saveButton = element.shadowRoot.querySelector('[data-id="bgeSaveButton"]');
+            expect(saveButton.disabled).toBeFalsy();
+        });
+
         it('renders make recurring button, when in batch mode and feature is enabled', async () => {
             retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
             getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
