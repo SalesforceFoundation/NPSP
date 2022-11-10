@@ -1,4 +1,5 @@
 import psElevateTokenHandler from '../psElevateTokenHandler';
+import getOriginUrls from '@salesforce/apex/GE_PaymentServices.getOriginUrls';
 
 const createPostMessageEvent = (type) => {
    switch (type) {
@@ -43,6 +44,16 @@ const createPostMessageEvent = (type) => {
       default:
    }
 }
+jest.mock(
+    '@salesforce/apex/GE_PaymentServices.getOriginUrls',
+    () => {
+       return {
+          default: jest.fn()
+       };
+    },
+    { virtual: true }
+);
+
 
 const buildVFUrls = async(domainInfo, namespace) => {
    return await psElevateTokenHandler.getVisualForceOriginURLs(domainInfo, namespace);
@@ -71,6 +82,10 @@ describe('c-ps-Elevate-Token-Handler', () => {
    });
 
    it('should discard an invalid message', async() => {
+      getOriginUrls.mockResolvedValue({
+         visualForceOriginUrl: 'https://flow-connect-2738-dev-ed--c.vf.force.com',
+         lightningOriginUrl: 'https://flow-connect-2738-dev-ed--c.lightning.force.com'
+      });
       psElevateTokenHandler.setVisualforceOriginURLs(mockDomainInfo());
       await flushPromises();
       const isMessageHandled =
@@ -132,7 +147,7 @@ describe('c-ps-Elevate-Token-Handler', () => {
    it('should create two non-namespaced visualforce origin urls on Experience Sites', () => {
       const vfURLS = buildVFUrls(mockDomainInfoExperienceSite(), 'c');
       return vfURLS.then(data => {
-         expect(data.length).toEqual(2);
+         expect(data.length).toEqual(3);
          expect(data[1].value.includes('c')).toBe(true);
       });
    });
