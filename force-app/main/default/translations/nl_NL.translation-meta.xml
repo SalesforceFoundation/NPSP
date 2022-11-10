@@ -4989,10 +4989,6 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
         <label>Een of meerdere kaartautorisaties zijn verlopen. Om ervoor te zorgen dat deze betalingen in rekening worden gebracht bij het verwerken van de batch, voert u de betalingsinformatie voor donaties opnieuw in met de Elevate-betaalstatus Autorisatie verlopen.</label>
     </customLabels>
     <customLabels>
-        <name>gePaymentProcessedWarning</name>
-        <label>{0} heeft de betaling verwerkt. Als u de donateur, de datum, het bedrag of de betalingswijze wijzigt, krijgt u inconsistente records voor dezelfde transactie in {0} en NPSP.</label>
-    </customLabels>
-    <customLabels>
         <name>gePaymentProcessError</name>
         <label>Er is een fout opgetreden bij het verwerken van de betaling. Controleer de fout en probeer het opnieuw. In plaats daarvan kunt u het volgende doen:
             selecteer &apos;Voer geen betalingsgegevens in.&apos; om een donatie in te voeren zonder betaling te verwerken. {0} fouten:
