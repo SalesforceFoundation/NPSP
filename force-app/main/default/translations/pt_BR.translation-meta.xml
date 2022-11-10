@@ -4990,10 +4990,6 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
         <label>Uma ou mais autorizações de cartão expiraram. Para garantir que esses pagamentos sejam cobrados ao processar o lote, reinsira as informações de pagamento de doações com status de pagamento Elevate de Autorização vencida.</label>
     </customLabels>
     <customLabels>
-        <name>gePaymentProcessedWarning</name>
-        <label>{0} processou com sucesso o pagamento. A alteração de doador, data, valor ou método de pagamento resultará em registros inconsistentes para a mesma transação em {0} e no NPSP.</label>
-    </customLabels>
-    <customLabels>
         <name>gePaymentProcessError</name>
         <label>Houve um erro no processamento do pagamento. Reveja o erro e tente novamente. Como alternativa,
             selecione &quot;Não digitar informações de pagamento.&quot; para inserir uma doação sem processar um pagamento. Erros {0}:

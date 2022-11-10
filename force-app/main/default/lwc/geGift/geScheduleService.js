@@ -20,6 +20,18 @@ import RECURRING_DONATION_DATE_ESTABLISHED from '@salesforce/schema/DataImport__
 import RECURRING_DONATION_IMPORT_STATUS from '@salesforce/schema/DataImport__c.RecurringDonationImportStatus__c';
 import RECURRING_DONATION_PAYMENT_METHOD
     from '@salesforce/schema/DataImport__c.Recurring_Donation_Payment_Method__c';
+import RECURRING_DONATION_ACH_LAST_4
+    from '@salesforce/schema/DataImport__c.Recurring_Donation_ACH_Last_4__c';
+import RECURRING_DONATION_END_DATE
+    from '@salesforce/schema/DataImport__c.Recurring_Donation_End_Date__c';
+import RECURRING_DONATION_NAME
+    from '@salesforce/schema/DataImport__c.Recurring_Donation_Name__c';
+import RECURRING_DONATION_STATUS
+    from '@salesforce/schema/DataImport__c.Recurring_Donation_Status__c';
+import RECURRING_DONATION_STATUS_REASON
+    from '@salesforce/schema/DataImport__c.Recurring_Donation_Status_Reason__c';
+import RECURRING_DONATION_IMPORTED
+    from '@salesforce/schema/DataImport__c.RecurringDonationImported__c';
 import PAYMENT_METHOD from '@salesforce/schema/DataImport__c.Payment_Method__c';
 
 class GiftScheduleService {
@@ -50,7 +62,13 @@ class GiftScheduleService {
             [RECURRING_DONATION_RECURRING_AMOUNT.fieldApiName]: null,
             [RECURRING_DONATION_DATE_ESTABLISHED.fieldApiName]: null,
             [RECURRING_DONATION_IMPORT_STATUS.fieldApiName]: null,
-            [RECURRING_DONATION_PAYMENT_METHOD.fieldApiName]: null
+            [RECURRING_DONATION_PAYMENT_METHOD.fieldApiName]: null,
+            [RECURRING_DONATION_ACH_LAST_4.fieldApiName]: null,
+            [RECURRING_DONATION_END_DATE.fieldApiName]: null,
+            [RECURRING_DONATION_NAME.fieldApiName]: null,
+            [RECURRING_DONATION_STATUS.fieldApiName]: null,
+            [RECURRING_DONATION_STATUS_REASON.fieldApiName]: null,
+            [RECURRING_DONATION_IMPORTED.fieldApiName]: null
         }
     }
 

@@ -10,6 +10,8 @@ import DATA_IMPORT_ACCOUNT_NAME from '@salesforce/schema/DataImport__c.Account1_
 import DATA_IMPORT_PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Payment_Status__c';
 import DATA_IMPORT_PARENT_BATCH_LOOKUP from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
 import DATA_IMPORT_ID from '@salesforce/schema/DataImport__c.Id';
+import DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID
+    from '@salesforce/schema/DataImport__c.Recurring_Donation_Elevate_Recurring_ID__c';
 import DATA_IMPORT_STATUS from '@salesforce/schema/DataImport__c.Status__c';
 
 const ALLOCATION_WIDGET = 'geFormWidgetAllocation';
@@ -42,7 +44,8 @@ export default class GeFormWidget extends LightningElement {
         apiNameFor(DATA_IMPORT_ACCOUNT_NAME),
         apiNameFor(DATA_IMPORT_PAYMENT_STATUS),
         apiNameFor(DATA_IMPORT_STATUS),
-        apiNameFor(DATA_IMPORT_ID)
+        apiNameFor(DATA_IMPORT_ID),
+        apiNameFor(DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID)
     ];
 
     get giftInViewHasSchedule() {

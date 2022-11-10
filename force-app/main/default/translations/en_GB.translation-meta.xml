@@ -4990,10 +4990,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <label>One or more card authorisations expired. To ensure these payments are charged when processing the batch, reenter the payment information for donations with an Elevate Payment Status of Expired Authorisation.</label>
     </customLabels>
     <customLabels>
-        <name>gePaymentProcessedWarning</name>
-        <label>{0} successfully processed the payment. Changing the donor, date, amount, or payment method will result in inconsistent records for the same transaction in {0} and NPSP.</label>
-    </customLabels>
-    <customLabels>
         <name>gePaymentProcessError</name>
         <label>There was an error processing the payment. Please review the error and try again. Alternatively,
             select &quot;Don&apos;t enter payment information.&quot; to enter a donation without processing a payment. {0} errors:
