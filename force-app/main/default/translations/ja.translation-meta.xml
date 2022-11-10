@@ -4986,10 +4986,6 @@
         <label>1 件以上のカード承認の期限が切れました。バッチを処理するときにこれらの支払が課金されるようにするには、期限が切れた承認の Elevate 支払状況を使用して支援の支払情報を再入力してください。</label>
     </customLabels>
     <customLabels>
-        <name>gePaymentProcessedWarning</name>
-        <label>{0} が支払を正常に処理しました。支援者、日付、金額、または支払方法を変更すると、{0} と NPSP で同じトランザクションのレコードで整合性が失われます。</label>
-    </customLabels>
-    <customLabels>
         <name>gePaymentProcessError</name>
         <label>支払の処理中に問題が発生しました。エラーを確認して、もう一度お試しください。または、
             支払を処理せずに、[支払情報を入力しない。] を選択して支援を入力してください。{0} エラー:
