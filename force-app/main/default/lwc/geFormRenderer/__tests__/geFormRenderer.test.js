@@ -16,6 +16,7 @@ import { mockCheckComboboxValidity } from 'lightning/combobox';
 import { mockGetIframeReply } from 'c/psElevateTokenHandler';
 
 import donationImported from '@salesforce/schema/DataImport__c.DonationImported__c';
+import { DEFAULT_FORM_FIELDS } from '../../utilTemplateBuilder/utilTemplateBuilder';
 
 const mockWrapperWithNoNames = require('../../../../../../tests/__mocks__/apex/data/retrieveDefaultSGERenderWrapper.json');
 const getRecordContact1Imported = require('./data/getRecordContact1Imported.json');
@@ -48,9 +49,37 @@ describe('c-ge-form-renderer', () => {
             });
 
             await flushPromises();
+                                
+            const button = element.shadowRoot.querySelectorAll('[data-id="recurringButton"]');
+            expect(button).toHaveLength(1);
+        });
+        
+        it('make recurring button is disabled when imported gift is loaded into the form', async() => {
+            retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
+            getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
+            const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
+
+            const DUMMY_BATCH_ID = 'a0T11000007F8WQEA0';
+
+            element.batchId = DUMMY_BATCH_ID;
+            document.body.appendChild(element);
+            await flushPromises();
+
+            // simulate getting back data for DUMMY_CONTACT_ID
+            getRecord.emit(dataImportBatchRecord, config => {
+                return config.recordId === DUMMY_BATCH_ID;
+            });
+
+            await flushPromises();
 
             const button = element.shadowRoot.querySelectorAll('[data-id="recurringButton"]');
             expect(button).toHaveLength(1);
+
+            element.isMakeRecurringButtonDisabled = true;
+            await flushPromises();
+
+            const disabledButton = element.shadowRoot.querySelectorAll('[data-id="recurringButton"]');
+            expect(disabledButton[0].disabled).toBe(true);
         });
 
         it('when a form is saved with a possible validation rule error then processing of the donation should be halted',
@@ -187,39 +216,6 @@ describe('c-ge-form-renderer', () => {
             expect(componentName).toBe('geModalRecurringDonation');
         });
 
-        it('dispatches an event to display a warning modal when adding schedule for gift matched to existing opportunity', async () => {
-            retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
-            getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
-            const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
-            const DUMMY_BATCH_ID = 'a0T11000007F8WQEA0';
-
-            element.batchId = DUMMY_BATCH_ID;
-
-            document.body.appendChild(element);
-
-            await flushPromises();
-
-            // simulate getting back data for DUMMY_CONTACT_ID
-            getRecord.emit(dataImportBatchRecord, config => {
-                return config.recordId === DUMMY_BATCH_ID;
-            });
-            element.giftInView = {
-                fields: { [donationImported.fieldApiName]: 'dummy_opportunity_id' }
-            };
-
-            await flushPromises();
-
-            const dispatchEventSpy = jest.spyOn(element, 'dispatchEvent');
-            const button = element.shadowRoot.querySelector('[data-id="recurringButton"]');
-            button.click();
-
-            await flushPromises();
-
-            expect(dispatchEventSpy).toHaveBeenCalledTimes(1);
-            const componentName = dispatchEventSpy.mock.calls[0][0].detail.modalProperties.componentName;
-            expect(componentName).toBe('geModalPrompt');
-        });
-
         it('dispatches an event to display a warning modal when adding schedule for gift with net new soft credits', async () => {
             retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
             getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
@@ -242,43 +238,6 @@ describe('c-ge-form-renderer', () => {
                     'Donation_Amount__c': '0.01'
                 },
                 softCredits: '[{"Role":"", "ContactId":"", "key":0}]'
-            };
-
-            await flushPromises();
-
-            const dispatchEventSpy = jest.spyOn(element, 'dispatchEvent');
-            const button = element.shadowRoot.querySelector('[data-id="recurringButton"]');
-            button.click();
-
-            await flushPromises();
-
-            expect(dispatchEventSpy).toHaveBeenCalledTimes(1);
-            const componentName = dispatchEventSpy.mock.calls[0][0].detail.modalProperties.componentName;
-            expect(componentName).toBe('geModalPrompt');
-        });
-
-        it('dispatches an event to display a warning modal when adding schedule for gift with elevate authorization', async () => {
-            retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
-            getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
-            const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
-            const DUMMY_BATCH_ID = 'a0T11000007F8WQEA0';
-
-            element.batchId = DUMMY_BATCH_ID;
-
-            document.body.appendChild(element);
-
-            await flushPromises();
-
-            // simulate getting back data for DUMMY_CONTACT_ID
-            getRecord.emit(dataImportBatchRecord, config => {
-                return config.recordId === DUMMY_BATCH_ID;
-            });
-            element.giftInView = {
-                fields: {
-                    'Payment_Method__c': 'Credit Card',
-                    'Donation_Amount__c': '0.01',
-                    'Payment_Status__c': 'AUTHORIZED'
-                }
             };
 
             await flushPromises();
