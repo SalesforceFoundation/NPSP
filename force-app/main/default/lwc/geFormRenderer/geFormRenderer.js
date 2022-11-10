@@ -206,8 +206,7 @@ export default class GeFormRenderer extends LightningElement{
     @track mappingSet = '';
     @track version = '';
     _isElevateWidgetInDisabledState = false;
-    _hasPaymentWidget = false;
-    latestElevateBatchId = null;
+    @api hasPaymentWidget = false;
     cardholderNamesNotInTemplate = {};
     _openedGiftId;
     currentElevateBatch = new ElevateBatch();
@@ -311,9 +310,8 @@ export default class GeFormRenderer extends LightningElement{
     @track
     _formState = {}
 
-    /** Determines when we show payment related text above the cancel and save buttons */
-    get showPaymentSaveNotice() {
-        return this._hasPaymentWidget && this._isElevateWidgetInDisabledState === false;
+    get isWidgetEnabled() {
+        return this.hasPaymentWidget && this._isElevateWidgetInDisabledState === false;
     }
 
     get title() {
@@ -1120,7 +1118,7 @@ export default class GeFormRenderer extends LightningElement{
 
     shouldTokenizeCard() {
         return Settings.isElevateCustomer()
-            && !!(this.showPaymentSaveNotice)
+            && !!(this.isWidgetEnabled)
             && this.hasChargeableTransactionStatus();
     }
 
@@ -1410,7 +1408,7 @@ export default class GeFormRenderer extends LightningElement{
         return this.getFieldValueFromFormState(STATUS_FIELD) === GIFT_STATUSES.IMPORTED ||
                 this.saveDisabled || (
 
-                Settings.isElevateCustomer() &&
+                this.isWidgetEnabled &&
                 GeGatewaySettings.isValidElevatePaymentMethod(this.selectedPaymentMethod()) &&
                 this.getFieldValueFromFormState(DATA_IMPORT_RECURRING_TYPE) === RECURRING_TYPE_FIXED
             )
@@ -1895,7 +1893,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleRegisterPaymentWidget() {
-       this._hasPaymentWidget = true;
+       this.hasPaymentWidget = true;
     }
 
     /*******************************************************************************

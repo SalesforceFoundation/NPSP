@@ -286,8 +286,11 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     get deactivatedMessage() {
-        return this.recurringType === RECURRING_TYPE_FIXED ? this.CUSTOM_LABELS.RD2_ElevateRDCannotBeFixedLength :
-                this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction
+        return this.recurringType === RECURRING_TYPE_FIXED &&
+                GeGatewaySettings.isValidElevatePaymentMethod(this.paymentMethod()) &&
+                !this.isDoNotCharge ?
+                    this.CUSTOM_LABELS.RD2_ElevateRDCannotBeFixedLength :
+                    this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction
                     + ' ' + this.CUSTOM_LABELS.psSelectValidPaymentMethod;
     }
 
