@@ -47,7 +47,7 @@ public without sharing class RD2_CommitmentService {
             PS_CommitmentRequest.RequestBody requestBody = new PS_CommitmentRequest().getRequestBody(rd, oldRd, paymentMethodToken);
 
             response = sendRequest(rd.CommitmentId__c, JSON.serialize(requestBody),
-                PS_Request.ElevateEndpoint.COMMITMENT);
+                PS_Request.ElevateEndpoint.COMMITMENT, UTIL_Http.Method.POST);
 
             processResponse(rd, response);
         }
@@ -60,8 +60,10 @@ public without sharing class RD2_CommitmentService {
 
         PS_CommitmentRequest.PauseRequestBody requestBody = new PS_CommitmentRequest().getPauseRequestBody(schedule);
 
+        UTIL_Http.Method method = schedule.scheduleId != null ? UTIL_Http.Method.PATCH : UTIL_Http.Method.POST;
+
         response = sendRequest(rd.getSObject()?.CommitmentId__c, JSON.serialize(requestBody),
-            PS_Request.ElevateEndpoint.COMMITMENT_PAUSE);
+            PS_Request.ElevateEndpoint.COMMITMENT_PAUSE, method);
 
         processResponse(rd, response);
 
@@ -144,14 +146,14 @@ public without sharing class RD2_CommitmentService {
     * @return response Payments API response
     */
     private UTIL_Http.Response sendRequest(String commitmentId, String jsonRequestBody,
-        PS_Request.ElevateEndpoint endpoint) {
+        PS_Request.ElevateEndpoint endpoint, UTIL_Http.Method method) {
         UTIL_Http.Response response;
 
         try {
             System.debug('jsonRequestBody: '+jsonRequestBody);
 
             HttpRequest request = PS_CommitmentRequest.buildRequest(commitmentId, jsonRequestBody,
-                endpoint, UTIL_Http.Method.POST);
+                endpoint, method);
 
             System.debug('Request: '+request.getBody());
 
