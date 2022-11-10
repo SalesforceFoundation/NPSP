@@ -55,7 +55,7 @@ public without sharing class RD2_CommitmentService {
         return response;
     }
 
-    public UTIL_Http.Response handleCommitmentPause(RecurringDonationSchedule__c schedule, RD2_RecurringDonation rd) {
+    public UTIL_Http.Response handleCommitmentPause(RD2_ScheduleService.ElevatePauseSchedule schedule, RD2_RecurringDonation rd) {
         UTIL_Http.Response response;
 
         PS_CommitmentRequest.PauseRequestBody requestBody = new PS_CommitmentRequest().getPauseRequestBody(schedule);

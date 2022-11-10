@@ -1027,6 +1027,23 @@ public without sharing class RD2_ScheduleService {
         }
     }
 
+    public class ElevatePauseSchedule {
+        public RD2_RecurringDonation donation;
+        public Datetime startDate;
+        public Datetime endDate;
+        public String statusReason;
+
+        public ElevatePauseSchedule(RD2_RecurringDonation donation,
+                Datetime startDate, Datetime endDate, String statusReason) {
+            this.donation = donation;
+            this.startDate = startDate;
+            this.endDate = endDate;
+            this.statusReason = statusReason;
+        }
+    }
+
+
+
     /***
     * @description Handles Pause Recurring Donation functionality
     */
@@ -1040,8 +1057,30 @@ public without sharing class RD2_ScheduleService {
                 StartDate__c = startDate,
                 EndDate__c = endDate
             );
-    
         }
+
+        public ElevatePauseSchedule createElevatePauseSchedule (String statusReason,
+                Date startDate, Date endDate, RD2_RecurringDonation rd) {
+            return new ElevatePauseSchedule(
+                    rd,
+                    Datetime.newInstance(startDate.year(), startDate.month(), startDate.day()),
+                    calculatePauseEndDate(endDate, rd),
+                    statusReason);
+        }
+
+
+        private Datetime calculatePauseEndDate (Date endDate, RD2_RecurringDonation rd) {
+            RD2_ScheduleService rd2ScheduleService = new RD2_ScheduleService();
+            List<Installment> installments = rd2ScheduleService.getAllVisualizedInstallments(endDate,
+                    1, rd.getSObject().RecurringDonationSchedules__r);
+            Date nextDonationDate =  installments[0].nextDonationDate;
+
+            return Datetime.newInstance(
+                    nextDonationDate.year(), nextDonationDate.month(), nextDonationDate.day()).addSeconds(-1);
+
+        }
+
+
         /***
         * @description Indicates if the Recurring Donation has an active pause schedule
         * at some point in the future (not necessarily in a current pause state).

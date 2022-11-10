@@ -304,7 +304,7 @@ public with sharing class RD2_PauseForm_CTRL {
             if (isPauseRemoved(pause)) {
                 response = commitmentService.handleRemoveCommitmentPause(rd);
             } else {
-                response = commitmentService.handleCommitmentPause(buildPauseSchedule(pause), rd);
+                response = commitmentService.handleCommitmentPause(buildPauseSchedule(pause, rd), rd);
             }
 
             return response;
@@ -334,6 +334,14 @@ public with sharing class RD2_PauseForm_CTRL {
             pause.startDate,
             pause.resumeAfterDate,
             pause.rdId
+        );
+    }
+    private static RD2_ScheduleService.ElevatePauseSchedule buildPauseSchedule (PauseData pause, RD2_RecurringDonation rd) {
+        return pauseHandler.createElevatePauseSchedule(
+                pause.pausedReason?.value,
+                pause.startDate,
+                pause.resumeAfterDate,
+                rd
         );
     }
 

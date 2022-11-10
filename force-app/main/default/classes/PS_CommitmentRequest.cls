@@ -236,12 +236,14 @@ public inherited sharing class PS_CommitmentRequest {
             : getUpdateRequestBody(rd, oldRd, token);
     }
 
-    public PauseRequestBody getPauseRequestBody(RecurringDonationSchedule__c schedule) {
+    public PauseRequestBody getPauseRequestBody(RD2_ScheduleService.ElevatePauseSchedule schedule) {
+
+
        return new PauseRequestBody()
-           .withStartTimestamp(schedule.StartDate__c)
-           .withEndTimestamp(schedule.EndDate__c)
-           .withReasonComment(ELEVATE_PAUSE_REASONS.get(schedule.StatusReason__c))
-           .withReason(ELEVATE_PAUSE_REASONS.get(schedule.StatusReason__c));
+           .withStartTimestamp(schedule.startDate)
+           .withEndTimestamp(schedule.endDate)
+           .withReasonComment(ELEVATE_PAUSE_REASONS.get(schedule.statusReason))
+           .withReason(ELEVATE_PAUSE_REASONS.get(schedule.statusReason));
     }
 
     /***
@@ -494,13 +496,13 @@ public inherited sharing class PS_CommitmentRequest {
         public String reasonComment;
 
 
-        public PauseRequestBody withStartTimestamp(Date startTimestamp) {
-            this.startTimestamp = getISOFormatDateTimeFor(startTimestamp, false);
+        public PauseRequestBody withStartTimestamp(Datetime startTimestamp) {
+            this.startTimestamp = getISOFormatDateTimeFor(startTimestamp);
             return this;
         }
 
-        public PauseRequestBody withEndTimestamp(Date endTimestamp) {
-            this.endTimestamp = getISOFormatDateTimeFor(endTimestamp, true);
+        public PauseRequestBody withEndTimestamp(Datetime endTimestamp) {
+            this.endTimestamp = getISOFormatDateTimeFor(endTimestamp);
             return this;
         }
 
@@ -514,12 +516,8 @@ public inherited sharing class PS_CommitmentRequest {
             return this;
         }
 
-        public String getISOFormatDateTimeFor(Date specifiedDate, Boolean isPauseEndDate) {
-            Datetime donationDatetime = specifiedDate == Datetime.now().date()
-                    ? Datetime.now()
-                    : Datetime.newInstance(specifiedDate.year(), specifiedDate.month(), specifiedDate.day());
-            donationDatetime = isPauseEndDate ? donationDatetime.addHours(1): donationDatetime;
-            return donationDatetime.formatGmt('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
+        public String getISOFormatDateTimeFor(Datetime specifiedDate) {
+            return specifiedDate.formatGmt('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
         }
 
     }
