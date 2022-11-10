@@ -100,14 +100,14 @@ describe('c-ps-Elevate-Token-Handler', () => {
    it('should create one non-namespaced visualforce origin urls', async () => {
       const vfURLS = buildVFUrls(mockDomainInfo(), 'c');
       return vfURLS.then(data => {
-         expect(data.length).toEqual(1);
+         expect(data.length).toEqual(2);
       });
    });
 
    it('should create one namespaced visualforce origin urls', () => {
       const vfURLS = buildVFUrls(mockDomainInfo(), 'npsp');
       return vfURLS.then(data => {
-         expect(data.length).toEqual(1);
+         expect(data.length).toEqual(2);
       });
    });
 
