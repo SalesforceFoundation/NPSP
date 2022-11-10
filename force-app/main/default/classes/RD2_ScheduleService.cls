@@ -1035,20 +1035,31 @@ public without sharing class RD2_ScheduleService {
         public Datetime startDate;
         public Datetime endDate;
         public String statusReason;
-        public ElevatePauseSchedule(RD2_RecurringDonation rd, RD2_PauseForm_CTRL.PauseData pause) {
+        public Boolean shouldEditPause;
+        public ElevatePauseSchedule(List<RecurringDonationSchedule__c> donationSchedules,
+                RD2_PauseForm_CTRL.PauseData pause) {
             this.startDate = pause.startDate;
-            this.endDate = calculateElevatePauseEndDate(pause.resumeAfterDate, rd);
+            this.endDate = calculateElevatePauseEndDate(pause.resumeAfterDate, donationSchedules);
             this.statusReason = pause.pausedReason?.value;
+            this.shouldEditPause = shouldEditPause(donationSchedules);
         }
-        private Datetime calculateElevatePauseEndDate (Date endDate, RD2_RecurringDonation rd) {
+        private Datetime calculateElevatePauseEndDate (Date endDate,
+                List<RecurringDonationSchedule__c> donationSchedules) {
             RD2_ScheduleService rd2ScheduleService = new RD2_ScheduleService();
             Date nextDonationDate = rd2ScheduleService.getNextInstallment(
-                    endDate, rd.getSObject().RecurringDonationSchedules__r
+                    endDate, donationSchedules
             ).nextDonationDate;
 
             return Datetime.newInstance(
                     nextDonationDate.year(), nextDonationDate.month(), nextDonationDate.day()).addSeconds(-1);
 
+        }
+
+        private Boolean shouldEditPause (List<RecurringDonationSchedule__c> donationSchedules) {
+            for (RecurringDonationSchedule__c schedule : donationSchedules) {
+                return schedule.IsPause__c;
+            }
+            return false;
         }
     }
 
@@ -1068,7 +1079,7 @@ public without sharing class RD2_ScheduleService {
         }
 
         public ElevatePauseSchedule createElevatePauseSchedule (RD2_PauseForm_CTRL.PauseData pause, RD2_RecurringDonation rd) {
-            return new ElevatePauseSchedule(rd, pause);
+            return new ElevatePauseSchedule(rd.getSObject().RecurringDonationSchedules__r, pause);
         }
 
 
