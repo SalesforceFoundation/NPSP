@@ -97,6 +97,8 @@ import DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_YEAR
     from '@salesforce/schema/DataImport__c.Recurring_Donation_Card_Expiration_Year__c';
 import DATA_IMPORT_RECURRING_DONATION_CARD_LAST_4
     from '@salesforce/schema/DataImport__c.Recurring_Donation_Card_Last_4__c';
+import DATA_IMPORT_RECURRING_DONATION_ACH_LAST_4
+    from '@salesforce/schema/DataImport__c.Recurring_Donation_ACH_Last_4__c';
 import DATA_IMPORT_RECURRING_TYPE
     from '@salesforce/schema/DataImport__c.Recurring_Donation_Recurring_Type__c';
 
@@ -1065,6 +1067,11 @@ export default class GeFormRenderer extends LightningElement{
                     [apiNameFor(DATA_IMPORT_RECURRING_DONATION_CARD_LAST_4)]:
                         elevateBatchItem.cardLast4,
                 });
+            } else if (this.selectedPaymentMethod() === PAYMENT_METHOD_ACH) {
+                this.updateFormState({
+                    [apiNameFor(DATA_IMPORT_RECURRING_DONATION_ACH_LAST_4)]:
+                        elevateBatchItem.achLast4,
+                });
             }
         }
     }
@@ -1438,8 +1445,10 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     get isUpdateActionDisabled() {
+        let newPaymentInfoRequiredAndNotEntered = this.shouldShowElevateTransactionWarning && 
+            this._isElevateWidgetInDisabledState;
         return this.getFieldValueFromFormState(STATUS_FIELD) === GIFT_STATUSES.IMPORTED ||
-                this.shouldShowElevateTransactionWarning ||
+                newPaymentInfoRequiredAndNotEntered ||
                 this.saveDisabled || (
 
                 (this.isWidgetEnabled || this.isGiftCommitment()) &&
