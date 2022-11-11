@@ -317,7 +317,7 @@ export default class GeFormRenderer extends LightningElement{
 
     /** Determines when we show payment related text above the cancel and save buttons */
     get isWidgetEnabled() {
-        return this._hasPaymentWidget && this._isElevateWidgetInDisabledState === false;
+        return this.hasPaymentWidget && this._isElevateWidgetInDisabledState === false;
     }
 
     get title() {
@@ -1151,7 +1151,7 @@ export default class GeFormRenderer extends LightningElement{
 
     shouldTokenizeCard() {
         return Settings.isElevateCustomer()
-            && !!(this.isWidgetEnabled)
+            && this.isWidgetEnabled
             && this.hasChargeableTransactionStatus();
     }
 
