@@ -46,8 +46,12 @@ public without sharing class RD2_CommitmentService {
         if (shouldSendToElevate(rd, oldRd, paymentMethodToken)) {
             PS_CommitmentRequest.RequestBody requestBody = new PS_CommitmentRequest().getRequestBody(rd, oldRd, paymentMethodToken);
 
+            UTIL_Http.Method method = String.isBlank(rd.CommitmentId__c)
+                    ? UTIL_Http.Method.POST
+                    : UTIL_Http.Method.PATCH;
+
             response = sendRequest(rd.CommitmentId__c, JSON.serialize(requestBody),
-                PS_Request.ElevateEndpoint.COMMITMENT, UTIL_Http.Method.POST);
+                PS_Request.ElevateEndpoint.COMMITMENT, method);
 
             processResponse(rd, response);
         }
