@@ -298,6 +298,10 @@ export default class GeFormRenderer extends LightningElement{
         });
     }
 
+    isGiftCommitment() {
+        return isNotEmpty(this.formState[apiNameFor(DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID)]);
+    }
+
     loadSelectedDonationFieldValues(record) {
         this.loadSelectedRecordFieldValues(
             apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD), record.Id);
@@ -312,7 +316,7 @@ export default class GeFormRenderer extends LightningElement{
     _formState = {}
 
     /** Determines when we show payment related text above the cancel and save buttons */
-    get showPaymentSaveNotice() {
+    get isWidgetEnabled() {
         return this._hasPaymentWidget && this._isElevateWidgetInDisabledState === false;
     }
 
@@ -1147,7 +1151,7 @@ export default class GeFormRenderer extends LightningElement{
 
     shouldTokenizeCard() {
         return Settings.isElevateCustomer()
-            && !!(this.showPaymentSaveNotice)
+            && !!(this.isWidgetEnabled)
             && this.hasChargeableTransactionStatus();
     }
 
@@ -2913,7 +2917,7 @@ export default class GeFormRenderer extends LightningElement{
         return  this.getFieldValueFromFormState(STATUS_FIELD) !== GIFT_STATUSES.IMPORTED &&
                 (
                     this.hasUnprocessedReadOnlyPaymentStatus(paymentStatus) ||
-                    this.getFieldValueFromFormState(DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID)
+                    !!this.getFieldValueFromFormState(DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID)
                 );
     }
 

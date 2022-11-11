@@ -172,7 +172,8 @@ describe('c-ge-form-renderer', () => {
             element.giftInView = {
                 fields: {
                     'Recurring_Donation_Recurring_Type__c': 'Fixed',
-                    'Payment_Method__c': 'Credit Card'
+                    'Payment_Method__c': 'Credit Card',
+                    'Recurring_Donation_Elevate_Recurring_ID__c': 'DUMMY_RECURRING_ID'
                 }
             };
             await flushPromises();
