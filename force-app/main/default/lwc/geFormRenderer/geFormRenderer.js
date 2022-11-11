@@ -1116,6 +1116,10 @@ export default class GeFormRenderer extends LightningElement{
         return this.formState[apiNameFor(PAYMENT_STATUS)] === this.PAYMENT_TRANSACTION_STATUS_ENUM.EXPIRED;
     }
 
+    isGiftCommitment() {
+        return isNotEmpty(this.formState[apiNameFor(DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID)]);
+    }
+
     shouldTokenizeCard() {
         return Settings.isElevateCustomer()
             && !!(this.isWidgetEnabled)
@@ -1408,7 +1412,7 @@ export default class GeFormRenderer extends LightningElement{
         return this.getFieldValueFromFormState(STATUS_FIELD) === GIFT_STATUSES.IMPORTED ||
                 this.saveDisabled || (
 
-                this.isWidgetEnabled &&
+                (this.isWidgetEnabled || this.isGiftCommitment()) &&
                 GeGatewaySettings.isValidElevatePaymentMethod(this.selectedPaymentMethod()) &&
                 this.getFieldValueFromFormState(DATA_IMPORT_RECURRING_TYPE) === RECURRING_TYPE_FIXED
             )
