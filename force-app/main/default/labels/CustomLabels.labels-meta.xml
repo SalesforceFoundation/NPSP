@@ -5845,6 +5845,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Process Batch &amp; Payments</value>
     </labels>
     <labels>
+        <fullName>bgeEditPaymentInformation</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warns users to re-enter payment information when editing Elevate-connected gifts</shortDescription>
+        <value>You can&apos;t edit this Elevate-connected gift until you re-enter the payment information. Select Edit Payment Information.</value>
+    </labels>
+    <labels>
         <fullName>bgeRetirementWarningBody</fullName>
         <categories>Batch Data Entry</categories>
         <language>en_US</language>
@@ -9809,14 +9816,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Warning about processing batch when authorizations have expired</shortDescription>
         <value>One or more card authorizations expired. To ensure these payments are charged when processing the batch, reenter the payment information for donations with an Elevate Payment Status of Expired Authorization.</value>
-    </labels>
-    <labels>
-        <fullName>gePaymentProcessedWarning</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Warning about editing fields when transaction already processed</shortDescription>
-        <value>{0} successfully processed the payment. Changing the donor, date, amount, or payment method will result in inconsistent records for the same transaction in {0} and NPSP.</value>
     </labels>
     <labels>
         <fullName>gePaymentProcessError</fullName>

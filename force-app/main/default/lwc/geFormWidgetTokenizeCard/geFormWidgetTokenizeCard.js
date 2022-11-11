@@ -46,8 +46,8 @@ import DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_YEAR
     from '@salesforce/schema/DataImport__c.Recurring_Donation_Card_Expiration_Year__c';
 import DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_MONTH
     from '@salesforce/schema/DataImport__c.Recurring_Donation_Card_Expiration_Month__c';
-import DATA_IMPORT_RECURRING_DONATION_INSTALLMENT_PERIOD
-    from '@salesforce/schema/DataImport__c.Recurring_Donation_Installment_Period__c';
+import DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID
+    from '@salesforce/schema/DataImport__c.Recurring_Donation_Elevate_Recurring_ID__c';
 import PAYMENT_EXPIRATION_YEAR from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Year__c';
 import PAYMENT_EXPIRATION_MONTH from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Month__c';
 import ACH_PAYMENT_LAST_4 from '@salesforce/schema/DataImport__c.Payment_ACH_Last_4__c';
@@ -197,7 +197,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return Settings.isElevateCustomer()
             && this.isReadOnly
             && (this.isExpiredTransaction || this.hasEditableReadOnlyStatus ||
-                !!this._widgetDataFromState[apiNameFor(DATA_IMPORT_RECURRING_DONATION_INSTALLMENT_PERIOD)]);
+                !!this._widgetDataFromState[apiNameFor(DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID)]);
     }
 
     get shouldDisplayDoNotEnterPaymentInformation() {
