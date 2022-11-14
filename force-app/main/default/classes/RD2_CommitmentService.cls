@@ -46,8 +46,12 @@ public without sharing class RD2_CommitmentService {
         if (shouldSendToElevate(rd, oldRd, paymentMethodToken)) {
             PS_CommitmentRequest.RequestBody requestBody = new PS_CommitmentRequest().getRequestBody(rd, oldRd, paymentMethodToken);
 
+            UTIL_Http.Method method = String.isBlank(rd.CommitmentId__c)
+                    ? UTIL_Http.Method.POST
+                    : UTIL_Http.Method.PATCH;
+
             response = sendRequest(rd.CommitmentId__c, JSON.serialize(requestBody),
-                PS_Request.ElevateEndpoint.COMMITMENT);
+                PS_Request.ElevateEndpoint.COMMITMENT, method);
 
             processResponse(rd, response);
         }
@@ -55,13 +59,15 @@ public without sharing class RD2_CommitmentService {
         return response;
     }
 
-    public UTIL_Http.Response handleCommitmentPause(RecurringDonationSchedule__c schedule, RD2_RecurringDonation rd) {
+    public UTIL_Http.Response handleCommitmentPause(RD2_ScheduleService.ElevatePauseSchedule schedule, RD2_RecurringDonation rd) {
         UTIL_Http.Response response;
 
-        PS_CommitmentRequest.RequestBody requestBody = new PS_CommitmentRequest().getPauseRequestBody(schedule);
+        PS_CommitmentRequest.PauseRequestBody requestBody = new PS_CommitmentRequest().getPauseRequestBody(schedule);
+
+        UTIL_Http.Method method = schedule.shouldEditPause ? UTIL_Http.Method.PATCH : UTIL_Http.Method.POST;
 
         response = sendRequest(rd.getSObject()?.CommitmentId__c, JSON.serialize(requestBody),
-            PS_Request.ElevateEndpoint.COMMITMENT_PAUSE);
+            PS_Request.ElevateEndpoint.COMMITMENT_PAUSE, method);
 
         processResponse(rd, response);
 
@@ -144,13 +150,12 @@ public without sharing class RD2_CommitmentService {
     * @return response Payments API response
     */
     private UTIL_Http.Response sendRequest(String commitmentId, String jsonRequestBody,
-        PS_Request.ElevateEndpoint endpoint) {
+        PS_Request.ElevateEndpoint endpoint, UTIL_Http.Method method) {
         UTIL_Http.Response response;
 
         try {
             HttpRequest request = PS_CommitmentRequest.buildRequest(commitmentId, jsonRequestBody,
-                endpoint);
-
+                endpoint, method);
             response = requestService.sendRequest(request);
 
         } catch (Exception ex) {
@@ -166,9 +171,7 @@ public without sharing class RD2_CommitmentService {
         try {
             HttpRequest request = PS_CommitmentRequest.buildRequest(commitmentId,
                 UTIL_Http.Method.DEL, endpoint);
-
             response = requestService.sendRequest(request);
-
         } catch (Exception ex) {
             response = requestService.buildErrorResponse(ex);
         }
