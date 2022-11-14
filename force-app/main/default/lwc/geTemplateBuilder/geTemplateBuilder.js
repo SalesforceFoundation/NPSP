@@ -368,6 +368,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     clearRecordIdOnClone(queryParameters) {
         if (queryParameters.c__clone || this.isClone) {
             this.formTemplateRecordId = null;
+            if (GeSettings.isElevateCustomer()) {
+                GeGatewaySettings.clearTemplateRecordId();
+            }
         }
     }
 

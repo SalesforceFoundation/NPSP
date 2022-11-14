@@ -789,7 +789,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         const schedule = event.detail;
         this.gift.addSchedule(schedule);
         this.giftInView = this.gift.state();
-        fireEvent(this.pageRef, 'geModalCloseEvent', {})
+        fireEvent(this, 'geModalCloseEvent', {});
     }
 
     handleRemoveSchedule() {
