@@ -257,6 +257,7 @@ public with sharing class RD2_PauseForm_CTRL {
         Boolean hasScheduleChanged = false;
         try {
             PauseData pause = (PauseData) JSON.deserialize(jsonPauseData, PauseData.class);
+
             RD2_RecurringDonation rd = getRecurringDonation(pause.rdId);
 
             if (isOnlineRecurringDonationRecord(rd)) {
@@ -302,7 +303,8 @@ public with sharing class RD2_PauseForm_CTRL {
             if (isPauseRemoved(pause)) {
                 response = commitmentService.handleRemoveCommitmentPause(rd);
             } else {
-                response = commitmentService.handleCommitmentPause(buildPauseSchedule(pause), rd);
+                response = commitmentService.handleCommitmentPause(
+                        pauseHandler.createElevatePauseSchedule(pause, rd), rd);
             }
 
             return response;
