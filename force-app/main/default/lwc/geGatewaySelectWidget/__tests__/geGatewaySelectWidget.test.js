@@ -13,22 +13,6 @@ const DEFAULT_GATEWAY_ID = "Default Gateway Id";
 const DEFAULT_TEMPLATE_ID = "Default Template Id";
 
 jest.mock(
-    "@salesforce/apex/GE_GiftEntryController.encryptGatewayId",
-    () => {
-        return { default: jest.fn() };
-    },
-    { virtual: true }
-);
-
-jest.mock(
-    "@salesforce/apex/GE_GiftEntryController.decryptGatewayId",
-    () => {
-        return { default: jest.fn() };
-    },
-    { virtual: true }
-);
-
-jest.mock(
     "@salesforce/apex/GE_GiftEntryController.getGatewayAssignmentSettings",
     () => {
         return { default: jest.fn() };
@@ -228,7 +212,7 @@ describe("c-ge-gateway-select-widget", () => {
 
         it("renders widget contents when not default template", async () => {
             GeGatewaySettings.setElevateSettings(null, SELECTED_GATEWAY_ID);
-            const element = createGeGatewaySelectWidget(PAYMENT_METHOD_MODE);
+            const element = createGeGatewaySelectWidget(GATEWAY_MANAGEMENT_MODE);
             document.body.appendChild(element);
             await flushPromises();
 
@@ -238,12 +222,12 @@ describe("c-ge-gateway-select-widget", () => {
 
         it("renders widget contents when default template", async () => {
             GeGatewaySettings.setElevateSettings(null, DEFAULT_TEMPLATE_ID);
-            const element = createGeGatewaySelectWidget(PAYMENT_METHOD_MODE);
+            const element = createGeGatewaySelectWidget(GATEWAY_MANAGEMENT_MODE);
             document.body.appendChild(element);
             await flushPromises();
 
             expect(element).toBeTruthy();
-            expect(getDiv(element)).toBeFalsy();
+            expect(getDiv(element)).toBeTruthy();
         });
 
         it("does not display spinner if no gateways found", async () => {
