@@ -141,6 +141,8 @@ export default class GeGatewaySelectWidget extends LightningElement {
         catch (error) {
             this._firstDisplay = false;
             this.handleErrors(error);
+
+            return;
         }
 
         if (this._elevateGateways && this._elevateGateways.length > 0 && !(this._elevateGateways.errors)) {
@@ -262,7 +264,13 @@ export default class GeGatewaySelectWidget extends LightningElement {
             details = this._elevateGateways.errors.map((error) => error.message).join("\n ");
         }
 
-        this.displayError(formattedErrorMessage, details);
+        if (!this.onGatewayManagementPage()) {
+            this.displayError(formattedErrorMessage, details);
+        }
+        else {
+            this.isLoading = false;
+            fireEvent(this, 'getElevateGatewaysError', formattedErrorMessage);
+        }
     }
 
     displayError(message, details) {

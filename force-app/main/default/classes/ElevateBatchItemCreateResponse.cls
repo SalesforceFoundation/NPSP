@@ -215,8 +215,12 @@ public class ElevateBatchItemCreateResponse {
         return purchaseResponse?.authExpiresAt;
     }
 
-    public String last4() {
+    public String cardLast4() {
         return commitmentResponse != null ? commitmentResponse.cardData?.last4 : purchaseResponse.cardData?.last4;
+    }
+
+    public String achLast4() {
+        return commitmentResponse != null ? commitmentResponse.achData?.last4 : purchaseResponse.achData?.last4;
     }
 
     public String brand() {
