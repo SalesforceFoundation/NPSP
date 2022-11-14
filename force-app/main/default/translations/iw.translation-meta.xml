@@ -3867,10 +3867,6 @@
         <name>gePaymentProcessError</name>
     </customLabels>
     <customLabels>
-        <label><!-- Warning about editing fields when transaction already processed --></label>
-        <name>gePaymentProcessedWarning</name>
-    </customLabels>
-    <customLabels>
         <label><!-- Field Bundle banner failure message for tokenization or purchase errors --></label>
         <name>gePaymentProcessingErrorBanner</name>
     </customLabels>

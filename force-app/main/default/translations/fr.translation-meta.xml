@@ -4991,10 +4991,6 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <label>Une ou plusieurs autorisations de carte ont expiré. Pour vous assurer que ces paiements sont débités lors du traitement du lot, saisissez à nouveau les informations de paiement pour les dons dont le statut de paiement est Autorisation expirée.</label>
     </customLabels>
     <customLabels>
-        <name>gePaymentProcessedWarning</name>
-        <label>{0} a traité le paiement. La modification du donateur, de la date, du montant ou du mode de paiement entraînera des incohérences dans les enregistrements pour la même transaction dans {0} et NPSP.</label>
-    </customLabels>
-    <customLabels>
         <name>gePaymentProcessError</name>
         <label>Une erreur s’est produite lors du traitement du paiement. Examinez l’erreur et réessayez. Vous pouvez également
             sélectionner « Ne saisissez pas d’informations de paiement. » pour saisir un don sans traiter de paiement. {0} erreurs :

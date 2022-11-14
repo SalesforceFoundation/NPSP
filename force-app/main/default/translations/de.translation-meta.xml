@@ -4989,10 +4989,6 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
         <label>Mindestens eine Kartenautorisierung ist abgelaufen. Damit sichergestellt ist, dass diese Zahlungen beim Verarbeiten des Batches belastet werden, geben Sie die Zahlungsinformationen für Spenden mit dem Elevate-Zahlungsstatus &quot;Autorisierung abgelaufen&quot; erneut ein.</label>
     </customLabels>
     <customLabels>
-        <name>gePaymentProcessedWarning</name>
-        <label>{0} hat die Zahlung erfolgreich verarbeitet. Das Ändern von Spender, Datum, Betrag oder Zahlungsmethode führt zu inkonsistenten Datensätzen für die gleiche Transaktion in {0} und NPSP.</label>
-    </customLabels>
-    <customLabels>
         <name>gePaymentProcessError</name>
         <label>Fehler beim Verarbeiten der Zahlung. Bitte überprüfen Sie den Fehler, und versuchen Sie es erneut. Wählen Sie
             alternativ &quot;Keine Zahlungsinformationen eingeben&quot; aus, um eine Spende einzugeben, ohne eine Kartenzahlung zu verarbeiten. {0}-Fehler:
