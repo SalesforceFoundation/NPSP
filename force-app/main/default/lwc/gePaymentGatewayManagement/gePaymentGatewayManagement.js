@@ -97,6 +97,7 @@ export default class GePaymentGatewayManagement extends LightningElement {
 
         if (this.hasAccess) {
             registerListener('updateSelectedGateway', this.updateSelectedGateway, this);
+            registerListener('getElevateGatewaysError', this.displayGatewayError, this);
         }
     }
 
@@ -188,5 +189,10 @@ export default class GePaymentGatewayManagement extends LightningElement {
             this.showSpinner = false;
             this.isError = true;
         }
+    }
+
+    displayGatewayError(message) {
+        this.errorMessage = message;
+        this.isError = true;
     }
 }
