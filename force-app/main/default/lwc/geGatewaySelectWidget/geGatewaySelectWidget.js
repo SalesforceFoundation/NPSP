@@ -29,9 +29,9 @@ export default class GeGatewaySelectWidget extends LightningElement {
     @track selectedGateway = null;
     @track gatewayOptions = [];
     @track isACHEnabled = true;
-    @track isACHDisabled = false;
+    @track isACHUnavailable = false;
     @track isCreditCardEnabled = true;
-    @track isCreditCardDisabled = false;
+    @track isCreditCardUnavailable = false;
     @track isLoading = true;
     @track isDefaultTemplate = false;
     @track isGatewayAssignmentEnabled = false;
@@ -90,7 +90,7 @@ export default class GeGatewaySelectWidget extends LightningElement {
 
     initWidgetSettings() {
         if (this._defaultTemplateId === GeGatewaySettings.getTemplateRecordId()) {
-            this.isDefaultTemplate = true;
+            this.isDefaultTemplate = !this.onGatewayManagementPage();
             this.isLoading = false;
             return;
         }
@@ -217,9 +217,11 @@ export default class GeGatewaySelectWidget extends LightningElement {
 
     async selectDefaultGateway() {
         this.selectedGateway = this.onGatewayManagementPage() ? this._defaultGatewayId : null;
-        this.updateACHSettings();
-        this.updateCreditCardSettings();
-        this.updateDisabledPaymentTypes();
+        if (!this.onGatewayManagementPage()) {
+            this.updateACHSettings();
+            this.updateCreditCardSettings();
+            this.updateDisabledPaymentTypes();
+        }
     }
 
     async selectSavedGateway(elevateSettings) {
@@ -227,9 +229,11 @@ export default class GeGatewaySelectWidget extends LightningElement {
 
         if (this.isValidSavedGatewayId(savedGatewayId)) {
             this.selectedGateway = savedGatewayId;
-            this.isACHEnabled = elevateSettings.isACHEnabled;
-            this.isCreditCardEnabled = elevateSettings.isCreditCardEnabled;
-            this.updateDisabledPaymentTypes();
+            if (!this.onGatewayManagementPage()) {
+                this.isACHEnabled = elevateSettings.isACHEnabled;
+                this.isCreditCardEnabled = elevateSettings.isCreditCardEnabled;
+                this.updateDisabledPaymentTypes();
+            }
         } else {
             this._savedGatewayNotFound = true;
             this.handleErrors();
@@ -291,10 +295,10 @@ export default class GeGatewaySelectWidget extends LightningElement {
 
     updateDisabledPaymentTypes() {
         if (!this.isACHAvailableFor(this.selectedGateway)) {
-            this.isACHDisabled = true;
+            this.isACHUnavailable = true;
         }
         if (!this.isCreditCardAvailableFor(this.selectedGateway)) {
-            this.isCreditCardDisabled = true;
+            this.isCreditCardUnavailable = true;
         }
     }
 
@@ -311,20 +315,20 @@ export default class GeGatewaySelectWidget extends LightningElement {
     updateACHSettings() {
         if (!this.isACHAvailableFor(this.selectedGateway)) {
             this.isACHEnabled = false;
-            this.isACHDisabled = true;
+            this.isACHUnavailable = true;
         }
         else {
-            this.isACHDisabled = false;
+            this.isACHUnavailable = false;
         }
     }
 
     updateCreditCardSettings() {
         if (!this.isCreditCardAvailableFor(this.selectedGateway)) {
             this.isCreditCardEnabled = false;
-            this.isCreditCardDisabled = true;
+            this.isCreditCardUnavailable = true;
         }
         else {
-            this.isCreditCardDisabled = false;
+            this.isCreditCardUnavailable = false;
         }
     }
 
@@ -353,9 +357,9 @@ export default class GeGatewaySelectWidget extends LightningElement {
         this.selectedGateway = null;
         this.gatewayOptions = [];
         this.isACHEnabled = true;
-        this.isACHDisabled = false;
+        this.isACHUnavailable = false;
         this.isCreditCardEnabled = true;
-        this.isCreditCardDisabled = false;
+        this.isCreditCardUnavailable = false;
     }
 
     enableGatewaySelection() {
