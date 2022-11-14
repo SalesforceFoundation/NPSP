@@ -194,6 +194,17 @@ public inherited sharing class PS_CommitmentRequest {
             .withBody(jsonRequestBody)
             .build();
     }
+    public static HttpRequest buildRequest(String commitmentId, String jsonRequestBody,
+            PS_Request.ElevateEndpoint endpoint, UTIL_Http.Method method) {
+
+        return new PS_Request.Builder()
+                .withMethod(method)
+                .withEndpoint(endpoint)
+                .withCommitmentId(commitmentId)
+                .withRecommendedTimeout()
+                .withBody(jsonRequestBody)
+                .build();
+    }
 
     /**
     * @description Builds a HTTP request for the provided commitment Id, Http method and endpoint
@@ -205,6 +216,7 @@ public inherited sharing class PS_CommitmentRequest {
         return new PS_Request.Builder()
                 .withCommitmentId(commitmentId)
                 .withEndpoint(endpoint)
+                .withRecommendedTimeout()
                 .withMethod(method)
                 .build();
     }
@@ -224,11 +236,14 @@ public inherited sharing class PS_CommitmentRequest {
             : getUpdateRequestBody(rd, oldRd, token);
     }
 
-    public RequestBody getPauseRequestBody(RecurringDonationSchedule__c schedule) {
-       return new RequestBody()
-           .withStartTimestamp(schedule.StartDate__c)
-           .withEndTimestamp(schedule.EndDate__c)
-           .withReason(ELEVATE_PAUSE_REASONS.get(schedule.StatusReason__c));
+    public PauseRequestBody getPauseRequestBody(RD2_ScheduleService.ElevatePauseSchedule schedule) {
+
+
+       return new PauseRequestBody()
+           .withStartTimestamp(schedule.startDate)
+           .withEndTimestamp(schedule.endDate)
+           .withReasonComment(ELEVATE_PAUSE_REASONS.get(schedule.statusReason))
+           .withReason(ELEVATE_PAUSE_REASONS.get(schedule.statusReason));
     }
 
     /***
@@ -494,6 +509,41 @@ public inherited sharing class PS_CommitmentRequest {
         public String consentType;
     }
 
+    public class PauseRequestBody {
+        public PauseRequestBody() {}
+
+        public String startTimestamp;
+        public String endTimestamp;
+        public String reason;
+        public String reasonComment;
+
+
+        public PauseRequestBody withStartTimestamp(Datetime startTimestamp) {
+            this.startTimestamp = getISOFormatDateTimeFor(startTimestamp);
+            return this;
+        }
+
+        public PauseRequestBody withEndTimestamp(Datetime endTimestamp) {
+            this.endTimestamp = getISOFormatDateTimeFor(endTimestamp);
+            return this;
+        }
+
+        public PauseRequestBody withReason(String reason) {
+            this.reason = reason;
+            return this;
+        }
+
+        public PauseRequestBody withReasonComment(String reasonComment) {
+            this.reasonComment = reasonComment;
+            return this;
+        }
+
+        public String getISOFormatDateTimeFor(Datetime specifiedDate) {
+            return specifiedDate.formatGmt('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
+        }
+
+    }
+
     /***
     * @description Assists in constructing the Commitment HttpRequest body.
     */
@@ -520,10 +570,7 @@ public inherited sharing class PS_CommitmentRequest {
          */
         public Map<String, Object> productMetadata;
 
-        public String startTimestamp;
-        public String endTimestamp;
-        public String reason;
-        public String reasonComment;
+
 
         /***
          * @description Constructor
@@ -711,32 +758,6 @@ public inherited sharing class PS_CommitmentRequest {
         public Boolean isCommitmentUpdate() {
             return this.id != null;
         }
-
-        public RequestBody withStartTimestamp(Date startTimestamp) {
-            this.startTimestamp = getISOFormatDateTimeFor(startTimestamp);
-            return this;
-        }
-
-        public RequestBody withEndTimestamp(Date endTimestamp) {
-            this.endTimestamp = getISOFormatDateTimeFor(endTimestamp);
-            return this;
-        }
-
-        public RequestBody withReason(String reason) {
-            this.reason = reason;
-            return this;
-        }
-
-        public RequestBody withReasonComment(String reasonComment) {
-            this.reasonComment = reasonComment;
-            return this;
-        }
-
-        private String getISOFormatDateTimeFor(Date specifiedDate) {
-            Datetime specifiedDateTime = Datetime.newInstance(
-                specifiedDate.year(), specifiedDate.month(), specifiedDate.day());
-            return JSON.serialize(specifiedDateTime);
-        }
     }
 
     /***
@@ -803,7 +824,7 @@ public inherited sharing class PS_CommitmentRequest {
             Datetime donationDatetime = donationDate == Datetime.now().date()
                 ? Datetime.now()
                 : Datetime.newInstance(donationDate.year(), donationDate.month(), donationDate.day());
-            
+
             return donationDatetime.formatGMT('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
         }
     }

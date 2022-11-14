@@ -153,8 +153,21 @@ public with sharing class GE_PaymentServices {
      * @return String JSON of visualforce URL
      */
     @AuraEnabled(cacheable=true)
-    public static String getVfURL(String namespace) {
-        return DomainCreator.getVisualforceHostname(namespace);
+    public static OriginUrls getOriginUrls(String namespace) {
+        return new OriginUrls(
+            DomainCreator.getVisualforceHostname(namespace),
+                DomainCreator.getLightningHostname()
+        );
+    }
+
+    public class OriginUrls {
+        @AuraEnabled public String visualForceOriginUrl;
+        @AuraEnabled public String lightningOriginUrl;
+
+        public OriginUrls(String visualForceOriginUrl, String lightningOriginUrl) {
+            this.visualForceOriginUrl = 'https://'+visualForceOriginUrl;
+            this.lightningOriginUrl = 'https://'+lightningOriginUrl;
+        }
     }
 
     /**
