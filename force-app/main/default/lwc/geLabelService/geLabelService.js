@@ -3,6 +3,7 @@ import { format } from 'c/utilCommon';
 
 // Import custom labels
 import bgeGridNoGiftsBody from '@salesforce/label/c.bgeGridNoGiftsBody';
+import bgeEditPaymentInformation from '@salesforce/label/c.bgeEditPaymentInformation';
 import bgeGridNoGiftsHeader from '@salesforce/label/c.bgeGridNoGiftsHeader';
 import commonAccountNumber from '@salesforce/label/c.commonAccountNumber';
 import commonACHLast4 from '@salesforce/label/c.commonACHLast4';
@@ -210,7 +211,6 @@ import geLabelTemplateInfoDescriptionField from '@salesforce/label/c.geLabelTemp
 import geLabelTemplateInfoNameField from '@salesforce/label/c.geLabelTemplateInfoNameField';
 import gePaymentAuthExpiredHeader from '@salesforce/label/c.gePaymentAuthExpiredHeader';
 import gePaymentAuthExpiredWarningText from '@salesforce/label/c.gePaymentAuthExpiredWarningText';
-import gePaymentProcessedWarning from '@salesforce/label/c.gePaymentProcessedWarning';
 import gePaymentProcessError from '@salesforce/label/c.gePaymentProcessError';
 import gePaymentProcessingErrorBanner from '@salesforce/label/c.gePaymentProcessingErrorBanner';
 import gePaymentRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
@@ -249,7 +249,8 @@ import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarning
 import labelBooleanFalse from '@salesforce/label/c.labelBooleanFalse';
 import labelBooleanTrue from '@salesforce/label/c.labelBooleanTrue';
 import psSelectValidPaymentMethod from '@salesforce/label/c.psSelectValidPaymentMethod';
-import recurringDonations from '@salesforce/label/c.stgNavRecurringDonations'
+import recurringDonations from '@salesforce/label/c.stgNavRecurringDonations';
+import RD2_ElevateRDCannotBeFixedLength from '@salesforce/label/c.RD2_ElevateRDCannotBeFixedLength';
 
 class GeLabelService {
 
@@ -263,6 +264,7 @@ class GeLabelService {
     CUSTOM_LABELS = Object.freeze({
         bgeGridNoGiftsBody,
         bgeGridNoGiftsHeader,
+        bgeEditPaymentInformation,
         commonAccountNumber,
         commonACHLast4,
         commonAmount,
@@ -360,6 +362,7 @@ class GeLabelService {
         geBodyMatchingSelectRecord,
         geBodyMatchingUpdatingDonation,
         geBodyPaymentNotProcessingTransaction,
+        RD2_ElevateRDCannotBeFixedLength,
         geBodyPaymentProcessedDuringBatchProcessing,
         geBodyTemplateInfoLeftCol,
         geBodyTemplatesTabDescription,
@@ -469,7 +472,6 @@ class GeLabelService {
         geLabelTemplateInfoNameField,
         gePaymentAuthExpiredHeader,
         gePaymentAuthExpiredWarningText,
-        gePaymentProcessedWarning,
         gePaymentProcessError,
         gePaymentProcessingErrorBanner,
         gePaymentRequestTimedOut,

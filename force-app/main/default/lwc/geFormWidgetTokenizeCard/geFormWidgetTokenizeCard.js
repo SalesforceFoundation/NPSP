@@ -16,7 +16,8 @@ import {
     TOKENIZE_ACH_EVENT_ACTION,
     TOKENIZE_CREDIT_CARD_EVENT_ACTION,
     DEFAULT_NAME_ON_CARD,
-    GIFT_STATUSES
+    GIFT_STATUSES,
+    RECURRING_TYPE_FIXED
 } from 'c/geConstants';
 import ElevateWidgetDisplay from './helpers/elevateWidgetDisplay';
 import GeFormService from 'c/geFormService';
@@ -33,7 +34,8 @@ import DATA_IMPORT_STATUS from '@salesforce/schema/DataImport__c.Status__c';
 import DATA_IMPORT_DONATION_DONOR from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 import DATA_IMPORT_ACCOUNT_NAME from '@salesforce/schema/DataImport__c.Account1_Name__c';
 import DATA_IMPORT_PARENT_BATCH_LOOKUP from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
-import DATA_IMPORT_RECURRING_DONATION_STATUS from '@salesforce/schema/DataImport__c.Recurring_Donation_Status__c';
+import DATA_IMPORT_RECURRING_TYPE
+    from '@salesforce/schema/DataImport__c.Recurring_Donation_Recurring_Type__c';
 import DATA_IMPORT_RECURRING_DONATION_ACH_LAST_4
     from '@salesforce/schema/DataImport__c.Recurring_Donation_ACH_Last_4__c';
 import DATA_IMPORT_RECURRING_DONATION_CARD_LAST_4
@@ -42,8 +44,8 @@ import DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_YEAR
     from '@salesforce/schema/DataImport__c.Recurring_Donation_Card_Expiration_Year__c';
 import DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_MONTH
     from '@salesforce/schema/DataImport__c.Recurring_Donation_Card_Expiration_Month__c';
-import DATA_IMPORT_RECURRING_DONATION_INSTALLMENT_PERIOD
-    from '@salesforce/schema/DataImport__c.Recurring_Donation_Installment_Period__c';
+import DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID
+    from '@salesforce/schema/DataImport__c.Recurring_Donation_Elevate_Recurring_ID__c';
 import PAYMENT_EXPIRATION_YEAR from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Year__c';
 import PAYMENT_EXPIRATION_MONTH from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Month__c';
 import ACH_PAYMENT_LAST_4 from '@salesforce/schema/DataImport__c.Payment_ACH_Last_4__c';
@@ -193,7 +195,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return Settings.isElevateCustomer()
             && this.isReadOnly
             && (this.isExpiredTransaction || this.hasEditableReadOnlyStatus ||
-                !!this._widgetDataFromState[apiNameFor(DATA_IMPORT_RECURRING_DONATION_INSTALLMENT_PERIOD)]);
+                !!this._widgetDataFromState[apiNameFor(DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID)]);
     }
 
     get shouldDisplayDoNotEnterPaymentInformation() {
@@ -238,7 +240,9 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     get doNotChargeMessage() {
-        return this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction;
+        return this.shouldDisplayElevateFixedRecurringTypeWarning ?
+            this.CUSTOM_LABELS.RD2_ElevateRDCannotBeFixedLength :
+            this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction;
     }
 
     get tokenizeCardPageUrl() {
@@ -282,8 +286,15 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     get deactivatedMessage() {
-        return this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction
-            + ' ' + this.CUSTOM_LABELS.psSelectValidPaymentMethod;
+        return this.shouldDisplayElevateFixedRecurringTypeWarning ?
+                    this.CUSTOM_LABELS.RD2_ElevateRDCannotBeFixedLength :
+                    this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction
+                    + ' ' + this.CUSTOM_LABELS.psSelectValidPaymentMethod;
+    }
+
+    get shouldDisplayElevateFixedRecurringTypeWarning() {
+        return this.recurringType === RECURRING_TYPE_FIXED &&
+            GeGatewaySettings.isValidElevatePaymentMethod(this.paymentMethod());
     }
 
     get shouldDisplayCardProcessingGuidanceMessage() {
@@ -313,6 +324,10 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return this._widgetDataFromState[apiNameFor(DATA_IMPORT_ID)] !== widgetState[apiNameFor(DATA_IMPORT_ID)];
     }
 
+    get recurringType() {
+        return this._widgetDataFromState[apiNameFor(DATA_IMPORT_RECURRING_TYPE)];
+    }
+
     updateDisplayState() {
         if (!Settings.isElevateCustomer()) return;
         if (this.isInBatchGiftEntry()) {
@@ -323,6 +338,15 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     updateDisplayStateWhenInBatchGiftEntry() {
+        if (this.recurringType === RECURRING_TYPE_FIXED) {
+            if (this.isReadOnly) {
+                this.display.transitionTo('resetToDeactivated');
+            } else {
+                this.display.transitionTo('deactivated');
+            }
+
+            return;
+        }
         if (this.hasReadOnlyStatus && !this.isValidBatchElevatePaymentMethod()) {
             this.display.transitionTo('resetToDeactivated');
         }
@@ -534,7 +558,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     shouldHandleWidgetDataChange() {
         return (this.isInBatchGiftEntry() && (isNotEmpty(
-            this.paymentStatus() || isNotEmpty(this.recurringDonationStatus())))
+            this.paymentStatus() || isNotEmpty(this.recurringDonationId())))
             || isEmpty(this.paymentStatus()));
     }
 
@@ -552,8 +576,8 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return this.widgetDataFromState && this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_STATUS_FIELD)];
     }
 
-    recurringDonationStatus() {
-        return this.widgetDataFromState && this.widgetDataFromState[apiNameFor(DATA_IMPORT_RECURRING_DONATION_STATUS)];
+    recurringDonationId() {
+        return this.widgetDataFromState && this.widgetDataFromState[apiNameFor(DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID)];
     }
 
     hasValidPaymentMethod() {
