@@ -114,14 +114,6 @@ describe("c-ge-gateway-select-widget", () => {
             expect(getACHCheckBox(element)).toBeFalsy();
             expect(getCCCheckBox(element)).toBeFalsy();
         })
-
-        it("displays toast error if no gateways found", async () => {
-            GeGatewaySettings.setElevateSettings(null, null);
-            getGatewaysFromElevate.mockResolvedValueOnce(null);
-            const element = createGeGatewaySelectWidget(null);
-            document.body.appendChild(element);
-            await flushPromises();
-        });
     });
 
     describe("payment method mode", () => {
