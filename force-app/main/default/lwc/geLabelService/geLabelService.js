@@ -249,7 +249,8 @@ import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarning
 import labelBooleanFalse from '@salesforce/label/c.labelBooleanFalse';
 import labelBooleanTrue from '@salesforce/label/c.labelBooleanTrue';
 import psSelectValidPaymentMethod from '@salesforce/label/c.psSelectValidPaymentMethod';
-import recurringDonations from '@salesforce/label/c.stgNavRecurringDonations'
+import recurringDonations from '@salesforce/label/c.stgNavRecurringDonations';
+import RD2_ElevateRDCannotBeFixedLength from '@salesforce/label/c.RD2_ElevateRDCannotBeFixedLength';
 
 class GeLabelService {
 
@@ -361,6 +362,7 @@ class GeLabelService {
         geBodyMatchingSelectRecord,
         geBodyMatchingUpdatingDonation,
         geBodyPaymentNotProcessingTransaction,
+        RD2_ElevateRDCannotBeFixedLength,
         geBodyPaymentProcessedDuringBatchProcessing,
         geBodyTemplateInfoLeftCol,
         geBodyTemplatesTabDescription,

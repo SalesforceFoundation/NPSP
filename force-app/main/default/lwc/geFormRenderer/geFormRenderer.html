@@ -130,7 +130,7 @@
                                           horizontal-align='center'
                                           if:false={isPermissionError}>
                             <lightning-layout-item size='12'
-                                                   if:true={showPaymentSaveNotice}>
+                                                   if:true={isWidgetEnabled}>
                                 <p class='slds-align_absolute-center slds-p-top_small'>
                                     {CUSTOM_LABELS.geTextPaymentsSaveNotice}
                                 </p>
@@ -148,7 +148,6 @@
                                                       title={saveActionLabel}
                                                       onclick={handleSave}
                                                       class='slds-m-left_x-small'
-                                                      disabled={isUpdateActionDisabled}
                                                       data-qa-locator={qaLocatorSaveButton}>
                                     </lightning-button>
                                 </div>
@@ -227,7 +226,7 @@
                                               horizontal-align='center'
                                               if:false={isPermissionError}>
                                 <lightning-layout-item size='12'
-                                                       if:true={showPaymentSaveNotice}>
+                                                       if:true={isWidgetEnabled}>
                                     <p class='slds-align_absolute-center slds-p-top_small'>
                                         {CUSTOM_LABELS.geTextPaymentsSaveNotice}
                                     </p>
@@ -247,7 +246,7 @@
                                                           class='slds-m-left_x-small'
                                                           disabled={isUpdateActionDisabled}
                                                           data-qa-locator={qaLocatorSaveButton}
-                                                          data-id="formSaveButton">
+                                                          data-id="bgeSaveButton">
                                         </lightning-button>
                                     </div>
                                 </lightning-layout-item>
