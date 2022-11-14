@@ -52,7 +52,9 @@ const CLICKED_DOWN = 'clicked-down';
 const DOWN = 'down';
 const UP = 'up';
 
-const DEFAULT_NAME_ON_CARD = '[Not Provided]'
+const DEFAULT_NAME_ON_CARD = '[Not Provided]';
+
+const RECURRING_TYPE_FIXED = 'Fixed';
 
 export {
     COMMITMENT_INACTIVE_STATUS,
@@ -77,5 +79,6 @@ export {
     CLICKED_DOWN,
     DOWN,
     UP,
-    DEFAULT_NAME_ON_CARD
+    DEFAULT_NAME_ON_CARD,
+    RECURRING_TYPE_FIXED
 };

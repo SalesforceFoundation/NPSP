@@ -31,7 +31,6 @@ import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
 import FAILURE_INFORMATION from '@salesforce/schema/DataImport__c.FailureInformation__c';
 import accountDonorSelectionMismatch from '@salesforce/label/c.geErrorDonorMismatch';
-import { fireEvent } from '../../pubsubNoPageRef/pubsubNoPageRef';
 
 const PROCESSING_BATCH_MESSAGE = 'c.geProcessingBatch';
 
@@ -257,9 +256,10 @@ describe('c-ge-gift-entry-form-app', () => {
             pubSub.fireEvent({}, 'widgetStateChange', {state: 'readOnly'});
             await flushPromises();
             
-            const saveButton = shadowQuerySelector(geFormRenderer, '[data-id="formSaveButton"]');
+            const saveButton = shadowQuerySelector(geFormRenderer, '[data-id="bgeSaveButton"]');
             expect(saveButton.disabled).toBe(true);
         });
+
         it('should disable update button when widget is read-only with an editable status for one-time gift', async() => {
             const formApp = setupForBatchMode({gifts: [{fields: {'Id': 'DUMMY_RECORD_ID',
                                                                  'Payment_Status__c': 'AUTHORIZED'}}], totals: { TOTAL: 1 }});
@@ -280,7 +280,7 @@ describe('c-ge-gift-entry-form-app', () => {
             pubSub.fireEvent({}, 'widgetStateChange', {state: 'readOnly'});
             await flushPromises();
             
-            const saveButton = shadowQuerySelector(geFormRenderer, '[data-id="formSaveButton"]');
+            const saveButton = shadowQuerySelector(geFormRenderer, '[data-id="bgeSaveButton"]');
             expect(saveButton.disabled).toBe(true);
         });
 

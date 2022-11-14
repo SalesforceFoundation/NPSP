@@ -35,7 +35,8 @@
                                                             icon-position="right"
                                                             onclick={handleUserEditExpired}
                                                             class='slds-button slds-button_base slds-float_right do-not-charge-card-button'
-                                                            data-qa-locator={qaLocatorEditPaymentInformation}>
+                                                            data-qa-locator={qaLocatorEditPaymentInformation}
+                                                            data-id="editPaymentInformation">
                                             </lightning-button>
                                         </template>
                                     </template>
@@ -79,7 +80,7 @@
                                                  icon={alert.icon}
                                                  message={alert.message}>
                             </c-util-alert-banner>
-                            <div class='iframe-container'>
+                            <div class='iframe-container' data-id="chargeIFrameContainer">
                                 <template if:true={showSpinner}>
                                     <lightning-spinner if:true={isElevateCustomer} alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
                                 </template>
@@ -114,7 +115,7 @@
                         <template if:true={isDeactivated}>
                             <template if:true={isElevateCustomer}>
                                 <p class='fade-in slds-p-vertical_medium'>
-                                    <span class='slds-content-message'>
+                                    <span class='slds-content-message' data-id="deactivatedMessage">
                                         {deactivatedMessage}
                                     </span>
                                 </p>
@@ -122,7 +123,7 @@
                         </template>
 
                         <template if:true={isReadOnly}>
-                            <lightning-layout class="read-only-mode">
+                            <lightning-layout class="read-only-mode" data-id="readOnlyLayout">
                                 <template if:true={showCreditCardReadOnlyFields}>
                                     <lightning-layout-item padding="around-small"
                                                         class='fade-in'
@@ -171,12 +172,14 @@
                                     <span class='slds-content-message'>
                                         {doNotChargeMessage}
                                     </span>
-                                    <lightning-button variant='base'
-                                                        label={CUSTOM_LABELS.geButtonPaymentAlternate}
-                                                        title={CUSTOM_LABELS.geButtonPaymentAlternate}
-                                                        onclick={handleUserEnterPaymentInformation}
-                                                        class='slds-m-left_xx-small'>
-                                    </lightning-button>
+                                    <template if:false={shouldDisplayElevateFixedRecurringTypeWarning}>
+                                        <lightning-button variant='base'
+                                                            label={CUSTOM_LABELS.geButtonPaymentAlternate}
+                                                            title={CUSTOM_LABELS.geButtonPaymentAlternate}
+                                                            onclick={handleUserEnterPaymentInformation}
+                                                            class='slds-m-left_xx-small'>
+                                        </lightning-button>
+                                    </template>
                                 </p>
                             </template>
                         </template>

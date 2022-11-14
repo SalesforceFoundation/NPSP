@@ -97,6 +97,10 @@ import DATA_IMPORT_RECURRING_DONATION_CARD_EXPIRATION_YEAR
     from '@salesforce/schema/DataImport__c.Recurring_Donation_Card_Expiration_Year__c';
 import DATA_IMPORT_RECURRING_DONATION_CARD_LAST_4
     from '@salesforce/schema/DataImport__c.Recurring_Donation_Card_Last_4__c';
+import DATA_IMPORT_RECURRING_DONATION_ACH_LAST_4
+    from '@salesforce/schema/DataImport__c.Recurring_Donation_ACH_Last_4__c';
+import DATA_IMPORT_RECURRING_TYPE
+    from '@salesforce/schema/DataImport__c.Recurring_Donation_Recurring_Type__c';
 
 import DATA_IMPORT_ADDITIONAL_OBJECT_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c'
 import DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.Account1Imported__c';
@@ -128,7 +132,8 @@ import {
     COMMITMENT_INACTIVE_STATUS,
     BATCH_COMMITMENT_CREATED_STATUS_REASON,
     PAYMENT_METHOD_ACH,
-    GIFT_STATUSES
+    GIFT_STATUSES,
+    RECURRING_TYPE_FIXED
 } from 'c/geConstants';
 
 
@@ -192,7 +197,6 @@ export default class GeFormRenderer extends LightningElement{
     @api isElevateCustomer = false;
     @api saveDisabled = false;
     @api isMakeRecurringButtonDisabled = false;
-    _isElevateWidgetInDisabledState = false;
 
     @track isPermissionError = false;
     @track permissionErrorTitle;
@@ -204,8 +208,8 @@ export default class GeFormRenderer extends LightningElement{
     @track description = '';
     @track mappingSet = '';
     @track version = '';
-    _hasPaymentWidget = false;
-    latestElevateBatchId = null;
+    @api hasPaymentWidget = false;
+    _isElevateWidgetInDisabledState = false;
     cardholderNamesNotInTemplate = {};
     _openedGiftId;
     currentElevateBatch = new ElevateBatch();
@@ -296,6 +300,10 @@ export default class GeFormRenderer extends LightningElement{
         });
     }
 
+    isGiftCommitment() {
+        return isNotEmpty(this.formState[apiNameFor(DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID)]);
+    }
+
     loadSelectedDonationFieldValues(record) {
         this.loadSelectedRecordFieldValues(
             apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD), record.Id);
@@ -310,8 +318,8 @@ export default class GeFormRenderer extends LightningElement{
     _formState = {}
 
     /** Determines when we show payment related text above the cancel and save buttons */
-    get showPaymentSaveNotice() {
-        return this._hasPaymentWidget && this._isElevateWidgetInDisabledState === false;
+    get isWidgetEnabled() {
+        return this.hasPaymentWidget && this._isElevateWidgetInDisabledState === false;
     }
 
     get title() {
@@ -1059,6 +1067,11 @@ export default class GeFormRenderer extends LightningElement{
                     [apiNameFor(DATA_IMPORT_RECURRING_DONATION_CARD_LAST_4)]:
                         elevateBatchItem.cardLast4,
                 });
+            } else if (this.selectedPaymentMethod() === PAYMENT_METHOD_ACH) {
+                this.updateFormState({
+                    [apiNameFor(DATA_IMPORT_RECURRING_DONATION_ACH_LAST_4)]:
+                        elevateBatchItem.achLast4,
+                });
             }
         }
     }
@@ -1145,7 +1158,7 @@ export default class GeFormRenderer extends LightningElement{
 
     shouldTokenizeCard() {
         return Settings.isElevateCustomer()
-            && !!(this.showPaymentSaveNotice)
+            && this.isWidgetEnabled
             && this.hasChargeableTransactionStatus();
     }
 
@@ -1432,12 +1445,16 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     get isUpdateActionDisabled() {
-        return this.getFieldValueFromFormState(STATUS_FIELD) === 'Imported' ||
-               this.saveDisabled ||
-               (
-                   this.shouldShowElevateTransactionWarning &&
-                   this._isElevateWidgetInDisabledState
-               );
+        let newPaymentInfoRequiredAndNotEntered = this.shouldShowElevateTransactionWarning && 
+            this._isElevateWidgetInDisabledState;
+        return this.getFieldValueFromFormState(STATUS_FIELD) === GIFT_STATUSES.IMPORTED ||
+                newPaymentInfoRequiredAndNotEntered ||
+                this.saveDisabled || (
+
+                (this.isWidgetEnabled || this.isGiftCommitment()) &&
+                GeGatewaySettings.isValidElevatePaymentMethod(this.selectedPaymentMethod()) &&
+                this.getFieldValueFromFormState(DATA_IMPORT_RECURRING_TYPE) === RECURRING_TYPE_FIXED
+            )
     }
 
     get cardholderNames() {
@@ -1919,7 +1936,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleRegisterPaymentWidget() {
-       this._hasPaymentWidget = true;
+       this.hasPaymentWidget = true;
     }
 
     /*******************************************************************************
@@ -2909,7 +2926,7 @@ export default class GeFormRenderer extends LightningElement{
         return  this.getFieldValueFromFormState(STATUS_FIELD) !== GIFT_STATUSES.IMPORTED &&
                 (
                     this.hasUnprocessedReadOnlyPaymentStatus(paymentStatus) ||
-                    this.getFieldValueFromFormState(DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID)
+                    !!this.getFieldValueFromFormState(DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID)
                 );
     }
 
