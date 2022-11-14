@@ -55,6 +55,9 @@ public inherited sharing class GiftEntryProcessorQueueFinalizer implements Final
             when UNHANDLED_EXCEPTION {
                 unhandledException(context);
             }
+            when SUCCESS {
+                giftBatchService.enableRD2AsynchronousProcesses();
+            }
         }
     }
 

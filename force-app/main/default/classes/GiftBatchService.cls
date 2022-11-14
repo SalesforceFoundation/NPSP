@@ -83,6 +83,18 @@ public with sharing class GiftBatchService {
         updateGiftBatchWith(giftBatchId, asyncApexJobId);
     }
 
+    public void disableRD2AsynchronousProcesses() {
+        RD2_Settings rd2Settings = RD2_Settings.getInstance();
+        rd2Settings.isGiftEntryMode = true;
+    }
+
+
+    public void enableRD2AsynchronousProcesses() {
+        RD2_Settings rd2Settings = RD2_Settings.getInstance();
+        rd2Settings.isGiftEntryMode = false;
+    }
+
+
     public void chainNextQueueable(GiftBatchForQueueable queueableGiftBatch) {
         if (Test.isRunningTest()) {
             AsyncApexJobId queueableId = new AsyncApexJobId(UTIL_UnitTestData_TEST.mockId(AsyncApexJob.SObjectType));

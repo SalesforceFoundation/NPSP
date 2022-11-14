@@ -52,7 +52,7 @@ const CLICKED_DOWN = 'clicked-down';
 const DOWN = 'down';
 const UP = 'up';
 
-const DEFAULT_NAME_ON_CARD = '[Not Provided]';
+const DEFAULT_NAME_ON_CARD = 'Not Provided';
 
 const RECURRING_TYPE_FIXED = 'Fixed';
 
