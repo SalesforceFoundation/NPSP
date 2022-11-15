@@ -92,22 +92,10 @@ describe("c-ge-gateway-select-widget", () => {
             expect(getComboBox(element)).toBeTruthy();
             expect(getACHCheckBox(element)).toBeTruthy();
             expect(getCCCheckBox(element)).toBeTruthy();
-        })
 
-        it("does not display gateways and payment methods when collapsed", async () => {
-            GeGatewaySettings.setElevateSettings(null, null);
-            const element = createGeGatewaySelectWidget(null);
-            document.body.appendChild(element);
-            await flushPromises();
-
-            const expandGatewayControl = getExpandGatewayControl(element);
-            expect(expandGatewayControl).toBeTruthy();
-            expandGatewayControl.click();
-            await flushPromises();
-
-            const collapseControl = shadowQuerySelector(element,'[data-id="ga-hide-button"]');
-            expect(collapseControl).toBeTruthy();
-            collapseControl.click();
+            const collapseGatewayControl = shadowQuerySelector(element,'[data-id="ga-hide-button"]');
+            expect(collapseGatewayControl).toBeTruthy();
+            collapseGatewayControl.click();
             await flushPromises();
 
             expect(getComboBox(element)).toBeFalsy();
@@ -169,22 +157,10 @@ describe("c-ge-gateway-select-widget", () => {
             expect(getComboBox(element)).toBeFalsy();
             expect(getACHCheckBox(element)).toBeTruthy();
             expect(getCCCheckBox(element)).toBeTruthy();
-        })
 
-        it("does not display payment methods when collapsed", async () => {
-            GeGatewaySettings.setElevateSettings(null, null);
-            const element = createGeGatewaySelectWidget(null);
-            document.body.appendChild(element);
-            await flushPromises();
-
-            const expandPaymentControl = getExpandPaymentControl(element);
-            expect(expandPaymentControl).toBeTruthy();
-            expandPaymentControl.click();
-            await flushPromises();
-
-            const collapseControl = shadowQuerySelector(element,'[data-id="pm-hide-button"]');
-            expect(collapseControl).toBeTruthy();
-            collapseControl.click();
+            const collapsePaymentControl = shadowQuerySelector(element,'[data-id="pm-hide-button"]');
+            expect(collapsePaymentControl).toBeTruthy();
+            collapsePaymentControl.click();
             await flushPromises();
 
             expect(getComboBox(element)).toBeFalsy();
@@ -200,26 +176,6 @@ describe("c-ge-gateway-select-widget", () => {
                 defaultTemplateId: DEFAULT_TEMPLATE_ID,
                 gatewayAssignmentEnabled: true,
             }));
-        });
-
-        it("renders widget contents when not default template", async () => {
-            GeGatewaySettings.setElevateSettings(null, SELECTED_GATEWAY_ID);
-            const element = createGeGatewaySelectWidget(GATEWAY_MANAGEMENT_MODE);
-            document.body.appendChild(element);
-            await flushPromises();
-
-            expect(element).toBeTruthy();
-            expect(getDiv(element)).toBeTruthy();
-        });
-
-        it("renders widget contents when default template", async () => {
-            GeGatewaySettings.setElevateSettings(null, DEFAULT_TEMPLATE_ID);
-            const element = createGeGatewaySelectWidget(GATEWAY_MANAGEMENT_MODE);
-            document.body.appendChild(element);
-            await flushPromises();
-
-            expect(element).toBeTruthy();
-            expect(getDiv(element)).toBeTruthy();
         });
 
         it("does not display spinner if no gateways found", async () => {
