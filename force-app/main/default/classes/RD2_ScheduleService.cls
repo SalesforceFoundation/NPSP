@@ -1060,6 +1060,7 @@ public without sharing class RD2_ScheduleService {
             for (RecurringDonationSchedule__c schedule : donationSchedules) {
                 if (schedule.IsPause__c) {
                     shouldEdit = true;
+                    break;
                 }
             }
             return shouldEdit;
