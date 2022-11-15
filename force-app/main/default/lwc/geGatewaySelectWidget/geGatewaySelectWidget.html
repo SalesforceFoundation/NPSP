@@ -117,7 +117,7 @@
                             <lightning-input data-id="checkboxACH"
                                              label={CUSTOM_LABELS.psACH}
                                              checked={isACHEnabled}
-                                             disabled={isACHDisabled}
+                                             disabled={isACHUnavailable}
                                              onchange={handleACHChange}
                                              variant="standard"
                                              type="checkbox"
@@ -126,7 +126,7 @@
                             <lightning-input data-id="checkboxCreditCard"
                                              label={CUSTOM_LABELS.RD2_Credit_Card_Payment_Method_Label}
                                              checked={isCreditCardEnabled}
-                                             disabled={isCreditCardDisabled}
+                                             disabled={isCreditCardUnavailable}
                                              onchange={handleCreditCardChange}
                                              variant="standard"
                                              type="checkbox"
