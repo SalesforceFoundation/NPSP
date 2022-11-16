@@ -1125,10 +1125,14 @@ public without sharing class RD2_ScheduleService {
         }
 
         private Boolean shouldEditPause (List<RecurringDonationSchedule__c> donationSchedules) {
+            Boolean shouldEdit = false;
             for (RecurringDonationSchedule__c schedule : donationSchedules) {
-                return schedule.IsPause__c;
+                if (schedule.IsPause__c) {
+                    shouldEdit = true;
+                    break;
+                }
             }
-            return false;
+            return shouldEdit;
         }
     }
 
