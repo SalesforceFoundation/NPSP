@@ -610,6 +610,91 @@ ElevateBatchItemType.ONE_TIME, TEST_PAYMENT_METHOD_CARD);
         System.assertEquals(2, GE_GiftEntryController.getAllFormTemplates().size());
     }
 
+    @IsTest
+    static void shouldReturnFormTemplatesWithMatchingGatewayName() {
+        Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
+        giftEntryCustomSetting.Enable_Gateway_Assignment__c = true;
+        UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
+
+        final String GATEWAY_ID = '123-sample-456';
+        final String GATEWAY_ALIAS = 'Gateway Alias';
+        final String VENDOR_NAME = 'Test Vendor Name';
+        final String ENABLED_PAYMENT_METHODS = '';
+
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
+        UTIL_Http_TEST.CalloutMock calloutMock = PS_GatewayService_TEST.getPopulatedGatewaysByMerchantSuccessMock(
+                GATEWAY_ID, GATEWAY_ALIAS, VENDOR_NAME, ENABLED_PAYMENT_METHODS);
+
+        Test.startTest();
+        GE_Template.Template template0 = UTIL_UnitTestData_TEST.createSampleGatewayAssignmentTemplate(GATEWAY_ID);
+        String templateJSON0 = JSON.serialize(template0);
+        System.assert(true, templateJSON0.contains('uniqueKey'));
+        GE_GiftEntryController.storeFormTemplate(null,template0.name, template0.description, template0.version, templateJSON0);
+        Test.stopTest();
+
+        GE_Template.Template[] templates = GE_GiftEntryController.getAllFormTemplates();
+        System.assertEquals(1, templates.size(), 'There should be one template');
+        System.assertEquals(GATEWAY_ALIAS, templates[0].elevateSettings.gatewayName,
+                'Gateway alias should be ' + GATEWAY_ALIAS);
+    }
+
+    @IsTest
+    static void shouldReturnFormTemplatesWithNoMatchingGatewayName() {
+        Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
+        giftEntryCustomSetting.Enable_Gateway_Assignment__c = false;
+        UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
+
+        final String GATEWAY_ID = '123-sample-456';
+        final String GATEWAY_ALIAS = 'Gateway Alias';
+        final String VENDOR_NAME = 'Test Vendor Name';
+        final String ENABLED_PAYMENT_METHODS = '';
+
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
+        UTIL_Http_TEST.CalloutMock calloutMock = PS_GatewayService_TEST.getPopulatedGatewaysByMerchantSuccessMock(
+                GATEWAY_ID, GATEWAY_ALIAS, VENDOR_NAME, ENABLED_PAYMENT_METHODS);
+
+        Test.startTest();
+        GE_Template.Template template0 = UTIL_UnitTestData_TEST.createSampleGatewayAssignmentTemplate(GATEWAY_ID);
+        String templateJSON0 = JSON.serialize(template0);
+        System.assert(true, templateJSON0.contains('uniqueKey'));
+        GE_GiftEntryController.storeFormTemplate(null,template0.name, template0.description, template0.version, templateJSON0);
+        Test.stopTest();
+
+        GE_Template.Template[] templates = GE_GiftEntryController.getAllFormTemplates();
+        System.assertEquals(1, templates.size(), 'There should be one template');
+        System.assertEquals(null, templates[0].elevateSettings.gatewayName, 'Gateway name should be null.');
+    }
+
+    @IsTest
+    static void shouldReturnTimeoutExceptionWhenAttemptingToRetrieveGatewayNames() {
+        Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
+        giftEntryCustomSetting.Enable_Gateway_Assignment__c = true;
+        UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
+
+        final String GATEWAY_ID = '123-sample-456';
+        final String TIMEOUT_MESSAGE = 'Read timed out';
+
+        PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
+        UTIL_Http_TEST.CalloutMock calloutMock = PS_GatewayService_TEST.getGatewaysByMerchantErrorMock(TIMEOUT_MESSAGE);
+
+        Test.startTest();
+        GE_Template.Template template0 = UTIL_UnitTestData_TEST.createSampleGatewayAssignmentTemplate(GATEWAY_ID);
+        String templateJSON0 = JSON.serialize(template0);
+        System.assert(true, templateJSON0.contains('uniqueKey'));
+        GE_GiftEntryController.storeFormTemplate(null,template0.name, template0.description, template0.version, templateJSON0);
+        Test.stopTest();
+
+        String errorMessage;
+        try {
+            GE_Template.Template[] templates = GE_GiftEntryController.getAllFormTemplates();
+        }
+        catch (Exception e) {
+            errorMessage = e.getMessage();
+        }
+
+        System.assertEquals(TIMEOUT_MESSAGE, errorMessage, 'Should throw timeout error');
+    }
+
     /***
     * @description Confirming that method deletes Form Template records with given ids.
     */
