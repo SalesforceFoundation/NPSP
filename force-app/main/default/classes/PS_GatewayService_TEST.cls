@@ -42,15 +42,7 @@ public with sharing class PS_GatewayService_TEST {
 
         PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
 
-        String errorResponseBody = new UTIL_Http.ErrorResponseBody()
-            .withError(TIMEOUT_MESSAGE)
-            .getAsJson();
-
-        UTIL_Http_TEST.CalloutMock calloutMock = UTIL_Http_TEST.mockErrorCalloutResponse(
-            UTIL_Http.STATUS_CODE_REQUEST_TIMEOUT,
-            UTIL_Http.STATUS_TIMED_OUT,
-            errorResponseBody
-        );
+        UTIL_Http_TEST.CalloutMock calloutMock = getGatewaysByMerchantErrorMock(TIMEOUT_MESSAGE);
 
         Test.startTest();
         try {
@@ -69,12 +61,7 @@ public with sharing class PS_GatewayService_TEST {
     private static void shouldReturnEmptyGatewayArray() {
         PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
 
-        UTIL_Http_TEST.CalloutMock calloutMock = UTIL_Http_TEST.mockSuccessCalloutResponse(
-'{\n' +
-            '  "gateways": [\n' +
-            '  ]\n' +
-            '}'
-        );
+        UTIL_Http_TEST.CalloutMock calloutMock = getEmptyGatewaysByMerchantSuccessMock();
 
         Test.startTest();
         PS_GatewayService gatewayService = new PS_GatewayService();
@@ -91,47 +78,15 @@ public with sharing class PS_GatewayService_TEST {
 
     @IsTest
     private static void shouldReturnValidTemplateSettings() {
+        final String GATEWAY_ID = 'a206b228-27c8-4fed-8699-6b0525902b94';
         final String GATEWAY_ALIAS = 'Gateway Alias';
         final String VENDOR_NAME = 'Test Vendor Name';
         final String ENABLED_PAYMENT_METHODS = '';
 
         PS_IntegrationServiceConfig_TEST.enableElevateIntegrationService();
 
-        UTIL_Http_TEST.CalloutMock calloutMock = UTIL_Http_TEST.mockSuccessCalloutResponse(
-'{\n' +
-            '  "gateways": [\n' +
-            '    {\n' +
-            '      "id": "a206b228-27c8-4fed-8699-6b0525902b94",\n' +
-            '      "merchantId": "fcdaee39-d8e9-4197-80da-0b2d4182d7c4",\n' +
-            '      "createdAt": "2022-07-27T02:31:43.144Z",\n' +
-            '      "type": "STRIPE_CONNECT",\n' +
-            '      "alias": "' + GATEWAY_ALIAS + '",\n' +
-            '      "settings": {\n' +
-                    ENABLED_PAYMENT_METHODS + '\n' +
-            '      },\n' +
-            '      "vendorName": "Stripe Connect",\n' +
-            '      "vendorType": "STRIPE_CONNECT",\n' +
-            '      "version": 1,\n' +
-            '      "tenantId": "99"\n' +
-            '    },\n' +
-            '    {\n' +
-            '      "id": "8970570c-b731-466f-9282-8ee749e40ad0",\n' +
-            '      "merchantId": "fcdaee39-d8e9-4197-80da-0b2d4182d7c4",\n' +
-            '      "createdAt": "2022-07-27T02:30:03.399Z",\n' +
-            '      "type": "STRIPE_CONNECT_TEST",\n' +
-            '      "settings": {\n' +
-            '        "enabledPaymentMethods": [\n' +
-            '          "CARD"\n' +
-            '        ]\n' +
-            '      },\n' +
-            '      "vendorName": "' + VENDOR_NAME + '",\n' +
-            '      "vendorType": "test",\n' +
-            '      "version": 1,\n' +
-            '      "tenantId": "99"\n' +
-            '    }\n' +
-            '  ]\n' +
-            '}'
-        );
+        UTIL_Http_TEST.CalloutMock calloutMock = getPopulatedGatewaysByMerchantSuccessMock(
+                GATEWAY_ID, GATEWAY_ALIAS, VENDOR_NAME, ENABLED_PAYMENT_METHODS);
 
         Test.startTest();
         PS_GatewayService gatewayService = new PS_GatewayService();
@@ -156,5 +111,75 @@ public with sharing class PS_GatewayService_TEST {
                 'ACH should not be enabled');
         System.assertEquals(true, templateSettings[1].isCreditCardEnabled,
                 'Credit Card should be enabled');
+    }
+
+    public static UTIL_Http_TEST.CalloutMock getGatewaysByMerchantErrorMock(String errorMessage) {
+        String errorResponseBody = new UTIL_Http.ErrorResponseBody()
+                .withError(errorMessage)
+                .getAsJson();
+
+        UTIL_Http_TEST.CalloutMock calloutMock = UTIL_Http_TEST.mockErrorCalloutResponse(
+                UTIL_Http.STATUS_CODE_REQUEST_TIMEOUT,
+                UTIL_Http.STATUS_TIMED_OUT,
+                errorResponseBody
+        );
+
+        return calloutMock;
+    }
+
+    public static UTIL_Http_TEST.CalloutMock getEmptyGatewaysByMerchantSuccessMock() {
+        UTIL_Http_TEST.CalloutMock calloutMock = UTIL_Http_TEST.mockSuccessCalloutResponse(
+                '{\n' +
+                        '  "gateways": [\n' +
+                        '  ]\n' +
+                        '}'
+        );
+
+        return calloutMock;
+    }
+
+    public static UTIL_Http_TEST.CalloutMock getPopulatedGatewaysByMerchantSuccessMock(
+            String gatewayId,
+            String gatewayAlias,
+            String vendorName,
+            String enabledPaymentMethods
+    ) {
+        UTIL_Http_TEST.CalloutMock calloutMock = UTIL_Http_TEST.mockSuccessCalloutResponse(
+                '{\n' +
+                        '  "gateways": [\n' +
+                        '    {\n' +
+                        '      "id": "' + gatewayId + '",\n' +
+                        '      "merchantId": "fcdaee39-d8e9-4197-80da-0b2d4182d7c4",\n' +
+                        '      "createdAt": "2022-07-27T02:31:43.144Z",\n' +
+                        '      "type": "STRIPE_CONNECT",\n' +
+                        '      "alias": "' + gatewayAlias + '",\n' +
+                        '      "settings": {\n' +
+                        enabledPaymentMethods + '\n' +
+                        '      },\n' +
+                        '      "vendorName": "Stripe Connect",\n' +
+                        '      "vendorType": "STRIPE_CONNECT",\n' +
+                        '      "version": 1,\n' +
+                        '      "tenantId": "99"\n' +
+                        '    },\n' +
+                        '    {\n' +
+                        '      "id": "8970570c-b731-466f-9282-8ee749e40ad0",\n' +
+                        '      "merchantId": "fcdaee39-d8e9-4197-80da-0b2d4182d7c4",\n' +
+                        '      "createdAt": "2022-07-27T02:30:03.399Z",\n' +
+                        '      "type": "STRIPE_CONNECT_TEST",\n' +
+                        '      "settings": {\n' +
+                        '        "enabledPaymentMethods": [\n' +
+                        '          "CARD"\n' +
+                        '        ]\n' +
+                        '      },\n' +
+                        '      "vendorName": "' + vendorName + '",\n' +
+                        '      "vendorType": "test",\n' +
+                        '      "version": 1,\n' +
+                        '      "tenantId": "99"\n' +
+                        '    }\n' +
+                        '  ]\n' +
+                        '}'
+        );
+
+        return calloutMock;
     }
 }
