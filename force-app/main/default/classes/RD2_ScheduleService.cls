@@ -1058,7 +1058,7 @@ public without sharing class RD2_ScheduleService {
         private Boolean shouldEditPause (List<RecurringDonationSchedule__c> donationSchedules) {
             Boolean shouldEdit = false;
             for (RecurringDonationSchedule__c schedule : donationSchedules) {
-                if (schedule.IsPause__c) {
+                if (schedule.IsPause__c && schedule.EndDate__c >= System.today()) {
                     shouldEdit = true;
                     break;
                 }
