@@ -38,17 +38,17 @@
 public without sharing class ElevateBatchCapturer implements Queueable, Database.AllowsCallouts {
 
     private Id giftBatchId;
-    @TestVisible private queueableElevateBatches queueableElevateBatches;
+    @TestVisible private QueueableElevateBatches queueableElevateBatches;
     @TestVisible private Map<String, String> failReasonByElevateBatchId = new Map<String, String>();
     @TestVisible private GiftBatchService giftBatchService = new GiftBatchService();
     @TestVisible private ElevateBatchService elevateBatchService = new ElevateBatchService();
 
     public ElevateBatchCapturer(Id batchId, Set<String> elevateBatchIds) {
         this.giftBatchId = batchId;
-        queueableElevateBatches = new queueableElevateBatches(elevateBatchIds);
+        queueableElevateBatches = new QueueableElevateBatches(elevateBatchIds);
     }
 
-    public ElevateBatchCapturer(Id batchId, queueableElevateBatches queueableElevateBatches) {
+    public ElevateBatchCapturer(Id batchId, QueueableElevateBatches queueableElevateBatches) {
         this.giftBatchId = batchId;
         this.queueableElevateBatches = queueableElevateBatches;
     }
@@ -90,13 +90,13 @@ public without sharing class ElevateBatchCapturer implements Queueable, Database
         }
     }
 
-    private class queueableElevateBatches {
+    private class QueueableElevateBatches {
         private List<String> elevateBatchIds;
         private List<List<String>> partitionedElevateBatchIds;
         private final Integer MAX_COUNT = 50;
         private Integer currentPartitionIndex = 0;
 
-        public queueableElevateBatches(Set<String> elevateBatchIds) {
+        public QueueableElevateBatches(Set<String> elevateBatchIds) {
             this.elevateBatchIds = new List<String>();
             this.elevateBatchIds.addAll(elevateBatchIds);
             partitionedElevateBatchIds = partitionElevateBatchIds(this.elevateBatchIds);

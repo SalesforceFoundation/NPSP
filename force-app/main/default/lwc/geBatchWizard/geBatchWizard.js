@@ -25,9 +25,11 @@ import {
     stripNamespace,
 } from 'c/utilCommon';
 import GeLabelService from 'c/geLabelService';
+import psPaymentGateway from '@salesforce/label/c.psPaymentGateway';
 
 import getAllFormTemplates from '@salesforce/apex/GE_GiftEntryController.getAllFormTemplates';
 import getDonationMatchingValues from '@salesforce/apex/GE_GiftEntryController.getDonationMatchingValues';
+import getGatewayAssignmentSettingsWithDefaultGatewayName from '@salesforce/apex/GE_GiftEntryController.getGatewayAssignmentSettingsWithDefaultGatewayName';
 
 import DATA_IMPORT_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
 import DATA_IMPORT_BATCH_ID_INFO from '@salesforce/schema/DataImportBatch__c.Id';
@@ -73,6 +75,8 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     templatesById = {};
     templateOptions;
     isLoaded = false;
+    gatewayName;
+    gatewaySettings = {};
 
     headers = {
         0: this.CUSTOM_LABELS.geHeaderBatchSelectTemplate,
@@ -85,6 +89,15 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         second: 1,
         third: 2
     }
+
+    _allowFirstInstallment = false;
+    _allowFirstInstallmentDisabled;
+    _allowRecurringDonations = false;
+
+    installmentCheckboxMetadata = Object.freeze({
+        objectApiName : 'AllowFirstInstallment__o',
+        fieldApiName : 'AllowFirstInstallment__f'
+    });
 
     get allowRecurringDonations() {
         return this
@@ -100,6 +113,38 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
 
     get canAllowRecurringDonations() {
         return Settings.canMakeGiftsRecurring();
+    }
+
+    handleAllowRecurringDonationsOnChange(event) {
+        const isChecked = event.detail.value
+        this._allowRecurringDonations = isChecked;
+        if (!isChecked) {
+            this._allowFirstInstallment = false;
+            this._allowFirstInstallmentDisabled = true;
+        } else {
+            this._allowFirstInstallmentDisabled = false;
+        }
+
+    }
+
+    get allowFirstInstallment () {
+        if (this.isEditMode && this._allowRecurringDonations) {
+            let batchLevelDefaults =
+                JSON.parse(this.dataImportBatchRecord.fields[DATA_IMPORT_BATCH_DEFAULTS_INFO.fieldApiName].value);
+            return batchLevelDefaults['AllowFirstInstallment__f'] ? 
+                batchLevelDefaults['AllowFirstInstallment__f'].value : 
+                false;
+        }
+
+        return this._allowFirstInstallment;
+    }
+
+    handleAllowFirstInstallmentOnChange(event) {
+        this._allowFirstInstallment = event.detail.value;
+    }
+
+    get allowFirstInstallmentDisabled() {
+        return this._allowFirstInstallmentDisabled;
     }
 
     get showBackButton() {
@@ -221,8 +266,12 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
                 });
         }
     }
-
     setFormFieldsBatchLevelDefaults() {
+        this._allowRecurringDonations =
+            this.dataImportBatchRecord
+            ?.fields[DATA_IMPORT_BATCH_ALLOW_RECURRING_DONATIONS.fieldApiName]
+            ?.value;
+
         let batchLevelDefaults =
             JSON.parse(this.dataImportBatchRecord.fields[DATA_IMPORT_BATCH_DEFAULTS_INFO.fieldApiName].value);
 
@@ -274,11 +323,18 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
                 await GeFormService.getFieldMappings();
             }
 
+            if (Settings.isElevateCustomer()) {
+                this.gatewaySettings = JSON.parse(await getGatewayAssignmentSettingsWithDefaultGatewayName());
+            }
+
             if (!this.recordId) {
                 this.templates = await getAllFormTemplates();
                 this.templates = this.templates.sort();
                 this.builderTemplateComboboxOptions(this.templates);
                 this.isLoading = false;
+            }
+            if (!this.isEditMode) {
+                this._allowFirstInstallmentDisabled = true;
             }
         } catch (error) {
             handleError(error);
@@ -316,6 +372,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
 
     handleTemplateChange(event) {
         this.selectedTemplateId = event.detail.value;
+        this.gatewayName = this.selectedTemplate.elevateSettings?.gatewayName;
         this.selectedBatchHeaderFields = [];
 
         this.selectedBatchHeaderFields = addKeyToCollectionItems(this.selectedTemplate.batchHeaderFields);
@@ -512,6 +569,14 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     resetValidations() {
         this.hasInvalidBatchFields = false;
         this.missingBatchHeaderFieldLabels = [];
+    }
+
+    get gatewayNameMessage() {
+        if (this.gatewaySettings?.gatewayAssignmentEnabled && this.selectedTemplateId) {
+            let gatewayName = this.gatewayName ? this.gatewayName : this.gatewaySettings?.defaultGatewayName;
+            return psPaymentGateway + ' ' + gatewayName;
+        }
+        return '';
     }
 
     /*******************************************************************************

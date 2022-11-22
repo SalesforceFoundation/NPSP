@@ -114,19 +114,6 @@
                             </c-util-illustration>
                         </div>
                     </template>
-                    <template if:true={showElevateTransactionWarning}>
-                        <div class="slds-notify slds-notify_alert payment-warn" role="alert">
-                            <span class="slds-assistive-text">{CUSTOM_LABELS.commonWarning}</span>
-                            <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small">
-                                    <lightning-icon
-                                            variant="warning"
-                                            icon-name="utility:warning"
-                                            size="small">
-                                    </lightning-icon>
-                                </span>
-                            <div class="slds-text-heading_small">{elevateTransactionWarning}</div>
-                        </div>
-                    </template>
                     <template if:true={isSingleGiftEntry}>
                         <template if:false={isPermissionError}
                                   for:each={sections}
@@ -143,7 +130,7 @@
                                           horizontal-align='center'
                                           if:false={isPermissionError}>
                             <lightning-layout-item size='12'
-                                                   if:true={showPaymentSaveNotice}>
+                                                   if:true={isWidgetEnabled}>
                                 <p class='slds-align_absolute-center slds-p-top_small'>
                                     {CUSTOM_LABELS.geTextPaymentsSaveNotice}
                                 </p>
@@ -161,7 +148,6 @@
                                                       title={saveActionLabel}
                                                       onclick={handleSave}
                                                       class='slds-m-left_x-small'
-                                                      disabled={isUpdateActionDisabled}
                                                       data-qa-locator={qaLocatorSaveButton}>
                                     </lightning-button>
                                 </div>
@@ -169,20 +155,36 @@
                         </lightning-layout>
                     </template>
                     <template if:false={isSingleGiftEntry}>
-                        <template if:false={hasSchedule}>
-                            <lightning-layout horizontal-align="end">
-                                <lightning-layout-item>
+                        <lightning-layout>
+                            <lightning-layout-item size="10">
+                                <template if:true={shouldShowElevateTransactionWarning}>
+                                    <div class="slds-notify slds-notify_alert payment-warn" role="alert">
+                                        <span class="slds-assistive-text">{CUSTOM_LABELS.commonWarning}</span>
+                                        <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small">
+                                            <lightning-icon
+                                                    variant="warning"
+                                                    icon-name="utility:warning"
+                                                    size="small">
+                                            </lightning-icon>
+                                        </span>
+                                        <div class="slds-text-heading_small" data-id="elevateTrnxWarning">{elevateTransactionWarning}</div>
+                                    </div>
+                                </template>
+                            </lightning-layout-item>
+                            <lightning-layout-item class="slds-text-align_right" size="2">
+                                <template if:false={hasSchedule}>
                                     <lightning-button
                                         if:true={isRecurringGiftsEnabled}
                                         icon-name="utility:refresh"
                                         label={CUSTOM_LABELS.geMakeRecurring}
                                         data-id='recurringButton'
                                         onclick={handleMakeGiftRecurring}
+                                        disabled={isMakeRecurringButtonDisabled}
                                         >
                                     </lightning-button>
-                                </lightning-layout-item>
-                            </lightning-layout>
-                        </template>
+                                </template>
+                            </lightning-layout-item>
+                        </lightning-layout>
                         <c-util-expandable-section class='slds-card slds-card_extension slds-m-bottom_large'
                                                    id={expandableContainerId}
                                                    is-collapsed={isFormCollapsed}
@@ -224,7 +226,7 @@
                                               horizontal-align='center'
                                               if:false={isPermissionError}>
                                 <lightning-layout-item size='12'
-                                                       if:true={showPaymentSaveNotice}>
+                                                       if:true={isWidgetEnabled}>
                                     <p class='slds-align_absolute-center slds-p-top_small'>
                                         {CUSTOM_LABELS.geTextPaymentsSaveNotice}
                                     </p>
@@ -243,7 +245,8 @@
                                                           onclick={handleSave}
                                                           class='slds-m-left_x-small'
                                                           disabled={isUpdateActionDisabled}
-                                                          data-qa-locator={qaLocatorSaveButton}>
+                                                          data-qa-locator={qaLocatorSaveButton}
+                                                          data-id="bgeSaveButton">
                                         </lightning-button>
                                     </div>
                                 </lightning-layout-item>

@@ -107,7 +107,7 @@ private with sharing class PS_Request_TEST {
     }
 
     /**
-    * @description Verifies Cancel Commitment HttpRequest
+    * @description Verifies Get Commitment HttpRequest
     */
     @isTest
     private static void shouldCreateHttpRequestWhenCommitmentEndpointWithId() {
@@ -116,7 +116,7 @@ private with sharing class PS_Request_TEST {
         Test.startTest();
         HttpRequest request = new PS_Request.Builder()
             .withMethod(UTIL_Http.Method.GET)
-            .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT)
+            .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT_GET)
             .withCommitmentId(COMMITMENT_ID)
             .build();
         Test.stopTest();
@@ -144,6 +144,8 @@ private with sharing class PS_Request_TEST {
 
             } else if (endpoint == PS_Request.ElevateEndpoint.COMMITMENT
                 || endpoint == PS_Request.ElevateEndpoint.COMMITMENT_CANCEL
+                || endpoint == PS_Request.ElevateEndpoint.COMMITMENT_GET
+                || endpoint == PS_Request.ElevateEndpoint.COMMITMENT_PAUSE
                 || endpoint == PS_Request.ElevateEndpoint.COMMITMENT_UPDATE_BULK) {
 
                 roles = PS_Request.ROLE_PAYMENT_COMMITMENTS;
@@ -155,6 +157,10 @@ private with sharing class PS_Request_TEST {
                 roles = PS_Request.ROLE_PAYMENT_BATCH;
             } else if (endpoint == PS_Request.ElevateEndpoint.REFUND) {
                 roles = PS_Request.ROLE_PAYMENT_REFUND;
+            } else if (endpoint == PS_Request.ElevateEndpoint.MERCHANTS) {
+                roles = PS_Request.ROLE_PAYMENT_MERCHANTS;
+            } else if (endpoint == PS_Request.ElevateEndpoint.TRANSACTIONS) {
+                roles = PS_Request.ROLE_PAYMENT_TRANSACTIONS;
             }
 
             String jwtPayload = new PS_Request.JWTPayload(sfdoId, endpoint).getAsString();

@@ -32,6 +32,7 @@ const inputTypeByDescribeType = {
 const numberFormatterByDescribeType = {
     'PERCENT': 'percent-fixed',
     'CURRENCY': 'currency',
+    'DOUBLE': 'decimal',
     'DECIMAL': 'decimal'
 };
 

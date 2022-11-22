@@ -55,7 +55,8 @@ private class GiftEntryProcessorQueue_TEST {
             Recurring_Donation_Effective_Date__c = Date.today(),
             Recurring_Donation_Recurring_Type__c = 'Open',
             Recurring_Donation_Day_of_Month__c = '5',
-            Donation_Amount__c = 25.00,
+            Recurring_Donation_Amount__c = 25.00,
+            Recurring_Donation_Date_Established__c = Date.today(),
             Donation_Date__c = Date.today(),
             NPSP_Data_Import_Batch__c = giftBatch.Id,
             Contact1_Lastname__c = 'Dummy Last Name',
@@ -63,7 +64,7 @@ private class GiftEntryProcessorQueue_TEST {
         ));
         insert giftsToInsert;
 
-        GiftBatchForQueueable giftBatchForProcessing = new GiftBatchForQueueable(new GiftBatchId(giftBatch.Id));
+        GiftBatchForQueueable giftBatchForProcessing = new GiftBatchForQueueable(new GiftBatchId(giftBatch.Id), new GiftBatchSelector());
         giftBatchForProcessing.chunkGiftsThatCanBeProcessed();
         GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(giftBatchForProcessing);
 
@@ -121,7 +122,7 @@ private class GiftEntryProcessorQueue_TEST {
         giftsToInsert.addAll(buildAuthorizedGifts(10, BDI_DataImport_API.bdiDryRunValidated, giftBatch.Id, false));
         insert giftsToInsert;
 
-        GiftBatchForQueueable giftBatchForProcessing = new GiftBatchForQueueable(new GiftBatchId(giftBatch.Id));
+        GiftBatchForQueueable giftBatchForProcessing = new GiftBatchForQueueable(new GiftBatchId(giftBatch.Id), new GiftBatchSelector());
         giftBatchForProcessing.chunkGiftsThatCanBeProcessed();
         GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(giftBatchForProcessing);
         GiftBatchServiceMock mockService = new GiftBatchServiceMock();
@@ -150,7 +151,7 @@ private class GiftEntryProcessorQueue_TEST {
         giftsToInsert.addAll(buildGifts(75, BDI_DataImport_API.bdiDryRunValidated, giftBatch.Id, false));
         insert giftsToInsert;
 
-        GiftBatchForQueueable giftBatchForProcessing = new GiftBatchForQueueable(new GiftBatchId(giftBatch.Id));
+        GiftBatchForQueueable giftBatchForProcessing = new GiftBatchForQueueable(new GiftBatchId(giftBatch.Id), new GiftBatchSelector());
         giftBatchForProcessing.chunkGiftsThatCanBeProcessed();
         GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(giftBatchForProcessing);
         GiftBatchServiceMock mockService = new GiftBatchServiceMock();
@@ -178,7 +179,7 @@ private class GiftEntryProcessorQueue_TEST {
         giftsToInsert.addAll(buildGifts(75, BDI_DataImport_API.bdiDryRunValidated, giftBatch.Id, false));
         insert giftsToInsert;
 
-        GiftBatchForQueueable giftBatchForProcessing = new GiftBatchForQueueable(new GiftBatchId(giftBatch.Id));
+        GiftBatchForQueueable giftBatchForProcessing = new GiftBatchForQueueable(new GiftBatchId(giftBatch.Id), new GiftBatchSelector());
         giftBatchForProcessing.chunkGiftsThatCanBeProcessed();
         GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(giftBatchForProcessing);
         GiftBatchServiceMock mockService = new GiftBatchServiceMock();

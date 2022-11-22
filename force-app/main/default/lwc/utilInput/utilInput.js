@@ -46,6 +46,7 @@ export default class utilInput extends LightningElement {
     @api value;
     @api widgetName;
     @api picklistOptionsOverride;
+    @api disabled;
 
     @track isRichTextValid = true;
     @track defaultRecordTypeId;
@@ -182,6 +183,9 @@ export default class utilInput extends LightningElement {
 
     get isRequired() {
         return this.required === YES || this.required === true;
+    }
+    get isDisabled() {
+        return this.disabled;
     }
 
     get lookupFormElementClass() {

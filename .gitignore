@@ -30,6 +30,7 @@ Referenced Packages
 *.sublime-project
 *.sublime-workspace
 **/.sfdx/
+**/.sf/
 **/.vscode/
 **/.idea/
 **/.mypy_cache/
@@ -42,7 +43,8 @@ robot/Cumulus/results/
 datasets/dev_org/test_data.db
 *.db
 .cci
-
+.sfdx
+.sf
 # LWC
 force-app/main/default/lwc/.eslintrc.json
 /node_modules

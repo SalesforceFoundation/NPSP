@@ -42,7 +42,7 @@
 1. Open a third-party address verification account. (Some are free for nonprofits.)&lt;br/&gt;
 2. In your address verification service, create the required authentication ID and/or token.&lt;br/&gt;
 3. Return to this settings page, click the Edit button above, and paste the ID and/or token into the appropriate fields.&lt;br/&gt;
-4. Complete the remaining fields and click Save. The help text for each field provides more information. If you still need more help, see the &lt;a href=&quot;https://powerofus.force.com/NPSP_Address_Verification&quot;&gt;NPSP documentation&lt;/a&gt;.</label>
+4. Complete the remaining fields and click Save. The help text for each field provides more information.</label>
     </customLabels>
     <customLabels>
         <name>Addr_Settings_Intro_Title</name>
@@ -766,7 +766,7 @@
     </customLabels>
     <customLabels>
         <name>ErrorEmailMessage</name>
-        <label>Salesforce encountered these NPSP errors. If you&apos;re unsure how to resolve the errors, post a message in the Nonprofit Success Pack group: https://powerofus.force.com/HUB_NPSP_Group</label>
+        <label>Salesforce encountered these NPSP errors. If you&apos;re unsure how to resolve the errors, post a message in the Nonprofit Success Pack group: https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE</label>
     </customLabels>
     <customLabels>
         <name>FieldSetRelatedFieldError</name>
@@ -778,7 +778,7 @@
     </customLabels>
     <customLabels>
         <name>InactiveScheduledJobsOwnerErrMsg</name>
-        <label>There are Scheduled Jobs owned by an inactive User. Review your Scheduled Jobs and ensure the owner of each one is an active User. See Edit or Reschedule NPSP Scheduled Jobs for more information: https://powerofus.force.com/NPSP_Scheduled_Jobs</label>
+        <label>There are Scheduled Jobs owned by an inactive User. Review your Scheduled Jobs and ensure the owner of each one is an active User.</label>
     </customLabels>
     <customLabels>
         <name>NameRequired</name>
@@ -1064,7 +1064,7 @@
         <name>RD2_EnablementIntro</name>
         <label>Greetings! Enhanced Recurring Donations is our redesigned and improved Recurring Donations feature for the Nonprofit Success Pack (NPSP). A big thanks to our community members who offered their feedback and helped make Enhanced Recurring Donations possible.
         &lt;br/&gt;&lt;br/&gt;Since there&apos;s already a Recurring Donations feature in NPSP, you&apos;ll need to perform several upgrade tasks and move your existing data to the Enhanced Recurring Donations model. We&apos;ve outlined the required tasks for you below.
-        &lt;br/&gt;&lt;br/&gt;You&apos;ll probably have questions along the way and we want you to be fully prepared at each step. Refer to the &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;Enhanced Recurring Donations documentation&lt;/a&gt; as you work through the upgrade process.</label>
+        &lt;br/&gt;&lt;br/&gt;You&apos;ll probably have questions along the way and we want you to be fully prepared at each step.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMetaDeployConfirm</name>
@@ -1112,7 +1112,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationErrorMessage</name>
-        <label>Your migration run has errors, these will need to be fixed to complete a successful Migration. See the errors by going to NPSP Settings &gt; System Tools &gt; Error Logs. Consult the &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt; for help. Fix the errors then return and try again.</label>
+        <label>Your migration run has errors, these will need to be fixed to complete a successful Migration. See the errors by going to NPSP Settings &gt; System Tools &gt; Error Logs.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationIntro</name>
@@ -1153,8 +1153,7 @@
     <customLabels>
         <name>RD2_EnablementPrepTasks</name>
         <label>&lt;ul&gt;&lt;li&gt;Disable workflows, processes, validation rules and triggers on the Recurring Donations, Opportunity, and Payment objects.&lt;/li&gt;
-&lt;li&gt;Backup your database, including all Recurring Donations and their related records.&lt;/li&gt;
-&lt;li&gt;Read the Enhanced Recurring Donations &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt;.&lt;/li&gt;&lt;/ul&gt;</label>
+&lt;li&gt;Backup your database, including all Recurring Donations and their related records.&lt;/li&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementPrepTitle</name>
@@ -1163,8 +1162,7 @@
     <customLabels>
         <name>RD2_EnablementSimpleIntro</name>
         <label>Enhanced Recurring Donations makes Recurring Donations more flexible and easier to manage than ever before. To enable Enhanced Recurring Donations, follow the steps below. You must complete ALL the steps to fully enable Enhanced Recurring Donations.
-        &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Because you have no Recurring Donation records, you don&apos;t need to validate or migrate any data.&lt;/b&gt;
-        &lt;br/&gt;&lt;br/&gt;For more information, read the &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;Enhanced Recurring Donations documentation&lt;/a&gt;.</label>
+            &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Because you have no Recurring Donation records, you don&apos;t need to validate or migrate any data.&lt;/b&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EndDateMustBeLaterThanCloseWonOpp</name>
@@ -2103,11 +2101,11 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>As of October 1, 2020, Batch Data Entry is no longer supported. Most capabilities have been replaced with newer features in NPSP. If you have any in-progress batches, you can still access those records, but you can&apos;t process them using Batch Data Entry. Contact support if you need to access in-progress batches. &lt;br/&gt; You may want to explore Gift Entry as an alternative to Batch Data Entry. Learn more about Gift Entry in the &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</label>
+        <label>As of October 1, 2020, Batch Data Entry is no longer supported. Most capabilities have been replaced with newer features in NPSP. If you have any in-progress batches, you can still access those records, but you can&apos;t process them using Batch Data Entry. Contact support if you need to access in-progress batches. &lt;br/&gt; You may want to explore Gift Entry as an alternative to Batch Data Entry.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
-        <label>On October 1, 2020, Batch Data Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Data Entry. To ensure a smooth transition, enable and use Gift Entry in advance of October 1st. Learn more about Gift Entry in the &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</label>
+        <label>On October 1, 2020, Batch Data Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Data Entry. To ensure a smooth transition, enable and use Gift Entry in advance of October 1st.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
@@ -3008,7 +3006,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>On July 13, 2021, legacy Batch Gift Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Gift Entry. To ensure a smooth transition, enable and use the newer Gift Entry in advance of July 13th. Learn more about Gift Entry in the &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</label>
+        <label>On July 13, 2021, legacy Batch Gift Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Gift Entry. To ensure a smooth transition, enable and use the newer Gift Entry in advance of July 13th.</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -3023,8 +3021,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
         <label>As of July 13, 2021, Batch Gift Entry is no longer supported and has been replaced by Gift Entry.
             If you have any in-progress batches, you can still access those records, but you can&apos;t process them using Batch Gift Entry.
             Contact support if you need to access in-progress batches.
-            You may want to explore Gift Entry as an alternative to Batch Gift Entry.
-            Learn more about Gift Entry in the &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</label>
+            You may want to explore Gift Entry as an alternative to Batch Gift Entry.</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -3546,7 +3543,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>See all duplicate Contacts found using matching rules. &lt;a href=&quot;https://powerofus.force.com/IP_Contacts&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; Tell Me More &lt;/b&gt;&lt;/a&gt;</label>
+        <label>See all duplicate Contacts found using matching rules. &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Merge_Contacts.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; Tell Me More &lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>
@@ -4993,10 +4990,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <label>One or more card authorisations expired. To ensure these payments are charged when processing the batch, reenter the payment information for donations with an Elevate Payment Status of Expired Authorisation.</label>
     </customLabels>
     <customLabels>
-        <name>gePaymentProcessedWarning</name>
-        <label>{0} successfully processed the payment. Changing the donor, date, amount, or payment method will result in inconsistent records for the same transaction in {0} and NPSP.</label>
-    </customLabels>
-    <customLabels>
         <name>gePaymentProcessError</name>
         <label>There was an error processing the payment. Please review the error and try again. Alternatively,
             select &quot;Don&apos;t enter payment information.&quot; to enter a donation without processing a payment. {0} errors:
@@ -5748,7 +5741,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>healthSolutionNothingScheduled</name>
-        <label>To reschedule the default NPSP jobs, go to NPSP Settings | Bulk Data Processes | Process Scheduler. Click Edit. Make sure Don&apos;t Enable Auto Schedule Default NPSP Job is not selected. Click Save. See Edit or Reschedule NPSP Jobs for more information: https://powerofus.force.com/NPSP_Scheduled_Jobs</label>
+        <label>To reschedule the default NPSP jobs, go to NPSP Settings | Bulk Data Processes | Process Scheduler. Click Edit. Make sure Don&apos;t Enable Auto Schedule Default NPSP Job is not selected. Click Save.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionOCRDupPrimary</name>
@@ -5784,7 +5777,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>healthSolutionTriggerHandlerMismatch</name>
-        <label>Changes to triggers can affect core NPSP functionality in unexpected ways, and should be thoroughly tested before deployment to production. If these changes were unintentional, you should reset your Trigger Handlers to match the default NPSP configuration. See Manage Trigger Handlers for more information: https://powerofus.force.com/NPSP_Manage_Trigger_Handlers</label>
+        <label>Changes to triggers can affect core NPSP functionality in unexpected ways, and should be thoroughly tested before deployment to production. If these changes were unintentional, you should reset your Trigger Handlers to match the default NPSP configuration.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionUnsupportedPicklistValue</name>
@@ -6245,10 +6238,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     <customLabels>
         <name>pmtRefundAmount</name>
         <label>Refund Amount</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundPaymentMessage</name>
-        <label>Refund the following payment:</label>
     </customLabels>
     <customLabels>
         <name>pmtRefundProcessing</name>
@@ -6846,15 +6835,11 @@ Selecting Don&apos;t Auto Schedule Default NPSP Jobs tells NPSP not to check for
         <label>You can disable Advanced Mapping and go back to Help Text mapping, but any changes you made with Advanced Mapping will be lost.</label>
     </customLabels>
     <customLabels>
-        <name>stgHelpAdvancedMapping3</name>
-        <label>Find complete Advanced Mapping setup documentation &lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.</label>
-    </customLabels>
-    <customLabels>
         <name>stgHelpAdvancedMapping4</name>
         <label>&lt;b&gt;This message won&apos;t be displayed if you leave this page! Take a screenshot of this page or copy the information in the table below to track the Help Text mappings you need correct. &lt;/b&gt;
             &lt;br/&gt;
             &lt;br/&gt;
-            We couldn&apos;t convert some of your existing Help Text mappings because they&apos;re invalid. &lt;a href=&quot;https://powerofus.force.com/NPSP_Troubleshoot_Help_Text&quot; target=&quot;_blank&quot;&gt;Read more about common Help Text mapping issues&lt;/a&gt;. We recommend disabling Advanced Mapping, correcting the invalid Help Text mappings, then re-enabling Advanced Mapping. Alternatively, you could add these mappings when you configure Advanced Mapping on the next screen, but these additional mappings will revert to the original invalid Help Text if you disable Advanced Mapping.</label>
+            We couldn&apos;t convert some of your existing Help Text mappings because they&apos;re invalid. We recommend disabling Advanced Mapping, correcting the invalid Help Text mappings, then re-enabling Advanced Mapping. Alternatively, you could add these mappings when you configure Advanced Mapping on the next screen, but these additional mappings will revert to the original invalid Help Text if you disable Advanced Mapping.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMappingInvalidHelpText</name>
@@ -6997,12 +6982,8 @@ Before starting this process, we recommend disabling the following when they aff
 Once the process is 100% complete, you can safely leave or refresh this page.</label>
     </customLabels>
     <customLabels>
-        <name>stgHelpCustomizableRollupsEnable1</name>
-        <label>You can find complete Customisable Rollups documentation &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.</label>
-    </customLabels>
-    <customLabels>
         <name>stgHelpCustomizableRollupsEnable2</name>
-        <label>When you enable Customisable Rollups for the first time, we will automatically convert your existing rollups and the 87 out-of-box NPSP rollups into Customisable Rollups. For complete details, see &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;this doc&lt;/a&gt;.
+        <label>When you enable Customisable Rollups for the first time, we will automatically convert your existing rollups and the 87 out-of-box NPSP rollups into Customisable Rollups.
             &lt;br/&gt;&lt;br/&gt;
             You can disable and go back to legacy rollups, but any new rollups or rollup/filter changes made in Customisable Rollups won&apos;t be applied to your legacy rollup settings.</label>
     </customLabels>
@@ -7085,10 +7066,6 @@ Once the process is 100% complete, you can safely leave or refresh this page.</l
         <label>When selected, NPSP automatically creates Contact Roles on Individual gifts for Household members of the Opportunity&apos;s Primary Contact.</label>
     </customLabels>
     <customLabels>
-        <name>stgHelpHHObjectOverview</name>
-        <label>To learn more about the recommended Household Account model, see the &lt;a href=&quot;https://powerofus.force.com/NPSP_Account_Model&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</label>
-    </customLabels>
-    <customLabels>
         <name>stgHelpHHRules</name>
         <label>Specifies for which Contacts Salesforce will automatically create separate Household objects. (Applies to One-to-One or Individual Account Models only.)</label>
     </customLabels>
@@ -7106,7 +7083,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</l
     </customLabels>
     <customLabels>
         <name>stgHelpLeadConvert</name>
-        <label>Specifies the default behaviour for Opportunity creation when you convert a Lead to a Contact. If left unselected, Salesforce will NOT automatically create an Opportunity when you convert Leads to Contacts. For more information, see the &lt;a href=&quot;https://powerofus.force.com/NPSP_Leads&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</label>
+        <label>Specifies the default behaviour for Opportunity creation when you convert a Lead to a Contact. If left unselected, Salesforce will NOT automatically create an Opportunity when you convert Leads to Contacts.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpLvlAssignBatch</name>
@@ -7162,7 +7139,7 @@ IMPORTANT: Both of these fields must have the same data type.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCR</name>
-        <label>Soft Credits, Contact Roles, and Matching Gifts relate to each other in important ways. If you&apos;re not familiar with these concepts and how they interact, you should read through the &lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt; before making any adjustments to these settings.</label>
+        <label>Soft Credits, Contact Roles, and Matching Gifts relate to each other in important ways. If you&apos;re not familiar with these concepts and how they interact, you should read through the &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Automated_Soft_Credits.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt; before making any adjustments to these settings.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCRDefaultRole</name>
@@ -7190,7 +7167,7 @@ IMPORTANT: Both of these fields must have the same data type.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingFormat</name>
-        <label>The Opportunity Name format. Choose &quot;other&quot; to create your own. See the &lt;a href=&quot;https://powerofus.force.com/NPSP_Opp_Names&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt; for details.</label>
+        <label>The Opportunity Name format. Choose &quot;other&quot; to create your own.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingRecTypes</name>
@@ -7234,7 +7211,7 @@ IMPORTANT: Both of these fields must have the same data type.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPowerOfUsHub</name>
-        <label>Got questions? Try the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; group for questions about NPSP and the &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; group for questions about Salesforce administration and configuration.&lt;br/&gt;&lt;br/&gt;Keep up with the latest NPSP release notes in the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt; group.</label>
+        <label>Got questions? Try the &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; group for questions about NPSP and the &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; group for questions about Salesforce administration and configuration.&lt;br/&gt;&lt;br/&gt;Keep up with the latest NPSP release notes in the &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;Nonprofit Release Readiness&lt;/a&gt; group.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPrimaryContactBatch</name>
@@ -7374,7 +7351,7 @@ This process may take some time, but you can close this page and the process wil
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalMethod</name>
-        <label>Specifies the method used for generating reciprocal relationships. See the &lt;a href=&quot;https://powerofus.force.com/NPSP_Relationships_Settings&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt; for more information.</label>
+        <label>Specifies the method used for generating reciprocal relationships.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalName</name>

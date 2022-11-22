@@ -44,64 +44,51 @@ public with sharing class ElevateAuthorizedGift_TEST {
     private static final String DUMMY_EXPIRATION_MONTH = String.valueOf(DUMMY_DATE.addYears(1).month());
 
 
-    @isTest
+    @IsTest
     private static void valueQueriesShouldReturnCorrectValues() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
-        ElevateAuthorizedGift authorizedGift;
+        ElevateBatchItem batchItem;
 
         Test.startTest();
-            authorizedGift = new ElevateAuthorizedGift(createTokenizedGift(),
-                    createAuthorizedGiftResponse());
+            batchItem = new ElevateBatchItem(createAuthorizedGiftResponse());
         Test.stopTest();
 
-        System.assertEquals(DUMMY_AMOUNT, authorizedGift.tokenizedGift.amount());
-        System.assertEquals(DUMMY_TOKEN, authorizedGift.tokenizedGift.token());
-        System.assertEquals(DUMMY_LAST_NAME, authorizedGift.tokenizedGift.lastName());
-        System.assertEquals(DUMMY_FIRST_NAME, authorizedGift.tokenizedGift.firstName());
-        System.assertEquals(DUMMY_PAYMENT_TYPE, authorizedGift.paymentMethod());
-        System.assertEquals(DUMMY_ID, authorizedGift.paymentId());
-        System.assertEquals(DUMMY_ID, authorizedGift.gatewayTransactionId());
-        System.assertEquals(DUMMY_ID, authorizedGift.originalTransactionId());
-        System.assertEquals(DUMMY_ID, authorizedGift.elevateBatchId());
-        System.assertEquals(System.today().addDays(1), authorizedGift.authExpiration());
-        System.assertEquals(DUMMY_STATUS, authorizedGift.status());
-        System.assertEquals(DUMMY_EXPIRATION_YEAR, authorizedGift.cardExpirationYear());
-        System.assertEquals(DUMMY_EXPIRATION_MONTH, authorizedGift.cardExpirationMonth());
-        System.assertEquals(DUMMY_ID, authorizedGift.gatewayId());
-        System.assertEquals(DUMMY_ID, authorizedGift.gatewayTransactionId());
-        System.assertEquals(DUMMY_CARD_LAST_4, authorizedGift.cardLast4());
-        System.assertEquals(DUMMY_DATE, authorizedGift.authorizedAt());
-        System.assertEquals(DUMMY_CARD_NETWORK, authorizedGift.cardNetwork());
-        System.assertEquals(null, authorizedGift.declineReason());
+        System.assertEquals(DUMMY_PAYMENT_TYPE, batchItem.paymentMethod());
+        System.assertEquals(DUMMY_ID, batchItem.id());
+        System.assertEquals(DUMMY_ID, batchItem.gatewayTransactionId());
+        System.assertEquals(DUMMY_ID, batchItem.originalTransactionId());
+        System.assertEquals(DUMMY_ID, batchItem.elevateBatchId());
+        System.assertEquals(System.today().addDays(1), batchItem.authExpiration());
+        System.assertEquals(DUMMY_STATUS, batchItem.status());
+        System.assertEquals(DUMMY_EXPIRATION_YEAR, batchItem.cardExpirationYear());
+        System.assertEquals(DUMMY_EXPIRATION_MONTH, batchItem.cardExpirationMonth());
+        System.assertEquals(DUMMY_ID, batchItem.gatewayId());
+        System.assertEquals(DUMMY_ID, batchItem.gatewayTransactionId());
+        System.assertEquals(DUMMY_CARD_LAST_4, batchItem.cardLast4());
+        System.assertEquals(DUMMY_DATE, batchItem.authorizedAt());
+        System.assertEquals(DUMMY_CARD_NETWORK, batchItem.cardNetwork());
+        System.assertEquals(null, batchItem.declineReason());
     }
 
-    private static ElevateTokenizedGift createTokenizedGift() {
-        ElevateTokenizedGift tokenizedGift = new ElevateTokenizedGift();
-        tokenizedGift.amount = DUMMY_AMOUNT;
-        tokenizedGift.paymentMethodToken = DUMMY_TOKEN;
-        tokenizedGift.lastName = DUMMY_LAST_NAME;
-        tokenizedGift.firstName = DUMMY_FIRST_NAME;
-
-        return tokenizedGift;
-    }
-
-    private static ElevateAuthorizedGiftResponse createAuthorizedGiftResponse() {
-        ElevateAuthorizedGiftResponse authorizedGiftResponse = new ElevateAuthorizedGiftResponse();
-        authorizedGiftResponse.cardData = new ElevateAuthorizedGiftResponse.CardData();
-        authorizedGiftResponse.id = DUMMY_ID;
-        authorizedGiftResponse.authExpiresAt = System.today().addDays(1);
-        authorizedGiftResponse.gatewayTransactionId = DUMMY_ID;
-        authorizedGiftResponse.paymentType = DUMMY_PAYMENT_TYPE;
-        authorizedGiftResponse.originalTransactionId = DUMMY_ID;
-        authorizedGiftResponse.batchId = DUMMY_ID;
-        authorizedGiftResponse.status = ElevateTransactionStatus.AUTHORIZED;
-        authorizedGiftResponse.cardData.expirationYear = String.valueOf(DUMMY_DATE.addYears(1).year());
-        authorizedGiftResponse.cardData.expirationMonth = String.valueOf(DUMMY_DATE.addYears(1).month());
-        authorizedGiftResponse.cardData.last4 = DUMMY_CARD_LAST_4;
-        authorizedGiftResponse.cardData.brand = DUMMY_CARD_NETWORK;
-        authorizedGiftResponse.gatewayId = DUMMY_ID;
-        authorizedGiftResponse.gatewayTransactionId = DUMMY_ID;
-        authorizedGiftResponse.authorizedAt = DUMMY_DATE;
-        return authorizedGiftResponse;
+    private static ElevateBatchItemCreateResponse createAuthorizedGiftResponse() {
+        ElevateBatchItemCreateResponse createBatchItemResponse = new ElevateBatchItemCreateResponse();
+        createBatchItemResponse.batchItemType = ElevateBatchItemType.ONE_TIME;
+        createBatchItemResponse.purchaseResponse = new ElevateBatchItemCreateResponse.PurchaseResponse();
+        createBatchItemResponse.purchaseResponse.cardData = new ElevateBatchItemCreateResponse.CardData();
+        createBatchItemResponse.purchaseResponse.id = DUMMY_ID;
+        createBatchItemResponse.purchaseResponse.authExpiresAt = System.today().addDays(1);
+        createBatchItemResponse.purchaseResponse.gatewayTransactionId = DUMMY_ID;
+        createBatchItemResponse.purchaseResponse.paymentType = DUMMY_PAYMENT_TYPE;
+        createBatchItemResponse.purchaseResponse.originalTransactionId = DUMMY_ID;
+        createBatchItemResponse.purchaseResponse.batchId = DUMMY_ID;
+        createBatchItemResponse.purchaseResponse.status = ElevateTransactionStatus.AUTHORIZED.name();
+        createBatchItemResponse.purchaseResponse.cardData.expirationYear = String.valueOf(DUMMY_DATE.addYears(1).year());
+        createBatchItemResponse.purchaseResponse.cardData.expirationMonth = String.valueOf(DUMMY_DATE.addYears(1).month());
+        createBatchItemResponse.purchaseResponse.cardData.last4 = DUMMY_CARD_LAST_4;
+        createBatchItemResponse.purchaseResponse.cardData.brand = DUMMY_CARD_NETWORK;
+        createBatchItemResponse.purchaseResponse.gatewayId = DUMMY_ID;
+        createBatchItemResponse.purchaseResponse.gatewayTransactionId = DUMMY_ID;
+        createBatchItemResponse.purchaseResponse.authorizedAt = DUMMY_DATE;
+        return createBatchItemResponse;
     }
 }

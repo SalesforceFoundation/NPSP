@@ -214,20 +214,6 @@ describe('c-rd2-pause-form', () => {
 
         });
 
-        it('displays an error when attempting to pause an elevate connected RD', async () => {
-            const controller = new PauseFormTestController(component);
-            getPauseData.mockResolvedValue(JSON.stringify({
-                ...mockPauseData,
-                isElevateRecord: true
-            }));
-            getInstallments.mockResolvedValue(mockGetInstallments);
-            document.body.appendChild(component);
-            await flushPromises();
-
-            expect(controller.blockedReasonValue()).toBe(RD2_ElevateNotSupported);
-
-        });
-
         it('on save, when PauseException encountered, displays error', async () => {
             const controller = new PauseFormTestController(component);
             savePause.mockRejectedValue(mockSavePauseException);
