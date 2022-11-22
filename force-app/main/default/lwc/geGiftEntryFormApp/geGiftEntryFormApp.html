@@ -33,7 +33,7 @@
                     </c-ge-batch-gift-entry-header>
                 </template>
 
-                <template if:true={isBatchProcessing}
+                <template if:true={shouldLoadSpinner}
                           class='spinner-container'>
                     <div class='slds-card'>
                         <lightning-spinner alternative-text={CUSTOM_LABELS.messageLoading}
@@ -67,6 +67,8 @@
                                 ontogglemodal={handleToggleModal}
                                 onnavigate={handleNavigateEvent}
                                 loading-text={loadingText}
+                                save-disabled={isFormSaveDisabled}
+                                is-make-recurring-button-disabled={shouldDisableMakeRecurringButton}
                                 batch-currency-iso-code={batchCurrencyIsoCode}
                                 >
                         </c-ge-form-renderer>

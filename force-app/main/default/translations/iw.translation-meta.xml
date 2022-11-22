@@ -37,7 +37,7 @@
 1. פתח חשבון בשירות חיצוני לאימות כתובות. (חלקם ניתנים בחינם למלכ&quot;רים.)&lt;br/&gt;
 2. בשירות אימות הכתובות, צור את מזהה ו/או אסימון האימות הנדרש.&lt;br/&gt;
 3. חזור לדף זה, לחץ על לחצן העריכה לעיל והדבק את המזהה ו/או האסימון בשדות המתאימים.&lt;br/&gt;
-4. מלא את יתר השדות ולחץ על &apos;שמור&apos;. טקסט העזרה של כל שדה מספק מידע נוסף. לקבלת עזרה נוספת, עיין &lt;a href=&quot;https://powerofus.force.com/NPSP_Address_Verification&quot;&gt;במסמכי התיעוד של NPSP‏&lt;/a&gt;.</label>
+4. מלא את יתר השדות ולחץ על &apos;שמור&apos;</label>
         <name>Addr_Settings_Intro_Body2</name>
     </customLabels>
     <customLabels>
@@ -764,9 +764,8 @@
     <customLabels>
         <label>מערכת Salesforce דיווחה על השגיאות הבאות בזמן ש-NPSP ניסתה לבצע את משימות האצווה שלה, או כאשר לא הייתה לה אפשרות להציג הודעות שגיאה למשתמש באופן ישיר. סביר להניח ש-NPSP ניסתה לעדכן שדות סיכום בחשבונות ואנשי קשר, אך לא הייתה לה אפשרות לשמור רשומות מסוימות. כשל זה עשוי להיגרם עקב גורמים שונים שאינם קשורים ל-NPSP, כגון קוד או כללי התאמה מותאמים אישית.
 
-קרא מאמר זה ב-Power of Us Hub כדי ללמוד כיצד פועלות משימות מתוזמנות אלה: https://powerofus.force.com/NPSP_Scheduled_Jobs
 
-אם אינך בטוח כיצד לפתור שגיאות אלה, פרסם הודעה בקבוצה של &apos;ערכת ההצלחה למלכ&quot;רים&apos; (NPSP) ב-Power of Us Hub‏: https://powerofus.force.com/HUB_NPSP_Group</label>
+אם אינך בטוח כיצד לפתור שגיאות אלה, פרסם הודעה בקבוצה של &apos;ערכת ההצלחה למלכ&quot;רים&apos; (NPSP) ב-Power of Us Hub‏: https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE</label>
         <name>ErrorEmailMessage</name>
     </customLabels>
     <customLabels>
@@ -3868,10 +3867,6 @@
         <name>gePaymentProcessError</name>
     </customLabels>
     <customLabels>
-        <label><!-- Warning about editing fields when transaction already processed --></label>
-        <name>gePaymentProcessedWarning</name>
-    </customLabels>
-    <customLabels>
         <label><!-- Field Bundle banner failure message for tokenization or purchase errors --></label>
         <name>gePaymentProcessingErrorBanner</name>
     </customLabels>
@@ -6313,10 +6308,6 @@
         <name>stgHelpAdvancedMapping2</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAdvancedMapping3 --></label>
-        <name>stgHelpAdvancedMapping3</name>
-    </customLabels>
-    <customLabels>
         <label><!-- stgHelpAdvancedMapping4 --></label>
         <name>stgHelpAdvancedMapping4</name>
     </customLabels>
@@ -6455,10 +6446,6 @@
         <name>stgHelpCreateMissingPayments</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpCustomizableRollupsEnable1 --></label>
-        <name>stgHelpCustomizableRollupsEnable1</name>
-    </customLabels>
-    <customLabels>
         <label><!-- stgHelpCustomizableRollupsEnable2 --></label>
         <name>stgHelpCustomizableRollupsEnable2</name>
     </customLabels>
@@ -6535,10 +6522,6 @@
         <name>stgHelpHHOCROn</name>
     </customLabels>
     <customLabels>
-        <label>למידע נוסף על הדגם המומלץ של חשבון משק בית, עיין &lt;a href=&quot;https://powerofus.force.com/NPSP_Account_Model&quot; target=&quot;_blank&quot;&gt;במסמכי התיעוד של NPSP‏&lt;/a&gt;.</label>
-        <name>stgHelpHHObjectOverview</name>
-    </customLabels>
-    <customLabels>
         <label>מציין עבור אילו אנשי קשר Salesforce תיצור באופן אוטומטי אובייקטים נפרדים של משק בית. (תקף לגבי מודל החשבון &apos;אחד לאחד&apos; או &apos;אישי&apos; בלבד.)</label>
         <name>stgHelpHHRules</name>
     </customLabels>
@@ -6555,7 +6538,7 @@
         <name>stgHelpINamingClass</name>
     </customLabels>
     <customLabels>
-        <label>מציין את ההתנהגות הכללית עבור יצירת הזדמנויות כאשר אתה ממיר הפניה לאיש קשר. אם אפשרות זו אינה מסומנת, Salesforce לא תיצור באופן אוטומטי הזדמנות כאשר תמיר הפניות לאנשי קשר. למידע נוסף, עיין &lt;a href=&quot;https://powerofus.force.com/NPSP_Leads&quot; target=&quot;_blank&quot;&gt;במסמכי התיעוד של NPSP‏&lt;/a&gt;.</label>
+        <label>מציין את ההתנהגות הכללית עבור יצירת הזדמנויות כאשר אתה ממיר הפניה לאיש קשר. אם אפשרות זו אינה מסומנת, Salesforce לא תיצור באופן אוטומטי הזדמנות כאשר תמיר הפניות לאנשי קשר. </label>
         <name>stgHelpLeadConvert</name>
     </customLabels>
     <customLabels>
@@ -6612,7 +6595,7 @@
         <name>stgHelpNoUDR</name>
     </customLabels>
     <customLabels>
-        <label>קרדיטים, תפקידי איש קשר ותרומות שוות קשורים אלה לאלה בדרכים חשובות. אם אינך מכיר את המושגים הללו ואת האופן שבו הם משפיעים זה על זה, עיין &lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;במסמכי התיעוד של NPSP‏&lt;/a&gt; לפני שתבצע שינויים בהגדרות אלה.</label>
+        <label>קרדיטים, תפקידי איש קשר ותרומות שוות קשורים אלה לאלה בדרכים חשובות. אם אינך מכיר את המושגים הללו ואת האופן שבו הם משפיעים זה על זה, עיין &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Automated_Soft_Credits.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;במסמכי התיעוד של NPSP‏&lt;/a&gt; לפני שתבצע שינויים בהגדרות אלה.</label>
         <name>stgHelpOCR</name>
     </customLabels>
     <customLabels>
@@ -6634,10 +6617,6 @@
     <customLabels>
         <label>תבנית התאריך המשמשת עבור כל שדה תאריך או DateTime שתבנית שם ההזדמנות מפנה אליו. בחר תבנית, או בחר &apos;אחר&apos; כדי ליצור תבנית מותאמת אישית משלך עבור המפרט SimpleDateFormat של Java.</label>
         <name>stgHelpOppNamingDateFormat</name>
-    </customLabels>
-    <customLabels>
-        <label>התבנית של שם ההזדמנות. בחר &apos;אחר&apos; כדי ליצור תבנית משלך. לפרטים, עיין &lt;a href=&quot;https://powerofus.force.com/NPSP_Opp_Names&quot; target=&quot;_blank&quot;&gt;במסמכי התיעוד של NPSP‏&lt;/a&gt;.</label>
-        <name>stgHelpOppNamingFormat</name>
     </customLabels>
     <customLabels>
         <label>סוגי רשומות ההזדמנות שעליהם ברצונך להחיל שם הזדמנות זה. כדי לבחור יותר מסוג רשומה אחד, לחץ על לחצן העכבר ועל מקש Control או Command. האפשרות &apos;--ללא--&apos; מחילה את השמות החדשים על כל סוגי הרשומות.</label>
@@ -6684,7 +6663,7 @@
         <name>stgHelpPaymentsEnabled</name>
     </customLabels>
     <customLabels>
-        <label>שאלות? ל-HUb יש תשובות! נסה את הקבוצה של &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;ערכת ההצלחה למלכ&quot;רים&lt;/a&gt; לתשובות בנושא NPSP ואת קבוצת &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;מנהלי המערכת&lt;/a&gt; לתשובות בנושא ניהול והגדרת התצורה של Salesforce‏.&lt;br/&gt;&lt;br/&gt;הישאר מעודכן בהערות המוצר החדשות ביותר של NPSP בקבוצת &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;הודעות המוצר של NPSP‏&lt;/a&gt;.</label>
+        <label>שאלות? ל-HUb יש תשובות! נסה את הקבוצה של &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;ערכת ההצלחה למלכ&quot;רים&lt;/a&gt; לתשובות בנושא NPSP ואת קבוצת &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;מנהלי המערכת&lt;/a&gt; לתשובות בנושא ניהול והגדרת התצורה של Salesforce‏.&lt;br/&gt;&lt;br/&gt;הישאר מעודכן בהערות המוצר החדשות ביותר של NPSP בקבוצת &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;הודעות המוצר של NPSP‏&lt;/a&gt;.</label>
         <name>stgHelpPowerOfUsHub</name>
     </customLabels>
     <customLabels>
@@ -6809,7 +6788,7 @@
         <name>stgHelpRelReciprocalMale</name>
     </customLabels>
     <customLabels>
-        <label>מציין את השיטה המשמשת ליצירת קשרים הדדיים. למידע נוסף, עיין &lt;a href=&quot;https://powerofus.force.com/NPSP_Relationships_Settings&quot; target=&quot;_blank&quot;&gt;במסמכי התיעוד של NPSP‏&lt;/a&gt;.</label>
+        <label>מציין את השיטה המשמשת ליצירת קשרים הדדיים. </label>
         <name>stgHelpRelReciprocalMethod</name>
     </customLabels>
     <customLabels>

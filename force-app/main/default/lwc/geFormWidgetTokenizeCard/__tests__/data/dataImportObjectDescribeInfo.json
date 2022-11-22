@@ -16,6 +16,9 @@
     },
     "Payment_Card_Expiration_Year__c": {
       "updateable": true
+    },
+    "Payment_ACH_Last_4__c": {
+      "updateable": true
     }
   }
 }

@@ -27,18 +27,27 @@
  *     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *     POSSIBILITY OF SUCH DAMAGE.
  */
-import { LightningElement } from 'lwc';
+import { LightningElement, track } from 'lwc';
 import { buildErrorMessage } from 'c/utilTemplateBuilder';
 import { isEmpty } from 'c/utilCommon';
 
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import insufficientPermissions from '@salesforce/label/c.commonInsufficientPermissions';
 import commonAdminPermissionErrorMessage from '@salesforce/label/c.commonAdminPermissionErrorMessage';
+import gatewaySelectionLabel from '@salesforce/label/c.psGatewaySelectionLabel';
+import psEnableGatewayAssignment from '@salesforce/label/c.psEnableGatewayAssignment';
+import psEnableGatewayAssignmentHeader from '@salesforce/label/c.psEnableGatewayAssignmentHeader';
+import psEnableGatewayAssignmentHelp from '@salesforce/label/c.psEnableGatewayAssignmentHelp';
+import psGatewayIDHeader from '@salesforce/label/c.psGatewayIdHeader';
+import psGatewayIDHelp from '@salesforce/label/c.psGatewayIdHelp';
+import psGatewayManagementHelp from '@salesforce/label/c.psGatewayManagementHelp';
 
 import setGatewayId from '@salesforce/apex/PS_GatewayManagement.setGatewayId';
-import getGatewayIdFromConfig from '@salesforce/apex/PS_GatewayManagement.getGatewayIdFromConfig';
-import checkForElevateCustomer from '@salesforce/apex/PS_GatewayManagement.isElevateCustomer';
-import checkForSystemAdmin from '@salesforce/apex/PS_GatewayManagement.isSystemAdmin';
+import setGatewayAssignmentEnabled from '@salesforce/apex/PS_GatewayManagement.setGatewayAssignmentEnabled';
+import getGatewayManagementSettings from '@salesforce/apex/PS_GatewayManagement.getGatewayManagementSettings';
+import { fireEvent, registerListener } from 'c/pubsubNoPageRef';
+
+const GATEWAY_MANAGEMENT_MODE = 'MANAGEMENT';
 
 export default class GePaymentGatewayManagement extends LightningElement {
 
@@ -52,21 +61,43 @@ export default class GePaymentGatewayManagement extends LightningElement {
     isSystemAdmin;
     hasAccess;
 
-    CUSTOM_LABELS = { messageLoading, insufficientPermissions, commonAdminPermissionErrorMessage };
+    parentContext = GATEWAY_MANAGEMENT_MODE;
+
+    isGatewayAssignmentEnabled;
+
+    CUSTOM_LABELS = {
+        commonAdminPermissionErrorMessage,
+        gatewaySelectionLabel,
+        insufficientPermissions,
+        messageLoading,
+        psEnableGatewayAssignment,
+        psEnableGatewayAssignmentHeader,
+        psEnableGatewayAssignmentHelp,
+        psGatewayIDHeader,
+        psGatewayIDHelp,
+        psGatewayManagementHelp
+    };
 
     async connectedCallback() {
         try {
-            this.isSystemAdmin = await checkForSystemAdmin();
-            this.isElevateCustomer = await checkForElevateCustomer();
+            const gatewayManagementSettings = JSON.parse(await getGatewayManagementSettings());
+
+            this.isSystemAdmin = gatewayManagementSettings.isSystemAdmin;
+            this.isElevateCustomer = gatewayManagementSettings.isElevateCustomer;
 
             this.hasAccess = !!(this.isElevateCustomer && this.isSystemAdmin);
+
+            if (this.hasAccess) {
+            this.isGatewayAssignmentEnabled = await gatewayManagementSettings.isGatewayAssignmentEnabled;
+            }
         } catch(ex) {
             this.errorMessage = buildErrorMessage(ex);
             this.isError = true;
         }
 
         if (this.hasAccess) {
-            this.gatewayId = await getGatewayIdFromConfig();
+            registerListener('updateSelectedGateway', this.updateSelectedGateway, this);
+            registerListener('getElevateGatewaysError', this.displayGatewayError, this);
         }
     }
 
@@ -102,33 +133,56 @@ export default class GePaymentGatewayManagement extends LightningElement {
 
     handleEdit() {
         this.isReadOnly = false;
+        fireEvent(this, 'editGatewayManagement', null);
     }
 
     handleCancel() {
-        this.template.querySelector("[data-id='gatewayIdField']").value = this.gatewayId;
-        this.resetAlert();
-        this.clearFieldErrors();
+        fireEvent(this, 'cancelGatewayManagement', null);
 
+        this.resetAlert();
         this.isReadOnly = true;
     }
 
     async handleSave(event) {
         this.resetAlert();
 
-        let gatewayId = this.validateGatewayId();
-
-        if (isEmpty(gatewayId)) {
+        if (isEmpty(this.gatewayId)) {
             return;
         }
 
         this.showSpinner = true;
 
         try {
-
-            await setGatewayId({ gatewayId: gatewayId});
+            await setGatewayId({ gatewayId: this.gatewayId });
 
             this.isReadOnly = true;
             this.isSuccess = true;
+            this.showSpinner = false;
+
+            fireEvent(this, 'saveGatewayManagement', this.gatewayId);
+        } catch(ex) {
+            this.errorMessage = buildErrorMessage(ex);
+            this.showSpinner = false;
+            this.isError = true;
+        }
+    }
+
+    updateSelectedGateway(event) {
+        this.gatewayId = event;
+    }
+
+    resetAlert() {
+        this.isSuccess = null;
+        this.isError = null;
+    }
+
+    async handleToggle(event) {
+
+        this.showSpinner = true;
+        const gatewayAssignmentEnabled = this.template.querySelector("[data-id='enableGatewayAssignment']");
+
+        try {
+            await setGatewayAssignmentEnabled({ gatewayAssignmentEnabled: gatewayAssignmentEnabled.checked});
             this.showSpinner = false;
         } catch(ex) {
             this.errorMessage = buildErrorMessage(ex);
@@ -137,36 +191,8 @@ export default class GePaymentGatewayManagement extends LightningElement {
         }
     }
 
-    validateGatewayId() {
-        // Temporary Hardcoded Text until this functionality is moved out of NPSP entirely
-
-        let gatewayIdField = this.template.querySelector("[data-id='gatewayIdField']");
-
-        if (isEmpty(gatewayIdField.value)) {
-
-            gatewayIdField.setCustomValidity('Invalid Gateway ID.');
-            gatewayIdField.reportValidity();
-
-
-            this.errorMessage = 'Enter a valid gateway ID.'
-            this.isError = true;
-        } else {
-            this.clearFieldErrors();
-
-            return gatewayIdField.value;
-        }
-    }
-
-    clearFieldErrors() {
-        let gatewayIdField = this.template.querySelector("[data-id='gatewayIdField']");
-        if (!gatewayIdField.valid) {
-            gatewayIdField.setCustomValidity('');
-            gatewayIdField.reportValidity();
-        }
-    }
-
-    resetAlert() {
-        this.isSuccess = null;
-        this.isError = null;
+    displayGatewayError(message) {
+        this.errorMessage = message;
+        this.isError = true;
     }
 }

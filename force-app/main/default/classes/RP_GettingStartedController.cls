@@ -51,10 +51,7 @@ public with sharing class RP_GettingStartedController {
     public class LinksWrapper {
 
         public String trailheadLink {get; set;}
-        public String salesforceOrgLink {get; set;}
         public String usLink {get; set;}
-        public String npspLink {get; set;}
-        public String webinarLink {get; set;}
         public String customerJourneyLink {get; set;}
 
         //Load url links values
@@ -62,13 +59,7 @@ public with sharing class RP_GettingStartedController {
 
             trailheadLink = RP_Constants.RP_TRAILHEAD_LINK;
 
-            salesforceOrgLink = RP_Constants.RP_SALESFORCE_ORG_OFFICE_HOURS_LINK;
-
             usLink = RP_Constants.RP_US_LINK;
-
-            npspLink = RP_Constants.RP_NPSP_DOCUMENTATION_LINK;
-
-            webinarLink = RP_Constants.RP_WEBINAR_LINK;
 
             customerJourneyLink = RP_Constants.RP_CUSTOMER_JOURNEY_LINK;
         }
