@@ -42,7 +42,7 @@
 1. Ouvrez un compte de vérification d’adresse sur un service tiers. (Certains sont gratuits pour les organisations à but non lucratif.)&lt;br/&gt;
 2. Dans votre service de vérification d’adresse, créez l’ID et/ou le jeton d’authentification nécessaire(s).&lt;br/&gt;
 3. Retournez à cette page de configuration, cliquez sur le bouton Modifier en haut, et collez l’ID et/ou le jeton dans les champs appropriés.&lt;br/&gt;
-4. Remplissez les champs restants et cliquez sur Enregistrer. Le texte d’aide pour chaque champ fournit des informations. Si vous avez besoin de plus d’aide, consultez la &lt;a href=&quot;https://powerofus.force.com/NPSP_Address_Verification&quot;&gt;documentation de NPSP&lt;/a&gt;.</label>
+4. Remplissez les champs restants et cliquez sur Enregistrer. Le texte d’aide pour chaque champ fournit des informations.</label>
     </customLabels>
     <customLabels>
         <name>Addr_Settings_Intro_Title</name>
@@ -766,7 +766,7 @@
     </customLabels>
     <customLabels>
         <name>ErrorEmailMessage</name>
-        <label>Salesforce a rencontré ces erreurs NPSP. Si vous ne savez pas comment corriger les erreurs, publiez un message dans le groupe Nonprofit Success Pack : https://powerofus.force.com/HUB_NPSP_Group</label>
+        <label>Salesforce a rencontré ces erreurs NPSP. Si vous ne savez pas comment corriger les erreurs, publiez un message dans le groupe Nonprofit Success Pack : https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE</label>
     </customLabels>
     <customLabels>
         <name>FieldSetRelatedFieldError</name>
@@ -778,7 +778,7 @@
     </customLabels>
     <customLabels>
         <name>InactiveScheduledJobsOwnerErrMsg</name>
-        <label>Il existe des tâches planifiées appartenant à un utilisateur inactif. Examinez vos tâches planifiées et assurez-vous que le propriétaire de chaque tâche est un utilisateur actif. Pour plus d’informations, accédez à Modifier ou reprogrammer les tâches planifiées NPSP : https://powerofus.force.com/NPSP_Scheduled_Jobs</label>
+        <label>Il existe des tâches planifiées appartenant à un utilisateur inactif. Examinez vos tâches planifiées et assurez-vous que le propriétaire de chaque tâche est un utilisateur actif.</label>
     </customLabels>
     <customLabels>
         <name>NameRequired</name>
@@ -1064,7 +1064,7 @@
         <name>RD2_EnablementIntro</name>
         <label>Bienvenue ! Les Dons récurrents avancés améliorent la fonctionnalité Dons récurrents de NPSP (Nonprofit Success Pack). Un grand merci aux membres de notre communauté qui ont contribué aux Dons récurrents avancés par leurs avis et conseils éclairés.
         &lt;br/&gt;&lt;br/&gt;Comme NPSP contient déjà une fonctionnalité Dons récurrents, vous devez exécuter plusieurs tâches de mise à niveau et déplacer vos données existantes vers le modèle Dons récurrents avancés. Nous présentons ci-dessous la procédure à suivre.
-        &lt;br/&gt;&lt;br/&gt;Pour vous aider à préparer chaque étape et répondre à toutes vos questions, nous mettons à votre disposition une &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentation sur les Dons récurrents avancés&lt;/a&gt; que vous pouvez suivre pendant tout le processus de mise à niveau.</label>
+        </label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMetaDeployConfirm</name>
@@ -1112,7 +1112,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationErrorMessage</name>
-        <label>L&apos;exécution de votre migration a généré des erreurs qui doivent être corrigées pour réussir la migration. Vous pouvez consulter les erreurs dans Paramètres NPSP &gt; Outils système &gt; Journal des erreurs. Pour obtenir une aide, consultez la documentation&lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;&lt;/a&gt;. Corrigez les erreurs, puis revenez et réessayez.</label>
+        <label>L&apos;exécution de votre migration a généré des erreurs qui doivent être corrigées pour réussir la migration. Vous pouvez consulter les erreurs dans Paramètres NPSP &gt; Outils système &gt; Journal des erreurs.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationIntro</name>
@@ -1153,8 +1153,7 @@
     <customLabels>
         <name>RD2_EnablementPrepTasks</name>
         <label>&lt;ul&gt;&lt;li&gt;Désactivez les workflows, processus, règles de validation et déclencheurs dans les objets Dons récurrents, Opportunité et Paiement.&lt;/li&gt;
-&lt;li&gt;Sauvegardez votre base de données, notamment tous les dons récurrents et leurs enregistrements associés.&lt;/li&gt;
-&lt;li&gt;Lisez la &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt; sur les dons récurrents avancés.&lt;/li&gt;&lt;/ul&gt;</label>
+&lt;li&gt;Sauvegardez votre base de données, notamment tous les dons récurrents et leurs enregistrements associés.&lt;/li&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementPrepTitle</name>
@@ -1163,8 +1162,7 @@
     <customLabels>
         <name>RD2_EnablementSimpleIntro</name>
         <label>Les dons récurrents avancés rendent les dons récurrents plus flexibles et plus faciles à gérer que jamais. Pour activer les dons récurrents avancés, suivez les étapes ci-dessous. Vous devez suivre TOUTES les étapes pour activer complètement les dons récurrents avancés.
-        &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Étant donné que vous n’avez aucun enregistrement de don récurrent, vous n’avez pas besoin de valider ou de migrer de données.&lt;/b&gt;
-        &lt;br/&gt;&lt;br/&gt;Pour plus d’informations, consultez la &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentation sur les dons récurrents avancés&lt;/a&gt;.</label>
+            &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Étant donné que vous n’avez aucun enregistrement de don récurrent, vous n’avez pas besoin de valider ou de migrer de données.&lt;/b&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EndDateMustBeLaterThanCloseWonOpp</name>
@@ -2103,11 +2101,11 @@ Pour vérifier vos paramètres d’affectations UCG, accédez à Dons | Affectat
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>Depuis le 1er octobre 2020, la saisie de données par lots n’est plus prise en charge. La plupart des capacités ont été remplacées par de nouvelles fonctionnalités dans NPSP. Si vous avez des lots en cours, vous pouvez accéder aux enregistrements, mais vous ne pouvez pas les traiter en utilisant la saisie de données par lots. Pour accéder à des lots en cours, contactez le support. &lt;br/&gt; Découvrez la saisie de dons comme alternative à la saisie de données par lots. Pour plus d’informations sur la saisie de dons, consultez la &lt;a href=’https://powerofus.force.com/NPSP_Documentation’ target=’_blank’&gt;documentation NPSP&lt;/a&gt;.</label>
+        <label>Depuis le 1er octobre 2020, la saisie de données par lots n’est plus prise en charge. La plupart des capacités ont été remplacées par de nouvelles fonctionnalités dans NPSP. Si vous avez des lots en cours, vous pouvez accéder aux enregistrements, mais vous ne pouvez pas les traiter en utilisant la saisie de données par lots. Pour accéder à des lots en cours, contactez le support. &lt;br/&gt; Découvrez la saisie de dons comme alternative à la saisie de données par lots.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
-        <label>La saisie de données par lots ne sera plus prise en charge à partir du 1er octobre 2020 et ne fonctionnera plus dans NPSP. Si vous avez des lots en cours à cette date, vous pourrez accéder à ces enregistrements, mais vous ne pourrez pas les traiter en utilisant la saisie de données par lots. Pour garantir une transition transparente, activez et utilisez la saisie de dons avant le 1er octobre. Pour plus d’informations sur la saisie de dons, consultez la &lt;a href=’https://powerofus.force.com/NPSP_Documentation’ target=’_blank’&gt;documentation NPSP&lt;/a&gt;.</label>
+        <label>La saisie de données par lots ne sera plus prise en charge à partir du 1er octobre 2020 et ne fonctionnera plus dans NPSP. Si vous avez des lots en cours à cette date, vous pourrez accéder à ces enregistrements, mais vous ne pourrez pas les traiter en utilisant la saisie de données par lots. Pour garantir une transition transparente, activez et utilisez la saisie de dons avant le 1er octobre.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
@@ -3008,7 +3006,7 @@ Pour vérifier vos paramètres d’affectations UCG, accédez à Dons | Affectat
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>La saisie de dons par lots héritée sera retirée le 13 juillet 2021 et ne fonctionnera plus dans NPSP. Si vous avez des lots en cours à cette date, vous pourrez toujours accéder à ces enregistrements, mais vous ne pourrez pas les traiter en utilisant la saisie de dons par lots. Pour garantir une parfaite transition, activez et utilisez la nouvelle saisie de dons avant le 13 juillet. Pour plus d’informations sur la saisie de dons, consultez la &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;documentation NPSP&lt;/a&gt;.</label>
+        <label>La saisie de dons par lots héritée sera retirée le 13 juillet 2021 et ne fonctionnera plus dans NPSP. Si vous avez des lots en cours à cette date, vous pourrez toujours accéder à ces enregistrements, mais vous ne pourrez pas les traiter en utilisant la saisie de dons par lots. Pour garantir une parfaite transition, activez et utilisez la nouvelle saisie de dons avant le 13 juillet. </label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -3023,8 +3021,7 @@ Pour vérifier vos paramètres d’affectations UCG, accédez à Dons | Affectat
         <label>À compter du 13 juillet 2021, la saisie de dons par lots n’est plus prise en charge et est remplacée par la saisie de dons.
             Si vous avez des lots en cours, vous pouvez toujours accéder aux enregistrements, mais vous ne pouvez pas les traiter en utilisant la saisie de dons par lots.
             Pour accéder à des lots en cours, contactez le support.
-            Vous pouvez découvrir la saisie de dons en tant qu’alternative à la saisie de dons par lots.
-            Pour plus d’informations sur la saisie de dons, consultez la &lt;a href=’https://powerofus.force.com/NPSP_Documentation’ target=’_blank’&gt;documentation NPSP&lt;/a&gt;.</label>
+            Vous pouvez découvrir la saisie de dons en tant qu’alternative à la saisie de dons par lots.</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -3547,7 +3544,7 @@ Pour vérifier vos paramètres d’affectations UCG, accédez à Dons | Affectat
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>Voir tous les contacts en double trouvés à l’aide de règles de correspondance. &lt;a href=&quot;https://powerofus.force.com/IP_Contacts&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; En savoir plus &lt;/b&gt;&lt;/a&gt;</label>
+        <label>Voir tous les contacts en double trouvés à l’aide de règles de correspondance. &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Merge_Contacts.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; En savoir plus &lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>
@@ -4994,10 +4991,6 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <label>Une ou plusieurs autorisations de carte ont expiré. Pour vous assurer que ces paiements sont débités lors du traitement du lot, saisissez à nouveau les informations de paiement pour les dons dont le statut de paiement est Autorisation expirée.</label>
     </customLabels>
     <customLabels>
-        <name>gePaymentProcessedWarning</name>
-        <label>{0} a traité le paiement. La modification du donateur, de la date, du montant ou du mode de paiement entraînera des incohérences dans les enregistrements pour la même transaction dans {0} et NPSP.</label>
-    </customLabels>
-    <customLabels>
         <name>gePaymentProcessError</name>
         <label>Une erreur s’est produite lors du traitement du paiement. Examinez l’erreur et réessayez. Vous pouvez également
             sélectionner « Ne saisissez pas d’informations de paiement. » pour saisir un don sans traiter de paiement. {0} erreurs :
@@ -5749,7 +5742,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>healthSolutionNothingScheduled</name>
-        <label>Pour replanifier les tâches NPSP par défaut, accédez à Paramètres NPSP | Processus de données en masse | Planificateur de processus. Cliquez sur Modifier. Assurez-vous que l’option Ne pas activer la tâche NPSP par défaut de planification automatique n’est pas sélectionnée. Cliquez sur Enregistrer. Pour plus d’informations, consultez Modifier ou reprogrammer des tâches NPSP : https://powerofus.force.com/NPSP_Scheduled_Jobs</label>
+        <label>Pour replanifier les tâches NPSP par défaut, accédez à Paramètres NPSP | Processus de données en masse | Planificateur de processus. Cliquez sur Modifier. Assurez-vous que l’option Ne pas activer la tâche NPSP par défaut de planification automatique n’est pas sélectionnée. Cliquez sur Enregistrer.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionOCRDupPrimary</name>
@@ -5785,7 +5778,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>healthSolutionTriggerHandlerMismatch</name>
-        <label>Les modifications apportées aux déclencheurs peuvent affecter les fonctionnalités de base NPSP de manière inattendue et doivent être minutieusement testées avant le déploiement en production. Si ces modifications ne sont pas intentionnelles, vous devez réinitialiser vos gestionnaires de déclencheurs pour qu’ils correspondent à la configuration NPSP par défaut. Pour plus d’informations, consultez l’article sur la gestion des gestionnaires de déclencheurs : https://powerofus.force.com/NPSP_Manage_Trigger_Handlers</label>
+        <label>Les modifications apportées aux déclencheurs peuvent affecter les fonctionnalités de base NPSP de manière inattendue et doivent être minutieusement testées avant le déploiement en production. Si ces modifications ne sont pas intentionnelles, vous devez réinitialiser vos gestionnaires de déclencheurs pour qu’ils correspondent à la configuration NPSP par défaut.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionUnsupportedPicklistValue</name>
@@ -6246,10 +6239,6 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     <customLabels>
         <name>pmtRefundAmount</name>
         <label>Montant du remboursement</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundPaymentMessage</name>
-        <label>Remboursez le paiement suivant :</label>
     </customLabels>
     <customLabels>
         <name>pmtRefundProcessing</name>
@@ -6847,15 +6836,11 @@ Si vous sélectionnez Ne pas planifier automatiquement les tâches NPSP par déf
         <label>Vous pouvez désactiver le Mappage avancé et rétablir le mappage Texte d&apos;aide, mais les modifications apportées au Mappage avancé sont perdues.</label>
     </customLabels>
     <customLabels>
-        <name>stgHelpAdvancedMapping3</name>
-        <label>Vous pouvez consulter la documentation complète sur la configuration du Mappage avancé &lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;ici&lt;/a&gt;.</label>
-    </customLabels>
-    <customLabels>
         <name>stgHelpAdvancedMapping4</name>
         <label>&lt;b&gt;Ce message ne sera pas affiché si vous quittez la page. Prenez une capture d’écran de cette page ou copiez les informations du tableau ci-dessous pour garder une trace des mappages Texte d’aide que vous devez corriger. &lt;/b&gt;
             &lt;br/&gt;
             &lt;br/&gt;
-            Nous n’avons pas pu convertir certains mappages Texte d’aide, car ceux-ci n’étaient pas valides. &lt;a href=&quot;https://powerofus.force.com/NPSP_Troubleshoot_Help_Text&quot; target=&quot;_blank&quot;&gt;Informations supplémentaires sur les problèmes courants relatifs aux mappages Texte d’aide&lt;/a&gt;. Nous vous recommandons de désactiver le mappage avancé, de corriger les mappages Texte d’aide non valides, puis de réactiver le mappage avancé. Vous pouvez aussi ajouter ces mappages en configurant le mappage avancé à l’écran suivant, mais si vous désactivez le mappage avancé, le texte d’aide non valide d’origine sera rétabli pour ces mappages supplémentaires.</label>
+            Nous n’avons pas pu convertir certains mappages Texte d’aide, car ceux-ci n’étaient pas valides. Nous vous recommandons de désactiver le mappage avancé, de corriger les mappages Texte d’aide non valides, puis de réactiver le mappage avancé. Vous pouvez aussi ajouter ces mappages en configurant le mappage avancé à l’écran suivant, mais si vous désactivez le mappage avancé, le texte d’aide non valide d’origine sera rétabli pour ces mappages supplémentaires.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMappingInvalidHelpText</name>
@@ -6998,12 +6983,8 @@ Avant de démarrer ce processus, nous recommandons de désactiver les éléments
 Attendez que le processus soit terminé à 100 % pour quitter ou rafraîchir cette page.</label>
     </customLabels>
     <customLabels>
-        <name>stgHelpCustomizableRollupsEnable1</name>
-        <label>Vous trouverez la documentation complète relative aux cumuls personnalisables &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;ici&lt;/a&gt;.</label>
-    </customLabels>
-    <customLabels>
         <name>stgHelpCustomizableRollupsEnable2</name>
-        <label>Lorsque vous activez les cumuls personnalisables pour la première fois, nous convertirons automatiquement vos cumuls existants et les 87 cumuls NPSP prédéfinis en cumuls personnalisables. Pour plus d&apos;informations, consultez &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;ce document&lt;/a&gt;.
+        <label>Lorsque vous activez les cumuls personnalisables pour la première fois, nous convertirons automatiquement vos cumuls existants et les 87 cumuls NPSP prédéfinis en cumuls personnalisables.
             &lt;br/&gt;&lt;br/&gt;
             Vous pouvez désactiver et retourner aux cumuls hérités, mais les nouveaux cumuls ou les modifications de cumuls/filtres effectuées dans les cumuls personnalisables ne seront pas appliquées à vos paramètres de cumuls hérités.</label>
     </customLabels>
@@ -7086,10 +7067,6 @@ Attendez que le processus soit terminé à 100 % pour quitter ou rafraîchir ce
         <label>Lorsque cette option est sélectionnée, NPSP crée automatiquement les rôles de contact pour les membres du foyer du contact principal de l’opportunité.</label>
     </customLabels>
     <customLabels>
-        <name>stgHelpHHObjectOverview</name>
-        <label>Pour en savoir plus sur le modèle de compte recommandé de foyer, consultez la &lt;a href=&quot;https://powerofus.force.com/NPSP_Account_Model&quot; target=&quot;_blank&quot;&gt;documentation de NPSP&lt;/a&gt;.</label>
-    </customLabels>
-    <customLabels>
         <name>stgHelpHHRules</name>
         <label>Indique les contacts pour lesquels des objets de foyer distincts seront créés automatiquement par Salesforce. (Uniquement applicable aux modèles de compte un-à-un ou individuel).</label>
     </customLabels>
@@ -7107,7 +7084,7 @@ Attendez que le processus soit terminé à 100 % pour quitter ou rafraîchir ce
     </customLabels>
     <customLabels>
         <name>stgHelpLeadConvert</name>
-        <label>Indique le comportement par défaut pour la création d’opportunité lorsque vous convertissez une piste en contact. Si cette option n’est pas sélectionnée, Salesforce ne créera pas d’opportunité automatiquement lorsque vous convertirez une piste en contact. Consultez la &lt;a href=&quot;https://powerofus.force.com/NPSP_Leads&quot; target=&quot;_blank&quot;&gt;documentation de NPSP&lt;/a&gt; pour plus d’informations.</label>
+        <label>Indique le comportement par défaut pour la création d’opportunité lorsque vous convertissez une piste en contact. Si cette option n’est pas sélectionnée, Salesforce ne créera pas d’opportunité automatiquement lorsque vous convertirez une piste en contact.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpLvlAssignBatch</name>
@@ -7163,7 +7140,7 @@ IMPORTANT : ces deux champs doivent avoir le même type de données.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCR</name>
-        <label>Les crédits indirects, les rôles de contact et les dons jumelés sont étroitement liés les uns aux autres. Si vous n’êtes pas familier avec ces concepts et la façon dont ils interagissent, nous vous conseillons de lire la &lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;documentation de NPSP&lt;/a&gt; avant d’effectuer des ajustements à ces paramètres.</label>
+        <label>Les crédits indirects, les rôles de contact et les dons jumelés sont étroitement liés les uns aux autres. Si vous n’êtes pas familier avec ces concepts et la façon dont ils interagissent, nous vous conseillons de lire la &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Automated_Soft_Credits.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;documentation de NPSP&lt;/a&gt; avant d’effectuer des ajustements à ces paramètres.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCRDefaultRole</name>
@@ -7191,7 +7168,7 @@ IMPORTANT : ces deux champs doivent avoir le même type de données.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingFormat</name>
-        <label>Le format de nom des opportunités. Choisissez « Autre » pour créer votre propre format. Consultez la &lt;a href=&quot;https://powerofus.force.com/NPSP_Opp_Names&quot; target=&quot;_blank&quot;&gt;documentation de NPSP&lt;/a&gt; pour plus de détails.</label>
+        <label>Le format de nom des opportunités. Choisissez « Autre » pour créer votre propre format.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingRecTypes</name>
@@ -7235,7 +7212,7 @@ IMPORTANT : ces deux champs doivent avoir le même type de données.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPowerOfUsHub</name>
-        <label>Vous avez des questions ? Essayez le groupe &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; pour des questions sur NPSP et le groupe &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;Administrateurs système&lt;/a&gt; pour des questions sur l’administration et la configuration de Salesforce.&lt;br/&gt;&lt;br/&gt;Et pour vous tenir au courant des dernières notes de version de NPSP, consultez le groupe &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;Notes de publication NPSP&lt;/a&gt;.</label>
+        <label>Vous avez des questions ? Essayez le groupe &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; pour des questions sur NPSP et le groupe &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;Administrateurs système&lt;/a&gt; pour des questions sur l’administration et la configuration de Salesforce.&lt;br/&gt;&lt;br/&gt;Et pour vous tenir au courant des dernières notes de version de NPSP, consultez le groupe &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;Notes de publication NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPrimaryContactBatch</name>
@@ -7375,7 +7352,7 @@ Ce processus peut prendre un certain temps, mais vous pouvez fermer cette page e
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalMethod</name>
-        <label>Indique la méthode utilisée pour générer des relations réciproques. Consultez la &lt;a href=&quot;https://powerofus.force.com/NPSP_Relationships_Settings&quot; target=&quot;_blank&quot;&gt;documentation de NPSP&lt;/a&gt; pour plus d’informations.</label>
+        <label>Indique la méthode utilisée pour générer des relations réciproques.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalName</name>

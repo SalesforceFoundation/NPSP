@@ -114,7 +114,7 @@ public inherited sharing class GiftBatchSelector {
             String.valueOf(DataImportBatch__c.Expected_Count_of_Gifts__c),
             String.valueOf(DataImportBatch__c.Expected_Total_Batch_Amount__c),
             String.valueOf(DataImportBatch__c.RequireTotalMatch__c),
-            String.valueOf(DataImportBatch__c.Batch_Table_Columns__c),
+            String.valueOf(DataImportBatch__c.Batch_Table_Columns__c), String.valueOf(DataImportBatch__c.Batch_Defaults__c),
             String.valueOf(DataImportBatch__c.LastModifiedDate),
             UTIL_Namespace.StrTokenNSPrefix('Form_Template__r')
             + '.'

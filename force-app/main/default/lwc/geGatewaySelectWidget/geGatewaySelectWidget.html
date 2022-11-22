@@ -1,0 +1,141 @@
+<template>
+    <lightning-layout-item size="12">
+        <template if:true={isLoading}>
+            <div class='spinner-container'>
+                <lightning-spinner data-id="spinner"
+                                   alternative-text={CUSTOM_LABELS.messageLoading}
+                                   size='large'
+                                   data-qa-locator="spinner">
+                </lightning-spinner>
+            </div>
+        </template>
+        <template if:false={isLoading}>
+            <template if:false={isDefaultTemplate}>
+                <template if:true={shouldShowGateways}>
+                    <template if:false={isExpanded}>
+                        <template if:true={shouldShowExpandControls}>
+                            <div class="uniform-top">
+                                <lightning-button data-id="ga-show-button"
+                                                  variant="base"
+                                                  label={CUSTOM_LABELS.psShowGatewaysAndMethods}
+                                                  onclick={toggleSelectGatewayControls}
+                                                  class="slds-button hide-card-button expand-collapse-link"
+                                                  data-qa-locator="ga-show-button">
+                                </lightning-button>
+                                <lightning-button-icon data-id="ga-show-button-icon"
+                                                       alternative-text={CUSTOM_LABELS.psShowGatewaysAndMethods}
+                                                       variant="bare"
+                                                       icon-name="utility:chevrondown"
+                                                       onclick={toggleSelectGatewayControls}
+                                                       class="slds-m-left_xxx-small"
+                                                       data-qa-locator="ga-show-button-icon">
+                                </lightning-button-icon>
+                            </div>
+                        </template>
+                    </template>
+                    <template if:true={isExpanded}>
+                        <template if:true={shouldShowExpandControls}>
+                            <div class="uniform-top">
+                                <lightning-button data-id="ga-hide-button"
+                                                  variant="base"
+                                                  label={CUSTOM_LABELS.psHideGatewaysAndMethods}
+                                                  onclick={toggleSelectGatewayControls}
+                                                  class='slds-button hide-card-button expand-collapse-link'
+                                                  data-qa-locator="ga-hide-button">
+                                </lightning-button>
+                                <lightning-button-icon data-id="ga-hide-button-icon"
+                                                       alternative-text={CUSTOM_LABELS.psHideGatewaysAndMethods}
+                                                       variant="bare"
+                                                       icon-name="utility:chevronup"
+                                                       onclick={toggleSelectGatewayControls}
+                                                       class="slds-m-left_xxx-small"
+                                                       data-qa-locator="ga-hide-button-icon">
+                                </lightning-button-icon>
+                            </div>
+                        </template>
+                        <div class="half-reduced">
+                            <lightning-combobox data-id="gateway-combobox"
+                                                value={selectedGateway}
+                                                disabled={isGatewaySelectionDisabled}
+                                                label={CUSTOM_LABELS.psSelectPaymentGateway}
+                                                options={gatewayOptions}
+                                                onchange={handleGatewaySelectionChange}
+                                                data-qa-locator="gateway-combobox"
+                                                variant="standard">
+                            </lightning-combobox>
+                        </div>
+                    </template>
+                </template>
+                <template if:false={shouldShowGateways}>
+                    <template if:false={isExpanded}>
+                        <template if:true={shouldShowExpandControls}>
+                            <div class="template-top">
+                                <lightning-button data-id="pm-show-button"
+                                                  variant="base"
+                                                  label={CUSTOM_LABELS.psShowPaymentMethods}
+                                                  onclick={toggleSelectGatewayControls}
+                                                  class='slds-button hide-card-button expand-collapse-link'
+                                                  data-qa-locator="pm-show-button">
+                                </lightning-button>
+                                <lightning-button-icon data-id="pm-show-button-icon"
+                                                       alternative-text={CUSTOM_LABELS.psShowPaymentMethods}
+                                                       variant="bare"
+                                                       icon-name="utility:chevrondown"
+                                                       onclick={toggleSelectGatewayControls}
+                                                       class="slds-m-left_xxx-small"
+                                                       data-qa-locator="pm-show-button-icon">
+                                </lightning-button-icon>
+                            </div>
+                        </template>
+                    </template>
+                    <template if:true={isExpanded}>
+                        <template if:true={shouldShowExpandControls}>
+                            <div class="template-top">
+                                <lightning-button data-id="pm-hide-button"
+                                                  variant="base"
+                                                  label={CUSTOM_LABELS.psHidePaymentMethods}
+                                                  onclick={toggleSelectGatewayControls}
+                                                  class='slds-button hide-card-button expand-collapse-link'
+                                                  data-qa-locator="pm-hide-button">
+                                </lightning-button>
+                                <lightning-button-icon data-id="pm-hide-button-icon"
+                                                       alternative-text={CUSTOM_LABELS.psHidePaymentMethods}
+                                                       variant="bare"
+                                                       icon-name="utility:chevronup"
+                                                       onclick={toggleSelectGatewayControls}
+                                                       class="slds-m-left_xxx-small"
+                                                       data-qa-locator="pm-hide-button-icon">
+                                </lightning-button-icon>
+                            </div>
+                        </template>
+                    </template>
+                </template>
+                <template if:true={isExpanded}>
+                    <template if:true={shouldShowPaymentMethods}>
+                        <div class="template-top">
+                            <label class="slds-form-element__label" >{CUSTOM_LABELS.psSelectPaymentMethods}</label>
+                            <lightning-input data-id="checkboxACH"
+                                             label={CUSTOM_LABELS.psACH}
+                                             checked={isACHEnabled}
+                                             disabled={isACHUnavailable}
+                                             onchange={handleACHChange}
+                                             variant="standard"
+                                             type="checkbox"
+                                             data-qa-locator="checkboxACH">
+                            </lightning-input>
+                            <lightning-input data-id="checkboxCreditCard"
+                                             label={CUSTOM_LABELS.RD2_Credit_Card_Payment_Method_Label}
+                                             checked={isCreditCardEnabled}
+                                             disabled={isCreditCardUnavailable}
+                                             onchange={handleCreditCardChange}
+                                             variant="standard"
+                                             type="checkbox"
+                                             data-qa-locator="checkboxCreditCard">
+                            </lightning-input>
+                        </div>
+                    </template>
+                </template>
+            </template>
+        </template>
+    </lightning-layout-item>
+</template>

@@ -951,6 +951,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         }
 
         giftEntrySettings.Default_Gift_Entry_Template__c = myGiftEntrySettings.Default_Gift_Entry_Template__c;
+        giftEntrySettings.Enable_Gateway_Assignment__c = myGiftEntrySettings.Enable_Gateway_Assignment__c;
 
         orgGiftEntrySettings = giftEntrySettings;
 

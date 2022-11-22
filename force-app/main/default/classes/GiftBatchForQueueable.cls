@@ -37,6 +37,11 @@ public inherited sharing class GiftBatchForQueueable {
     private final Integer CHUNK_LIMIT = 50;
 
     private GiftBatchId giftBatchId;
+
+    private Boolean shouldPayFirstInstallment;
+
+    private GiftBatch giftBatch;
+
     @TestVisible
     private Gifts gifts;
     @TestVisible
@@ -51,6 +56,18 @@ public inherited sharing class GiftBatchForQueueable {
         }
         set;
     }
+
+    @TestVisible
+    private GiftBatchSelector giftBatchSelector {
+        get {
+            if (giftBatchSelector == null) {
+                giftBatchSelector = new GiftBatchSelector();
+            }
+            return giftBatchSelector;
+        }
+        set;
+    }
+
     @TestVisible
     private Data_Import_Settings__c dataImportSettings {
         get {
@@ -82,13 +99,22 @@ public inherited sharing class GiftBatchForQueueable {
         set;
     }
 
-    private void disableRD2AsynchronousProcesses() {
-        RD2_Settings rd2Settings = RD2_Settings.getInstance();
-        rd2Settings.isGiftEntryMode = true;
+
+    @TestVisible
+    private GiftBatchService giftBatchService {
+        get {
+            if (giftBatchService == null) {
+                return new GiftBatchService();
+            }
+            return giftBatchService;
+        }
+        set;
     }
 
-    public GiftBatchForQueueable(GiftBatchId giftBatchId) {
+    public GiftBatchForQueueable(GiftBatchId giftBatchId, GiftBatchSelector giftBatchSelector) {
         this.giftBatchId = giftBatchId;
+        this.giftBatchSelector = giftBatchSelector;
+        this.giftBatch = new GiftBatch(giftBatchSelector.selectGiftBatchBy(giftBatchId));
     }
 
     public GiftBatchId id() {
@@ -103,13 +129,11 @@ public inherited sharing class GiftBatchForQueueable {
         List<Id> giftIdsToSelect = chunkedIds.get(0);
         gifts = new Gifts(giftsSelector.getGiftsReadyToMoveToProcessing(giftIdsToSelect, CHUNK_LIMIT));
         gifts.moveProcessableToProcessingStatus();
-        if (gifts.hasRecurringGifts()) {
-            disableRD2AsynchronousProcesses();
-        }
+        giftBatchService.disableRD2AsynchronousProcesses();
     }
 
     public void preprocessRecurringGifts() {
-        gifts.preprocessRecurringGifts();
+        gifts.preprocessRecurringGifts(this.giftBatch.shouldPayFirstInstallment());
     }
 
     public void captureElevateBatches() {
