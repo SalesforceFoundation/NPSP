@@ -1,0 +1,16 @@
+{
+  "apiName": "DataImport__c",
+  "childRelationships": {},
+  "id": "a0T11000005i0nwEAA",
+  "lastModifiedById": "0051100000AbIhSAAV",
+  "lastModifiedDate": "2021-03-19T01:02:47.000Z",
+  "recordTypeId": "012000000000000AAA",
+  "recordTypeInfo": null,
+  "systemModstamp": "2021-03-19T01:02:47.000Z",
+  "fields": {
+    "Payment_ACH_Last_4__c": {
+      "displayValue": null,
+      "value": "2222"
+    }
+  }
+}

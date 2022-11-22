@@ -13,7 +13,7 @@ module.exports = {
         "^@salesforce/apex/GE_GiftEntryController.isElevateCustomer": "<rootDir>/tests/__mocks__/apex/GE_GiftEntryController.isElevateCustomer",
         "^@salesforce/apex/GE_GiftEntryController.addGiftTo": "<rootDir>/tests/__mocks__/apex/GE_GiftEntryController.addGiftTo",
         "^@salesforce/apex/GE_GiftEntryController.getGiftBatchView": "<rootDir>/tests/__mocks__/apex/GE_GiftEntryController.getGiftBatchView",
-        "^@salesforce/apex/GE_GiftEntryController.hasQueueableId": "<rootDir>/tests/__mocks__/apex/GE_GiftEntryController.hasQueueableId",
+        "^@salesforce/apex/GE_GiftEntryController.hasActiveRunningJob": "<rootDir>/tests/__mocks__/apex/GE_GiftEntryController.hasActiveRunningJob",
         "^@salesforce/apex/GE_GiftEntryController.isGiftBatchAccessible": "<rootDir>/tests/__mocks__/apex/GE_GiftEntryController.isGiftBatchAccessible",
         "^@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel": "<rootDir>/tests/__mocks__/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel",
         "^@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues": "<rootDir>/tests/__mocks__/apex/GE_PaymentServices.getPaymentTransactionStatusValues",

@@ -32,6 +32,7 @@
 private with sharing class PS_GatewayManagement_TEST {
     public static final String TEST_MERCHANT_ID = 'abc123-xyz456';
     public static final String TEST_GATEWAY_ID = 'def123-ghi456';
+    public static final Boolean TEST_GATEWAY_ASSIGNMENT_ENABLED = true;
 
     @isTest
     static void shouldUpdateGatewayId() {
@@ -55,6 +56,18 @@ private with sharing class PS_GatewayManagement_TEST {
 
         System.assertEquals(TEST_GATEWAY_ID, PS_GatewayManagement.getGatewayIdFromConfig(), 'When this method is ' +
                 'invoked, the gateway Id stored in CRM should be the gateway returned.');
+    }
+    
+    @isTest
+    static void shouldRetrieveGatewayAssignmentEnabled() {
+        Test.startTest();
+
+        PS_GatewayManagement.setGatewayAssignmentEnabled(TEST_GATEWAY_ASSIGNMENT_ENABLED);
+
+        Test.stopTest();
+
+        System.assertEquals(TEST_GATEWAY_ASSIGNMENT_ENABLED, PS_GatewayManagement.isGatewayAssignmentEnabled(), 'When this method is ' +
+                'invoked, the gateway assignment enabled status stored in CRM should be the gateway assignment enabled status returned.');
     }
 
     @isTest

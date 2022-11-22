@@ -48,12 +48,6 @@
                                     styleClass="slds-text-body_small" />
                             </i>
                         </div>
-                        <div class="slds-m-vertical_medium">
-                            <c:UTIL_HtmlOutput
-                                html="{!$Label.stgHelpAdvancedMapping3}"
-                                hasLink="true"
-                                styleClass="slds-text-body_small" />
-                        </div>
 
                         <label class="slds-checkbox_toggle slds-grid slds-m-vertical_large" style="width: fit-content;">
                             <span class="slds-form-element__label slds-m-bottom_none">Advanced Mapping</span>
