@@ -29,51 +29,75 @@
  */
 public virtual with sharing class ElevateBatchService {
 
-    public virtual ElevateAuthorizedGift addToElevateBatch(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
-        return new ElevateBatch(elevateBatchId).add(tokenizedGift);
+    @TestVisible
+    private ElevateBatch elevateBatch {
+        get {
+            if (elevateBatch == null) {
+                elevateBatch = new ElevateBatch();
+            }
+            return elevateBatch;
+        }
+        set;
     }
 
-    public virtual ElevateAuthorizedGift removeFromElevateBatch(ElevateAuthorizedGift authorizedGift) {
-        return new ElevateBatch(authorizedGift.elevateBatchId).remove(authorizedGift.paymentId);
+    public virtual ElevateBatchItem addToElevateBatch(ElevateCreateBatchItemRequestDTO batchItemRequestDTO, String
+            elevateBatchId) {
+        return new ElevateBatch(elevateBatchId).add(batchItemRequestDTO);
+    }
+
+    public ElevateCreateBatchItemRequest buildBatchItemRequestFrom(ElevateCreateBatchItemRequestDTO
+            batchItemRequestDTO) {
+        return new ElevateCreateBatchItemRequest(batchItemRequestDTO);
+    }
+
+    public virtual ElevateBatchItem removeFromElevateBatch(ElevateBatchItem batchItem) {
+        return new ElevateBatch(batchItem.elevateBatchId).remove(batchItem.id());
+    }
+
+    // Method is used for dependency injection in test classes
+    @TestVisible
+    private virtual ElevateBatchItem removeFromElevateBatch(ElevateBatch elevateBatch, ElevateBatchItem batchItem) {
+        return elevateBatch.remove(batchItem.id());
     }
 
     public virtual ElevateBatch createElevateBatch() {
         return new ElevateBatch().create();
     }
 
-    public ElevateAuthorizedGift sendAddRequest(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
+
+    public ElevateBatchItem sendAddRequest(ElevateCreateBatchItemRequest tokenizedGift, String elevateBatchId) {
         UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
                 addRequest(tokenizedGift, elevateBatchId)
         );
-        ElevateAuthorizedGiftResponse authorizedGiftResponse = (ElevateAuthorizedGiftResponse)JSON.deserialize
-                (response.body, ElevateAuthorizedGiftResponse.class);
-        checkForAuthorizedGiftErrorsIn(authorizedGiftResponse);
+        ElevateBatchItemCreateResponse batchItemCreateResponse = ElevateBatchItemCreateResponse.parse(response.body);
+        checkForBatchItemErrorsIn(batchItemCreateResponse);
 
-        return new ElevateAuthorizedGift(tokenizedGift, authorizedGiftResponse);
+        return new ElevateBatchItem(batchItemCreateResponse);
     }
 
-    public ElevateAuthorizedGift sendRemoveRequest(String elevatePaymentId, String elevateBatchId) {
-        UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
-                removeRequest(elevateBatchId, elevatePaymentId)
-        );
+    public virtual UTIL_Http.Response sendRemoveRequest(String elevatePaymentId, String elevateBatchId) {
+        return new UTIL_Http.RequestService().sendRequest(
+                removeRequest(elevateBatchId, elevatePaymentId));
+    }
 
-        ElevateAuthorizedGiftResponse authorizedGiftResponse = (ElevateAuthorizedGiftResponse)JSON.deserialize
-                (response.body, ElevateAuthorizedGiftResponse.class);
-        checkForAuthorizedGiftErrorsIn(authorizedGiftResponse);
-
-        return new ElevateAuthorizedGift(null, authorizedGiftResponse);
+    public virtual void handleRemoveResponse(UTIL_Http.Response response) {
+        if (response.statusCode != 204) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(response.status);
+        }
     }
 
     public ElevateBatch getElevateBatch() {
         UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
                 createRequest()
         );
-        ElevateBatchResponse ElevateBatchResponse = (ElevateBatchResponse)JSON.deserialize(
+        ElevateBatchResponse elevateBatchResponse = (ElevateBatchResponse)JSON.deserialize(
                 response.body, ElevateBatchResponse.class);
-        return new ElevateBatch(ElevateBatchResponse);
+        checkForElevateBatchErrorsIn(elevateBatchResponse);
+
+        return new ElevateBatch(elevateBatchResponse);
     }
 
-    private HttpRequest addRequest(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
+    private HttpRequest addRequest(ElevateCreateBatchItemRequest tokenizedGift, String elevateBatchId) {
         return new PS_Request.Builder()
                 .withMethod(UTIL_Http.Method.POST)
                 .withElevateBatchId(elevateBatchId)
@@ -85,7 +109,7 @@ public virtual with sharing class ElevateBatchService {
 
     private HttpRequest removeRequest(String elevateBatchId, String elevatePaymentId) {
         return new PS_Request.Builder()
-                .withMethod(UTIL_Http.Method.POST)
+                .withMethod(UTIL_Http.Method.DEL)
                 .withElevateBatchId(elevateBatchId)
                 .withElevatePaymentId(elevatePaymentId)
                 .withRecommendedTimeout()
@@ -113,25 +137,25 @@ public virtual with sharing class ElevateBatchService {
     }
 
     @TestVisible
-    private void checkForAuthorizedGiftErrorsIn(ElevateAuthorizedGiftResponse authorizedGiftResponse) {
-        if (hasAuthorizedGiftErrors(authorizedGiftResponse)) {
-            UTIL_AuraEnabledCommon.throwAuraHandledException(authorizedGiftResponse.errors()[0].message);
+    private void checkForBatchItemErrorsIn(ElevateBatchItemCreateResponse batchItemCreateResponse) {
+        if (hasBatchItemErrors(batchItemCreateResponse)) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(batchItemCreateResponse.errors()[0].message);
         }
     }
 
-    private Boolean hasAuthorizedGiftErrors(ElevateAuthorizedGiftResponse authorizedGiftResponse) {
+    private Boolean hasBatchItemErrors(ElevateBatchItemCreateResponse authorizedGiftResponse) {
         return authorizedGiftResponse.errors() != null &&
                !authorizedGiftResponse.errors().isEmpty();
     }
 
     @TestVisible
     private void checkForElevateBatchErrorsIn(ElevateBatchResponse ElevateBatchResponse) {
-        if (hasElevateBatchErrors(ElevateBatchResponse)) {
+        if (hasBatchErrors(ElevateBatchResponse)) {
             UTIL_AuraEnabledCommon.throwAuraHandledException(ElevateBatchResponse.errors()[0].message);
         }
     }
 
-    private Boolean hasElevateBatchErrors(ElevateBatchResponse ElevateBatchResponse) {
+    private Boolean hasBatchErrors(ElevateBatchResponse ElevateBatchResponse) {
         return ElevateBatchResponse.errors() != null &&
                !ElevateBatchResponse.errors().isEmpty();
     }

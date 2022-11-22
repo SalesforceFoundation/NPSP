@@ -27,63 +27,333 @@
  *     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *     POSSIBILITY OF SUCH DAMAGE.
  */
-@isTest
-public with sharing class ElevateBatchServiceValidRequest extends ElevateBatchService {
+@IsTest
+public class ElevateBatchServiceValidRequest extends ElevateBatchService {
+    ElevateBatchItemType batchItemType;
+    String paymentMethod;
 
-    public override ElevateAuthorizedGift addToElevateBatch(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
-        ElevateAuthorizedGiftResponse giftResponse = addElevateBatchSuccessMessage();
+    private String oneTimeResponse {
+        get {
+            if (paymentMethod == 'CARD') {
+                return oneTimeCardSuccessResponse();
+            } else {
+                return oneTimeACHSuccessResponse();
+            }
+        }
+        set;
+    }
+    private String commitmentResponse {
+        get {
+            if (paymentMethod == 'CARD') {
+                return commitmentCardSuccessResponse();
+            } else {
+                return commitmentACHSuccessResponse();
+            }
+        }
+        set;
+    }
 
-        return new ElevateAuthorizedGift(tokenizedGift, giftResponse);
+    public ElevateBatchServiceValidRequest(){}
+    public ElevateBatchServiceValidRequest(ElevateBatchItemType batchItemType, String paymentMethod){
+        this.batchItemType = batchItemType;
+        this.paymentMethod = paymentMethod;
+    }
+
+    public override ElevateBatchItem addToElevateBatch(ElevateCreateBatchItemRequestDTO createBatchItemRequestDTO,
+                                                       String elevateBatchId) {
+        ElevateBatchItemCreateResponse giftResponse;
+
+        if (batchItemType == ElevateBatchItemType.ONE_TIME) {
+            giftResponse = ElevateBatchItemCreateResponse.parse(oneTimeResponse);
+        } else {
+            giftResponse = ElevateBatchItemCreateResponse.parse(commitmentResponse);
+        }
+
+        return new ElevateBatchItem(giftResponse);
     }
 
     public override ElevateBatch createElevateBatch() {
-        ElevateBatchResponse elevateBatchResponse = createElevateBatchSuccessMessage();
+        ElevateBatchResponse elevateBatchResponse = ElevateBatchResponse.parse(createBatchSuccessResponse());
         return new ElevateBatch(elevateBatchResponse);
     }
 
-    public ElevateBatchResponse createElevateBatchSuccessMessage() {
-        return (ElevateBatchResponse)JSON.deserialize('{\n' +
+    public override UTIL_Http.Response sendRemoveRequest(String elevatePaymentId, String elevateBatchId) {
+        return (UTIL_Http.Response) JSON.deserialize(removeBatchItemSuccessResponse(), UTIL_Http.Response.class);
+    }
+
+    private static String removeBatchItemSuccessResponse() {
+        return '{\n' +
+                '"statusCode": "204",\n' +
+                '"status": "Remove successful"\n' +
+                '}';
+    }
+
+    private static String oneTimeCardSuccessResponse() {
+        return '{\n' +
+                '  "batchItemType": "ONE_TIME",\n' +
+                '  "purchaseResponse": {\n' +
+                '    "accountName": "test account",\n' +
+                '    "cardData": {\n' +
+                '      "brand": "Visa",\n' +
+                '      "expirationMonth": "11",\n' +
+                '      "expirationYear": "2025",\n' +
+                '      "fingerprint": "123456",\n' +
+                '      "firstName": "test",\n' +
+                '      "lastName": "user",\n' +
+                '      "last4": "0123"\n' +
+                '    },\n' +
+                '    "addressLine1": "string",\n' +
+                '    "addressLine2": "string",\n' +
+                '    "amount": 0,\n' +
+                '    "authExpiresAt": "2022-08-20T05:40:24.576Z",\n' +
+                '    "authorizedAt": "2022-08-20T05:40:24.576Z",\n' +
+                '    "batchId": "test-valid-id",\n' +
+                '    "city": "string",\n' +
+                '    "country": "US",\n' +
+                '    "createdAt": "2022-08-20T05:40:24.576Z",\n' +
+                '    "currencyCode": "ADP",\n' +
+                '    "email": "string",\n' +
+                '    "firstName": "string",\n' +
+                '    "gatewayFee": 0,\n' +
+                '    "gatewayId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '    "gatewayTransactionId": "string",\n' +
+                '    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '    "lastName": "string",\n' +
+                '    "merchantId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '    "merchantName": "string",\n' +
+                '    "metadata": {},\n' +
+                '    "mostRecentReceiptId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '    "originalTransactionId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '    "paymentType": "CARD",\n' +
+                '    "phone": "string",\n' +
+                '    "platformFee": 0,\n' +
+                '    "postalCode": "string",\n' +
+                '    "processedAt": "2022-08-20T05:40:24.576Z",\n' +
+                '    "productMetadata": {},\n' +
+                '    "productMetadataSchemaUri": "string",\n' +
+                '    "receiptTimezone": "string",\n' +
+                '    "remainingBalance": 0,\n' +
+                '    "salutation": "string",\n' +
+                '    "state": "string",\n' +
+                '    "status": "PENDING",\n' +
+                '    "submittedAt": "2022-08-20T05:40:24.576Z",\n' +
+                '    "suffix": "string",\n' +
+                '    "totalFee": 0,\n' +
+                '    "type": "PAYMENT",\n' +
+                '    "version": 0\n' +
+                '  }\n' +
+                '}';
+    }
+
+    private static String oneTimeACHSuccessResponse() {
+        return '{\n' +
+                '  "batchItemType": "ONE_TIME",\n' +
+                '  "purchaseResponse": {\n' +
+                '    "accountName": "string",\n' +
+                '    "achData": {\n' +
+                '      "accountHolderBankType": "CHECKING",\n' +
+                '      "accountHolderType": "INDIVIDUAL",\n' +
+                '      "achCode": "ARC",\n' +
+                '      "bankName": "string",\n' +
+                '      "checkNumber": "string",\n' +
+                '      "consentMessage": "string",\n' +
+                '      "last4": "string"\n' +
+                '    },\n' +
+                '    "addressLine1": "string",\n' +
+                '    "addressLine2": "string",\n' +
+                '    "amount": 0,\n' +
+                '    "batchId": "test-valid-id",\n' +
+                '    "city": "string",\n' +
+                '    "country": "US",\n' +
+                '    "createdAt": "2022-08-20T05:40:24.576Z",\n' +
+                '    "currencyCode": "ADP",\n' +
+                '    "email": "string",\n' +
+                '    "firstName": "string",\n' +
+                '    "gatewayFee": 0,\n' +
+                '    "gatewayId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '    "gatewayTransactionId": "string",\n' +
+                '    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '    "lastName": "string",\n' +
+                '    "merchantId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '    "merchantName": "string",\n' +
+                '    "metadata": {},\n' +
+                '    "mostRecentReceiptId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '    "originalTransactionId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '    "paymentType": "CARD",\n' +
+                '    "phone": "string",\n' +
+                '    "platformFee": 0,\n' +
+                '    "postalCode": "string",\n' +
+                '    "processedAt": "2022-08-20T05:40:24.576Z",\n' +
+                '    "productMetadata": {},\n' +
+                '    "productMetadataSchemaUri": "string",\n' +
+                '    "receiptTimezone": "string",\n' +
+                '    "remainingBalance": 0,\n' +
+                '    "salutation": "string",\n' +
+                '    "state": "string",\n' +
+                '    "status": "PENDING",\n' +
+                '    "submittedAt": "2022-08-20T05:40:24.576Z",\n' +
+                '    "suffix": "string",\n' +
+                '    "totalFee": 0,\n' +
+                '    "type": "PAYMENT",\n' +
+                '    "version": 0\n' +
+                '  }\n' +
+                '}';
+    }
+
+    private static String commitmentCardSuccessResponse() {
+        return '{\n' +
+                '  "batchItemType": "COMMITMENT",\n' +
+                '  "commitmentResponse": {\n' +
+                '    "accountName": "test account",\n' +
+                '    "cardData": {\n' +
+                '      "brand": "Visa",\n' +
+                '      "expirationMonth": "11",\n' +
+                '      "expirationYear": "2025",\n' +
+                '      "fingerprint": "123456",\n' +
+                '      "firstName": "test",\n' +
+                '      "lastName": "user",\n' +
+                '      "last4": "0123"\n' +
+                '    },\n' +
+                '    "addressLine1": "string",\n' +
+                '    "addressLine2": "string",\n' +
+                '    "amount": 0,\n' +
+                '    "batchId": "test-valid-id",\n' +
+                '    "city": "string",\n' +
+                '    "commitmentType": "SUSTAINER",\n' +
+                '    "country": "US",\n' +
+                '    "createdAt": "2022-08-20T05:40:24.576Z",\n' +
+                '    "currencyCode": "ADP",\n' +
+                '    "email": "string",\n' +
+                '    "firstName": "string",\n' +
+                '    "gatewayFee": 0,\n' +
+                '    "gatewayId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '    "gatewayTransactionId": "string",\n' +
+                '    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '    "lastName": "string",\n' +
+                '    "merchantId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '    "merchantName": "string",\n' +
+                '    "metadata": {},\n' +
+                '    "mostRecentReceiptId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '    "originalTransactionId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '    "paymentType": "CARD",\n' +
+                '    "phone": "string",\n' +
+                '    "platformFee": 0,\n' +
+                '    "postalCode": "string",\n' +
+                '    "processedAt": "2022-08-20T05:40:24.576Z",\n' +
+                '    "productMetadata": {},\n' +
+                '    "productMetadataSchemaUri": "string",\n' +
+                '    "receiptTimezone": "string",\n' +
+                '    "remainingBalance": 0,\n' +
+                '    "salutation": "string",\n' +
+                '    "schedules": [\n' +
+                '      {\n' +
+                '        "amount": 0,\n' +
+                '        "canceledAt": "2022-08-20T05:40:24.576Z",\n' +
+                '        "createdAt": "2022-08-20T05:40:24.576Z",\n' +
+                '        "currencyCode": "ADP",\n' +
+                '        "firstOccurrenceOnTimestamp": "2022-08-20T05:40:24.576Z",\n' +
+                '        "frequency": "DAY",\n' +
+                '        "frequencyInterval": 0,\n' +
+                '        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '        "merchantId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '        "modifiedAt": "2022-08-20T05:40:24.576Z",\n' +
+                '        "nextPaymentAmount": 0,\n' +
+                '        "nextPaymentDate": "2022-08-20",\n' +
+                '        "nextPaymentTimestamp": "2022-08-20T05:40:24.576Z",\n' +
+                '        "previousId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '        "recentTransactionId": "string",\n' +
+                '        "status": "ACTIVE"\n' +
+                '      }],\n' +
+                '    "state": "string",\n' +
+                '    "status": "PENDING",\n' +
+                '    "submittedAt": "2022-08-20T05:40:24.576Z",\n' +
+                '    "suffix": "string",\n' +
+                '    "totalFee": 0,\n' +
+                '    "type": "PAYMENT",\n' +
+                '    "version": 0\n' +
+                '  }\n' +
+                '}';
+    }
+
+    private static String commitmentACHSuccessResponse() {
+        return '{\n' +
+                '  "batchItemType": "COMMITMENT",\n' +
+                '  "commitmentResponse": {\n' +
+                '    "accountName": "string",\n' +
+                '    "achData": {\n' +
+                '      "accountHolderBankType": "CHECKING",\n' +
+                '      "accountHolderType": "INDIVIDUAL",\n' +
+                '      "achCode": "ARC",\n' +
+                '      "bankName": "string",\n' +
+                '      "checkNumber": "string",\n' +
+                '      "consentMessage": "string",\n' +
+                '      "last4": "string"\n' +
+                '    },\n' +
+                '    "addressLine1": "string",\n' +
+                '    "addressLine2": "string",\n' +
+                '    "amount": 0,\n' +
+                '    "batchId": "test-valid-id",\n' +
+                '    "city": "string",\n' +
+                '    "country": "US",\n' +
+                '    "createdAt": "2022-08-20T05:40:24.576Z",\n' +
+                '    "currencyCode": "ADP",\n' +
+                '    "email": "string",\n' +
+                '    "firstName": "string",\n' +
+                '    "gatewayFee": 0,\n' +
+                '    "gatewayId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '    "gatewayTransactionId": "string",\n' +
+                '    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '    "lastName": "string",\n' +
+                '    "merchantId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '    "merchantName": "string",\n' +
+                '    "metadata": {},\n' +
+                '    "mostRecentReceiptId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '    "originalTransactionId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '    "paymentType": "CARD",\n' +
+                '    "phone": "string",\n' +
+                '    "platformFee": 0,\n' +
+                '    "postalCode": "string",\n' +
+                '    "processedAt": "2022-08-20T05:40:24.576Z",\n' +
+                '    "productMetadata": {},\n' +
+                '    "productMetadataSchemaUri": "string",\n' +
+                '    "receiptTimezone": "string",\n' +
+                '    "remainingBalance": 0,\n' +
+                '    "salutation": "string",\n' +
+                '    "schedules": [\n' +
+                '      {\n' +
+                '        "amount": 0,\n' +
+                '        "canceledAt": "2022-08-20T05:40:24.576Z",\n' +
+                '        "createdAt": "2022-08-20T05:40:24.576Z",\n' +
+                '        "currencyCode": "ADP",\n' +
+                '        "firstOccurrenceOnTimestamp": "2022-08-20T05:40:24.576Z",\n' +
+                '        "frequency": "DAY",\n' +
+                '        "frequencyInterval": 0,\n' +
+                '        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '        "merchantId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '        "modifiedAt": "2022-08-20T05:40:24.576Z",\n' +
+                '        "nextPaymentAmount": 0,\n' +
+                '        "nextPaymentDate": "2022-08-20",\n' +
+                '        "nextPaymentTimestamp": "2022-08-20T05:40:24.576Z",\n' +
+                '        "previousId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n' +
+                '        "recentTransactionId": "string",\n' +
+                '        "status": "ACTIVE"\n' +
+                '     }],\n' +
+                '    "state": "string",\n' +
+                '    "status": "PENDING",\n' +
+                '    "statusReason": "COMMITMENT_CREATED",\n' +
+                '    "submittedAt": "2022-08-20T05:40:24.576Z",\n' +
+                '    "suffix": "string",\n' +
+                '    "totalFee": 0,\n' +
+                '    "type": "PAYMENT",\n' +
+                '    "version": 0\n' +
+                '  }\n' +
+                '}';
+    }
+
+    private static String createBatchSuccessResponse() {
+        return '{\n' +
                 '  "id": "test-id",\n' +
                 '  "status": "Open"\n' +
-                '}', ElevateBatchResponse.class);
+                '}';
     }
-
-    public ElevateAuthorizedGiftResponse addElevateBatchSuccessMessage() {
-        return (ElevateAuthorizedGiftResponse)JSON.deserialize(
-                '{\n' +
-                    '"id": "test-valid-id",\n' +
-                    '"timestamp": "2021-03-03T17:43:28.589Z",\n' +
-                    '"createdAt": "2021-03-03T17:43:28.589Z",\n' +
-                    '"submittedAt": "2021-03-03T17:43:29.313Z",\n' +
-                    '"authorizedAt": "2021-03-03T17:43:29.313Z",\n' +
-                    '"authExpiresAt": "2021-03-06T17:43:29.313Z",\n' +
-                    '"status": "AUTHORIZED",\n' +
-                    '"merchantId": "f4338833-20f1-44b5-9270-6087659e0b9f",\n' +
-                    '"merchantName": "TestPortal",\n' +
-                    '"gatewayId": "106beaae-6d28-48b2-8c67-3cac2b636ee4",\n' +
-                    '"gatewayTransactionId": "ch_1IQyjMLjHqxVjuiLnrG8C6Zx",\n' +
-                    '"currencyCode": "USD",\n' +
-                    '"amount": 500,\n' +
-                    '"lastName": "Bond",\n' +
-                    '"firstName": "James",\n' +
-                    '"type": "PAYMENT",\n' +
-                    '"paymentType": "CARD",\n' +
-                    '"cardData": {\n' +
-                    '    "last4": "1111",\n' +
-                    '    "brand": "visa",\n' +
-                    '    "expirationYear": "2025",\n' +
-                    '    "expirationMonth": "05",\n' +
-                    '    "firstName": "James",\n' +
-                    '    "lastName": "Bond",\n' +
-                    '    "fingerprint": "wU5VS1C0QNoMND4z"\n' +
-                    '},\n' +
-                    '"originalTransactionId": "c260c3eb-a8ae-47de-8f19-15e66c22098b",\n' +
-                    '"batchId": "b0eec3f4-ab08-4207-857b-f2c6afc36d24",\n' +
-                    '"receiptTimezone": "America/Los_Angeles",\n' +
-                    '"amountRefunded": 0,\n' +
-                    '"achData": {},\n' +
-                    '"version": 2\n' +
-                '}', ElevateAuthorizedGiftResponse.class);
-    }
-
 }

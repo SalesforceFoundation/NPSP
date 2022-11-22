@@ -789,7 +789,7 @@ public with sharing class ADDR_Addresses_TEST {
             overrideAddressToCreate.Address_Type__c = 'Home';
             overrideAddressToCreate.MailingStreet__c = 'Street Override';
             overrideAddressToCreate.MailingCity__c = 'City Override';
-            overrideAddressToCreate.MailingState__c = 'Washington';
+            overrideAddressToCreate.MailingState__c = 'Pennsylvania';
             overrideAddressToCreate.MailingPostalCode__c = 'Zip Override';
             overrideAddressToCreate.MailingCountry__c = 'United States';
             overrideAddressToCreate.Household_Account__c = testAccounts[0].Id;
@@ -800,7 +800,7 @@ public with sharing class ADDR_Addresses_TEST {
             LastName = 'Override',
             is_Address_Override__c = true,
             AccountId = testAccounts[0].Id,
-            MailingState = 'Washington',
+            MailingState = 'Pennsylvania',
             MailingCity = 'City Override',
             MailingStreet = 'Street Override',
             MailingPostalCode = 'Zip Override',
@@ -811,7 +811,7 @@ public with sharing class ADDR_Addresses_TEST {
 
         Address__c overrideAddress = [SELECT Undeliverable__c
                                       FROM Address__c
-                                      WHERE MailingPostalCode__c = 'Zip Override'];
+                                      WHERE MailingState__c = 'Pennsylvania'];
 
         Test.startTest();
             overrideAddress.Undeliverable__c = true;

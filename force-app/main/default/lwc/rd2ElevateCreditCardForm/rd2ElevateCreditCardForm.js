@@ -196,7 +196,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
             this.handleError(error);
         });
 
-        tokenHandler.setVisualforceOriginURLs(domainInfo);
+        await tokenHandler.setVisualforceOriginURLs(domainInfo);
         
         if(this.isDigitalExperience) {
             this.handleUserEnabledWidget();
