@@ -6180,6 +6180,40 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Amount</value>
     </labels>
     <labels>
+        <fullName>gePaymentProcessedWarning</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning about editing fields when transaction already processed</shortDescription>
+        <value>{0} successfully processed the payment. Changing the donor, date, amount, or payment method will result in inconsistent records for the same transaction in {0} and NPSP.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAdvancedMapping3</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAdvancedMapping3</shortDescription>
+        <value>Find complete Advanced Mapping setup documentation &lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpCustomizableRollupsEnable1</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgHelpCustomizableRollupsEnable1</shortDescription>
+        <value>
+            You can find complete Customizable Rollups documentation &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.
+        </value>
+    </labels>
+    <labels>
+        <fullName>stgHelpHHObjectOverview</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpHHObjectOverview</shortDescription>
+        <value>To learn more about the recommended Household Account model, see the &lt;a href=&quot;https://powerofus.force.com/NPSP_Account_Model&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</value>
+    </labels>
+    <labels>
         <fullName>commonAssistiveError</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
