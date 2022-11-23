@@ -226,14 +226,22 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     private void runPaymentTriggerHandler(List<SObject> newlist, List<SObject> oldlist,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
+
+        //do not run if Payment allocations are disabled
+        if (isPaymentAllocationsEnabled()) {
+            processPaymentAllocations(newlist, oldlist, triggerAction);
+        }
+    
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+            handleAllocationsAndOpportunities(newList, oldList);
+        }
+    }
+
+    private void processPaymentAllocations(List<SObject> newlist, List<SObject> oldlist, TDTM_Runnable.Action triggerAction) {
         List<npe01__OppPayment__c> listPmtsForProcessing = new List<npe01__OppPayment__c>();
         List<npe01__OppPayment__c> pmtsWithNullOldAmount = new List<npe01__OppPayment__c>();
         List<npe01__OppPayment__c> pmtsNeedingAllocations = new List<npe01__OppPayment__c>();
 
-        //do not run if Payment allocations are disabled
-        if (!isPaymentAllocationsEnabled()) {
-            return;
-        }
 
         for (integer i=0; i<newList.size(); i++) {
             npe01__OppPayment__c pmt = (npe01__OppPayment__c) newlist[i];
@@ -281,6 +289,41 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
             paymentAmountCurrencyChange(pmts);
             //paymentAmountCurrencyChange(listPmtsForProcessing);
+        }
+    }
+
+    private void handleAllocationsAndOpportunities(
+        List<npe01__OppPayment__c> newList,
+        List<npe01__OppPayment__c> oldList
+    ) {
+        List<npe01__OppPayment__c> refunds = new List<npe01__OppPayment__c>();
+        List<npe01__OppPayment__c> oldRefunds = new List<npe01__OppPayment__c>();
+        for (Integer i = 0; i < newList.size(); i++) {
+            if (newList[i].npe01__Payment_Amount__c < 0 && String.isBlank(newList[i].Elevate_Payment_ID__c)) {
+                refunds.add(newList[i]);
+                if ( oldList != null) {
+                    oldRefunds.add(oldList[i]);
+                }
+            }
+        }
+
+        if (refunds.isEmpty()) {
+            return;
+        }
+
+        PMT_RefundService refundService = new PMT_RefundService()
+            .withRefundRecords(refunds)
+            .withOldRefundRecords(oldRefunds);
+
+        refundService.adjustAllocationsAndOpportunities()
+            .updateAllocationsAndOpportunities();
+
+        List<ErrorRecord> errorRecords = refundService.getErrors();
+
+        for (ErrorRecord error : errorRecords) {
+            if (error.hasError()) {
+                error.getRecord().addError(error.getFirstError());
+            }
         }
     }
 
@@ -747,8 +790,18 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 } else {
 
                     for (Allocation__c allo : oppWrap.listAllo) {
+                        // if the Opportunity is for $0, we can safely update fixed Allocations to be $0
+                        // This fixes a bug with Elevate refunds when non-default Allocations have fixed (not percent based) Amounts
+                        if (oppWrap.parentAmount == 0 && allo.Percent__c == null) {
+                            oppWrap.totalAmount -= allo.Amount__c;
+                            allo.Amount__c = 0;
+
+                            if (UserInfo.isMultiCurrencyOrganization()) {
+                                allo.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
+                            }
+                            dmlWrapper.objectsToUpdate.add(allo);
                         //if the percentage changed, recalculate the amount
-                        if (allo.Percent__c!=null && allo.Percent__c>0 && allo.Amount__c != (oppWrap.parentAmount * allo.Percent__c * .01).setScale(2)) {
+                        } else if (allo.Percent__c != null && allo.Percent__c > 0 && allo.Amount__c != (oppWrap.parentAmount * allo.Percent__c * .01).setScale(2)) {
                             //remove the previous amount, recalculate the amount, and add it back
                             oppWrap.totalAmount -= allo.Amount__c;
                             allo.Amount__c = (oppWrap.parentAmount * allo.Percent__c * .01).setScale(2);

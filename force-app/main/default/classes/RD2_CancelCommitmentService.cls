@@ -126,10 +126,12 @@ public without sharing class RD2_CancelCommitmentService {
             HttpRequest request;
 
             if (getRequestType(closedRecord) == PS_Request.ElevateEndpoint.COMMITMENT_CANCEL) {
-                request = buildCancelRequest(closedRecord.rd.CommitmentId__c);
+                request = PS_CommitmentRequest.buildRequest(closedRecord.rd.CommitmentId__c,
+                    UTIL_Http.Method.POST, PS_Request.ElevateEndpoint.COMMITMENT_CANCEL);
             }
-            else if (getRequestType(closedRecord) == PS_Request.ElevateEndpoint.COMMITMENT) {
-                request = PS_CommitmentRequest.buildGetRequest(closedRecord.rd.CommitmentId__c);
+            else if (getRequestType(closedRecord) == PS_Request.ElevateEndpoint.COMMITMENT_GET) {
+                request = PS_CommitmentRequest.buildRequest(closedRecord.rd.CommitmentId__c,
+                    UTIL_Http.Method.GET, PS_Request.ElevateEndpoint.COMMITMENT_GET);
             }
             response = requestService.sendRequest(request);
 
@@ -142,19 +144,6 @@ public without sharing class RD2_CancelCommitmentService {
     }
 
     /**
-    * Builds a cancel commitment request for the provided commitment Id
-    * @param commitmentId Elevate recurring commitment Id
-    * @return HttpRequest
-    */
-    private HttpRequest buildCancelRequest(String commitmentId) {
-        return new PS_Request.Builder()
-            .withCommitmentId(commitmentId)
-            .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT_CANCEL)
-            .withMethod(UTIL_Http.Method.POST)
-            .build();
-    }
-
-    /**
     * @description Returns request type to send to Payment API endpoint.
     * @param closedRecord RecordWrapper
     * @return PS_Request.ElevateEndpoint
@@ -163,7 +152,7 @@ public without sharing class RD2_CancelCommitmentService {
         PS_Request.ElevateEndpoint requestType = PS_Request.ElevateEndpoint.COMMITMENT_CANCEL;
 
         if (hasPreviousTimeoutOrConflict(closedRecord)) {
-            requestType = PS_Request.ElevateEndpoint.COMMITMENT;
+            requestType = PS_Request.ElevateEndpoint.COMMITMENT_GET;
         }
 
         return requestType;

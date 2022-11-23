@@ -87,7 +87,7 @@ public inherited sharing class PS_CommitmentRequest {
     /***
      * @description Translates the Installment Period into the Elevate API frequency value
      */
-    private static final Map<String, String> frequencyByInstallmentPeriod = new Map<String, String>{
+    public static final Map<String, String> frequencyByInstallmentPeriod = new Map<String, String>{
         RD2_Constants.INSTALLMENT_PERIOD_YEARLY => Frequency.YEAR.name(),
         RD2_Constants.INSTALLMENT_PERIOD_MONTHLY => Frequency.MONTH.name(),
         RD2_Constants.INSTALLMENT_PERIOD_WEEKLY => Frequency.WEEK.name(),
@@ -105,20 +105,32 @@ public inherited sharing class PS_CommitmentRequest {
     /***
      * @description Default currency multiplier
      */
-    private static final Integer DEFAULT_CURRENCY_MULTIPLIER = 100;
+    public static final Integer DEFAULT_CURRENCY_MULTIPLIER = 100;
 
     /***
      * @description Contains max length for a first/last name passed to the Elevate commitment request
      */
     private static final Integer MAX_NAME_LENGTH = 60;
 
-    private static final String ACH_BANK_TYPE_CHECKING = 'CHECKING';
-    private static final String ACH_CODE_WEB = 'WEB';
-    private static final String ACH_CONSENT_MESSAGE = 'true';
+    public static final String ACH_BANK_TYPE_CHECKING = 'CHECKING';
+    public static final String ACH_CODE_WEB = 'WEB';
+    public static final String ACH_CONSENT_MESSAGE = 'true';
+    public static final String ACH_CONSENT_TYPE = 'OFFLINE';
 
     private static final Map<SObjectType, ElevateBankAccountType> BANK_ACCOUNT_TYPE_MAP = new Map<SObjectType, ElevateBankAccountType>{
         Contact.SObjectType => ElevateBankAccountType.INDIVIDUAL,
         Account.SObjectType => ElevateBankAccountType.BUSINESS
+    };
+
+    private static final Map<String, String> ELEVATE_PAUSE_REASONS = new Map<String, String>{
+        'Financial Difficulty' => 'FINANCIAL_DIFFICULTY',
+        'Donor Cancelled' => 'DONOR_CANCELED',
+        'Card Expired' => 'CARD_EXPIRED',
+        'Commitment Completed' => 'COMMITMENT_COMPLETED',
+        'Deceased Donor' => 'DECEASED_DONOR',
+        'Donor Lapsed' => 'DONOR_LAPSED',
+        'No Longer Interested' => 'NO_LONGER_INTERESTED',
+        'Unknown' => 'OTHER'
     };
 
     /***
@@ -168,29 +180,44 @@ public inherited sharing class PS_CommitmentRequest {
     * @param jsonRequestBody JSON containing parameters for the purchase call request body
     * @return HttpRequest
     */
-    public static HttpRequest buildRequest(String commitmentId, String jsonRequestBody) {
+    public static HttpRequest buildRequest(String commitmentId, String jsonRequestBody,
+        PS_Request.ElevateEndpoint endpoint) {
         UTIL_Http.Method method = String.isBlank(commitmentId)
             ? UTIL_Http.Method.POST
             : UTIL_Http.Method.PATCH;
 
         return new PS_Request.Builder()
             .withMethod(method)
-            .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT)
+            .withEndpoint(endpoint)
+            .withCommitmentId(commitmentId)
             .withRecommendedTimeout()
             .withBody(jsonRequestBody)
             .build();
     }
+    public static HttpRequest buildRequest(String commitmentId, String jsonRequestBody,
+            PS_Request.ElevateEndpoint endpoint, UTIL_Http.Method method) {
+
+        return new PS_Request.Builder()
+                .withMethod(method)
+                .withEndpoint(endpoint)
+                .withCommitmentId(commitmentId)
+                .withRecommendedTimeout()
+                .withBody(jsonRequestBody)
+                .build();
+    }
 
     /**
-    * @description Builds a commitment GET request for the provided commitment Id
+    * @description Builds a HTTP request for the provided commitment Id, Http method and endpoint
     * @param commitmentId Elevate recurring commitment Id
     * @return HttpRequest
     */
-    public static HttpRequest buildGetRequest(String commitmentId) {
+    public static HttpRequest buildRequest(String commitmentId, UTIL_Http.Method method,
+        PS_Request.ElevateEndpoint endpoint) {
         return new PS_Request.Builder()
                 .withCommitmentId(commitmentId)
-                .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT)
-                .withMethod(UTIL_Http.Method.GET)
+                .withEndpoint(endpoint)
+                .withRecommendedTimeout()
+                .withMethod(method)
                 .build();
     }
 
@@ -207,6 +234,16 @@ public inherited sharing class PS_CommitmentRequest {
         return isCreateCommitment
             ? getCreateRequestBody(rd, token)
             : getUpdateRequestBody(rd, oldRd, token);
+    }
+
+    public PauseRequestBody getPauseRequestBody(RD2_ScheduleService.ElevatePauseSchedule schedule) {
+
+
+       return new PauseRequestBody()
+           .withStartTimestamp(schedule.startDate)
+           .withEndTimestamp(schedule.endDate)
+           .withReasonComment(ELEVATE_PAUSE_REASONS.get(schedule.statusReason))
+           .withReason(ELEVATE_PAUSE_REASONS.get(schedule.statusReason));
     }
 
     /***
@@ -298,7 +335,8 @@ public inherited sharing class PS_CommitmentRequest {
     }
 
     private Map<String, Object> getElevateCommitment(String commitmentId) {
-        HttpRequest commitmentGetRequest = buildGetRequest(commitmentId);
+        HttpRequest commitmentGetRequest = buildRequest(commitmentId, UTIL_Http.Method.GET,
+            PS_Request.ElevateEndpoint.COMMITMENT_GET);
         UTIL_Http.Response response = requestService.sendRequest(commitmentGetRequest);
 
         Map<String, Object> responseBody = (Map<String, Object>) JSON.deserializeUntyped(response.body);
@@ -442,8 +480,47 @@ public inherited sharing class PS_CommitmentRequest {
         public String consent;
         public String type;
         public String bankType;
+        public ConsentDetails consentDetails = new ConsentDetails();
     }
 
+    public with sharing class ConsentDetails {
+        public String consentType;
+    }
+
+    public class PauseRequestBody {
+        public PauseRequestBody() {}
+
+        public String startTimestamp;
+        public String endTimestamp;
+        public String reason;
+        public String reasonComment;
+
+
+        public PauseRequestBody withStartTimestamp(Datetime startTimestamp) {
+            this.startTimestamp = getISOFormatDateTimeFor(startTimestamp);
+            return this;
+        }
+
+        public PauseRequestBody withEndTimestamp(Datetime endTimestamp) {
+            this.endTimestamp = getISOFormatDateTimeFor(endTimestamp);
+            return this;
+        }
+
+        public PauseRequestBody withReason(String reason) {
+            this.reason = reason;
+            return this;
+        }
+
+        public PauseRequestBody withReasonComment(String reasonComment) {
+            this.reasonComment = reasonComment;
+            return this;
+        }
+
+        public String getISOFormatDateTimeFor(Datetime specifiedDate) {
+            return specifiedDate.formatGmt('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
+        }
+
+    }
 
     /***
     * @description Assists in constructing the Commitment HttpRequest body.
@@ -470,6 +547,8 @@ public inherited sharing class PS_CommitmentRequest {
          * Optional properties
          */
         public Map<String, Object> productMetadata;
+
+
 
         /***
          * @description Constructor
@@ -561,6 +640,7 @@ public inherited sharing class PS_CommitmentRequest {
             this.achData.achCode = ACH_CODE_WEB;
             this.achData.bankType = ACH_BANK_TYPE_CHECKING;
             this.achData.consent = ACH_CONSENT_MESSAGE;
+            this.achData.consentDetails.consentType = ACH_CONSENT_TYPE;
             this.achData.type = accountHolderType.name();
             return this;
         }
@@ -716,7 +796,7 @@ public inherited sharing class PS_CommitmentRequest {
             Datetime donationDatetime = donationDate == Datetime.now().date()
                 ? Datetime.now()
                 : Datetime.newInstance(donationDate.year(), donationDate.month(), donationDate.day());
-            
+
             return donationDatetime.formatGMT('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
         }
     }

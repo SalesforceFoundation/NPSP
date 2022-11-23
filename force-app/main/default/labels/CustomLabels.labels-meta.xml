@@ -81,7 +81,7 @@
 1. Open a third-party address verification account. (Some are free for nonprofits.)&lt;br/&gt;
 2. In your address verification service, create the required authentication ID and/or token.&lt;br/&gt;
 3. Return to this settings page, click the Edit button above, and paste the ID and/or token into the appropriate fields.&lt;br/&gt;
-4. Complete the remaining fields and click Save. The help text for each field provides more information. If you still need more help, see the &lt;a href=&quot;https://powerofus.force.com/NPSP_Address_Verification&quot;&gt;NPSP documentation&lt;/a&gt;.</value>
+4. Complete the remaining fields and click Save. The help text for each field provides more information.</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_Intro_Title</fullName>
@@ -1479,7 +1479,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>ErrorEmailMessage</shortDescription>
-        <value>Salesforce encountered these NPSP errors. If you&apos;re unsure how to resolve the errors, post a message in the Nonprofit Success Pack group: https://powerofus.force.com/HUB_NPSP_Group</value>
+        <value>Salesforce encountered these NPSP errors. If you&apos;re unsure how to resolve the errors, post a message in the Nonprofit Success Pack group: https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE</value>
     </labels>
     <labels>
         <fullName>FieldSetRelatedFieldError</fullName>
@@ -1503,7 +1503,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>InactiveScheduledJobsOwnerErrMsg</shortDescription>
-        <value>There are Scheduled Jobs owned by an inactive User. Review your Scheduled Jobs and ensure the owner of each one is an active User. See Edit or Reschedule NPSP Scheduled Jobs for more information: https://powerofus.force.com/NPSP_Scheduled_Jobs</value>
+        <value>There are Scheduled Jobs owned by an inactive User. Review your Scheduled Jobs and ensure the owner of each one is an active User.</value>
     </labels>
     <labels>
         <fullName>NameRequired</fullName>
@@ -1608,6 +1608,14 @@
         <protected>true</protected>
         <shortDescription>Cannot change payment method to a non-Elevate payment method</shortDescription>
         <value>Valid Payment Methods for an active Elevate-connected Recurring Donation are Credit Card or ACH.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevatePauseInstallmentDateErrorMessage</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when trying to pause an RD a day from installment date</shortDescription>
+        <value>We can&apos;t pause an Elevate-connected Recurring Donation less than two days before the installment date.</value>
     </labels>
     <labels>
         <fullName>RD2_CurrencyChangeIsRestrictedOnRD</fullName>
@@ -2072,8 +2080,7 @@
         <protected>true</protected>
         <shortDescription>Enablement page introduction and guidelines</shortDescription>
         <value>Greetings! Enhanced Recurring Donations is our redesigned and improved Recurring Donations feature for the Nonprofit Success Pack (NPSP). A big thanks to our community members who offered their feedback and helped make Enhanced Recurring Donations possible.
-        &lt;br/&gt;&lt;br/&gt;Since there&apos;s already a Recurring Donations feature in NPSP, you&apos;ll need to perform several upgrade tasks and move your existing data to the Enhanced Recurring Donations model. We&apos;ve outlined the required tasks for you below.
-        &lt;br/&gt;&lt;br/&gt;You&apos;ll probably have questions along the way and we want you to be fully prepared at each step. Refer to the &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;Enhanced Recurring Donations documentation&lt;/a&gt; as you work through the upgrade process.</value>
+            &lt;br/&gt;&lt;br/&gt;Since there&apos;s already a Recurring Donations feature in NPSP, you&apos;ll need to perform several upgrade tasks and move your existing data to the Enhanced Recurring Donations model. We&apos;ve outlined the required tasks for you below.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMetaDeployConfirm</fullName>
@@ -2161,7 +2168,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Message displayed on a migration error</shortDescription>
-        <value>Your migration run has errors, these will need to be fixed to complete a successful Migration. See the errors by going to NPSP Settings &gt; System Tools &gt; Error Logs. Consult the &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt; for help. Fix the errors then return and try again.</value>
+        <value>Your migration run has errors, these will need to be fixed to complete a successful Migration. See the errors by going to NPSP Settings &gt; System Tools &gt; Error Logs.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMigrationIntro</fullName>
@@ -2242,8 +2249,7 @@
         <protected>true</protected>
         <shortDescription>Enablement preparation tasks introduction and guidelines</shortDescription>
         <value>&lt;ul&gt;&lt;li&gt;Disable workflows, processes, validation rules and triggers on the Recurring Donations, Opportunity, and Payment objects.&lt;/li&gt;
-&lt;li&gt;Backup your database, including all Recurring Donations and their related records.&lt;/li&gt;
-&lt;li&gt;Read the Enhanced Recurring Donations &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt;.&lt;/li&gt;&lt;/ul&gt;</value>
+&lt;li&gt;Backup your database, including all Recurring Donations and their related records.&lt;/li&gt;&lt;/ul&gt;</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementPrepTitle</fullName>
@@ -2260,8 +2266,7 @@
         <protected>true</protected>
         <shortDescription>Simple enablement page introduction and guidelines</shortDescription>
         <value>Enhanced Recurring Donations makes Recurring Donations more flexible and easier to manage than ever before. To enable Enhanced Recurring Donations, follow the steps below. You must complete ALL the steps to fully enable Enhanced Recurring Donations.
-        &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Because you have no Recurring Donation records, you don&apos;t need to validate or migrate any data.&lt;/b&gt;
-        &lt;br/&gt;&lt;br/&gt;For more information, read the &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;Enhanced Recurring Donations documentation&lt;/a&gt;.</value>
+        &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Because you have no Recurring Donation records, you don&apos;t need to validate or migrate any data.&lt;/b&gt;</value>
     </labels>
     <labels>
         <fullName>RD2_EndDateMustBeLaterThanCloseWonOpp</fullName>
@@ -4100,7 +4105,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Explanation of Batch Data Entry not being supported &amp; recommendations</shortDescription>
-        <value>As of October 1, 2020, Batch Data Entry is no longer supported. Most capabilities have been replaced with newer features in NPSP. If you have any in-progress batches, you can still access those records, but you can&apos;t process them using Batch Data Entry. Contact support if you need to access in-progress batches. &lt;br/&gt; You may want to explore Gift Entry as an alternative to Batch Data Entry. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.</value>
+        <value>As of October 1, 2020, Batch Data Entry is no longer supported. Most capabilities have been replaced with newer features in NPSP. If you have any in-progress batches, you can still access those records, but you can&apos;t process them using Batch Data Entry. Contact support if you need to access in-progress batches. &lt;br/&gt; You may want to explore Gift Entry as an alternative to Batch Data Entry.</value>
     </labels>
     <labels>
         <fullName>bdeRetirementWarningBody</fullName>
@@ -4108,7 +4113,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Explanation of Batch Data Entry retirement &amp; recommendations</shortDescription>
-        <value>On October 1, 2020, Batch Data Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Data Entry. To ensure a smooth transition, enable and use Gift Entry in advance of October 1st. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.</value>
+        <value>On October 1, 2020, Batch Data Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Data Entry. To ensure a smooth transition, enable and use Gift Entry in advance of October 1st.</value>
     </labels>
     <labels>
         <fullName>bdeRetirementWarningHeader</fullName>
@@ -5840,12 +5845,19 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Process Batch &amp; Payments</value>
     </labels>
     <labels>
+        <fullName>bgeEditPaymentInformation</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warns users to re-enter payment information when editing Elevate-connected gifts</shortDescription>
+        <value>You can&apos;t edit this Elevate-connected gift until you re-enter the payment information. Select Edit Payment Information.</value>
+    </labels>
+    <labels>
         <fullName>bgeRetirementWarningBody</fullName>
         <categories>Batch Data Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Explanation of Batch Gift Entry retirement &amp; recommendations</shortDescription>
-        <value>On July 13, 2021, legacy Batch Gift Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Gift Entry. To ensure a smooth transition, enable and use the newer Gift Entry in advance of July 13th. Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.</value>
+        <value>On July 13, 2021, legacy Batch Gift Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Gift Entry. To ensure a smooth transition, enable and use the newer Gift Entry in advance of July 13th.</value>
     </labels>
     <labels>
         <fullName>bgeRetirementWarningHeader</fullName>
@@ -5874,7 +5886,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
             If you have any in-progress batches, you can still access those records, but you can&apos;t process them using Batch Gift Entry.
             Contact support if you need to access in-progress batches.
             You may want to explore Gift Entry as an alternative to Batch Gift Entry.
-            Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt;.
         </value>
     </labels>
     <labels>
@@ -6129,6 +6140,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You don&apos;t have the required permissions to perform this action. Contact your system administrator for assistance.</value>
     </labels>
     <labels>
+        <fullName>commonAccountNumber</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for Account Number</shortDescription>
+        <value>Account Number</value>
+    </labels>
+    <labels>
+        <fullName>commonACHLast4</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for ach last 4</shortDescription>
+        <value>ACH Last 4</value>
+    </labels>
+    <labels>
         <fullName>commonActivate</fullName>
         <categories>Auto Number</categories>
         <language>en_US</language>
@@ -6151,6 +6178,40 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Amount</shortDescription>
         <value>Amount</value>
+    </labels>
+    <labels>
+        <fullName>gePaymentProcessedWarning</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning about editing fields when transaction already processed</shortDescription>
+        <value>{0} successfully processed the payment. Changing the donor, date, amount, or payment method will result in inconsistent records for the same transaction in {0} and NPSP.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAdvancedMapping3</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpAdvancedMapping3</shortDescription>
+        <value>Find complete Advanced Mapping setup documentation &lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpCustomizableRollupsEnable1</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgHelpCustomizableRollupsEnable1</shortDescription>
+        <value>
+            You can find complete Customizable Rollups documentation &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.
+        </value>
+    </labels>
+    <labels>
+        <fullName>stgHelpHHObjectOverview</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpHHObjectOverview</shortDescription>
+        <value>To learn more about the recommended Household Account model, see the &lt;a href=&quot;https://powerofus.force.com/NPSP_Account_Model&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</value>
     </labels>
     <labels>
         <fullName>commonAssistiveError</fullName>
@@ -6215,6 +6276,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Common label for card last 4</shortDescription>
         <value>Card Last 4</value>
+    </labels>
+    <labels>
+        <fullName>commonCVC</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for CVC code</shortDescription>
+        <value>CVC</value>
     </labels>
     <labels>
         <fullName>commonCVV</fullName>
@@ -6551,6 +6620,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Review Form</shortDescription>
         <value>Review Form</value>
+    </labels>
+    <labels>
+        <fullName>commonRoutingNumber</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for Routing Number</shortDescription>
+        <value>Routing Number</value>
     </labels>
     <labels>
         <fullName>commonAdminPermissionErrorMessage</fullName>
@@ -6894,7 +6971,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Text to be display before the &quot;See Duplicate Contact&quot; button</shortDescription>
-        <value>See all duplicate Contacts found using matching rules. &lt;a href=&quot;https://powerofus.force.com/IP_Contacts&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; Tell Me More &lt;/b&gt;&lt;/a&gt;</value>
+        <value>See all duplicate Contacts found using matching rules. &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Merge_Contacts.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; Tell Me More &lt;/b&gt;&lt;/a&gt;</value>
     </labels>
     <labels>
         <fullName>conMergeSeeDupConDRS</fullName>
@@ -7529,8 +7606,8 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Credit card(s) will not be processed until batch is processed</shortDescription>
-        <value>The donor&apos;s credit card will be processed when you process the batch.</value>
+        <shortDescription>Payment(s) will not be processed until batch is processed</shortDescription>
+        <value>The donor&apos;s payment will be processed when you process the batch.</value>
     </labels>
     <labels>
         <fullName>geBodyTemplateInfoLeftCol</fullName>
@@ -9775,14 +9852,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>One or more card authorizations expired. To ensure these payments are charged when processing the batch, reenter the payment information for donations with an Elevate Payment Status of Expired Authorization.</value>
     </labels>
     <labels>
-        <fullName>gePaymentProcessedWarning</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Warning about editing fields when transaction already processed</shortDescription>
-        <value>{0} successfully processed the payment. Changing the donor, date, amount, or payment method will result in inconsistent records for the same transaction in {0} and NPSP.</value>
-    </labels>
-    <labels>
         <fullName>gePaymentProcessError</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -9895,6 +9964,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Failure message if invalid configuration params was provided for onboarding</shortDescription>
         <value>Invalid configuration parameters were provided</value>
+    </labels>
+    <labels>
+        <fullName>geRD2FirstInstallmentPaid</fullName>
+        <categories>Gift Entry, Recurring Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for First Installment paid checkbox in BGE</shortDescription>
+        <value>First installment paid</value>
     </labels>
     <labels>
         <fullName>geSearchPlaceholder</fullName>
@@ -11279,7 +11356,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionNothingScheduled</shortDescription>
-        <value>To reschedule the default NPSP jobs, go to NPSP Settings | Bulk Data Processes | Process Scheduler. Click Edit. Make sure Don&apos;t Enable Auto Schedule Default NPSP Job is not selected. Click Save. See Edit or Reschedule NPSP Jobs for more information: https://powerofus.force.com/NPSP_Scheduled_Jobs</value>
+        <value>To reschedule the default NPSP jobs, go to NPSP Settings | Bulk Data Processes | Process Scheduler. Click Edit. Make sure Don&apos;t Enable Auto Schedule Default NPSP Job is not selected. Click Save.</value>
     </labels>
     <labels>
         <fullName>healthSolutionOCRDupPrimary</fullName>
@@ -11350,7 +11427,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionTriggerHandlerMismatch</shortDescription>
-        <value>Changes to triggers can affect core NPSP functionality in unexpected ways, and should be thoroughly tested before deployment to production. If these changes were unintentional, you should reset your Trigger Handlers to match the default NPSP configuration. See Manage Trigger Handlers for more information: https://powerofus.force.com/NPSP_Manage_Trigger_Handlers</value>
+        <value>Changes to triggers can affect core NPSP functionality in unexpected ways, and should be thoroughly tested before deployment to production. If these changes were unintentional, you should reset your Trigger Handlers to match the default NPSP configuration.</value>
     </labels>
     <labels>
         <fullName>healthSolutionUnsupportedPicklistValue</fullName>
@@ -12214,38 +12291,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>A paid Payment must have a Payment Date.</value>
     </labels>
     <labels>
-        <fullName>pmtRefundPaymentDate</fullName>
-        <categories>Payment</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Payment Date</shortDescription>
-        <value>Payment Date</value>
-    </labels>
-    <labels>
-        <fullName>pmtRefundPaymentErrorMessage</fullName>
-        <categories>Payment</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Error message title for refund</shortDescription>
-        <value>There was an error processing the refund.</value>
-    </labels>
-    <labels>
-        <fullName>pmtRefundAmountInvalid</fullName>
-        <categories>Payment</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Refund error when the refund amount is invalid</shortDescription>
-        <value>Enter a refund that&apos;s less than or equal to the remaining balance.</value>
-    </labels>
-    <labels>
-        <fullName>pmtRefundPaymentSuccessMessage</fullName>
-        <categories>Payment</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Success message for refund</shortDescription>
-        <value>Refund was successful.</value>
-    </labels>
-    <labels>
         <fullName>pmtPaymentNotFound</fullName>
         <categories>Payment</categories>
         <language>en_US</language>
@@ -12262,6 +12307,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>This payment has already been refunded, or is a refund itself.</value>
     </labels>
     <labels>
+        <fullName>pmtRefundAllocationHelpText</fullName>
+        <categories>Payment, Refund</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund Amount Allocation help text</shortDescription>
+        <value>Fixed GAU Allocations are changed to percentages to adjust for this refund.</value>
+    </labels>
+    <labels>
         <fullName>pmtRefundAmount</fullName>
         <categories>Payment</categories>
         <language>en_US</language>
@@ -12270,20 +12323,12 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Refund Amount</value>
     </labels>
     <labels>
-        <fullName>pmtRefundPaymentMessage</fullName>
+        <fullName>pmtRefundAmountInvalid</fullName>
         <categories>Payment</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Refund Information</shortDescription>
-        <value>Refund the following payment:</value>
-    </labels>
-    <labels>
-        <fullName>pmtRefundProcessing</fullName>
-        <categories>Payment</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Refund submitted for processing.</shortDescription>
-        <value>Refund submitted for processing. Check for the refunded Payment on the Opportunity record.</value>
+        <shortDescription>Refund error when the refund amount is invalid</shortDescription>
+        <value>Enter a refund that&apos;s less than or equal to the remaining balance.</value>
     </labels>
     <labels>
         <fullName>pmtRefundPaymentConfirmedButton</fullName>
@@ -12294,12 +12339,68 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Refund Payment</value>
     </labels>
     <labels>
+        <fullName>pmtRefundPaymentDate</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Payment Date</shortDescription>
+        <value>Payment Date</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentErrorMessage</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message title for refund</shortDescription>
+        <value>There was an error processing the refund.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundAmountTooHigh</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when refund amount is too high</shortDescription>
+        <value>Refund can&apos;t be more than {{AMOUNT}}.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundAmountTooLow</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when refund amount is too low</shortDescription>
+        <value>Enter a refund that&apos;s more than 0.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundProcessing</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refund submitted for processing.</shortDescription>
+        <value>Refund submitted for processing. Check for the refunded Payment on the Opportunity record.</value>
+    </labels>
+    <labels>
+        <fullName>pmtRefundPaymentSuccessMessage</fullName>
+        <categories>Payment</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Success message for refund</shortDescription>
+        <value>Refund was successful.</value>
+    </labels>
+    <labels>
         <fullName>pmtRefundPaymentTitle</fullName>
         <categories>Payment, Refund</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Refund Payment Title</shortDescription>
         <value>Refund Payment?</value>
+    </labels>
+    <labels>
+        <fullName>pmtRemainingBalance</fullName>
+        <categories>Payment, Refund</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Remaining Balance</shortDescription>
+        <value>Remaining Balance</value>
     </labels>
     <labels>
         <fullName>pmtUnpaidPaymentScheduledDateRequired</fullName>
@@ -12598,12 +12699,172 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>A written off Payment must have a Payment Date.</value>
     </labels>
     <labels>
+        <fullName>psACH</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for ACH payment method.</shortDescription>
+        <value>ACH (bank account)</value>
+    </labels>
+    <labels>
+        <fullName>psElevateConnectionTimeout</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message for timeout connecting to Elevate.</shortDescription>
+        <value>The connection to Elevate timed out. Try again later.</value>
+    </labels>
+    <labels>
+        <fullName>psGatewayDefault</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Picklist option label for default gateway.</shortDescription>
+        <value>Always Use Default Gateway</value>
+    </labels>
+    <labels>
+        <fullName>psGatewaySelectionLabel</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Gateway selection in settings.</shortDescription>
+        <value>NPSP uses the gateway that was added to Elevate most recently unless you override it. To set a default Elevate payment gateway, select it here.</value>
+    </labels>
+    <labels>
+        <fullName>psGatewaysNotFound</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message for Elevate Payment Gateways not found.</shortDescription>
+        <value>No Payment Gateways were found. Check your Elevate Account.</value>
+    </labels>
+    <labels>
+        <fullName>psGatewayNotValid</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message for saved Elevate Payment Gateway not found.</shortDescription>
+        <value>We can&apos;t validate the previously saved gateway. Select a different gateway.</value>
+    </labels>
+    <labels>
+        <fullName>psHideGatewaysAndMethods</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to hide Elevate Gateways and Payment Methods.</shortDescription>
+        <value>Hide Elevate Gateways and Payment Methods</value>
+    </labels>
+    <labels>
+        <fullName>psHidePaymentMethods</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to hide Payment Methods.</shortDescription>
+        <value>Hide Payment Methods</value>
+    </labels>
+    <labels>
+        <fullName>psPaymentGateway</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to identify selected Payment Gateway.</shortDescription>
+        <value>Payment Gateway:</value>
+    </labels>
+    <labels>
+        <fullName>psSelectPaymentGateway</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to select Payment Gateway.</shortDescription>
+        <value>Select Payment Gateway</value>
+    </labels>
+    <labels>
+        <fullName>psSelectPaymentMethods</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to select Payment Methods.</shortDescription>
+        <value>Select Payment Methods</value>
+    </labels>
+    <labels>
         <fullName>psSelectValidPaymentMethod</fullName>
         <categories>Gift Entry, Recurring Donations</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>How to activate the Elevate field bundle to enter payment information</shortDescription>
         <value>To enter payment, select a valid Payment Method.</value>
+    </labels>
+    <labels>
+        <fullName>psShowGatewaysAndMethods</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to show Elevate Gateways and Payment Methods.</shortDescription>
+        <value>Show Elevate Gateways and Payment Methods</value>
+    </labels>
+    <labels>
+        <fullName>psEnableGatewayAssignment</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to show Gateway Assignment is enabled.</shortDescription>
+        <value>Enable Gateway Assignment</value>
+    </labels>
+    <labels>
+        <fullName>psEnableGatewayAssignmentHeader</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Gateway Assignment Header.</shortDescription>
+        <value>Enable Gateway Assignment</value>
+    </labels>
+    <labels>
+        <fullName>psEnableGatewayAssignmentHelp</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Gateway Assignment Help Message.</shortDescription>
+        <value>Enabling gateway assignment allows you to select the payment gateway and respective payment methods when modifying Gift Entry Templates.</value>
+    </labels>
+    <labels>
+        <fullName>psGatewayManagementHelp</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Gateway Management Help Message.</shortDescription>
+        <value>These settings manage the payment gateways for Elevate transactions.</value>
+    </labels>
+    <labels>
+        <fullName>psGatewayIDHeader</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Gateway ID Header.</shortDescription>
+        <value>Gateway ID</value>
+    </labels>
+    <labels>
+        <fullName>psGatewayIDHelp</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Gateway ID Help Message.</shortDescription>
+        <value>NPSP uses the gateway that was added to Elevate most recently unless you override it. To change the gateway NPSP usess, click Edit, enter the gateway ID, and save your work. Find the gateway ID in the Elevate Admin Console | Gateway Management.</value>
+    </labels>
+    <labels>
+        <fullName>psShowPaymentMethods</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to show Payment Methods.</shortDescription>
+        <value>Show Payment Methods</value>
+    </labels>
+    <labels>
+        <fullName>psUnableToConnect</fullName>
+        <categories>Payment Gateway Management</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message for unable to connect to Elevate.</shortDescription>
+        <value>Unable to connect to Elevate. Check your connection and try again.</value>
     </labels>
     <labels>
         <fullName>ProgressMarkerAssistiveTextProgress</fullName>
@@ -13453,14 +13714,6 @@ Selecting Don&apos;t Auto Schedule Default NPSP Jobs tells NPSP not to check for
         <value>You can disable Advanced Mapping and go back to Help Text mapping, but any changes you made with Advanced Mapping will be lost.</value>
     </labels>
     <labels>
-        <fullName>stgHelpAdvancedMapping3</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgHelpAdvancedMapping3</shortDescription>
-        <value>Find complete Advanced Mapping setup documentation &lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.</value>
-    </labels>
-    <labels>
         <fullName>stgHelpAdvancedMapping4</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -13470,7 +13723,7 @@ Selecting Don&apos;t Auto Schedule Default NPSP Jobs tells NPSP not to check for
             &lt;b&gt;This message won&apos;t be displayed if you leave this page! Take a screenshot of this page or copy the information in the table below to track the Help Text mappings you need correct. &lt;/b&gt;
             &lt;br/&gt;
             &lt;br/&gt;
-            We couldn&apos;t convert some of your existing Help Text mappings because they&apos;re invalid. &lt;a href=&quot;https://powerofus.force.com/NPSP_Troubleshoot_Help_Text&quot; target=&quot;_blank&quot;&gt;Read more about common Help Text mapping issues&lt;/a&gt;. We recommend disabling Advanced Mapping, correcting the invalid Help Text mappings, then re-enabling Advanced Mapping. Alternatively, you could add these mappings when you configure Advanced Mapping on the next screen, but these additional mappings will revert to the original invalid Help Text if you disable Advanced Mapping.
+            We couldn&apos;t convert some of your existing Help Text mappings because they&apos;re invalid. We recommend disabling Advanced Mapping, correcting the invalid Help Text mappings, then re-enabling Advanced Mapping. Alternatively, you could add these mappings when you configure Advanced Mapping on the next screen, but these additional mappings will revert to the original invalid Help Text if you disable Advanced Mapping.
         </value>
     </labels>
     <labels>
@@ -13702,23 +13955,13 @@ Before starting this process, we recommend disabling the following when they aff
 Once the process is 100% complete, you can safely leave or refresh this page.</value>
     </labels>
     <labels>
-        <fullName>stgHelpCustomizableRollupsEnable1</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>stgHelpCustomizableRollupsEnable1</shortDescription>
-        <value>
-            You can find complete Customizable Rollups documentation &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.
-        </value>
-    </labels>
-    <labels>
         <fullName>stgHelpCustomizableRollupsEnable2</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgHelpCustomizableRollupsEnable2</shortDescription>
         <value>
-            When you enable Customizable Rollups for the first time, we will automatically convert your existing rollups and the 87 out-of-box NPSP rollups into Customizable Rollups. For complete details, see &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;this doc&lt;/a&gt;.
+            When you enable Customizable Rollups for the first time, we will automatically convert your existing rollups and the 87 out-of-box NPSP rollups into Customizable Rollups.
             &lt;br/&gt;&lt;br/&gt;
             You can disable and go back to legacy rollups, but any new rollups or rollup/filter changes made in Customizable Rollups won&apos;t be applied to your legacy rollup settings.
         </value>
@@ -13880,14 +14123,6 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <value>When selected, NPSP automatically creates Contact Roles on Individual gifts for Household members of the Opportunity&apos;s Primary Contact.</value>
     </labels>
     <labels>
-        <fullName>stgHelpHHObjectOverview</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgHelpHHObjectOverview</shortDescription>
-        <value>To learn more about the recommended Household Account model, see the &lt;a href=&quot;https://powerofus.force.com/NPSP_Account_Model&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</value>
-    </labels>
-    <labels>
         <fullName>stgHelpHHRules</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -13925,7 +14160,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpLeadConvert</shortDescription>
-        <value>Specifies the default behavior for Opportunity creation when you convert a Lead to a Contact. If left unselected, Salesforce will NOT automatically create an Opportunity when you convert Leads to Contacts. For more information, see the &lt;a href=&quot;https://powerofus.force.com/NPSP_Leads&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</value>
+        <value>Specifies the default behavior for Opportunity creation when you convert a Lead to a Contact. If left unselected, Salesforce will NOT automatically create an Opportunity when you convert Leads to Contacts.</value>
     </labels>
     <labels>
         <fullName>stgHelpLvlAssignBatch</fullName>
@@ -14033,7 +14268,7 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpOCR</shortDescription>
-        <value>Soft Credits, Contact Roles, and Matching Gifts relate to each other in important ways. If you&apos;re not familiar with these concepts and how they interact, you should read through the &lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt; before making any adjustments to these settings.</value>
+        <value>Soft Credits, Contact Roles, and Matching Gifts relate to each other in important ways. If you&apos;re not familiar with these concepts and how they interact, you should read through the &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Automated_Soft_Credits.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt; before making any adjustments to these settings.</value>
     </labels>
     <labels>
         <fullName>stgHelpOCRDefaultRole</fullName>
@@ -14089,7 +14324,7 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpOppNamingFormat</shortDescription>
-        <value>The Opportunity Name format. Choose &quot;other&quot; to create your own. See the &lt;a href=&quot;https://powerofus.force.com/NPSP_Opp_Names&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt; for details.</value>
+        <value>The Opportunity Name format. Choose &quot;other&quot; to create your own.</value>
     </labels>
     <labels>
         <fullName>stgHelpOppNamingRecTypes</fullName>
@@ -14177,7 +14412,7 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpPowerOfUsHub</shortDescription>
-        <value>Got questions? Try the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; group for questions about NPSP and the &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; group for questions about Salesforce administration and configuration.&lt;br/&gt;&lt;br/&gt;Keep up with the latest NPSP release notes in the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt; group.</value>
+        <value>Got questions? Try the &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; group for questions about NPSP and the &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; group for questions about Salesforce administration and configuration.&lt;br/&gt;&lt;br/&gt;Keep up with the latest NPSP release notes in the &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC.htm&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt; group.</value>
     </labels>
     <labels>
         <fullName>stgHelpPrimaryContactBatch</fullName>
@@ -14429,7 +14664,7 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRelReciprocalMethod</shortDescription>
-        <value>Specifies the method used for generating reciprocal relationships. See the &lt;a href=&quot;https://powerofus.force.com/NPSP_Relationships_Settings&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt; for more information.</value>
+        <value>Specifies the method used for generating reciprocal relationships.</value>
     </labels>
     <labels>
         <fullName>stgHelpRelReciprocalName</fullName>

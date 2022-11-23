@@ -40,11 +40,11 @@ const getNumberAsCurrencyByCode = (amount, currencyCode) => {
 * @description Formats the provided number into the lowest common denominator by currency as a string
 * based on the logged in user's locale and currency.
 *
-* @param {integer} number: Number to convert into lowest common denominator
+* @param number: Number to convert into lowest common denominator
 */
 const getCurrencyLowestCommonDenominator = (number) => {
     let multiplier = isNull(currencyMultiplier.get(CURRENCY)) ? DEFAULT_MULTIPLIER : currencyMultiplier.get(CURRENCY);
-    return number * multiplier;
+    return parseInt(parseFloat(number) * multiplier, 10);
 }
 
 export {

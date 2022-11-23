@@ -3,7 +3,7 @@ import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGif
 import updateGiftBatchWith from '@salesforce/apex/GE_GiftEntryController.updateGiftBatchWith';
 import deleteGiftFromGiftBatch from '@salesforce/apex/GE_GiftEntryController.deleteGiftFromGiftBatch';
 import addGiftTo from '@salesforce/apex/GE_GiftEntryController.addGiftTo';
-import hasQueueableId from '@salesforce/apex/GE_GiftEntryController.hasQueueableId';
+import hasActiveRunningJob from '@salesforce/apex/GE_GiftEntryController.hasActiveRunningJob';
 import isGiftBatchAccessible from '@salesforce/apex/GE_GiftEntryController.isGiftBatchAccessible';
 
 // Methods below still need to be replaced/updated to go through service x domain. These were only moved.
@@ -43,7 +43,7 @@ class GiftBatch {
         this._accessible = await isGiftBatchAccessible({ batchId: this._id });
 
         if (this._accessible) {
-            this._isProcessing = await hasQueueableId({ batchId: this._id });
+            this._isProcessing = await hasActiveRunningJob({ batchId: this._id });
             const viewModel = await getGiftBatchViewWithLimitsAndOffsets({
                 dataImportBatchId: this._id,
                 giftsLimit: DEFAULT_MEMBER_GIFTS_QUERY_LIMIT,
@@ -78,7 +78,7 @@ class GiftBatch {
 
     async refreshTotals() {
         this._totals = await getGiftBatchTotalsBy({ batchId: this._id });
-        this._isProcessing = await hasQueueableId({ batchId: this._id });
+        this._isProcessing = await hasActiveRunningJob({ batchId: this._id });
         return this.state();
     }
 

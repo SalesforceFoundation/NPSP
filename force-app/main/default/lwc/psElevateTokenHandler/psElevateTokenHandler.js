@@ -3,12 +3,13 @@ import { getNamespace, isFunction, isNull, validateJSONString } from 'c/utilComm
 import PAYMENT_AUTHORIZATION_TOKEN_FIELD from
         '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import tokenRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
+import getOriginUrls from '@salesforce/apex/GE_PaymentServices.getOriginUrls';
 import { isBlank } from 'c/util';
 
 
 /***
-* @description Visualforce page used to handle the payment services credit card tokenization request
-*/
+ * @description Visualforce page used to handle the payment services credit card tokenization request
+ */
 const TOKENIZE_CARD_PAGE_NAME = 'GE_TokenizeCard';
 
 const MOUNT_IFRAME_EVENT_ACTION = 'mount';
@@ -16,20 +17,20 @@ const MOUNT_IFRAME_EVENT_ACTION = 'mount';
 const SET_PAYMENT_METHOD_EVENT_ACTION = 'setPaymentMethod';
 
 /***
-* @description Max number of ms to wait for the response containing a token or an error
-*/
+ * @description Max number of ms to wait for the response containing a token or an error
+ */
 const TOKENIZE_TIMEOUT_MS = 10000;
 
 const NON_NAMESPACED_CHARACTER = 'c';
 
 
 /***
-* @description Payment services Elevate credit card tokenization service
-*/
+ * @description Payment services Elevate credit card tokenization service
+ */
 class psElevateTokenHandler {
     /***
-    * @description Custom labels
-    */
+     * @description Custom labels
+     */
     labels = Object.freeze({
         tokenRequestTimedOut
     });
@@ -39,38 +40,33 @@ class psElevateTokenHandler {
 
 
     /***
-    * @description Returns credit card tokenization Visualforce page URL
-    */
+     * @description Returns credit card tokenization Visualforce page URL
+     */
     getTokenizeCardPageURL() {
         return this.currentNamespace
             ? `/apex/${this.currentNamespace}__${TOKENIZE_CARD_PAGE_NAME}`
             : `/apex/${TOKENIZE_CARD_PAGE_NAME}`;
     }
 
-    getVisualForceOriginURLs(domainInfo, namespace) {
-        const url = `https://${domainInfo.orgDomain}--${namespace}.visualforce.com`;
-        const alternateUrl = `https://${domainInfo.orgDomain}--${namespace}.${domainInfo.podName}.visual.force.com`;
-        const productionEnhancedUrl = `https://${domainInfo.orgDomain}--${namespace}.vf.force.com`;
-        const sandboxEnhancedUrl =  `https://${domainInfo.orgDomain}--${namespace}.sandbox.vf.force.com`;
+    async getVisualForceOriginURLs(domainInfo, namespace) {
+        const originUrls = await getOriginUrls({namespace});
 
         const originURLs = [
-            {value: url},
-            {value: alternateUrl},
-            {value: productionEnhancedUrl},
-            {value: sandboxEnhancedUrl}
+            {value: originUrls.visualForceOriginUrl},
+            {value: originUrls.lightningOriginUrl}
         ];
         if (!isBlank(domainInfo.communityBaseURL)) {
             return [...originURLs, { value: domainInfo.communityBaseURL }];
         }
-        
+
         return originURLs;
     }
 
     /***
-    * @description Builds the Visualforce origin url that we need in order to
-    * make sure we're only listening for messages from the correct source.
-    */
-    setVisualforceOriginURLs(domainInfo) {
+     * @description Builds the Visualforce origin url that we need in order to
+     * make sure we're only listening for messages from the correct source.
+     */
+    async setVisualforceOriginURLs(domainInfo) {
         if (isNull(domainInfo)) {
             return;
         }
@@ -78,29 +74,29 @@ class psElevateTokenHandler {
             ? this.currentNamespace
             : NON_NAMESPACED_CHARACTER;
         this._visualforceOriginUrls =
-            this.getVisualForceOriginURLs(domainInfo, namespace);
+            await this.getVisualForceOriginURLs(domainInfo, namespace);
 
     }
 
     /***
-    * @description Returns the NPSP namespace (if any)
-    */
+     * @description Returns the NPSP namespace (if any)
+     */
     get currentNamespace() {
         return getNamespace(PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName);
     }
 
     /***
-    * @description Dispatches the application event when the Elevate credit card iframe
-    * is displayed or hidden
-    */
+     * @description Dispatches the application event when the Elevate credit card iframe
+     * is displayed or hidden
+     */
     dispatchApplicationEvent(eventName, payload) {
         fireEvent(null, eventName, payload);
     }
 
     /***
-    * @description Listens for a message from the Visualforce iframe.
-    * Rejects any messages from an unknown origin.
-    */
+     * @description Listens for a message from the Visualforce iframe.
+     * Rejects any messages from an unknown origin.
+     */
     registerPostMessageListener(component) {
         const self = this;
 
@@ -109,7 +105,7 @@ class psElevateTokenHandler {
                 if (typeof event.data === 'object') {
                     component.handleMessage(event.data);
                 } else {
-                    const message = JSON.parse(event.data);
+                    const message = event.data;
                     component.handleMessage(message);
                 }
             }
@@ -139,9 +135,9 @@ class psElevateTokenHandler {
     }
 
     /***
-    * @description Handles messages received from Visualforce page.
-    * @param message Message received from the iframe
-    */
+     * @description Handles messages received from Visualforce page.
+     * @param message Message received from the iframe
+     */
     handleMessage(message) {
         const isValidMessageType = message.type === 'post__npsp';
         if (isValidMessageType) {
@@ -158,12 +154,12 @@ class psElevateTokenHandler {
      * @return Promise A token promise
      */
     requestToken({
-        iframe,
-        handleError,
-        resolveToken,
-        eventAction,
-        tokenizeParameters,
-    } = {}) {
+                     iframe,
+                     handleError,
+                     resolveToken,
+                     eventAction,
+                     tokenizeParameters,
+                 } = {}) {
         if (isNull(iframe)) {
             return;
         }
@@ -228,7 +224,7 @@ class psElevateTokenHandler {
         return setPaymentMethodPromise;
     }
 
-    mount(iframe, paymentMethod, handleError, resolveMount) {
+    mount(iframe, paymentMethod, handleError, resolveMount, gatewayOverride) {
         if (isNull(iframe)) {
             return;
         }
@@ -245,7 +241,8 @@ class psElevateTokenHandler {
 
         const message = {
             action: MOUNT_IFRAME_EVENT_ACTION,
-            paymentMethod: paymentMethod
+            paymentMethod: paymentMethod,
+            gatewayId: gatewayOverride
         };
         this.sendIframeMessage(iframe, message, this._visualforceOrigin);
 
@@ -255,7 +252,7 @@ class psElevateTokenHandler {
 
     sendIframeMessage(iframe, message, targetOrigin) {
         iframe.contentWindow.postMessage(
-            message,
+            JSON.stringify(message),
             targetOrigin
         );
     }

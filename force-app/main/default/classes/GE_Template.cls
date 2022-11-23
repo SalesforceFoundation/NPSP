@@ -275,6 +275,7 @@ public with sharing class GE_Template {
         @AuraEnabled public String[] defaultBatchTableColumns;
         @AuraEnabled public String permissionErrorType;
         @AuraEnabled public String permissionErrors;
+        @AuraEnabled public ElevateSettings elevateSettings;
 
         /* Additional props PS */
         @AuraEnabled public BatchHeaderField[] batchHeaderFields;
@@ -313,6 +314,13 @@ public with sharing class GE_Template {
 
             return giftFieldApiNames;
         }
+    }
+
+    public class ElevateSettings {
+        @AuraEnabled public String uniqueKey;
+        @AuraEnabled public Boolean isACHEnabled;
+        @AuraEnabled public Boolean isCreditCardEnabled;
+        @AuraEnabled public String gatewayName;
     }
 
     /**

@@ -42,7 +42,7 @@
 1. Öffnen Sie einen Drittanbieter-Adressenüberprüfungs-Account. (Einige sind für gemeinnützige Organisationen kostenlos.)&lt;br/&gt;
 2. Erstellen Sie in Ihrem Adressenüberprüfungsservice die erforderlichen Authentifizierungskennung und/oder -Token.&lt;br/&gt;
 3. Kehren Sie zu dieser Einstellungsseite zurück, klicken Sie oben auf die Schaltfläche &quot;Bearbeiten&quot; und fügen Sie die Kennung und/oder den Token in die entsprechenden Felder ein.&lt;br/&gt;
-4. Füllen Sie die restlichen Felder aus und klicken Sie auf &quot;Speichern&quot;. Weitere Informationen finden Sie im Hilfetext zu den einzelnen Feldern. Wenn Sie weitere Hilfe benötigen, lesen Sie in der &lt;a href=&quot;https://powerofus.force.com/NPSP_Address_Verification&quot;&gt;NPSP-Dokumentation&lt;/a&gt; nach.</label>
+4. Füllen Sie die restlichen Felder aus und klicken Sie auf &quot;Speichern&quot;. Weitere Informationen finden Sie im Hilfetext zu den einzelnen Feldern.</label>
     </customLabels>
     <customLabels>
         <name>Addr_Settings_Intro_Title</name>
@@ -766,7 +766,7 @@
     </customLabels>
     <customLabels>
         <name>ErrorEmailMessage</name>
-        <label>Salesforce hat diese NPSP-Fehler festgestellt. Wenn Sie nicht sicher sind, wie Sie diese Fehler beheben können, veröffentlichen Sie eine Nachricht in der Nonprofit Success Pack-Gruppe: https://powerofus.force.com/HUB_NPSP_Group</label>
+        <label>Salesforce hat diese NPSP-Fehler festgestellt. Wenn Sie nicht sicher sind, wie Sie diese Fehler beheben können, veröffentlichen Sie eine Nachricht in der Nonprofit Success Pack-Gruppe: https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE</label>
     </customLabels>
     <customLabels>
         <name>FieldSetRelatedFieldError</name>
@@ -778,7 +778,7 @@
     </customLabels>
     <customLabels>
         <name>InactiveScheduledJobsOwnerErrMsg</name>
-        <label>Es gibt geplante Aufträge, die im Eigentum eines inaktiven Benutzers stehen. Überprüfen Sie Ihre geplanten Aufträge und vergewissern Sie sich, dass der Inhaber jedes einzelnen von ihnen ein aktiver Benutzer ist. Weitere Informationen finden Sie unter &quot;Geplante NPSP-Aufträge bearbeiten oder neu planen&quot; unter: https://powerofus.force.com/NPSP_Scheduled_Jobs</label>
+        <label>Es gibt geplante Aufträge, die im Eigentum eines inaktiven Benutzers stehen. Überprüfen Sie Ihre geplanten Aufträge und vergewissern Sie sich, dass der Inhaber jedes einzelnen von ihnen ein aktiver Benutzer ist.</label>
     </customLabels>
     <customLabels>
         <name>NameRequired</name>
@@ -1064,7 +1064,7 @@
         <name>RD2_EnablementIntro</name>
         <label>Herzlich Willkommen! Erweiterte wiederkehrende Spenden ist unsere neu gestaltete und verbesserte Funktion Wiederkehrende Spenden für das Nonprofit Success Pack (NPSP). Ein großes Dankeschön an unsere Community-Mitglieder, die ihr Feedback gegeben und ihren Beitrag zu Erweiterte wiederkehrende Spenden geleistet haben.
         &lt;br/&gt;&lt;br/&gt;Da bereits eine Funktion für wiederkehrende Spenden in NPSP vorhanden ist, müssen Sie eine Reihe von Upgradeschritten ausführen und Ihre vorhandenen Daten in das Erweiterte wiederkehrende Spenden-Modell verschieben. Wir haben die erforderlichen Schritte unten dargestellt.
-        &lt;br/&gt;&lt;br/&gt;Auf dem Weg werden Sie wahrscheinlich die eine oder andere Frage haben, daher möchten wir, dass Sie auf jeden einzelnen Schritt umfassend vorbereitet sind. Informieren Sie sich beim Durchlaufen des Upgradevorgangs mithilfe der &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;Dokumentation zu Erweiterte wiederkehrende Spenden&lt;/a&gt;.</label>
+        &lt;br/&gt;&lt;br/&gt;Auf dem Weg werden Sie wahrscheinlich die eine oder andere Frage haben, daher möchten wir, dass Sie auf jeden einzelnen Schritt umfassend vorbereitet sind.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMetaDeployConfirm</name>
@@ -1112,7 +1112,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationErrorMessage</name>
-        <label>In Ihrem Migrationslauf sind Fehler aufgetreten, diese müssen behoben werden, um eine erfolgreiche Migration durchzuführen. Zeigen Sie die Fehler an, in dem Sie zu NPSP-Einstellungen &gt; Systemtools &gt; Fehlerprotokolle wechseln. Wenn Sie Hilfe benötigen, ziehen Sie die &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;Dokumentation&lt;/a&gt; zu Rate. Beheben Sie die Fehler, kehren Sie dann hierher zurück, und versuchen Sie es erneut.</label>
+        <label>In Ihrem Migrationslauf sind Fehler aufgetreten, diese müssen behoben werden, um eine erfolgreiche Migration durchzuführen. Zeigen Sie die Fehler an, in dem Sie zu NPSP-Einstellungen &gt; Systemtools &gt; Fehlerprotokolle wechseln.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationIntro</name>
@@ -1153,8 +1153,7 @@
     <customLabels>
         <name>RD2_EnablementPrepTasks</name>
         <label>&lt;ul&gt;&lt;li&gt;Deaktivieren Sie Workflows, Prozesse, Validierungsregeln und Trigger für die Objekte Wiederkehrende Spenden, Opportunity und Zahlung.&lt;/li&gt;
-&lt;li&gt;Sichern Sie Ihre Datenbank, einschließlich aller Wiederkehrenden Spenden und aller zugeordneten Datensätze.&lt;/li&gt;
-&lt;li&gt;Lesen Sie die &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;Dokumentation&lt;/a&gt; zu Erweiterte wiederkehrende Spenden.&lt;/li&gt;&lt;/ul&gt;</label>
+&lt;li&gt;Sichern Sie Ihre Datenbank, einschließlich aller Wiederkehrenden Spenden und aller zugeordneten Datensätze.&lt;/li&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementPrepTitle</name>
@@ -1163,8 +1162,7 @@
     <customLabels>
         <name>RD2_EnablementSimpleIntro</name>
         <label>Durch &quot;Erweiterte wiederkehrende Spenden aktivieren&quot; lassen sich wiederkehrende Spenden flexibler und einfacher verwalten als je zuvor. Führen Sie die Schritte unten aus, um Erweiterte wiederkehrende Spenden zu aktivieren. Sie müssen ALLE Schritte ausführen, um Erweiterte wiederkehrende Spenden vollständig zu aktivieren.
-        &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Da Sie nicht über Datensätze für wiederkehrende Spenden verfügen, brauchen Sie keinerlei Daten zu überprüfen oder zu migrieren.&lt;/b&gt;
-        &lt;br/&gt;&lt;br/&gt;Weitere Informationen finden Sie in der &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;Dokumentation für Erweiterte wiederkehrende Spenden&lt;/a&gt;.</label>
+            &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Da Sie nicht über Datensätze für wiederkehrende Spenden verfügen, brauchen Sie keinerlei Daten zu überprüfen oder zu migrieren.&lt;/b&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EndDateMustBeLaterThanCloseWonOpp</name>
@@ -2103,11 +2101,10 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>Seit dem 1. Oktober 2020 wird die Batch-Dateneingabe nicht mehr unterstützt. Die meisten Funktionen wurden durch neuere Features in NPSP ersetzt. Wenn sich bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Dateneingabe verarbeiten. Wenden Sie sich an den Support, wenn Sie auf in Bearbeitung befindliche Datensätze zugreifen müssen. &lt;br/&gt; Sie sollten sich Spendeneintrag als Alternative zur Batch-Dateneingabe ansehen. Weitere Informationen zum Spendeneintrag finden Sie in der &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
+        <label>Seit dem 1. Oktober 2020 wird die Batch-Dateneingabe nicht mehr unterstützt. Die meisten Funktionen wurden durch neuere Features in NPSP ersetzt. Wenn sich bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Dateneingabe verarbeiten.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
-        <label>Am 1. Oktober 2020 wird die Batch-Dateneingabe deaktiviert und funktioniert dann in NPSP nicht mehr. Wenn sich zu diesem Zeitpunkt bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Dateneingabe verarbeiten. Um einen reibungslosen Übergang zu gewährleisten, aktivieren und verwenden Sie den Spendeneintrag vor dem 1. Oktober. Weitere Informationen zum Spendeneintrag finden Sie in der &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
@@ -3008,7 +3005,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>Am 13. Juli 2021 wird das Legacy-Batch-Spendeneintragsmodul deaktiviert und funktioniert dann in NPSP nicht mehr. Wenn sich zu diesem Zeitpunkt bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Spendeneingabe verarbeiten. Um einen reibungslosen Übergang zu gewährleisten, aktivieren und verwenden Sie vor dem 13. Juli den neueren Spendeneintrag. Weitere Informationen zum Spendeneintrag finden Sie in der &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
+        <label>Am 13. Juli 2021 wird das Legacy-Batch-Spendeneintragsmodul deaktiviert und funktioniert dann in NPSP nicht mehr. Wenn sich zu diesem Zeitpunkt bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Spendeneingabe verarbeiten. Um einen reibungslosen Übergang zu gewährleisten, aktivieren und verwenden Sie vor dem 13.</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -3023,8 +3020,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <label>Ab dem 13. Juli 2021 wird der Batch-Spendeneintrag nicht mehr unterstützt; er wurde durch den Spendeneintrag ersetzt.
             Wenn sich bei Ihnen noch Batches in Bearbeitung befinden, können Sie nach wie vor auf die betreffenden Datensätze zugreifen, sie jedoch nicht mehr mithilfe des Batch-Spendeneintrags bearbeiten.
             Wenden Sie sich an den Support, wenn Sie Zugriff auf in Bearbeitung befindliche Batches benötigen.
-            Sie sollten sich den Spendeneintrag als Alternative zum Batch-Spendeneintrag ansehen.
-            Weitere Informationen zum Spendeneintrag finden Sie in der &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
+            Sie sollten sich den Spendeneintrag als Alternative zum Batch-Spendeneintrag ansehen.</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -3546,7 +3542,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>Zeigen Sie alle doppelten Kontakte an, die mithilfe von Zuordnungsregeln gefunden wurden. &lt;a href=&quot;https://powerofus.force.com/IP_Contacts&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; Weitere Informationen&lt;/b&gt;&lt;/a&gt;</label>
+        <label>Zeigen Sie alle doppelten Kontakte an, die mithilfe von Zuordnungsregeln gefunden wurden. &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Merge_Contacts.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; Weitere Informationen&lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>
@@ -4993,10 +4989,6 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
         <label>Mindestens eine Kartenautorisierung ist abgelaufen. Damit sichergestellt ist, dass diese Zahlungen beim Verarbeiten des Batches belastet werden, geben Sie die Zahlungsinformationen für Spenden mit dem Elevate-Zahlungsstatus &quot;Autorisierung abgelaufen&quot; erneut ein.</label>
     </customLabels>
     <customLabels>
-        <name>gePaymentProcessedWarning</name>
-        <label>{0} hat die Zahlung erfolgreich verarbeitet. Das Ändern von Spender, Datum, Betrag oder Zahlungsmethode führt zu inkonsistenten Datensätzen für die gleiche Transaktion in {0} und NPSP.</label>
-    </customLabels>
-    <customLabels>
         <name>gePaymentProcessError</name>
         <label>Fehler beim Verarbeiten der Zahlung. Bitte überprüfen Sie den Fehler, und versuchen Sie es erneut. Wählen Sie
             alternativ &quot;Keine Zahlungsinformationen eingeben&quot; aus, um eine Spende einzugeben, ohne eine Kartenzahlung zu verarbeiten. {0}-Fehler:
@@ -5748,7 +5740,7 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
     </customLabels>
     <customLabels>
         <name>healthSolutionNothingScheduled</name>
-        <label>Um die Standard-NPSP-Aufträge neu zu planen, rufen Sie &quot;NPSP-Einstellungen&quot; &gt; &quot;Bulk-Datenprozesse&quot; &gt; &quot;Vorgangsplanung&quot; auf. Klicken Sie auf &quot;Bearbeiten&quot;. Vergewissern Sie sich, dass &quot;NPSP-Standardaufträge n. automat. planen&quot; nicht ausgewählt ist. Klicken Sie auf &quot;Speichern&quot;. Weitere Informationen finden Sie unter &quot;Geplante NPSP-Aufträge bearbeiten oder neu planen&quot; unter: https://powerofus.force.com/NPSP_Scheduled_Jobs</label>
+        <label>Um die Standard-NPSP-Aufträge neu zu planen, rufen Sie &quot;NPSP-Einstellungen&quot; &gt; &quot;Bulk-Datenprozesse&quot; &gt; &quot;Vorgangsplanung&quot; auf. Klicken Sie auf &quot;Bearbeiten&quot;. Vergewissern Sie sich, dass &quot;NPSP-Standardaufträge n. automat. planen&quot; nicht ausgewählt ist. Klicken Sie auf &quot;Speichern&quot;.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionOCRDupPrimary</name>
@@ -5784,7 +5776,7 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
     </customLabels>
     <customLabels>
         <name>healthSolutionTriggerHandlerMismatch</name>
-        <label>Änderungen an den Auslösern können die NPSP-Kernfunktionalität unerwartet beeinträchtigen und sollten vor Beginn der Produktion sorgfältig getestet werden. Falls diese Änderungen unbeabsichtigt erfolgt sind, sollten Sie Ihre Auslöserverarbeitung zurücksetzen, damit sie der Standard-NPSP-Konfiguration entsprechen. Weitere Informationen finden Sie in dem Artikel zur Verwaltung von Auslöserverarbeitungen unter: https://powerofus.force.com/NPSP_Manage_Trigger_Handlers</label>
+        <label>Änderungen an den Auslösern können die NPSP-Kernfunktionalität unerwartet beeinträchtigen und sollten vor Beginn der Produktion sorgfältig getestet werden. Falls diese Änderungen unbeabsichtigt erfolgt sind, sollten Sie Ihre Auslöserverarbeitung zurücksetzen, damit sie der Standard-NPSP-Konfiguration entsprechen.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionUnsupportedPicklistValue</name>
@@ -6245,10 +6237,6 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
     <customLabels>
         <name>pmtRefundAmount</name>
         <label>Erstattungsbetrag</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundPaymentMessage</name>
-        <label>Rückerstattung der folgenden Zahlung:</label>
     </customLabels>
     <customLabels>
         <name>pmtRefundProcessing</name>
@@ -6846,15 +6834,11 @@ Indem Sie &quot;NPSP-Standardaufträge n. automat. planen&quot; auswählen, teil
         <label>Sie können die Erweiterte Zuordnung deaktivieren und zur Zuordnung von Hilfetexten zurückkehren, jedoch verlieren Sie dabei alle Änderungen, die Sie in der Erweiterten Zuordnung vorgenommen haben.</label>
     </customLabels>
     <customLabels>
-        <name>stgHelpAdvancedMapping3</name>
-        <label>Die vollständige Dokumentation zum Einrichten der Erweiterten Zuordnung finden Sie &lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;hier&lt;/a&gt;.</label>
-    </customLabels>
-    <customLabels>
         <name>stgHelpAdvancedMapping4</name>
         <label>&lt;b&gt;Diese Nachricht wird nicht mehr angezeigt, wenn Sie diese Seite verlassen! Erstellen Sie einen Screenshot dieser Seite, oder kopieren Sie die Informationen in der Tabelle unten, um die Hilfetext-Zuordnungen nachzuverfolgen, die Sie korrigieren müssen. &lt;/b&gt;
             &lt;br/&gt;
             &lt;br/&gt;
-            Wir konnten einige Ihrer bestehenden Hilfetext-Zuordnungen nicht konvertieren, da sie ungültig sind. &lt;a href=&quot;https://powerofus.force.com/NPSP_Troubleshoot_Help_Text&quot; target=&quot;_blank&quot;&gt;Weitere Informationen zu allgemeinen Problemen bei der Hilfetext-Zuordnung&lt;/a&gt;. Wir empfehlen, die Erweiterte Zuordnung zu deaktivieren, die ungültigen Hilfetext-Zuordnungen zu korrigieren und die Erweiterte Zuordnung anschließend wieder zu aktivieren. Alternativ können Sie diese Zuordnungen hinzufügen, wenn Sie die Erweiterte Zuordnung auf der nächsten Seite konfigurieren, diese zusätzlichen Zuordnungen werden aber auf den ursprünglichen ungültigen Hilfetext zurückgesetzt, wenn Sie die Erweiterte Zuordnung deaktivieren.</label>
+            Wir konnten einige Ihrer bestehenden Hilfetext-Zuordnungen nicht konvertieren, da sie ungültig sind. Wir empfehlen, die Erweiterte Zuordnung zu deaktivieren, die ungültigen Hilfetext-Zuordnungen zu korrigieren und die Erweiterte Zuordnung anschließend wieder zu aktivieren. Alternativ können Sie diese Zuordnungen hinzufügen, wenn Sie die Erweiterte Zuordnung auf der nächsten Seite konfigurieren, diese zusätzlichen Zuordnungen werden aber auf den ursprünglichen ungültigen Hilfetext zurückgesetzt, wenn Sie die Erweiterte Zuordnung deaktivieren.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMappingInvalidHelpText</name>
@@ -6997,12 +6981,8 @@ Wir empfehlen Ihnen, vor dem Starten dieses Vorgangs Folgendes zu deaktivieren, 
 Wenn der Vorgang zu 100 % abgeschlossen ist, können Sie die Seite verlassen oder aktualisieren.</label>
     </customLabels>
     <customLabels>
-        <name>stgHelpCustomizableRollupsEnable1</name>
-        <label>Die vollständige Dokumentation zu anpassbaren Rollups finden Sie &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;hier&lt;/a&gt;.</label>
-    </customLabels>
-    <customLabels>
         <name>stgHelpCustomizableRollupsEnable2</name>
-        <label>Wenn Sie anpassbare Rollups zum ersten Mal aktivieren, werden Ihre vorhandenen Rollups und die 87 vorgefertigten NPSP-Rollups in anpassbare Rollups konvertiert. Vollständige Details finden Sie in &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;diesem Dokument&lt;/a&gt;.
+        <label>Wenn Sie anpassbare Rollups zum ersten Mal aktivieren, werden Ihre vorhandenen Rollups und die 87 vorgefertigten NPSP-Rollups in anpassbare Rollups konvertiert.
             &lt;br/&gt;&lt;br/&gt;
             Sie können sie deaktivieren und zu den alten Rollups zurückkehren, aber neue Rollups und Rollup-/Filteränderungen, die in anpassbaren Rollups vorgenommen werden, werden nicht auf Ihre alten Rollup-Einstellungen angewendet.</label>
     </customLabels>
@@ -7085,10 +7065,6 @@ Wenn der Vorgang zu 100 % abgeschlossen ist, können Sie die Seite verlassen od
         <label>Wenn diese Option ausgewählt ist, erstellt NPSP automatisch Kontaktrollen zu einzelnen Spenden für Haushalt-Mitglieder des Hauptansprechpartners der Opportunity.</label>
     </customLabels>
     <customLabels>
-        <name>stgHelpHHObjectOverview</name>
-        <label>Weitere Informationen zum empfohlenen Haushalt-Account-Modell finden Sie in der &lt;a href=&quot;https://powerofus.force.com/NPSP_Account_Model&quot; target=&quot;_blank&quot;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
-    </customLabels>
-    <customLabels>
         <name>stgHelpHHRules</name>
         <label>Gibt an, für welche Kontakte Salesforce automatisch separate Haushalt-Objekte erstellt. (Gilt nur für Eins-zu-Eins- oder Einzelperson-Account-Modelle.)</label>
     </customLabels>
@@ -7106,7 +7082,7 @@ Wenn der Vorgang zu 100 % abgeschlossen ist, können Sie die Seite verlassen od
     </customLabels>
     <customLabels>
         <name>stgHelpLeadConvert</name>
-        <label>Gibt das Standardverhalten für die Opportunity-Erstellung an, wenn Sie einen Lead in einen Kontakt konvertieren. Wird nichts ausgewählt, erstellt Salesforce NICHT automatisch eine Opportunity, wenn Sie Leads in Kontakte konvertieren. Weitere Informationen finden Sie in der &lt;a href=&quot;https://powerofus.force.com/NPSP_Leads&quot; target=&quot;_blank&quot;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
+        <label>Gibt das Standardverhalten für die Opportunity-Erstellung an, wenn Sie einen Lead in einen Kontakt konvertieren. Wird nichts ausgewählt, erstellt Salesforce NICHT automatisch eine Opportunity, wenn Sie Leads in Kontakte konvertieren.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpLvlAssignBatch</name>
@@ -7162,7 +7138,7 @@ WICHTIG: Die Datentypen beider Felder müssen identisch sein.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCR</name>
-        <label>Zwischen Soft Credits, Kontaktrollen und Spendenverdopplung bestehen wichtige Beziehungen. Wenn Sie mit diesen Konzepten und der Art und Weise, in der sie interagieren, nicht vertraut sind, lesen Sie die&lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;NPSP-Dokumentation&lt;/a&gt;, bevor Sie diese Einstellungen ändern.</label>
+        <label>Zwischen Soft Credits, Kontaktrollen und Spendenverdopplung bestehen wichtige Beziehungen. Wenn Sie mit diesen Konzepten und der Art und Weise, in der sie interagieren, nicht vertraut sind, lesen Sie die&lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Automated_Soft_Credits.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;NPSP-Dokumentation&lt;/a&gt;, bevor Sie diese Einstellungen ändern.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCRDefaultRole</name>
@@ -7190,7 +7166,7 @@ WICHTIG: Die Datentypen beider Felder müssen identisch sein.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingFormat</name>
-        <label>Das Format des Opportunity-Namens. Wählen Sie &quot;Sonstige&quot;, um ein eigenes zu erstellen. Weitere Informationen finden Sie in der &lt;a href=&quot;https://powerofus.force.com/NPSP_Opp_Names&quot; target=&quot;_blank&quot;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
+        <label>Das Format des Opportunity-Namens. Wählen Sie &quot;Sonstige&quot;, um ein eigenes zu erstellen.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingRecTypes</name>
@@ -7234,7 +7210,7 @@ WICHTIG: Die Datentypen beider Felder müssen identisch sein.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPowerOfUsHub</name>
-        <label>Haben Sie Fragen? Antworten zu Fragen über NPSP können Sie in der Gruppe &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; finden. Antworten zu Fragen über die Verwaltung und Konfiguration von Salesforce können Sie in der Gruppe &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; finden.&lt;br/&gt;&lt;br/&gt;Lesen Sie die neuesten NPSP-Versionshinweise in der Gruppe &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt;, um auf dem Laufenden zu bleiben.</label>
+        <label>Haben Sie Fragen? Antworten zu Fragen über NPSP können Sie in der Gruppe &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; finden. Antworten zu Fragen über die Verwaltung und Konfiguration von Salesforce können Sie in der Gruppe &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; finden.&lt;br/&gt;&lt;br/&gt;Lesen Sie die neuesten NPSP-Versionshinweise in der Gruppe &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt;, um auf dem Laufenden zu bleiben.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPrimaryContactBatch</name>
@@ -7374,7 +7350,7 @@ Dieser Vorgang kann etwas Zeit in Anspruch nehmen, Sie können die Seite jedoch 
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalMethod</name>
-        <label>Legt die Methode zur Generierung von wechselseitigen Beziehungen fest. Weitere Informationen finden Sie in der &lt;a href=&quot;https://powerofus.force.com/NPSP_Relationships_Settings&quot; target=&quot;_blank&quot;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
+        <label>Legt die Methode zur Generierung von wechselseitigen Beziehungen fest.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalName</name>
