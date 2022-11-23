@@ -57,6 +57,23 @@ private with sharing class CRLP_GAU_BATCH_TEST {
         System.assertEquals(false,
             gauBatch.hasLastParentDetails(lastParentId, null, detailRecords, parentKeyField));
     }
+    
+    @IsTest
+    private static void shouldDetermineLastParentIdHasNoDetailsEmptyDetailRecords() {
+        String parentKeyField = 'General_Accounting_Unit__c';
+
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(
+            Id = UTIL_UnitTestData_TEST.mockId(General_Accounting_Unit__c.SObjectType));
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(
+            Id = UTIL_UnitTestData_TEST.mockId(General_Accounting_Unit__c.SObjectType));
+
+        List<Allocation__c> detailRecords = new List<Allocation__c>();
+
+        CRLP_GAU_BATCH gauBatch = new CRLP_GAU_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All);
+        Id lastParentId = gau2.Id;
+        System.assertEquals(false,
+            gauBatch.hasLastParentDetails(lastParentId, null, detailRecords, parentKeyField));
+    }
 
     @IsTest
     private static void shouldDetermineLastParentIdHasDetails() {

@@ -183,13 +183,18 @@ public with sharing class Gift {
         return true;
     }
 
-    public void preprocessForRecurringGift() {
-        this.dataImport.Recurring_Donation_Amount__c = this.dataImport.Donation_Amount__c;
-        this.dataImport.Recurring_Donation_Date_Established__c = this.dataImport.Donation_Date__c;
-        this.dataImport.Donation_Amount__c = null;
+    public void preprocessForRecurringGift(Boolean shouldPayFirstInstallment) {
+        this.dataImport.Donation_Amount__c =
+                !canPayFirstInstallment(shouldPayFirstInstallment) ? null :  this.dataImport.Donation_Amount__c;
         this.dataImport.Donation_Date__c = null;
         this.dataImport.DonationImported__c = null;
         clearNetNewSoftCredits();
+    }
+
+    private Boolean canPayFirstInstallment(Boolean shouldPayFirstInstallment) {
+        return this.dataImport.Recurring_Donation_Elevate_Recurring_ID__c == null
+                && this.dataImport.Payment_Elevate_Batch_ID__c == null
+                && shouldPayFirstInstallment;
     }
 
     public void remapFieldsForView() {

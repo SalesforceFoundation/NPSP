@@ -66,32 +66,34 @@
         }
 
         function handleMessage(event) {
-            const action = event.data.action;
+            const data = JSON.parse(event.data)
+            const action = data.action
             switch (action) {
                 case 'mount':
-                    handleMounting(event.data.paymentMethod);
+                    handleMounting(data.paymentMethod, data.gatewayId);
                     break;
 
                 case 'setPaymentMethod':
-                    handleSetPaymentMethod(event.data.paymentMethod);
+                    handleSetPaymentMethod(data.paymentMethod);
                     break;
 
                 case 'createToken':
-                    handleTokenCreation(event.data.params);
+                    handleTokenCreation(data.params);
                     break;
 
                 case 'createAchToken':
-                    handleAchTokenCreation(event.data.params);
+                    handleAchTokenCreation(data.params);
                     break;
             }
         }
 
-        function handleMounting(paymentMethod) {
+        function handleMounting(paymentMethod, gatewayOverride) {
             if (isValidPaymentMethod(paymentMethod)) {
+                const mountGateway = !!gatewayOverride ? gatewayOverride : '{!gatewayIds}';
                 const config = {
                     id: 'payments',
                     clientId: '{!clientId}',
-                    gatewayId: '{!gatewayIds}',
+                    gatewayId: mountGateway,
                     merchantId: '{!merchantIds}',
                     designSystem: 'Lightning',
                     paymentMethod: deriveElevatePaymentMethodFrom(paymentMethod),
@@ -100,11 +102,11 @@
 
                 sfdo.mount(config)
                     .then(() => {
-                        const successMessage = JSON.stringify({ type: postMessageType, success: true });
+                        const successMessage = { type: postMessageType, success: true };
                         sendPostMessage(successMessage);
                     })
                     .catch((err) => {
-                        const errorString = JSON.stringify({ type: postMessageType, ...err });
+                        const errorString = { type: postMessageType, ...err };
                         sendPostMessage(errorString);
                     });
             }
@@ -114,11 +116,11 @@
             if (isValidPaymentMethod(paymentMethod)) {
                 sfdo.setPaymentMethod(deriveElevatePaymentMethodFrom(paymentMethod))
                     .then(() => {
-                        const successMessage = JSON.stringify({ type: postMessageType, success: true });
+                        const successMessage = ({ type: postMessageType, success: true });
                         sendPostMessage(successMessage);
                     })
                     .catch((err) => {
-                        const errorString = JSON.stringify({ type: postMessageType, ...err });
+                        const errorString = ({ type: postMessageType, ...err });
                         sendPostMessage(errorString);
                     });
             }
@@ -142,17 +144,17 @@
                 .then((resp) => {
                     if (resp.token) {
                         // Send token to lwc
-                        const successString = JSON.stringify({ type: postMessageType, token: resp.token });
+                        const successString = { type: postMessageType, token: resp.token };
                         sendPostMessage(successString);
 
                     } else if (resp.error) {
                         // Response contains the error, send it to lwc
-                        sendPostMessage(JSON.stringify({ type: postMessageType, ...resp }));
+                        sendPostMessage({ type: postMessageType, ...resp });
                     }
                 })
                 .catch((err) => {
                     // Send error to lwc
-                    const errorString = JSON.stringify({ type: postMessageType, ...err });
+                    const errorString =  {type: postMessageType, ...err };
                     sendPostMessage(errorString);
                 });
         }
@@ -173,17 +175,17 @@
            .then((resp) => {
               if (resp.token) {
                  // Send token to lwc
-                 const successString = JSON.stringify({ type: postMessageType, token: resp.token });
+                 const successString = { type: postMessageType, token: resp.token };
                  sendPostMessage(successString);
 
               } else if (resp.error) {
                  // Response contains the error, send it to lwc
-                 sendPostMessage(JSON.stringify({ type: postMessageType, ...resp }));
+                 sendPostMessage(({ type: postMessageType, ...resp }));
               }
            })
            .catch((err) => {
               // Send error to lwc
-              const errorString = JSON.stringify({ type: postMessageType, ...err });
+              const errorString = ({ type: postMessageType, ...err });
               sendPostMessage(errorString);
            });
         }
@@ -191,7 +193,7 @@
         /*******************************************************************************
         * @description Posts messages to a credit card widget LWC
         *
-        * @param {string} message: String to pass to the LWC
+        * @param {object} message: Object to pass to the LWC
         */
         function sendPostMessage(message) {
             window.top.postMessage(message, lightningOrigin);
@@ -208,24 +210,15 @@
         }
 
         function buildLightningOrigin() {
-            const hostname = window.location.hostname;
-            const arr = hostname.split(".");
-            let domain = arr[0].replace('--npsp', '');
-            domain = domain.replace('--c', '');
-            const siteBaseURL = '{!$Site.BaseUrl}';
-            if (siteBaseURL.length > 0) {
-                return siteBaseURL;
-            } else {
-                return `https://${domain}.lightning.force.com`;
-            }
+            return 'https://{!LightningURL}';
         }
 
-        function isReadyToMount() {
-            const message = JSON.stringify({ isReadyToMount: true });
+        function setReadyToMount() {
+            const message = { isReadyToMount: true };
             sendPostMessage(message);
         }
 
-        window.onload = isReadyToMount();
+        window.onload = setReadyToMount();
     </script>
 
 </apex:page>

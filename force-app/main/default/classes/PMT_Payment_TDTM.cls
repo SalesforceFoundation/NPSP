@@ -98,7 +98,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
 
         DmlWrapper dmlWrapper = null;
 
-        validatePayments(newList, oldList, triggerAction, dmlWrapper);
+        validatePayments(newList, oldList, triggerAction);
 
         if (UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
             return handleMultiCurrencyPayments(newlist, oldlist, triggerAction, dmlWrapper);
@@ -309,9 +309,8 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     private void validatePayments(
         List<npe01__OppPayment__c> newList,
         List<npe01__OppPayment__c> oldList,
-        TDTM_Runnable.Action triggerAction,
-        DmlWrapper dmlWrapper) {
-            
+        TDTM_Runnable.Action triggerAction
+    ) {  
         PMT_ValidationService validationService = new PMT_ValidationService(newlist, oldList, triggerAction);
         List<ErrorRecord> errorRecords = validationService.validate().getErrors();
 

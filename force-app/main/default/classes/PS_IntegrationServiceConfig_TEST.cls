@@ -33,7 +33,7 @@
 @IsTest
 public with sharing class PS_IntegrationServiceConfig_TEST {
 
-    public static String testMerchantId = 'abc123-xyz456';
+    public static String testMerchantId = 'abc123-xyz456-fgh987-uvw2468';
     public static String testGatewayId = 'def123-ghi456';
     public static String testApiKey = 'def1234-tuv4567';
     public static String testMakanaApiKey = 'ghi12345-qrs45678';

@@ -54,12 +54,21 @@ public with sharing class ElevateBatch {
         return elevateBatchService.getElevateBatch();
     }
 
-    public ElevateAuthorizedGift add(ElevateTokenizedGift tokenizedGift) {
-        return elevateBatchService.sendAddRequest(tokenizedGift, elevateBatchId());
+    public ElevateBatchItem add(ElevateCreateBatchItemRequestDTO batchItemRequestDTO) {
+        return elevateBatchService.sendAddRequest(
+            elevateBatchService.buildBatchItemRequestFrom(batchItemRequestDTO), elevateBatchId());
     }
 
-    public ElevateAuthorizedGift remove(String elevateTransactionId) {
-        return elevateBatchService.sendRemoveRequest(elevateTransactionId, elevateBatchId());
+    public ElevateBatchItem remove(String elevateBatchItemId) {
+        UTIL_Http.Response removeResponse = elevateBatchService.sendRemoveRequest(
+            elevateBatchItemId, elevateBatchId());
+        elevateBatchService.handleRemoveResponse(removeResponse);
+
+        ElevateBatchItem batchItem = new ElevateBatchItem();
+        batchItem.id = elevateBatchItemId;
+        batchItem.elevateBatchId = elevateBatchId;
+
+        return batchItem;
     }
 
     public String elevateBatchId() {

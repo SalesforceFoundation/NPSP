@@ -1,6 +1,6 @@
 import GiftBatch from 'c/geGiftBatch';
 import getGiftBatchView from '@salesforce/apex/GE_GiftEntryController.getGiftBatchView';
-import hasQueueableId from '@salesforce/apex/GE_GiftEntryController.hasQueueableId';
+import hasActiveRunningJob from '@salesforce/apex/GE_GiftEntryController.hasActiveRunningJob';
 import isGiftBatchAccessible from '@salesforce/apex/GE_GiftEntryController.isGiftBatchAccessible';
 
 const giftBatchViewJSON = require('./data/giftBatchView.json');
@@ -14,7 +14,7 @@ describe('ge-gift-batch', () => {
 
     it('should initialize with expected properties', async () => {
         getGiftBatchView.mockResolvedValue(giftBatchViewJSON);
-        hasQueueableId.mockResolvedValue(null);
+        hasActiveRunningJob.mockResolvedValue(false);
         isGiftBatchAccessible.mockResolvedValue(true);
         const giftBatch = new GiftBatch();
         await giftBatch.init(giftBatchViewJSON.giftBatchId);
@@ -38,7 +38,7 @@ describe('ge-gift-batch', () => {
 
     it('should be in processing state', async () => {
         getGiftBatchView.mockResolvedValue(giftBatchViewJSON);
-        hasQueueableId.mockResolvedValue('DUMMY_QUEUEABLE_ID');
+        hasActiveRunningJob.mockResolvedValue(true);
         isGiftBatchAccessible.mockResolvedValue(true);
         const giftBatch = new GiftBatch();
         await giftBatch.init(giftBatchViewJSON.giftBatchId);
@@ -46,5 +46,17 @@ describe('ge-gift-batch', () => {
         await flushPromises();
 
         expect(giftBatch.state().isProcessingGifts).toBeTruthy();
+    });
+
+    it('should not be in processing state', async () => {
+        getGiftBatchView.mockResolvedValue(giftBatchViewJSON);
+        hasActiveRunningJob.mockResolvedValue(false);
+        isGiftBatchAccessible.mockResolvedValue(true);
+        const giftBatch = new GiftBatch();
+        await giftBatch.init(giftBatchViewJSON.giftBatchId);
+
+        await flushPromises();
+
+        expect(giftBatch.state().isProcessingGifts).toBeFalsy();
     });
 });
