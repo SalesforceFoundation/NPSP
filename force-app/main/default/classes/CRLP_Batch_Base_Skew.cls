@@ -232,7 +232,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
     * @param parentObjectField
     * @param detailRecords
     * @param parentKeyField
-    * @return Boolean true if lastParentId has no associated detail records in a GAU rollup
+    * @return Boolean false if lastParentId has no associated detail records in a GAU rollup
     */
     @TestVisible
     private Boolean hasLastParentDetails(
@@ -241,14 +241,16 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
         List<SObject> detailRecords,
         String parentKeyField
     ) {
-        if (this.jobType == CRLP_RollupProcessingOptions.RollupType.GAU &&
+        Integer drSize = detailRecords.size();
+        if (drSize == 0 || (this.jobType == CRLP_RollupProcessingOptions.RollupType.GAU &&
             lastParentId != CRLP_Rollup_SVC.getParentIdFromRecord(
-                detailRecords[detailRecords.size() - 1], parentKeyField, parentObjectField
+                detailRecords[drSize - 1], parentKeyField, parentObjectField
             )
-        ) {
+        )) {
             return false;
+        } else {
+            return true;
         }
-        return true;
     }
 
     /********************************************************************************************************

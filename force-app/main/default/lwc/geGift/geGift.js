@@ -7,6 +7,8 @@ import DONATION_IMPORTED from '@salesforce/schema/DataImport__c.DonationImported
 import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Payment_Status__c';
 import PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
+import DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID
+    from '@salesforce/schema/DataImport__c.Recurring_Donation_Elevate_Recurring_ID__c';
 
 import SoftCredits from './geSoftCredits';
 import GiftScheduleService from './geScheduleService';
@@ -16,6 +18,8 @@ class Gift {
     _softCredits = new SoftCredits();
     _schedule = {};
     _fields = {};
+    _hasConvertedToOneTimeBatchItemType = false;
+    _hasConvertedToRecurringBatchItemType = false;
 
     constructor(giftView) {
         this._init(giftView);
@@ -34,6 +38,19 @@ class Gift {
         }
     }
 
+    idToRemove() {
+        let id;
+        if (this.hasConvertedToElevateRecurringType()) {
+            id = this._fields[PAYMENT_ELEVATE_ID.fieldApiName];
+        } else if (this.hasConvertedToElevateOneTimeType()) {
+            id = this._fields[DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID.fieldApiName];
+        } else {
+            id = this._fields[PAYMENT_ELEVATE_ID.fieldApiName] ? this._fields[PAYMENT_ELEVATE_ID.fieldApiName] :
+                       this._fields[DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID.fieldApiName]
+        }
+        return id;
+    }
+
     id() {
         return this._fields.Id;
     }
@@ -42,16 +59,28 @@ class Gift {
         return Object.keys(this._schedule).length > 0;
     }
 
+    isImported() {
+        return this._fields[STATUS.fieldApiName] === GIFT_STATUSES.IMPORTED;
+    }
+
+    hasCommitmentId() {
+        return !!this._fields[DATA_IMPORT_RECURRING_DONATION_ELEVATE_ID.fieldApiName];
+    }
+
     addSchedule(scheduleData) {
         this._schedule = scheduleData;
         const giftScheduleService = new GiftScheduleService();
         this._fields = giftScheduleService.addScheduleTo(this._fields, scheduleData);
+        this._hasConvertedToOneTimeBatchItemType = false;
+        this._hasConvertedToRecurringBatchItemType = true;
     }
 
     removeSchedule() {
         const giftScheduleService = new GiftScheduleService();
         this._fields = giftScheduleService.removeScheduleFromFields(this._fields);
         this._schedule = {};
+        this._hasConvertedToOneTimeBatchItemType = true;
+        this._hasConvertedToRecurringBatchItemType = false;
     }
 
     isFailed() {
@@ -114,6 +143,14 @@ class Gift {
         return this._fields[field];
     }
 
+    hasConvertedToElevateRecurringType() {
+        return this._hasConvertedToRecurringBatchItemType;
+    }
+
+    hasConvertedToElevateOneTimeType() {
+        return this._hasConvertedToOneTimeBatchItemType;
+    }
+
     asDataImport() {
         let dataImportRecord = { ...this._fields };
         delete dataImportRecord[undefined];
@@ -150,14 +187,21 @@ class Gift {
             fields: { ...this._fields },
             softCredits: JSON.stringify([ ...this._softCredits.unprocessedSoftCredits() ]),
             processedSoftCredits: JSON.stringify([ ...this._softCredits.processedSoftCredits() ]),
-            schedule: { ...this._schedule }
+            schedule: { ...this._schedule },
+            hasConvertedToRecurringBatchItemType: this._hasConvertedToRecurringBatchItemType,
+            hasConvertedToElevateOneTimeBatchItemType: this._hasConvertedToOneTimeBatchItemType
         }
     }
 
-    isAuthorized() {
-        return (this.getFieldValue(PAYMENT_STATUS.fieldApiName) === PAYMENT_STATUSES.AUTHORIZED
-            || this.getFieldValue(PAYMENT_STATUS.fieldApiName) === PAYMENT_STATUSES.PENDING)
-            && this.getFieldValue(PAYMENT_ELEVATE_ID.fieldApiName);
+    hasElevateRemovableStatus() {
+        return this.getFieldValue(STATUS.fieldApiName) !== GIFT_STATUSES.IMPORTED && (
+                (
+                    this.getFieldValue(PAYMENT_ELEVATE_ID.fieldApiName) &&
+                    this.getFieldValue(PAYMENT_STATUS.fieldApiName) === PAYMENT_STATUSES.AUTHORIZED ||
+                    this.getFieldValue(PAYMENT_STATUS.fieldApiName) === PAYMENT_STATUSES.PENDING
+                ) ||
+                this.hasCommitmentId()
+            );
     }
 }
 

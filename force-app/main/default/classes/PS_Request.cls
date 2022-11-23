@@ -39,13 +39,17 @@ public inherited sharing class PS_Request {
         TOKENIZE,
         PURCHASE,
         REFUND,
+        TRANSACTIONS,
         COMMITMENT,
+        COMMITMENT_GET,
+        COMMITMENT_PAUSE,
         COMMITMENT_CANCEL,
         COMMITMENT_UPDATE_BULK,
         CREATE_ELEVATE_BATCH,
         ADD_TO_ELEVATE_BATCH,
         CHARGE_ELEVATE_BATCH,
-        REMOVE_FROM_ELEVATE_BATCH
+        REMOVE_FROM_ELEVATE_BATCH,
+        MERCHANTS
     }
 
     public enum ProductType {
@@ -63,8 +67,10 @@ public inherited sharing class PS_Request {
     public static String ROLE_PAYMENT_TOKENS = 'Payments.Tokens';
     public static String ROLE_PAYMENT_PURCHASE = 'Payments.Purchase';
     public static String ROLE_PAYMENT_REFUND = 'Payments.Refund';
+    public static String ROLE_PAYMENT_TRANSACTIONS = 'Payments.Transactions';
     public static String ROLE_PAYMENT_COMMITMENTS = 'Payments.Commitments';
     public static String ROLE_PAYMENT_BATCH = 'Payments.Batch';
+    public static String ROLE_PAYMENT_MERCHANTS = 'Payments.Merchants';
 
     public static String JWT_ISSUER_PARAM = 'iss';
     public static String JWT_EXPIRES_AT_PARAM = 'exp';
@@ -76,16 +82,21 @@ public inherited sharing class PS_Request {
     public static String ENDPOINT_TOKENIZE = '/v1/payments/verified/tokens';
     public static String ENDPOINT_PURCHASE = '/v1/payments/verified/purchase';
     public static String ENDPOINT_REFUND = '/v1/payments/verified/refund';
+    public static String ENDPOINT_TRANSACTIONS = '/v1/payments/verified/transactions/{0}';
     public static String ENDPOINT_COMMITMENT = '/v1/payments/verified/commitments';
+    public static String ENDPOINT_COMMITMENT_GET = '/v1/payments/verified/commitments/{0}';
     public static String ENDPOINT_COMMITMENT_CANCEL = '/v1/payments/verified/commitments/{0}/cancel';
     public static String ENDPOINT_COMMITMENT_UPDATE_BULK = '/v1/payments/verified/commitments/update/bulk';
     public static String ENDPOINT_CREATE_ELEVATE_BATCH = '/v1/payments/verified/batch';
-    public static String ENDPOINT_ADD_TO_ELEVATE_BATCH = '/v1/payments/verified/batch/{0}/add';
+    public static String ENDPOINT_ADD_TO_ELEVATE_BATCH = '/v1/payments/verified/batch/{0}/items';
     public static String ENDPOINT_CHARGE_ELEVATE_BATCH = '/v1/payments/verified/batch/{0}/capture';
-    public static String ENDPOINT_REMOVE_FROM_ELEVATE_BATCH = '/v1/payments/verified/batch/{0}/remove/{1}';
+    public static String ENDPOINT_REMOVE_FROM_ELEVATE_BATCH = '/v1/payments/verified/batch/{0}/items/{1}';
+    public static String ENDPOINT_COMMITMENT_PAUSE = '/v1/payments/verified/commitments/{0}/pause';
+    public static String ENDPOINT_GATEWAYS_BY_MERCHANT = '/v1/payments/verified/merchants/{0}/gateways';
 
     public static String PRODUCT_METADATA_SCHEMA_URI = 'https://payments-js.elevate.salesforce.org/schema/productMetadata/donation-v1.1.0';
     private static Integer RECOMMENDED_TIMEOUT_MS = 20000;
+    private static String DELETE_HTTP_VERB = 'DELETE';
 
     /***
     * @description Returns payments service endpoint URL
@@ -202,7 +213,10 @@ public inherited sharing class PS_Request {
             HttpRequest request = new HttpRequest();
 
             request.setEndpoint(getEndpoint(endpoint, commitmentId));
-            request.setMethod(method.name());
+            String method = method == UTIL_Http.Method.DEL
+                ? DELETE_HTTP_VERB
+                : method.name();
+            request.setMethod(method);
             setHeader(request, endpoint);
 
             // Default timeout is 10s if the value is not specified
@@ -252,13 +266,29 @@ public inherited sharing class PS_Request {
                 value = ENDPOINT_PURCHASE;
             } else if (endpoint == ElevateEndpoint.REFUND) {
                 value = ENDPOINT_REFUND;
+            } else if (endpoint == ElevateEndpoint.TRANSACTIONS) {
+                value = String.format(
+                    ENDPOINT_TRANSACTIONS,
+                    new String[]{
+                        commitmentId
+                    }
+                );
             } else if (endpoint == ElevateEndpoint.COMMITMENT) {
                 value = ENDPOINT_COMMITMENT;
-
-                if (String.isNotBlank(commitmentId)) {
-                    value += '/' + commitmentId;
-                }
-
+            } else if (endpoint == ElevateEndpoint.COMMITMENT_GET) {
+                value = String.format(
+                    ENDPOINT_COMMITMENT_GET,
+                    new String[]{
+                        commitmentId
+                    }
+                );
+            } else if (endpoint == ElevateEndpoint.COMMITMENT_PAUSE) {
+                value = String.format(
+                    ENDPOINT_COMMITMENT_PAUSE,
+                    new String[]{
+                        commitmentId
+                    }
+                );
             } else if (endpoint == ElevateEndpoint.COMMITMENT_CANCEL) {
                 value = String.format(
                     ENDPOINT_COMMITMENT_CANCEL,
@@ -291,7 +321,14 @@ public inherited sharing class PS_Request {
                         ENDPOINT_REMOVE_FROM_ELEVATE_BATCH,
                         new String[] {
                             elevateBatchId,
-                            elevatePaymentId     
+                            elevatePaymentId
+                        }
+                );
+            } else if (endpoint == ElevateEndpoint.MERCHANTS) {
+                value = String.format(
+                        ENDPOINT_GATEWAYS_BY_MERCHANT,
+                        new String[] {
+                            configService.getMerchantIds()
                         }
                 );
             }
@@ -403,6 +440,10 @@ public inherited sharing class PS_Request {
                 value = ROLE_PAYMENT_BATCH;
             } else if (isRefundEndpoint()) {
                 value = ROLE_PAYMENT_REFUND;
+            } else if (isMerchantEndpoint()) {
+                value = ROLE_PAYMENT_MERCHANTS;
+            } else if (isTransactionsEnpoint()) {
+                value = ROLE_PAYMENT_TRANSACTIONS;
             }
             return value;
         }
@@ -425,11 +466,21 @@ public inherited sharing class PS_Request {
         private Boolean isCommitmentEndpoint () {
             return endpoint == ElevateEndpoint.COMMITMENT
                     || endpoint == ElevateEndpoint.COMMITMENT_CANCEL
-                    || endpoint == ElevateEndpoint.COMMITMENT_UPDATE_BULK;
+                    || endpoint == ElevateEndpoint.COMMITMENT_GET
+                    || endpoint == ElevateEndpoint.COMMITMENT_UPDATE_BULK
+                    || endpoint == ElevateEndpoint.COMMITMENT_PAUSE;
         }
 
         private Boolean isRefundEndpoint() {
             return endpoint == ElevateEndpoint.REFUND;
+        }
+
+        private Boolean isTransactionsEnpoint() {
+            return endpoint == ElevateEndpoint.TRANSACTIONS;
+        }
+
+        private Boolean isMerchantEndpoint() {
+            return endpoint == ElevateEndpoint.MERCHANTS;
         }
     }
 }

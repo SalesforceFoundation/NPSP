@@ -27,44 +27,52 @@
  *     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *     POSSIBILITY OF SUCH DAMAGE.
  */
-public with sharing class ElevateAuthorizedGift {
-    @AuraEnabled public ElevateTokenizedGift tokenizedGift;
-    @AuraEnabled public String paymentId {get; set;}
-    @AuraEnabled public DateTime authExpiration;
-    @AuraEnabled public String status;
-    @AuraEnabled public String paymentMethod;
-    @AuraEnabled public String originalTransactionId;
+public with sharing class ElevateBatchItem {
+    @AuraEnabled public String id {get; set;}
+    @AuraEnabled public DateTime authExpiration {get; set;}
+    @AuraEnabled public String status {get; set;}
+    @AuraEnabled public String statusReason {get; set;}
+    @AuraEnabled public String paymentMethod {get; set;}
+    @AuraEnabled public String originalTransactionId {get; set;}
     @AuraEnabled public String elevateBatchId {get; set;}
-    @AuraEnabled public String declineReason;
-    @AuraEnabled public String cardLast4;
-    @AuraEnabled public String cardNetwork;
-    @AuraEnabled public String cardExpirationMonth;
-    @AuraEnabled public String cardExpirationYear;
-    @AuraEnabled public DateTime authorizedAt;
-    @AuraEnabled public String gatewayTransactionId;
-    @AuraEnabled public String gatewayId;
+    @AuraEnabled public String declineReason {get; set;}
+    @AuraEnabled public String cardLast4 {get; set;}
+    @AuraEnabled public String achLast4 {get; set;}
+    @AuraEnabled public String cardNetwork {get; set;}
+    @AuraEnabled public String cardExpirationMonth {get; set;}
+    @AuraEnabled public String cardExpirationYear {get; set;}
+    @AuraEnabled public Datetime authorizedAt {get; set;}
+    @AuraEnabled public String gatewayTransactionId {get; set;}
+    @AuraEnabled public String gatewayId {get; set;}
+    @AuraEnabled public Datetime createdAt {get; set;}
+    @AuraEnabled public String dayOfMonth {get; set;}
+    @AuraEnabled public String installmentPeriod {get; set;}
+    @AuraEnabled public String batchItemType {get; set;}
+    @AuraEnabled public Integer version {get; set;}
 
-    public ElevateAuthorizedGift(ElevateTokenizedGift tokenizedGift,
-                                 ElevateAuthorizedGiftResponse authorizedGiftResponse) {
-        this.tokenizedGift = tokenizedGift;
-        this.paymentId = authorizedGiftResponse.id();
-        this.authExpiration = authorizedGiftResponse.authExpiration();
-        this.status = authorizedGiftResponse.status().name();
-        this.gatewayTransactionId = authorizedGiftResponse.gatewayTransactionId();
-        this.paymentMethod = authorizedGiftResponse.paymentMethod();
-        this.elevateBatchId  = authorizedGiftResponse.elevateBatchId();
-        this.originalTransactionId = authorizedGiftResponse.originalTransactionId();
-        this.declineReason = authorizedGiftResponse.declineReason();
-        this.cardLast4 = authorizedGiftResponse.last4();
-        this.cardNetwork = authorizedGiftResponse.brand();
-        this.cardExpirationMonth = authorizedGiftResponse.expirationMonth();
-        this.cardExpirationYear = authorizedGiftResponse.expirationYear();
-        this.authorizedAt = authorizedGiftResponse.authorizedAt();
-        this.gatewayId = authorizedGiftResponse.gatewayId();
-        this.gatewayTransactionId = authorizedGiftResponse.gatewayTransactionId();
+    public ElevateBatchItem(ElevateBatchItemCreateResponse createBatchItemResponse) {
+        this.batchItemType = createBatchItemResponse.batchItemType().name();
+        this.id = createBatchItemResponse.id();
+        this.authorizedAt = createBatchItemResponse.authorizedAt();
+        this.authExpiration = createBatchItemResponse.authExpiration();
+        this.gatewayTransactionId = createBatchItemResponse.gatewayTransactionId();
+        this.paymentMethod = createBatchItemResponse.paymentMethod();
+        this.elevateBatchId  = createBatchItemResponse.elevateBatchId();
+        this.originalTransactionId = createBatchItemResponse.originalTransactionId();
+        this.declineReason = createBatchItemResponse.declineReason();
+        this.cardLast4 = createBatchItemResponse.cardLast4();
+        this.achLast4 = createBatchItemResponse.achLast4();
+        this.status = createBatchItemResponse.status();
+        this.statusReason = createBatchItemResponse.statusReason();
+        this.cardNetwork = createBatchItemResponse.brand();
+        this.cardExpirationMonth = createBatchItemResponse.expirationMonth();
+        this.cardExpirationYear = createBatchItemResponse.expirationYear();
+        this.gatewayId = createBatchItemResponse.gatewayId();
+        this.createdAt = createBatchItemResponse.createdAt();
+        this.version = createBatchItemResponse.version();
     }
 
-    public ElevateAuthorizedGift() {}
+    public ElevateBatchItem() {}
 
     public String elevateBatchId() {
         return elevateBatchId;
@@ -98,8 +106,8 @@ public with sharing class ElevateAuthorizedGift {
         return cardExpirationYear;
     }
 
-    public String paymentId() {
-        return paymentId;
+    public String id() {
+        return id;
     }
 
     public DateTime authExpiration() {

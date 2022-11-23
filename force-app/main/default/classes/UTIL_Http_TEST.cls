@@ -269,6 +269,14 @@ public with sharing class UTIL_Http_TEST {
         Test.setMock(HttpCalloutMock.class, callout);
     }
 
+    public static void mockNoContentCalloutResponse() {
+        CalloutMock callout = new CalloutMock()
+            .withStatusCode(UTIL_Http.STATUS_CODE_NO_CONTENT)
+            .withStatus(UTIL_Http.STATUS_OK);
+
+        Test.setMock(HttpCalloutMock.class, callout);
+    }
+
     /**
      * @description Stubs a "bad request" callout response
      * @return void

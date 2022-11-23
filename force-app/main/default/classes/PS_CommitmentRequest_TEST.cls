@@ -306,7 +306,8 @@ private with sharing class PS_CommitmentRequest_TEST {
 
         Test.startTest();
         String commitmentId = null;
-        HttpRequest request = PS_CommitmentRequest.buildRequest(commitmentId, jsonRequestBody);
+        HttpRequest request = PS_CommitmentRequest.buildRequest(commitmentId, jsonRequestBody,
+            PS_Request.ElevateEndpoint.COMMITMENT);
         Test.stopTest();
 
         final String expectedEndpoint = PS_IntegrationServiceConfig_TEST.testBaseUrl
@@ -327,7 +328,8 @@ private with sharing class PS_CommitmentRequest_TEST {
 
         Test.startTest();
         String commitmentId = RD2_ElevateIntegrationService_TEST.COMMITMENT_ID;
-        HttpRequest request = PS_CommitmentRequest.buildRequest(commitmentId, jsonRequestBody);
+        HttpRequest request = PS_CommitmentRequest.buildRequest(commitmentId, jsonRequestBody,
+            PS_Request.ElevateEndpoint.COMMITMENT);
         Test.stopTest();
 
         final String expectedEndpoint = PS_IntegrationServiceConfig_TEST.testBaseUrl

@@ -47,7 +47,7 @@
 
 &lt;li&gt;この設定ページに戻って上の [編集] ボタンをクリックし、ID やトークンを適切な項目に貼り付けます。&lt;/li&gt;
 
-&lt;li&gt;残りの項目に入力して [保存] をクリックします。詳細は、各項目のヘルプテキストを参照してください。さらに詳しい情報が必要な場合は、&lt;a href=&quot;https://powerofus.force.com/NPSP_Address_Verification&quot;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。&lt;/li&gt;</label>
+&lt;li&gt;残りの項目に入力して [保存] をクリックします。詳細は、各項目のヘルプテキストを参照してください</label>
     </customLabels>
     <customLabels>
         <name>Addr_Settings_Intro_Title</name>
@@ -771,7 +771,7 @@
     </customLabels>
     <customLabels>
         <name>ErrorEmailMessage</name>
-        <label>Salesforce でこれらの NPSP エラーが発生しました。エラーの解決方法がわからない場合は、Nonprofit Success Pack グループ (https://powerofus.force.com/HUB_NPSP_Group) にメッセージを投稿してください</label>
+        <label>Salesforce でこれらの NPSP エラーが発生しました。エラーの解決方法がわからない場合は、Nonprofit Success Pack グループ (https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE) にメッセージを投稿してください</label>
     </customLabels>
     <customLabels>
         <name>FieldSetRelatedFieldError</name>
@@ -783,7 +783,7 @@
     </customLabels>
     <customLabels>
         <name>InactiveScheduledJobsOwnerErrMsg</name>
-        <label>無効なユーザが所有するスケジュール済みジョブが存在します。スケジュール済みジョブで、それぞれの所有者が有効なユーザであることを確認します。詳細は、「NPSP スケジュール済みジョブの編集または再スケジュール」(https://powerofus.force.com/NPSP_Scheduled_Jobs) を参照してください。</label>
+        <label>無効なユーザが所有するスケジュール済みジョブが存在します。スケジュール済みジョブで、それぞれの所有者が有効なユーザであることを確認します。</label>
     </customLabels>
     <customLabels>
         <name>NameRequired</name>
@@ -1069,7 +1069,7 @@
         <name>RD2_EnablementIntro</name>
         <label>拡張継続支援は、Nonprofit Success Pack (NPSP) の再設計および改善された継続支援機能です。フィードバックを提供し、拡張継続支援の実現を支援してくれたコミュニティメンバーに感謝します。
         &lt;br/&gt;&lt;br/&gt;NPSP にはすでに継続支援機能があるため、いくつかのアップグレードタスクを実行し、既存のデータを拡張継続支援モデルに移行する必要があります。必要なタスクの概要を以下に示します。
-        &lt;br/&gt;&lt;br/&gt;その過程で疑問が生じると思われますが、各ステップで準備を万全にしてください。アップグレードプロセスの進行時に&lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;拡張継続支援のドキュメント&lt;/a&gt;を参照してください。</label>
+        &lt;br/&gt;&lt;br/&gt;その過程で疑問が生じると思われますが、各ステップで準備を万全にしてください。</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMetaDeployConfirm</name>
@@ -1117,7 +1117,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationErrorMessage</name>
-        <label>移行の実行でエラーが発生しました。正常に完了するには、これらのエラーを修正する必要があります。エラーを確認するには、[NPSP 設定] &gt; [システムツール] &gt; [エラーログ] に移動します。詳細は、&lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;ドキュメント&lt;/a&gt;を参照してください。エラーを修正してから戻ってもう一度お試しください。</label>
+        <label>移行の実行でエラーが発生しました。正常に完了するには、これらのエラーを修正する必要があります。エラーを確認するには、[NPSP 設定] &gt; [システムツール] &gt; [エラーログ] に移動します。</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationIntro</name>
@@ -1158,8 +1158,7 @@
     <customLabels>
         <name>RD2_EnablementPrepTasks</name>
         <label>&lt;ul&gt;&lt;li&gt;継続支援、商談、支払オブジェクトのワークフロー、プロセス、入力規則、トリガを無効にする。&lt;/li&gt;
-&lt;li&gt;データベース (すべての継続支援とそれらの関連レコードを含む) をバックアップする。&lt;/li&gt;
-&lt;li&gt;拡張継続支援の&lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;ドキュメント&lt;/a&gt;を参照する。&lt;/li&gt;&lt;/ul&gt;</label>
+&lt;li&gt;データベース (すべての継続支援とそれらの関連レコードを含む) をバックアップする。&lt;/li&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementPrepTitle</name>
@@ -1168,8 +1167,7 @@
     <customLabels>
         <name>RD2_EnablementSimpleIntro</name>
         <label>拡張継続支援により、継続支援の管理がこれまで以上に柔軟かつ容易になります。拡張継続支援を有効にするには、以下の手順を実行します。拡張継続支援を完全に有効にするには、すべての手順を完了する必要があります。
-        &lt;br/&gt;&lt;br/&gt;&lt;b&gt;継続支援レコードがないため、データの検証や移行を行う必要はありません。&lt;/b&gt;
-        &lt;br/&gt;&lt;br/&gt;詳細は、&lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;拡張継続支援のドキュメント&lt;/a&gt;を参照してください。</label>
+            &lt;br/&gt;&lt;br/&gt;&lt;b&gt;継続支援レコードがないため、データの検証や移行を行う必要はありません。&lt;/b&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EndDateMustBeLaterThanCloseWonOpp</name>
@@ -2102,11 +2100,11 @@
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>2020 年 10 月 1 日以降、バッチデータエントリはサポートされなくなりました。ほとんどの機能は NPSP の新機能に置き換えられました。進行中のバッチがある場合、それらのレコードには引き続きアクセスできますが、バッチデータエントリを使用して処理することはできません。進行中のバッチにアクセスする必要がある場合は、サポートにお問い合わせください。&lt;br/&gt;バッチデータエントリの代わりとして、支援エントリを検討することをお勧めします。支援エントリについての詳細は、&lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
+        <label>2020 年 10 月 1 日以降、バッチデータエントリはサポートされなくなりました。ほとんどの機能は NPSP の新機能に置き換えられました。進行中のバッチがある場合、それらのレコードには引き続きアクセスできますが、バッチデータエントリを使用して処理することはできません。進行中のバッチにアクセスする必要がある場合は、サポートにお問い合わせください。</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
-        <label>2020 年 10 月 1 日にバッチデータエントリは廃止になり、NPSP では機能しなくなります。その時点で進行中のバッチがあった場合、レコードには引き続きアクセスできますが、バッチデータエントリを使用して処理することはできません。スムーズに移行できるように、10 月 1 日に先立って支援エントリを有効化して使用するようにしてください。支援エントリについての詳細は、&lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
+        <label>2020 年 10 月 1 日にバッチデータエントリは廃止になり、NPSP では機能しなくなります。その時点で進行中のバッチがあった場合、レコードには引き続きアクセスできますが、バッチデータエントリを使用して処理することはできません。スムーズに移行できるように、10 月 1 日に先立って支援エントリを有効化して使用するようにしてください。</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
@@ -3007,7 +3005,7 @@
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>2021 年 7 月 13 日にバッチ支援エントリは廃止になり、NPSP では機能しなくなります。その時点で進行中のバッチがあった場合、レコードには引き続きアクセスできますが、バッチ支援エントリを使用して処理することはできません。スムーズに移行できるように、7 月 13 日に先立って新しい支援エントリを有効化して使用するようにしてください。支援エントリについての詳細は、&lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
+        <label>2021 年 7 月 13 日にバッチ支援エントリは廃止になり、NPSP では機能しなくなります。その時点で進行中のバッチがあった場合、レコードには引き続きアクセスできますが、バッチ支援エントリを使用して処理することはできません。スムーズに移行できるように、7 月 13 日に先立って新しい支援エントリを有効化して使用するようにしてください。</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -3022,8 +3020,7 @@
         <label>2021 年 7 月 13 日以降、バッチ支援エントリはサポートされなくなり、支援エントリに置き換えられました。
             進行中のバッチがある場合、それらのレコードには引き続きアクセスできますが、バッチ支援エントリを使用して処理することはできません。
             進行中のバッチにアクセスする必要がある場合は、サポートにお問い合わせください。
-            バッチ支援エントリの代わりとして、支援エントリを検討することをお勧めします。
-            支援エントリについての詳細は、&lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
+            バッチ支援エントリの代わりとして、支援エントリを検討することをお勧めします。</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -3542,7 +3539,7 @@
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>一致ルールを使用して、見つかったすべての重複する取引先責任者を表示します。&lt;a href=&quot;https://powerofus.force.com/IP_Contacts&quot; target=&quot;_blank&quot;&gt;&lt;b&gt;詳細はこちら&lt;/b&gt;&lt;/a&gt;</label>
+        <label>一致ルールを使用して、見つかったすべての重複する取引先責任者を表示します。&lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Merge_Contacts.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;&lt;b&gt;詳細はこちら&lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>
@@ -4989,10 +4986,6 @@
         <label>1 件以上のカード承認の期限が切れました。バッチを処理するときにこれらの支払が課金されるようにするには、期限が切れた承認の Elevate 支払状況を使用して支援の支払情報を再入力してください。</label>
     </customLabels>
     <customLabels>
-        <name>gePaymentProcessedWarning</name>
-        <label>{0} が支払を正常に処理しました。支援者、日付、金額、または支払方法を変更すると、{0} と NPSP で同じトランザクションのレコードで整合性が失われます。</label>
-    </customLabels>
-    <customLabels>
         <name>gePaymentProcessError</name>
         <label>支払の処理中に問題が発生しました。エラーを確認して、もう一度お試しください。または、
             支払を処理せずに、[支払情報を入力しない。] を選択して支援を入力してください。{0} エラー:
@@ -5744,7 +5737,7 @@
     </customLabels>
     <customLabels>
         <name>healthSolutionNothingScheduled</name>
-        <label>デフォルトの NPSP ジョブを再スケジュールするには、[NPSP 設定] | [一括データ処理] | [プロセススケジューラ] に移動します。[編集] をクリックします。[デフォルトの NPSP ジョブを自動スケジュールしない] が選択されていないことを確認します。[保存] をクリックします。詳細は、「NPSP ジョブの編集または再スケジュール」(https://powerofus.force.com/NPSP_Scheduled_Jobs) を参照してください。</label>
+        <label>デフォルトの NPSP ジョブを再スケジュールするには、[NPSP 設定] | [一括データ処理] | [プロセススケジューラ] に移動します。[編集] をクリックします。[デフォルトの NPSP ジョブを自動スケジュールしない] が選択されていないことを確認します。[保存] をクリックします。</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionOCRDupPrimary</name>
@@ -5780,7 +5773,7 @@
     </customLabels>
     <customLabels>
         <name>healthSolutionTriggerHandlerMismatch</name>
-        <label>トリガを変更すると NPSP のコア機能に予期しない影響が生じる可能性があるため、本番にリリースする前に綿密にテストする必要があります。トリガへの変更が意図的でない場合は、トリガハンドラをリセットしてデフォルト設定に一致させます。詳細は、「トリガハンドラの管理」(https://powerofus.force.com/NPSP_Manage_Trigger_Handlers) を参照してください。</label>
+        <label>トリガを変更すると NPSP のコア機能に予期しない影響が生じる可能性があるため、本番にリリースする前に綿密にテストする必要があります。トリガへの変更が意図的でない場合は、トリガハンドラをリセットしてデフォルト設定に一致させます。</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionUnsupportedPicklistValue</name>
@@ -6241,10 +6234,6 @@
     <customLabels>
         <name>pmtRefundAmount</name>
         <label>返金額</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundPaymentMessage</name>
-        <label>次の支払を返金します:</label>
     </customLabels>
     <customLabels>
         <name>pmtRefundProcessing</name>
@@ -6842,15 +6831,11 @@
         <label>高度な対応付けを無効にして、ヘルプテキストの対応付けに戻ることはできますが、高度な対応付けで行った変更は失われます。</label>
     </customLabels>
     <customLabels>
-        <name>stgHelpAdvancedMapping3</name>
-        <label>高度な対応付けの完全な設定ドキュメントについては、&lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;こちら&lt;/a&gt;を参照してください。</label>
-    </customLabels>
-    <customLabels>
         <name>stgHelpAdvancedMapping4</name>
         <label>&lt;b&gt;このメッセージは、このページから移動すると表示されなくなります。修正する必要のあるヘルプテキストの対応付けを追跡できるように、このページのスクリーンショットを撮るか、以下のテーブルの情報をコピーしてください。&lt;/b&gt;
             &lt;br/&gt;
             &lt;br/&gt;
-            既存のヘルプテキストの対応付けの一部は無効であったため変換できませんでした。&lt;a href=&quot;https://powerofus.force.com/NPSP_Troubleshoot_Help_Text&quot; target=&quot;_blank&quot;&gt;ヘルプテキストの対応付けの一般的な問題についての詳細を確認してください&lt;/a&gt;。高度な対応付けを無効にし、無効なヘルプテキストの対応付けを修正してから高度な対応付けを再度有効にすることをお勧めします。または、次の画面で高度な対応付けを設定するときにこれらの対応付けを追加することもできますが、高度な対応付けを無効にすると、これらの追加の対応付けは元の無効なヘルプテキストに戻ります。</label>
+            既存のヘルプテキストの対応付けの一部は無効であったため変換できませんでした。高度な対応付けを無効にし、無効なヘルプテキストの対応付けを修正してから高度な対応付けを再度有効にすることをお勧めします。または、次の画面で高度な対応付けを設定するときにこれらの対応付けを追加することもできますが、高度な対応付けを無効にすると、これらの追加の対応付けは元の無効なヘルプテキストに戻ります。</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMappingInvalidHelpText</name>
@@ -6992,12 +6977,8 @@
 処理が 100% 完了したら、このページから移動したり、このページを更新しても問題ありません。</label>
     </customLabels>
     <customLabels>
-        <name>stgHelpCustomizableRollupsEnable1</name>
-        <label>カスタマイズ可能な積み上げ集計のドキュメントの詳細は&lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;こちら&lt;/a&gt;。</label>
-    </customLabels>
-    <customLabels>
         <name>stgHelpCustomizableRollupsEnable2</name>
-        <label>初めてカスタマイズ可能な積み上げ集計を有効にすると、既存の積み上げ集計と 87 個の事前定義済み NPSP 積み上げ集計が、カスタマイズ可能な積み上げ集計に自動的に変換されます。詳細は、&lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;こちらのドキュメント&lt;/a&gt;を参照してください。
+        <label>初めてカスタマイズ可能な積み上げ集計を有効にすると、既存の積み上げ集計と 87 個の事前定義済み NPSP 積み上げ集計が、カスタマイズ可能な積み上げ集計に自動的に変換されます。
             &lt;br/&gt;&lt;br/&gt;
             無効にして従来の積み上げ集計に戻すこともできますが、新しい積み上げ集計や、カスタマイズ可能な積み上げ集計で実行した積み上げ集計および検索条件の変更は、従来の積み上げ集計設定に適用されません。</label>
     </customLabels>
@@ -7080,14 +7061,6 @@
         <label>商談の主取引先責任者の世帯メンバーの取引先責任者の役割を自動作成する場合はオンにします。</label>
     </customLabels>
     <customLabels>
-        <name>stgHelpHHObjectOverview</name>
-        <label>Nonprofit Success Pack では、2 つの異なる方法で世帯を追跡できます。取引先を取引先責任者の世帯として使用する世帯取引先モデルを指定することをお勧めします。ただし、1 対 1 または個人の取引先モデルを使用する場合、必要に応じて個々の世帯オブジェクトを取引先責任者の世帯として使用できます。
-&lt;br/&gt;&lt;br/&gt;
-世帯オブジェクトとそれに関連付けられている取引先モデルは推奨されなくなりました。ただし、以前のバージョンの Nonprofit Success Pack から 1 対 1 または取引先責任者 (「バケット」) の取引先モデルを引き続き使用している場合、世帯オブジェクトの設定をここで変更できます。
-&lt;br/&gt;&lt;br/&gt;
-推奨される世帯取引先モデルについての詳細は、&lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_new&quot;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
-    </customLabels>
-    <customLabels>
         <name>stgHelpHHRules</name>
         <label>個々の世帯オブジェクトを自動的に作成する取引先責任者を指定します。(1 対 1 または個人の取引先モデルにのみ適用されます)</label>
     </customLabels>
@@ -7161,7 +7134,7 @@
     </customLabels>
     <customLabels>
         <name>stgHelpOCR</name>
-        <label>ソフトクレジット、取引先責任者の役割、およびマッチング支援はいくつかの重要な点で相互に関連します。これらの概念および相互関係をよく理解していない場合は、この設定を調整する前に &lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;NPSP ドキュメント&lt;/a&gt;全体を読む必要があります。</label>
+        <label>ソフトクレジット、取引先責任者の役割、およびマッチング支援はいくつかの重要な点で相互に関連します。これらの概念および相互関係をよく理解していない場合は、この設定を調整する前に &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Automated_Soft_Credits.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;NPSP ドキュメント&lt;/a&gt;全体を読む必要があります。</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCRDefaultRole</name>
@@ -7189,7 +7162,7 @@
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingFormat</name>
-        <label>商談名の形式。独自の形式を作成するには、[その他] を選択します。詳細は、&lt;a href=&quot;https://powerofus.force.com/NPSP_Opp_Names&quot; target=&quot;_blank&quot;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
+        <label>商談名の形式。独自の形式を作成するには、[その他] を選択します。</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingRecTypes</name>
@@ -7233,7 +7206,7 @@
     </customLabels>
     <customLabels>
         <name>stgHelpPowerOfUsHub</name>
-        <label>質問を受けましたか? NPSP に関する質問には、&lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;「Nonprofit Success Pack」&lt;/a&gt;グループをお試しください。Salesforce の管理と設定に関する質問には、&lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;「System Administrators」&lt;/a&gt;グループをお試しください。&lt;br/&gt;&lt;br/&gt;最新の NPSP リリースノートについては、&lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;「NPSP Release Announcements」&lt;/a&gt;グループで確認できます。</label>
+        <label>質問を受けましたか? NPSP に関する質問には、&lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;「Nonprofit Success Pack」&lt;/a&gt;グループをお試しください。Salesforce の管理と設定に関する質問には、&lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;「System Administrators」&lt;/a&gt;グループをお試しください。&lt;br/&gt;&lt;br/&gt;最新の NPSP リリースノートについては、&lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;「NPSP Release Announcements」&lt;/a&gt;グループで確認できます。</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPrimaryContactBatch</name>

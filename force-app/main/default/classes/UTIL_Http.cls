@@ -36,6 +36,7 @@
 public without sharing class UTIL_Http {
     public static final Integer STATUS_CODE_OK = 200;
     public static final Integer STATUS_CODE_CREATED = 201;
+    public static final Integer STATUS_CODE_NO_CONTENT = 204;
     public static final Integer STATUS_CODE_BAD_REQUEST = 400;
     public static final Integer STATUS_CODE_UNAUTHORIZED = 401;
     public static final Integer STATUS_CODE_FORBIDDEN = 403;
@@ -56,7 +57,7 @@ public without sharing class UTIL_Http {
     public static final String TIMED_OUT_MESSAGE = 'timed out';
 
     public enum Method {
-        GET, POST, PATCH
+        GET, POST, PATCH, DEL
     }
 
     /***

@@ -3,7 +3,7 @@
     <masterLabel>NPSP Contact Merge Guidance</masterLabel>
     <promptVersions>
         <actionButtonLabel>Find and Merge Duplicates</actionButtonLabel>
-        <actionButtonLink>https://powerofus.force.com/s/article/NPSP-Merging-Contacts</actionButtonLink>
+        <actionButtonLink>https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Merge_Contacts.htm&amp;type=5</actionButtonLink>
         <body>&lt;p&gt;Keeping your data clean and reliable is one of the most important ways to instill confidence in your system. &lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Use NPSP Duplicate rules to identify duplicate contacts. Then use NPSP Contact Merge to merge duplicates into a single record without losing data from any related households, activities or opportunities. &lt;/p&gt;</body>
         <customApplication>Nonprofit_Success_Pack</customApplication>
         <delayDays>1</delayDays>
