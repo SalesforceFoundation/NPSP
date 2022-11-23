@@ -54,6 +54,12 @@ public with sharing class GiftBatchService {
         String.valueOf(DataImport__c.Account1_Name__c)
     };
 
+    private static final Set<String> FINISH_JOB_STATUS_SET = New Set<String> {
+        'Completed',
+        'Failed',
+        'Aborted'
+    };
+
     // Used to determine whether or not the Gift Batch has recurring gifts and
     // the current user has the proper permissions to open the gift batch.
     public Boolean isGiftBatchAccessible(GiftBatchId giftBatchId) {
@@ -67,7 +73,7 @@ public with sharing class GiftBatchService {
     }
 
     public void processGiftsFor(GiftBatchId giftBatchId) {
-        GiftBatchForQueueable queueableGiftBatch = new GiftBatchForQueueable(giftBatchId);
+        GiftBatchForQueueable queueableGiftBatch = new GiftBatchForQueueable(giftBatchId, new GiftBatchSelector());
         queueableGiftBatch.chunkGiftsThatCanBeProcessed();
         GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(queueableGiftBatch);
 
@@ -76,6 +82,18 @@ public with sharing class GiftBatchService {
 
         updateGiftBatchWith(giftBatchId, asyncApexJobId);
     }
+
+    public void disableRD2AsynchronousProcesses() {
+        RD2_Settings rd2Settings = RD2_Settings.getInstance();
+        rd2Settings.isGiftEntryMode = true;
+    }
+
+
+    public void enableRD2AsynchronousProcesses() {
+        RD2_Settings rd2Settings = RD2_Settings.getInstance();
+        rd2Settings.isGiftEntryMode = false;
+    }
+
 
     public void chainNextQueueable(GiftBatchForQueueable queueableGiftBatch) {
         if (Test.isRunningTest()) {
@@ -140,17 +158,19 @@ public with sharing class GiftBatchService {
         }
 
     }
+    
+    public Boolean hasActiveRunningJob(GiftBatchId giftBatchId) {
+        Id jobId = giftBatchServicePrivilegedHelper.getLatestAsyncApexJobId(giftBatchId);
+        if (jobId == null) {
+            return false;
+        }
+
+        String jobStatus = getStatusFor(new AsyncApexJobId(jobId));
+        return !(FINISH_JOB_STATUS_SET.contains(jobStatus) || jobStatus == null);
+    }
 
     public String getStatusFor(AsyncApexJobId jobId) {
         return giftBatchServicePrivilegedHelper.getStatusFor(jobId);
-    }
-
-    public Boolean hasQueueableJob(GiftBatchId giftBatchId) {
-        Id asyncApexJob = giftBatchServicePrivilegedHelper.getLatestAsyncApexJobId(giftBatchId);
-        if (asyncApexJob != null) {
-            return true;
-        }
-        return false;
     }
 
     public void clearLatestJobIdFrom(GiftBatchId giftBatchId) {
@@ -165,7 +185,7 @@ public with sharing class GiftBatchService {
         }
     }
 
-    private class GiftBatchServicePrivilegedHelper {
+    private inherited sharing class GiftBatchServicePrivilegedHelper {
         private DataImportBatch__c batch;
         private AsyncApexJob asyncApexJob;
         private final String JOB_TYPE_BATCH = 'BatchApex';

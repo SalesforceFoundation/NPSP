@@ -176,8 +176,10 @@
                                     </lightning-formatted-date-time>
                                 </div>
                             </td>
-                            <td key={item.nextDonation} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.RD_nextDonation} tabindex="-1" aria-label={item.nextDonation} role="gridcell">
-                                <div class="next-donation" data-ndid={item.recurringDonation.Id} lwc:dom="manual"></div>
+                            <td key={item.nextDonation} data-id={item.recurringDonation.Id} class={tdClasses} data-label={labels.RD_nextDonation} tabindex="-1" aria-label={item.nextDonation} role="gridcell">
+                                <div class={rowClasses} title={labels.RD_nextDonation}>
+                                    <lightning-formatted-rich-text value={item.nextDonation}></lightning-formatted-rich-text>
+                                </div>
                             </td>
                             <td key={item.recurringDonation.LastModifiedDate} data-id={item.recurringDonation.Id} class={tdClasses}  data-label={labels.RD_lastModified} tabindex="-1" aria-label={item.lastModifiedDate} role="gridcell">
                                 <div class={rowClasses} title={labels.RD_lastModified}>

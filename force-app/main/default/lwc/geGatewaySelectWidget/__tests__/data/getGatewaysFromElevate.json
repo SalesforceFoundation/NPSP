@@ -1,0 +1,16 @@
+[
+  {
+    "gatewayName": "Default Gateway Id",
+    "id": "Default Gateway Id",
+    "isACHEnabled": true,
+    "isCreditCardEnabled": true,
+    "isDefault": true
+  },
+  {
+    "gatewayName": "Non-default Gateway Id",
+    "id": "Non-default Gateway Id",
+    "isACHEnabled": true,
+    "isCreditCardEnabled": true,
+    "isDefault": false
+  }
+]

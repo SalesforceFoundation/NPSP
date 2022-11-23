@@ -42,7 +42,7 @@
 1. Open een account voor adresverificatie bij een derde partij. (Sommige zijn gratis voor de niet-commerciële sector.)&lt;br/&gt;
 2. In uw dienst voor adresverificatie creëert u de benodigde authenticatie-ID en/of -token.&lt;br/&gt;
 3. Ga terug naar de instellingenpagina, klik bovenaan op de knop Bewerken en plak de ID en/of de token in de juiste velden.&lt;br/&gt;
-4. Vul de overige velden in en klik op Opslaan. De hulptekst voor elk veld geeft meer informatie. Als u nog meer informatie nodig hebt, raadpleegt u de &lt;a href=&quot;https://powerofus.force.com/NPSP_Address_Verification&quot;&gt;NPSP-documentatie&lt;/a&gt;.</label>
+4. Vul de overige velden in en klik op Opslaan. De hulptekst voor elk veld geeft meer informatie.</label>
     </customLabels>
     <customLabels>
         <name>Addr_Settings_Intro_Title</name>
@@ -766,7 +766,7 @@
     </customLabels>
     <customLabels>
         <name>ErrorEmailMessage</name>
-        <label>Salesforce heeft deze NPSP-fouten ontdekt. Als u niet zeker weet hoe u de fouten oplost, plaatst u een bericht in de Nonprofit Success Pack-groep: https://powerofus.force.com/HUB_NPSP_Group</label>
+        <label>Salesforce heeft deze NPSP-fouten ontdekt. Als u niet zeker weet hoe u de fouten oplost, plaatst u een bericht in de Nonprofit Success Pack-groep: https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE</label>
     </customLabels>
     <customLabels>
         <name>FieldSetRelatedFieldError</name>
@@ -778,7 +778,7 @@
     </customLabels>
     <customLabels>
         <name>InactiveScheduledJobsOwnerErrMsg</name>
-        <label>Er zijn geplande taken in eigendom van een inactieve gebruiker. Bekijk de geplande taken en controleer of de eigenaar van elke taak een actieve gebruiker is. Bekijk Geplande NPSP-taken bewerken of opnieuw plannen voor meer informatie: https://powerofus.force.com/NPSP_Scheduled_Jobs</label>
+        <label>Er zijn geplande taken in eigendom van een inactieve gebruiker. Bekijk de geplande taken en controleer of de eigenaar van elke taak een actieve gebruiker is.</label>
     </customLabels>
     <customLabels>
         <name>NameRequired</name>
@@ -1064,7 +1064,7 @@
         <name>RD2_EnablementIntro</name>
         <label>Gegroet! Uitgebreide terugkerende donaties is onze nieuw ontworpen en verbeterde voorziening voor terugkerende donaties voor het Nonprofit Success Pack (NPSP). Onze grote dank gaat naar communityleden die hun feedback hebben gegeven en hebben geholpen om uitgebreide terugkerende donaties mogelijk te maken.
         &lt;br/&gt;&lt;br/&gt;Aangezien er al een voorziening Terugkerende donaties in NPSP is, moet u diverse upgradetaken uitvoeren en uw bestaande gegevens overzetten naar het model Uitgebreide terugkerende donaties. Hieronder hebben we de vereiste taken voor u op een rijtje gezet.
-        &lt;br/&gt;&lt;br/&gt;Waarschijnlijk hebt u later nog wat vragen; daarom willen we u volledig voorbereiden bij elke stap. Raadpleeg de &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentatie over Uitgebreide terugkerend donaties&lt;/a&gt; terwijl u het upgradeproces doorloopt.</label>
+        &lt;br/&gt;&lt;br/&gt;Waarschijnlijk hebt u later nog wat vragen; daarom willen we u volledig voorbereiden bij elke stap.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMetaDeployConfirm</name>
@@ -1112,7 +1112,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationErrorMessage</name>
-        <label>De uitvoering van uw migratie bevat fouten; deze moeten worden gecorrigeerd om de migratie te kunnen voltooien. Bekijk de fouten door naar NPSP-instellingen &gt; Systeemtools &gt; Foutenlogboeken te gaan. Raadpleeg de &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentatie&lt;/a&gt; voor hulp. Corrigeer de fouten, ga terug en probeer het opnieuw.</label>
+        <label>De uitvoering van uw migratie bevat fouten; deze moeten worden gecorrigeerd om de migratie te kunnen voltooien. Bekijk de fouten door naar NPSP-instellingen &gt; Systeemtools &gt; Foutenlogboeken te gaan.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationIntro</name>
@@ -1153,8 +1153,7 @@
     <customLabels>
         <name>RD2_EnablementPrepTasks</name>
         <label>&lt;ul&gt;&lt;li&gt;Schakel workflows, processen, validatieregels en triggers uit voor de objecten Terugkerende donaties, Opportunity en Betaling.&lt;/li&gt;
-&lt;li&gt;Maak een back-up van uw database, inclusief alle terugkerende donaties en hun gerelateerde records.&lt;/li&gt;
-&lt;li&gt;Lees de &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentatie&lt;/a&gt; voor uitgebreide terugkerende donaties.&lt;/li&gt;&lt;/ul&gt;</label>
+&lt;li&gt;Maak een back-up van uw database, inclusief alle terugkerende donaties en hun gerelateerde records.&lt;/li&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementPrepTitle</name>
@@ -1163,8 +1162,7 @@
     <customLabels>
         <name>RD2_EnablementSimpleIntro</name>
         <label>Met uitgebreide terugkerende donaties worden terugkerende donaties flexibeler en eenvoudiger te beheren dan ooit tevoren. Als u uitgebreide terugkerende donaties wilt inschakelen, volgt u de onderstaande stappen. U moet ALLE stappen uitvoeren om uitgebreide terugkerende donaties volledig in te schakelen.
-        &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Omdat er geen records zijn voor terugkerende donaties, hoeft u geen gegevens te valideren of migreren.&lt;/b&gt;
-        &lt;br/&gt;&lt;br/&gt;Lees voor meer informatie de &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentatie over uitgebreide terugkerende donaties&lt;/a&gt;.</label>
+            &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Omdat er geen records zijn voor terugkerende donaties, hoeft u geen gegevens te valideren of migreren.&lt;/b&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EndDateMustBeLaterThanCloseWonOpp</name>
@@ -2103,11 +2101,11 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>Sinds 1 oktober 2020 wordt Batchgegevensinvoer niet meer ondersteund. De meeste opties zijn vervangen door nieuwere functies in NPSP. Als u nog actieve batches hebt, kunt u de records nog wel openen, maar niet meer verwerken met Batchgegevensinvoer. Neem contact op met Support als u toegang wilt tot deze batches. &lt;br/&gt; Mogelijk is Opgave van gift een goed alternatief voor Batchgegevensinvoer. Meer informatie over Opgave van gift vindt u in de &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-documentatie&lt;/a&gt;.</label>
+        <label>Sinds 1 oktober 2020 wordt Batchgegevensinvoer niet meer ondersteund. De meeste opties zijn vervangen door nieuwere functies in NPSP. Als u nog actieve batches hebt, kunt u de records nog wel openen, maar niet meer verwerken met Batchgegevensinvoer. Neem contact op met Support als u toegang wilt tot deze batches.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
-        <label>Op 1 oktober 2020 wordt Batchgegevensinvoer buiten gebruik gesteld; de functie is dan niet meer beschikbaar in NPSP. Als u op dat moment actieve batches hebt, kunt u de records nog wel openen, maar u kunt ze niet meer verwerken met Batchgegevensinvoer. Als u voor een goede overgang wilt zorgen, schakelt u Opgave van gift op voorhand in en neemt u dit al in gebruik vóór 1 oktober. Meer informatie over Opgave van gift vindt u in de &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-documentatie&lt;/a&gt;.</label>
+        <label>Op 1 oktober 2020 wordt Batchgegevensinvoer buiten gebruik gesteld; de functie is dan niet meer beschikbaar in NPSP. Als u op dat moment actieve batches hebt, kunt u de records nog wel openen, maar u kunt ze niet meer verwerken met Batchgegevensinvoer. Als u voor een goede overgang wilt zorgen, schakelt u Opgave van gift op voorhand in en neemt u dit al in gebruik vóór 1 oktober.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
@@ -3008,7 +3006,7 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>Op 13 juli 2021 wordt de verouderde functie Batchinvoer van giften buiten gebruik gesteld; de functie is dan niet meer beschikbaar in NPSP. Als u op dat moment actieve batches hebt, kunt u de records nog wel openen, maar u kunt ze niet meer verwerken met Batchinvoer van giften. Als u voor een goede overgang wilt zorgen, schakelt u de nieuwere functie Opgave van gift op voorhand in en neemt u deze al in gebruik vóór 13 juli. Meer informatie over Opgave van gift vindt u in de &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-documentatie&lt;/a&gt;.</label>
+        <label>Op 13 juli 2021 wordt de verouderde functie Batchinvoer van giften buiten gebruik gesteld; de functie is dan niet meer beschikbaar in NPSP. Als u op dat moment actieve batches hebt, kunt u de records nog wel openen, maar u kunt ze niet meer verwerken met Batchinvoer van giften. Als u voor een goede overgang wilt zorgen, schakelt u de nieuwere functie Opgave van gift op voorhand in en neemt u deze al in gebruik vóór 13 juli.</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -3023,8 +3021,7 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
         <label>Op 13 juli 2021 wordt Batchinvoer van giften niet meer ondersteund en wordt dit vervangen door Opgave van gift.
             Als u nog actieve batches hebt, kunt u de records nog wel openen, maar niet meer verwerken met Batchinvoer van giften.
             Neem contact op met Support als u toegang wilt tot deze batches.
-            Mogelijk is Opgave van gift een goed alternatief voor Batchinvoer van giften.
-            Meer informatie over opgave van giften vindt u in de &lt;a href=&quot;https://powerofus.force.com/NPSP_Documentation&quot; target=&quot;_blank&quot;&gt;NPSP-documentatie&lt;/a&gt;.</label>
+            Mogelijk is Opgave van gift een goed alternatief voor Batchinvoer van giften.</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -3546,7 +3543,7 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>Bekijk alle dubbele contactpersonen die zijn gevonden aan de hand van overeenkomstregels. &lt;a href=&quot;https://powerofus.force.com/IP_Contacts&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; Meer informatie &lt;/b&gt;&lt;/a&gt;</label>
+        <label>Bekijk alle dubbele contactpersonen die zijn gevonden aan de hand van overeenkomstregels. &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Merge_Contacts.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; Meer informatie &lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>
@@ -4992,10 +4989,6 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
         <label>Een of meerdere kaartautorisaties zijn verlopen. Om ervoor te zorgen dat deze betalingen in rekening worden gebracht bij het verwerken van de batch, voert u de betalingsinformatie voor donaties opnieuw in met de Elevate-betaalstatus Autorisatie verlopen.</label>
     </customLabels>
     <customLabels>
-        <name>gePaymentProcessedWarning</name>
-        <label>{0} heeft de betaling verwerkt. Als u de donateur, de datum, het bedrag of de betalingswijze wijzigt, krijgt u inconsistente records voor dezelfde transactie in {0} en NPSP.</label>
-    </customLabels>
-    <customLabels>
         <name>gePaymentProcessError</name>
         <label>Er is een fout opgetreden bij het verwerken van de betaling. Controleer de fout en probeer het opnieuw. In plaats daarvan kunt u het volgende doen:
             selecteer &apos;Voer geen betalingsgegevens in.&apos; om een donatie in te voeren zonder betaling te verwerken. {0} fouten:
@@ -5747,7 +5740,7 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
     </customLabels>
     <customLabels>
         <name>healthSolutionNothingScheduled</name>
-        <label>Om de standaard NPSP-taken opnieuw te plannen, gaat u naar NPSP-instellingen | Bulkgegevensprocessen | Procesplanner. Klik op Bewerken. Zorg dat Automatisch plannen van standaard NPSP-taken niet inschakelen niet is geselecteerd. Klik op Opslaan. Raadpleeg NPSP-taken bewerken of opnieuw plannen voor meer informatie: https://powerofus.force.com/NPSP_Scheduled_Jobs</label>
+        <label>Om de standaard NPSP-taken opnieuw te plannen, gaat u naar NPSP-instellingen | Bulkgegevensprocessen | Procesplanner. Klik op Bewerken. Zorg dat Automatisch plannen van standaard NPSP-taken niet inschakelen niet is geselecteerd. Klik op Opslaan.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionOCRDupPrimary</name>
@@ -5783,7 +5776,7 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
     </customLabels>
     <customLabels>
         <name>healthSolutionTriggerHandlerMismatch</name>
-        <label>Wijzigen aan triggers kunnen op onverwachte wijze invloed hebben op kernfunctionaliteit van NPSP, en moeten grondig worden getest voordat ze op productie worden uitgerold. Als deze wijzigingen onbedoeld zijn, moet u de triggerhandlers opnieuw instellen om ze te laten overeenkomen met de standaardconfiguratie voor NPSP. Raadpleeg het artikel Triggerhandlers beheren voor meer informatie: https://powerofus.force.com/NPSP_Manage_Trigger_Handlers</label>
+        <label>Wijzigen aan triggers kunnen op onverwachte wijze invloed hebben op kernfunctionaliteit van NPSP, en moeten grondig worden getest voordat ze op productie worden uitgerold. Als deze wijzigingen onbedoeld zijn, moet u de triggerhandlers opnieuw instellen om ze te laten overeenkomen met de standaardconfiguratie voor NPSP.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionUnsupportedPicklistValue</name>
@@ -6244,10 +6237,6 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
     <customLabels>
         <name>pmtRefundAmount</name>
         <label>Terugbetalingsbedrag</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundPaymentMessage</name>
-        <label>Betaal de volgende betaling terug:</label>
     </customLabels>
     <customLabels>
         <name>pmtRefundProcessing</name>
@@ -6845,15 +6834,11 @@ Door Standaard NPSP-taken niet automatisch plannen te selecteren, laat u NPSP we
         <label>U kunt Geavanceerd toewijzen uitschakelen en teruggaan naar toewijzingen voor Help-tekst, maar alle wijzigingen die u aanbrengt met Geavanceerd toewijzen, gaan verloren.</label>
     </customLabels>
     <customLabels>
-        <name>stgHelpAdvancedMapping3</name>
-        <label>Zoek &lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;hier&lt;/a&gt; naar de volledige set-updocumentatie voor Geavanceerd toewijzen.</label>
-    </customLabels>
-    <customLabels>
         <name>stgHelpAdvancedMapping4</name>
         <label>&lt;b&gt;Dit bericht wordt niet weergegeven als u deze pagina verlaat. Maak een screenshot van deze pagina of kopieer de gegevens in de onderstaande tabel om de toewijzingen voor Help-tekst bij te houden die u nodig hebt. &lt;/b&gt;
             &lt;br/&gt;
             &lt;br/&gt;
-            We kunnen enkele van uw bestaande toewijzingen voor Help-tekst niet converteren, omdat ze ongeldig zijn. &lt;a href=&quot;https://powerofus.force.com/NPSP_Troubleshoot_Help_Text&quot; target=&quot;_blank&quot;&gt;Meer informatie over veel voorkomende problemen met toewijzingen van Help-tekst&lt;/a&gt;. U wordt aangeraden om Geavanceerd toewijzen uit te schakelen, de ongeldige toewijzingen van Help-tekst te corrigeren en vervolgens Geavanceerd toewijzen opnieuw in te schakelen. Of anders kunt u deze toewijzingen toevoegen wanneer u Geavanceerd toewijzen configureert op het volgende scherm, maar deze extra toewijzingen zetten alles terug naar de oorspronkelijke ongeldig Help-tekst als u Geavanceerd toewijzen uitschakelt.</label>
+            We kunnen enkele van uw bestaande toewijzingen voor Help-tekst niet converteren, omdat ze ongeldig zijn. U wordt aangeraden om Geavanceerd toewijzen uit te schakelen, de ongeldige toewijzingen van Help-tekst te corrigeren en vervolgens Geavanceerd toewijzen opnieuw in te schakelen. Of anders kunt u deze toewijzingen toevoegen wanneer u Geavanceerd toewijzen configureert op het volgende scherm, maar deze extra toewijzingen zetten alles terug naar de oorspronkelijke ongeldig Help-tekst als u Geavanceerd toewijzen uitschakelt.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMappingInvalidHelpText</name>
@@ -6996,12 +6981,8 @@ Voordat u dit proces start, wordt aangeraden de volgende zaken uit te schakelen 
 Wanneer het proces 100% is voltooid, is het veilig de pagina af te sluiten of opnieuw te laden.</label>
     </customLabels>
     <customLabels>
-        <name>stgHelpCustomizableRollupsEnable1</name>
-        <label>U vindt &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;hier&lt;/a&gt; alle documentatie over aanpasbare totaliseringen.</label>
-    </customLabels>
-    <customLabels>
         <name>stgHelpCustomizableRollupsEnable2</name>
-        <label>Wanneer u aanpasbare totaliseringen voor het eerst inschakelt, converteren we uw bestaande totaliseringen en de 87 kant-en-klare NPSP-totaliseringen automatisch in Aanpasbare totaliseringen. Voor alle details raadpleegt u &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;dit document&lt;/a&gt;.
+        <label>Wanneer u aanpasbare totaliseringen voor het eerst inschakelt, converteren we uw bestaande totaliseringen en de 87 kant-en-klare NPSP-totaliseringen automatisch in Aanpasbare totaliseringen.
             &lt;br/&gt;&lt;br/&gt;
             U kunt uitschakelen en terugkeren naar verouderde totaliseringen, maar nieuwe totaliseringen of wijzigingen van totaliseringen/filters die zijn aangebracht in Aanpasbare totaliseringen worden niet toegepast op uw verouderde totaliseringsinstellingen.</label>
     </customLabels>
@@ -7084,10 +7065,6 @@ Wanneer het proces 100% is voltooid, is het veilig de pagina af te sluiten of op
         <label>Wanneer aangevinkt, maakt NPSP automatisch Contactpersoonrollen op Individuele giften voor Huishoudenleden van de Primaire Contactpersoon van de Opportunity.</label>
     </customLabels>
     <customLabels>
-        <name>stgHelpHHObjectOverview</name>
-        <label>Om meer te weten over het aangeraden Huishoudenaccountmodel, raadpleeg &lt;a href=&quot;https://powerofus.force.com/NPSP_Account_Model&quot; target=&quot;_blank&quot;&gt;NPSP-Documentatie&lt;/a&gt;.</label>
-    </customLabels>
-    <customLabels>
         <name>stgHelpHHRules</name>
         <label>Specificeert voor welke Contactpersonen Salesforce automatisch aparte Huishoudenobjecten maakt. (Dit geldt enkel voor One-to-One-Accountmodellen of Individuele Accountmodellen.)</label>
     </customLabels>
@@ -7105,7 +7082,7 @@ Wanneer het proces 100% is voltooid, is het veilig de pagina af te sluiten of op
     </customLabels>
     <customLabels>
         <name>stgHelpLeadConvert</name>
-        <label>Specificeert het standaardgedrag voor het maken van Opportunities wanneer u een Lead naar een Contactpersoon converteert. Wanneer dit niet wordt aangevinkt, zal Salesforce NIET automatisch een Opportunity maken wanneer u Leads naar Contactpersonen converteert. Voor meer informatie, raadpleegt u de &lt;a href=&quot;https://powerofus.force.com/NPSP_Leads&quot; target=&quot;_blank&quot;&gt;NPSP-Documentatie&lt;/a&gt;.</label>
+        <label>Specificeert het standaardgedrag voor het maken van Opportunities wanneer u een Lead naar een Contactpersoon converteert. Wanneer dit niet wordt aangevinkt, zal Salesforce NIET automatisch een Opportunity maken wanneer u Leads naar Contactpersonen converteert.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpLvlAssignBatch</name>
@@ -7161,7 +7138,7 @@ BELANGRIJK: Beide velden moeten van hetzelfde gegevenstype zijn.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCR</name>
-        <label>Soft Credits, Contactpersoonrollen en Overeenkomende Giften zijn in belangrijke mate met elkaar verbonden. Bent u niet vertrouwd met deze concepten en hoe ze elkaar beïnvloeden, leest u de &lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;NPSP-Documentatie&lt;/a&gt; door voordat u enige wijzigingen aan deze instellingen aanbrengt.</label>
+        <label>Soft Credits, Contactpersoonrollen en Overeenkomende Giften zijn in belangrijke mate met elkaar verbonden. Bent u niet vertrouwd met deze concepten en hoe ze elkaar beïnvloeden, leest u de &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Automated_Soft_Credits.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;NPSP-Documentatie&lt;/a&gt; door voordat u enige wijzigingen aan deze instellingen aanbrengt.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCRDefaultRole</name>
@@ -7189,7 +7166,7 @@ BELANGRIJK: Beide velden moeten van hetzelfde gegevenstype zijn.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingFormat</name>
-        <label>De Opportunitynaamnotatie. Kies &apos;Anders&apos; om uw eigen notatie te maken. Raadpleeg de &lt;a href=&quot;https://powerofus.force.com/NPSP_Opp_Names&quot; target=&quot;_blank&quot;&gt;NPSP-Documentatie&lt;/a&gt; voor details.</label>
+        <label>De Opportunitynaamnotatie. Kies &apos;Anders&apos; om uw eigen notatie te maken.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingRecTypes</name>
@@ -7233,7 +7210,7 @@ BELANGRIJK: Beide velden moeten van hetzelfde gegevenstype zijn.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPowerOfUsHub</name>
-        <label>Hebt u vragen? Probeer de groep &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; uit voor vragen over NPSP en de groep &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;Systeembeheerders&lt;/a&gt; voor vragen over Salesforce-administratie en -configuratie.&lt;br/&gt;&lt;br/&gt;Zorg dat u altijd op de hoogte bent dankzij de notities bij de nieuwste NPSP-releases in de groep &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot;target=&quot;_blank&quot;&gt;Aankondigingen NPSP-release&lt;/a&gt;.</label>
+        <label>Hebt u vragen? Probeer de groep &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; uit voor vragen over NPSP en de groep &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;Systeembeheerders&lt;/a&gt; voor vragen over Salesforce-administratie en -configuratie.&lt;br/&gt;&lt;br/&gt;Zorg dat u altijd op de hoogte bent dankzij de notities bij de nieuwste NPSP-releases in de groep &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot;target=&quot;_blank&quot;&gt;Aankondigingen NPSP-release&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPrimaryContactBatch</name>
@@ -7373,7 +7350,7 @@ Dit proces kan enige tijd duren, maar u kunt deze pagina afsluiten en het proces
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalMethod</name>
-        <label>Bepaalt de methode die gebruikt wordt voor het genereren van wederkerige relaties. Raadpleeg de &lt;a href=&quot;https://powerofus.force.com/NPSP_Relationships_Settings&quot; target=&quot;_blank&quot;&gt;NPSP-Documentatie&lt;/a&gt; voor meer informatie.</label>
+        <label>Bepaalt de methode die gebruikt wordt voor het genereren van wederkerige relaties.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalName</name>

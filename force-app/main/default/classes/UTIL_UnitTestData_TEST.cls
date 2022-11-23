@@ -510,6 +510,19 @@ public class UTIL_UnitTestData_TEST {
         return gaus;
     }
 
+    public static GE_Template.Template createSampleGatewayAssignmentTemplate(String gatewayId) {
+        GE_Template.Template sampleTemplate = createSampleTemplate();
+        GE_Template.ElevateSettings elevateSettings = new GE_Template.ElevateSettings();
+
+        elevateSettings.uniqueKey = GE_GiftEntryController.encryptGatewayId(gatewayId);
+        elevateSettings.isCreditCardEnabled = true;
+        elevateSettings.isACHEnabled = true;
+
+        sampleTemplate.elevateSettings = elevateSettings;
+
+        return sampleTemplate;
+    }
+
     //Utility method for creating a sample template.
     public static GE_Template.Template createSampleTemplate () {
 

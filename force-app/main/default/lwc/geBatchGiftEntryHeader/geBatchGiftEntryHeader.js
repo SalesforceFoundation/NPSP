@@ -41,6 +41,7 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
                 break;
             case this.ACTIONS.PROCESS_BATCH:
                 this.dispatchEvent(new CustomEvent('processbatch'));
+                this.isGiftBatchProcessing = true;
                 break;
             case this.ACTIONS.EDIT_BATCH:
                 this.editBatch();
