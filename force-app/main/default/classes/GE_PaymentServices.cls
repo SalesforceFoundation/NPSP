@@ -140,6 +140,37 @@ public with sharing class GE_PaymentServices {
     }
 
     /**
+     * @description Returns salesforce lightning URL
+     * @return String JSON of lightning URL
+     */
+    public String getLightningURL() {
+        return DomainCreator.getLightningHostname();
+    }
+
+    /**
+     * @description Returns salesforce visualforce URL
+     * @param namespace: string for namespace in org instance
+     * @return String JSON of visualforce URL
+     */
+    @AuraEnabled(cacheable=true)
+    public static OriginUrls getOriginUrls(String namespace) {
+        return new OriginUrls(
+            DomainCreator.getVisualforceHostname(namespace),
+                DomainCreator.getLightningHostname()
+        );
+    }
+
+    public class OriginUrls {
+        @AuraEnabled public String visualForceOriginUrl;
+        @AuraEnabled public String lightningOriginUrl;
+
+        public OriginUrls(String visualForceOriginUrl, String lightningOriginUrl) {
+            this.visualForceOriginUrl = 'https://'+visualForceOriginUrl;
+            this.lightningOriginUrl = 'https://'+lightningOriginUrl;
+        }
+    }
+
+    /**
      * @description Returns purchase request body
      * @param jsonRequestBody: JSON containing parameters for the purchase call request body
      * @return PurchaseCallBody
@@ -220,6 +251,11 @@ public with sharing class GE_PaymentServices {
         public String consent;
         public String type;
         public String bankType;
+        public ConsentDetails consentDetails = new ConsentDetails();
+    }
+
+    public with sharing class ConsentDetails {
+        public String consentType;
     }
 
     /***

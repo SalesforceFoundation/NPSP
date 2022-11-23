@@ -49,12 +49,6 @@ public with sharing class ElevateBatchResponse {
         return errors;
     }
 
-    public Boolean isValidCaptureResponse (DataImport__c dataImport) {
-        return id.equals(dataImport.Payment_Elevate_Batch_ID__c)
-                && errors == null
-                && status == BDI_DataImport_API.bdiProcessing;
-    }
-
     public Boolean isValidCaptureResponse() {
         return errors == null && status == BDI_DataImport_API.bdiProcessing;
     }
@@ -64,5 +58,9 @@ public with sharing class ElevateBatchResponse {
             return errors == null ? '' : errors()[0].message;
         }
         return null;
+    }
+
+    public static ElevateBatchResponse parse(String json) {
+        return (ElevateBatchResponse) System.JSON.deserialize(json, ElevateBatchResponse.class);
     }
 }

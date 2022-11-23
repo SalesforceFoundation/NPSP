@@ -131,7 +131,8 @@ public with sharing class GiftSelector {
             String.valueOf(DataImport__c.PaymentImportStatus__c),
             String.valueOf(DataImport__c.PaymentImported__c),
             String.valueOf(DataImport__c.Payment_Status__c),
-            String.valueOf(DataImport__c.Status__c)
+            String.valueOf(DataImport__c.Status__c),
+            String.valueOf(DataImport__c.Recurring_Donation_Elevate_Recurring_ID__c)
         };
 
         return giftEntryFieldApiNames;

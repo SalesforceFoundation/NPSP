@@ -65,6 +65,17 @@ global with sharing class Callable_API implements System.Callable {
         set;
     }
 
+    @TestVisible
+    PMT_RefundService refundService {
+        get {
+            if (refundService == null) {
+                refundService = new PMT_RefundService();
+            }
+            return refundService;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description call function implementation of the callable Interface will dispatch to the appropriate
     * action handler based on the action text
@@ -169,7 +180,15 @@ global with sharing class Callable_API implements System.Callable {
                 // If you do so, your functionality can break without any warning or liability from Salesforce.               
                 return ALLO_AllocationsSettings.getSettings().validatePaymentAllocationsConfiguration();
 
-            } when 'settings.enablecustomizablerollups' {
+             } when 'pmt.procressrefunds' {
+                List<npe01__OppPayment__c> refunds = paramService.getSObjects(CallableApiParameters.PARAM_REFUND_RECORDS);
+                    refundService.withRefundRecords(refunds);
+                    refundService.adjustAllocationsAndOpportunities();
+                    refundService.updateAllocationsAndOpportunities();
+                
+                return null;
+            } 
+            when 'settings.enablecustomizablerollups' {
                 Boolean scheduleJobsWhenComplete = paramService.getBoolean(CallableApiParameters.PARAM_SCHEDULE_JOBS, true);
                 return new CRLP_EnablementService().enable(scheduleJobsWhenComplete);
 

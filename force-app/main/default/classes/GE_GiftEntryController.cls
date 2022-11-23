@@ -39,6 +39,8 @@ public with sharing class GE_GiftEntryController {
 
     public static final String PURCHASE_CALL_TIMEOUT_MESSAGE = System.Label.geErrorRequestTimedout;
     private static final String BOOLEAN_DATA_TYPE = 'BOOLEAN';
+    public static final String ENCRYPTION_ALGORITHM = 'AES128';
+
     @TestVisible
     private static GiftBatchService giftBatchService {
         get {
@@ -90,10 +92,20 @@ public with sharing class GE_GiftEntryController {
         set;
     }
 
+    @TestVisible
+    private static PS_GatewayService gatewayService {
+        get {
+            if (gatewayService == null) {
+                gatewayService = new PS_GatewayService();
+            }
+            return gatewayService;
+        }
+        set;
+    }
+
     @AuraEnabled
     public static void addGiftTo(Id dataImportBatchId, InboundGiftDTO inboundGift) {
         try {
-            // TODO: currency validity check should happen inside the GiftBatch.add(gift) method
             if (areCurrenciesValid(dataImportBatchId)) {
                 GiftBatchId giftBatchId = new GiftBatchId(dataImportBatchId);
                 giftBatchService.add(giftBatchId, inboundGift);
@@ -156,10 +168,10 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
-    public static Boolean hasQueueableId(String batchId) {
+    public static Boolean hasActiveRunningJob(String batchId) {
         try {
-            return giftBatchService.hasQueueableJob(new GiftBatchId((Id) batchId));
-        } catch (AuraHandledException e) {
+           return giftBatchService.hasActiveRunningJob(new GiftBatchId((Id) batchId));
+        }catch (AuraHandledException e) {
             throw new AuraHandledException(e.getMessage());
         }
     }
@@ -326,24 +338,25 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
-    public static ElevateAuthorizedGift addToElevateBatch(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
-        ElevateAuthorizedGift authorizedGift;
+    public static ElevateBatchItem addToElevateBatch(ElevateCreateBatchItemRequestDTO batchItemRequestDTO,
+                                                     String elevateBatchId) {
+        ElevateBatchItem batchItem;
         try {
-            authorizedGift = elevateBatchService.addToElevateBatch(tokenizedGift, elevateBatchId);
+            batchItem = elevateBatchService.addToElevateBatch(batchItemRequestDTO, elevateBatchId);
         } catch (AuraHandledException ex) {
           UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
         }
-        return authorizedGift;
+
+        return batchItem;
     }
 
     @AuraEnabled
-    public static ElevateAuthorizedGift removeFromElevateBatch(ElevateAuthorizedGift authorizedGift) {
+    public static void removeFromElevateBatch(ElevateBatchItem batchItem) {
         try {
-           elevateBatchService.removeFromElevateBatch(authorizedGift);
+           elevateBatchService.removeFromElevateBatch(batchItem);
         } catch (AuraHandledException ex) {
           UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
         }
-        return null;
     }
 
     @AuraEnabled
@@ -409,11 +422,12 @@ public with sharing class GE_GiftEntryController {
     * @return The DataImport__c record that was saved
     */
     @AuraEnabled
-    public static DataImport__c upsertDataImport(DataImport__c dataImport) {
+    public static DataImport__c upsertDataImport(String dataImport) {
+        DataImport__c dataImportObject = (DataImport__c)JSON.deserialize(dataImport, DataImport__c.class);
         try {
-            upsert dataImport Id;
+            upsert dataImportObject Id;
 
-            return dataImport;
+            return dataImportObject;
         } catch (Exception e) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
 
@@ -962,7 +976,82 @@ public with sharing class GE_GiftEntryController {
             formTemplates.add(deserializedFormTemplate);
         }
 
+        if (!getGiftEntrySettings().Enable_Gateway_Assignment__c) {
+            return formTemplates;
+        }
+
+        return getMappedGateways(formTemplates);
+    }
+
+    private static GE_Template.Template[] getMappedGateways(GE_Template.Template[] formTemplates) {
+        List<PS_GatewayService.GatewayTemplateSetting> gatewayTemplateSettings = getGatewayTemplateSettings();
+        Map<String, String> gatewayNameById = getGatewayNameById(gatewayTemplateSettings);
+
+        String defaultGatewayId = new PS_IntegrationServiceConfig.Service().getGatewayIds();
+        for (GE_Template.Template formTemplate : formTemplates) {
+            if (String.isNotBlank(formTemplate.elevateSettings?.uniqueKey)) {
+
+                try {
+                    formTemplate.elevateSettings.gatewayName =
+                        gatewayNameById.get(decryptGatewayId(formTemplate.elevateSettings.uniqueKey));
+                    if (String.isBlank(formTemplate.elevateSettings.gatewayName)) {
+                        formTemplate.elevateSettings.gatewayName = System.Label.psGatewayNotValid;
+                    }
+
+                } catch (Exception e) {
+                    throw new AuraHandledException(e.getMessage());
+                }
+
+            } else {
+                if (formTemplate.elevateSettings != null) {
+                    formTemplate.elevateSettings.gatewayName = gatewayNameById.get(defaultGatewayId);
+                }
+            }
+        }
+
         return formTemplates;
+    }
+
+    private static Map<String, String> getGatewayNameById(List<PS_GatewayService.GatewayTemplateSetting> gatewayTemplateSettings) {
+        Map<String, String> gatewayNameById = new Map<String, String>();
+
+        for (PS_GatewayService.GatewayTemplateSetting gatewayTemplateSetting : gatewayTemplateSettings) {
+            gatewayNameById.put(gatewayTemplateSetting.id, gatewayTemplateSetting.gatewayName);
+        }
+
+        return gatewayNameById;
+    }
+
+    private static List<PS_GatewayService.GatewayTemplateSetting> getGatewayTemplateSettings() {
+        List<PS_GatewayService.GatewayTemplateSetting> gatewayTemplateSettings =
+                new List<PS_GatewayService.GatewayTemplateSetting>();
+        PS_GatewayService gatewayService = new PS_GatewayService();
+        String gatewaysByMerchant = gatewayService.getGatewaysByMerchant();
+
+        try {
+            gatewayTemplateSettings = (List<PS_GatewayService.GatewayTemplateSetting>)
+                    JSON.deserialize(gatewaysByMerchant,
+                            List<PS_GatewayService.GatewayTemplateSetting>.class);
+
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+
+        return gatewayTemplateSettings;
+    }
+
+    @AuraEnabled
+    public static String getGatewayAssignmentSettingsWithDefaultGatewayName() {
+        GatewayAssignmentSettings gaSettings = new GatewayAssignmentSettings();
+        gaSettings.gatewayAssignmentEnabled = getGiftEntrySettings().Enable_Gateway_Assignment__c;
+
+        if (gaSettings.gatewayAssignmentEnabled) {
+            List<PS_GatewayService.GatewayTemplateSetting> gatewayTemplateSettings = getGatewayTemplateSettings();
+            Map<String, String> gatewayNameById = getGatewayNameById(gatewayTemplateSettings);
+            gaSettings.defaultGatewayName = gatewayNameById.get(new PS_IntegrationServiceConfig.Service().getGatewayIds());
+        }
+
+        return JSON.serialize(gaSettings);
     }
 
     /*******************************************************************************************************
@@ -1246,8 +1335,7 @@ public with sharing class GE_GiftEntryController {
         }
     }
 
-    @AuraEnabled(Cacheable= true)
-    public static String retrieveBatchCurrencyIsoCode (Id batchId) {
+    private static String retrieveBatchCurrencyIsoCode (Id batchId) {
         String query = new UTIL_Query()
             .withSelectFields(new Set<String>{UTIL_Currency.CURRENCY_ISO_CODE_FIELD})
             .withFrom(DataImportBatch__c.SObjectType)
@@ -1255,6 +1343,62 @@ public with sharing class GE_GiftEntryController {
             .build();
         List<DataImportBatch__c> batches = Database.query(query);
         return (String)batches[0].get(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
+    }
+
+    @AuraEnabled
+    public static String getGatewaysFromElevate() {
+        return gatewayService.getGatewaysByMerchant();
+    }
+
+    @AuraEnabled
+    public static String encryptGatewayId(String gatewayId) {
+        PS_IntegrationServiceConfig.Service integrationService = new PS_IntegrationServiceConfig.Service();
+        try {
+            return EncodingUtil.base64Encode(Crypto.encryptWithManagedIV(ENCRYPTION_ALGORITHM,
+                    Blob.valueOf(integrationService.getMerchantIds().left(16)), Blob.valueOf(gatewayId)));
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
+
+    @AuraEnabled
+    public static String decryptGatewayId(String encryptedGatewayId) {
+        PS_IntegrationServiceConfig.Service integrationService = new PS_IntegrationServiceConfig.Service();
+        try {
+            return (Crypto.decryptWithManagedIV(ENCRYPTION_ALGORITHM,
+                    Blob.valueOf(integrationService.getMerchantIds().left(16)),
+                    EncodingUtil.base64Decode(encryptedGatewayId))).toString();
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
+
+    @AuraEnabled
+    public static String getGatewayAssignmentSettings() {
+
+        try {
+            GatewayAssignmentSettings gaSettings = new GatewayAssignmentSettings();
+
+            gaSettings.defaultGatewayId = PS_GatewayManagement.getGatewayIdFromConfig();
+            gaSettings.defaultTemplateId = getGiftEntrySettings().Default_Gift_Entry_Template__c;
+            gaSettings.gatewayAssignmentEnabled = getGiftEntrySettings().Enable_Gateway_Assignment__c;
+
+            return JSON.serialize(gaSettings);
+
+        } catch (Exception e) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
+        }
+
+        return null;
+    }
+
+    public class GatewayAssignmentSettings {
+        String defaultGatewayId;
+        String defaultGatewayName;
+        String defaultTemplateId;
+        Boolean gatewayAssignmentEnabled;
     }
 
     private class CurrencyMismatchException extends Exception {}
