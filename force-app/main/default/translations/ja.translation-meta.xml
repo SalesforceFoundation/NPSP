@@ -2314,7 +2314,7 @@
     </customLabels>
     <customLabels>
         <name>bdiErrorDeploymentFailedLink</name>
-        <label>&lt;a href="{0}" target="_blank"&gt;ここでリリース状況を確認できます。&lt;/a&gt;</label>
+        <label>&lt;a href=&quot;{0}&quot; target=&quot;_blank&quot;&gt;ここでリリース状況を確認できます。&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorDonationLookupMatch</name>
@@ -3541,7 +3541,7 @@
     </customLabels>
     <customLabels>
         <name>conMergeErrorNoDRSFound</name>
-        <label>&lt;B&gt;重複レコードセットがありません。&lt;/b&gt;&lt;/br&gt;&lt;/br&gt; 重複レコードセットが見つかりませんでした。重複ルールが有効になっていることを確認してください。&lt;a href="https://help.salesforce.com/articleView?id=duplicate_rules_map_of_reference.htm&amp;type=5" target="_blank"&gt;詳細情報&lt;/a&gt;。</label>
+        <label>&lt;B&gt;重複レコードセットがありません。&lt;/b&gt;&lt;/br&gt;&lt;/br&gt; 重複レコードセットが見つかりませんでした。重複ルールが有効になっていることを確認してください。&lt;a href=&quot;https://help.salesforce.com/articleView?id=duplicate_rules_map_of_reference.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;詳細情報&lt;/a&gt;。</label>
     </customLabels>
     <customLabels>
         <name>conMergeErrorNoReadDSRObjPermission</name>
@@ -3557,7 +3557,7 @@
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>一致ルールを使用して、見つかったすべての重複する取引先責任者を表示します。&lt;a href="https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Merge_Contacts.htm&amp;type=5" target="_blank"&gt;&lt;b&gt;詳細はこちら&lt;/b&gt;&lt;/a&gt;</label>
+        <label>一致ルールを使用して、見つかったすべての重複する取引先責任者を表示します。&lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Merge_Contacts.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;&lt;b&gt;詳細はこちら&lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>
@@ -7184,7 +7184,7 @@
     </customLabels>
     <customLabels>
         <name>stgHelpHealthCheck</name>
-        <label>&lt;a href="#" onclick="ShowPanel('idPanelHealthCheck');return false;"&gt;状態チェック&lt;/a&gt;を使用して NPSP 設定を検証してください!</label>
+        <label>&lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelHealthCheck&apos;);return false;&quot;&gt;状態チェック&lt;/a&gt;を使用して NPSP 設定を検証してください!</label>
     </customLabels>
     <customLabels>
         <name>stgHelpIGFormat</name>
@@ -7252,7 +7252,7 @@
     </customLabels>
     <customLabels>
         <name>stgHelpOCR</name>
-        <label>ソフトクレジット、取引先責任者の役割、およびマッチング支援はいくつかの重要な点で相互に関連します。これらの概念および相互関係をよく理解していない場合は、この設定を調整する前に &lt;a href="https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Automated_Soft_Credits.htm&amp;type=5" target="_blank"&gt;NPSP ドキュメント&lt;/a&gt;全体を読む必要があります。</label>
+        <label>ソフトクレジット、取引先責任者の役割、およびマッチング支援はいくつかの重要な点で相互に関連します。これらの概念および相互関係をよく理解していない場合は、この設定を調整する前に &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Automated_Soft_Credits.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;NPSP ドキュメント&lt;/a&gt;全体を読む必要があります。</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCRDefaultRole</name>
@@ -7324,7 +7324,7 @@
     </customLabels>
     <customLabels>
         <name>stgHelpPowerOfUsHub</name>
-        <label>質問を受けましたか? NPSP に関する質問には、&lt;a href="https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE" target="_blank"&gt;「Nonprofit Success Pack」&lt;/a&gt;グループをお試しください。Salesforce の管理と設定に関する質問には、&lt;a href="https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion" target="_blank"&gt;「System Administrators」&lt;/a&gt;グループをお試しください。&lt;br/&gt;&lt;br/&gt;最新の NPSP リリースノートについては、&lt;a href="https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC.htm" target="_blank"&gt;「NPSP Release Announcements」&lt;/a&gt;グループで確認できます。</label>
+        <label>質問を受けましたか? NPSP に関する質問には、&lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;「Nonprofit Success Pack」&lt;/a&gt;グループをお試しください。Salesforce の管理と設定に関する質問には、&lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&quot; target=&quot;_blank&quot;&gt;「System Administrators」&lt;/a&gt;グループをお試しください。&lt;br/&gt;&lt;br/&gt;最新の NPSP リリースノートについては、&lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC.htm&quot; target=&quot;_blank&quot;&gt;「NPSP Release Announcements」&lt;/a&gt;グループで確認できます。</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPrimaryContactBatch</name>
@@ -7485,7 +7485,7 @@
     </customLabels>
     <customLabels>
         <name>stgHelpReviewErrorLog</name>
-        <label>&lt;a href="#" onclick="ShowPanel('idPanelErrorLog');return false;"&gt;エラーログ&lt;/a&gt;で、問題があるかどうかを確認してください。</label>
+        <label>&lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;エラーログ&lt;/a&gt;で、問題があるかどうかを確認してください。</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRollupBatchSize</name>
@@ -7529,7 +7529,7 @@
     </customLabels>
     <customLabels>
         <name>stgHelpSalesforceSetup</name>
-        <label>ページレイアウトのカスタマイズ、項目の追加、またはユーザの追加を行いますか?  &lt;a href="/setup/forcecomHomepage.apexp?setupid=ForceCom" target="_blank"&gt;「Salesforce Setup (Salesforce の設定)」&lt;/a&gt;ページをお試しください。</label>
+        <label>ページレイアウトのカスタマイズ、項目の追加、またはユーザの追加を行いますか?  &lt;a href=&quot;/setup/forcecomHomepage.apexp?setupid=ForceCom&quot; target=&quot;_blank&quot;&gt;「Salesforce Setup (Salesforce の設定)」&lt;/a&gt;ページをお試しください。</label>
     </customLabels>
     <customLabels>
         <name>stgHelpSimpleAddrChangeIsUpdate</name>
