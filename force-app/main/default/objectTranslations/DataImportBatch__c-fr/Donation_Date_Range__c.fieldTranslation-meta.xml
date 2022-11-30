@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Donation_Date_Range__c</name>
-    <help>Nbre de jours àpd de la date de don à prendre en compte lors de la recherche d’une opp. ou d&apos;un paiement corresp. NPSP choisira l’opp. ou le paiement corresp. dont la date tombe dans le nombre de jours ET se rapproche le plus de la date du don.</help>
+    <help>Nbre de jours àpd de la date de don à prendre en compte lors de la recherche d’une opp. ou d'un paiement corresp. NPSP choisira l’opp. ou le paiement corresp. dont la date tombe dans le nombre de jours ET se rapproche le plus de la date du don.</help>
     <label>Nbre de jours à partir de la date du don</label>
 </CustomFieldTranslation>

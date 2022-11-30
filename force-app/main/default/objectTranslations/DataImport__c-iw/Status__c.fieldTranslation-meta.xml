@@ -5,11 +5,11 @@
     <name>Status__c</name>
     <picklistValues>
         <masterLabel>Dry Run - Error</masterLabel>
-        <translation/>
+        <translation></translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>Dry Run - Validated</masterLabel>
-        <translation/>
+        <translation></translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>Failed</masterLabel>
@@ -21,10 +21,10 @@
     </picklistValues>
     <picklistValues>
         <masterLabel>Processing</masterLabel>
-        <translation/>
+        <translation></translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>Ready to Process</masterLabel>
-        <translation/>
+        <translation></translation>
     </picklistValues>
 </CustomFieldTranslation>

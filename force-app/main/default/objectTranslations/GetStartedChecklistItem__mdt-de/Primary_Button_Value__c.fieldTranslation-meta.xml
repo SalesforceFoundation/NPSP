@@ -3,6 +3,6 @@
     <name>Primary_Button_Value__c</name>
     <help>Aktion der Hauptschaltfläche.
 Schaltfläche für externe Seite: externe URL.
-Schaltflächen für neue SFDC-Registerkarte: &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. Beispiele und alle Angaben finden Sie in der Lightning NavigationMixin-Dokumentation.</help>
+Schaltflächen für neue SFDC-Registerkarte: "{pageReference}:{objectOrPageApiName}:{action}". Beispiele und alle Angaben finden Sie in der Lightning NavigationMixin-Dokumentation.</help>
     <label>Wert für Hauptschaltfläche</label>
 </CustomFieldTranslation>

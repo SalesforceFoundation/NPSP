@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>All_Members_Deceased__c</name>
-    <help>Wenn dies aktiviert ist, sind alle Mitglieder dieses Haushalts verstorben. Aktualisieren Sie dieses Feld nicht manuell. NPSP aktualisiert es automatisch, basierend auf Aktualisierungen des Kontrollkästchens &quot;Verstorben&quot; für Haushalt-Mitgliederkontakte.</help>
+    <help>Wenn dies aktiviert ist, sind alle Mitglieder dieses Haushalts verstorben. Aktualisieren Sie dieses Feld nicht manuell. NPSP aktualisiert es automatisch, basierend auf Aktualisierungen des Kontrollkästchens "Verstorben" für Haushalt-Mitgliederkontakte.</help>
     <label>Alle Haushalt-Mitglieder verstorben</label>
 </CustomFieldTranslation>

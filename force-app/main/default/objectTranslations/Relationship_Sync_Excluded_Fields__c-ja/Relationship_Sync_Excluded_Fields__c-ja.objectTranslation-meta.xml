@@ -8,4 +8,8 @@
         <plural>false</plural>
         <value>除外対象項目の同期</value>
     </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <value>除外対象項目の同期</value>
+    </caseValues>
 </CustomObjectTranslation>

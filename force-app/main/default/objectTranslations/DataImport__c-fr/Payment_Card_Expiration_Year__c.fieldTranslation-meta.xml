@@ -2,5 +2,5 @@
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Payment_Card_Expiration_Year__c</name>
     <help>L’année d’expiration de la carte utilisée pour cette transaction.</help>
-    <label>Année d&apos;expiration carte de paiement</label>
+    <label>Année d'expiration carte de paiement</label>
 </CustomFieldTranslation>

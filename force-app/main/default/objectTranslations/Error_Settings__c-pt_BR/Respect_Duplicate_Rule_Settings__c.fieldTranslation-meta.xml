@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Respect_Duplicate_Rule_Settings__c</name>
-    <help>Respeita config. de uma Regra dupl. que controla se registros dupl. são permitidos. P/ verificar as config. existentes, acesse Regras de dupl. em Config. Quando os campos Ação na criação ou Ação na edição são definidos como &quot;Permitir&quot;, dupl. são salvos.</help>
+    <help>Respeita config. de uma Regra dupl. que controla se registros dupl. são permitidos. P/ verificar as config. existentes, acesse Regras de dupl. em Config. Quando os campos Ação na criação ou Ação na edição são definidos como "Permitir", dupl. são salvos.</help>
     <label>Respeitar config. de regras duplicadas</label>
 </CustomFieldTranslation>

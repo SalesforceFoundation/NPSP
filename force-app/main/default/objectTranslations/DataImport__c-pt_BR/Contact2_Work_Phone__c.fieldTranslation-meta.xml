@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Contact2_Work_Phone__c</name>
+    <help>Contact2.npe01__WorkPhone__c</help>
     <label>Telefone comercial do Contact2</label>
 </CustomFieldTranslation>

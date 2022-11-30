@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Rollups_IncrementalLastNDays_ValOverride__c</name>
-    <help>Enkel Overschrijving Increm. totaliseringen. Waarde overschrijft het berekende aantal dagen gebruikt om gerelateerde Opp. te filteren om te bepalen welke Accounts, Contactpersonen, GAU&apos;s of RD&apos;s opnieuw berekend worden tijdens een geplande nachttaak.</help>
+    <help>Enkel Overschrijving Increm. totaliseringen. Waarde overschrijft het berekende aantal dagen gebruikt om gerelateerde Opp. te filteren om te bepalen welke Accounts, Contactpersonen, GAU's of RD's opnieuw berekend worden tijdens een geplande nachttaak.</help>
     <label>Increm.: Overschr Waarde Laatste N Dagen</label>
 </CustomFieldTranslation>

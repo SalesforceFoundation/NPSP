@@ -11,77 +11,77 @@
     <layouts>
         <layout>Data Import Layout</layout>
         <sections>
-            <label/>
+            <label></label>
             <section>Account1 Organization Information</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Account2 Organization Information</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Campaign Information</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Contact1 Information</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Contact2 Information</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>GAU Allocation 1 Information</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>GAU Allocation 2 Information</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Home Address</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Household Account Information</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Opportunity Contact Role 1 Information</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Opportunity Contact Role 2 Information</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Opportunity Information</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Payment Information</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Recurring Donation Information</section>
         </sections>
     </layouts>
     <startsWith>Consonant</startsWith>
     <webLinks>
-        <label/>
+        <label></label>
         <name>Delete_All_Data_Import_Records</name>
     </webLinks>
     <webLinks>
-        <label/>
+        <label></label>
         <name>Delete_Imported_Data_Import_Records</name>
     </webLinks>
     <webLinks>
-        <label/>
+        <label></label>
         <name>Process_Data_Import</name>
     </webLinks>
 </CustomObjectTranslation>

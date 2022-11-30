@@ -5,10 +5,10 @@
     <name>Donation_Donor__c</name>
     <picklistValues>
         <masterLabel>Account1</masterLabel>
-        <translation/>
+        <translation></translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>Contact1</masterLabel>
-        <translation/>
+        <translation></translation>
     </picklistValues>
 </CustomFieldTranslation>

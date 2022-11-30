@@ -9,19 +9,19 @@
         <value>GAU Allocations</value>
     </caseValues>
     <fieldSets>
-        <label/>
+        <label></label>
         <name>ManageAllocationsAdditionalFields</name>
     </fieldSets>
     <layouts>
         <layout>Allocation Layout</layout>
         <sections>
-            <label/>
+            <label></label>
             <section>Custom Links</section>
         </sections>
     </layouts>
     <startsWith>Vowel</startsWith>
     <webLinks>
-        <label/>
+        <label></label>
         <name>Manage_Allocations</name>
     </webLinks>
 </CustomObjectTranslation>

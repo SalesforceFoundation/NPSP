@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Primary_Contact__c</name>
-    <help>Le contact principal pour cette opportunité. S&apos;il s&apos;agit d&apos;un don individuel, NPSP attribue le don au contact principal. S&apos;il s&apos;agit d&apos;un don organisationnel, NPSP attribue un crédit indirect au contact principal.</help>
+    <help>Le contact principal pour cette opportunité. S'il s'agit d'un don individuel, NPSP attribue le don au contact principal. S'il s'agit d'un don organisationnel, NPSP attribue un crédit indirect au contact principal.</help>
     <relationshipLabel>Opportunités</relationshipLabel>
     <label>Contact principal</label>
 </CustomFieldTranslation>

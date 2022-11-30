@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>CurrentYearValue__c</name>
-    <help>Le montant total de ce Don récurrent pour le calendrier ou l&apos;exercice fiscal actuel (en lecture seule). Inclut les opportunités gagnées fermées plus les futurs versements pour le reste de l&apos;exercice fiscal.</help>
+    <help>Le montant total de ce Don récurrent pour le calendrier ou l'exercice fiscal actuel (en lecture seule). Inclut les opportunités gagnées fermées plus les futurs versements pour le reste de l'exercice fiscal.</help>
     <label>Valeur annuelle actuelle</label>
 </CustomFieldTranslation>

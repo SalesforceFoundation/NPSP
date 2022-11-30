@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Field_Mapping_Method__c</name>
-    <help>Definiert die Weise, in der Felder des NPSP-Datenimport-Datensatzes anderen Objekten in Salesforce zugeordnet werden. Die Optionen sind &quot;Hilfetext&quot; oder &quot;Datenimport-Feldzuordnung&quot;.</help>
+    <help>Definiert die Weise, in der Felder des NPSP-Datenimport-Datensatzes anderen Objekten in Salesforce zugeordnet werden. Die Optionen sind "Hilfetext" oder "Datenimport-Feldzuordnung".</help>
     <label>Methode der Feldzuordnung</label>
 </CustomFieldTranslation>

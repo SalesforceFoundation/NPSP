@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>EndDate__c</name>
-    <help>La date de fin, si nécessaire, de l&apos;enregistrement de ce calendrier.</help>
+    <help>La date de fin, si nécessaire, de l'enregistrement de ce calendrier.</help>
     <label>Date de fin du calendrier</label>
 </CustomFieldTranslation>

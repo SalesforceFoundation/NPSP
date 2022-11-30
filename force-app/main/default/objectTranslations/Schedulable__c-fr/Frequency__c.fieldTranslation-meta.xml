@@ -3,4 +3,24 @@
     <name>Frequency__c</name>
     <help>Quand exécuter la tâche.</help>
     <label>Fréquence</label>
-    </CustomFieldTranslation>
+    <picklistValues>
+        <masterLabel>Hourly</masterLabel>
+        <translation>Toutes les heures</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Daily</masterLabel>
+        <translation>Quotidien</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Weekly</masterLabel>
+        <translation>Hebdomadaire</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Monthly</masterLabel>
+        <translation>Mensuel</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Quarterly</masterLabel>
+        <translation>Trimestriel</translation>
+    </picklistValues>
+</CustomFieldTranslation>

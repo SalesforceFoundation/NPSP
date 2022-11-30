@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Namespace_Prefix__c</name>
-    <help>Préfixe d&apos;espace de noms de package actif pour NPSP. Ne pas modifier manuellement.</help>
-    <label>Préfixe d&apos;espace de noms</label>
+    <help>Préfixe d'espace de noms de package actif pour NPSP. Ne pas modifier manuellement.</help>
+    <label>Préfixe d'espace de noms</label>
 </CustomFieldTranslation>

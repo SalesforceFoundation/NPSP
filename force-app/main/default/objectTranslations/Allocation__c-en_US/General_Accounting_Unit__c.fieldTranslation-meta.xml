@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help/>
-    <label/>
+    <help></help>
+    <label></label>
     <lookupFilter>
-        <errorMessage/>
-        <informationalMessage/>
+        <errorMessage></errorMessage>
+        <informationalMessage></informationalMessage>
     </lookupFilter>
     <name>General_Accounting_Unit__c</name>
-    <relationshipLabel/>
+    <relationshipLabel></relationshipLabel>
 </CustomFieldTranslation>

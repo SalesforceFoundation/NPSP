@@ -2,7 +2,7 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>npe03__Amount__c</name>
-    <help>The amount for each installment Opportunity.</help>
+    <help>The amount for each instalment Opportunity.</help>
     <label>Amount</label>
   </fields>
   <fields>
@@ -41,7 +41,7 @@
   </fields>
   <fields>
     <name>%%%NAMESPACE%%%Day_of_Month__c</name>
-    <help>Sets the specific day of the month for future installment Opportunities when the Installment Period is Monthly. If you select 29 or 30, the installment date will be the last day of the month for months that don't have that many days.</help>
+    <help>Sets the specific day of the month for future instalment Opportunities when the Instalment Period is Monthly. If you select 29 or 30, the instalment date will be the last day of the month for months that don't have that many days.</help>
     <label>Day of Month</label>
     <picklistValues>
       <masterLabel>1</masterLabel>
@@ -174,7 +174,7 @@
   </fields>
   <fields>
     <name>%%%NAMESPACE%%%RecurringType__c</name>
-    <help>Select Open for an ongoing Recurring Donation. Select Fixed for a Recurring Donation that has a specific number of installments. For Fixed, you must also populate the Number of Planned Installments field.</help>
+    <help>Select Open for an ongoing Recurring Donation. Select Fixed for a Recurring Donation that has a specific number of instalments. For Fixed, you must also populate the Number of Planned Instalments field.</help>
     <label>Recurring Type</label>
     <picklistValues>
       <masterLabel>Open</masterLabel>
@@ -215,11 +215,15 @@
       <masterLabel>Paused</masterLabel>
       <translation>Paused</translation>
     </picklistValues>
+    <picklistValues>
+      <masterLabel>Failing</masterLabel>
+      <translation>Failing</translation>
+    </picklistValues>
   </fields>
   <fields>
     <name>npe03__Installment_Period__c</name>
-    <help>The Installment Period along with Installment Frequency defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as "every 3 months".</help>
-    <label>Installment Period</label>
+    <help>The Instalment Period along with Instalment Frequency defines the instalment schedule of this Recurring Donation. For example, if Instalment Period is Monthly and Instalment Frequency is 3, the schedule is defined as "every 3 months".</help>
+    <label>Instalment Period</label>
     <picklistValues>
       <masterLabel>Monthly</masterLabel>
       <translation>Monthly</translation>
@@ -243,23 +247,23 @@
   </fields>
   <fields>
     <name>%%%NAMESPACE%%%InstallmentFrequency__c</name>
-    <help>The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as "every 3 months".</help>
-    <label>Installment Frequency</label>
+    <help>The Instalment Frequency along with Instalment Period defines the instalment schedule of this Recurring Donation. For example, if Instalment Period is Monthly and Instalment Frequency is 3, the schedule is defined as "every 3 months".</help>
+    <label>Instalment Frequency</label>
   </fields>
   <fields>
     <name>npe03__Last_Payment_Date__c</name>
-    <help>NPSP calculates this value automatically based on the last time an installment Opportunity was marked paid (read only).</help>
+    <help>NPSP calculates this value automatically based on the last time an instalment Opportunity was marked paid (read only).</help>
     <label>Last Donation Date</label>
   </fields>
   <fields>
     <name>npe03__Paid_Amount__c</name>
-    <help>The total amount paid on this Recurring Donation. Calculated automatically as the total amount of all Closed/Won installment Opportunities (read only).</help>
+    <help>The total amount paid on this Recurring Donation. Calculated automatically as the total amount of all Closed/Won instalment Opportunities (read only).</help>
     <label>Total Paid Amount</label>
   </fields>
   <fields>
     <name>npe03__Total_Paid_Installments__c</name>
-    <help>Total number of installment Opportunities paid on this Recurring Donation (read only).</help>
-    <label>Number Of Paid Installments</label>
+    <help>Total number of instalment Opportunities paid on this Recurring Donation (read only).</help>
+    <label>Number Of Paid Instalments</label>
   </fields>
   <fields>
     <name>npe03__Next_Payment_Date__c</name>

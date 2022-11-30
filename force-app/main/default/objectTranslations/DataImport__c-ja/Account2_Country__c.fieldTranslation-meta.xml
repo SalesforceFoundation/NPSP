@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Account2_Country__c</name>
+    <help>Account2.BillingCountry</help>
     <label>国(取引先2)</label>
 </CustomFieldTranslation>

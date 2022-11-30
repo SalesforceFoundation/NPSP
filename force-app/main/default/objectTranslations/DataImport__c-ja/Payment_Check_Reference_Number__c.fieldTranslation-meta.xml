@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Payment_Check_Reference_Number__c</name>
+    <help>Payment.npe01__Check_Reference_Number__c</help>
     <label>支払確認/参照番号</label>
 </CustomFieldTranslation>

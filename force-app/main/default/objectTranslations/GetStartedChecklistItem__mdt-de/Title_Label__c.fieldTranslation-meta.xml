@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Title_Label__c</name>
-    <help>Der API-Name für die Titelbezeichnung eines Abschnittselements auf der Seite &quot;Erste Schritte&quot;. Muss mit einer importierten Bezeichnung in gsLabelMapper-LWC übereinstimmen.</help>
+    <help>Der API-Name für die Titelbezeichnung eines Abschnittselements auf der Seite "Erste Schritte". Muss mit einer importierten Bezeichnung in gsLabelMapper-LWC übereinstimmen.</help>
     <label>Name der Titelbezeichnung</label>
 </CustomFieldTranslation>

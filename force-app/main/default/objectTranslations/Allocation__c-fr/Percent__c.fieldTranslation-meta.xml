@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Percent__c</name>
-    <help>Pourcentage du montant de l’opportunité alloué à l’unité comptable générale de cette affectation. Si vous modifiez ultérieurement le montant de l&apos;opportunité, NPSP mettra à jour le montant de l&apos;affectation dans l&apos;unité comptable générale.</help>
+    <help>Pourcentage du montant de l’opportunité alloué à l’unité comptable générale de cette affectation. Si vous modifiez ultérieurement le montant de l'opportunité, NPSP mettra à jour le montant de l'affectation dans l'unité comptable générale.</help>
     <label>Pourcentage</label>
 </CustomFieldTranslation>

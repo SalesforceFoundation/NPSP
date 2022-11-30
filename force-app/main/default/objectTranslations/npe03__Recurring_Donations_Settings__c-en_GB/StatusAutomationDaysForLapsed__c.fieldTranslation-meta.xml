@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>StatusAutomationDaysForLapsed__c</name>
-    <help>After the specified number of days, NPSP updates the Recurring Donation Status to the Status Automation Lapsed Value if donations aren&apos;t being received as expected.</help>
+    <help>After the specified number of days, NPSP updates the Recurring Donation Status to the Status Automation Lapsed Value if donations aren't being received as expected.</help>
     <label>Status Automation Days for Lapsed</label>
 </CustomFieldTranslation>

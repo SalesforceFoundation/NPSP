@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Account_Custom_Unique_ID__c</name>
-    <help>Un champ facultatif d&apos;ID unique à utiliser pour la correspondance de comptes d&apos;organisation</help>
+    <help>Un champ facultatif d'ID unique à utiliser pour la correspondance de comptes d'organisation</help>
     <label>ID unique personnalisé de compte</label>
 </CustomFieldTranslation>

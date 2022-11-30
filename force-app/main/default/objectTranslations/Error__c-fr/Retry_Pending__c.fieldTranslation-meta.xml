@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Retry_Pending__c</name>
-    <help>Lorsque cette option est sélectionnée, l&apos;enregistrement spécifié dans ID d&apos;enregistrement associé est retraité dans le processus suivant. Si le nouveau traitement réussit, ce champ est désélectionné. S&apos;applique aux types d&apos;erreur des processus planifiés.</help>
+    <help>Lorsque cette option est sélectionnée, l'enregistrement spécifié dans ID d'enregistrement associé est retraité dans le processus suivant. Si le nouveau traitement réussit, ce champ est désélectionné. S'applique aux types d'erreur des processus planifiés.</help>
     <label>Nouvelle tentative en attente ?</label>
 </CustomFieldTranslation>
