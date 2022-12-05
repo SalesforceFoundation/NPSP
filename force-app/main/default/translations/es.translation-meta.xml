@@ -146,7 +146,7 @@
     </customLabels>
     <customLabels>
         <name>Address_StateCountry_Invalid_Error</name>
-        <label>{0}' no está configurado como un País válido en su organización.</label>
+        <label>{0}&apos; no está configurado como un País válido en su organización.</label>
     </customLabels>
     <customLabels>
         <name>Address_Verification_Limit</name>
@@ -846,15 +846,15 @@
     </customLabels>
     <customLabels>
         <name>RD2_DataMigrationInvalidCloseAction</name>
-        <label>En Configuración de NPSP | Donaciones recurrentes, seleccione cualquier valor que no sea "No_Action" para Comportam oportunidad abierta cierre DR. Después de completar la migración de los datos, puede cambiar la configuración de nuevo al valor anterior.</label>
+        <label>En Configuración de NPSP | Donaciones recurrentes, seleccione cualquier valor que no sea &quot;No_Action&quot; para Comportam oportunidad abierta cierre DR. Después de completar la migración de los datos, puede cambiar la configuración de nuevo al valor anterior.</label>
     </customLabels>
     <customLabels>
         <name>RD2_DataMigrationInvalidInstallmentPeriod</name>
-        <label>El período de cuota de la donación recurrente "{0}" no puede convertirse al formato de Donaciones recurrentes mejoradas. Asegúrese de que el período de cuota está definido en Configuración de NPSP -&gt; Donaciones recurrentes -&gt; Frecuencias personalizadas.</label>
+        <label>El período de cuota de la donación recurrente &quot;{0}&quot; no puede convertirse al formato de Donaciones recurrentes mejoradas. Asegúrese de que el período de cuota está definido en Configuración de NPSP -&gt; Donaciones recurrentes -&gt; Frecuencias personalizadas.</label>
     </customLabels>
     <customLabels>
         <name>RD2_DataMigrationInvalidOpenEndedStatus</name>
-        <label>El estado finalizado abierto de la donación recurrente "{0}" no puede convertirse al formato de Donaciones recurrentes mejoradas. Debe utilizar uno de estos valores: Abierto, Cerrado o Ninguno.</label>
+        <label>El estado finalizado abierto de la donación recurrente &quot;{0}&quot; no puede convertirse al formato de Donaciones recurrentes mejoradas. Debe utilizar uno de estos valores: Abierto, Cerrado o Ninguno.</label>
     </customLabels>
     <customLabels>
         <name>RD2_DataMigrationInvalidPlannedInstallments</name>
@@ -1209,7 +1209,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormInsertSuccessMessage</name>
-        <label>Se ha creado la donación recurrente "{0}".</label>
+        <label>Se ha creado la donación recurrente &quot;{0}&quot;.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormMissingPermissions</name>
@@ -1306,7 +1306,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormUpdateSuccessMessage</name>
-        <label>Se ha guardado la donación recurrente "{0}".</label>
+        <label>Se ha guardado la donación recurrente &quot;{0}&quot;.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ErrorDataMigrationJobCannotBeRun</name>
@@ -1430,7 +1430,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_PauseStatusMustExist</name>
-        <label>NPSP no puede actualizar Estado y Motivo de estado en donaciones recurrentes en pausa. Debe agregar el valor de lista de selección "En pausa" al campo Estado.</label>
+        <label>NPSP no puede actualizar Estado y Motivo de estado en donaciones recurrentes en pausa. Debe agregar el valor de lista de selección &quot;En pausa&quot; al campo Estado.</label>
     </customLabels>
     <customLabels>
         <name>RD2_PaymentInformation</name>
@@ -1573,7 +1573,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_StatusMustBeMapped</name>
-        <label>El Estado "{0}" no se ha asignado a una Situación.</label>
+        <label>El Estado &quot;{0}&quot; no se ha asignado a una Situación.</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusMustBeMappedSolution</name>
@@ -2320,7 +2320,7 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     </customLabels>
     <customLabels>
         <name>bdiErrorDeploymentFailedLink</name>
-        <label>&lt;a href="{0}" target="_blank"&gt;Puede ver el estado de implementación aquí.&lt;/a&gt;</label>
+        <label>&lt;a href=&quot;{0}&quot; target=&quot;_blank&quot;&gt;Puede ver el estado de implementación aquí.&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>bdiErrorDonationLookupMatch</name>
@@ -2658,7 +2658,7 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     </customLabels>
     <customLabels>
         <name>bdiOMUIErrorNoValidThroughThisField</name>
-        <label>Error: No hay campos válidos basados en lo que seleccionó en "Nombre de objeto", "Es secundario/principal" y "De este grupo de asignaciones".</label>
+        <label>Error: No hay campos válidos basados en lo que seleccionó en &quot;Nombre de objeto&quot;, &quot;Es secundario/principal&quot; y &quot;De este grupo de asignaciones&quot;.</label>
     </customLabels>
     <customLabels>
         <name>bdiOMUIErrorDupeName</name>
@@ -3188,15 +3188,15 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     </customLabels>
     <customLabels>
         <name>stgHelpAdvancedMapping3</name>
-        <label>Encontrará la documentación completa de configuración de Asignación avanzada &lt;a href="https://powerofus.force.com/NPSP_Advanced_Mapping" target="_blank"&gt;aquí&lt;/a&gt;.</label>
+        <label>Encontrará la documentación completa de configuración de Asignación avanzada &lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;aquí&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpCustomizableRollupsEnable1</name>
-        <label>Podrá encontrar la documentación completa de Totalizaciones personalizables &lt;a href="https://powerofus.force.com/NPSP_Customizable_Rollups_Overview" target="_blank"&gt;aquí&lt;/a&gt;.</label>
+        <label>Podrá encontrar la documentación completa de Totalizaciones personalizables &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;aquí&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpHHObjectOverview</name>
-        <label>Para aprender más sobre el modelo de cuenta Hogar recomendado, consulte la &lt;a href="https://powerofus.force.com/NPSP_Account_Model" target="_blank"&gt;Documentación de NPSP&lt;/a&gt;.</label>
+        <label>Para aprender más sobre el modelo de cuenta Hogar recomendado, consulte la &lt;a href=&quot;https://powerofus.force.com/NPSP_Account_Model&quot; target=&quot;_blank&quot;&gt;Documentación de NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>commonAssistiveError</name>
@@ -3560,7 +3560,7 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     </customLabels>
     <customLabels>
         <name>conMergeErrorNoDRSFound</name>
-        <label>&lt;b&gt;No hay conjuntos de registros duplicados.&lt;/b&gt;&lt;/br&gt;&lt;/br&gt; No se encontraron conjuntos de registros duplicados. Asegúrese de que las reglas de duplicados están activadas. &lt;a href="https://help.salesforce.com/articleView?id=duplicate_rules_map_of_reference.htm&amp;type=5" target="_blank"&gt;Más información&lt;/a&gt;.</label>
+        <label>&lt;b&gt;No hay conjuntos de registros duplicados.&lt;/b&gt;&lt;/br&gt;&lt;/br&gt; No se encontraron conjuntos de registros duplicados. Asegúrese de que las reglas de duplicados están activadas. &lt;a href=&quot;https://help.salesforce.com/articleView?id=duplicate_rules_map_of_reference.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;Más información&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>conMergeErrorNoReadDSRObjPermission</name>
@@ -3576,7 +3576,7 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>Vea todos los contactos duplicados encontrados empleando reglas de coincidencia. &lt;a href="https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Merge_Contacts.htm&amp;type=5" target="_blank"&gt;&lt;b&gt;Más información &lt;/b&gt;&lt;/a&gt;</label>
+        <label>Vea todos los contactos duplicados encontrados empleando reglas de coincidencia. &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Merge_Contacts.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;&lt;b&gt;Más información &lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>
@@ -4295,7 +4295,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     </customLabels>
     <customLabels>
         <name>gsChecklistItemReviewCompanyDesc</name>
-        <label>Dentro de Salesforce, la información de la organización se conoce como "Información de empresa". Aquí configurará la zona horaria, la configuración regional de divisa y el mes de inicio del año fiscal predeterminados. También podrá encontrar información sobre el uso de su licencia.</label>
+        <label>Dentro de Salesforce, la información de la organización se conoce como &quot;Información de empresa&quot;. Aquí configurará la zona horaria, la configuración regional de divisa y el mes de inicio del año fiscal predeterminados. También podrá encontrar información sobre el uso de su licencia.</label>
     </customLabels>
     <customLabels>
         <name>gsChecklistItemReviewCompanyLinkLabel</name>
@@ -4439,7 +4439,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     </customLabels>
     <customLabels>
         <name>gseuChecklistItemWhatIsNPSPDesc</name>
-        <label>La base de Nonprofit Cloud e la aplicación Nonprofit Success Pack (NPSP). NPSP le ayuda a gestionar sus integrantes y esfuerzos de obtención de fondos. Si alguien dice que está utilizando la "versión sin ánimo de lucro" de Salesforce, normalmente está hablando de NPSP.</label>
+        <label>La base de Nonprofit Cloud e la aplicación Nonprofit Success Pack (NPSP). NPSP le ayuda a gestionar sus integrantes y esfuerzos de obtención de fondos. Si alguien dice que está utilizando la &quot;versión sin ánimo de lucro&quot; de Salesforce, normalmente está hablando de NPSP.</label>
     </customLabels>
     <customLabels>
         <name>gseuChecklistItemWhatIsNPSPLink</name>
@@ -5025,7 +5025,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     <customLabels>
         <name>gePaymentProcessError</name>
         <label>Se produjo un error al procesar el pago. Revise el error e inténtelo de nuevo. De manera alternativa,
-            seleccione "No introduzca información de pago." para introducir una donación sin procesar un pago. {0} errores:
+            seleccione &quot;No introduzca información de pago.&quot; para introducir una donación sin procesar un pago. {0} errores:
             /0x0A/ {1}</label>
     </customLabels>
     <customLabels>
@@ -5170,7 +5170,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     </customLabels>
     <customLabels>
         <name>geToastTemplateCreateSuccess</name>
-        <label>Se creó la plantilla "{0}".</label>
+        <label>Se creó la plantilla &quot;{0}&quot;.</label>
     </customLabels>
     <customLabels>
         <name>geToastTemplateDeleteError</name>
@@ -5178,7 +5178,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     </customLabels>
     <customLabels>
         <name>geToastTemplateDeleteSuccess</name>
-        <label>Se eliminó la plantilla "{0}".</label>
+        <label>Se eliminó la plantilla &quot;{0}&quot;.</label>
     </customLabels>
     <customLabels>
         <name>geToastTemplateTabsError</name>
@@ -5186,7 +5186,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     </customLabels>
     <customLabels>
         <name>geToastTemplateUpdateSuccess</name>
-        <label>Se actualizó la plantilla "{0}".</label>
+        <label>Se actualizó la plantilla &quot;{0}&quot;.</label>
     </customLabels>
     <customLabels>
         <name>geUtilJWTTestInvalidKey</name>
@@ -5214,7 +5214,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     </customLabels>
     <customLabels>
         <name>giftProcessingAccountException</name>
-        <label>El procesamiento de regalos no admite el modelo de cuentas individual ("Depósito").</label>
+        <label>El procesamiento de regalos no admite el modelo de cuentas individual (&quot;Depósito&quot;).</label>
     </customLabels>
     <customLabels>
         <name>giftProcessingConfigException</name>
@@ -5342,7 +5342,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     </customLabels>
     <customLabels>
         <name>healthDetailsHHAccountModel</name>
-        <label>Cuando se utiliza el modelo de cuenta Hogar, debe establecer las reglas del objeto Hogar en "Sin contactos". Puede establecer el campo Reglas del objeto Hogar en la página Configuración de NPSP bajo Personas | Hogares.</label>
+        <label>Cuando se utiliza el modelo de cuenta Hogar, debe establecer las reglas del objeto Hogar en &quot;Sin contactos&quot;. Puede establecer el campo Reglas del objeto Hogar en la página Configuración de NPSP bajo Personas | Hogares.</label>
     </customLabels>
     <customLabels>
         <name>healthDetailsHHActNoContacts</name>
@@ -5414,7 +5414,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     </customLabels>
     <customLabels>
         <name>healthDetailsInvalidPicklistValue</name>
-        <label>No se admite el valor de la lista de selección "{0}".</label>
+        <label>No se admite el valor de la lista de selección &quot;{0}&quot;.</label>
     </customLabels>
     <customLabels>
         <name>healthDetailsInvalidRecordtypeId</name>
@@ -5438,7 +5438,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     </customLabels>
     <customLabels>
         <name>healthDetailsMissingRequiredPicklistValue</name>
-        <label>Falta el valor de la lista de selección obligatorio "{0}".</label>
+        <label>Falta el valor de la lista de selección obligatorio &quot;{0}&quot;.</label>
     </customLabels>
     <customLabels>
         <name>healthDetailsNothingScheduled</name>
@@ -5690,7 +5690,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     </customLabels>
     <customLabels>
         <name>healthSolutionAccountRTIssue</name>
-        <label>Para cuentas Hogar, asegúrese que npe01__SYSTEM_AccountType__c es 'Household Account' (Cuenta Hogar). Para Cuentas Uno a uno, asegúrese que npe01__SYSTEM_AccountType__c es 'One-to-One Individual' (Uno a uno Individual). Para ambos asegurarse que npe01__SYSTEMISINDIVIDUAL__c es verdadero.</label>
+        <label>Para cuentas Hogar, asegúrese que npe01__SYSTEM_AccountType__c es &apos;Household Account&apos; (Cuenta Hogar). Para Cuentas Uno a uno, asegúrese que npe01__SYSTEM_AccountType__c es &apos;One-to-One Individual&apos; (Uno a uno Individual). Para ambos asegurarse que npe01__SYSTEMISINDIVIDUAL__c es verdadero.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionAutoRelFieldsMissing</name>
@@ -5774,7 +5774,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     </customLabels>
     <customLabels>
         <name>healthSolutionMissingPicklistValue</name>
-        <label>Agregue el valor de lista de selección obligatorio "{0}" en el campo "{1}".</label>
+        <label>Agregue el valor de lista de selección obligatorio &quot;{0}&quot; en el campo &quot;{1}&quot;.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionNothingScheduled</name>
@@ -5818,7 +5818,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     </customLabels>
     <customLabels>
         <name>healthSolutionUnsupportedPicklistValue</name>
-        <label>Desactive o elimine el valor de lista de selección "{0}" en el campo "{1}".</label>
+        <label>Desactive o elimine el valor de lista de selección &quot;{0}&quot; en el campo &quot;{1}&quot;.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionUDFBadDatatypes</name>
@@ -5846,7 +5846,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     </customLabels>
     <customLabels>
         <name>hhCmpDedupeNoReport</name>
-        <label>No puede encontrar el informe. Cree un informe con el Nombre exclusivo del informe: 'NPSP_Campaign_Household_Mailing_List_V2'. NOTA: El tipo de informe debe ser Campañas con Contactos. Filtrar por Estado de miembro no contiene "Duplicado".</label>
+        <label>No puede encontrar el informe. Cree un informe con el Nombre exclusivo del informe: &apos;NPSP_Campaign_Household_Mailing_List_V2&apos;. NOTA: El tipo de informe debe ser Campañas con Contactos. Filtrar por Estado de miembro no contiene &quot;Duplicado&quot;.</label>
     </customLabels>
     <customLabels>
         <name>hhCmpDedupeStatus</name>
@@ -6638,7 +6638,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     </customLabels>
     <customLabels>
         <name>sendAcknowledgmentFailureReasons</name>
-        <label>Los siguientes registros no fueron reconocidos por NPSP. Los acuses de recibo pueden fallar si no hay una regla de flujo de trabajo (Acuse de estado igual a "Enviar acuse de recibo") activada para enviar el acuse de recibo, o si los registros no cumplen con los criterios adicionales para activar la regla de flujo de trabajo. Por ejemplo, si el Contacto principal no está establecido o si el campo Correo electrónico del Contacto principal está vacío o no es válido.</label>
+        <label>Los siguientes registros no fueron reconocidos por NPSP. Los acuses de recibo pueden fallar si no hay una regla de flujo de trabajo (Acuse de estado igual a &quot;Enviar acuse de recibo&quot;) activada para enviar el acuse de recibo, o si los registros no cumplen con los criterios adicionales para activar la regla de flujo de trabajo. Por ejemplo, si el Contacto principal no está establecido o si el campo Correo electrónico del Contacto principal está vacío o no es válido.</label>
     </customLabels>
     <customLabels>
         <name>sendAcknowledgmentFireStatus</name>
@@ -6992,7 +6992,7 @@ La selección de No programar automáticamente trabajos de NPSP predeterminados 
     </customLabels>
     <customLabels>
         <name>stgHelpAlloNDayValue</name>
-        <label>Asignar un valor para los totales "N días", donde "N" es el número de días de hoy hacía el pasado. De forma predeterminada este valor calcula los últimos 365 días.</label>
+        <label>Asignar un valor para los totales &quot;N días&quot;, donde &quot;N&quot; es el número de días de hoy hacía el pasado. De forma predeterminada este valor calcula los últimos 365 días.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpAllocationLevel</name>
@@ -7063,7 +7063,7 @@ Una vez el proceso esté completo al 100% podrá salir o actualizar esta página
     </customLabels>
     <customLabels>
         <name>stgHelpBtnOppNaming</name>
-        <label>&lt;b&gt;ADVERTENCIA:&lt;/b&gt; Al hacer clic en este botón se activará el cambio de nombre de oportunidades por lotes, y se actualizarán todos los nombres de las oportunidades de acuerdo al formato que se eligió. Salesforce cambiará el nombre de todas las oportunidades en su organización exceptuando a aquellas oportunidades que especificó como "No cambiar nombre".&lt;br/&gt;&lt;br/&gt;
+        <label>&lt;b&gt;ADVERTENCIA:&lt;/b&gt; Al hacer clic en este botón se activará el cambio de nombre de oportunidades por lotes, y se actualizarán todos los nombres de las oportunidades de acuerdo al formato que se eligió. Salesforce cambiará el nombre de todas las oportunidades en su organización exceptuando a aquellas oportunidades que especificó como &quot;No cambiar nombre&quot;.&lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;Este es un proceso irreversible.&lt;/b&gt; 
 Antes de iniciar este proceso, recomendamos realizar una copia de seguridad de sus datos. También recomendamos desactivar lo siguiente cuando afecten a oportunidades: 
@@ -7086,7 +7086,7 @@ Una vez el proceso esté completo al 100% podrá salir o actualizar esta página
     </customLabels>
     <customLabels>
         <name>stgHelpContactRTExcluded</name>
-        <label>Los tipos de registros de contactos que desea excluir de la creación de funciones de contactos de miembros de hogares. Por ejemplo, podría desear crear un tipo de registro "secundario" para contactos secundarios en el hogar, e introducirlo aquí. Salesforce excluiría entonces esos contactos de la recepción de la función del contacto del miembro del hogar cuando se crea la oportunidad.</label>
+        <label>Los tipos de registros de contactos que desea excluir de la creación de funciones de contactos de miembros de hogares. Por ejemplo, podría desear crear un tipo de registro &quot;secundario&quot; para contactos secundarios en el hogar, e introducirlo aquí. Salesforce excluiría entonces esos contactos de la recepción de la función del contacto del miembro del hogar cuando se crea la oportunidad.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpCreateMissingPayments</name>
@@ -7180,7 +7180,7 @@ Una vez el proceso esté completo al 100% podrá salir o actualizar esta página
     </customLabels>
     <customLabels>
         <name>stgHelpHHMailingListReport</name>
-        <label>El Informe de lista de envío de Hogar utilizado para la campaña de listas de correo de hogar des duplicado. El informe debe ser de Campañas con  Contactos, donde Estado de miembro no contiene "Duplicado"</label>
+        <label>El Informe de lista de envío de Hogar utilizado para la campaña de listas de correo de hogar des duplicado. El informe debe ser de Campañas con  Contactos, donde Estado de miembro no contiene &quot;Duplicado&quot;</label>
     </customLabels>
     <customLabels>
         <name>stgHelpHHNameFormat</name>
@@ -7200,7 +7200,7 @@ Una vez el proceso esté completo al 100% podrá salir o actualizar esta página
     </customLabels>
     <customLabels>
         <name>stgHelpHealthCheck</name>
-        <label>Utilice &lt;a href="#" onclick="ShowPanel('idPanelHealthCheck');return false;"&gt;Comprobación de estado&lt;/a&gt; para verificar su configuración de NPSP.</label>
+        <label>Utilice &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelHealthCheck&apos;);return false;&quot;&gt;Comprobación de estado&lt;/a&gt; para verificar su configuración de NPSP.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpIGFormat</name>
@@ -7223,7 +7223,7 @@ Una vez el proceso esté completo al 100% podrá salir o actualizar esta página
     </customLabels>
     <customLabels>
         <name>stgHelpMatchedDonorRole</name>
-        <label>La función de contacto que desea utilizar para donantes coincidentes. Recomendamos utilizar "Donante con coincidencia".</label>
+        <label>La función de contacto que desea utilizar para donantes coincidentes. Recomendamos utilizar &quot;Donante con coincidencia&quot;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpMaxPayments</name>
@@ -7231,7 +7231,7 @@ Una vez el proceso esté completo al 100% podrá salir o actualizar esta página
     </customLabels>
     <customLabels>
         <name>stgHelpMembershipGracePeriod</name>
-        <label>La duración del período de gracia (en días) después de que la afiliación venza antes que el estado se cambie de "Período de gracia" a "Vencida". El valor predeterminado es 30 días.</label>
+        <label>La duración del período de gracia (en días) después de que la afiliación venza antes que el estado se cambie de &quot;Período de gracia&quot; a &quot;Vencida&quot;. El valor predeterminado es 30 días.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpMembershipRT</name>
@@ -7268,7 +7268,7 @@ IMPORTANTE: Ambos campos deben ser del mismo tipo de datos.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCR</name>
-        <label>Los créditos blandos, las funciones de contactos y los regalos coincidentes se relacionan entre sí de manera importante. Si no está familiarizado con estos conceptos y cómo interactúan, debe leer la &lt;a href="https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Automated_Soft_Credits.htm&amp;type=5" target="_blank"&gt;Documentación de NPSP&lt;/a&gt; antes de realizar ajustes en cualquiera de estos parámetros.</label>
+        <label>Los créditos blandos, las funciones de contactos y los regalos coincidentes se relacionan entre sí de manera importante. Si no está familiarizado con estos conceptos y cómo interactúan, debe leer la &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Automated_Soft_Credits.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;Documentación de NPSP&lt;/a&gt; antes de realizar ajustes en cualquiera de estos parámetros.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCRDefaultRole</name>
@@ -7292,15 +7292,15 @@ IMPORTANTE: Ambos campos deben ser del mismo tipo de datos.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingDateFormat</name>
-        <label>El formato de fecha usado en cualquier campo de día o día y hora referenciado en el Formato de nombre de oportunidad. Elegir un formato, o elegir "Otro" para crear su propio formato personalizado siguiendo las especificaciones del SimpleDateFormat de Java</label>
+        <label>El formato de fecha usado en cualquier campo de día o día y hora referenciado en el Formato de nombre de oportunidad. Elegir un formato, o elegir &quot;Otro&quot; para crear su propio formato personalizado siguiendo las especificaciones del SimpleDateFormat de Java</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingFormat</name>
-        <label>El Formato del nombre de la oportunidad. Elija "otro" para crear el suyo propio.</label>
+        <label>El Formato del nombre de la oportunidad. Elija &quot;otro&quot; para crear el suyo propio.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingRecTypes</name>
-        <label>El/los tipos de registros de oportunidad al cual se le quiere aplicar este nombre de oportunidad. Utilice control o comando para seleccionar más de uno. "Ninguno" aplica el nuevo nombre a TODOS los tipos de registro.</label>
+        <label>El/los tipos de registros de oportunidad al cual se le quiere aplicar este nombre de oportunidad. Utilice control o comando para seleccionar más de uno. &quot;Ninguno&quot; aplica el nuevo nombre a TODOS los tipos de registro.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppRecTypesNoPayments</name>
@@ -7340,7 +7340,7 @@ IMPORTANTE: Ambos campos deben ser del mismo tipo de datos.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPowerOfUsHub</name>
-        <label>¿Tiene preguntas? Pruebe el grupo  &lt;a href="https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE" target="_blank"&gt;Nonprofit Success Pack&lt;/a&gt; para formular preguntas sobre NPSP y el grupo &lt;a href="https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion" target="_blank"&gt;System Administrators&lt;/a&gt; para formular preguntas sobre la administración y configuración de Salesforce.&lt;br/&gt;&lt;br/&gt;Manténgase al día con las notas de la versión de NPSP más recientes en el grupo &lt;a href="https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC.htm" target="_blank"&gt;NPSP Release Announcements&lt;/a&gt;.</label>
+        <label>¿Tiene preguntas? Pruebe el grupo  &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; para formular preguntas sobre NPSP y el grupo &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; para formular preguntas sobre la administración y configuración de Salesforce.&lt;br/&gt;&lt;br/&gt;Manténgase al día con las notas de la versión de NPSP más recientes en el grupo &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC.htm&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPrimaryContactBatch</name>
@@ -7497,11 +7497,11 @@ Este proceso puede tardar algún tiempo, pero puede cerrar esta página con segu
     <customLabels>
         <name>stgHelpRespectDuplicateRuleSettings</name>
         <label>Respeta los parámetros en una regla de duplicados que controla si se permiten registros duplicados.
-Para comprobar su configuración vigente, vaya a Reglas de duplicados bajo Configuración. Para cualquier regla, cuando los campos Acción al crear o Acción al modificar están establecidos en "Permitir", se guardarán los duplicados.</label>
+Para comprobar su configuración vigente, vaya a Reglas de duplicados bajo Configuración. Para cualquier regla, cuando los campos Acción al crear o Acción al modificar están establecidos en &quot;Permitir&quot;, se guardarán los duplicados.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpReviewErrorLog</name>
-        <label>Revise los &lt;a href="#" onclick="ShowPanel('idPanelErrorLog');return false;"&gt;registros de errores&lt;/a&gt; para comprobar si hay problemas.</label>
+        <label>Revise los &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;registros de errores&lt;/a&gt; para comprobar si hay problemas.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRollupBatchSize</name>
@@ -7533,7 +7533,7 @@ Para comprobar su configuración vigente, vaya a Reglas de duplicados bajo Confi
     </customLabels>
     <customLabels>
         <name>stgHelpRollupNDayValue</name>
-        <label>Asignar un valor para los totales "N días", donde "N" es el número de días de hoy hacía el pasado. De forma predeterminada este valor calcula los últimos 365 días.</label>
+        <label>Asignar un valor para los totales &quot;N días&quot;, donde &quot;N&quot; es el número de días de hoy hacía el pasado. De forma predeterminada este valor calcula los últimos 365 días.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRollupPrimaryContact</name>
@@ -7545,7 +7545,7 @@ Para comprobar su configuración vigente, vaya a Reglas de duplicados bajo Confi
     </customLabels>
     <customLabels>
         <name>stgHelpSalesforceSetup</name>
-        <label>¿Busca personalizar formatos de página, agregar campos o usuarios? Pruebe con las páginas de &lt;a href="/setup/forcecomHomepage.apexp?setupid=ForceCom" target="_blank"&gt;Configuración de Salesforce&lt;/a&gt;.</label>
+        <label>¿Busca personalizar formatos de página, agregar campos o usuarios? Pruebe con las páginas de &lt;a href=&quot;/setup/forcecomHomepage.apexp?setupid=ForceCom&quot; target=&quot;_blank&quot;&gt;Configuración de Salesforce&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpSimpleAddrChangeIsUpdate</name>
@@ -8203,7 +8203,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
     </customLabels>
     <customLabels>
         <name>stgValidationHHAccountHHRules</name>
-        <label>Al establecer el modelo de cuenta en "Cuenta de Hogar", se requieren que las reglas de hogares se establezcan en "Sin contactos". Al utilizar este modelo, no hay necesidad de tener un objeto adicional Hogar.</label>
+        <label>Al establecer el modelo de cuenta en &quot;Cuenta de Hogar&quot;, se requieren que las reglas de hogares se establezcan en &quot;Sin contactos&quot;. Al utilizar este modelo, no hay necesidad de tener un objeto adicional Hogar.</label>
     </customLabels>
     <customLabels>
         <name>gsResourcesTitle</name>
