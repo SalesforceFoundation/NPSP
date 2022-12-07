@@ -288,7 +288,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             fillMapWrapper(pmts);
 
             paymentAmountCurrencyChange(pmts);
-            //paymentAmountCurrencyChange(listPmtsForProcessing);
         }
     }
 
@@ -299,7 +298,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         List<npe01__OppPayment__c> refunds = new List<npe01__OppPayment__c>();
         List<npe01__OppPayment__c> oldRefunds = new List<npe01__OppPayment__c>();
         for (Integer i = 0; i < newList.size(); i++) {
-            if (newList[i].npe01__Payment_Amount__c < 0 && String.isBlank(newList[i].Elevate_Payment_ID__c)) {
+            if (newList[i].npe01__Payment_Amount__c < 0 && String.isBlank(newList[i].Elevate_Payment_ID__c) && hasRefundDebitType(newList[i])) {
                 refunds.add(newList[i]);
                 if ( oldList != null) {
                     oldRefunds.add(oldList[i]);
@@ -325,6 +324,11 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 error.getRecord().addError(error.getFirstError());
             }
         }
+    }
+
+    private Boolean hasRefundDebitType (npe01__OppPayment__c payment) {
+        return (payment.DebitType__c == PMT_RefundService.PARTIAL_REFUND 
+            || payment.DebitType__c == PMT_RefundService.FULL_REFUND);
     }
 
     /*******************************************************************************************************
@@ -842,9 +846,10 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                         }
                     }
                     //if the Opportunity amount has decreased, we run the risk of allocations exceeding the total opportunity amount
-                    if (oppWrap.totalAmount > oppWrap.parentAmount)
+                    if (oppWrap.totalAmount > oppWrap.parentAmount) {
                         //using addError here because we want to block opportunity update, display the error inline, and block the DML of updating all the related allocations
                         opp.Amount.addError(Label.alloExceedsOppAmount);
+                    }
                 }
             //if we have no allocations for this opportunity, defaults are enabled, and the opportunity has an amount, make a default allocation
             } else if (settings.Default_Allocations_Enabled__c && opp.Amount != null) {
