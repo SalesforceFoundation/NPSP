@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>All_Members_Deceased__c</name>
-    <help>If selected, all members of this household are deceased. Do not update this field manually. It&apos;s updated automatically by NPSP as a result of updates to the Deceased checkbox on household member Contacts.</help>
+    <help>If selected, all members of this household are deceased. Do not update this field manually. It's updated automatically by NPSP as a result of updates to the Deceased checkbox on household member Contacts.</help>
     <label>All Household Members Deceased</label>
 </CustomFieldTranslation>

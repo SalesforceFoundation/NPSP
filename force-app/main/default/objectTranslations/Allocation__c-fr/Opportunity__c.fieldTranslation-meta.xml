@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Opportunity__c</name>
-    <help>L&apos;opportunité à laquelle vous souhaitez attribuer cette affectation. NPSP cumule toutes les opportunités dans une étape Clôturée/Gagnée dans l’unité comptable générale de cette affectation.</help>
+    <help>L'opportunité à laquelle vous souhaitez attribuer cette affectation. NPSP cumule toutes les opportunités dans une étape Clôturée/Gagnée dans l’unité comptable générale de cette affectation.</help>
     <relationshipLabel>Affectations UCG</relationshipLabel>
     <label>Opportunité</label>
 </CustomFieldTranslation>

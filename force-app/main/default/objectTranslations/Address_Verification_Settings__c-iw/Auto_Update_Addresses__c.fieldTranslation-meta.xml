@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <help>אם אפשרות זו מסומנת, כתובות שהשתנו מעודכנות אוטומטית בתגובה מהשירות (כאשר קיימת תוצאה מאומתת אחת).</help>
-    <label/>
+    <label></label>
     <name>Auto_Update_Addresses__c</name>
 </CustomFieldTranslation>

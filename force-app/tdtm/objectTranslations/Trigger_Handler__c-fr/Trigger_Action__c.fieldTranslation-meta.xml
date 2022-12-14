@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Trigger_Action__c</name>
-    <help>Le contexte dans lequel cette classe doit être exécutée, par exemple, avant l&apos;insertion d&apos;un enregistrement, après la suppression d&apos;un enregistrement, etc.</help>
+    <help>Le contexte dans lequel cette classe doit être exécutée, par exemple, avant l'insertion d'un enregistrement, après la suppression d'un enregistrement, etc.</help>
     <label>Action de déclencheur</label>
     <picklistValues>
         <masterLabel>BeforeInsert</masterLabel>

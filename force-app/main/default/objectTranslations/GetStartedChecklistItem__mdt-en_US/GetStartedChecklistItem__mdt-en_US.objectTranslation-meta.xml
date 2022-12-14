@@ -11,19 +11,19 @@
     <layouts>
         <layout>GS Checklist Item Layout</layout>
         <sections>
-            <label/>
+            <label></label>
             <section>Buttons</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Info</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Link</section>
         </sections>
     </layouts>

@@ -24,10 +24,10 @@
     <startsWith>Consonant</startsWith>
     <caseValues>
         <plural>false</plural>
-        <value>Modèle de plan d&apos;engagement</value>
+        <value>Modèle de plan d'engagement</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value>Modèles de plan d&apos;engagement</value>
+        <value>Modèles de plan d'engagement</value>
     </caseValues>
 </CustomObjectTranslation>

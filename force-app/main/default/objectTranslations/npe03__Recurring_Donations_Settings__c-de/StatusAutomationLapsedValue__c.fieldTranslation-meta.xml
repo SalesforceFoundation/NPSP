@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>StatusAutomationLapsedValue__c</name>
-    <help>Der Status der wiederkehrenden Spende, der festgelegt wird, wenn der Datensatz der wiederkehrenden Spende von der Statusautomatisierung als &quot;Ausgesetzt&quot; festgelegt wird.</help>
-    <label>&quot;Ausgesetzt&quot;-Wert Statusautomatisierung</label>
+    <help>Der Status der wiederkehrenden Spende, der festgelegt wird, wenn der Datensatz der wiederkehrenden Spende von der Statusautomatisierung als "Ausgesetzt" festgelegt wird.</help>
+    <label>"Ausgesetzt"-Wert Statusautomatisierung</label>
 </CustomFieldTranslation>

@@ -11,7 +11,7 @@
     <layouts>
         <layout>Engagement Plan Layout</layout>
         <sections>
-            <label/>
+            <label></label>
             <section>Custom Links</section>
         </sections>
     </layouts>

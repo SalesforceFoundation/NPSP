@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Related_Record_ID__c</name>
-    <help>L&apos;ID Salesforce de l&apos;enregistrement associé à cette erreur.</help>
-    <label>ID d&apos;enregistrement associé</label>
+    <help>L'ID Salesforce de l'enregistrement associé à cette erreur.</help>
+    <label>ID d'enregistrement associé</label>
 </CustomFieldTranslation>

@@ -3,32 +3,32 @@
     <caseValues>
         <article>None</article>
         <plural>false</plural>
-        <value/>
+        <value></value>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>false</plural>
-        <value/>
+        <value></value>
     </caseValues>
     <caseValues>
         <article>None</article>
         <plural>true</plural>
-        <value/>
+        <value></value>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>true</plural>
-        <value/>
+        <value></value>
     </caseValues>
-    <gender/>
+    <gender></gender>
     <layouts>
         <layout>Address Layout</layout>
         <sections>
-            <label/>
+            <label></label>
             <section>Address Verification</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Custom Links</section>
         </sections>
         <sections>
@@ -36,7 +36,7 @@
             <section>Seasonal Information</section>
         </sections>
     </layouts>
-    <nameFieldLabel/>
+    <nameFieldLabel></nameFieldLabel>
     <quickActions>
         <label>עדכן כתובת</label>
         <name>Update_Address</name>

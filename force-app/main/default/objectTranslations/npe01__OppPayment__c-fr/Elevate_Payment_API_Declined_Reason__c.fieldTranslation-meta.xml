@@ -2,5 +2,5 @@
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Elevate_Payment_API_Declined_Reason__c</name>
     <help>Fournit des détails sur les raisons pour lesquelles une transaction a été refusée.</help>
-    <label>Motif refus de l&apos;API de paiement Elevate</label>
+    <label>Motif refus de l'API de paiement Elevate</label>
 </CustomFieldTranslation>

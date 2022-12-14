@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Secondary_Button_Value__c</name>
-    <help>Acción del botón secundario. Para Página externa, la URL externa. Para Nueva ficha de SFDC, el formato es &quot;{referenciaPágina}:{objetoONombreApiPágina}:{acción}&quot;. Vea la documentación de NavigationMixin para consultar ejemplos y todas las especificaciones.</help>
+    <help>Acción del botón secundario. Para Página externa, la URL externa. Para Nueva ficha de SFDC, el formato es "{referenciaPágina}:{objetoONombreApiPágina}:{acción}". Vea la documentación de NavigationMixin para consultar ejemplos y todas las especificaciones.</help>
     <label>Valor de botón secundario</label>
 </CustomFieldTranslation>

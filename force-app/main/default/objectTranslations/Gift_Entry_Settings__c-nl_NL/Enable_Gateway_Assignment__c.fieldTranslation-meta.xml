@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Enable_Gateway_Assignment__c</name>
+    <help>Schakelt verschillende Elevate-gateways in die worden gebruikt voor Elevate-batches van Opgave van gift. Indien dit niet is ingeschakeld, wordt altijd de standaardgateway gebruikt.</help>
+    <label>Gatewaytoewijzing inschakelen</label>
+</CustomFieldTranslation>

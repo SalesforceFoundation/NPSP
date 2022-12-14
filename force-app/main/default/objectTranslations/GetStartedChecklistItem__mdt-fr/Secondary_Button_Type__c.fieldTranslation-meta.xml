@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Secondary_Button_Type__c</name>
-    <help>Le type d&apos;action associé au bouton secondaire. Indique si le bouton est désactivé, ouvre un nouvel onglet Salesforce ou ouvre une page externe.</help>
+    <help>Le type d'action associé au bouton secondaire. Indique si le bouton est désactivé, ouvre un nouvel onglet Salesforce ou ouvre une page externe.</help>
     <label>Type du bouton secondaire</label>
     <picklistValues>
         <masterLabel>Disabled</masterLabel>
