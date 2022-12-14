@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Default_Assignee__c</name>
-    <help>Cuando se deja en blanco el campo &quot;Asignado a&quot; en una tarea del plan de acción, ¿a quién se debe asignar la tarea?</help>
+    <help>Cuando se deja en blanco el campo "Asignado a" en una tarea del plan de acción, ¿a quién se debe asignar la tarea?</help>
     <label>Persona asignada predeterminada</label>
     <picklistValues>
         <masterLabel>Owner of Object for Engagement Plan</masterLabel>

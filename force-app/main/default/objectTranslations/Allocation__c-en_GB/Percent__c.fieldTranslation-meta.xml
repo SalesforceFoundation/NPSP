@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Percent__c</name>
-    <help>Percent of Opportunity amount allocated to this Allocation&apos;s General Accounting Unit. If you later modify the Opportunity amount, NPSP will update the allocation amount on the General Accounting Unit.</help>
+    <help>Percent of Opportunity amount allocated to this Allocation's General Accounting Unit. If you later modify the Opportunity amount, NPSP will update the allocation amount on the General Accounting Unit.</help>
     <label>Percent</label>
 </CustomFieldTranslation>

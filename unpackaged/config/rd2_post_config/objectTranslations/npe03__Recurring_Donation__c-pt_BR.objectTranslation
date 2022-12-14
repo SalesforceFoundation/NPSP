@@ -215,10 +215,14 @@
       <masterLabel>Paused</masterLabel>
       <translation>Pausado</translation>
     </picklistValues>
+    <picklistValues>
+      <masterLabel>Failing</masterLabel>
+      <translation>Com falhas</translation>
+    </picklistValues>
   </fields>
   <fields>
     <name>npe03__Installment_Period__c</name>
-    <help>O Período de parcelamento, juntamente com a Frequência de parcelamento, define a agenda de parcelamento desta Doação recorrente. Por exemplo, se o Período de parcelamento for Mensal e a Frequência for 3, a agenda será definida como &quot;a cada 3 meses&quot;.</help>
+    <help>O Período de parcelamento, juntamente com a Frequência de parcelamento, define a agenda de parcelamento desta Doação recorrente. Por exemplo, se o Período de parcelamento for Mensal e a Frequência for 3, a agenda será definida como "a cada 3 meses".</help>
     <label>Período de parcelamento</label>
     <picklistValues>
       <masterLabel>Monthly</masterLabel>
@@ -243,7 +247,7 @@
   </fields>
   <fields>
     <name>%%%NAMESPACE%%%InstallmentFrequency__c</name>
-    <help>A Frequência de parcelamento, juntamente com o Período de parcelamento, define a agenda de parcelamento desta Doação recorrente. Por exemplo, se o Período de parcelamento for Mensal e a Frequência for 3, a agenda será definida como &quot;a cada 3 meses&quot;.</help>
+    <help>A Frequência de parcelamento, juntamente com o Período de parcelamento, define a agenda de parcelamento desta Doação recorrente. Por exemplo, se o Período de parcelamento for Mensal e a Frequência for 3, a agenda será definida como "a cada 3 meses".</help>
     <label>Frequência de parcelamento</label>
   </fields>
   <fields>

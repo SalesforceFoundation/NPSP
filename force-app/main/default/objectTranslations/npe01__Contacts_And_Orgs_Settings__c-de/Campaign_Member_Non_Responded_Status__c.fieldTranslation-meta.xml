@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Campaign_Member_Non_Responded_Status__c</name>
-    <help>Der Stand‘status, den NPSP bei Kampagnenmitgl. für Opp. m. d. Status &quot;Offen&quot; o. &quot;Geschl./Verloren&quot;, denen ein Hauptansprechp. u. eine prim. Kampagnenquelle zugeordnet ist, verwenden soll. Erfolgt kein Eintrag, verw. NPSP den 1. Status &quot;Nicht geantwortet&quot;.</help>
-    <label>Kamp.mitgl.status &quot;Nicht geantwortet&quot;</label>
+    <help>Der Stand‘status, den NPSP bei Kampagnenmitgl. für Opp. m. d. Status "Offen" o. "Geschl./Verloren", denen ein Hauptansprechp. u. eine prim. Kampagnenquelle zugeordnet ist, verwenden soll. Erfolgt kein Eintrag, verw. NPSP den 1. Status "Nicht geantwortet".</help>
+    <label>Kamp.mitgl.status "Nicht geantwortet"</label>
 </CustomFieldTranslation>

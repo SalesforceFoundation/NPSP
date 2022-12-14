@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Automatically_Update_Child_Task_Due_Date__c</name>
-    <help>Recalculates a child Task&apos;s due date based on when the parent Task was actually completed.</help>
+    <help>Recalculates a child Task's due date based on when the parent Task was actually completed.</help>
     <label>Automatically Update Child Task Due Date</label>
 </CustomFieldTranslation>

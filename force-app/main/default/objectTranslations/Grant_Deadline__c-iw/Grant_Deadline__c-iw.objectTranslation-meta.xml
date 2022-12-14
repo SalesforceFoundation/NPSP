@@ -3,28 +3,28 @@
     <caseValues>
         <article>None</article>
         <plural>false</plural>
-        <value/>
+        <value></value>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>false</plural>
-        <value/>
+        <value></value>
     </caseValues>
     <caseValues>
         <article>None</article>
         <plural>true</plural>
-        <value/>
+        <value></value>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>true</plural>
-        <value/>
+        <value></value>
     </caseValues>
-    <gender/>
+    <gender></gender>
     <layouts>
         <layout>Grant Deadline Layout</layout>
         <sections>
-            <label/>
+            <label></label>
             <section>Custom Links</section>
         </sections>
         <sections>
@@ -32,5 +32,5 @@
             <section>Grant Deliverable Requirements</section>
         </sections>
     </layouts>
-    <nameFieldLabel/>
+    <nameFieldLabel></nameFieldLabel>
 </CustomObjectTranslation>

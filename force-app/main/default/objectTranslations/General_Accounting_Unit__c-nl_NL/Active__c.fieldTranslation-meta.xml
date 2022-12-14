@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Active__c</name>
-    <help>Bepaalt of deze GAU beschikbaar is voor selectie op Toewijzingen. Enkel actieve GAU&apos;s zijn beschikbaar voor selectie.</help>
+    <help>Bepaalt of deze GAU beschikbaar is voor selectie op Toewijzingen. Enkel actieve GAU's zijn beschikbaar voor selectie.</help>
     <label>Actief</label>
 </CustomFieldTranslation>

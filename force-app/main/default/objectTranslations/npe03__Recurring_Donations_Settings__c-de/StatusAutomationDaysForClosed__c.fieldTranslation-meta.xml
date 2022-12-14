@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>StatusAutomationDaysForClosed__c</name>
-    <help>Nach der angegebenen Anzahl Tage aktualisiert NPSP den Status der wiederkehrenden Spende auf den &quot;Geschlossen&quot;-Wert der Statusautomatisierung, wenn Spenden nicht wie erwartet eingehen.</help>
-    <label>Tage bis &quot;Geschlossen&quot; Statusautomat.</label>
+    <help>Nach der angegebenen Anzahl Tage aktualisiert NPSP den Status der wiederkehrenden Spende auf den "Geschlossen"-Wert der Statusautomatisierung, wenn Spenden nicht wie erwartet eingehen.</help>
+    <label>Tage bis "Geschlossen" Statusautomat.</label>
 </CustomFieldTranslation>

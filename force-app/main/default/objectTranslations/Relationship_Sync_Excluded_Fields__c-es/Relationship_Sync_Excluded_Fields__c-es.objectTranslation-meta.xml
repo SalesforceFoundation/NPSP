@@ -17,4 +17,12 @@
         <plural>true</plural>
         <value>Campos que excluir de sincronizaciones</value>
     </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <value>Campos que excluir de sincronización</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Campos que excluir de sincronizaciones</value>
+    </caseValues>
 </CustomObjectTranslation>
