@@ -2,5 +2,5 @@
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>NCOA_Evaluation_Date__c</name>
     <help>La date et l’heure les plus récentes auxquelles l’adresse a été évaluée par un fournisseur NCOA.</help>
-    <label>Date d&apos;évaluation du NCOA</label>
+    <label>Date d'évaluation du NCOA</label>
 </CustomFieldTranslation>

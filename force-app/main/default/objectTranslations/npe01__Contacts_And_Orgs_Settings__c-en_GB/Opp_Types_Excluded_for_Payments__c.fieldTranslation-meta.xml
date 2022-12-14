@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Opp_Types_Excluded_for_Payments__c</name>
-    <help>NPSP automatically creates Payment records for Opportunities with any value in the Type picklist. Select any Types here that you don&apos;t want Payment records automatically created for. Control or Command click to select more than one Type.</help>
+    <help>NPSP automatically creates Payment records for Opportunities with any value in the Type picklist. Select any Types here that you don't want Payment records automatically created for. Control or Command click to select more than one Type.</help>
     <label>Excluded Opp Types</label>
 </CustomFieldTranslation>

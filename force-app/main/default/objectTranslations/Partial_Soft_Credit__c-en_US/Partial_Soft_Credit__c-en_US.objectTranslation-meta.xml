@@ -11,13 +11,13 @@
     <layouts>
         <layout>Partial Soft Credit Layout</layout>
         <sections>
-            <label/>
+            <label></label>
             <section>Custom Links</section>
         </sections>
     </layouts>
     <startsWith>Consonant</startsWith>
     <webLinks>
-        <label/>
+        <label></label>
         <name>Manage_Soft_Credits</name>
     </webLinks>
 </CustomObjectTranslation>

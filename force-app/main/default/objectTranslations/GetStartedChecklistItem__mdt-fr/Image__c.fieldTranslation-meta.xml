@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Image__c</name>
-    <help>Le filename de l&apos;image dans la ressource statique CumulusResources (dans le dossier gsAssets/step) à restituer.</help>
+    <help>Le filename de l'image dans la ressource statique CumulusResources (dans le dossier gsAssets/step) à restituer.</help>
     <label>Image</label>
 </CustomFieldTranslation>

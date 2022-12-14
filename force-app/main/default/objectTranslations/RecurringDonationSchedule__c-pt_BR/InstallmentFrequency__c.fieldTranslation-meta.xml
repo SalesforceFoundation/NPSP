@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>InstallmentFrequency__c</name>
-    <help>Define o cronograma de parcelamento desta Doação recorrente juntamente com o Período de parcelamento. Por exemplo, se o Período de parcelamento for Mensal e a Frequência de parcelamento for 3, o cronograma será definido como &quot;a cada 3 meses&quot;.</help>
+    <help>Define o cronograma de parcelamento desta Doação recorrente juntamente com o Período de parcelamento. Por exemplo, se o Período de parcelamento for Mensal e a Frequência de parcelamento for 3, o cronograma será definido como "a cada 3 meses".</help>
     <label>Frequência de parcelamento</label>
 </CustomFieldTranslation>

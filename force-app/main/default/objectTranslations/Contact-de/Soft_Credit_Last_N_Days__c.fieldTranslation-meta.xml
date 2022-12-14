@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Soft_Credit_Last_N_Days__c</name>
-    <help>Der Gesamtbetrag des diesem Kontakt in den letzten N Tagen zugewiesenen Soft Credit. Der Wert N wird in den NPSP-Einstellungen unter &quot;Spenden&quot; &gt; &quot;Spenderstatistik&quot; definiert.</help>
+    <help>Der Gesamtbetrag des diesem Kontakt in den letzten N Tagen zugewiesenen Soft Credit. Der Wert N wird in den NPSP-Einstellungen unter "Spenden" &gt; "Spenderstatistik" definiert.</help>
     <label>Soft Credits in den letzten N Tagen</label>
 </CustomFieldTranslation>

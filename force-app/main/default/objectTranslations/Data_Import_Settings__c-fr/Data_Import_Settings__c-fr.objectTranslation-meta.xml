@@ -4,10 +4,10 @@
     <startsWith>Consonant</startsWith>
     <caseValues>
         <plural>false</plural>
-        <value>Paramètre d&apos;importation de données</value>
+        <value>Paramètre d'importation de données</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value>Paramètres d&apos;importation de données</value>
+        <value>Paramètres d'importation de données</value>
     </caseValues>
 </CustomObjectTranslation>

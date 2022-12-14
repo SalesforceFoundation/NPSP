@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label/>
+    <label></label>
     <name>Operation__c</name>
     <picklistValues>
         <masterLabel>Average</masterLabel>
-        <translation/>
+        <translation></translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>Best Year</masterLabel>
-        <translation/>
+        <translation></translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>Best Year Total</masterLabel>
-        <translation/>
+        <translation></translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>Count</masterLabel>
-        <translation/>
+        <translation></translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>Donor Streak</masterLabel>
-        <translation/>
+        <translation></translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>First</masterLabel>
-        <translation/>
+        <translation></translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>Largest</masterLabel>
-        <translation/>
+        <translation></translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>Last</masterLabel>
-        <translation/>
+        <translation></translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>Smallest</masterLabel>
-        <translation/>
+        <translation></translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>Sum</masterLabel>
-        <translation/>
+        <translation></translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>Years Donated</masterLabel>
-        <translation/>
+        <translation></translation>
     </picklistValues>
 </CustomFieldTranslation>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <fieldSets>
-        <label/>
+        <label></label>
         <name>BDE_Entry_FS</name>
     </fieldSets>
     <fieldSets>
-        <label/>
+        <label></label>
         <name>BDE_List_FS</name>
     </fieldSets>
     <fieldSets>
-        <label/>
+        <label></label>
         <name>ContactMergeFoundFS</name>
     </fieldSets>
     <layouts>
@@ -68,11 +68,11 @@
         <name>Merge_Contacts</name>
     </webLinks>
     <webLinks>
-        <label/>
+        <label></label>
         <name>New_Gift</name>
     </webLinks>
     <webLinks>
-        <label/>
+        <label></label>
         <name>Recalculate_Rollups</name>
     </webLinks>
 </CustomObjectTranslation>

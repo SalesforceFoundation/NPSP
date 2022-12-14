@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>CustomizableRollups_UseSkewMode__c</name>
-    <help>When checked, Customisable Rollups will always use &apos;Skew Mode&apos; to rollup Hard Credit and Soft Credits for this record.</help>
+    <help>When checked, Customisable Rollups will always use 'Skew Mode' to rollup Hard Credit and Soft Credits for this record.</help>
     <label>Customisable Rollups: Force Skew Mode</label>
 </CustomFieldTranslation>

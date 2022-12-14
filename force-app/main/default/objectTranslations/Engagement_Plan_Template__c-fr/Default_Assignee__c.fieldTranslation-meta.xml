@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Default_Assignee__c</name>
-    <help>Le bénéficiaire auquel la tâche est attribuée lorsque le champ « Attribué à » d&apos;une tâche de plan d&apos;engagement est vide.</help>
+    <help>Le bénéficiaire auquel la tâche est attribuée lorsque le champ « Attribué à » d'une tâche de plan d'engagement est vide.</help>
     <label>Bénéficiaire par défaut</label>
     <picklistValues>
         <masterLabel>Owner of Object for Engagement Plan</masterLabel>

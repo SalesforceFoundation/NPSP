@@ -215,6 +215,10 @@
       <masterLabel>Paused</masterLabel>
       <translation>En pausa</translation>
     </picklistValues>
+    <picklistValues>
+      <masterLabel>Failing</masterLabel>
+      <translation>Fallando</translation>
+    </picklistValues>
   </fields>
   <fields>
     <name>npe03__Installment_Period__c</name>

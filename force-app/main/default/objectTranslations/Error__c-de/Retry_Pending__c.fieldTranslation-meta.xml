@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Retry_Pending__c</name>
-    <help>Diese Option zeigt an, dass der Datensatz in &quot;Verwandte Datensatz-ID&quot; bei der nächsten planmäßigen Verarbeitung erneut verarbeitet wird. Gelingt dies, wird das Feld deaktiviert. Gilt für bestimmte Fehlertypen, die in geplanten Prozessen auftreten.</help>
+    <help>Diese Option zeigt an, dass der Datensatz in "Verwandte Datensatz-ID" bei der nächsten planmäßigen Verarbeitung erneut verarbeitet wird. Gelingt dies, wird das Feld deaktiviert. Gilt für bestimmte Fehlertypen, die in geplanten Prozessen auftreten.</help>
     <label>Ausstehende wiederholen?</label>
 </CustomFieldTranslation>

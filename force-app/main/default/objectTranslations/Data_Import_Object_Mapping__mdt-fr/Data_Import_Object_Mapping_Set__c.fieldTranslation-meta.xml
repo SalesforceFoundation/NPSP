@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Data_Import_Object_Mapping_Set__c</name>
-    <help>Le Groupe d&apos;objets Importation de données qui contient cet enregistrement.</help>
-    <relationshipLabel>Mappages d&apos;objets Importation de données</relationshipLabel>
+    <help>Le Groupe d'objets Importation de données qui contient cet enregistrement.</help>
+    <relationshipLabel>Mappages d'objets Importation de données</relationshipLabel>
     <label>Ensemble mappages objets import. données</label>
 </CustomFieldTranslation>
