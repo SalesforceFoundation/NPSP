@@ -434,6 +434,104 @@ private with sharing class ALLO_Allocations_TEST {
     }
 
     /*******************************************************************************************************
+    * @description When working with negative and positive Payments:
+    * A mixture of positive and negative payments should be successfully inserted
+    * This test was created to ensure we are not breaking Accounting Subledger functionality
+    ********************************************************************************************************/
+    static testMethod void pmtsWithPositiveAndNegativeAmounts() {
+        Date todaysDate = System.today();
+        Date tomorrowsDate = System.today().addDays(1);
+        Date todayPlusOneMonthsDate = System.today().addMonths(1);
+        Date todayPlusTwoMonthsDate = System.today().addMonths(2);
+        Date todayPlusThreeMonthsDate = System.today().addMonths(3);
+
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='default GAU');
+        insert defaultGau;
+
+        setupSettings(new Allocations_Settings__c(
+            Payment_Allocations_Enabled__c = true,
+            Default_Allocations_Enabled__c = true,
+            Default__c = defaultGau.Id));
+
+        Account acc = new Account(Name='Account-pmtAmountChange');
+        insert acc;
+
+        List<General_Accounting_Unit__c> gaus = UTIL_UnitTestData_TEST.createGAUs(4);
+        insert gaus;
+
+        Opportunity opp = new Opportunity(Name='Opp-pmtAmountChange', Amount = 1000, AccountID=acc.Id, CloseDate=System.today(), StageName=UTIL_UnitTestData_TEST.getOpenStage(), npe01__Do_Not_Automatically_Create_Payment__c=true);
+        insert opp;
+
+        //Create Opportunity Allocation Defaults
+        List<Allocation__c> oppAllocations = new List<Allocation__c>();
+        Allocation__c opp1Allo1 = new Allocation__c(General_Accounting_Unit__c = gaus[0].Id,
+                Amount__c = 200, //20%
+                Opportunity__c = opp.Id);
+                Allocation__c opp1Allo2 = new Allocation__c(General_Accounting_Unit__c = gaus[1].Id,
+                Amount__c = 800, //80%
+                Opportunity__c = opp.Id);
+
+        oppAllocations.add(opp1Allo1);
+        oppAllocations.add(opp1Allo2);
+
+        insert oppAllocations;
+
+        List<npe01__OppPayment__c> payments = new List<npe01__OppPayment__c>();
+        npe01__OppPayment__c p1 = new npe01__OppPayment__c(npe01__Opportunity__c = opp.Id,
+            npe01__Scheduled_Date__c = todaysDate, npe01__Payment_Amount__c = 400);
+        npe01__OppPayment__c p2 = new npe01__OppPayment__c(npe01__Opportunity__c = opp.Id,
+            npe01__Scheduled_Date__c = todayPlusOneMonthsDate, 
+            npe01__Payment_Amount__c = 600);
+        payments.add(p1);
+        payments.add(p2);
+
+        insert payments;
+
+        opp.StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        update opp;
+
+        payments = new List<npe01__OppPayment__c>();
+
+        //Now Insert a mixture of payments
+        p1 = new npe01__OppPayment__c(
+                npe01__Opportunity__c = opp.Id,
+                npe01__Payment_Date__c = todaysDate,
+                npe01__Paid__c = true,
+                npe01__Payment_Amount__c = 300);
+        p2 = new npe01__OppPayment__c(
+                npe01__Opportunity__c = opp.Id,
+                npe01__Payment_Date__c = todayPlusOneMonthsDate,
+                npe01__Paid__c = true,
+                npe01__Payment_Amount__c = -200);
+        npe01__OppPayment__c p3 = new npe01__OppPayment__c(
+                npe01__Opportunity__c = opp.Id,
+                npe01__Payment_Date__c = todayPlusTwoMonthsDate,
+                npe01__Paid__c = true,
+                npe01__Payment_Amount__c = 500);
+        npe01__OppPayment__c p4 = new npe01__OppPayment__c(
+                npe01__Opportunity__c = opp.Id,
+                npe01__Payment_Date__c = todayPlusThreeMonthsDate,
+                npe01__Paid__c = true,
+                npe01__Payment_Amount__c = -600);
+
+        payments.add(p1);
+        payments.add(p2);
+        payments.add(p3);
+        payments.add(p4);
+
+        Test.startTest();
+        insert payments;
+        Test.stopTest();
+
+        List<Allocation__c> queryAllo = getAllocationsOrderByPercent(p1.Id, gaus[0].Id);
+        System.assertEquals(300 * 0.2, queryAllo[0].Amount__c, 'The allocation amount should be 20% of the Payment');
+
+        queryAllo = getAllocationsOrderByPercent(p2.Id, gaus[0].Id);
+        System.assertEquals(-200 * 0.2, queryAllo[0].Amount__c, 'The allocation amount should be 20% of the Payment');
+
+    }
+
+    /*******************************************************************************************************
     * @description When working with negative amount Payments:
     * Updating the amount will adjust the percentage allocations.
     * Changing the amount sign from positive to negative and vice versa also flips the sign on the allocations
