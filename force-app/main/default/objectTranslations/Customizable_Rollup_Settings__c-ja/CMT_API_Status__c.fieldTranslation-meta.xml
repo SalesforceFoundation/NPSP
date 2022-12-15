@@ -2,6 +2,6 @@
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>CMT_API_Status__c</name>
     <help>CMT リリース結果用の JSON
-{ &quot;jobId&quot;: &quot;repsonse&quot; }</help>
+{ "jobId": "repsonse" }</help>
     <label>CMT API リリース結果</label>
 </CustomFieldTranslation>

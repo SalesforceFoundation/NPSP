@@ -11,11 +11,11 @@
     <layouts>
         <layout>Recurring Schedule Layout</layout>
         <sections>
-            <label/>
+            <label></label>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Schedule Details</section>
         </sections>
     </layouts>

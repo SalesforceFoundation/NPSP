@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Respect_Duplicate_Rule_Settings__c</name>
-    <help>Respeta parámetros en una regla de duplicados que controla registros duplicados. Para la configuración, vaya a Reglas de duplicados bajo Configuración. Cuando Acción al crear o Acción al modificar se establecen en &quot;Permitir&quot;, se guardarán los duplicados.</help>
+    <help>Respeta parámetros en una regla de duplicados que controla registros duplicados. Para la configuración, vaya a Reglas de duplicados bajo Configuración. Cuando Acción al crear o Acción al modificar se establecen en "Permitir", se guardarán los duplicados.</help>
     <label>Respetar parámetros reglas de duplicados</label>
 </CustomFieldTranslation>

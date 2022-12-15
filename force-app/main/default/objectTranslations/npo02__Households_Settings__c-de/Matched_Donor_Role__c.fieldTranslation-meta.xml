@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Matched_Donor_Role__c</name>
-    <help>Die Kontaktrolle, die Sie für geeignete Spender verwenden wollen. Wir empfehlen &quot;Geeignete Spender&quot;.</help>
+    <help>Die Kontaktrolle, die Sie für geeignete Spender verwenden wollen. Wir empfehlen "Geeignete Spender".</help>
     <label>Rolle des geeigneten Spenders</label>
 </CustomFieldTranslation>

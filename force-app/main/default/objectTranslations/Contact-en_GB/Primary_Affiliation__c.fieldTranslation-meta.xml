@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Primary_Affiliation__c</name>
-    <help>The Account marked as Primary in this Contact&apos;s list of Organisation Affiliations.</help>
+    <help>The Account marked as Primary in this Contact's list of Organisation Affiliations.</help>
     <relationshipLabel>Do Not Use.  Use Organisation Affiliations.</relationshipLabel>
     <label>Primary Affiliation</label>
 </CustomFieldTranslation>

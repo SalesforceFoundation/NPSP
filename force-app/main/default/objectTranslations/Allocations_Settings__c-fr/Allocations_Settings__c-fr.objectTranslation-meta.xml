@@ -4,10 +4,10 @@
     <startsWith>Consonant</startsWith>
     <caseValues>
         <plural>false</plural>
-        <value>Paramètre d&apos;affectation</value>
+        <value>Paramètre d'affectation</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value>Paramètres d&apos;affectations</value>
+        <value>Paramètres d'affectations</value>
     </caseValues>
 </CustomObjectTranslation>

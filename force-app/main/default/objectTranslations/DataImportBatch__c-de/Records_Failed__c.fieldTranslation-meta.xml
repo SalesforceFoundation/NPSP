@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Records_Failed__c</name>
-    <help>Zeigt die Anzahl der Datensätze an, die an dem im Feld &quot;Zuletzt verarbeitet am&quot; angegebenen Datum nicht erfolgreich verarbeitet wurden.</help>
+    <help>Zeigt die Anzahl der Datensätze an, die an dem im Feld "Zuletzt verarbeitet am" angegebenen Datum nicht erfolgreich verarbeitet wurden.</help>
     <label>Fehlerhafte Datensätze</label>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>DisableFirstInstallment__c</name>
-    <help>Empêche la création de la première opportunité de versement pour un nouveau don récurrent, quel que soit le paramètre de Création auto d&apos;opportunité de versement dans les paramètres NPSP.</help>
+    <help>Empêche la création de la première opportunité de versement pour un nouveau don récurrent, quel que soit le paramètre de Création auto d'opportunité de versement dans les paramètres NPSP.</help>
     <label>Désactiver le premier versement</label>
 </CustomFieldTranslation>

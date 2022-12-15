@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <help>אם אפשרות זו מסומנת, כל כתובת של חשבון בארה&quot;ב שהשירות מסמן כלא מתאימה למשלוח תימחק באופן אוטומטי. (תוכל לעיין בערך הלא חוקי ברשומת הכתובת.)</help>
-    <label/>
+    <label></label>
     <name>Clear_Invalid_Addresses__c</name>
 </CustomFieldTranslation>
