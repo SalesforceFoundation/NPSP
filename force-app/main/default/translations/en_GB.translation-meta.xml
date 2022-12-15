@@ -6,7 +6,7 @@
     </customLabels>
     <customLabels>
         <name>installmentPeriod</name>
-        <label>Installment Period</label>
+        <label>Instalment Period</label>
     </customLabels>
     <customLabels>
         <name>recurringDonationSchedule</name>
@@ -54,7 +54,7 @@
     </customLabels>
     <customLabels>
         <name>Addr_Settings_Test_Body</name>
-        <label>To test your Secret Key Pair, enter any US Zip Code:</label>
+        <label>To test your Secret Key Pair, enter any US Zip/Postal Code:</label>
     </customLabels>
     <customLabels>
         <name>Addr_Settings_Test_Response_Title</name>
@@ -833,6 +833,10 @@
         <label>Valid Payment Methods for an active Elevate-connected Recurring Donation are Credit Card or ACH.</label>
     </customLabels>
     <customLabels>
+        <name>RD2_ElevatePauseInstallmentDateErrorMessage</name>
+        <label>We can&apos;t pause an Elevate-connected Recurring Donation less than two days before the instalment date.</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_CurrencyChangeIsRestrictedOnRD</name>
         <label>You can&apos;t change the Recurring Donation currency when there is a related closed Opportunity.</label>
     </customLabels>
@@ -846,7 +850,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_DataMigrationInvalidInstallmentPeriod</name>
-        <label>Recurring Donation Installment Period &quot;{0}&quot; cannot be converted to the Enhanced Recurring Donations format. Make sure the Installment Period is defined in NPSP Settings -&gt; Recurring Donations -&gt; Recurring Donation Custom Installment Periods.</label>
+        <label>Recurring Donation Instalment Period &quot;{0}&quot; cannot be converted to the Enhanced Recurring Donations format. Make sure the Instalment Period is defined in NPSP Settings -&gt; Recurring Donations -&gt; Recurring Donation Custom Instalment Periods.</label>
     </customLabels>
     <customLabels>
         <name>RD2_DataMigrationInvalidOpenEndedStatus</name>
@@ -854,7 +858,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_DataMigrationInvalidPlannedInstallments</name>
-        <label>When Open Ended Status is Closed and Schedule Type is not populated, Number of Planned Installments must be 1.</label>
+        <label>When Open Ended Status is Closed and Schedule Type is not populated, Number of Planned Instalments must be 1.</label>
     </customLabels>
     <customLabels>
         <name>RD2_DayOfMonthMustBeValid</name>
@@ -862,7 +866,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_DayOfMonthIsRequiredForMonthlyInstallment</name>
-        <label>You must enter a value for Day of Month when Installment Period is Monthly.</label>
+        <label>You must enter a value for Day of Month when Instalment Period is Monthly.</label>
     </customLabels>
     <customLabels>
         <name>RD2_DisableCustomizableRollupWarning</name>
@@ -878,11 +882,11 @@
     </customLabels>
     <customLabels>
         <name>RD2_PaidInstallments</name>
-        <label>Paid Installments:</label>
+        <label>Paid Instalments:</label>
     </customLabels>
     <customLabels>
         <name>RD2_NextDonationDate</name>
-        <label>Next Installment Date:</label>
+        <label>Next Instalment Date:</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateCancelInProgress</name>
@@ -1063,8 +1067,7 @@
     <customLabels>
         <name>RD2_EnablementIntro</name>
         <label>Greetings! Enhanced Recurring Donations is our redesigned and improved Recurring Donations feature for the Nonprofit Success Pack (NPSP). A big thanks to our community members who offered their feedback and helped make Enhanced Recurring Donations possible.
-        &lt;br/&gt;&lt;br/&gt;Since there&apos;s already a Recurring Donations feature in NPSP, you&apos;ll need to perform several upgrade tasks and move your existing data to the Enhanced Recurring Donations model. We&apos;ve outlined the required tasks for you below.
-        &lt;br/&gt;&lt;br/&gt;You&apos;ll probably have questions along the way and we want you to be fully prepared at each step.</label>
+            &lt;br/&gt;&lt;br/&gt;Since there&apos;s already a Recurring Donations feature in NPSP, you&apos;ll need to perform several upgrade tasks and move your existing data to the Enhanced Recurring Donations model. We&apos;ve outlined the required tasks for you below.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMetaDeployConfirm</name>
@@ -1153,7 +1156,7 @@
     <customLabels>
         <name>RD2_EnablementPrepTasks</name>
         <label>&lt;ul&gt;&lt;li&gt;Disable workflows, processes, validation rules and triggers on the Recurring Donations, Opportunity, and Payment objects.&lt;/li&gt;
-&lt;li&gt;Backup your database, including all Recurring Donations and their related records.&lt;/li&gt;</label>
+&lt;li&gt;Backup your database, including all Recurring Donations and their related records.&lt;/li&gt;&lt;/ul&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementPrepTitle</name>
@@ -1162,7 +1165,7 @@
     <customLabels>
         <name>RD2_EnablementSimpleIntro</name>
         <label>Enhanced Recurring Donations makes Recurring Donations more flexible and easier to manage than ever before. To enable Enhanced Recurring Donations, follow the steps below. You must complete ALL the steps to fully enable Enhanced Recurring Donations.
-            &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Because you have no Recurring Donation records, you don&apos;t need to validate or migrate any data.&lt;/b&gt;</label>
+        &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Because you have no Recurring Donation records, you don&apos;t need to validate or migrate any data.&lt;/b&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EndDateMustBeLaterThanCloseWonOpp</name>
@@ -1319,15 +1322,15 @@
     </customLabels>
     <customLabels>
         <name>RD2_InstallmentFrequencyMustBeValid</name>
-        <label>Installment Frequency is required. Enter a value between 1 and 20.</label>
+        <label>Instalment Frequency is required. Enter a value between 1 and 20.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ElevateInstallmentPeriodMustBeValid</name>
-        <label>{0} is not a supported Installment Period for Elevate connected Recurring Donations.</label>
+        <label>{0} is not a supported Instalment Period for Elevate connected Recurring Donations.</label>
     </customLabels>
     <customLabels>
         <name>RD2_InstallmentPeriodMustBeValid</name>
-        <label>{0} is not a supported value for Installment Period. Select Daily, Weekly, 1st and 15th, Monthly, or Yearly.</label>
+        <label>{0} is not a supported value for Instalment Period. Select Daily, Weekly, 1st and 15th, Monthly, or Yearly.</label>
     </customLabels>
     <customLabels>
         <name>RD2_InstallmentStatusSkipped</name>
@@ -1347,15 +1350,15 @@
     </customLabels>
     <customLabels>
         <name>RD2_NumberInstallmentsRequiredWhenFixed</name>
-        <label>Number of Planned Installments is required when Recurring Type is Fixed.</label>
+        <label>Number of Planned Instalments is required when Recurring Type is Fixed.</label>
     </customLabels>
     <customLabels>
         <name>RD2_NumberInstallmentsNotAllowedWhenOpen</name>
-        <label>Number of Planned Installments is for Fixed Recurring Donations only. Remove the value in Number of Planned Installments or change the Recurring Type to Fixed.</label>
+        <label>Number of Planned Instalments is for Fixed Recurring Donations only. Remove the value in Number of Planned Instalments or change the Recurring Type to Fixed.</label>
     </customLabels>
     <customLabels>
         <name>RD2_NumberInstallmentsCannotBeLessThanPaid</name>
-        <label>Number of Planned Installments can&apos;t be less than the Number of Paid Installments.</label>
+        <label>Number of Planned Instalments can&apos;t be less than the Number of Paid Instalments.</label>
     </customLabels>
     <customLabels>
         <name>RD2_PageNotAvailableHeader</name>
@@ -1379,7 +1382,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_PauseDescription</name>
-        <label>Select installments from the list below. You can pause for up to 12 consecutive installments.</label>
+        <label>Select instalments from the list below. You can pause for up to 12 consecutive instalments.</label>
     </customLabels>
     <customLabels>
         <name>RD2_PausePermissionRequired</name>
@@ -1411,11 +1414,11 @@
     </customLabels>
     <customLabels>
         <name>RD2_PauseSelectedInstallmentTextPlural</name>
-        <label>You&apos;ve selected {0} installments.</label>
+        <label>You&apos;ve selected {0} instalments.</label>
     </customLabels>
     <customLabels>
         <name>RD2_PauseSelectedInstallmentTextSingular</name>
-        <label>You&apos;ve selected 1 installment.</label>
+        <label>You&apos;ve selected 1 instalment.</label>
     </customLabels>
     <customLabels>
         <name>RD2_PauseStartDateMustBeTodayOrLater</name>
@@ -1459,7 +1462,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_ScheduleVisualizerFLSInstallment</name>
-        <label>You don&apos;t have permissions to view Upcoming Installments. Please contact your system administrator for more information.</label>
+        <label>You don&apos;t have permissions to view Upcoming Instalments. Please contact your system administrator for more information.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ScheduleVisualizerFLSSchedule</name>
@@ -1467,7 +1470,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_ScheduleVisualizerMessageNoSchedule</name>
-        <label>There are no scheduled installment Opportunities.</label>
+        <label>There are no scheduled instalment Opportunities.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ScheduleVisualizerMessageNoActiveSchedule</name>
@@ -1475,7 +1478,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_ScheduleVisualizerTitle</name>
-        <label>Upcoming Installments</label>
+        <label>Upcoming Instalments</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationConfigurationSection</name>
@@ -1495,7 +1498,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationIntro</name>
-        <label>These settings automate changing the Recurring Donation Status when donors miss installment payments.&lt;br/&gt;&lt;br/&gt;For example, given a monthly Recurring Donation started on January 1st, and Number of Days for Lapsed is set to 10 days, the Recurring Donation becomes Lapsed on February 12th if no installment payment is received. If Number of Days for Closed is set to 20 days, the Recurring Donation becomes Closed on February 22nd.&lt;br/&gt;&lt;br/&gt;Salesforce begins counting Number of Days for Lapsed and Number of Days for Closed on the day after the expected installment date (February 2nd in our example).</label>
+        <label>These settings automate changing the Recurring Donation Status when donors miss instalment payments.&lt;br/&gt;&lt;br/&gt;For example, given a monthly Recurring Donation started on January 1st, and Number of Days for Lapsed is set to 10 days, the Recurring Donation becomes Lapsed on February 12th if no instalment payment is received. If Number of Days for Closed is set to 20 days, the Recurring Donation becomes Closed on February 22nd.&lt;br/&gt;&lt;br/&gt;Salesforce begins counting Number of Days for Lapsed and Number of Days for Closed on the day after the expected instalment date (February 2nd in our example).</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusAutomationInvalidClosedStatus</name>
@@ -1535,7 +1538,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_StatusMappingColumnState</name>
-        <label>State</label>
+        <label>State/Province</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusMappingColumnStatusAPIName</name>
@@ -1543,9 +1546,9 @@
     </customLabels>
     <customLabels>
         <name>RD2_StatusMappingDefinitions</name>
-        <label>&lt;b&gt;State Definitions&lt;/b&gt;&lt;br/&gt;&lt;ul&gt;&lt;li&gt;Active: The donor is actively donating. NPSP creates installment Opportunities as defined by the Recurring Donation schedule.&lt;/li&gt;
-&lt;li&gt;Lapsed: Donations aren&apos;t being received as expected, but NPSP still creates installment Opportunities as defined by the Recurring Donation schedule.&lt;/li&gt;
-&lt;li&gt;Closed: The donor has stopped making donations for this Recurring Donation. NPSP doesn&apos;t create any new installment Opportunities.&lt;/li&gt;&lt;/ul&gt;</label>
+        <label>&lt;b&gt;State Definitions&lt;/b&gt;&lt;br/&gt;&lt;ul&gt;&lt;li&gt;Active: The donor is actively donating. NPSP creates instalment Opportunities as defined by the Recurring Donation schedule.&lt;/li&gt;
+&lt;li&gt;Lapsed: Donations aren&apos;t being received as expected, but NPSP still creates instalment Opportunities as defined by the Recurring Donation schedule.&lt;/li&gt;
+&lt;li&gt;Closed: The donor has stopped making donations for this Recurring Donation. NPSP doesn&apos;t create any new instalment Opportunities.&lt;/li&gt;&lt;/ul&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_StatusMappingDeploymentAlreadyInProgress</name>
@@ -1710,7 +1713,7 @@
     </customLabels>
     <customLabels>
         <name>RD_ErrorMoreClosedWonOpportunitiesThanInstallments</name>
-        <label>There are more Closed Won Opportunities associated with this Recurring Donation than the number of Installments defined.</label>
+        <label>There are more Closed Won Opportunities associated with this Recurring Donation than the number of Instalments defined.</label>
     </customLabels>
     <customLabels>
         <name>RD_ErrorNotEnoughClosedValueForFixedLength</name>
@@ -1718,7 +1721,7 @@
     </customLabels>
     <customLabels>
         <name>RD_RefreshOppsContinueMessage</name>
-        <label>This process updates all future installment Opportunities to match the current data for this Recurring Donation. For some installments, NPSP may delete and recreate new installments.
+        <label>This process updates all future instalment Opportunities to match the current data for this Recurring Donation. For some instalments, NPSP may delete and recreate new instalments.
 &lt;br/&gt;&lt;br/&gt;Click Continue to start the process or Cancel to return to the Recurring Donation page.</label>
     </customLabels>
     <customLabels>
@@ -1871,7 +1874,7 @@
     </customLabels>
     <customLabels>
         <name>Zip_Not_Found</name>
-        <label>Zip/postal code not found.</label>
+        <label>Zip/Postal code not found.</label>
     </customLabels>
     <customLabels>
         <name>Zipcode_Verification_Limit</name>
@@ -3005,6 +3008,10 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
         <label>Process Batch &amp; Payments</label>
     </customLabels>
     <customLabels>
+        <name>bgeEditPaymentInformation</name>
+        <label>You can&apos;t edit this Elevate-connected gift until you re-enter the payment information. Select Edit Payment Information.</label>
+    </customLabels>
+    <customLabels>
         <name>bgeRetirementWarningBody</name>
         <label>On July 13, 2021, legacy Batch Gift Entry will be retired and will no longer work in NPSP. If you have any in-progress batches at that time, you can still access those records, but you can&apos;t process them using Batch Gift Entry. To ensure a smooth transition, enable and use the newer Gift Entry in advance of July 13th.</label>
     </customLabels>
@@ -3162,6 +3169,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
         <label>You don&apos;t have the required permissions to perform this action. Contact your system administrator for assistance.</label>
     </customLabels>
     <customLabels>
+        <name>commonAccountNumber</name>
+        <label>Account Number</label>
+    </customLabels>
+    <customLabels>
+        <name>commonACHLast4</name>
+        <label>ACH Last 4</label>
+    </customLabels>
+    <customLabels>
         <name>commonActivate</name>
         <label>Activate</label>
     </customLabels>
@@ -3172,6 +3187,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     <customLabels>
         <name>commonAmount</name>
         <label>Amount</label>
+    </customLabels>
+    <customLabels>
+        <name>gePaymentProcessedWarning</name>
+        <label>{0} successfully processed the payment. Changing the donor, date, amount, or payment method will result in inconsistent records for the same transaction in {0} and NPSP.</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpAdvancedMapping3</name>
+        <label>Find complete Advanced Mapping setup documentation &lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpCustomizableRollupsEnable1</name>
+        <label>You can find complete Customisable Rollups documentation &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpHHObjectOverview</name>
+        <label>To learn more about the recommended Household Account model, see the &lt;a href=&quot;https://powerofus.force.com/NPSP_Account_Model&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>commonAssistiveError</name>
@@ -3204,6 +3235,10 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     <customLabels>
         <name>commonCardLast4</name>
         <label>Card Last 4</label>
+    </customLabels>
+    <customLabels>
+        <name>commonCVC</name>
+        <label>CVC</label>
     </customLabels>
     <customLabels>
         <name>commonCVV</name>
@@ -3372,6 +3407,10 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     <customLabels>
         <name>commonReviewForm</name>
         <label>Review Form</label>
+    </customLabels>
+    <customLabels>
+        <name>commonRoutingNumber</name>
+        <label>Routing Number</label>
     </customLabels>
     <customLabels>
         <name>commonAdminPermissionErrorMessage</name>
@@ -3723,7 +3762,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</label
     </customLabels>
     <customLabels>
         <name>geAuthorizingCreditCard</name>
-        <label>Authorising...</label>
+        <label>Authorizing...</label>
     </customLabels>
     <customLabels>
         <name>geBatchGiftsCount</name>
@@ -3866,7 +3905,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>geBodyPaymentProcessedDuringBatchProcessing</name>
-        <label>The donor&apos;s credit card will be processed when you process the batch.</label>
+        <label>The donor&apos;s payment will be processed when you process the batch.</label>
     </customLabels>
     <customLabels>
         <name>geBodyTemplateInfoLeftCol</name>
@@ -4050,7 +4089,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>geFixedGiftSchedule</name>
-        <label>{0} {1} donation starting on {2} and ending after {3} installments.</label>
+        <label>{0} {1} donation starting on {2} and ending after {3} instalments.</label>
     </customLabels>
     <customLabels>
         <name>geRecurringScheduleInformation</name>
@@ -5048,6 +5087,10 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <label>Invalid configuration parameters were provided</label>
     </customLabels>
     <customLabels>
+        <name>geRD2FirstInstallmentPaid</name>
+        <label>First instalment paid</label>
+    </customLabels>
+    <customLabels>
         <name>geSearchPlaceholder</name>
         <label>Search...</label>
     </customLabels>
@@ -5369,11 +5412,11 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>healthDetailsInvalidRDCustomPeriod</name>
-        <label>Custom Installment Period {0} is not included in the picklist values for Recurring Donation field Installment Period.</label>
+        <label>Custom Instalment Period {0} is not included in the picklist values for Recurring Donation field Instalment Period.</label>
     </customLabels>
     <customLabels>
         <name>healthDetailsInvalidRDCustomPeriodPIcklist</name>
-        <label>Recurring Donation Installment Period picklist value {0} is not a valid Custom Installment Period.</label>
+        <label>Recurring Donation Instalment Period picklist value {0} is not a valid Custom Instalment Period.</label>
     </customLabels>
     <customLabels>
         <name>healthDetailsInvalidPicklistValue</name>
@@ -5469,7 +5512,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>healthDetailsValidRDCustomPeriod</name>
-        <label>Recurring Donation Custom Installment Periods are valid.</label>
+        <label>Recurring Donation Custom Instalment Periods are valid.</label>
     </customLabels>
     <customLabels>
         <name>healthLabelAccountData</name>
@@ -5713,11 +5756,11 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>healthSolutionInvalidRDCustomPeriod</name>
-        <label>Add this Recurring Donation Installment Period picklist value in Salesforce Setup.</label>
+        <label>Add this Recurring Donation Instalment Period picklist value in Salesforce Setup.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionInvalidRDCustomPeriodPicklist</name>
-        <label>On the NPSP Settings tab, click {0} | {1}, and add the missing Recurring Donation Custom Installment Period, or delete the picklist value from the Installment Period field.</label>
+        <label>On the NPSP Settings tab, click {0} | {1}, and add the missing Recurring Donation Custom Instalment Period, or delete the picklist value from the Instalment Period field.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionInvalidScheduledJob</name>
@@ -6212,22 +6255,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <label>A paid Payment must have a Payment Date.</label>
     </customLabels>
     <customLabels>
-        <name>pmtRefundPaymentDate</name>
-        <label>Payment Date</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundPaymentErrorMessage</name>
-        <label>There was an error processing the refund.</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundAmountInvalid</name>
-        <label>Enter a refund that&apos;s less than or equal to the remaining balance.</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundPaymentSuccessMessage</name>
-        <label>Refund was successful.</label>
-    </customLabels>
-    <customLabels>
         <name>pmtPaymentNotFound</name>
         <label>The corresponding Elevate payment record couldn&apos;t be found. Contact your Salesforce admin for help.</label>
     </customLabels>
@@ -6236,20 +6263,52 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <label>This payment has already been refunded, or is a refund itself.</label>
     </customLabels>
     <customLabels>
+        <name>pmtRefundAllocationHelpText</name>
+        <label>Fixed GAU Allocations are changed to percentages to adjust for this refund.</label>
+    </customLabels>
+    <customLabels>
         <name>pmtRefundAmount</name>
         <label>Refund Amount</label>
     </customLabels>
     <customLabels>
-        <name>pmtRefundProcessing</name>
-        <label>Refund submitted for processing. Check for the refunded Payment on the Opportunity record.</label>
+        <name>pmtRefundAmountInvalid</name>
+        <label>Enter a refund that&apos;s less than or equal to the remaining balance.</label>
     </customLabels>
     <customLabels>
         <name>pmtRefundPaymentConfirmedButton</name>
         <label>Refund Payment</label>
     </customLabels>
     <customLabels>
+        <name>pmtRefundPaymentDate</name>
+        <label>Payment Date</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentErrorMessage</name>
+        <label>There was an error processing the refund.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmountTooHigh</name>
+        <label>Refund can&apos;t be more than {{AMOUNT}}.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmountTooLow</name>
+        <label>Enter a refund that&apos;s more than 0.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundProcessing</name>
+        <label>Refund submitted for processing. Check for the refunded Payment on the Opportunity record.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentSuccessMessage</name>
+        <label>Refund was successful.</label>
+    </customLabels>
+    <customLabels>
         <name>pmtRefundPaymentTitle</name>
         <label>Refund Payment?</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRemainingBalance</name>
+        <label>Remaining Balance</label>
     </customLabels>
     <customLabels>
         <name>pmtUnpaidPaymentScheduledDateRequired</name>
@@ -6385,7 +6444,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>pmtWizardWriteoffMessage</name>
-        <label>You are preparing to write off {0} Payment(s) totaling {1}</label>
+        <label>You are preparing to write off {0} Payment(s) totalling {1}</label>
     </customLabels>
     <customLabels>
         <name>pmtWizardWriteoffNoAccessMessage</name>
@@ -6400,8 +6459,88 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <label>A written off Payment must have a Payment Date.</label>
     </customLabels>
     <customLabels>
+        <name>psACH</name>
+        <label>ACH (bank account)</label>
+    </customLabels>
+    <customLabels>
+        <name>psElevateConnectionTimeout</name>
+        <label>The connection to Elevate timed out. Try again later.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayDefault</name>
+        <label>Always Use Default Gateway</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewaySelectionLabel</name>
+        <label>NPSP uses the gateway that was added to Elevate most recently unless you override it. To set a default Elevate payment gateway, select it here.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewaysNotFound</name>
+        <label>No Payment Gateways were found. Check your Elevate Account.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayNotValid</name>
+        <label>We can&apos;t validate the previously saved gateway. Select a different gateway.</label>
+    </customLabels>
+    <customLabels>
+        <name>psHideGatewaysAndMethods</name>
+        <label>Hide Elevate Gateways and Payment Methods</label>
+    </customLabels>
+    <customLabels>
+        <name>psHidePaymentMethods</name>
+        <label>Hide Payment Methods</label>
+    </customLabels>
+    <customLabels>
+        <name>psPaymentGateway</name>
+        <label>Payment Gateway:</label>
+    </customLabels>
+    <customLabels>
+        <name>psSelectPaymentGateway</name>
+        <label>Select Payment Gateway</label>
+    </customLabels>
+    <customLabels>
+        <name>psSelectPaymentMethods</name>
+        <label>Select Payment Methods</label>
+    </customLabels>
+    <customLabels>
         <name>psSelectValidPaymentMethod</name>
         <label>To enter payment, select a valid Payment Method.</label>
+    </customLabels>
+    <customLabels>
+        <name>psShowGatewaysAndMethods</name>
+        <label>Show Elevate Gateways and Payment Methods</label>
+    </customLabels>
+    <customLabels>
+        <name>psEnableGatewayAssignment</name>
+        <label>Enable Gateway Assignment</label>
+    </customLabels>
+    <customLabels>
+        <name>psEnableGatewayAssignmentHeader</name>
+        <label>Enable Gateway Assignment</label>
+    </customLabels>
+    <customLabels>
+        <name>psEnableGatewayAssignmentHelp</name>
+        <label>Enabling gateway assignment allows you to select the payment gateway and respective payment methods when modifying Gift Entry Templates.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayManagementHelp</name>
+        <label>These settings manage the payment gateways for Elevate transactions.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayIDHeader</name>
+        <label>Gateway ID</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayIDHelp</name>
+        <label>NPSP uses the gateway that was added to Elevate most recently unless you override it. To change the gateway NPSP usess, click Edit, enter the gateway ID, and save your work. Find the gateway ID in the Elevate Admin Console | Gateway Management.</label>
+    </customLabels>
+    <customLabels>
+        <name>psShowPaymentMethods</name>
+        <label>Show Payment Methods</label>
+    </customLabels>
+    <customLabels>
+        <name>psUnableToConnect</name>
+        <label>Unable to connect to Elevate. Check your connection and try again.</label>
     </customLabels>
     <customLabels>
         <name>ProgressMarkerAssistiveTextProgress</name>
@@ -6501,7 +6640,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>sendAcknowledgmentFailedStatus</name>
-        <label>Email Acknowledgment Not Sent</label>
+        <label>Email Acknowledgement Not Sent</label>
     </customLabels>
     <customLabels>
         <name>sendAcknowledgmentFailureReasons</name>
@@ -6509,11 +6648,11 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>sendAcknowledgmentFireStatus</name>
-        <label>Email Acknowledgment Now</label>
+        <label>Email Acknowledgement Now</label>
     </customLabels>
     <customLabels>
         <name>sendAcknowledgmentNoneSelected</name>
-        <label>You must select one or more Opportunities before clicking Email Acknowledgments.</label>
+        <label>You must select one or more Opportunities before clicking Email Acknowledgements.</label>
     </customLabels>
     <customLabels>
         <name>sendAcknowledgmentNumberNoEmail</name>
@@ -6521,15 +6660,15 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>sendAcknowledgmentNumberSent</name>
-        <label>{0} acknowledgment(s) sent.</label>
+        <label>{0} acknowledgement(s) sent.</label>
     </customLabels>
     <customLabels>
         <name>sendAcknowledgmentNumberAlreadySent</name>
-        <label>{0} acknowledgment(s) already sent.</label>
+        <label>{0} acknowledgement(s) already sent.</label>
     </customLabels>
     <customLabels>
         <name>sendAcknowledgmentPageTitle</name>
-        <label>Email Acknowledgments</label>
+        <label>Email Acknowledgements</label>
     </customLabels>
     <customLabels>
         <name>sendAcknowledgmentReturnLinkLabel</name>
@@ -6605,7 +6744,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>stgBtnCreateRDPeriod</name>
-        <label>Create Custom Installment Period</label>
+        <label>Create Custom Instalment Period</label>
     </customLabels>
     <customLabels>
         <name>stgBtnCreateRelReciprocal</name>
@@ -6649,7 +6788,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </customLabels>
     <customLabels>
         <name>stgBtnNewRDPeriod</name>
-        <label>New Custom Installment Period</label>
+        <label>New Custom Instalment Period</label>
     </customLabels>
     <customLabels>
         <name>stgBtnNewRelReciprocal</name>
@@ -6983,9 +7122,9 @@ Once the process is 100% complete, you can safely leave or refresh this page.</l
     </customLabels>
     <customLabels>
         <name>stgHelpCustomizableRollupsEnable2</name>
-        <label>When you enable Customisable Rollups for the first time, we will automatically convert your existing rollups and the 87 out-of-box NPSP rollups into Customisable Rollups.
+        <label>When you enable Customizable Rollups for the first time, we will automatically convert your existing rollups and the 87 out-of-box NPSP rollups into Customizable Rollups.
             &lt;br/&gt;&lt;br/&gt;
-            You can disable and go back to legacy rollups, but any new rollups or rollup/filter changes made in Customisable Rollups won&apos;t be applied to your legacy rollup settings.</label>
+            You can disable and go back to legacy rollups, but any new rollups or rollup/filter changes made in Customizable Rollups won&apos;t be applied to your legacy rollup settings.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpCustomizableRollupsEnable3</name>
@@ -7009,7 +7148,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</l
     </customLabels>
     <customLabels>
         <name>stgHelpEnhancedRDBatch</name>
-        <label>This utility runs a batch process that creates the next scheduled installment Opportunities for Recurring Donations and updates the Recurring Donation Statistics fields.
+        <label>This utility runs a batch process that creates the next scheduled instalment Opportunities for Recurring Donations and updates the Recurring Donation Statistics fields.
         &lt;br/&gt;&lt;br/&gt;
         This process may take some time, but you can close this page and the process will continue in the background.</label>
     </customLabels>
@@ -7211,7 +7350,7 @@ IMPORTANT: Both of these fields must have the same data type.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPowerOfUsHub</name>
-        <label>Got questions? Try the &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; group for questions about NPSP and the &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; group for questions about Salesforce administration and configuration.&lt;br/&gt;&lt;br/&gt;Keep up with the latest NPSP release notes in the &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;Nonprofit Release Readiness&lt;/a&gt; group.</label>
+        <label>Got questions? Try the &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; group for questions about NPSP and the &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; group for questions about Salesforce administration and configuration.&lt;br/&gt;&lt;br/&gt;Keep up with the latest NPSP release notes in the &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC.htm&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt; group.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPrimaryContactBatch</name>
@@ -7249,7 +7388,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</l
     </customLabels>
     <customLabels>
         <name>stgHelpRDAddCampaign</name>
-        <label>When selected, NPSP copies the Campaign you specified on the Recurring Donation to its installment Opportunities.</label>
+        <label>When selected, NPSP copies the Campaign you specified on the Recurring Donation to its instalment Opportunities.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRDBatch</name>
@@ -7257,7 +7396,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</l
 &lt;br/&gt;
 &lt;br/&gt;
 ● creates new opportunities&lt;br/&gt;
-● updates the number of Installments and Paid Amount&lt;br/&gt;
+● updates the number of Instalments and Paid Amount&lt;br/&gt;
 &lt;br/&gt;
 This process may take some time, but you can close this page and the process will continue in the background.</label>
     </customLabels>
@@ -7291,7 +7430,7 @@ This process may take some time, but you can close this page and the process wil
     </customLabels>
     <customLabels>
         <name>stgHelpRDMaxDonations</name>
-        <label>Restricts the total number of Donations (installments) for Fixed-Length Recurring Donations. The default is 50.</label>
+        <label>Restricts the total number of Donations (instalments) for Fixed-Length Recurring Donations. The default is 50.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRDOpenOppBehavior</name>
@@ -7303,23 +7442,23 @@ This process may take some time, but you can close this page and the process wil
     </customLabels>
     <customLabels>
         <name>stgHelpRDOppRT</name>
-        <label>The Opportunity record type assigned to the Recurring Donation&apos;s installment Opportunities.</label>
+        <label>The Opportunity record type assigned to the Recurring Donation&apos;s instalment Opportunities.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRDInstallmentCreateOptionMessage</name>
-        <label>Specifies when NPSP will create installment Opportunities for Recurring Donations. The default is Always Create Next Installment.</label>
+        <label>Specifies when NPSP will create instalment Opportunities for Recurring Donations. The default is Always Create Next Instalment.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRDPeriodFrequency</name>
-        <label>The amount of time the Custom Installment Period covers.</label>
+        <label>The amount of time the Custom Instalment Period covers.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRDPeriodName</name>
-        <label>The name of the new Custom Installment Period.</label>
+        <label>The name of the new Custom Instalment Period.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRDPeriodType</name>
-        <label>The unit of time (days, weeks, months, years) for the Custom Installment Period.</label>
+        <label>The unit of time (days, weeks, months, years) for the Custom Instalment Period.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRDSuccesses</name>
@@ -7327,7 +7466,7 @@ This process may take some time, but you can close this page and the process wil
     </customLabels>
     <customLabels>
         <name>stgHelpRecDon</name>
-        <label>This setting lets you create Custom Installment Periods for Recurring Donations, different from the default Installment Periods (monthly, quarterly, yearly, and so on) that come with NPSP.</label>
+        <label>This setting lets you create Custom Instalment Periods for Recurring Donations, different from the default Instalment Periods (monthly, quarterly, yearly, and so on) that come with NPSP.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRelAutoCreatedDup</name>
@@ -7484,15 +7623,15 @@ To check your existing settings, go to Duplicate Rules under Setup. For any rule
     </customLabels>
     <customLabels>
         <name>stgInstallmentOppDisableAll</name>
-        <label>Disable All Installments</label>
+        <label>Disable All Instalments</label>
     </customLabels>
     <customLabels>
         <name>stgInstallmentOppDisableFirst</name>
-        <label>Disable First Installment on Create</label>
+        <label>Disable First Instalment on Create</label>
     </customLabels>
     <customLabels>
         <name>stgInstallmentOppEnableAll</name>
-        <label>Always Create Next Installment</label>
+        <label>Always Create Next Instalment</label>
     </customLabels>
     <customLabels>
         <name>stgInstallScriptError</name>
@@ -7766,11 +7905,11 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </customLabels>
     <customLabels>
         <name>stgLabelRDNewPeriod</name>
-        <label>New Installment Period</label>
+        <label>New Instalment Period</label>
     </customLabels>
     <customLabels>
         <name>stgLabelRDPeriod</name>
-        <label>Custom Installment Periods</label>
+        <label>Custom Instalment Periods</label>
     </customLabels>
     <customLabels>
         <name>stgLabelRDSettings</name>
@@ -7978,7 +8117,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </customLabels>
     <customLabels>
         <name>stgNavRDInstallmentPeriods</name>
-        <label>Recurring Donation Custom Installment Periods</label>
+        <label>Recurring Donation Custom Instalment Periods</label>
     </customLabels>
     <customLabels>
         <name>stgNavRecurringDonations</name>
@@ -8293,7 +8432,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <label>New Recurring Donation</label>
     </quickActions>
     <quickActions>
-        <name>npe01__oppPayment__c.Refund</name>
+        <name>npe01__OppPayment__c.Refund</name>
         <label>Refund</label>
     </quickActions>
     <quickActions>

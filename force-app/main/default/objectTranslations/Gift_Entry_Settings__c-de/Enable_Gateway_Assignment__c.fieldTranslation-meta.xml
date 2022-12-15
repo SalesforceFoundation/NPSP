@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Enable_Gateway_Assignment__c</name>
+    <help>Ermöglicht die Verwendung verschiedener Elevate-Gateways für Elevate-Batches für den Spendeneintrag. Ohne Aktivierung wird immer das Standard-Gateway verwendet.</help>
+    <label>Gateway-Zuweisung aktivieren</label>
+</CustomFieldTranslation>

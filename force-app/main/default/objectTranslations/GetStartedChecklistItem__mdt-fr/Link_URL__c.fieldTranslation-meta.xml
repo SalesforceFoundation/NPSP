@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Link_URL__c</name>
-    <help>L&apos;URL cible d&apos;un lien dans la page Premiers pas.</help>
+    <help>L'URL cible d'un lien dans la page Premiers pas.</help>
     <label>URL du lien</label>
 </CustomFieldTranslation>

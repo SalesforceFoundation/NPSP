@@ -36,10 +36,10 @@
     <startsWith>Consonant</startsWith>
     <caseValues>
         <plural>false</plural>
-        <value>Lot d&apos;importation de données NPSP</value>
+        <value>Lot d'importation de données NPSP</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value>Lots d&apos;importation de données NPSP</value>
+        <value>Lots d'importation de données NPSP</value>
     </caseValues>
 </CustomObjectTranslation>

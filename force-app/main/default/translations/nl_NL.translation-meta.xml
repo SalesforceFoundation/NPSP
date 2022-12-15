@@ -833,6 +833,10 @@
         <label>Geldige betalingswijzen voor een actieve, aan Elevate gekoppelde terugkerende donatie zijn Creditcard of ACH.</label>
     </customLabels>
     <customLabels>
+        <name>RD2_ElevatePauseInstallmentDateErrorMessage</name>
+        <label>We kunnen een aan Elevate gekoppelde terugkerende donatie niet minder dan twee dagen vóór de installatiedatum pauzeren.</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_CurrencyChangeIsRestrictedOnRD</name>
         <label>U kunt de valuta van Terugkerende donatie valuta niet wijzigen wanneer er een gerelateerde gesloten Opportunity is.</label>
     </customLabels>
@@ -1063,8 +1067,7 @@
     <customLabels>
         <name>RD2_EnablementIntro</name>
         <label>Gegroet! Uitgebreide terugkerende donaties is onze nieuw ontworpen en verbeterde voorziening voor terugkerende donaties voor het Nonprofit Success Pack (NPSP). Onze grote dank gaat naar communityleden die hun feedback hebben gegeven en hebben geholpen om uitgebreide terugkerende donaties mogelijk te maken.
-        &lt;br/&gt;&lt;br/&gt;Aangezien er al een voorziening Terugkerende donaties in NPSP is, moet u diverse upgradetaken uitvoeren en uw bestaande gegevens overzetten naar het model Uitgebreide terugkerende donaties. Hieronder hebben we de vereiste taken voor u op een rijtje gezet.
-        &lt;br/&gt;&lt;br/&gt;Waarschijnlijk hebt u later nog wat vragen; daarom willen we u volledig voorbereiden bij elke stap.</label>
+        &lt;br/&gt;&lt;br/&gt;Aangezien er al een voorziening Terugkerende donaties in NPSP is, moet u diverse upgradetaken uitvoeren en uw bestaande gegevens overzetten naar het model Uitgebreide terugkerende donaties. Hieronder hebben we de vereiste taken voor u op een rijtje gezet.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMetaDeployConfirm</name>
@@ -1112,7 +1115,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationErrorMessage</name>
-        <label>De uitvoering van uw migratie bevat fouten; deze moeten worden gecorrigeerd om de migratie te kunnen voltooien. Bekijk de fouten door naar NPSP-instellingen &gt; Systeemtools &gt; Foutenlogboeken te gaan.</label>
+        <label>Uw migratie-uitvoering bevat fouten. Deze moeten worden opgelost om een migratie te voltooien. Bekijk de fouten door naar NPSP-instellingen &gt; Systeemtools &gt; Foutenlogboeken te gaan.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationIntro</name>
@@ -1153,7 +1156,7 @@
     <customLabels>
         <name>RD2_EnablementPrepTasks</name>
         <label>&lt;ul&gt;&lt;li&gt;Schakel workflows, processen, validatieregels en triggers uit voor de objecten Terugkerende donaties, Opportunity en Betaling.&lt;/li&gt;
-&lt;li&gt;Maak een back-up van uw database, inclusief alle terugkerende donaties en hun gerelateerde records.&lt;/li&gt;</label>
+&lt;li&gt;Maak een back-up van uw database, inclusief alle terugkerende donaties en hun gerelateerde records.&lt;/li&gt;&lt;/ul&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementPrepTitle</name>
@@ -1162,7 +1165,7 @@
     <customLabels>
         <name>RD2_EnablementSimpleIntro</name>
         <label>Met uitgebreide terugkerende donaties worden terugkerende donaties flexibeler en eenvoudiger te beheren dan ooit tevoren. Als u uitgebreide terugkerende donaties wilt inschakelen, volgt u de onderstaande stappen. U moet ALLE stappen uitvoeren om uitgebreide terugkerende donaties volledig in te schakelen.
-            &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Omdat er geen records zijn voor terugkerende donaties, hoeft u geen gegevens te valideren of migreren.&lt;/b&gt;</label>
+        &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Omdat er geen records zijn voor terugkerende donaties, hoeft u geen gegevens te valideren of migreren.&lt;/b&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EndDateMustBeLaterThanCloseWonOpp</name>
@@ -2101,7 +2104,7 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>Sinds 1 oktober 2020 wordt Batchgegevensinvoer niet meer ondersteund. De meeste opties zijn vervangen door nieuwere functies in NPSP. Als u nog actieve batches hebt, kunt u de records nog wel openen, maar niet meer verwerken met Batchgegevensinvoer. Neem contact op met Support als u toegang wilt tot deze batches.</label>
+        <label>Sinds 1 oktober 2020 wordt Batchgegevensinvoer niet meer ondersteund. De meeste opties zijn vervangen door nieuwere functies in NPSP. Als u nog actieve batches hebt, kunt u de records nog wel openen, maar niet meer verwerken met Batchgegevensinvoer. Neem contact op met Support als u toegang wilt tot deze batches. &lt;br/&gt; Mogelijk is Opgave van gift een goed alternatief voor Batchgegevensinvoer.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
@@ -3005,8 +3008,12 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
         <label>Batch en betalingen verwerken</label>
     </customLabels>
     <customLabels>
+        <name>bgeEditPaymentInformation</name>
+        <label>U kunt deze aan Elevate gekoppelde terugkerende donatie niet bewerken, totdat u de betalingsgegevens opnieuw invoert. Selecteer Betalingsgegevens bewerken.</label>
+    </customLabels>
+    <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>Op 13 juli 2021 wordt de verouderde functie Batchinvoer van giften buiten gebruik gesteld; de functie is dan niet meer beschikbaar in NPSP. Als u op dat moment actieve batches hebt, kunt u de records nog wel openen, maar u kunt ze niet meer verwerken met Batchinvoer van giften. Als u voor een goede overgang wilt zorgen, schakelt u de nieuwere functie Opgave van gift op voorhand in en neemt u deze al in gebruik vóór 13 juli.</label>
+        <label>Op 13 juli 2021 wordt de verouderde Batchinvoer van giften buiten gebruik gesteld; de functie is dan niet meer beschikbaar in NPSP. Als u op dat moment actieve batches hebt, kunt u de records nog wel openen, maar u kunt ze niet meer verwerken met Batchinvoer van giften. Als u voor een goede overgang wilt zorgen, schakelt u de nieuwere Opgave van gift op voorhand in en neemt u dit al in gebruik vóór 1 oktober.</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -3018,9 +3025,9 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
     </customLabels>
     <customLabels>
         <name>bgeNotSupportedBody</name>
-        <label>Op 13 juli 2021 wordt Batchinvoer van giften niet meer ondersteund en wordt dit vervangen door Opgave van gift.
+        <label>Sinds 13 juli 2021 wordt Batchinvoer van giften niet meer ondersteund. De meeste opties zijn vervangen door Opgave van gift.
             Als u nog actieve batches hebt, kunt u de records nog wel openen, maar niet meer verwerken met Batchinvoer van giften.
-            Neem contact op met Support als u toegang wilt tot deze batches.
+            Neem contact op met Support als u toegang wilt tot deze actieve batches.
             Mogelijk is Opgave van gift een goed alternatief voor Batchinvoer van giften.</label>
     </customLabels>
     <customLabels>
@@ -3162,6 +3169,14 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
         <label>U hebt niet de vereiste machtigingen om deze actie te kunnen uitvoeren. Neem voor hulp contact op met de systeembeheerder.</label>
     </customLabels>
     <customLabels>
+        <name>commonAccountNumber</name>
+        <label>Accountnummer</label>
+    </customLabels>
+    <customLabels>
+        <name>commonACHLast4</name>
+        <label>Laatste 4 cijfers ACH</label>
+    </customLabels>
+    <customLabels>
         <name>commonActivate</name>
         <label>Activeren</label>
     </customLabels>
@@ -3172,6 +3187,22 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
     <customLabels>
         <name>commonAmount</name>
         <label>Bedrag</label>
+    </customLabels>
+    <customLabels>
+        <name>gePaymentProcessedWarning</name>
+        <label>{0} heeft de betaling verwerkt. Als u de donateur, de datum, het bedrag of de betalingswijze wijzigt, krijgt u inconsistente records voor dezelfde transactie in {0} en NPSP.</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpAdvancedMapping3</name>
+        <label>Zoek &lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;hier&lt;/a&gt; naar de volledige set-updocumentatie voor Geavanceerd toewijzen.</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpCustomizableRollupsEnable1</name>
+        <label>U vindt &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;hier&lt;/a&gt; alle documentatie over aanpasbare totaliseringen.</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpHHObjectOverview</name>
+        <label>Om meer te weten over het aangeraden Huishoudenaccountmodel, raadpleeg &lt;a href=&quot;https://powerofus.force.com/NPSP_Account_Model&quot; target=&quot;_blank&quot;&gt;NPSP-Documentatie&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>commonAssistiveError</name>
@@ -3204,6 +3235,10 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
     <customLabels>
         <name>commonCardLast4</name>
         <label>Laatste 4 kaart</label>
+    </customLabels>
+    <customLabels>
+        <name>commonCVC</name>
+        <label>CVC</label>
     </customLabels>
     <customLabels>
         <name>commonCVV</name>
@@ -3372,6 +3407,10 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
     <customLabels>
         <name>commonReviewForm</name>
         <label>Controleformulier</label>
+    </customLabels>
+    <customLabels>
+        <name>commonRoutingNumber</name>
+        <label>Routenummer</label>
     </customLabels>
     <customLabels>
         <name>commonAdminPermissionErrorMessage</name>
@@ -3865,7 +3904,7 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
     </customLabels>
     <customLabels>
         <name>geBodyPaymentProcessedDuringBatchProcessing</name>
-        <label>De creditcard van de donateur wordt verwerkt wanneer u de batch verwerkt.</label>
+        <label>De betaling van de donateur wordt verwerkt wanneer u de batch verwerkt.</label>
     </customLabels>
     <customLabels>
         <name>geBodyTemplateInfoLeftCol</name>
@@ -5047,6 +5086,10 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
         <label>Er zijn ongeldige configuratieparameters opgegeven</label>
     </customLabels>
     <customLabels>
+        <name>geRD2FirstInstallmentPaid</name>
+        <label>Eerste termijn betaald</label>
+    </customLabels>
+    <customLabels>
         <name>geSearchPlaceholder</name>
         <label>Zoeken...</label>
     </customLabels>
@@ -5776,7 +5819,7 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
     </customLabels>
     <customLabels>
         <name>healthSolutionTriggerHandlerMismatch</name>
-        <label>Wijzigen aan triggers kunnen op onverwachte wijze invloed hebben op kernfunctionaliteit van NPSP, en moeten grondig worden getest voordat ze op productie worden uitgerold. Als deze wijzigingen onbedoeld zijn, moet u de triggerhandlers opnieuw instellen om ze te laten overeenkomen met de standaardconfiguratie voor NPSP.</label>
+        <label>Wijzigen aan triggers kunnen op onverwachte wijze invloed hebben op kernfunctionaliteit van NPSP, en moeten grondig worden getest voordat ze in productie worden uitgerold. Als deze wijzigingen onbedoeld zijn, moet u de triggerhandlers opnieuw instellen om ze te laten overeenkomen met de standaardconfiguratie voor NPSP.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionUnsupportedPicklistValue</name>
@@ -6211,22 +6254,6 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
         <label>Een betaalde Betaling moet een Betalingsdatum hebben.</label>
     </customLabels>
     <customLabels>
-        <name>pmtRefundPaymentDate</name>
-        <label>Betalingsdatum</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundPaymentErrorMessage</name>
-        <label>Er is een fout opgetreden bij het verwerken van de terugbetaling.</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundAmountInvalid</name>
-        <label>Voer een bedrag voor terugbetaling in dat lager is dan of gelijk is aan het openstaande saldo.</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundPaymentSuccessMessage</name>
-        <label>Terugbetaling is gelukt.</label>
-    </customLabels>
-    <customLabels>
         <name>pmtPaymentNotFound</name>
         <label>De bijbehorende Elevate-betaling is niet gevonden. Neem contact op met uw Salesforce-beheerder voor hulp.</label>
     </customLabels>
@@ -6235,20 +6262,52 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
         <label>Deze betaling is al terugbetaald of betrof zelf een terugbetaling.</label>
     </customLabels>
     <customLabels>
+        <name>pmtRefundAllocationHelpText</name>
+        <label>Vaste GAU-toewijzingen zijn gewijzigd naar percentages om deze terugbetaling aan te passen.</label>
+    </customLabels>
+    <customLabels>
         <name>pmtRefundAmount</name>
         <label>Terugbetalingsbedrag</label>
     </customLabels>
     <customLabels>
-        <name>pmtRefundProcessing</name>
-        <label>Terugbetaling ter verwerking ingediend. Controleer of de terugbetaalde betaling wordt weergegeven op de opportunityrecord.</label>
+        <name>pmtRefundAmountInvalid</name>
+        <label>Voer een bedrag voor terugbetaling in dat lager is dan of gelijk is aan het openstaande saldo.</label>
     </customLabels>
     <customLabels>
         <name>pmtRefundPaymentConfirmedButton</name>
         <label>Betaling terugbetalen</label>
     </customLabels>
     <customLabels>
+        <name>pmtRefundPaymentDate</name>
+        <label>Betalingsdatum</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentErrorMessage</name>
+        <label>Er is een fout opgetreden bij het verwerken van de terugbetaling.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmountTooHigh</name>
+        <label>Terugbetaling kan niet hoger zijn dan {{AMOUNT}}.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmountTooLow</name>
+        <label>Voer een terugbetaling in die hoger is dan 0.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundProcessing</name>
+        <label>Terugbetaling ter verwerking ingediend. Controleer of de terugbetaalde betaling wordt weergegeven op de opportunityrecord.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentSuccessMessage</name>
+        <label>Terugbetaling is gelukt.</label>
+    </customLabels>
+    <customLabels>
         <name>pmtRefundPaymentTitle</name>
         <label>Betaling terugbetalen?</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRemainingBalance</name>
+        <label>Resterend saldo</label>
     </customLabels>
     <customLabels>
         <name>pmtUnpaidPaymentScheduledDateRequired</name>
@@ -6399,8 +6458,88 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
         <label>Een afgeschreven Betaling moet een Betalingsdatum hebben.</label>
     </customLabels>
     <customLabels>
+        <name>psACH</name>
+        <label>ACH (bankrekening)</label>
+    </customLabels>
+    <customLabels>
+        <name>psElevateConnectionTimeout</name>
+        <label>Time-out opgetreden voor Elevate-koppeling. Probeer het later nog eens.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayDefault</name>
+        <label>Altijd standaard gateway gebruiken</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewaySelectionLabel</name>
+        <label>NPSP gebruikt de gateway die het meest recent is toegevoegd aan Elevate, tenzij u deze overschrijft. Als u een standaard Elevate-betalingsgateaway wilt instellen, moet u deze hier selecteren.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewaysNotFound</name>
+        <label>Er zijn geen betalingsgateways gevonden. Controleer uw Elevate-account.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayNotValid</name>
+        <label>We kunnen de voorgaande opgeslagen gateways niet valideren. Selecteer een andere gateway.</label>
+    </customLabels>
+    <customLabels>
+        <name>psHideGatewaysAndMethods</name>
+        <label>Elevate-gateways en betalingsmethoden verbergen</label>
+    </customLabels>
+    <customLabels>
+        <name>psHidePaymentMethods</name>
+        <label>Betalingsmethoden verbergen</label>
+    </customLabels>
+    <customLabels>
+        <name>psPaymentGateway</name>
+        <label>Betalingsgateaway:</label>
+    </customLabels>
+    <customLabels>
+        <name>psSelectPaymentGateway</name>
+        <label>Betalingsgateaway selecteren</label>
+    </customLabels>
+    <customLabels>
+        <name>psSelectPaymentMethods</name>
+        <label>Betalingsmethoden selecteren</label>
+    </customLabels>
+    <customLabels>
         <name>psSelectValidPaymentMethod</name>
         <label>Selecteer een geldige betalingsmethode om uw betaling te verrichten.</label>
+    </customLabels>
+    <customLabels>
+        <name>psShowGatewaysAndMethods</name>
+        <label>Elevate-gateways en betalingsmethoden tonen</label>
+    </customLabels>
+    <customLabels>
+        <name>psEnableGatewayAssignment</name>
+        <label>Gatewaytoewijzing inschakelen</label>
+    </customLabels>
+    <customLabels>
+        <name>psEnableGatewayAssignmentHeader</name>
+        <label>Gatewaytoewijzing inschakelen</label>
+    </customLabels>
+    <customLabels>
+        <name>psEnableGatewayAssignmentHelp</name>
+        <label>Als u gatewaytoewijzing inschakelt, kunt u de betalingsgateway en bijbehorende betalingsmethoden selecteren wanneer u sjablonen voor Opgave van gift aanpast.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayManagementHelp</name>
+        <label>Deze instellingen beheren de betalingsgateaway voor Elevate-transacties.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayIDHeader</name>
+        <label>Gateway-ID</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayIDHelp</name>
+        <label>NPSP gebruikt de gateway die het meest recent is toegevoegd aan Elevate, tenzij u deze overschrijft. Om de gateway die NPSP gebruikt te wijzigen, voert u de gateway-ID in en slaat u uw werk op. Zoek de gateway-ID in de Elevate-beheedersconsole | Gatewaybeheer.</label>
+    </customLabels>
+    <customLabels>
+        <name>psShowPaymentMethods</name>
+        <label>Betalingsmethoden weergeven</label>
+    </customLabels>
+    <customLabels>
+        <name>psUnableToConnect</name>
+        <label>Kan geen verbinding maken met Elevate. Controleer uw verbinding en probeer het opnieuw.</label>
     </customLabels>
     <customLabels>
         <name>ProgressMarkerAssistiveTextProgress</name>
@@ -6785,7 +6924,7 @@ Wanneer Standaard NPSP-taken niet automatisch plannen niet is geselecteerd, cont
 &lt;br/&gt;
 &lt;br/&gt;
 Om deze taken weer te geven, zoekt u naar geplande taken in Salesforce Set-up.
-&lt;Br/&gt;
+&lt;br/&gt;
 &lt;br/&gt;
 Door Standaard NPSP-taken niet automatisch plannen te selecteren, laat u NPSP weten standaardtaken niet te controleren of niet opnieuw te plannen.</label>
     </customLabels>
@@ -7082,7 +7221,7 @@ Wanneer het proces 100% is voltooid, is het veilig de pagina af te sluiten of op
     </customLabels>
     <customLabels>
         <name>stgHelpLeadConvert</name>
-        <label>Specificeert het standaardgedrag voor het maken van Opportunities wanneer u een Lead naar een Contactpersoon converteert. Wanneer dit niet wordt aangevinkt, zal Salesforce NIET automatisch een Opportunity maken wanneer u Leads naar Contactpersonen converteert.</label>
+        <label>Specificeert het standaardgedrag voor het maken van opportunities wanneer u een lead naar een contactpersoon converteert. Wanneer dit niet wordt aangevinkt, zal Salesforce NIET automatisch een opportunity maken wanneer u leads naar contactpersonen converteert.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpLvlAssignBatch</name>
@@ -7138,7 +7277,7 @@ BELANGRIJK: Beide velden moeten van hetzelfde gegevenstype zijn.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCR</name>
-        <label>Soft Credits, Contactpersoonrollen en Overeenkomende Giften zijn in belangrijke mate met elkaar verbonden. Bent u niet vertrouwd met deze concepten en hoe ze elkaar beïnvloeden, leest u de &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Automated_Soft_Credits.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;NPSP-Documentatie&lt;/a&gt; door voordat u enige wijzigingen aan deze instellingen aanbrengt.</label>
+        <label>Soft Credits, contactpersoonrollen en overeenkomende giften zijn in belangrijke mate met elkaar verbonden. Bent u niet vertrouwd met deze concepten en hoe ze elkaar beïnvloeden, leest u de &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Automated_Soft_Credits.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;NPSP-documentatie&lt;/a&gt; door voordat u enige wijzigingen aan deze instellingen aanbrengt.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCRDefaultRole</name>
@@ -7166,7 +7305,7 @@ BELANGRIJK: Beide velden moeten van hetzelfde gegevenstype zijn.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingFormat</name>
-        <label>De Opportunitynaamnotatie. Kies &apos;Anders&apos; om uw eigen notatie te maken.</label>
+        <label>De indeling van de opportunitynaam. Kies Overige om uw eigen te maken.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingRecTypes</name>
@@ -7210,7 +7349,7 @@ BELANGRIJK: Beide velden moeten van hetzelfde gegevenstype zijn.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPowerOfUsHub</name>
-        <label>Hebt u vragen? Probeer de groep &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; uit voor vragen over NPSP en de groep &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;Systeembeheerders&lt;/a&gt; voor vragen over Salesforce-administratie en -configuratie.&lt;br/&gt;&lt;br/&gt;Zorg dat u altijd op de hoogte bent dankzij de notities bij de nieuwste NPSP-releases in de groep &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot;target=&quot;_blank&quot;&gt;Aankondigingen NPSP-release&lt;/a&gt;.</label>
+        <label>Hebt u vragen? Probeer de groep &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; uit voor vragen over NPSP en de groep &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&quot; target=&quot;_blank&quot;&gt;Systeembeheerders&lt;/a&gt; voor vragen over Salesforce-administratie en -configuratie.&lt;br/&gt;&lt;br/&gt;Zorg dat u altijd op de hoogte bent dankzij de notities bij de nieuwste NPSP-releases in de groep &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC.htm&quot; target=&quot;_blank&quot;&gt;Aankondigingen NPSP-release&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPrimaryContactBatch</name>
@@ -7350,7 +7489,7 @@ Dit proces kan enige tijd duren, maar u kunt deze pagina afsluiten en het proces
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalMethod</name>
-        <label>Bepaalt de methode die gebruikt wordt voor het genereren van wederkerige relaties.</label>
+        <label>Geeft de methode aan die wordt gebruikt voor het genereren van wederzijdse relaties.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalName</name>
@@ -8292,7 +8431,7 @@ Opmerking: Het tabblad NPSP-instellingen is zichtbaar in de toepassing Nonprofit
         <label>Nieuwe Terugkerende Donatie</label>
     </quickActions>
     <quickActions>
-        <name>npe01__oppPayment__c.Refund</name>
+        <name>npe01__OppPayment__c.Refund</name>
         <label>Terugbetalen</label>
     </quickActions>
     <quickActions>

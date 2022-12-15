@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Records_Failed__c</name>
-    <help>Affiche le nombre d’enregistrements qui n&apos;ont pas pu être traités avec succès à la date répertoriée au champ Dernier traitement le.</help>
+    <help>Affiche le nombre d’enregistrements qui n'ont pas pu être traités avec succès à la date répertoriée au champ Dernier traitement le.</help>
     <label>Échec des enregistrements</label>
 </CustomFieldTranslation>

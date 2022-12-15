@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Total_Allocations_Last_N_Days__c</name>
-    <help>Die Anzahl aller Zuweisungen von geschl./gew. Opp. in den letzten N Tagen. (Der Wert N wird in den NPSP-Einstellungen unter &quot;Spenden&quot;, &quot;Zuweisungen Verwendungszweck&quot; festgelegt.) NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
+    <help>Die Anzahl aller Zuweisungen von geschl./gew. Opp. in den letzten N Tagen. (Der Wert N wird in den NPSP-Einstellungen unter "Spenden", "Zuweisungen Verwendungszweck" festgelegt.) NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
     <label>Zuweisungen gesamt in d. letzten N Tagen</label>
 </CustomFieldTranslation>

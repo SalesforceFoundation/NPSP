@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Default_Data_Import_Field_Mapping_Set__c</name>
-    <help>Le nom d&apos;API des métadonnées personnalisées de l&apos;enregistrement Ensemble de mappages de champs d&apos;importation de données qui doit être utilisé par défaut.</help>
+    <help>Le nom d'API des métadonnées personnalisées de l'enregistrement Ensemble de mappages de champs d'importation de données qui doit être utilisé par défaut.</help>
     <label>Ensemble map. champs Imp. données défaut</label>
 </CustomFieldTranslation>

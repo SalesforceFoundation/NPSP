@@ -18,4 +18,12 @@
         <plural>true</plural>
         <value>Champs à exclure de la synchronisation</value>
     </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <value>Champ à exclure de la synchronisation</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Champs à exclure de la synchronisation</value>
+    </caseValues>
 </CustomObjectTranslation>

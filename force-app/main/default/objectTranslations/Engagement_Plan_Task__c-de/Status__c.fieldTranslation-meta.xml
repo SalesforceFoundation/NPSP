@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Status__c</name>
-    <help>Der Status einer Aufgabe. Abhängige Aufgaben erhalten den Status &quot;Auf übergeordnete Aufgabe warten&quot;, bis die übergeordnete Aufgabe abgeschlossen ist.</help>
+    <help>Der Status einer Aufgabe. Abhängige Aufgaben erhalten den Status "Auf übergeordnete Aufgabe warten", bis die übergeordnete Aufgabe abgeschlossen ist.</help>
     <label>Status</label>
     <picklistValues>
         <masterLabel>Not Started</masterLabel>

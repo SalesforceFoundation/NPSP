@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>StatusReason__c</name>
-    <help>Contient des détails supplémentaires sur la planification, par exemple un motif d&apos;interruption pour une planification interrompue.</help>
+    <help>Contient des détails supplémentaires sur la planification, par exemple un motif d'interruption pour une planification interrompue.</help>
     <label>Motif du statut</label>
 </CustomFieldTranslation>

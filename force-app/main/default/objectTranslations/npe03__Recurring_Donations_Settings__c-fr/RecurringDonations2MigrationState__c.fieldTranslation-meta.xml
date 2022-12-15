@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>RecurringDonations2MigrationState__c</name>
-    <help>Contient les tout derniers résultats d&apos;importation test et de migration des données.</help>
+    <help>Contient les tout derniers résultats d'importation test et de migration des données.</help>
     <label>État de migration des données DR avancés</label>
 </CustomFieldTranslation>

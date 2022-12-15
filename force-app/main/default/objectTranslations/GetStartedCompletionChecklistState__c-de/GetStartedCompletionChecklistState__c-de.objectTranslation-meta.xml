@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <nameFieldLabel>Statusname für die Abschluss-Checkliste der Seite &quot;Erste Schritte&quot;</nameFieldLabel>
+    <nameFieldLabel>Statusname für die Abschluss-Checkliste der Seite "Erste Schritte"</nameFieldLabel>
     <standardFields>
         <name>Name</name>
-        <label>Statusname für die Abschluss-Checkliste der Seite &quot;Erste Schritte&quot;</label>
+        <label>Statusname für die Abschluss-Checkliste der Seite "Erste Schritte"</label>
     </standardFields>
     <gender>Masculine</gender>
     <caseValues>
