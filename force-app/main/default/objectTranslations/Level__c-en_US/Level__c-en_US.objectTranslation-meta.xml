@@ -9,23 +9,23 @@
         <value>Levels</value>
     </caseValues>
     <fieldSets>
-        <label/>
+        <label></label>
         <name>LevelEdit</name>
     </fieldSets>
     <layouts>
         <layout>Level Layout</layout>
         <sections>
-            <label/>
+            <label></label>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>long text section</section>
         </sections>
     </layouts>
     <startsWith>Consonant</startsWith>
     <validationRules>
-        <errorMessage/>
+        <errorMessage></errorMessage>
         <name>Target_Required</name>
     </validationRules>
 </CustomObjectTranslation>

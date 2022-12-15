@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Batch_Defaults__c</name>
-    <help>Les valeurs de champ par défaut d&apos;un lot dans la Saisie de dons. Ne pas modifier directement. Doivent être mises à jour dans l&apos;interface utilisateur à l&apos;emplacement où vous modifiez votre lot.</help>
+    <help>Les valeurs de champ par défaut d'un lot dans la Saisie de dons. Ne pas modifier directement. Doivent être mises à jour dans l'interface utilisateur à l'emplacement où vous modifiez votre lot.</help>
     <label>Valeurs par défaut du lot</label>
 </CustomFieldTranslation>

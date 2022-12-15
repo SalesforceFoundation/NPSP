@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Grant_Program_Area_s__c</name>
-    <help>Gebruik dit om de financieringsgebieden voor de Subsidie of Donatie te beschrijven. Bijvoorbeeld, de namen van de programma&apos;s waarvoor de Subsidie of Donatie is bestemd.</help>
+    <help>Gebruik dit om de financieringsgebieden voor de Subsidie of Donatie te beschrijven. Bijvoorbeeld, de namen van de programma's waarvoor de Subsidie of Donatie is bestemd.</help>
     <label>Programmagebieden</label>
 </CustomFieldTranslation>

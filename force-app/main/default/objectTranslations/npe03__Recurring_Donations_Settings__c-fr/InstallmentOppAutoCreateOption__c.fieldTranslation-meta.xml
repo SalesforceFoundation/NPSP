@@ -2,5 +2,5 @@
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>InstallmentOppAutoCreateOption__c</name>
     <help>Spécifie quand NPSP crée des Opportunités de versement pour des Dons récurrents. Le paramètre par défaut est Toujours créer le prochain versement.</help>
-    <label>Création auto d&apos;opportunité de versement</label>
+    <label>Création auto d'opportunité de versement</label>
 </CustomFieldTranslation>

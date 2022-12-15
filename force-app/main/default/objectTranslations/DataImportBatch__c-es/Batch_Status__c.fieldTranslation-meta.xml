@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Batch_Status__c</name>
-    <help>El Estado del lote se basa en el Estado de importación de los registros de Importaciones de datos de NPSP dentro del lote. Si uno no se importa, el estado del lote es &quot;Fallo - Necesita revisión&quot;.</help>
+    <help>El Estado del lote se basa en el Estado de importación de los registros de Importaciones de datos de NPSP dentro del lote. Si uno no se importa, el estado del lote es "Fallo - Necesita revisión".</help>
     <label>Estado del lote</label>
     <picklistValues>
         <masterLabel>Open</masterLabel>

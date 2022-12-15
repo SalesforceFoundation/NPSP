@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>RecurringDonation__c</name>
-    <help>Le don récurrent auquel l&apos;enregistrement de ce calendrier est associé.</help>
+    <help>Le don récurrent auquel l'enregistrement de ce calendrier est associé.</help>
     <relationshipLabel>Calendriers de dons récurrents</relationshipLabel>
     <label>Don récurrent</label>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Last_Soft_Credit_Amount__c</name>
-    <help>The amount of this Contact&apos;s most recent soft credit.</help>
+    <help>The amount of this Contact's most recent soft credit.</help>
     <label>Last Soft Credit Amount</label>
 </CustomFieldTranslation>

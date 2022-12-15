@@ -81,4 +81,44 @@
         <caseType>Genitive</caseType>
         <value>Aus der Synchronisierung auszuschließenden Felder</value>
     </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Nominative</caseType>
+        <value>Aus der Synchronisierung auszuschließende Feld</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Accusative</caseType>
+        <value>Aus der Synchronisierung auszuschließende Feld</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Dative</caseType>
+        <value>Aus der Synchronisierung auszuschließenden Feld</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Genitive</caseType>
+        <value>Aus der Synchronisierung auszuschließenden Felds</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Nominative</caseType>
+        <value>Aus der Synchronisierung auszuschließenden Felder</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Accusative</caseType>
+        <value>Aus der Synchronisierung auszuschließenden Felder</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Dative</caseType>
+        <value>Aus der Synchronisierung auszuschließenden Feldern</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Genitive</caseType>
+        <value>Aus der Synchronisierung auszuschließenden Felder</value>
+    </caseValues>
 </CustomObjectTranslation>

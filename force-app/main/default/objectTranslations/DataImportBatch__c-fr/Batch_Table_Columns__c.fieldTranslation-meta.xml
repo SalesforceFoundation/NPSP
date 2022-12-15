@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Batch_Table_Columns__c</name>
-    <help>Liste des noms d&apos;API pour les champs inclus dans le tableau des dons par lots. Stocké sous JSON.</help>
+    <help>Liste des noms d'API pour les champs inclus dans le tableau des dons par lots. Stocké sous JSON.</help>
     <label>Colonnes de tableau par lots</label>
 </CustomFieldTranslation>

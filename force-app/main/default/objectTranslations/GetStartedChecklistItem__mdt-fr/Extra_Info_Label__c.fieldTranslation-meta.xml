@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Extra_Info_Label__c</name>
-    <help>Le nom d&apos;API de l&apos;étiquette d&apos;informations supplémentaires, qui fournit des informations complémentaires sur un élément de section (par exemple durée de la vidéo, PDF, etc.). Affiché dans le coin supérieur droit.</help>
+    <help>Le nom d'API de l'étiquette d'informations supplémentaires, qui fournit des informations complémentaires sur un élément de section (par exemple durée de la vidéo, PDF, etc.). Affiché dans le coin supérieur droit.</help>
     <label>Nom étiquette information supplémentaire</label>
 </CustomFieldTranslation>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>General_Accounting_Unit__c</name>
-    <help>De GAU waaraan deze Toewijzing is toegeschreven. Enkel GAU&apos;s die gemarkeerd zijn als actief zijn beschikbaar voor nieuwe Toewijzingen.</help>
+    <help>De GAU waaraan deze Toewijzing is toegeschreven. Enkel GAU's die gemarkeerd zijn als actief zijn beschikbaar voor nieuwe Toewijzingen.</help>
     <relationshipLabel>GAU-Toewijzingen</relationshipLabel>
     <label>GAU</label>
 </CustomFieldTranslation>

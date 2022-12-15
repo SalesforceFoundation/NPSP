@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Enable_Gateway_Assignment__c</name>
+    <help>Enables different Elevate Gateways to be used for Gift Entry Elevate batches. If not enabled, the default gateway is always used.</help>
+    <label>Enable Gateway Assignment</label>
+</CustomFieldTranslation>

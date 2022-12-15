@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>RecurringDonations2EnablementState__c</name>
-    <help>Contient les confirmations et l&apos;état d&apos;activation du Don récurrent avancé.</help>
-    <label>État d&apos;activation des dons récurrents</label>
+    <help>Contient les confirmations et l'état d'activation du Don récurrent avancé.</help>
+    <label>État d'activation des dons récurrents</label>
 </CustomFieldTranslation>

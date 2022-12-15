@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Verification_Status__c</name>
-    <help>Als dit adres verificatie nodig heeft, klikt u in de rechterbovenhoek op het pijltje met de vervolgkeuzelijst Meer acties tonen en klikt u op Adres verifiëren. Raadpleeg de documentatie &apos;NPSP&apos; voor meer informatie over adresverificatie.</help>
+    <help>Als dit adres verificatie nodig heeft, klikt u in de rechterbovenhoek op het pijltje met de vervolgkeuzelijst Meer acties tonen en klikt u op Adres verifiëren. Raadpleeg de documentatie 'NPSP' voor meer informatie over adresverificatie.</help>
     <label>Verificatiestatus</label>
 </CustomFieldTranslation>

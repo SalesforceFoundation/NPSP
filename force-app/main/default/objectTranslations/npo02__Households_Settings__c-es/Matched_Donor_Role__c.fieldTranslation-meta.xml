@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Matched_Donor_Role__c</name>
-    <help>La función de contacto que desea utilizar para donantes coincidentes. Recomendamos utilizar &quot;Donante con coincidencia&quot;.</help>
+    <help>La función de contacto que desea utilizar para donantes coincidentes. Recomendamos utilizar "Donante con coincidencia".</help>
     <label>Función del donante coincidente</label>
 </CustomFieldTranslation>

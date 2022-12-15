@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Assigned_To__c</name>
-    <help>Recherche de l&apos;utilisateur auquel vous souhaitez attribuer la tâche. Si vous laissez ce champ vide, NPSP attribuera la tâche en fonction du destinataire par défaut du modèle de plan d’engagement.</help>
+    <help>Recherche de l'utilisateur auquel vous souhaitez attribuer la tâche. Si vous laissez ce champ vide, NPSP attribuera la tâche en fonction du destinataire par défaut du modèle de plan d’engagement.</help>
     <label>Attribué à</label>
 </CustomFieldTranslation>
