@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Respect_Duplicate_Rule_Settings__c</name>
-    <help>Berücks. Sie die Einst‘en in einer Dupl‘regel zur Festleg., ob dopp. Datens. zulässig sind. Um die vorhand. Einstell‘n zu überpr., zu &quot;Setup&quot; &gt; &quot;Duplikatsregeln&quot; gehen. Wenn &quot;Aktion beim Erstellen&quot; o. &quot;Aktion b. Bearbeiten&quot; = &quot;Zulassen&quot;, Dupl. speichern.</help>
+    <help>Berücks. Sie die Einst‘en in einer Dupl‘regel zur Festleg., ob dopp. Datens. zulässig sind. Um die vorhand. Einstell‘n zu überpr., zu "Setup" &gt; "Duplikatsregeln" gehen. Wenn "Aktion beim Erstellen" o. "Aktion b. Bearbeiten" = "Zulassen", Dupl. speichern.</help>
     <label>Duplikatsregeleinst. berücksichtigen</label>
 </CustomFieldTranslation>

@@ -215,10 +215,14 @@
       <masterLabel>Paused</masterLabel>
       <translation>Onderbroken</translation>
     </picklistValues>
+    <picklistValues>
+      <masterLabel>Failing</masterLabel>
+      <translation>Mislukt</translation>
+    </picklistValues>
   </fields>
   <fields>
     <name>npe03__Installment_Period__c</name>
-    <help>De Termijnperiode, samen met Frequentie van termijnen, definieert de planning van termijnen  van deze terugkerende donatie. Als Termijnperiode bijvoorbeeld Maandelijks is en Frequentie van termijnen 3, wordt de planning gedefinieerd als "elke 3 maanden".</help>
+    <help>De Termijnperiode, samen met Frequentie van termijnen, definieert de planning van termijnen van deze terugkerende donatie. Als Termijnperiode bijvoorbeeld Maandelijks is en Frequentie van termijnen 3, wordt de planning gedefinieerd als "elke 3 maanden".</help>
     <label>Termijnperiode</label>
     <picklistValues>
       <masterLabel>Monthly</masterLabel>
@@ -243,7 +247,7 @@
   </fields>
   <fields>
     <name>%%%NAMESPACE%%%InstallmentFrequency__c</name>
-    <help>De Frequentie van termijnen, samen met Termijnperiode, definieert de planning van termijnen  van deze terugkerende donatie. Als Termijnperiode bijvoorbeeld Maandelijks is en Frequentie van termijnen 3, wordt de planning gedefinieerd als "elke 3 maanden".</help>
+    <help>De Frequentie van termijnen, samen met Termijnperiode, definieert de planning van termijnen van deze terugkerende donatie. Als Termijnperiode bijvoorbeeld Maandelijks is en Frequentie van termijnen 3, wordt de planning gedefinieerd als "elke 3 maanden".</help>
     <label>Frequentie van termijnen</label>
   </fields>
   <fields>

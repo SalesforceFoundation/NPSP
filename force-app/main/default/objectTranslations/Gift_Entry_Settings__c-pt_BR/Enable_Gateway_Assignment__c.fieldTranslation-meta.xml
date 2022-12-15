@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Enable_Gateway_Assignment__c</name>
+    <help>Ativa gateways diferentes do Elevate a serem usados para Entrada de doações em lote do Elevate. Se não forem ativados, o gateway padrão é sempre usado.</help>
+    <label>Ativar atribuição de gateway</label>
+</CustomFieldTranslation>

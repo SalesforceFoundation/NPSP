@@ -833,6 +833,10 @@
         <label>Os Métodos de pagamento válidos para uma Doação recorrente ativa conectada ao Elevate são cartão de crédito ou a ACH.</label>
     </customLabels>
     <customLabels>
+        <name>RD2_ElevatePauseInstallmentDateErrorMessage</name>
+        <label>Não é possível pausar uma Doação recorrente conectada ao Elevate a menos de dois dias da data de parcelamento.</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_CurrencyChangeIsRestrictedOnRD</name>
         <label>Não é possível alterar a moeda da Doação recorrente quando há uma Oportunidade fechada relacionada.</label>
     </customLabels>
@@ -1063,8 +1067,7 @@
     <customLabels>
         <name>RD2_EnablementIntro</name>
         <label>Olá! Doações recorrentes aprimoradas é nosso recurso de Doações recorrentes repensado e melhorado para o NPSP (Pacote de sucesso para organizações sem fins lucrativos). Agradecemos bastante aos membros da nossa comunidade que deram seu feedback e ajudaram a tornar possíveis as Doações recorrentes aprimoradas.
-        &lt;br/&gt;&lt;br/&gt;Como já existe um recurso de Doações recorrentes no NPSP, você precisará executar várias tarefas de upgrade e mover seus dados existentes para o modelo de Doações recorrentes aprimoradas. Nós indicamos as tarefas necessárias abaixo.
-        &lt;br/&gt;&lt;br/&gt;Você provavelmente terá perguntas ao longo do caminho e nós queremos que esteja totalmente preparado a cada passo.</label>
+        &lt;br/&gt;&lt;br/&gt;Como já existe um recurso de Doações recorrentes no NPSP, você precisará executar várias tarefas de upgrade e mover seus dados existentes para o modelo de Doações recorrentes aprimoradas. Nós indicamos as tarefas necessárias abaixo.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMetaDeployConfirm</name>
@@ -1153,7 +1156,7 @@
     <customLabels>
         <name>RD2_EnablementPrepTasks</name>
         <label>&lt;ul&gt;&lt;li&gt;Desabilite fluxos de trabalho, processos, regras de validação e acionadores nos objetos Doações recorrentes, Oportunidades e Pagamentos.&lt;/li&gt;
-&lt;li&gt;Faça backup do seu banco de dados, incluindo todas as Doações recorrentes e seus registros relacionados.&lt;/li&gt;</label>
+&lt;li&gt;Faça backup do seu banco de dados, incluindo todas as Doações recorrentes e seus registros relacionados.&lt;/li&gt;&lt;/ul&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementPrepTitle</name>
@@ -1162,7 +1165,7 @@
     <customLabels>
         <name>RD2_EnablementSimpleIntro</name>
         <label>A opção Doações recorrentes aprimoradas torna as Doações recorrentes mais flexíveis e mais fáceis de gerenciar do que nunca. Para habilitar as Doações recorrentes aprimoradas, siga os passos abaixo. Você deve completar TODAS as etapas para habilitar totalmente as Doações recorrentes aprimoradas.
-            &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Como você não tem registros de Doação recorrente, não precisa validar ou migrar nenhum dado.&lt;/b&gt;</label>
+        &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Como você não tem registros de Doação recorrente, não precisa validar ou migrar nenhum dado.&lt;/b&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EndDateMustBeLaterThanCloseWonOpp</name>
@@ -1206,7 +1209,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormInsertSuccessMessage</name>
-        <label>A Doação recorrente &quot;{0}&quot; foi criada.</label>
+        <label>A Doação recorrente &quot;{0}” foi criada.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormMissingPermissions</name>
@@ -1303,7 +1306,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EntryFormUpdateSuccessMessage</name>
-        <label>A Doação recorrente &quot;{0}&quot; foi salva.</label>
+        <label>A Doação recorrente &quot;{0}” foi salva.</label>
     </customLabels>
     <customLabels>
         <name>RD2_ErrorDataMigrationJobCannotBeRun</name>
@@ -2101,7 +2104,7 @@ Para verificar as configurações de Alocação de GAU, acesse Doações | Aloca
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>A partir de 1º de outubro de 2020, a Entrada de dados em lote não é mais suportada. A maioria dos recursos foram substituídos por recursos mais novos no NPSP. Se você tiver algum lote em andamento, ainda poderá acessar esses registros, mas não poderá processá-los usando a Entrada de dados em lote. Entre em contato com o suporte se precisar acessar lotes em andamento. &lt;br/&gt; Talvez seja melhor explorar a Entrada de doações como uma alternativa à Entrada de dados em lote.</label>
+        <label>A partir de 1º de outubro de 2020, a Entrada de dados em lote não é mais suportada. A maioria dos recursos foi substituída por recursos mais novos no NPSP. Se você tiver algum lote em andamento, ainda poderá acessar esses registros, mas não poderá processá-los usando a Entrada de dados em lote. Entre em contato com o suporte se precisar acessar lotes em andamento. &lt;br/&gt; Talvez seja melhor explorar a Entrada de doações como uma alternativa à Entrada de dados em lote.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
@@ -3005,6 +3008,10 @@ Para verificar as configurações de Alocação de GAU, acesse Doações | Aloca
         <label>Processar lote e pagamentos</label>
     </customLabels>
     <customLabels>
+        <name>bgeEditPaymentInformation</name>
+        <label>Não é possível editar esta doação conectada ao Elevate até você digitar novamente as informações de pagamento. Selecione Editar as informações de pagamento.</label>
+    </customLabels>
+    <customLabels>
         <name>bgeRetirementWarningBody</name>
         <label>Em 13 de julho de 2021, a Entrada de doações em lote será aposentada e não funcionará mais no NPSP. Se você tiver algum lote em andamento no momento, ainda poderá acessar esses registros, mas não poderá processá-los usando a Entrada de doações em lote. Para garantir uma transição suave, ative e use a Entrada de doações mais recente antes de 13 de julho.</label>
     </customLabels>
@@ -3018,7 +3025,7 @@ Para verificar as configurações de Alocação de GAU, acesse Doações | Aloca
     </customLabels>
     <customLabels>
         <name>bgeNotSupportedBody</name>
-        <label>A partir de 13 de julho de 2021, a Entrada de doações em lote não é mais suportada e foi substituída pela Entrada de doações.
+        <label>A partir de 13 de julho de 2021, a Entrada de doações em lote não é mais suportada e foi substituída pela Entrada de doações. 
             Se você tiver algum lote em andamento, ainda poderá acessar esses registros, mas não poderá processá-los usando a Entrada de doações em lote.
             Entre em contato com o suporte se precisar acessar lotes em andamento.
             Talvez seja melhor explorar a Entrada de doações como uma alternativa à Entrada de doações em lote.</label>
@@ -3162,6 +3169,14 @@ Para verificar as configurações de Alocação de GAU, acesse Doações | Aloca
         <label>Você não tem as permissões necessárias para realizar esta ação. Entre em contato com o administrador do sistema para obter assistência.</label>
     </customLabels>
     <customLabels>
+        <name>commonAccountNumber</name>
+        <label>Account Number (Número da conta)</label>
+    </customLabels>
+    <customLabels>
+        <name>commonACHLast4</name>
+        <label>ACH Últimos 4</label>
+    </customLabels>
+    <customLabels>
         <name>commonActivate</name>
         <label>Ativar</label>
     </customLabels>
@@ -3172,6 +3187,22 @@ Para verificar as configurações de Alocação de GAU, acesse Doações | Aloca
     <customLabels>
         <name>commonAmount</name>
         <label>Valor</label>
+    </customLabels>
+    <customLabels>
+        <name>gePaymentProcessedWarning</name>
+        <label>{0} processou com sucesso o pagamento. A alteração de doador, data, valor ou método de pagamento resultará em registros inconsistentes para a mesma transação em {0} e no NPSP.</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpAdvancedMapping3</name>
+        <label>Encontre a documentação completa da configuração do Mapeamento Avançado &lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;aqui&lt;/a&gt;.</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpCustomizableRollupsEnable1</name>
+        <label>Você pode encontrar a documentação completa de Totalizações personalizáveis &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;aqui&lt;/a&gt;.</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpHHObjectOverview</name>
+        <label>Para saber mais sobre o modelo recomendado Conta de família, consulte a &lt;a href=&quot;https://powerofus.force.com/NPSP_Account_Model&quot; target=&quot;_blank&quot;&gt;Documentação do NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>commonAssistiveError</name>
@@ -3204,6 +3235,10 @@ Para verificar as configurações de Alocação de GAU, acesse Doações | Aloca
     <customLabels>
         <name>commonCardLast4</name>
         <label>Últimos 4 dígitos</label>
+    </customLabels>
+    <customLabels>
+        <name>commonCVC</name>
+        <label>CVC</label>
     </customLabels>
     <customLabels>
         <name>commonCVV</name>
@@ -3372,6 +3407,10 @@ Para verificar as configurações de Alocação de GAU, acesse Doações | Aloca
     <customLabels>
         <name>commonReviewForm</name>
         <label>Analisar formulário</label>
+    </customLabels>
+    <customLabels>
+        <name>commonRoutingNumber</name>
+        <label>Número de encaminhamento</label>
     </customLabels>
     <customLabels>
         <name>commonAdminPermissionErrorMessage</name>
@@ -3543,7 +3582,7 @@ Para verificar as configurações de Alocação de GAU, acesse Doações | Aloca
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>Veja todos os Contatos duplicados encontrados usando regras de correspondência. &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Merge_Contacts.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; Conte-me mais &lt;/b&gt;&lt;/a&gt;</label>
+        <label>Veja todos os Contatos duplicados encontrados usando regras de correspondência. &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Merge_Contacts.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; Quero saber mais &lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>
@@ -3866,7 +3905,7 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
     </customLabels>
     <customLabels>
         <name>geBodyPaymentProcessedDuringBatchProcessing</name>
-        <label>O cartão de crédito do doador será processado quando você processar o lote.</label>
+        <label>O pagamento do doador será processado quando você processar o lote.</label>
     </customLabels>
     <customLabels>
         <name>geBodyTemplateInfoLeftCol</name>
@@ -5048,6 +5087,10 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
         <label>Parâmetros de configuração inválidos fornecidos</label>
     </customLabels>
     <customLabels>
+        <name>geRD2FirstInstallmentPaid</name>
+        <label>Primeiro parcelamento pago</label>
+    </customLabels>
+    <customLabels>
         <name>geSearchPlaceholder</name>
         <label>Pesquisar...</label>
     </customLabels>
@@ -5777,7 +5820,7 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
     </customLabels>
     <customLabels>
         <name>healthSolutionTriggerHandlerMismatch</name>
-        <label>As alterações nos acionadores podem afetar as funcionalidade principais do NPSP de maneiras inesperadas e devem ser completamente testadas antes da implantação na produção. Se essas alterações não forem intencionais, você deve redefinir seus manipuladores de acionador para corresponder à configuração do NPSP padrão.</label>
+        <label>As alterações nos acionadores podem afetar as funcionalidades principais do NPSP de maneiras inesperadas e devem ser completamente testadas antes da implantação na produção. Se essas alterações não forem intencionais, você deve redefinir seus manipuladores de acionador para corresponder à configuração do NPSP padrão.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionUnsupportedPicklistValue</name>
@@ -6212,22 +6255,6 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
         <label>Um Pagamento realizado precisa ter uma data de pagamento.</label>
     </customLabels>
     <customLabels>
-        <name>pmtRefundPaymentDate</name>
-        <label>Data de pagamento</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundPaymentErrorMessage</name>
-        <label>Ocorreu um erro ao processar o reembolso.</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundAmountInvalid</name>
-        <label>Insira um valor de reembolso menor ou igual ao saldo restante.</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundPaymentSuccessMessage</name>
-        <label>O reembolso foi bem-sucedido.</label>
-    </customLabels>
-    <customLabels>
         <name>pmtPaymentNotFound</name>
         <label>O registro de pagamento correspondente do Elevate não foi encontrado. Entre em contato com seu administrador do Salesforce para obter ajuda.</label>
     </customLabels>
@@ -6236,20 +6263,52 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
         <label>Esse pagamento já foi reembolsado, ou é um reembolso em si.</label>
     </customLabels>
     <customLabels>
+        <name>pmtRefundAllocationHelpText</name>
+        <label>As Alocações de GAU fixas são alteradas para porcentagens de modo a efetuar o ajuste para este reembolso.</label>
+    </customLabels>
+    <customLabels>
         <name>pmtRefundAmount</name>
         <label>Valor do reembolso</label>
     </customLabels>
     <customLabels>
-        <name>pmtRefundProcessing</name>
-        <label>Reembolso enviado para processamento. Verifique o pagamento reembolsado no registro Oportunidade.</label>
+        <name>pmtRefundAmountInvalid</name>
+        <label>Insira um valor de reembolso menor ou igual ao saldo restante.</label>
     </customLabels>
     <customLabels>
         <name>pmtRefundPaymentConfirmedButton</name>
         <label>Pagamento do reembolso</label>
     </customLabels>
     <customLabels>
+        <name>pmtRefundPaymentDate</name>
+        <label>Data de pagamento</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentErrorMessage</name>
+        <label>Ocorreu um erro ao processar o reembolso.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmountTooHigh</name>
+        <label>O valor de reembolso não pode ser maior que {{AMOUNT}}.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmountTooLow</name>
+        <label>Insira um valor de reembolso maior que 0.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundProcessing</name>
+        <label>Reembolso enviado para processamento. Verifique o pagamento reembolsado no registro Oportunidade.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentSuccessMessage</name>
+        <label>O reembolso foi bem-sucedido.</label>
+    </customLabels>
+    <customLabels>
         <name>pmtRefundPaymentTitle</name>
         <label>Pagamento do reembolso?</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRemainingBalance</name>
+        <label>Saldo restante</label>
     </customLabels>
     <customLabels>
         <name>pmtUnpaidPaymentScheduledDateRequired</name>
@@ -6400,8 +6459,88 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
         <label>Um pagamento abatido precisa ter uma data de pagamento.</label>
     </customLabels>
     <customLabels>
+        <name>psACH</name>
+        <label>ACH (conta bancária)</label>
+    </customLabels>
+    <customLabels>
+        <name>psElevateConnectionTimeout</name>
+        <label>A conexão ao Elevate atingiu o tempo limite. Tente novamente mais tarde.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayDefault</name>
+        <label>Usar sempre gateway padrão</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewaySelectionLabel</name>
+        <label>O NPSP usa o gateway adicionado mais recentemente ao Elevate, a menos que você o substitua. Para definir um gateway de pagamento padrão do Elevate, selecione-o aqui.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewaysNotFound</name>
+        <label>Não foram encontrados gateways de pagamento. Confira sua conta do Elevate.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayNotValid</name>
+        <label>Não é possível validar o gateway salvo anteriormente. Selecione um gateway diferente.</label>
+    </customLabels>
+    <customLabels>
+        <name>psHideGatewaysAndMethods</name>
+        <label>Ocultar gateways e métodos de pagamento do Elevate</label>
+    </customLabels>
+    <customLabels>
+        <name>psHidePaymentMethods</name>
+        <label>Ocultar métodos de pagamento</label>
+    </customLabels>
+    <customLabels>
+        <name>psPaymentGateway</name>
+        <label>Gateway de pagamento:</label>
+    </customLabels>
+    <customLabels>
+        <name>psSelectPaymentGateway</name>
+        <label>Selecionar gateway de pagamento</label>
+    </customLabels>
+    <customLabels>
+        <name>psSelectPaymentMethods</name>
+        <label>Selecionar métodos de pagamento</label>
+    </customLabels>
+    <customLabels>
         <name>psSelectValidPaymentMethod</name>
         <label>Para inserir o pagamento, selecione um Método de pagamento válido.</label>
+    </customLabels>
+    <customLabels>
+        <name>psShowGatewaysAndMethods</name>
+        <label>Mostrar gateways e métodos de pagamento do Elevate</label>
+    </customLabels>
+    <customLabels>
+        <name>psEnableGatewayAssignment</name>
+        <label>Ativar atribuição de gateway</label>
+    </customLabels>
+    <customLabels>
+        <name>psEnableGatewayAssignmentHeader</name>
+        <label>Ativar atribuição de gateway</label>
+    </customLabels>
+    <customLabels>
+        <name>psEnableGatewayAssignmentHelp</name>
+        <label>Ativar a atribuição de gateway permite que você selecione o gateway de pagamento e os respetivos métodos de pagamento ao modificar os modelos de Entrada de doações.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayManagementHelp</name>
+        <label>Estas configurações gerenciam os gateways de pagamento para transações do Elevate.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayIDHeader</name>
+        <label>ID do gateway</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayIDHelp</name>
+        <label>O NPSP usa o gateway adicionado mais recentemente ao Elevate, a menos que você o substitua. Para alterar o gateway usado pelo NPSP, clique em Editar, insira o ID do gateway e salve seu trabalho. Encontre o ID do gateway no Console do administrador do Elevate | Gerenciamento de gateway.</label>
+    </customLabels>
+    <customLabels>
+        <name>psShowPaymentMethods</name>
+        <label>Mostrar métodos de pagamento</label>
+    </customLabels>
+    <customLabels>
+        <name>psUnableToConnect</name>
+        <label>Não é possível se conectar ao Elevate. Verifique sua conexão e tente novamente.</label>
     </customLabels>
     <customLabels>
         <name>ProgressMarkerAssistiveTextProgress</name>
@@ -7051,7 +7190,7 @@ Quando o processo estiver 100% concluído, você poderá sair ou atualizar esta 
     </customLabels>
     <customLabels>
         <name>stgHelpHHMailingListReport</name>
-        <label>O Relatório da lista de correspondência de família desduplica uma campanha que contém vários contatos da mesma família a fim de evitar o envio de vários emails iguais para o mesmo endereço. O NPSP inclui um relatório que você pode selecionar chamado &quot;Lista de correspondência para famílias da campanha do NPSP V2&quot;. Se esse relatório tiver sido renomeado ou excluído, selecione um relatório que utilize o tipo de relatório Campanhas com contatos, com filtros de Status de membro não contém &quot;Duplicado&quot; e ID da campanha = em branco.</label>
+        <label>O Relatório da lista de correspondência de família desduplica uma campanha que contém vários contatos da mesma família a fim de evitar o envio de vários emails iguais para o mesmo endereço. O NPSP inclui um relatório que você pode selecionar chamado &quot;Lista de correspondência para famílias da campanha do NPSP V2&quot;. Se esse relatório tiver sido renomeado ou excluído, selecione um relatório que utilize o tipo de relatório Campanhas com contatos, com filtros de Status de membro não contém &quot;Duplicado” e ID da campanha = em branco.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpHHNameFormat</name>
@@ -7167,7 +7306,7 @@ IMPORTANTE: ambos os campos precisam ter o mesmo tipo de dados.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingFormat</name>
-        <label>O formato do nome de oportunidade.</label>
+        <label>O formato do nome de oportunidade. Escolha &quot;outro&quot; para criar seu próprio.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingRecTypes</name>
@@ -7211,7 +7350,7 @@ IMPORTANTE: ambos os campos precisam ter o mesmo tipo de dados.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPowerOfUsHub</name>
-        <label>Tem dúvidas? Experimente o grupo &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;Pacote de sucesso para organizações sem fins lucrativos&lt;/a&gt; para  perguntas sobre o NPSP e o grupo &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;Administradores do sistema&lt;/a&gt; para perguntas sobre administração e configuração do Salesforce.&lt;br/&gt;&lt;br/&gt;Acompanhe as últimas notas de versão do NPSP no grupo &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;Anúncios de versão do NPSP&lt;/a&gt;.</label>
+        <label>Tem dúvidas? Experimente o grupo &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;Pacote de sucesso para organizações sem fins lucrativos&lt;/a&gt; para perguntas sobre o NPSP e o grupo &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&quot; target=&quot;_blank&quot;&gt;Administradores do sistema&lt;/a&gt; para perguntas sobre administração e configuração do Salesforce.&lt;br/&gt;&lt;br/&gt;Acompanhe as últimas notas de versão do NPSP no grupo &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC.htm&quot; target=&quot;_blank&quot;&gt;Anúncios de versão do NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPrimaryContactBatch</name>
@@ -7351,7 +7490,7 @@ Esse processo pode levar algum tempo, mas você pode fechar esta página porque 
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalMethod</name>
-        <label>Especifica o método utilizado para gerar relações recíprocas.</label>
+        <label>Especifica o método usado para gerar relações recíprocas.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalName</name>
@@ -8293,7 +8432,7 @@ Nota: a guia Configurações do NPSP está visível no aplicativo Pacote de suce
         <label>Nova doação recorrente</label>
     </quickActions>
     <quickActions>
-        <name>npe01__oppPayment__c.Refund</name>
+        <name>npe01__OppPayment__c.Refund</name>
         <label>Reembolso</label>
     </quickActions>
     <quickActions>

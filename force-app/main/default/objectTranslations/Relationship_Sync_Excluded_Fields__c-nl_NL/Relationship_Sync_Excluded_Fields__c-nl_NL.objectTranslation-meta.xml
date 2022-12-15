@@ -17,4 +17,12 @@
         <plural>true</plural>
         <value>Velden om uit te sluiten van synchronisatie</value>
     </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <value>Velden om uit te sluiten van synchronisatie</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Velden om uit te sluiten van synchronisatie</value>
+    </caseValues>
 </CustomObjectTranslation>

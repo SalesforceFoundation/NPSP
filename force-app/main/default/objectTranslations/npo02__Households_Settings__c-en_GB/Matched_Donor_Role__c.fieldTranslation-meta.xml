@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Matched_Donor_Role__c</name>
-    <help>The Contact Role you want to use for matched donors. We recommend using &quot;Matched Donor.&quot;</help>
+    <help>The Contact Role you want to use for matched donors. We recommend using "Matched Donor."</help>
     <label>Matched Donor Role</label>
 </CustomFieldTranslation>

@@ -3,32 +3,32 @@
     <caseValues>
         <article>None</article>
         <plural>false</plural>
-        <value/>
+        <value></value>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>false</plural>
-        <value/>
+        <value></value>
     </caseValues>
     <caseValues>
         <article>None</article>
         <plural>true</plural>
-        <value/>
+        <value></value>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>true</plural>
-        <value/>
+        <value></value>
     </caseValues>
-    <gender/>
+    <gender></gender>
     <layouts>
         <layout>Partial Soft Credit Layout</layout>
         <sections>
-            <label/>
+            <label></label>
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel/>
+    <nameFieldLabel></nameFieldLabel>
     <webLinks>
         <label>נהל קרדיט</label>
         <name>Manage_Soft_Credits</name>

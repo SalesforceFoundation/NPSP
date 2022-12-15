@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Matched_Donor_Role__c</name>
-    <help>A Função de contato que você deseja usar para doadores com correspondência. Recomendamos usar &quot;Doador com correspondência&quot;.</help>
+    <help>A Função de contato que você deseja usar para doadores com correspondência. Recomendamos usar "Doador com correspondência".</help>
     <label>Função de doador com correspondência</label>
 </CustomFieldTranslation>

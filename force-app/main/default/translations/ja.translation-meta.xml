@@ -38,16 +38,11 @@
     </customLabels>
     <customLabels>
         <name>Addr_Settings_Intro_Body2</name>
-        <label>&lt;br/&gt;使用を開始するには: 
-
-&lt;ol&gt;
-&lt;li&gt;サードパーティの住所検証アカウントを開きます(一部のアカウントは非営利取引先では無料)。&lt;/li&gt;
-
-&lt;li&gt;住所検証サービスで、必要な認証 ID やトークンを作成します。&lt;/li&gt;
-
-&lt;li&gt;この設定ページに戻って上の [編集] ボタンをクリックし、ID やトークンを適切な項目に貼り付けます。&lt;/li&gt;
-
-&lt;li&gt;残りの項目に入力して [保存] をクリックします。詳細は、各項目のヘルプテキストを参照してください</label>
+        <label>&lt;br/&gt;使用を開始するには:&lt;br/&gt;&lt;br/&gt;
+1. サードパーティの住所検証アカウントを開きます (一部のアカウントは非営利取引先では無料)。&lt;br/&gt;
+2. 住所検証サービスで、必要な認証 ID やトークンを作成します。&lt;br/&gt;
+3. この設定ページに戻って上の [編集] ボタンをクリックし、ID やトークンを適切な項目に貼り付けます。&lt;br/&gt;
+4. 残りの項目に入力して [保存] をクリックします。詳細は、各項目のヘルプテキストを参照してください。</label>
     </customLabels>
     <customLabels>
         <name>Addr_Settings_Intro_Title</name>
@@ -838,6 +833,10 @@
         <label>Elevate に接続された有効な継続支援の有効な支払方法はクレジットカードまたは ACH です。</label>
     </customLabels>
     <customLabels>
+        <name>RD2_ElevatePauseInstallmentDateErrorMessage</name>
+        <label>支払日の 2 日以上前でないと、Elevate に接続された継続支援は一時停止できません。</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_CurrencyChangeIsRestrictedOnRD</name>
         <label>関連する完了した商談がある場合、継続支援通貨は変更できません。</label>
     </customLabels>
@@ -1068,8 +1067,7 @@
     <customLabels>
         <name>RD2_EnablementIntro</name>
         <label>拡張継続支援は、Nonprofit Success Pack (NPSP) の再設計および改善された継続支援機能です。フィードバックを提供し、拡張継続支援の実現を支援してくれたコミュニティメンバーに感謝します。
-        &lt;br/&gt;&lt;br/&gt;NPSP にはすでに継続支援機能があるため、いくつかのアップグレードタスクを実行し、既存のデータを拡張継続支援モデルに移行する必要があります。必要なタスクの概要を以下に示します。
-        &lt;br/&gt;&lt;br/&gt;その過程で疑問が生じると思われますが、各ステップで準備を万全にしてください。</label>
+        &lt;br/&gt;&lt;br/&gt;NPSP にはすでに継続支援機能があるため、いくつかのアップグレードタスクを実行し、既存のデータを拡張継続支援モデルに移行する必要があります。必要なタスクの概要を以下に示します。</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMetaDeployConfirm</name>
@@ -1158,7 +1156,7 @@
     <customLabels>
         <name>RD2_EnablementPrepTasks</name>
         <label>&lt;ul&gt;&lt;li&gt;継続支援、商談、支払オブジェクトのワークフロー、プロセス、入力規則、トリガを無効にする。&lt;/li&gt;
-&lt;li&gt;データベース (すべての継続支援とそれらの関連レコードを含む) をバックアップする。&lt;/li&gt;</label>
+&lt;li&gt;データベース (すべての継続支援とそれらの関連レコードを含む) をバックアップする。&lt;/li&gt;&lt;/ul&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementPrepTitle</name>
@@ -1167,7 +1165,7 @@
     <customLabels>
         <name>RD2_EnablementSimpleIntro</name>
         <label>拡張継続支援により、継続支援の管理がこれまで以上に柔軟かつ容易になります。拡張継続支援を有効にするには、以下の手順を実行します。拡張継続支援を完全に有効にするには、すべての手順を完了する必要があります。
-            &lt;br/&gt;&lt;br/&gt;&lt;b&gt;継続支援レコードがないため、データの検証や移行を行う必要はありません。&lt;/b&gt;</label>
+        &lt;br/&gt;&lt;br/&gt;&lt;b&gt;継続支援レコードがないため、データの検証や移行を行う必要はありません。&lt;/b&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EndDateMustBeLaterThanCloseWonOpp</name>
@@ -2100,7 +2098,7 @@
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>2020 年 10 月 1 日以降、バッチデータエントリはサポートされなくなりました。ほとんどの機能は NPSP の新機能に置き換えられました。進行中のバッチがある場合、それらのレコードには引き続きアクセスできますが、バッチデータエントリを使用して処理することはできません。進行中のバッチにアクセスする必要がある場合は、サポートにお問い合わせください。</label>
+        <label>2020 年 10 月 1 日以降、バッチデータエントリはサポートされなくなりました。ほとんどの機能は NPSP の新機能に置き換えられました。進行中のバッチがある場合、それらのレコードには引き続きアクセスできますが、バッチデータエントリを使用して処理することはできません。進行中のバッチにアクセスする必要がある場合は、サポートにお問い合わせください。&lt;br/&gt;バッチデータエントリの代わりとして、支援エントリを検討することをお勧めします。</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
@@ -3004,6 +3002,10 @@
         <label>バッチと支払の処理</label>
     </customLabels>
     <customLabels>
+        <name>bgeEditPaymentInformation</name>
+        <label>この Elevate に接続された支援は、支払情報を再入力するまで編集できません。[支払情報を編集] を選択してください。</label>
+    </customLabels>
+    <customLabels>
         <name>bgeRetirementWarningBody</name>
         <label>2021 年 7 月 13 日にバッチ支援エントリは廃止になり、NPSP では機能しなくなります。その時点で進行中のバッチがあった場合、レコードには引き続きアクセスできますが、バッチ支援エントリを使用して処理することはできません。スムーズに移行できるように、7 月 13 日に先立って新しい支援エントリを有効化して使用するようにしてください。</label>
     </customLabels>
@@ -3018,9 +3020,9 @@
     <customLabels>
         <name>bgeNotSupportedBody</name>
         <label>2021 年 7 月 13 日以降、バッチ支援エントリはサポートされなくなり、支援エントリに置き換えられました。
-            進行中のバッチがある場合、それらのレコードには引き続きアクセスできますが、バッチ支援エントリを使用して処理することはできません。
-            進行中のバッチにアクセスする必要がある場合は、サポートにお問い合わせください。
-            バッチ支援エントリの代わりとして、支援エントリを検討することをお勧めします。</label>
+           進行中のバッチがある場合、それらのレコードには引き続きアクセスできますが、バッチ支援エントリを使用して処理することはできません。
+           進行中のバッチにアクセスする必要がある場合は、サポートにお問い合わせください。
+           バッチ支援エントリの代わりとして、支援エントリを検討することをお勧めします。</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -3158,6 +3160,14 @@
         <label>このアクションの実行に必要な権限がありません。詳細は、システム管理者にお問い合わせください。</label>
     </customLabels>
     <customLabels>
+        <name>commonAccountNumber</name>
+        <label>口座番号</label>
+    </customLabels>
+    <customLabels>
+        <name>commonACHLast4</name>
+        <label>ACH の最後の 4 桁</label>
+    </customLabels>
+    <customLabels>
         <name>commonActivate</name>
         <label>有効化</label>
     </customLabels>
@@ -3168,6 +3178,22 @@
     <customLabels>
         <name>commonAmount</name>
         <label>金額</label>
+    </customLabels>
+    <customLabels>
+        <name>gePaymentProcessedWarning</name>
+        <label>{0} が支払を正常に処理しました。支援者、日付、金額、または支払方法を変更すると、{0} と NPSP で同じトランザクションのレコードで整合性が失われます。</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpAdvancedMapping3</name>
+        <label>高度な対応付けの完全な設定ドキュメントについては、&lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;こちら&lt;/a&gt;を参照してください。</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpCustomizableRollupsEnable1</name>
+        <label>カスタマイズ可能な積み上げ集計のドキュメントの詳細は&lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;こちら&lt;/a&gt;。</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpHHObjectOverview</name>
+        <label>推奨される世帯取引先モデルについての詳細は、&lt;a href=&quot;https://powerofus.force.com/NPSP_Account_Model&quot; target=&quot;_blank&quot;&gt;NPSP ドキュメント&lt;/a&gt;を参照してください。</label>
     </customLabels>
     <customLabels>
         <name>commonAssistiveError</name>
@@ -3200,6 +3226,10 @@
     <customLabels>
         <name>commonCardLast4</name>
         <label>カードの最後の 4 桁</label>
+    </customLabels>
+    <customLabels>
+        <name>commonCVC</name>
+        <label>CVC</label>
     </customLabels>
     <customLabels>
         <name>commonCVV</name>
@@ -3368,6 +3398,10 @@
     <customLabels>
         <name>commonReviewForm</name>
         <label>確認フォーム</label>
+    </customLabels>
+    <customLabels>
+        <name>commonRoutingNumber</name>
+        <label>銀行支店コード</label>
     </customLabels>
     <customLabels>
         <name>commonAdminPermissionErrorMessage</name>
@@ -3862,7 +3896,7 @@
     </customLabels>
     <customLabels>
         <name>geBodyPaymentProcessedDuringBatchProcessing</name>
-        <label>支援者のクレジットカードはバッチを処理したときに処理されます。</label>
+        <label>支援者の支払はバッチを処理したときに処理されます。</label>
     </customLabels>
     <customLabels>
         <name>geBodyTemplateInfoLeftCol</name>
@@ -5044,6 +5078,10 @@
         <label>無効な設定パラメータが提供されました</label>
     </customLabels>
     <customLabels>
+        <name>geRD2FirstInstallmentPaid</name>
+        <label>初回の割賦が支払われました</label>
+    </customLabels>
+    <customLabels>
         <name>geSearchPlaceholder</name>
         <label>検索...</label>
     </customLabels>
@@ -6208,22 +6246,6 @@
         <label>支払済の支払には [支払日] が必要です。</label>
     </customLabels>
     <customLabels>
-        <name>pmtRefundPaymentDate</name>
-        <label>支払日</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundPaymentErrorMessage</name>
-        <label>返金の処理中にエラーが発生しました。</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundAmountInvalid</name>
-        <label>残高以下の返金を入力してください。</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundPaymentSuccessMessage</name>
-        <label>返金に成功しました。</label>
-    </customLabels>
-    <customLabels>
         <name>pmtPaymentNotFound</name>
         <label>対応する Elevate 支払レコードが見つかりませんでした。Salesforce システム管理者にお問い合わせください。</label>
     </customLabels>
@@ -6232,20 +6254,52 @@
         <label>この支払は返金済みか、それ自体が返金です。</label>
     </customLabels>
     <customLabels>
+        <name>pmtRefundAllocationHelpText</name>
+        <label>この返金に合わせて調整するために、一般会計単位の割り当てが [固定] から [パーセント] に変更されました。</label>
+    </customLabels>
+    <customLabels>
         <name>pmtRefundAmount</name>
         <label>返金額</label>
     </customLabels>
     <customLabels>
-        <name>pmtRefundProcessing</name>
-        <label>返金は処理のために送信されました。返金された支払は商談レコードで確認してください。</label>
+        <name>pmtRefundAmountInvalid</name>
+        <label>残高以下の返金を入力してください。</label>
     </customLabels>
     <customLabels>
         <name>pmtRefundPaymentConfirmedButton</name>
         <label>支払を返金</label>
     </customLabels>
     <customLabels>
+        <name>pmtRefundPaymentDate</name>
+        <label>支払日</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentErrorMessage</name>
+        <label>返金の処理中にエラーが発生しました。</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmountTooHigh</name>
+        <label>返金は {{AMOUNT}} 以下にする必要があります。</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmountTooLow</name>
+        <label>0 より大きな返金を入力してください。</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundProcessing</name>
+        <label>返金は処理のために送信されました。返金された支払は商談レコードで確認してください。</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentSuccessMessage</name>
+        <label>返金に成功しました。</label>
+    </customLabels>
+    <customLabels>
         <name>pmtRefundPaymentTitle</name>
         <label>支払を返金しますか?</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRemainingBalance</name>
+        <label>残高</label>
     </customLabels>
     <customLabels>
         <name>pmtUnpaidPaymentScheduledDateRequired</name>
@@ -6396,8 +6450,88 @@
         <label>取消対象の支払には [支払日] が必要です。</label>
     </customLabels>
     <customLabels>
+        <name>psACH</name>
+        <label>ACH (銀行口座)</label>
+    </customLabels>
+    <customLabels>
+        <name>psElevateConnectionTimeout</name>
+        <label>Elevate への接続がタイムアウトしました。後でもう一度お試しください。</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayDefault</name>
+        <label>デフォルトゲートウェイを常に使用</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewaySelectionLabel</name>
+        <label>NPSP では、上書きしない限り、最近 Elevate に追加されたゲートウェイが使用されます。デフォルトの Elevate 支払ゲートウェイを設定するには、ここで選択します。</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewaysNotFound</name>
+        <label>支払ゲートウェイが見つかりません。Elevate アカウントを確認してください。</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayNotValid</name>
+        <label>以前に保存されたゲートウェイを検証できません。別のゲートウェイを選択してください。</label>
+    </customLabels>
+    <customLabels>
+        <name>psHideGatewaysAndMethods</name>
+        <label>Elevate ゲートウェイと支払方法を非表示</label>
+    </customLabels>
+    <customLabels>
+        <name>psHidePaymentMethods</name>
+        <label>支払方法を非表示</label>
+    </customLabels>
+    <customLabels>
+        <name>psPaymentGateway</name>
+        <label>支払ゲートウェイ:</label>
+    </customLabels>
+    <customLabels>
+        <name>psSelectPaymentGateway</name>
+        <label>支払ゲートウェイを選択</label>
+    </customLabels>
+    <customLabels>
+        <name>psSelectPaymentMethods</name>
+        <label>支払方法を選択</label>
+    </customLabels>
+    <customLabels>
         <name>psSelectValidPaymentMethod</name>
         <label>支払を入力するには、有効な支払方法を選択してください。</label>
+    </customLabels>
+    <customLabels>
+        <name>psShowGatewaysAndMethods</name>
+        <label>Elevate ゲートウェイと支払方法を表示</label>
+    </customLabels>
+    <customLabels>
+        <name>psEnableGatewayAssignment</name>
+        <label>ゲートウェイの割り当てを有効化</label>
+    </customLabels>
+    <customLabels>
+        <name>psEnableGatewayAssignmentHeader</name>
+        <label>ゲートウェイの割り当てを有効化</label>
+    </customLabels>
+    <customLabels>
+        <name>psEnableGatewayAssignmentHelp</name>
+        <label>ゲートウェイの割り当てを有効にすると、支援エントリテンプレートの変更時に支払ゲートウェイとそれぞれの支払方法を選択できるようになります。</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayManagementHelp</name>
+        <label>これらの設定では、Elevate 取引の支払ゲートウェイを管理します。</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayIDHeader</name>
+        <label>ゲートウェイ ID</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayIDHelp</name>
+        <label>NPSP では、上書きしない限り、最近 Elevate に追加されたゲートウェイが使用されます。NPSP で使用されるゲートウェイを変更するには、[編集] をクリックし、ゲートウェイ ID を入力して、作業内容を保存します。[Elevate 管理コンソール] | [ゲートウェイ管理] でゲートウェイ ID を見つけます。</label>
+    </customLabels>
+    <customLabels>
+        <name>psShowPaymentMethods</name>
+        <label>支払方法を表示</label>
+    </customLabels>
+    <customLabels>
+        <name>psUnableToConnect</name>
+        <label>Elevate に接続できません。接続を確認して、もう一度お試しください。</label>
     </customLabels>
     <customLabels>
         <name>ProgressMarkerAssistiveTextProgress</name>
@@ -7206,7 +7340,7 @@
     </customLabels>
     <customLabels>
         <name>stgHelpPowerOfUsHub</name>
-        <label>質問を受けましたか? NPSP に関する質問には、&lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;「Nonprofit Success Pack」&lt;/a&gt;グループをお試しください。Salesforce の管理と設定に関する質問には、&lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;「System Administrators」&lt;/a&gt;グループをお試しください。&lt;br/&gt;&lt;br/&gt;最新の NPSP リリースノートについては、&lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;「NPSP Release Announcements」&lt;/a&gt;グループで確認できます。</label>
+        <label>質問を受けましたか? NPSP に関する質問には、&lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;「Nonprofit Success Pack」&lt;/a&gt;グループをお試しください。Salesforce の管理と設定に関する質問には、&lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&quot; target=&quot;_blank&quot;&gt;「System Administrators」&lt;/a&gt;グループをお試しください。&lt;br/&gt;&lt;br/&gt;最新の NPSP リリースノートについては、&lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC.htm&quot; target=&quot;_blank&quot;&gt;「NPSP Release Announcements」&lt;/a&gt;グループで確認できます。</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPrimaryContactBatch</name>
@@ -7346,7 +7480,7 @@
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalMethod</name>
-        <label>相互関係の生成に使用される方法を決定します。性別のカスタム設定を使用する「リスト設定」、または必要に応じて種別を反転 (「親-子」から「子-親」) する「値反転」のいずれか。</label>
+        <label>相互関係の生成に使用する方法を指定します。</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalName</name>
@@ -8288,7 +8422,7 @@
         <label>新規継続支援</label>
     </quickActions>
     <quickActions>
-        <name>npe01__oppPayment__c.Refund</name>
+        <name>npe01__OppPayment__c.Refund</name>
         <label>返金</label>
     </quickActions>
     <quickActions>

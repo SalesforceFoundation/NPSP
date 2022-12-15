@@ -833,6 +833,10 @@
         <label>Gültige Zahlungsmethoden für eine aktive, Elevate zugeordnete wiederkehrende Spende sind Kreditkarte oder Clearing-Zentrale.</label>
     </customLabels>
     <customLabels>
+        <name>RD2_ElevatePauseInstallmentDateErrorMessage</name>
+        <label>Wir können eine mit Elevate verbundene wiederkehrende Spende nicht weniger als zwei Tage vor dem Datum der Rate aufschieben.</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_CurrencyChangeIsRestrictedOnRD</name>
         <label>Sie können die Währung für eine wiederkehrende Spende nicht ändern, wenn eine zugeordnete geschlossene Opportunity vorhanden ist.</label>
     </customLabels>
@@ -1063,8 +1067,7 @@
     <customLabels>
         <name>RD2_EnablementIntro</name>
         <label>Herzlich Willkommen! Erweiterte wiederkehrende Spenden ist unsere neu gestaltete und verbesserte Funktion Wiederkehrende Spenden für das Nonprofit Success Pack (NPSP). Ein großes Dankeschön an unsere Community-Mitglieder, die ihr Feedback gegeben und ihren Beitrag zu Erweiterte wiederkehrende Spenden geleistet haben.
-        &lt;br/&gt;&lt;br/&gt;Da bereits eine Funktion für wiederkehrende Spenden in NPSP vorhanden ist, müssen Sie eine Reihe von Upgradeschritten ausführen und Ihre vorhandenen Daten in das Erweiterte wiederkehrende Spenden-Modell verschieben. Wir haben die erforderlichen Schritte unten dargestellt.
-        &lt;br/&gt;&lt;br/&gt;Auf dem Weg werden Sie wahrscheinlich die eine oder andere Frage haben, daher möchten wir, dass Sie auf jeden einzelnen Schritt umfassend vorbereitet sind.</label>
+        &lt;br/&gt;&lt;br/&gt;Da bereits eine Funktion für wiederkehrende Spenden in NPSP vorhanden ist, müssen Sie eine Reihe von Upgradeschritten ausführen und Ihre vorhandenen Daten in das Erweiterte wiederkehrende Spenden-Modell verschieben. Wir haben die erforderlichen Schritte unten dargestellt.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMetaDeployConfirm</name>
@@ -1112,7 +1115,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationErrorMessage</name>
-        <label>In Ihrem Migrationslauf sind Fehler aufgetreten, diese müssen behoben werden, um eine erfolgreiche Migration durchzuführen. Zeigen Sie die Fehler an, in dem Sie zu NPSP-Einstellungen &gt; Systemtools &gt; Fehlerprotokolle wechseln.</label>
+        <label>Bei der Ausführung Ihrer Migration sind Fehler aufgetreten, die behoben werden müssen, damit die Migration erfolgreich abgeschlossen werden kann. Sehen Sie sich die Fehler unter &quot;NPSP-Einstellungen&quot; &gt; &quot;Systemtools&quot; &gt; &quot;Fehlerprotokolle&quot; an.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationIntro</name>
@@ -1153,7 +1156,7 @@
     <customLabels>
         <name>RD2_EnablementPrepTasks</name>
         <label>&lt;ul&gt;&lt;li&gt;Deaktivieren Sie Workflows, Prozesse, Validierungsregeln und Trigger für die Objekte Wiederkehrende Spenden, Opportunity und Zahlung.&lt;/li&gt;
-&lt;li&gt;Sichern Sie Ihre Datenbank, einschließlich aller Wiederkehrenden Spenden und aller zugeordneten Datensätze.&lt;/li&gt;</label>
+&lt;li&gt;Sichern Sie Ihre Datenbank, einschließlich aller Wiederkehrenden Spenden und aller zugeordneten Datensätze.&lt;/li&gt;&lt;/ul&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementPrepTitle</name>
@@ -1162,7 +1165,7 @@
     <customLabels>
         <name>RD2_EnablementSimpleIntro</name>
         <label>Durch &quot;Erweiterte wiederkehrende Spenden aktivieren&quot; lassen sich wiederkehrende Spenden flexibler und einfacher verwalten als je zuvor. Führen Sie die Schritte unten aus, um Erweiterte wiederkehrende Spenden zu aktivieren. Sie müssen ALLE Schritte ausführen, um Erweiterte wiederkehrende Spenden vollständig zu aktivieren.
-            &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Da Sie nicht über Datensätze für wiederkehrende Spenden verfügen, brauchen Sie keinerlei Daten zu überprüfen oder zu migrieren.&lt;/b&gt;</label>
+        &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Da Sie nicht über Datensätze für wiederkehrende Spenden verfügen, brauchen Sie keinerlei Daten zu überprüfen oder zu migrieren.&lt;/b&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EndDateMustBeLaterThanCloseWonOpp</name>
@@ -2101,10 +2104,11 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>Seit dem 1. Oktober 2020 wird die Batch-Dateneingabe nicht mehr unterstützt. Die meisten Funktionen wurden durch neuere Features in NPSP ersetzt. Wenn sich bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Dateneingabe verarbeiten.</label>
+        <label>Seit dem 1. Oktober 2020 wird die Batch-Dateneingabe nicht mehr unterstützt. Die meisten Funktionen wurden durch neuere Features in NPSP ersetzt. Wenn sich bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Dateneingabe verarbeiten. Wenden Sie sich an den Support, wenn Sie auf in Bearbeitung befindliche Datensätze zugreifen müssen. &lt;br/&gt; Sie sollten sich Spendeneintrag als Alternative zur Batch-Dateneingabe ansehen.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
+        <label>Am 1. Oktober 2020 wird die Batch-Dateneingabe deaktiviert und funktioniert dann in NPSP nicht mehr. Wenn sich zu diesem Zeitpunkt bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Dateneingabe verarbeiten. Um einen reibungslosen Übergang zu gewährleisten, aktivieren und verwenden Sie den Spendeneintrag vor dem 1. Oktober.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningHeader</name>
@@ -3004,8 +3008,12 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <label>Batch-Verarbeitung und Zahlungen</label>
     </customLabels>
     <customLabels>
+        <name>bgeEditPaymentInformation</name>
+        <label>Sie können diese mit Elevate verbundene Spende erst bearbeiten, nachdem Sie die Zahlungsinformationen erneut eingegeben haben. Wählen Sie &quot;Zahlungsinformationen bearbeiten&quot; aus.</label>
+    </customLabels>
+    <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>Am 13. Juli 2021 wird das Legacy-Batch-Spendeneintragsmodul deaktiviert und funktioniert dann in NPSP nicht mehr. Wenn sich zu diesem Zeitpunkt bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Spendeneingabe verarbeiten. Um einen reibungslosen Übergang zu gewährleisten, aktivieren und verwenden Sie vor dem 13.</label>
+        <label>Am 13. Juli 2021 wird das Legacy-Batch-Spendeneintragsmodul deaktiviert und funktioniert dann in NPSP nicht mehr. Wenn sich zu diesem Zeitpunkt bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Spendeneingabe verarbeiten. Um einen reibungslosen Übergang zu gewährleisten, aktivieren und verwenden Sie vor dem 13. Juli den neueren Spendeneintrag.</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -3017,10 +3025,10 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     </customLabels>
     <customLabels>
         <name>bgeNotSupportedBody</name>
-        <label>Ab dem 13. Juli 2021 wird der Batch-Spendeneintrag nicht mehr unterstützt; er wurde durch den Spendeneintrag ersetzt.
-            Wenn sich bei Ihnen noch Batches in Bearbeitung befinden, können Sie nach wie vor auf die betreffenden Datensätze zugreifen, sie jedoch nicht mehr mithilfe des Batch-Spendeneintrags bearbeiten.
-            Wenden Sie sich an den Support, wenn Sie Zugriff auf in Bearbeitung befindliche Batches benötigen.
-            Sie sollten sich den Spendeneintrag als Alternative zum Batch-Spendeneintrag ansehen.</label>
+        <label>Seit dem 13. Juli 2021 wird der Batch-Spendeneintrag nicht mehr unterstützt und durch den Spendeneintrag ersetzt.
+            Wenn sich bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe von Batch-Spendeneintrag verarbeiten.
+            Wenden Sie sich an den Support, wenn Sie auf in Bearbeitung befindliche Datensätze zugreifen müssen.
+            Sie sollten sich Spendeneintrag als Alternative zu Batch-Spendeneintrag ansehen.</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -3161,6 +3169,14 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <label>Sie verfügen nicht über die erforderlichen Systemberechtigungen, um diese Aktion auszuführen. Wenden Sie sich Unterstützung an Ihren Systemadministrator.</label>
     </customLabels>
     <customLabels>
+        <name>commonAccountNumber</name>
+        <label>Account Number (Kontonummer)</label>
+    </customLabels>
+    <customLabels>
+        <name>commonACHLast4</name>
+        <label>ACH Letzte 4</label>
+    </customLabels>
+    <customLabels>
         <name>commonActivate</name>
         <label>Aktivieren</label>
     </customLabels>
@@ -3171,6 +3187,22 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     <customLabels>
         <name>commonAmount</name>
         <label>Betrag</label>
+    </customLabels>
+    <customLabels>
+        <name>gePaymentProcessedWarning</name>
+        <label>{0} hat die Zahlung erfolgreich verarbeitet. Das Ändern von Spender, Datum, Betrag oder Zahlungsmethode führt zu inkonsistenten Datensätzen für die gleiche Transaktion in {0} und NPSP.</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpAdvancedMapping3</name>
+        <label>Die vollständige Dokumentation zum Einrichten der Erweiterten Zuordnung finden Sie &lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;hier&lt;/a&gt;.</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpCustomizableRollupsEnable1</name>
+        <label>Die vollständige Dokumentation zu anpassbaren Rollups finden Sie &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;hier&lt;/a&gt;.</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpHHObjectOverview</name>
+        <label>Weitere Informationen zum empfohlenen Haushalt-Account-Modell finden Sie in der &lt;a href=&quot;https://powerofus.force.com/NPSP_Account_Model&quot; target=&quot;_blank&quot;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>commonAssistiveError</name>
@@ -3203,6 +3235,10 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     <customLabels>
         <name>commonCardLast4</name>
         <label>Letzte 4 Karte</label>
+    </customLabels>
+    <customLabels>
+        <name>commonCVC</name>
+        <label>CVC</label>
     </customLabels>
     <customLabels>
         <name>commonCVV</name>
@@ -3371,6 +3407,10 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     <customLabels>
         <name>commonReviewForm</name>
         <label>Überprüfungsformular</label>
+    </customLabels>
+    <customLabels>
+        <name>commonRoutingNumber</name>
+        <label>Routingnummer</label>
     </customLabels>
     <customLabels>
         <name>commonAdminPermissionErrorMessage</name>
@@ -3542,7 +3582,7 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>Zeigen Sie alle doppelten Kontakte an, die mithilfe von Zuordnungsregeln gefunden wurden. &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Merge_Contacts.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; Weitere Informationen&lt;/b&gt;&lt;/a&gt;</label>
+        <label>Zeigen Sie alle doppelten Kontakte an, die mithilfe von Zuordnungsregeln gefunden wurden. &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Merge_Contacts.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; Weitere Informationen &lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>
@@ -3865,7 +3905,7 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
     </customLabels>
     <customLabels>
         <name>geBodyPaymentProcessedDuringBatchProcessing</name>
-        <label>Die Kreditkarte des Spenders wird verarbeitet, wenn Sie den Batch bearbeiten.</label>
+        <label>Die Zahlung des Spenders wird verarbeitet, wenn Sie den Batch bearbeiten.</label>
     </customLabels>
     <customLabels>
         <name>geBodyTemplateInfoLeftCol</name>
@@ -5047,6 +5087,10 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
         <label>Es wurden ungültige Konfigurationsparameter angegeben</label>
     </customLabels>
     <customLabels>
+        <name>geRD2FirstInstallmentPaid</name>
+        <label>Erste Ratenzahlung</label>
+    </customLabels>
+    <customLabels>
         <name>geSearchPlaceholder</name>
         <label>Suchen...</label>
     </customLabels>
@@ -6211,22 +6255,6 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
         <label>Eine ausgeführte Zahlung muss über ein Zahlungsdatum verfügen.</label>
     </customLabels>
     <customLabels>
-        <name>pmtRefundPaymentDate</name>
-        <label>Zahlungsdatum</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundPaymentErrorMessage</name>
-        <label>Fehler beim Bearbeiten der Rückerstattung.</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundAmountInvalid</name>
-        <label>Geben Sie eine Rückerstattung ein, die kleiner oder gleich dem Restsaldo ist.</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundPaymentSuccessMessage</name>
-        <label>Die Rückerstattung war erfolgreich.</label>
-    </customLabels>
-    <customLabels>
         <name>pmtPaymentNotFound</name>
         <label>Der entsprechende Elevate-Zahlungsdatensatz konnte nicht gefunden werden. Bitten Sie Ihren Salesforce-Administrator um Hilfe.</label>
     </customLabels>
@@ -6235,20 +6263,52 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
         <label>Diese Zahlung wurde bereits zurückerstattet oder stellt selbst eine Erstattung dar.</label>
     </customLabels>
     <customLabels>
+        <name>pmtRefundAllocationHelpText</name>
+        <label>Feste Zuweisungen zum Verwendungszweck werden in Prozentsätze umgewandelt, um diese Erstattung auszugleichen.</label>
+    </customLabels>
+    <customLabels>
         <name>pmtRefundAmount</name>
         <label>Erstattungsbetrag</label>
     </customLabels>
     <customLabels>
-        <name>pmtRefundProcessing</name>
-        <label>Die Rückerstattung wurde zur Bearbeitung eingereicht. Prüfen Sie, ob die erstattete Zahlung im Opportunity-Datensatz enthalten ist.</label>
+        <name>pmtRefundAmountInvalid</name>
+        <label>Geben Sie eine Rückerstattung ein, die kleiner oder gleich dem Restsaldo ist.</label>
     </customLabels>
     <customLabels>
         <name>pmtRefundPaymentConfirmedButton</name>
         <label>Zahlung zurückerstatten</label>
     </customLabels>
     <customLabels>
+        <name>pmtRefundPaymentDate</name>
+        <label>Zahlungsdatum</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentErrorMessage</name>
+        <label>Fehler beim Bearbeiten der Rückerstattung.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmountTooHigh</name>
+        <label>Die Erstattung kann nicht mehr als {{AMOUNT}} betragen.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmountTooLow</name>
+        <label>Geben Sie eine Erstattung ein, die größer als 0 ist.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundProcessing</name>
+        <label>Die Rückerstattung wurde zur Bearbeitung eingereicht. Prüfen Sie, ob die erstattete Zahlung im Opportunity-Datensatz enthalten ist.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentSuccessMessage</name>
+        <label>Die Rückerstattung war erfolgreich.</label>
+    </customLabels>
+    <customLabels>
         <name>pmtRefundPaymentTitle</name>
         <label>Zahlung zurückerstatten?</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRemainingBalance</name>
+        <label>Verbleibender Saldo</label>
     </customLabels>
     <customLabels>
         <name>pmtUnpaidPaymentScheduledDateRequired</name>
@@ -6399,8 +6459,88 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
         <label>Eine abgeschriebene Zahlung muss über ein Zahlungsdatum verfügen.</label>
     </customLabels>
     <customLabels>
+        <name>psACH</name>
+        <label>ACH (Bankkonto)</label>
+    </customLabels>
+    <customLabels>
+        <name>psElevateConnectionTimeout</name>
+        <label>Zeitlimitüberschreitung bei der Verbindung zu Elevate. Versuchen Sie es später noch einmal.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayDefault</name>
+        <label>Immer Standard-Gateway verwenden</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewaySelectionLabel</name>
+        <label>NPSP verwendet das Gateway, das zuletzt zu Elevate hinzugefügt wurde, es sei denn, Sie setzen es außer Kraft. Zum Festlegen eines Standard-Zahlungs-Gateways für Elevate wählen Sie es hier aus.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewaysNotFound</name>
+        <label>Es wurden keine Zahlungs-Gateways gefunden. Überprüfen Sie Ihren Elevate-Account.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayNotValid</name>
+        <label>Wir können das zuvor gespeicherte Gateway nicht validieren. Wählen Sie ein anderes Gateway aus.</label>
+    </customLabels>
+    <customLabels>
+        <name>psHideGatewaysAndMethods</name>
+        <label>Elevate-Gateways und Zahlungsmethoden ausblenden</label>
+    </customLabels>
+    <customLabels>
+        <name>psHidePaymentMethods</name>
+        <label>Zahlungsmethoden ausblenden</label>
+    </customLabels>
+    <customLabels>
+        <name>psPaymentGateway</name>
+        <label>Zahlungs-Gateway:</label>
+    </customLabels>
+    <customLabels>
+        <name>psSelectPaymentGateway</name>
+        <label>Zahlungs-Gateway auswählen</label>
+    </customLabels>
+    <customLabels>
+        <name>psSelectPaymentMethods</name>
+        <label>Zahlungsmethoden auswählen</label>
+    </customLabels>
+    <customLabels>
         <name>psSelectValidPaymentMethod</name>
         <label>Wählen Sie zum Eingeben der Zahlung eine gültige Zahlungsmethode aus.</label>
+    </customLabels>
+    <customLabels>
+        <name>psShowGatewaysAndMethods</name>
+        <label>Elevate-Gateways und Zahlungsmethoden anzeigen</label>
+    </customLabels>
+    <customLabels>
+        <name>psEnableGatewayAssignment</name>
+        <label>Gateway-Zuweisung aktivieren</label>
+    </customLabels>
+    <customLabels>
+        <name>psEnableGatewayAssignmentHeader</name>
+        <label>Gateway-Zuweisung aktivieren</label>
+    </customLabels>
+    <customLabels>
+        <name>psEnableGatewayAssignmentHelp</name>
+        <label>Durch die Aktivierung der Gateway-Zuweisung können Sie beim Ändern von Spendeneintrags-Vorlagen das Zahlungs-Gateway und die entsprechenden Zahlungsmethoden auswählen.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayManagementHelp</name>
+        <label>Mit diesen Einstellungen werden die Zahlungs-Gateways für Elevate-Transaktionen verwaltet.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayIDHeader</name>
+        <label>Gateway-ID</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayIDHelp</name>
+        <label>NPSP verwendet das Gateway, das Elevate zuletzt hinzugefügt wurde, es sei denn, Sie setzen es außer Kraft. Zum Ändern des Gateways, das von NPSP verwendet wird, klicken Sie auf &quot;Bearbeiten&quot;, geben Sie die Gateway-ID ein, und speichern Sie Ihre Arbeit. Suchen Sie die Gateway-ID in der Elevate-Verwaltungskonsole | Gateway-Management.</label>
+    </customLabels>
+    <customLabels>
+        <name>psShowPaymentMethods</name>
+        <label>Zahlungsmethoden anzeigen</label>
+    </customLabels>
+    <customLabels>
+        <name>psUnableToConnect</name>
+        <label>Es konnte keine Verbindung mit Elevate hergestellt werden. Überprüfen Sie Ihre Verbindung, und versuchen Sie es noch einmal.</label>
     </customLabels>
     <customLabels>
         <name>ProgressMarkerAssistiveTextProgress</name>
@@ -7166,7 +7306,7 @@ WICHTIG: Die Datentypen beider Felder müssen identisch sein.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingFormat</name>
-        <label>Das Format des Opportunity-Namens. Wählen Sie &quot;Sonstige&quot;, um ein eigenes zu erstellen.</label>
+        <label>Das Namensformat für Opportunities. Wählen Sie &quot;Sonstige&quot; aus, um ein eigenes zu erstellen.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingRecTypes</name>
@@ -7210,7 +7350,7 @@ WICHTIG: Die Datentypen beider Felder müssen identisch sein.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPowerOfUsHub</name>
-        <label>Haben Sie Fragen? Antworten zu Fragen über NPSP können Sie in der Gruppe &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; finden. Antworten zu Fragen über die Verwaltung und Konfiguration von Salesforce können Sie in der Gruppe &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; finden.&lt;br/&gt;&lt;br/&gt;Lesen Sie die neuesten NPSP-Versionshinweise in der Gruppe &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt;, um auf dem Laufenden zu bleiben.</label>
+        <label>Haben Sie Fragen? Antworten zu Fragen über NPSP können Sie in der Gruppe &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; finden. Antworten zu Fragen über die Verwaltung und Konfiguration von Salesforce können Sie in der Gruppe &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; finden.&lt;br/&gt;&lt;br/&gt;Lesen Sie die neuesten NPSP-Versionshinweise in der Gruppe &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC.htm&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt;, um auf dem Laufenden zu bleiben.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPrimaryContactBatch</name>
@@ -7350,7 +7490,7 @@ Dieser Vorgang kann etwas Zeit in Anspruch nehmen, Sie können die Seite jedoch 
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalMethod</name>
-        <label>Legt die Methode zur Generierung von wechselseitigen Beziehungen fest.</label>
+        <label>Gibt die Methode an, die zum Generieren von wechselseitigen Beziehungen verwendet wird.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalName</name>
@@ -8292,7 +8432,7 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
         <label>Neue wiederkehrende Spende</label>
     </quickActions>
     <quickActions>
-        <name>npe01__oppPayment__c.Refund</name>
+        <name>npe01__OppPayment__c.Refund</name>
         <label>Rückerstattung</label>
     </quickActions>
     <quickActions>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Payments_Auto_Close_Stage_Name__c</name>
-    <help>NPSP automatically sets an Opportunity&apos;s stage to this value when the Payment Amount Received is equal to the Opportunity Amount. If no stage is selected, the Opportunity Stage won&apos;t change when payments are complete.</help>
+    <help>NPSP automatically sets an Opportunity's stage to this value when the Payment Amount Received is equal to the Opportunity Amount. If no stage is selected, the Opportunity Stage won't change when payments are complete.</help>
     <label>Opportunity Stage for When Fully Paid</label>
 </CustomFieldTranslation>

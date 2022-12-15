@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>DisableContactRoleAutomation__c</name>
-    <help>Une fois sélectionné, ce champ désactive plusieurs aspects de l’automatisation des rôle de contact d’opportunité NPSP, ce qui peut entraîner des données incorrectes ou en double. Pour plus d&apos;informations, reportez-vous à la documentation du produit.</help>
+    <help>Une fois sélectionné, ce champ désactive plusieurs aspects de l’automatisation des rôle de contact d’opportunité NPSP, ce qui peut entraîner des données incorrectes ou en double. Pour plus d'informations, reportez-vous à la documentation du produit.</help>
     <label>Désactiver automatisation rôles contacts</label>
 </CustomFieldTranslation>

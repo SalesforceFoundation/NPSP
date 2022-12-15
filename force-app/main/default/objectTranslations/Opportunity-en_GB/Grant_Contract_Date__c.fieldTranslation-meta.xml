@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Grant_Contract_Date__c</name>
-    <help>The date of the Grant&apos;s inception, according to the document or contract sent by the grantmaking organisation.</help>
+    <help>The date of the Grant's inception, according to the document or contract sent by the grantmaking organisation.</help>
     <label>Grant Contract Date</label>
 </CustomFieldTranslation>

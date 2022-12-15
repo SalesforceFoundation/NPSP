@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Matching_Gift_Status__c</name>
-    <help>Der Status der Spendenverdopplung für diese Spende, wie z. B. &quot;Übermittelt&quot; oder &quot;Empfangen&quot;.</help>
+    <help>Der Status der Spendenverdopplung für diese Spende, wie z. B. "Übermittelt" oder "Empfangen".</help>
     <label>Spendenverdopplungs-Status</label>
     <picklistValues>
         <masterLabel>Potential</masterLabel>

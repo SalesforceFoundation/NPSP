@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>InstallmentFrequency__c</name>
-    <help>Definieert de planning van termijnen van deze terugkerende donatie, samen met Termijnperiode. Als Termijnperiode bijvoorbeeld Maandelijks zou zijn en Frequentie van termijnen 3, zou de planning worden gedefinieerd als &quot;elke 3 maanden&quot;.</help>
+    <help>Definieert de planning van termijnen van deze terugkerende donatie, samen met Termijnperiode. Als Termijnperiode bijvoorbeeld Maandelijks zou zijn en Frequentie van termijnen 3, zou de planning worden gedefinieerd als "elke 3 maanden".</help>
     <label>Frequentie van termijnen</label>
 </CustomFieldTranslation>

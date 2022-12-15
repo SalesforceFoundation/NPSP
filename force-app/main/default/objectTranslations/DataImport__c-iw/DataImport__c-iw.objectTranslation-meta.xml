@@ -3,24 +3,24 @@
     <caseValues>
         <article>None</article>
         <plural>false</plural>
-        <value/>
+        <value></value>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>false</plural>
-        <value/>
+        <value></value>
     </caseValues>
     <caseValues>
         <article>None</article>
         <plural>true</plural>
-        <value/>
+        <value></value>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>true</plural>
-        <value/>
+        <value></value>
     </caseValues>
-    <gender/>
+    <gender></gender>
     <layouts>
         <layout>Data Import Layout</layout>
         <sections>
@@ -32,7 +32,7 @@
             <section>Account2 Organization Information</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Campaign Information</section>
         </sections>
         <sections>
@@ -44,15 +44,15 @@
             <section>Contact2 Information</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>GAU Allocation 1 Information</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>GAU Allocation 2 Information</section>
         </sections>
         <sections>
@@ -60,31 +60,31 @@
             <section>Home Address</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Household Account Information</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Opportunity Contact Role 1 Information</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Opportunity Contact Role 2 Information</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Opportunity Information</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Payment Information</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Recurring Donation Information</section>
         </sections>
     </layouts>
-    <nameFieldLabel/>
+    <nameFieldLabel></nameFieldLabel>
     <webLinks>
         <label>מחק את כל רשומות יבוא הנתונים</label>
         <name>Delete_All_Data_Import_Records</name>

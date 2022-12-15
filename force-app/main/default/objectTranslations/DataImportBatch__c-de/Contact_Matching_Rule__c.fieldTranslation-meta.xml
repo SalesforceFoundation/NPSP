@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Contact_Matching_Rule__c</name>
-    <help>Regelt Abgleich von Kontakten in Datenimportdatensätzen mit vorh. Kontakten. &quot;Doppelt vorhandene Kontaktregeln&quot; führt alle akt. Duplikatregeln f. d. Kontaktobjekt aus, sucht beste Übereinstimmung. Verwaltung von Duplikatregeln: Setup | Duplikatverwaltung.</help>
+    <help>Regelt Abgleich von Kontakten in Datenimportdatensätzen mit vorh. Kontakten. "Doppelt vorhandene Kontaktregeln" führt alle akt. Duplikatregeln f. d. Kontaktobjekt aus, sucht beste Übereinstimmung. Verwaltung von Duplikatregeln: Setup | Duplikatverwaltung.</help>
     <label>Kontakt-Abgleichsregel</label>
 </CustomFieldTranslation>
