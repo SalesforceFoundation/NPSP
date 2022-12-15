@@ -11,10 +11,10 @@
     <startsWith>Consonant</startsWith>
     <caseValues>
         <plural>false</plural>
-        <value>Mappage de champs d&apos;importation de données</value>
+        <value>Mappage de champs d'importation de données</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value>Mappages de champs d&apos;importation de données</value>
+        <value>Mappages de champs d'importation de données</value>
     </caseValues>
 </CustomObjectTranslation>

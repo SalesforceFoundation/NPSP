@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Opportunity__c</name>
-    <help>The Opportunity you want this Allocation attributed to. NPSP rolls up all Opportunities in a Closed/Won stage to this Allocation&apos;s General Accounting Unit.</help>
+    <help>The Opportunity you want this Allocation attributed to. NPSP rolls up all Opportunities in a Closed/Won stage to this Allocation's General Accounting Unit.</help>
     <relationshipLabel>GAU Allocations</relationshipLabel>
     <label>Opportunity</label>
 </CustomFieldTranslation>

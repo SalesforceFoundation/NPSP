@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Minimum_Amount__c</name>
-    <help>The minimum amount needed for NPSP to assign this Level. If this field is empty, then NPSP will assign this Level to any amount less than this Level&apos;s Maximum Amount.</help>
+    <help>The minimum amount needed for NPSP to assign this Level. If this field is empty, then NPSP will assign this Level to any amount less than this Level's Maximum Amount.</help>
     <label>Minimum Amount (&gt;=)</label>
 </CustomFieldTranslation>

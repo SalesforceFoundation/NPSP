@@ -833,6 +833,10 @@
         <label>Los métodos de pago válidos para una Donación recurrente conectada con Elevate activa son Tarjeta de crédito o ACH.</label>
     </customLabels>
     <customLabels>
+        <name>RD2_ElevatePauseInstallmentDateErrorMessage</name>
+        <label>No podemos poner en pausa una Donación recurrente conectada con Elevate que esté menos de dos día antes de la fecha de abono.</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_CurrencyChangeIsRestrictedOnRD</name>
         <label>No puede cambiar la divisa de la donación recurrente cuando hay una oportunidad cerrada relacionada.</label>
     </customLabels>
@@ -1063,8 +1067,7 @@
     <customLabels>
         <name>RD2_EnablementIntro</name>
         <label>¡Saludos! Donaciones recurrentes mejoradas es nuestra función de Donaciones recurrentes rediseñada y mejorada para Nonprofit Success Pack (NPSP). Damos las gracias calurosamente a los miembros de nuestra comunidad que ofrecieron sus comentarios y ayudaron a que Donaciones recurrentes mejoradas fuese posible.
-        &lt;br/&gt;&lt;br/&gt;Debido a que ya hay una función Donaciones recurrentes en NPSP, tendrá que realizar varias tareas de actualización y trasladar sus datos existentes al modelo de Donaciones recurrentes mejoradas. Indicamos las tareas requeridas a continuación.
-        &lt;br/&gt;&lt;br/&gt;Es probable que tenga preguntas a lo largo del camino y queremos que esté completamente preparado en cada paso.</label>
+        &lt;br/&gt;&lt;br/&gt;Debido a que ya hay una función Donaciones recurrentes en NPSP, tendrá que realizar varias tareas de actualización y trasladar sus datos existentes al modelo de Donaciones recurrentes mejoradas. Indicamos las tareas requeridas a continuación.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMetaDeployConfirm</name>
@@ -1112,7 +1115,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationErrorMessage</name>
-        <label>Su ejecución de migración tiene errores; estos tendrán que solucionarse para completar una migración satisfactoria. Vea los errores dirigiéndose a Configuración de NPSP &gt; Herramientas del sistema &gt; Registros de errores.</label>
+        <label>Su ejecución de migración tiene errores que tendrán que solucionarse para completar una migración satisfactoria. Consulte los errores dirigiéndose a Configuración de NPSP &gt; Herramientas del sistema &gt; Registros de errores.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationIntro</name>
@@ -1153,7 +1156,7 @@
     <customLabels>
         <name>RD2_EnablementPrepTasks</name>
         <label>&lt;ul&gt;&lt;li&gt;Desactive los flujos de trabajo, procesos, reglas de validación y desencadenadores en los objetos Donaciones recurrentes, Oportunidad y Pago.&lt;/li&gt;
-&lt;li&gt;Realice una copia de seguridad de su base de datos, incluyendo todas las Donaciones recurrentes y sus registros relacionados.&lt;/li&gt;</label>
+&lt;li&gt;Realice una copia de seguridad de su base de datos, incluyendo todas las Donaciones recurrentes y sus registros relacionados.&lt;/li&gt;&lt;/ul&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementPrepTitle</name>
@@ -1162,7 +1165,7 @@
     <customLabels>
         <name>RD2_EnablementSimpleIntro</name>
         <label>Donaciones recurrentes mejoradas hace que las Donaciones recurrentes sean más flexibles y fáciles de gestionar que nunca. Para activar Donaciones recurrentes mejoradas, siga los pasos que aparecen a continuación. Debe completar TODOS los pasos para activar completamente Donaciones recurrentes mejoradas.
-            &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Debido a que no tiene registros de Donaciones recurrentes, no es necesario que valide o migre datos.&lt;/b&gt;</label>
+        &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Debido a que no tiene registros de Donaciones recurrentes, no es necesario que valide o migre datos.&lt;/b&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EndDateMustBeLaterThanCloseWonOpp</name>
@@ -2101,7 +2104,7 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     </customLabels>
     <customLabels>
         <name>bdeRetirementBlockerMessage</name>
-        <label>Desde el 1 de octubre de 2020, Entrada de datos en lote ya no se admite. La mayoría de las funciones han sido sustituidas por nuevas funciones en NPSP. Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de datos en lote. Póngase en contacto con el servicio de asistencia si necesita acceder a lotes en curso&lt;br/&gt;.</label>
+        <label>Desde el 1 de octubre de 2020, Entrada de datos en lote ya no se admite. La mayoría de las funciones han sido sustituidas por nuevas funciones en NPSP. Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de datos en lote. Póngase en contacto con el servicio de asistencia si necesita acceder a lotes en curso&lt;br/&gt;. Puede explorar Entrada de regalos como una alternativa a Entrada de datos en lote.</label>
     </customLabels>
     <customLabels>
         <name>bdeRetirementWarningBody</name>
@@ -3002,8 +3005,12 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <label>Procesar lote y pagos</label>
     </customLabels>
     <customLabels>
+        <name>bgeEditPaymentInformation</name>
+        <label>No puede modificar este regalo conectado con Elevate hasta que vuelva a introducir la información de pago. Seleccione Modificar información del pago.</label>
+    </customLabels>
+    <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>El 13 de julio de 2021, Entrada de regalos en lote quedará retirada y dejará de funcionar en NPSP. Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de regalos en lote. Para garantizar una transición sin problemas, active y utilice Entrada de regalos antes del 13 de julio.</label>
+        <label>El 13 de julio de 2021, la función heredada Entrada regalos en lote quedará retirada y dejará de funcionar en NPSP. Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada regalos en lote. Para garantizar una transición sin problemas, active y utilice Entrada de admisión regalos antes del 13 de julio.</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -3015,9 +3022,10 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     </customLabels>
     <customLabels>
         <name>bgeNotSupportedBody</name>
-        <label>A fecha del 13 de julio de 2021, Entrada de regalos en lote dejará de admitirse y queda sustituida por Entrada de regalos.
-Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de regalos en lote.
-            Póngase en contacto con el servicio de asistencia si necesita acceder a lotes en curso.</label>
+        <label>Desde el 13 de julio de 2021, Entrada de regalos en lote ya no se admite y se ha sustituido por Entrada de regalos. 
+            Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de regalos en lote.
+            Póngase en contacto con el servicio de asistencia si necesita acceder a lotes regalos curso.
+            Puede explorar Entrada de regalos como una alternativa a Entrada de regalos en lote.</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -3155,6 +3163,14 @@ Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos re
         <label>No tiene los permisos necesarios para realizar esta acción. Póngase en contacto con su administrador para obtener ayuda.</label>
     </customLabels>
     <customLabels>
+        <name>commonAccountNumber</name>
+        <label>Número de cuenta</label>
+    </customLabels>
+    <customLabels>
+        <name>commonACHLast4</name>
+        <label>Últimos 4 de ACH</label>
+    </customLabels>
+    <customLabels>
         <name>commonActivate</name>
         <label>Activar</label>
     </customLabels>
@@ -3165,6 +3181,22 @@ Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos re
     <customLabels>
         <name>commonAmount</name>
         <label>Importe</label>
+    </customLabels>
+    <customLabels>
+        <name>gePaymentProcessedWarning</name>
+        <label>{0} procesó correctamente el pago. Al cambiar el donante, la fecha, el importe o el método de pago dará como resultado registros incoherentes para la misma transacción en {0} y NPSP.</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpAdvancedMapping3</name>
+        <label>Encontrará la documentación completa de configuración de Asignación avanzada &lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;aquí&lt;/a&gt;.</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpCustomizableRollupsEnable1</name>
+        <label>Podrá encontrar la documentación completa de Totalizaciones personalizables &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;aquí&lt;/a&gt;.</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpHHObjectOverview</name>
+        <label>Para aprender más sobre el modelo de cuenta Hogar recomendado, consulte la &lt;a href=&quot;https://powerofus.force.com/NPSP_Account_Model&quot; target=&quot;_blank&quot;&gt;Documentación de NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>commonAssistiveError</name>
@@ -3197,6 +3229,10 @@ Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos re
     <customLabels>
         <name>commonCardLast4</name>
         <label>Últimos 4 dígitos de tarjeta</label>
+    </customLabels>
+    <customLabels>
+        <name>commonCVC</name>
+        <label>CVC</label>
     </customLabels>
     <customLabels>
         <name>commonCVV</name>
@@ -3365,6 +3401,10 @@ Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos re
     <customLabels>
         <name>commonReviewForm</name>
         <label>Revisar formulario</label>
+    </customLabels>
+    <customLabels>
+        <name>commonRoutingNumber</name>
+        <label>Número de enrutamiento</label>
     </customLabels>
     <customLabels>
         <name>commonAdminPermissionErrorMessage</name>
@@ -3859,7 +3899,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     </customLabels>
     <customLabels>
         <name>geBodyPaymentProcessedDuringBatchProcessing</name>
-        <label>Se procesará la tarjeta de crédito del donante cuando procese el lote.</label>
+        <label>Se procesará el pago del donante cuando procese el lote.</label>
     </customLabels>
     <customLabels>
         <name>geBodyTemplateInfoLeftCol</name>
@@ -5041,6 +5081,10 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <label>Se han proporcionado parámetros de configuración no válidos</label>
     </customLabels>
     <customLabels>
+        <name>geRD2FirstInstallmentPaid</name>
+        <label>Primera cuota pagada</label>
+    </customLabels>
+    <customLabels>
         <name>geSearchPlaceholder</name>
         <label>Buscar...</label>
     </customLabels>
@@ -6205,22 +6249,6 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <label>Un pago realizado debe tener una fecha de pago.</label>
     </customLabels>
     <customLabels>
-        <name>pmtRefundPaymentDate</name>
-        <label>Fecha del pago</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundPaymentErrorMessage</name>
-        <label>Se produjo un error al procesar el reembolso.</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundAmountInvalid</name>
-        <label>Introduzca un reembolso que sea inferior o igual al saldo restante.</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundPaymentSuccessMessage</name>
-        <label>El reembolso se realizó correctamente.</label>
-    </customLabels>
-    <customLabels>
         <name>pmtPaymentNotFound</name>
         <label>No se pudo encontrar el registro del pago de Elevate correspondiente. Póngase en contacto con su administrador de Salesforce para obtener ayuda.</label>
     </customLabels>
@@ -6229,20 +6257,52 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <label>Este pago ya se ha reembolsado o es un reembolso en sí.</label>
     </customLabels>
     <customLabels>
+        <name>pmtRefundAllocationHelpText</name>
+        <label>Las asignaciones de CCG fijas se cambian a porcentajes para ajustar este reembolso.</label>
+    </customLabels>
+    <customLabels>
         <name>pmtRefundAmount</name>
         <label>Reembolsar importe</label>
     </customLabels>
     <customLabels>
-        <name>pmtRefundProcessing</name>
-        <label>Reembolso enviado para procesamiento. Consulte el pago reembolsado en el registro Oportunidad.</label>
+        <name>pmtRefundAmountInvalid</name>
+        <label>Introduzca un reembolso que sea inferior o igual al saldo restante.</label>
     </customLabels>
     <customLabels>
         <name>pmtRefundPaymentConfirmedButton</name>
         <label>Reembolsar pago</label>
     </customLabels>
     <customLabels>
+        <name>pmtRefundPaymentDate</name>
+        <label>Fecha del pago</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentErrorMessage</name>
+        <label>Se produjo un error al procesar el reembolso.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmountTooHigh</name>
+        <label>El reembolso no puede ser superior a {{AMOUNT}}.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmountTooLow</name>
+        <label>Introduzca un reembolso que sea superior a 0.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundProcessing</name>
+        <label>Reembolso enviado para procesamiento. Consulte el pago reembolsado en el registro Oportunidad.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentSuccessMessage</name>
+        <label>El reembolso se realizó correctamente.</label>
+    </customLabels>
+    <customLabels>
         <name>pmtRefundPaymentTitle</name>
         <label>¿Reembolsar pago?</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRemainingBalance</name>
+        <label>Saldo restante</label>
     </customLabels>
     <customLabels>
         <name>pmtUnpaidPaymentScheduledDateRequired</name>
@@ -6393,8 +6453,88 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <label>Un pago amortizado debe tener una fecha de pago.</label>
     </customLabels>
     <customLabels>
+        <name>psACH</name>
+        <label>ACH (cuenta bancaria)</label>
+    </customLabels>
+    <customLabels>
+        <name>psElevateConnectionTimeout</name>
+        <label>Se agotó el tiempo de espera de la conexión con Elevate. Inténtelo de nuevo más tarde.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayDefault</name>
+        <label>Utilizar siempre la pasarela predeterminada</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewaySelectionLabel</name>
+        <label>NPSP utiliza la pasarela que se agregó a Elevate más recientemente a no ser que la sustituya. Para establecer una pasarela de pago predeterminada de Elevate, selecciónela aquí.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewaysNotFound</name>
+        <label>No se encontraron Pasarelas de pago. Compruebe su cuenta de Elevate.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayNotValid</name>
+        <label>No podemos validar la pasarela guardada anteriormente. Seleccione una pasarela diferente.</label>
+    </customLabels>
+    <customLabels>
+        <name>psHideGatewaysAndMethods</name>
+        <label>Ocultar pasarelas y métodos de pago de Elevate</label>
+    </customLabels>
+    <customLabels>
+        <name>psHidePaymentMethods</name>
+        <label>Ocultar métodos de pago</label>
+    </customLabels>
+    <customLabels>
+        <name>psPaymentGateway</name>
+        <label>Pasarela de pago:</label>
+    </customLabels>
+    <customLabels>
+        <name>psSelectPaymentGateway</name>
+        <label>Seleccionar pasarela de pago</label>
+    </customLabels>
+    <customLabels>
+        <name>psSelectPaymentMethods</name>
+        <label>Seleccionar métodos de pago</label>
+    </customLabels>
+    <customLabels>
         <name>psSelectValidPaymentMethod</name>
         <label>Para introducir el pago, seleccione un Método de pago válido.</label>
+    </customLabels>
+    <customLabels>
+        <name>psShowGatewaysAndMethods</name>
+        <label>Mostrar pasarelas y métodos de pago de Elevate</label>
+    </customLabels>
+    <customLabels>
+        <name>psEnableGatewayAssignment</name>
+        <label>Activar asignación de pasarela</label>
+    </customLabels>
+    <customLabels>
+        <name>psEnableGatewayAssignmentHeader</name>
+        <label>Activar asignación de pasarela</label>
+    </customLabels>
+    <customLabels>
+        <name>psEnableGatewayAssignmentHelp</name>
+        <label>La activación de una asignación de pasarela le permite seleccionar la pasarela de pago y los métodos de pago respectivos al modificar Plantillas de entrada de regalos.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayManagementHelp</name>
+        <label>Estos parámetros gestionan las pasarelas de pago para las transacciones de Elevate.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayIDHeader</name>
+        <label>Id. de Pasarela</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayIDHelp</name>
+        <label>NPSP utiliza la pasarela que se agregó a Elevate más recientemente a no ser que la sustituya. Para cambiar la pasarela que utiliza NPSP, haga clic en Modificar, introduzca el Id. de pasarela y guarde su trabajo. Encontrará el Id. de la pasarela en la Consola de administrador de Elevate | Gestión de pasarela.</label>
+    </customLabels>
+    <customLabels>
+        <name>psShowPaymentMethods</name>
+        <label>Mostrar métodos de pago</label>
+    </customLabels>
+    <customLabels>
+        <name>psUnableToConnect</name>
+        <label>No se puede conectar con Elevate. Compruebe su conexión e inténtelo de nuevo.</label>
     </customLabels>
     <customLabels>
         <name>ProgressMarkerAssistiveTextProgress</name>
@@ -7156,7 +7296,7 @@ IMPORTANTE: Ambos campos deben ser del mismo tipo de datos.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingFormat</name>
-        <label>El formato del nombre de la oportunidad. Elegir &quot;Otro&quot; para crear su propio formato.</label>
+        <label>El Formato del nombre de la oportunidad. Elija &quot;otro&quot; para crear el suyo propio.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingRecTypes</name>
@@ -7200,7 +7340,7 @@ IMPORTANTE: Ambos campos deben ser del mismo tipo de datos.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPowerOfUsHub</name>
-        <label>¿Tiene preguntas? Pruebe el grupo &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; para formular preguntas sobre NPSP y el grupo &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; para formular preguntas sobre la administración y configuración de Salesforce.&lt;br/&gt;&lt;br/&gt;Manténgase al día con las notas de la versión de NPSP más recientes en el grupo &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;Nonprofit Release Readiness&lt;/a&gt;.</label>
+        <label>¿Tiene preguntas? Pruebe el grupo  &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; para formular preguntas sobre NPSP y el grupo &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; para formular preguntas sobre la administración y configuración de Salesforce.&lt;br/&gt;&lt;br/&gt;Manténgase al día con las notas de la versión de NPSP más recientes en el grupo &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC.htm&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPrimaryContactBatch</name>
@@ -7340,7 +7480,7 @@ Este proceso puede tardar algún tiempo, pero puede cerrar esta página con segu
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalMethod</name>
-        <label>Método a usar para generar relaciones reciprocas. Ya sea Configuración de lista que usa configuración personalizada por género (ver Relaciones recíprocas), o Inversión de valores, que invierte el tipo si es apropiado (&quot;Padre-Hijo&quot; a &quot;Hijo-Padre&quot;)</label>
+        <label>Especifica el método utilizado para generar relaciones recíprocas.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalName</name>
@@ -8282,7 +8422,7 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <label>Nueva donación recurrente</label>
     </quickActions>
     <quickActions>
-        <name>npe01__oppPayment__c.Refund</name>
+        <name>npe01__OppPayment__c.Refund</name>
         <label>Reembolso</label>
     </quickActions>
     <quickActions>

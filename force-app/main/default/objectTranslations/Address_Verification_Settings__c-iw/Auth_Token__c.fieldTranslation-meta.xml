@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <help>אסימון האימות מתוך מפתח הזוג הסודי שלך.</help>
-    <label/>
+    <label></label>
     <name>Auth_Token__c</name>
 </CustomFieldTranslation>

@@ -4,10 +4,10 @@
     <startsWith>Consonant</startsWith>
     <caseValues>
         <plural>false</plural>
-        <value>Paramètre de nommage d&apos;opportunité</value>
+        <value>Paramètre de nommage d'opportunité</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value>Paramètres de nommage d&apos;opportunité</value>
+        <value>Paramètres de nommage d'opportunité</value>
     </caseValues>
 </CustomObjectTranslation>

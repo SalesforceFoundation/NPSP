@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help/>
-    <label/>
+    <help></help>
+    <label></label>
     <name>Page_Type__c</name>
     <picklistValues>
         <masterLabel>Admin</masterLabel>
-        <translation/>
+        <translation></translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>End User</masterLabel>
-        <translation/>
+        <translation></translation>
     </picklistValues>
 </CustomFieldTranslation>

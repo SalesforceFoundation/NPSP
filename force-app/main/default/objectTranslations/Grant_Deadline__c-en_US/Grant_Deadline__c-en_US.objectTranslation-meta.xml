@@ -11,11 +11,11 @@
     <layouts>
         <layout>Grant Deadline Layout</layout>
         <sections>
-            <label/>
+            <label></label>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label/>
+            <label></label>
             <section>Grant Deliverable Requirements</section>
         </sections>
     </layouts>

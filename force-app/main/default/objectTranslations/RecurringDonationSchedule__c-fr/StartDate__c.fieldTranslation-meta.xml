@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>StartDate__c</name>
-    <help>La date à laquelle l&apos;enregistrement de ce calendrier s&apos;applique.</help>
+    <help>La date à laquelle l'enregistrement de ce calendrier s'applique.</help>
     <label>Date de début</label>
 </CustomFieldTranslation>

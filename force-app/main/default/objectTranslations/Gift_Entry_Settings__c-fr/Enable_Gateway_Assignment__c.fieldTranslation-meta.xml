@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Enable_Gateway_Assignment__c</name>
+    <help>Permet d’utiliser différentes passerelles Elevate pour les lots Elevate de saisie de dons. Si l’option n’est pas activée, la passerelle par défaut est toujours utilisée.</help>
+    <label>Activer l’attribution de passerelle</label>
+</CustomFieldTranslation>
