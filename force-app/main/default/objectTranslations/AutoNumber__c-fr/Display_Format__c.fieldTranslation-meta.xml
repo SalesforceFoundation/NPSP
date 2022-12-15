@@ -2,5 +2,5 @@
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Display_Format__c</name>
     <help>Le format du champ à numérotation automatique inclut le nombre de chiffres et, si vous le souhaitez, un préfixe.</help>
-    <label>Format d&apos;affichage</label>
+    <label>Format d'affichage</label>
 </CustomFieldTranslation>

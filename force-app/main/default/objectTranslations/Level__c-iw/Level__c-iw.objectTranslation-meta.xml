@@ -3,32 +3,32 @@
     <caseValues>
         <article>None</article>
         <plural>false</plural>
-        <value/>
+        <value></value>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>false</plural>
-        <value/>
+        <value></value>
     </caseValues>
     <caseValues>
         <article>None</article>
         <plural>true</plural>
-        <value/>
+        <value></value>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>true</plural>
-        <value/>
+        <value></value>
     </caseValues>
     <fieldSets>
-        <label/>
+        <label></label>
         <name>LevelEdit</name>
     </fieldSets>
-    <gender/>
+    <gender></gender>
     <layouts>
         <layout>Level Layout</layout>
         <sections>
-            <label/>
+            <label></label>
             <section>Custom Links</section>
         </sections>
         <sections>
@@ -36,7 +36,7 @@
             <section>long text section</section>
         </sections>
     </layouts>
-    <nameFieldLabel/>
+    <nameFieldLabel></nameFieldLabel>
     <validationRules>
         <errorMessage>היעד הוא שדה נדרש ברמה זו.  ציין את אובייקט היעד עבור רמה זו.</errorMessage>
         <name>Target_Required</name>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Rollup_N_Day_Value__c</name>
-    <help>Dieser Wert beeinflusst die Anzahl der Tage für die Rollup-Felder &quot;N-Tage-Zuweisungen&quot;.</help>
+    <help>Dieser Wert beeinflusst die Anzahl der Tage für die Rollup-Felder "N-Tage-Zuweisungen".</help>
     <label>N-Tage-Wert für Rollup</label>
 </CustomFieldTranslation>

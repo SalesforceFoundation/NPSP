@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Opportunity__c</name>
-    <help>Die Opportunity, der diese Zuweisung zugeordnet werden soll. NPSP fasst alle Opportunities in einer Phase, die &quot;abgeschlossen&quot; bzw. &quot;gewonnen“ ist, im Verwendungszweck dieser Zuweisung zusammen.</help>
+    <help>Die Opportunity, der diese Zuweisung zugeordnet werden soll. NPSP fasst alle Opportunities in einer Phase, die "abgeschlossen" bzw. "gewonnen“ ist, im Verwendungszweck dieser Zuweisung zusammen.</help>
     <relationshipLabel>Zuweisungen Verwendungszweck</relationshipLabel>
     <label>Opportunity</label>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Grant_Requirements_Website__c</name>
-    <help>A URL that points to the grant requirements on the grantmaker&apos;s website.</help>
+    <help>A URL that points to the grant requirements on the grantmaker's website.</help>
     <label>Grant Requirements Website</label>
 </CustomFieldTranslation>

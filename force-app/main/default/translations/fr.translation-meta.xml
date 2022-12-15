@@ -833,6 +833,10 @@
         <label>Les modes de paiement valides pour un don récurrent actif connecté Elevate sont Carte de crédit ou CCA.</label>
     </customLabels>
     <customLabels>
+        <name>RD2_ElevatePauseInstallmentDateErrorMessage</name>
+        <label>Nous ne pouvons pas suspendre un don récurrent lié à Elevate moins de deux jours avant la date de versement.</label>
+    </customLabels>
+    <customLabels>
         <name>RD2_CurrencyChangeIsRestrictedOnRD</name>
         <label>Vous ne pouvez pas changer la devise du Don récurrent lorsqu&apos;une opportunité fermée associée existe.</label>
     </customLabels>
@@ -1063,8 +1067,7 @@
     <customLabels>
         <name>RD2_EnablementIntro</name>
         <label>Bienvenue ! Les Dons récurrents avancés améliorent la fonctionnalité Dons récurrents de NPSP (Nonprofit Success Pack). Un grand merci aux membres de notre communauté qui ont contribué aux Dons récurrents avancés par leurs avis et conseils éclairés.
-        &lt;br/&gt;&lt;br/&gt;Comme NPSP contient déjà une fonctionnalité Dons récurrents, vous devez exécuter plusieurs tâches de mise à niveau et déplacer vos données existantes vers le modèle Dons récurrents avancés. Nous présentons ci-dessous la procédure à suivre.
-        </label>
+        &lt;br/&gt;&lt;br/&gt;Comme NPSP contient déjà une fonctionnalité Dons récurrents, vous devez exécuter plusieurs tâches de mise à niveau et déplacer vos données existantes vers le modèle Dons récurrents avancés. Nous présentons ci-dessous la procédure à suivre.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMetaDeployConfirm</name>
@@ -1112,7 +1115,7 @@
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationErrorMessage</name>
-        <label>L&apos;exécution de votre migration a généré des erreurs qui doivent être corrigées pour réussir la migration. Vous pouvez consulter les erreurs dans Paramètres NPSP &gt; Outils système &gt; Journal des erreurs.</label>
+        <label>Votre exécution de migration comporte des erreurs. Celles-ci devront être corrigées pour terminer la migration. Consultez les erreurs en accédant à Paramètres NPSP &gt; Outils système &gt; Journaux d’erreurs.</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementMigrationIntro</name>
@@ -1153,7 +1156,7 @@
     <customLabels>
         <name>RD2_EnablementPrepTasks</name>
         <label>&lt;ul&gt;&lt;li&gt;Désactivez les workflows, processus, règles de validation et déclencheurs dans les objets Dons récurrents, Opportunité et Paiement.&lt;/li&gt;
-&lt;li&gt;Sauvegardez votre base de données, notamment tous les dons récurrents et leurs enregistrements associés.&lt;/li&gt;</label>
+&lt;li&gt;Sauvegardez votre base de données, notamment tous les dons récurrents et leurs enregistrements associés.&lt;/li&gt;/ul&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EnablementPrepTitle</name>
@@ -1162,7 +1165,7 @@
     <customLabels>
         <name>RD2_EnablementSimpleIntro</name>
         <label>Les dons récurrents avancés rendent les dons récurrents plus flexibles et plus faciles à gérer que jamais. Pour activer les dons récurrents avancés, suivez les étapes ci-dessous. Vous devez suivre TOUTES les étapes pour activer complètement les dons récurrents avancés.
-            &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Étant donné que vous n’avez aucun enregistrement de don récurrent, vous n’avez pas besoin de valider ou de migrer de données.&lt;/b&gt;</label>
+        &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Étant donné que vous n’avez aucun enregistrement de don récurrent, vous n’avez pas besoin de valider ou de migrer de données.&lt;/b&gt;</label>
     </customLabels>
     <customLabels>
         <name>RD2_EndDateMustBeLaterThanCloseWonOpp</name>
@@ -3005,8 +3008,12 @@ Pour vérifier vos paramètres d’affectations UCG, accédez à Dons | Affectat
         <label>Traiter le lot et les paiements</label>
     </customLabels>
     <customLabels>
+        <name>bgeEditPaymentInformation</name>
+        <label>Vous ne pouvez pas modifier ce don lié à Elevate tant que vous n’avez pas saisi de nouveau les informations de paiement. Sélectionnez Modifiez les informations de paiement.</label>
+    </customLabels>
+    <customLabels>
         <name>bgeRetirementWarningBody</name>
-        <label>La saisie de dons par lots héritée sera retirée le 13 juillet 2021 et ne fonctionnera plus dans NPSP. Si vous avez des lots en cours à cette date, vous pourrez toujours accéder à ces enregistrements, mais vous ne pourrez pas les traiter en utilisant la saisie de dons par lots. Pour garantir une parfaite transition, activez et utilisez la nouvelle saisie de dons avant le 13 juillet. </label>
+        <label>La saisie de dons par lots ne sera plus prise en charge à partir du 13 juillet 2021 et ne fonctionnera plus dans NPSP. Si vous avez des lots en cours à cette date, vous pourrez accéder à ces enregistrements, mais vous ne pourrez pas les traiter en utilisant la saisie de dons par lots. Pour garantir une transition transparente, activez et utilisez la saisie de dons avant le 13 juillet.</label>
     </customLabels>
     <customLabels>
         <name>bgeRetirementWarningHeader</name>
@@ -3018,10 +3025,10 @@ Pour vérifier vos paramètres d’affectations UCG, accédez à Dons | Affectat
     </customLabels>
     <customLabels>
         <name>bgeNotSupportedBody</name>
-        <label>À compter du 13 juillet 2021, la saisie de dons par lots n’est plus prise en charge et est remplacée par la saisie de dons.
-            Si vous avez des lots en cours, vous pouvez toujours accéder aux enregistrements, mais vous ne pouvez pas les traiter en utilisant la saisie de dons par lots.
+        <label>Depuis le 13 juillet 2021, la saisie de dons par lots n’est plus prise en charge et est remplacée par la saisie de dons.
+            Si vous avez des lots en cours, vous pouvez accéder aux enregistrements, mais vous ne pouvez pas les traiter en utilisant la saisie de dons par lots.
             Pour accéder à des lots en cours, contactez le support.
-            Vous pouvez découvrir la saisie de dons en tant qu’alternative à la saisie de dons par lots.</label>
+            Découvrez la saisie de dons comme alternative à la saisie de dons par lots.</label>
     </customLabels>
     <customLabels>
         <name>bgeTabHeader</name>
@@ -3163,6 +3170,14 @@ Pour vérifier vos paramètres d’affectations UCG, accédez à Dons | Affectat
         <label>Vous ne disposez pas des autorisations requises pour réaliser cette action. Contactez votre administrateur système pour obtenir de l’aide.</label>
     </customLabels>
     <customLabels>
+        <name>commonAccountNumber</name>
+        <label>Numéro de compte</label>
+    </customLabels>
+    <customLabels>
+        <name>commonACHLast4</name>
+        <label>Quatre derniers chiffres du code CCA</label>
+    </customLabels>
+    <customLabels>
         <name>commonActivate</name>
         <label>Activer</label>
     </customLabels>
@@ -3173,6 +3188,22 @@ Pour vérifier vos paramètres d’affectations UCG, accédez à Dons | Affectat
     <customLabels>
         <name>commonAmount</name>
         <label>Montant</label>
+    </customLabels>
+    <customLabels>
+        <name>gePaymentProcessedWarning</name>
+        <label>{0} a traité le paiement. La modification du donateur, de la date, du montant ou du mode de paiement entraînera des incohérences dans les enregistrements pour la même transaction dans {0} et NPSP.</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpAdvancedMapping3</name>
+        <label>Vous pouvez consulter la documentation complète sur la configuration du Mappage avancé &lt;a href=&quot;https://powerofus.force.com/NPSP_Advanced_Mapping&quot; target=&quot;_blank&quot;&gt;ici&lt;/a&gt;.</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpCustomizableRollupsEnable1</name>
+        <label>Vous trouverez la documentation complète relative aux cumuls personnalisables &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;ici&lt;/a&gt;.</label>
+    </customLabels>
+    <customLabels>
+        <name>stgHelpHHObjectOverview</name>
+        <label>Pour en savoir plus sur le modèle de compte recommandé de foyer, consultez la &lt;a href=&quot;https://powerofus.force.com/NPSP_Account_Model&quot; target=&quot;_blank&quot;&gt;documentation de NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>commonAssistiveError</name>
@@ -3205,6 +3236,10 @@ Pour vérifier vos paramètres d’affectations UCG, accédez à Dons | Affectat
     <customLabels>
         <name>commonCardLast4</name>
         <label>Quatre derniers chiffres de la carte</label>
+    </customLabels>
+    <customLabels>
+        <name>commonCVC</name>
+        <label>Cryptogramme visuel</label>
     </customLabels>
     <customLabels>
         <name>commonCVV</name>
@@ -3373,6 +3408,10 @@ Pour vérifier vos paramètres d’affectations UCG, accédez à Dons | Affectat
     <customLabels>
         <name>commonReviewForm</name>
         <label>Examiner le formulaire</label>
+    </customLabels>
+    <customLabels>
+        <name>commonRoutingNumber</name>
+        <label>Numéro de routage</label>
     </customLabels>
     <customLabels>
         <name>commonAdminPermissionErrorMessage</name>
@@ -3544,7 +3583,7 @@ Pour vérifier vos paramètres d’affectations UCG, accédez à Dons | Affectat
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConText</name>
-        <label>Voir tous les contacts en double trouvés à l’aide de règles de correspondance. &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Merge_Contacts.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; En savoir plus &lt;/b&gt;&lt;/a&gt;</label>
+        <label>Affichez tous les contacts en double trouvés à l’aide de règles de correspondance. &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Merge_Contacts.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;&lt;b&gt; En savoir plus &lt;/b&gt;&lt;/a&gt;</label>
     </customLabels>
     <customLabels>
         <name>conMergeSeeDupConDRS</name>
@@ -3867,7 +3906,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>geBodyPaymentProcessedDuringBatchProcessing</name>
-        <label>La carte de crédit du donateur sera traitée lorsque vous traiterez le lot.</label>
+        <label>Le paiement du donateur sera traité lorsque vous traiterez le lot.</label>
     </customLabels>
     <customLabels>
         <name>geBodyTemplateInfoLeftCol</name>
@@ -5049,6 +5088,10 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <label>Des paramètres de configuration non valide ont été fournis</label>
     </customLabels>
     <customLabels>
+        <name>geRD2FirstInstallmentPaid</name>
+        <label>Premier versement payé</label>
+    </customLabels>
+    <customLabels>
         <name>geSearchPlaceholder</name>
         <label>Recherchez...</label>
     </customLabels>
@@ -5778,7 +5821,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
     </customLabels>
     <customLabels>
         <name>healthSolutionTriggerHandlerMismatch</name>
-        <label>Les modifications apportées aux déclencheurs peuvent affecter les fonctionnalités de base NPSP de manière inattendue et doivent être minutieusement testées avant le déploiement en production. Si ces modifications ne sont pas intentionnelles, vous devez réinitialiser vos gestionnaires de déclencheurs pour qu’ils correspondent à la configuration NPSP par défaut.</label>
+        <label>Les modifications apportées aux déclencheurs peuvent affecter les fonctionnalités de base NPSP de manière inattendue et doivent être minutieusement testées avant le déploiement en production. Si ces modifications ne sont pas intentionnelles, vous devez réinitialiser vos gestionnaires de déclencheurs pour qu’ils correspondent à la configuration NPSP par défaut. </label>
     </customLabels>
     <customLabels>
         <name>healthSolutionUnsupportedPicklistValue</name>
@@ -6213,22 +6256,6 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <label>Une paiement payé doit avoir une date de paiement.</label>
     </customLabels>
     <customLabels>
-        <name>pmtRefundPaymentDate</name>
-        <label>Date du paiement</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundPaymentErrorMessage</name>
-        <label>Une erreur s&apos;est produite lors du traitement du remboursement.</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundAmountInvalid</name>
-        <label>Saisissez un remboursement inférieur ou égal au solde restant.</label>
-    </customLabels>
-    <customLabels>
-        <name>pmtRefundPaymentSuccessMessage</name>
-        <label>Le remboursement a été effectué.</label>
-    </customLabels>
-    <customLabels>
         <name>pmtPaymentNotFound</name>
         <label>L’enregistrement de paiement Elevate correspondant est introuvable. Contactez votre administrateur Salesforce pour obtenir de l’aide.</label>
     </customLabels>
@@ -6237,20 +6264,52 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <label>Ce paiement a déjà été remboursé ou il s’agit d’un remboursement.</label>
     </customLabels>
     <customLabels>
+        <name>pmtRefundAllocationHelpText</name>
+        <label>Les allocations UGC fixes sont remplacées par des pourcentages pour s’adapter à ce remboursement.</label>
+    </customLabels>
+    <customLabels>
         <name>pmtRefundAmount</name>
         <label>Montant du remboursement</label>
     </customLabels>
     <customLabels>
-        <name>pmtRefundProcessing</name>
-        <label>Remboursement soumis pour traitement. Recherchez le paiement remboursé dans l’enregistrement de l’opportunité.</label>
+        <name>pmtRefundAmountInvalid</name>
+        <label>Saisissez un remboursement inférieur ou égal au solde restant.</label>
     </customLabels>
     <customLabels>
         <name>pmtRefundPaymentConfirmedButton</name>
         <label>Rembourser le paiement</label>
     </customLabels>
     <customLabels>
+        <name>pmtRefundPaymentDate</name>
+        <label>Date du paiement</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentErrorMessage</name>
+        <label>Une erreur s&apos;est produite lors du traitement du remboursement.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmountTooHigh</name>
+        <label>Le remboursement ne peut pas dépasser {{AMOUNT}}.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundAmountTooLow</name>
+        <label>Entrez un remboursement supérieur à 0.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundProcessing</name>
+        <label>Remboursement soumis pour traitement. Recherchez le paiement remboursé dans l’enregistrement de l’opportunité.</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRefundPaymentSuccessMessage</name>
+        <label>Le remboursement a été effectué.</label>
+    </customLabels>
+    <customLabels>
         <name>pmtRefundPaymentTitle</name>
         <label>Rembourser le paiement ?</label>
+    </customLabels>
+    <customLabels>
+        <name>pmtRemainingBalance</name>
+        <label>Crédit restant</label>
     </customLabels>
     <customLabels>
         <name>pmtUnpaidPaymentScheduledDateRequired</name>
@@ -6401,8 +6460,88 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <label>Une paiement annulé doit avoir une date de paiement.</label>
     </customLabels>
     <customLabels>
+        <name>psACH</name>
+        <label>CCA (compte bancaire)</label>
+    </customLabels>
+    <customLabels>
+        <name>psElevateConnectionTimeout</name>
+        <label>La connexion à Elevate a expiré. Réessayez ultérieurement.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayDefault</name>
+        <label>Toujours utiliser la passerelle par défaut</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewaySelectionLabel</name>
+        <label>NPSP utilise la passerelle qui a été ajoutée à Elevate le plus récemment, sauf si vous la remplacez. Pour définir une passerelle de paiement Elevate par défaut, sélectionnez-la ici.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewaysNotFound</name>
+        <label>Aucune passerelle de paiement n’a été trouvée. Consultez votre compte Elevate.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayNotValid</name>
+        <label>Nous ne pouvons pas valider la passerelle précédemment enregistrée. Sélectionnez une autre passerelle.</label>
+    </customLabels>
+    <customLabels>
+        <name>psHideGatewaysAndMethods</name>
+        <label>Masquer les passerelles Elevate et les modes de paiement</label>
+    </customLabels>
+    <customLabels>
+        <name>psHidePaymentMethods</name>
+        <label>Masquer les modes de paiement</label>
+    </customLabels>
+    <customLabels>
+        <name>psPaymentGateway</name>
+        <label>Passerelle de paiement :</label>
+    </customLabels>
+    <customLabels>
+        <name>psSelectPaymentGateway</name>
+        <label>Sélectionner la passerelle de paiement</label>
+    </customLabels>
+    <customLabels>
+        <name>psSelectPaymentMethods</name>
+        <label>Sélectionner les modes de paiement</label>
+    </customLabels>
+    <customLabels>
         <name>psSelectValidPaymentMethod</name>
         <label>Pour saisir le paiement, sélectionnez un Mode de paiement valide.</label>
+    </customLabels>
+    <customLabels>
+        <name>psShowGatewaysAndMethods</name>
+        <label>Afficher les passerelles et les modes de paiement Elevate</label>
+    </customLabels>
+    <customLabels>
+        <name>psEnableGatewayAssignment</name>
+        <label>Activer l’attribution de passerelle</label>
+    </customLabels>
+    <customLabels>
+        <name>psEnableGatewayAssignmentHeader</name>
+        <label>Activer l’attribution de passerelle</label>
+    </customLabels>
+    <customLabels>
+        <name>psEnableGatewayAssignmentHelp</name>
+        <label>L’activation de l’attribution de la passerelle vous permet de sélectionner la passerelle de paiement et les modes de paiement respectifs lors de la modification des modèles de saisie de dons.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayManagementHelp</name>
+        <label>Ces paramètres gèrent les passerelles de paiement pour les transactions Elevate.</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayIDHeader</name>
+        <label>ID de passerelle</label>
+    </customLabels>
+    <customLabels>
+        <name>psGatewayIDHelp</name>
+        <label>NPSP utilise la passerelle qui a été ajoutée à Elevate le plus récemment, sauf si vous la remplacez. Pour modifier la passerelle utilisée par NPSP, cliquez sur Modifier, saisissez l’ID de la passerelle et enregistrez votre travail. Recherchez l’ID de la passerelle dans la console d’administration Elevate | Gestion de la passerelle.</label>
+    </customLabels>
+    <customLabels>
+        <name>psShowPaymentMethods</name>
+        <label>Afficher les modes de paiement</label>
+    </customLabels>
+    <customLabels>
+        <name>psUnableToConnect</name>
+        <label>Impossible de se connecter à Elevate. Vérifiez votre connexion et réessayez.</label>
     </customLabels>
     <customLabels>
         <name>ProgressMarkerAssistiveTextProgress</name>
@@ -7140,7 +7279,7 @@ IMPORTANT : ces deux champs doivent avoir le même type de données.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCR</name>
-        <label>Les crédits indirects, les rôles de contact et les dons jumelés sont étroitement liés les uns aux autres. Si vous n’êtes pas familier avec ces concepts et la façon dont ils interagissent, nous vous conseillons de lire la &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Automated_Soft_Credits.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;documentation de NPSP&lt;/a&gt; avant d’effectuer des ajustements à ces paramètres.</label>
+        <label>Les crédits indirects, les rôles de contact et les dons jumelés sont étroitement liés les uns aux autres. Si vous n’êtes pas familier avec ces concepts et la façon dont ils interagissent, nous vous conseillons de lire la &lt;a href=&quot;https://help.salesforce.com/s/articleView?id=sfdo.NPSP_Automated_Soft_Credits.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;documentation de NPSP&lt;/a&gt; avant d’apporter des ajustements à ces paramètres.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOCRDefaultRole</name>
@@ -7168,7 +7307,7 @@ IMPORTANT : ces deux champs doivent avoir le même type de données.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingFormat</name>
-        <label>Le format de nom des opportunités. Choisissez « Autre » pour créer votre propre format.</label>
+        <label>Format du nom de l’opportunité. Choisissez « Autre » pour créer le vôtre.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpOppNamingRecTypes</name>
@@ -7212,7 +7351,7 @@ IMPORTANT : ces deux champs doivent avoir le même type de données.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPowerOfUsHub</name>
-        <label>Vous avez des questions ? Essayez le groupe &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; pour des questions sur NPSP et le groupe &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;Administrateurs système&lt;/a&gt; pour des questions sur l’administration et la configuration de Salesforce.&lt;br/&gt;&lt;br/&gt;Et pour vous tenir au courant des dernières notes de version de NPSP, consultez le groupe &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC&quot; target=&quot;_blank&quot;&gt;Notes de publication NPSP&lt;/a&gt;.</label>
+        <label>Vous avez des questions ? Essayez le groupe &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; pour des questions sur NPSP et le groupe &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHiLSAU?tab=discussion&quot; target=&quot;_blank&quot;&gt;Administrateurs système&lt;/a&gt; pour des questions sur l’administration et la configuration de Salesforce.&lt;br/&gt;&lt;br/&gt;Et pour vous tenir au courant des dernières notes de version de NPSP, consultez le groupe &lt;a href=&quot;https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHOXSA2?tab=discussion&amp;sort=LAST_MODIFIED_DATE_DESC.htm&quot; target=&quot;_blank&quot;&gt;Notes de publication NPSP&lt;/a&gt;.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpPrimaryContactBatch</name>
@@ -7352,7 +7491,7 @@ Ce processus peut prendre un certain temps, mais vous pouvez fermer cette page e
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalMethod</name>
-        <label>Indique la méthode utilisée pour générer des relations réciproques.</label>
+        <label>Spécifie la méthode utilisée pour générer des relations réciproques.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRelReciprocalName</name>
@@ -8294,7 +8433,7 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
         <label>Nouveau don régulier</label>
     </quickActions>
     <quickActions>
-        <name>npe01__oppPayment__c.Refund</name>
+        <name>npe01__OppPayment__c.Refund</name>
         <label>Rembourser</label>
     </quickActions>
     <quickActions>

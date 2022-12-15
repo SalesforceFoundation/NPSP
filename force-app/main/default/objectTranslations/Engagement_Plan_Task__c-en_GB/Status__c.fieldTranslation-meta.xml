@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Status__c</name>
-    <help>The Status of a Task. Dependent Tasks are set to &quot;Waiting on Parent Task&quot; until their Parent Task is completed.</help>
+    <help>The Status of a Task. Dependent Tasks are set to "Waiting on Parent Task" until their Parent Task is completed.</help>
     <label>Status</label>
     <picklistValues>
         <masterLabel>Not Started</masterLabel>

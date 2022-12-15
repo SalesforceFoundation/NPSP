@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Secondary_Button_Value__c</name>
-    <help>L&apos;action du bouton secondaire.
-Pour un bouton Page externe, l&apos;URL externe.
-Pour un bouton Nouvel onglet Salesforce, le format est &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. La documentation Lightning présente des exemples et les spécifications.</help>
+    <help>L'action du bouton secondaire.
+Pour un bouton Page externe, l'URL externe.
+Pour un bouton Nouvel onglet Salesforce, le format est "{pageReference}:{objectOrPageApiName}:{action}". La documentation Lightning présente des exemples et les spécifications.</help>
     <label>Valeur du bouton secondaire</label>
 </CustomFieldTranslation>

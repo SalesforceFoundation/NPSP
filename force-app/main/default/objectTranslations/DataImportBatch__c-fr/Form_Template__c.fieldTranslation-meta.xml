@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Form_Template__c</name>
-    <help>Le modèle à utiliser pour le formulaire d&apos;entrée de dons pour ce lot.</help>
+    <help>Le modèle à utiliser pour le formulaire d'entrée de dons pour ce lot.</help>
     <relationshipLabel>Lots d’importation de données NPSP</relationshipLabel>
     <label>Modèle de formulaire</label>
 </CustomFieldTranslation>

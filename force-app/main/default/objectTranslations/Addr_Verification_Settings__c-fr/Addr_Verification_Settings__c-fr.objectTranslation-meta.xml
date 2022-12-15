@@ -4,10 +4,10 @@
     <startsWith>Consonant</startsWith>
     <caseValues>
         <plural>false</plural>
-        <value>Paramètre de vérification d&apos;adresse</value>
+        <value>Paramètre de vérification d'adresse</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value>Paramètres de vérification d&apos;adresse</value>
+        <value>Paramètres de vérification d'adresse</value>
     </caseValues>
 </CustomObjectTranslation>

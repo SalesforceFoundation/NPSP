@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
-    <help>When checked, NPSP won&apos;t automatically schedule default recurring jobs. These recurring jobs calculate rollups, update recurring donations and seasonal address, and perform error handling.</help>
-    <label>Don&apos;t Auto Schedule Default NPSP Jobs</label>
+    <help>When checked, NPSP won't automatically schedule default recurring jobs. These recurring jobs calculate rollups, update recurring donations and seasonal address, and perform error handling.</help>
+    <label>Don't Auto Schedule Default NPSP Jobs</label>
 </CustomFieldTranslation>

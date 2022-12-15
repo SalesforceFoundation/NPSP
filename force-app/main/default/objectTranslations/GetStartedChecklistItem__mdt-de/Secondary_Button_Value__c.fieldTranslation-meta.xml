@@ -3,6 +3,6 @@
     <name>Secondary_Button_Value__c</name>
     <help>Aktion der sekundären Schaltfläche.
 Schaltfläche für externe Seite: externe URL.
-Schaltflächen für neue SFDC-Registerkarte: &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. Beispiele und Angaben finden Sie in der Lightning NavigationMixin-Dokumentation.</help>
+Schaltflächen für neue SFDC-Registerkarte: "{pageReference}:{objectOrPageApiName}:{action}". Beispiele und Angaben finden Sie in der Lightning NavigationMixin-Dokumentation.</help>
     <label>Wert der sekundären Schaltfläche</label>
 </CustomFieldTranslation>

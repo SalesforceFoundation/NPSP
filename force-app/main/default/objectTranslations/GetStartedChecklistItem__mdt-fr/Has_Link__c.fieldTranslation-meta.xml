@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Has_Link__c</name>
-    <help>Indique si l&apos;élément inclut un lien à afficher.</help>
+    <help>Indique si l'élément inclut un lien à afficher.</help>
     <label>Contient un lien</label>
 </CustomFieldTranslation>

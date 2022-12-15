@@ -2,5 +2,5 @@
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>StatusAutomationClosedValue__c</name>
     <help>Der Status der wiederkehrenden Spende, der festgelegt wird, wenn der Datensatz der wiederkehrenden Spende von der Statusautomatisierung geschlossen wird.</help>
-    <label>&quot;Geschlossen&quot;-Wert Statusautomatisierung</label>
+    <label>"Geschlossen"-Wert Statusautomatisierung</label>
 </CustomFieldTranslation>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Target_Object_Mapping__c</name>
-    <help>Le Groupe d&apos;objets Importation de données cible de ce mappage de champs.</help>
-    <relationshipLabel>Mappages de champs d&apos;importation de données</relationshipLabel>
+    <help>Le Groupe d'objets Importation de données cible de ce mappage de champs.</help>
+    <relationshipLabel>Mappages de champs d'importation de données</relationshipLabel>
     <label>Mappage des objets cibles</label>
 </CustomFieldTranslation>

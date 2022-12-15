@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>ExcludeClosedRecurringDonations__c</name>
-    <help>Gesloten terugkerende donatie uitsluiten van de batchtaak &apos;Evaluatie opportunities terugkerende donaties&apos;.</help>
+    <help>Gesloten terugkerende donatie uitsluiten van de batchtaak 'Evaluatie opportunities terugkerende donaties'.</help>
     <label>Gesloten terugkerende donatie uitsluiten</label>
 </CustomFieldTranslation>
