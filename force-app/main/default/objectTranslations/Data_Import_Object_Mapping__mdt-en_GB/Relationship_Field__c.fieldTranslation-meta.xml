@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Relationship_Field__c</name>
-    <help>If this Object Group is a child of the predecessor, this field should look up to the parent. If it&apos;s the parent of the predecessor, this should be the lookup field on the child record.</help>
+    <help>If this Object Group is a child of the predecessor, this field should look up to the parent. If it's the parent of the predecessor, this should be the lookup field on the child record.</help>
     <label>Relationship Field</label>
 </CustomFieldTranslation>

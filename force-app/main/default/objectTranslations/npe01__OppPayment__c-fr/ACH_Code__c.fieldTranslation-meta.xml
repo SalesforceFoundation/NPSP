@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>ACH_Code__c</name>
-    <help>Le code de Classe d&apos;entrée standard (CES) utilisé pour cette transaction de la Chambre de compensation automatisée (CCA).</help>
+    <help>Le code de Classe d'entrée standard (CES) utilisé pour cette transaction de la Chambre de compensation automatisée (CCA).</help>
     <label>Code CCA</label>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Primary_Contact_Campaign_Member_Status__c</name>
-    <help>The status NPSP uses when it creates a Campaign Member for this Opportunity&apos;s Primary Contact and Primary Campaign Source. Leave blank to default to a responded status for Closed/Won Opportunities, and a non-responded status for other Opportunities.</help>
+    <help>The status NPSP uses when it creates a Campaign Member for this Opportunity's Primary Contact and Primary Campaign Source. Leave blank to default to a responded status for Closed/Won Opportunities, and a non-responded status for other Opportunities.</help>
     <label>Primary Contact Campaign Member Status</label>
 </CustomFieldTranslation>

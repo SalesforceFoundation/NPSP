@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>InstallmentFrequency__c</name>
-    <help>Definiert zusammen mit der Ratenlaufzeit den Ratenplan dieser wiederkehrenden Spende. Wenn die Ratenlaufzeit beispielsweise monatlich ist und die Häufigkeit der Ratenzahlung 3 beträgt, wird der Zeitplan als &quot;alle 3 Monate&quot; definiert.</help>
+    <help>Definiert zusammen mit der Ratenlaufzeit den Ratenplan dieser wiederkehrenden Spende. Wenn die Ratenlaufzeit beispielsweise monatlich ist und die Häufigkeit der Ratenzahlung 3 beträgt, wird der Zeitplan als "alle 3 Monate" definiert.</help>
     <label>Häufigkeit der Ratenzahlung</label>
 </CustomFieldTranslation>

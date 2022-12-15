@@ -11,7 +11,7 @@
     <layouts>
         <layout>Form Template Layout</layout>
         <sections>
-            <label/>
+            <label></label>
             <section>Custom Links</section>
         </sections>
     </layouts>

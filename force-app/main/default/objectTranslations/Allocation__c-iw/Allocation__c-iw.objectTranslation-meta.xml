@@ -3,36 +3,36 @@
     <caseValues>
         <article>None</article>
         <plural>false</plural>
-        <value/>
+        <value></value>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>false</plural>
-        <value/>
+        <value></value>
     </caseValues>
     <caseValues>
         <article>None</article>
         <plural>true</plural>
-        <value/>
+        <value></value>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>true</plural>
-        <value/>
+        <value></value>
     </caseValues>
     <fieldSets>
-        <label/>
+        <label></label>
         <name>ManageAllocationsAdditionalFields</name>
     </fieldSets>
-    <gender/>
+    <gender></gender>
     <layouts>
         <layout>Allocation Layout</layout>
         <sections>
-            <label/>
+            <label></label>
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel/>
+    <nameFieldLabel></nameFieldLabel>
     <webLinks>
         <label>נהל הקצאות</label>
         <name>Manage_Allocations</name>

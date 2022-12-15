@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Current_Address__c</name>
-    <help>Recherche de l’enregistrement de l’adresse actuelle pour ce contact. NPSP renseigne le champ Adresse postale du contact avec la rue, la ville, l&apos;état ou la province, et le code postal de l&apos;enregistrement de l’adresse actuelle.</help>
+    <help>Recherche de l’enregistrement de l’adresse actuelle pour ce contact. NPSP renseigne le champ Adresse postale du contact avec la rue, la ville, l'état ou la province, et le code postal de l'enregistrement de l’adresse actuelle.</help>
     <relationshipLabel>Contacts (adresse actuelle)</relationshipLabel>
     <label>Adresse actuelle</label>
 </CustomFieldTranslation>

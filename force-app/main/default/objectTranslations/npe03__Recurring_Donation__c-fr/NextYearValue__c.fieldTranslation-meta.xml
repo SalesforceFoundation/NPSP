@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>NextYearValue__c</name>
-    <help>Le montant attendu total de ce Don récurrent pour le calendrier ou l&apos;exercice fiscal suivant (en lecture seule).</help>
+    <help>Le montant attendu total de ce Don récurrent pour le calendrier ou l'exercice fiscal suivant (en lecture seule).</help>
     <label>Valeur annuelle suivante</label>
 </CustomFieldTranslation>

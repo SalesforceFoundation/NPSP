@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>InstallmentFrequency__c</name>
-    <help>The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as &quot;every 3 months&quot;.</help>
+    <help>The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as "every 3 months".</help>
     <label>Installment Frequency</label>
 </CustomFieldTranslation>

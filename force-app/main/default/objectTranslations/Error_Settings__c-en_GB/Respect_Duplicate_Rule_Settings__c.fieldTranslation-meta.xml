@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Respect_Duplicate_Rule_Settings__c</name>
-    <help>Respect the settings on a Duplicate Rule that control whether duplicate records are allowed. To check existing settings, go to Duplicate Rules under Setup. When the Action On Create or Action On Edit fields are set to &quot;Allow,&quot; duplicates will be saved.</help>
+    <help>Respect the settings on a Duplicate Rule that control whether duplicate records are allowed. To check existing settings, go to Duplicate Rules under Setup. When the Action On Create or Action On Edit fields are set to "Allow," duplicates will be saved.</help>
     <label>Respect Duplicate Rule Settings</label>
 </CustomFieldTranslation>
