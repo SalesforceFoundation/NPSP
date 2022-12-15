@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Required__c</name>
-    <help>Indicates if the field on the NPSP Data Import object must contain a value. When it&apos;s required, Dry Run will fail if that field doesn&apos;t contain a value.</help>
+    <help>Indicates if the field on the NPSP Data Import object must contain a value. When it's required, Dry Run will fail if that field doesn't contain a value.</help>
     <label>Required?</label>
     <picklistValues>
         <masterLabel>Yes</masterLabel>

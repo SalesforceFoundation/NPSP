@@ -9,4 +9,8 @@
         <plural>false</plural>
         <value>Fields to Exclude from Sync</value>
     </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <value>Fields to Exclude from Sync</value>
+    </caseValues>
 </CustomObjectTranslation>

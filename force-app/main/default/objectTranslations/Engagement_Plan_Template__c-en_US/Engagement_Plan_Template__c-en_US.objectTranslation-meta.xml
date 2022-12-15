@@ -9,19 +9,19 @@
         <value>Engagement Plan Templates</value>
     </caseValues>
     <fieldSets>
-        <label/>
+        <label></label>
         <name>ManageEPTemplateFS</name>
     </fieldSets>
     <layouts>
         <layout>Engagement Plan Template Layout</layout>
         <sections>
-            <label/>
+            <label></label>
             <section>Custom Links</section>
         </sections>
     </layouts>
     <startsWith>Vowel</startsWith>
     <webLinks>
-        <label/>
+        <label></label>
         <name>Manage_Template</name>
     </webLinks>
 </CustomObjectTranslation>

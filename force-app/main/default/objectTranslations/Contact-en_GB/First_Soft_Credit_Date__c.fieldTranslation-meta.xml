@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>First_Soft_Credit_Date__c</name>
-    <help>The date of this Contact&apos;s earliest soft credit.</help>
+    <help>The date of this Contact's earliest soft credit.</help>
     <label>First Soft Credit Date</label>
 </CustomFieldTranslation>

@@ -3,6 +3,6 @@
     <name>Secondary_Button_Value__c</name>
     <help>Ação do Botão secundário.
 Para um botão Página externa, a URL externa.
-Para um botão Nova guia SFDC, o formato é &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. Consulte a Doc. do Lightning NavigationMixin para ver exemplos e todas as especificações.</help>
+Para um botão Nova guia SFDC, o formato é "{pageReference}:{objectOrPageApiName}:{action}". Consulte a Doc. do Lightning NavigationMixin para ver exemplos e todas as especificações.</help>
     <label>Valor do botão secundário</label>
 </CustomFieldTranslation>

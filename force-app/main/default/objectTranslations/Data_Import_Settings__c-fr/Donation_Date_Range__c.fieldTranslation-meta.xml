@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Donation_Date_Range__c</name>
-    <help>Nbre de jour àpd la date de don à considérer lors de la recherche d’une opp. ou d&apos;un paiement corresp. L’importateur de données choisira l’opp. ou le paiement corresp. dont la date tombe dans le nbre de jours ET se rapproche le plus de la date du don.</help>
+    <help>Nbre de jour àpd la date de don à considérer lors de la recherche d’une opp. ou d'un paiement corresp. L’importateur de données choisira l’opp. ou le paiement corresp. dont la date tombe dans le nbre de jours ET se rapproche le plus de la date du don.</help>
     <label>Nbre de jours à partir de la date du don</label>
 </CustomFieldTranslation>

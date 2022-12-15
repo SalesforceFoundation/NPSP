@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>DisableRecordDataHealthChecks__c</name>
-    <help>Lorsque cette option est sélectionnée, le Contrôle d&apos;intégrité identifie les erreurs dans vos paramètres de configuration NPSP. Sélectionnez-la si votre organisation a de nombreux enregistrements et en cas de problème d&apos;exécution du Contrôle d&apos;intégrité.</help>
+    <help>Lorsque cette option est sélectionnée, le Contrôle d'intégrité identifie les erreurs dans vos paramètres de configuration NPSP. Sélectionnez-la si votre organisation a de nombreux enregistrements et en cas de problème d'exécution du Contrôle d'intégrité.</help>
     <label>Désactiver contrôles données enregistr.</label>
 </CustomFieldTranslation>

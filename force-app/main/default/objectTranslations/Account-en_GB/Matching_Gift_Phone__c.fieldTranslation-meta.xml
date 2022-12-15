@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Matching_Gift_Phone__c</name>
-    <help>The phone number of the company&apos;s Matching Gift administrator.</help>
+    <help>The phone number of the company's Matching Gift administrator.</help>
     <label>Matching Gift Phone</label>
 </CustomFieldTranslation>

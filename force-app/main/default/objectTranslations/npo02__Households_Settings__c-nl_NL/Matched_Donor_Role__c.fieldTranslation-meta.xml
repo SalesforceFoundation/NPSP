@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Matched_Donor_Role__c</name>
-    <help>De Contactpersoonrol die u wilt gebruiken voor overeenkomende donors. We raden aan &apos;Overeenkomende Donor&apos; te gebruiken.</help>
+    <help>De Contactpersoonrol die u wilt gebruiken voor overeenkomende donors. We raden aan 'Overeenkomende Donor' te gebruiken.</help>
     <label>Overeenkomende Donorrol</label>
 </CustomFieldTranslation>

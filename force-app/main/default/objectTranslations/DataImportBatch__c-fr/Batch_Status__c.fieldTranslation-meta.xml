@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Batch_Status__c</name>
-    <help>Le Statut du lot est basé sur les enregistrements Importation de données NPSP inclus dans le lot. Si l&apos;importation d&apos;un enregistrement échoue, le statut du lot indique « Échoué - vérification requise ».</help>
+    <help>Le Statut du lot est basé sur les enregistrements Importation de données NPSP inclus dans le lot. Si l'importation d'un enregistrement échoue, le statut du lot indique « Échoué - vérification requise ».</help>
     <label>Statut du lot</label>
     <picklistValues>
         <masterLabel>Open</masterLabel>
