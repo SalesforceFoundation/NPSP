@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Automatic_Campaign_Member_Management__c</name>
-    <help>Bei Auswahl erstellt NPSP autom. ein Kampagnenmitglied, wenn Sie eine Opp. erstellen, der ein Hauptansprechpartner und eine Primäre Kampagnenquelle zugeordnet ist, oder wenn Sie diese Opp. mit der Phase &quot;Geschl./Gew.&quot; aktualisieren.</help>
+    <help>Bei Auswahl erstellt NPSP autom. ein Kampagnenmitglied, wenn Sie eine Opp. erstellen, der ein Hauptansprechpartner und eine Primäre Kampagnenquelle zugeordnet ist, oder wenn Sie diese Opp. mit der Phase "Geschl./Gew." aktualisieren.</help>
     <label>Autom. Verwaltung d. Kampagnenmitglieder</label>
 </CustomFieldTranslation>

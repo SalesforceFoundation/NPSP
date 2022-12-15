@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Next_Grant_Deadline_Due_Date__c</name>
-    <help>The due date for this Opportunity&apos;s next Deliverable (read only).</help>
+    <help>The due date for this Opportunity's next Deliverable (read only).</help>
     <label>Next Deliverable Date</label>
 </CustomFieldTranslation>

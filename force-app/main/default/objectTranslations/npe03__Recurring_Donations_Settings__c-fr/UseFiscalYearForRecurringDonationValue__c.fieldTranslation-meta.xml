@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>UseFiscalYearForRecurringDonationValue__c</name>
-    <help>Permet d&apos;activer l&apos;exercice fiscal pour le total des dons récurrents. Vous pouvez définir le mois de début de l&apos;exercice dans Configuration | Paramètres de la société | Exercice fiscal. REMARQUE : Utilisez uniquement l&apos;exercice standard, pas personnalisé.</help>
+    <help>Permet d'activer l'exercice fiscal pour le total des dons récurrents. Vous pouvez définir le mois de début de l'exercice dans Configuration | Paramètres de la société | Exercice fiscal. REMARQUE : Utilisez uniquement l'exercice standard, pas personnalisé.</help>
     <label>Utiliser exercice fiscal pour dons récu.</label>
 </CustomFieldTranslation>

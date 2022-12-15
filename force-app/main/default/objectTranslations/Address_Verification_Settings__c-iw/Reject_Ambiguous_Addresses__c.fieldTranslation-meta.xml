@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <help>מסמן כתובות רב-משמעיות כבלתי חוקיות, כאשר ה-API מחזיר יותר מכתובת אחת. אם אפשרות זו אינה מסומנת, Salesforce תקבל את הכתובת הראשונה שהוצעה בתור הכתובת החוקית.</help>
-    <label/>
+    <label></label>
     <name>Reject_Ambiguous_Addresses__c</name>
 </CustomFieldTranslation>

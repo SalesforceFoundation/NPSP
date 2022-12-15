@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Opp_Types_Excluded_for_Payments__c</name>
-    <help>NPSP erst. autom. Zahlungsdatens. für Opp. mit e-m belieb. Wert in d. Auswahlliste &quot;Typ&quot;. belieb. Typen ausw., zu denen nicht autom. Zahlungsdatens. erst. werden sollen. Zum Ausw. v. mehr als einem Typ zusätzl. auf die Strg- oder die CMD-Taste drücken.</help>
+    <help>NPSP erst. autom. Zahlungsdatens. für Opp. mit e-m belieb. Wert in d. Auswahlliste "Typ". belieb. Typen ausw., zu denen nicht autom. Zahlungsdatens. erst. werden sollen. Zum Ausw. v. mehr als einem Typ zusätzl. auf die Strg- oder die CMD-Taste drücken.</help>
     <label>Ausgeschlossene Opportunity-Typen</label>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Enable_Gift_Entry__c</name>
-    <help>Active l&apos;outil Saisie de dons. Cette fonctionnalité nécessite le Mappage avancé.</help>
+    <help>Active l'outil Saisie de dons. Cette fonctionnalité nécessite le Mappage avancé.</help>
     <label>Activer la saisie de dons</label>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Field_Mapping_Method__c</name>
-    <help>Définit la méthode de mappage des champs de l&apos;enregistrement Importation de données NPSP avec d&apos;autres objets dans Salesforce. Les options sont Texte d&apos;aide ou Mappage de champs d&apos;importation de données.</help>
+    <help>Définit la méthode de mappage des champs de l'enregistrement Importation de données NPSP avec d'autres objets dans Salesforce. Les options sont Texte d'aide ou Mappage de champs d'importation de données.</help>
     <label>Méthode de mappage de champs</label>
 </CustomFieldTranslation>

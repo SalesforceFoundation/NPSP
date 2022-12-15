@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>StartDate__c</name>
-    <help>La date à partir de laquelle les informations nouvelles ou mises à jour sur ce calendrier (Montant, Jour du mois, etc.) s&apos;appliquent pour ce Don récurrent. Le paramètre par défaut est la date actuelle.</help>
+    <help>La date à partir de laquelle les informations nouvelles ou mises à jour sur ce calendrier (Montant, Jour du mois, etc.) s'appliquent pour ce Don récurrent. Le paramètre par défaut est la date actuelle.</help>
     <label>Date de début</label>
 </CustomFieldTranslation>

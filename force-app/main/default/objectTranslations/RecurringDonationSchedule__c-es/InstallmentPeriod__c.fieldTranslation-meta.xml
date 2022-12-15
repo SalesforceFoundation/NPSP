@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>InstallmentPeriod__c</name>
-    <help>Define la programación de cuota para esta Donación recurrente junto con la Frecuencia de cuota. Por ejemplo, si Período de cuota es Mensualmente y Frecuencia de cuota es 3, la programación se define como &quot;cada 3 meses&quot;.</help>
+    <help>Define la programación de cuota para esta Donación recurrente junto con la Frecuencia de cuota. Por ejemplo, si Período de cuota es Mensualmente y Frecuencia de cuota es 3, la programación se define como "cada 3 meses".</help>
     <label>Frecuencia</label>
     <picklistValues>
         <masterLabel>Monthly</masterLabel>

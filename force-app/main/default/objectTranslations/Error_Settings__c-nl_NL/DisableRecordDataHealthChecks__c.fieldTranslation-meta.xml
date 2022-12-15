@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>DisableRecordDataHealthChecks__c</name>
-    <help>Als deze optie wordt geselecteerd, worden met &apos;Controle van de Toestand&apos; alleen de NPSP-configuratie-instellingen gecontroleerd op problemen. Selecteer deze optie als uw organisatie veel records heeft en de functie niet kan worden voltooid.</help>
+    <help>Als deze optie wordt geselecteerd, worden met 'Controle van de Toestand' alleen de NPSP-configuratie-instellingen gecontroleerd op problemen. Selecteer deze optie als uw organisatie veel records heeft en de functie niet kan worden voltooid.</help>
     <label>Statuscontroles recordgegevens uitsch.</label>
 </CustomFieldTranslation>

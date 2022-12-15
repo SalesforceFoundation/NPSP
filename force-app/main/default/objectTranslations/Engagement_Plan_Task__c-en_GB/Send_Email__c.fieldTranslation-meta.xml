@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Send_Email__c</name>
-    <help>Determines if an email is sent to the user in the Task&apos;s Assigned To field when the Task becomes active. Dependent Tasks are active when their Parent Task is completed.</help>
+    <help>Determines if an email is sent to the user in the Task's Assigned To field when the Task becomes active. Dependent Tasks are active when their Parent Task is completed.</help>
     <label>Send Email</label>
 </CustomFieldTranslation>

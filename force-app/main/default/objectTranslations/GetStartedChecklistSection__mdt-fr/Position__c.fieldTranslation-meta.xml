@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Position__c</name>
-    <help>L&apos;emplacement de cette section dans la page Premiers pas.</help>
+    <help>L'emplacement de cette section dans la page Premiers pas.</help>
     <label>Position</label>
 </CustomFieldTranslation>

@@ -4,10 +4,10 @@
     <startsWith>Vowel</startsWith>
     <caseValues>
         <plural>false</plural>
-        <value>Étape d&apos;opportunité pour le mappage d&apos;état</value>
+        <value>Étape d'opportunité pour le mappage d'état</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value>Étapes d&apos;opportunité pour le mappage d&apos;état</value>
+        <value>Étapes d'opportunité pour le mappage d'état</value>
     </caseValues>
 </CustomObjectTranslation>

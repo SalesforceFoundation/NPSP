@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Status__c</name>
-    <help>O status de uma tarefa. As tarefas dependentes são definidas como &quot;Aguardando tarefa pai&quot; até que sua tarefa pai seja concluída.</help>
+    <help>O status de uma tarefa. As tarefas dependentes são definidas como "Aguardando tarefa pai" até que sua tarefa pai seja concluída.</help>
     <label>Status</label>
     <picklistValues>
         <masterLabel>Not Started</masterLabel>

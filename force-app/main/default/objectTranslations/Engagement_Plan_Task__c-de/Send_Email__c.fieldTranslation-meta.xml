@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Send_Email__c</name>
-    <help>Legt fest, ob nach der Aktivierung der Aufgabe eine E-Mail an den Benutzer im Feld &quot;Zugewiesen zu&quot; gesendet wird. Abhängige Aufgaben werden aktiviert, sobald die übergeordnete Aufgabe abgeschlossen ist.</help>
+    <help>Legt fest, ob nach der Aktivierung der Aufgabe eine E-Mail an den Benutzer im Feld "Zugewiesen zu" gesendet wird. Abhängige Aufgaben werden aktiviert, sobald die übergeordnete Aufgabe abgeschlossen ist.</help>
     <label>E-Mail senden</label>
 </CustomFieldTranslation>

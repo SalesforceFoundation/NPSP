@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Load_Order__c</name>
-    <help>Volgorde waarin deze klasse moet worden uitgevoerd. De volgorde heeft betrekking op de triggers op hetzelfde object met dezelfde Triggeracties, bijvoorbeeld, alle triggers &quot;voor invoer&quot; op Account.</help>
+    <help>Volgorde waarin deze klasse moet worden uitgevoerd. De volgorde heeft betrekking op de triggers op hetzelfde object met dezelfde Triggeracties, bijvoorbeeld, alle triggers "voor invoer" op Account.</help>
     <label>Volgorde Laden</label>
 </CustomFieldTranslation>

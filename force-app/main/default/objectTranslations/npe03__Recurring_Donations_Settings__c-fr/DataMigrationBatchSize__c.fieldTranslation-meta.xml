@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>DataMigrationBatchSize__c</name>
-    <help>Nombre d&apos;enregistrements à traiter à la fois lors de la migration d&apos;enregistrements de Dons récurrents existants vers le modèle de données Dons récurrents avancés.</help>
+    <help>Nombre d'enregistrements à traiter à la fois lors de la migration d'enregistrements de Dons récurrents existants vers le modèle de données Dons récurrents avancés.</help>
     <label>Taille lot migration données DR avancés</label>
 </CustomFieldTranslation>

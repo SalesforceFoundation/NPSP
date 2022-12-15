@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Rollups_IncrementalLastNDays_FldOverride__c</name>
-    <help>Enkel voor Overschr. Increm. Totaliseringen. Waarde overschrijft het veld om gerelateerde Opp. te filteren om te bepalen welke Accounts, Contactpersonen, GAU&apos;s of RD&apos;s opnieuw worden berekend tijdens een geplande nachttaak. Standaard SystemModStamp.</help>
+    <help>Enkel voor Overschr. Increm. Totaliseringen. Waarde overschrijft het veld om gerelateerde Opp. te filteren om te bepalen welke Accounts, Contactpersonen, GAU's of RD's opnieuw worden berekend tijdens een geplande nachttaak. Standaard SystemModStamp.</help>
     <label>Increm.: Overschr. Veld Laatste N Dagen</label>
 </CustomFieldTranslation>

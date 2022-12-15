@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>DisableFirstInstallment__c</name>
-    <help>Voorkomt het maken van de eerste termijnopportunity voor een nieuwe terugkerende donatie, onafhankelijk van de instelling &apos;Opportunity voor termijnen autom. maken&apos; in de NPSP-instellingen.</help>
+    <help>Voorkomt het maken van de eerste termijnopportunity voor een nieuwe terugkerende donatie, onafhankelijk van de instelling 'Opportunity voor termijnen autom. maken' in de NPSP-instellingen.</help>
     <label>Eerste termijn uitschakelen</label>
 </CustomFieldTranslation>

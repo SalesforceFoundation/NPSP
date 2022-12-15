@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Imported_Record_Status_Field_Name__c</name>
-    <help>Le Nom d&apos;API du champ dans lequel la réussite ou l&apos;échec de l&apos;importation est enregistré pour un enregistrement Importation de données NPSP.</help>
+    <help>Le Nom d'API du champ dans lequel la réussite ou l'échec de l'importation est enregistré pour un enregistrement Importation de données NPSP.</help>
     <label>Nom champ statut enregistrement importé</label>
 </CustomFieldTranslation>
