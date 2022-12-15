@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Secondary_Button_Label__c</name>
-    <help>Der API-Name für die Bezeichnung der sekundären Schaltfläche in einem Abschnittselement auf der Seite &quot;Erste Schritte&quot;. Muss mit einer importierten Bezeichnung in gsLabelMapper LWC übereinstimmen.</help>
+    <help>Der API-Name für die Bezeichnung der sekundären Schaltfläche in einem Abschnittselement auf der Seite "Erste Schritte". Muss mit einer importierten Bezeichnung in gsLabelMapper LWC übereinstimmen.</help>
     <label>Bezeichnungsname sekundäre Schaltfläche</label>
 </CustomFieldTranslation>

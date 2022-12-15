@@ -3,6 +3,6 @@
     <name>Primary_Button_Value__c</name>
     <help>Actie die door primaire knop wordt uitgevoerd.
 Voor externe-paginaknop, externe URL.
-Voor Nieuw tabblad SFDC, is de notatie &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. Zie documentatie Lightning NavigationMixin voor voorbeelden en specificaties.</help>
+Voor Nieuw tabblad SFDC, is de notatie "{pageReference}:{objectOrPageApiName}:{action}". Zie documentatie Lightning NavigationMixin voor voorbeelden en specificaties.</help>
     <label>Waarde primaire knop</label>
 </CustomFieldTranslation>

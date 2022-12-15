@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Recurring_Donation_Installment_Number__c</name>
-    <help>The installment number of this Opportunity&apos;s Recurring Donation schedule.</help>
+    <help>The installment number of this Opportunity's Recurring Donation schedule.</help>
     <label>Recurring Donation Installment Number</label>
 </CustomFieldTranslation>

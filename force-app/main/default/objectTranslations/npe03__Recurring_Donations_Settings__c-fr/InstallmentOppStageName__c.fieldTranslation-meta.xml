@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>InstallmentOppStageName__c</name>
-    <help>L&apos;étape d&apos;opportunité que NPSP applique à chaque nouvelle opportunité de versement lors de la création d&apos;un Don récurrent.</help>
+    <help>L'étape d'opportunité que NPSP applique à chaque nouvelle opportunité de versement lors de la création d'un Don récurrent.</help>
     <label>Nom étape des opportunités de versement</label>
 </CustomFieldTranslation>

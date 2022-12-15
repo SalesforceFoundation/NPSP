@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Use_Dated_Conversion_Rates__c</name>
-    <help>Akt. Sie dieses Kontrollk., um &quot;Datierte Wechselkurse&quot; zu verw., wenn &quot;Erweitertes Währungsmanagement&quot; in dieser Organisation akt. ist. Wenn das Häkchen nicht gesetzt ist und ACM aktiviert ist, verw. alle NPSP-Rollups den Stand‘wechselk. der Währung.</help>
+    <help>Akt. Sie dieses Kontrollk., um "Datierte Wechselkurse" zu verw., wenn "Erweitertes Währungsmanagement" in dieser Organisation akt. ist. Wenn das Häkchen nicht gesetzt ist und ACM aktiviert ist, verw. alle NPSP-Rollups den Stand‘wechselk. der Währung.</help>
     <label>Ggf. datierte Wechselkurse verwenden</label>
 </CustomFieldTranslation>

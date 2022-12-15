@@ -47,7 +47,7 @@
             <section>Campaign Information</section>
         </sections>
         <sections>
-            <label>Informations sur l&apos;opportunité</label>
+            <label>Informations sur l'opportunité</label>
             <section>Opportunity Information</section>
         </sections>
         <sections>
@@ -59,19 +59,19 @@
             <section>Payment Information</section>
         </sections>
         <sections>
-            <label>Information 1 sur l&apos;affectation UCG</label>
+            <label>Information 1 sur l'affectation UCG</label>
             <section>GAU Allocation 1 Information</section>
         </sections>
         <sections>
-            <label>Information 2 sur l&apos;affectation UCG</label>
+            <label>Information 2 sur l'affectation UCG</label>
             <section>GAU Allocation 2 Information</section>
         </sections>
         <sections>
-            <label>Information 1 sur le rôle de contact d&apos;opportunité</label>
+            <label>Information 1 sur le rôle de contact d'opportunité</label>
             <section>Opportunity Contact Role 1 Information</section>
         </sections>
         <sections>
-            <label>Information 2 sur le rôle de contact d&apos;opportunité</label>
+            <label>Information 2 sur le rôle de contact d'opportunité</label>
             <section>Opportunity Contact Role 2 Information</section>
         </sections>
         <sections>

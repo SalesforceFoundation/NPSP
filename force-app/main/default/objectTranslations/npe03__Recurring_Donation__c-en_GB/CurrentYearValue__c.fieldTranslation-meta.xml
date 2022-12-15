@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>CurrentYearValue__c</name>
-    <help>This Recurring Donation&apos;s total amount for the current calendar or fiscal year (read only). Includes Closed Won Opportunities plus future installments for the rest of the year.</help>
+    <help>This Recurring Donation's total amount for the current calendar or fiscal year (read only). Includes Closed Won Opportunities plus future installments for the rest of the year.</help>
     <label>Current Year Value</label>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Primary_Contact_Campaign_Member_Status__c</name>
-    <help>Status, den NPSP beim Erst. e-s Kamp‘mitgl. für den Hauptansprechp. dieser Opp. u. d. prim. Kampagnenqu. verwendet. Leer lassen, wenn die Stand‘einst. a. d. Status &quot;Geantwortet&quot; f. geschl./gew. Opp. u. &quot;Nicht geantwortet&quot; f. sonst. Opp. ges. werden soll.</help>
+    <help>Status, den NPSP beim Erst. e-s Kamp‘mitgl. für den Hauptansprechp. dieser Opp. u. d. prim. Kampagnenqu. verwendet. Leer lassen, wenn die Stand‘einst. a. d. Status "Geantwortet" f. geschl./gew. Opp. u. "Nicht geantwortet" f. sonst. Opp. ges. werden soll.</help>
     <label>Kamp.mitgl.status f. Hauptanspr.partner</label>
 </CustomFieldTranslation>
