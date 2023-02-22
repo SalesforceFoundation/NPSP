@@ -9,7 +9,6 @@ Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
-
 API Modify Trigger Handler
     [Arguments]                  ${triggerhandler_id}           &{fields}
     ${ns} =                      Get NPSP Namespace Prefix
@@ -22,10 +21,10 @@ API Modify Trigger Handler
     [return]                     &{triggerhandler}
 
 *** Test Cases ***
-
 Update a Trigger Handler to Exclude a Username
     [Documentation]    This test case verifies that when a username is added to a Trigger Handler		
     ...                record for exclusion that triggers indeed do not run for that User.
+    [Tags]              quadrant:q3
 
     # Create an Account so Trigger Handler records are created
     &{account} =                 API Create Organization Account

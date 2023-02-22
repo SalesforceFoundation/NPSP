@@ -19,7 +19,7 @@ Match Based on Number of Days from Donation Date Functionality
     [Documentation]    The number of days from donation date field on the BGE wizard allows matching to be made by providing
     ...                a margin of error on the Donation Date field for a record. If the gift created is within range of that date,
     ...                gift is matched to the existing donation
-    [tags]             stable
+    [tags]             stable       quadrant:q3
     Go To Page                  Details      DataImportBatch__c         object_id=${batch}[Id]
     Current Page Should Be      Details      DataImportBatch__c
     Select Value From BGE DD    Donor Type    Account
@@ -60,7 +60,7 @@ Match Based on Number of Days from Donation Date Functionality
     ...    npe01__Payment_Date__c=${api_date}
     ...    npe01__Paid__c=True
 
-***Keywords***
+*** Keywords ***
 Setup Test Data
     ${ns} =  Get NPSP Namespace Prefix
     Set Suite Variable    ${ns}
