@@ -132,7 +132,38 @@ private with sharing class BDI_ContactService_TEST {
             Home_Street__c = '300 Fake Blvd',
             Home_Zip_Postal_Code__c = '94105');
 
-        DataImport__c[] diList = new DataImport__c[]{testDi1,testDi2,testDi3};
+        // This record will test that it doesn't just match part of the contact data
+        DataImport__c testDi4 = new DataImport__c(
+            Contact1_Firstname__c = 'match1',
+            Contact1_Lastname__c = 'noMatch1',
+            Home_City__c = 'Fakeville',
+            Home_Country__c = 'United States',
+            Home_State_Province__c = 'California',
+            Home_Street__c = '300 Fake Blvd',
+            Home_Zip_Postal_Code__c = '94105');
+        
+        DataImport__c testDi5 = new DataImport__c(
+            Contact1_Firstname__c = 'FirstInternalMatch1',
+            Contact1_Lastname__c = 'LastInternalMatch1',
+            Contact1_Personal_Email__c = 'FirstInternalMatch1@fake.com',
+            Home_City__c = 'Fakeville',
+            Home_Country__c = 'United States',
+            Home_State_Province__c = 'California',
+            Home_Street__c = '300 Fake Blvd',
+            Home_Zip_Postal_Code__c = '94105');
+
+
+        DataImport__c testDi6 = new DataImport__c(
+            Contact1_Firstname__c = 'FirstInternalMatch1',
+            Contact1_Lastname__c = 'LastInternalMatch1',
+            Contact1_Personal_Email__c = 'FirstInternalMatch1@fake.com',
+            Home_City__c = 'Fakeville',
+            Home_Country__c = 'United States',
+            Home_State_Province__c = 'California',
+            Home_Street__c = '300 Fake Blvd',
+            Home_Zip_Postal_Code__c = '94105');
+
+        DataImport__c[] diList = new DataImport__c[]{testDi1,testDi2,testDi3,testDi4,testDi5,testDi6};
         insert diList;
 
         // Instantiate the Data Import and Contact services so we can test the Contact Service in isolation
@@ -175,10 +206,12 @@ private with sharing class BDI_ContactService_TEST {
         contService.dupeMgmtUtil = dupeMgmt;
 
         Test.startTest();
+        // Run the tests with dry run turned on first.
         contService.importContactsAndHouseholds();
-        Test.stopTest();
+        
 
-        // Confirm that the Import Status and Imported Fields for each DI are updated appropriately.
+        // Confirm that the Import Status and Imported Fields for each DI are updated appropriately
+        // for Dry run
         System.assertEquals(matchCont1.Id, testDi1.Contact1Imported__c);
         System.assert(testDi1.Contact1ImportStatus__c.contains(match1c.duplicateRuleName));
 
@@ -189,14 +222,87 @@ private with sharing class BDI_ContactService_TEST {
         System.assert(testDi2.Contact1ImportStatus__c.contains(match1c.duplicateRuleName));
 
         System.assertEquals(null, testDi2.Contact2Imported__c);
-        System.assertEquals(diService.statusMatchedNew(), testDi2.Contact2ImportStatus__c);
+        System.assertEquals(System.Label.bdiDryRunNoMatch, testDi2.Contact2ImportStatus__c);
 
         System.assertEquals(null, testDi3.Contact1Imported__c);
-        System.assertEquals(diService.statusMatchedNew(), testDi3.Contact1ImportStatus__c);
+        System.assertEquals(System.Label.bdiDryRunNoMatch, testDi3.Contact1ImportStatus__c);
 
         System.assertEquals(null, testDi3.Contact2Imported__c);
-        System.assertEquals(diService.statusMatchedNew(), testDi3.Contact2ImportStatus__c);
+        System.assertEquals(System.Label.bdiDryRunNoMatch, testDi3.Contact2ImportStatus__c);
+
+        System.assertEquals(null, testDi4.Contact1Imported__c);
+        System.assertEquals(System.Label.bdiDryRunNoMatch,testDi4.Contact1ImportStatus__c);
+
+        System.assertEquals(null, testDi5.Contact1Imported__c);
+        System.assertEquals(System.Label.bdiDryRunNoMatch,testDi5.Contact1ImportStatus__c);
+
+        System.assertEquals(null, testDi6.Contact1Imported__c);
+        System.assertEquals(System.Label.bdiDryRunNoMatch,testDi6.Contact1ImportStatus__c);
+
         
+        // Now re-run the same records in normal mode (no dry run).  
+        
+        // Reset the status and Imported fields to simulate them not having already been matched.
+        for (DataImport__c di: diList) {
+            di.Contact1Imported__c = null;
+            di.Contact1ImportStatus__c = null;
+            di.Contact2Imported__c = null;
+            di.Contact2ImportStatus__c = null;
+        }
+        
+        BDI_DataImportService diService2 = new BDI_DataImportService(false,mapService);
+        diService2.listDI = diList;
+        diService2.injectDataImportSettings(dis);
+        BDI_ContactService contService2 = new BDI_ContactService(diService2);
+        contService2.dupeMgmtUtil = dupeMgmt;
+
+        contService2.importContactsAndHouseholds();
+
+        Set<Id> existingContSet = new Set<Id>{matchCont1.Id,matchCont2.Id};
+
+        // DI contact should match on existing contact record
+        System.assertEquals(matchCont1.Id, testDi1.Contact1Imported__c);
+        System.assert(testDi1.Contact1ImportStatus__c.contains(match1c.duplicateRuleName));
+
+        // DI contact should match on existing contact record
+        System.assertEquals(matchCont2.Id, testDi1.Contact2Imported__c);
+        System.assert(testDi1.Contact2ImportStatus__c.contains(match2.duplicateRuleName));
+
+        // DI contact should match on existing contact record
+        System.assertEquals(matchCont1.Id, testDi2.Contact1Imported__c);
+        System.assert(testDi2.Contact1ImportStatus__c.contains(match1c.duplicateRuleName));
+        
+        // DI should create contact since it doesn't match
+        System.assertNotEquals(null, testDi2.Contact2Imported__c);
+        System.assert(!existingContSet.contains(testDi2.Contact2Imported__c));
+        System.assertEquals(System.Label.bdiCreated, testDi2.Contact2ImportStatus__c);
+
+        // DI should create contact since it doesn't match
+        System.assertNotEquals(null, testDi3.Contact1Imported__c);
+        System.assert(!existingContSet.contains(testDi3.Contact1Imported__c));
+        System.assertEquals(System.Label.bdiCreated, testDi3.Contact1ImportStatus__c);
+
+        // DI should create contact since it doesn't match
+        System.assertNotEquals(null, testDi3.Contact2Imported__c);
+        System.assert(!existingContSet.contains(testDi3.Contact2Imported__c));
+        System.assertEquals(System.Label.bdiCreated, testDi3.Contact2ImportStatus__c);
+        
+        // DI should create contact since it doesn't match
+        System.assertNotEquals(null, testDi4.Contact1Imported__c);
+        System.assert(!existingContSet.contains(testDi4.Contact1Imported__c));
+        System.assertEquals(System.Label.bdiCreated,testDi4.Contact1ImportStatus__c);
+        
+        // DI should create contact since it doesn't match
+        System.assertNotEquals(null, testDi5.Contact1Imported__c);
+        System.assert(!existingContSet.contains(testDi5.Contact1Imported__c));
+        System.assertEquals(System.Label.bdiCreated,testDi5.Contact1ImportStatus__c);
+        
+        // Confirm that the contact in the second identical DI is marked as matched,
+        // and has the same id as the first identical DI.
+        System.assertEquals(testDi5.Contact1Imported__c, testDi6.Contact1Imported__c);
+        System.assertEquals(System.Label.bdiMatched,testDi6.Contact1ImportStatus__c);
+
+        Test.stopTest();
     }
 
     /**
