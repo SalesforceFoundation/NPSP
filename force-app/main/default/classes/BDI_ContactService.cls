@@ -355,12 +355,14 @@ public with sharing class BDI_ContactService {
         Boolean modelIsOneToOne = CAO_Constants.isOneToOne();
 
         for (DataImport__c di : bdi.listDI) {
+
             // skip di's that already have an error
             if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
             List<String> listDiKey = listDIKeyCx(di, strCx);
+
             Contact con = ContactFromDiKeys(listDiKey);
-            
+
             Boolean bothContactsSpecified = (strCx == 'Contact1' && isContactSpecified(di, 'Contact2')) || 
                 (strCx == 'Contact2' && isContactSpecified(di, 'Contact1'));
 
@@ -371,6 +373,7 @@ public with sharing class BDI_ContactService {
                     && (con.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE);
                 Boolean usingAdvAccountOneToOne = usingAdv && contactAndAccountExist
                     && (con.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
+
                 // Only Contacts with Household Accounts are allowed, unless Advancement is installed, 
                 // where One-to-one Accounts (Administrative in HEDA) are also valid
                 if (accountIsNotHousehold && !usingAdvAccountOneToOne) {
@@ -791,7 +794,12 @@ public with sharing class BDI_ContactService {
             listFName.add(con.Firstname.toLowerCase());
             addedToken = true;
         }
-        if (!addedToken || !isFirstnameInContactMatchRules)
+
+        // Only add a blank space to the matching set if the field was null, or if the field wasn't in the matching
+        // method name AND Contact Duplicate Rules matching is not enabled.  This is because adding a blank space 
+        // allows it to make a match without the value from this field, which we do not want for internal matching when
+        // Contact Duplicate Rules (aka Duplicate Management) is the selected matching method.
+        if (!addedToken || (!isFirstnameInContactMatchRules && !isDuplicateManagement))
             listFName.add('');
 
         addedToken = false;
@@ -799,7 +807,7 @@ public with sharing class BDI_ContactService {
             listLName.add(con.Lastname.toLowerCase());
             addedToken = true;
         }
-        if (!addedToken || !isLastnameInContactMatchRules)
+        if (!addedToken || (!isLastnameInContactMatchRules && !isDuplicateManagement))
             listLName.add('');
 
         addedToken = false;
@@ -819,7 +827,7 @@ public with sharing class BDI_ContactService {
             listEmail.add(con.npe01__AlternateEmail__c.toLowerCase());
             addedToken = true;
         }
-        if (!addedToken || !isEmailInContactMatchRules)
+        if (!addedToken || (!isEmailInContactMatchRules && !isDuplicateManagement))
             listEmail.add('');
 
         addedToken = false;
@@ -847,7 +855,7 @@ public with sharing class BDI_ContactService {
             listPhone.add(con.npe01__WorkPhone__c);
             addedToken = true;
         }
-        if (!addedToken || !isPhoneInContactMatchRules)
+        if (!addedToken || (!isPhoneInContactMatchRules && !isDuplicateManagement))
             listPhone.add('');
 
         Set<String> setDiKey = new Set<String>();
@@ -917,7 +925,12 @@ public with sharing class BDI_ContactService {
             listFName.add(String.valueOf(di.get(strCx + '_Firstname__c')).toLowerCase());
             addedToken = true;
         }
-        if (!isFirstnameInContactMatchRules || !addedToken) {
+
+        // Only add a blank space to the matching set if the field was null, or if the field wasn't in the matching
+        // method name AND Contact Duplicate Rules matching is not enabled.  This is because adding a blank space 
+        // allows it to make a match without the value from this field, which we do not want for internal matching when
+        // Contact Duplicate Rules (aka Duplicate Management) is the selected matching method.
+        if ((!isFirstnameInContactMatchRules && !isDuplicateManagement)  || !addedToken) {
             listFName.add('');
         }
 
@@ -926,7 +939,7 @@ public with sharing class BDI_ContactService {
             listLName.add(String.valueOf(di.get(strCx + '_Lastname__c')).toLowerCase());
             addedToken = true;
         }
-        if (!isLastnameInContactMatchRules || !addedToken) {
+        if ((!isLastnameInContactMatchRules && !isDuplicateManagement) || !addedToken) {
             listLName.add('');
         }
 
@@ -943,7 +956,7 @@ public with sharing class BDI_ContactService {
             listEmail.add(String.valueOf(di.get(strCx + '_Alternate_Email__c')).toLowerCase());
             addedToken = true;
         }
-        if (!isEmailInContactMatchRules || !addedToken) {
+        if ((!isEmailInContactMatchRules && !isDuplicateManagement) || !addedToken) {
             listEmail.add('');
         }
 
@@ -964,7 +977,7 @@ public with sharing class BDI_ContactService {
             listPhone.add(String.valueOf(di.get(strCx + '_Work_Phone__c')));
             addedToken = true;
         }
-        if (!isPhoneInContactMatchRules || !addedToken) {
+        if ((!isPhoneInContactMatchRules && !isDuplicateManagement) || !addedToken) {
             listPhone.add('');
         }
 
