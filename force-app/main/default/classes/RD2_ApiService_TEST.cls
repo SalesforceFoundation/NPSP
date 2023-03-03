@@ -515,7 +515,7 @@ private class RD2_ApiService_TEST {
     private static void shouldReturnErrorForPauseWhenEndDateIsMoreThanTwelveMonthsAfterStartDate() {
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
         RD2_ApiService.PauseObject pauseObject = createPauseObjectWithDetail(
-            Date.today(), Date.today().addDays(367), 'Vacation');
+            Date.today(), Date.today().addYears(1).addDays(2), 'Vacation');
 
         new RD2_ApiService().isValidPauseData(rd.Id, pauseObject, new RD2_RecurringDonation(rd));
 
