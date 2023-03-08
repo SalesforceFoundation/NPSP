@@ -10,7 +10,7 @@ Suite Setup     Run keywords
 ...             Setup Test Data
 Suite Teardown  Delete Records and Close Browser
 
-***Keywords***
+*** Keywords ***
 # Setup a contact with parameters specified
 Setup Test Data
     Setupdata   contact   ${contact1_fields}
@@ -19,10 +19,9 @@ Setup Test Data
 &{contact1_fields}  Email=test@example.com
 
 *** Test Cases ***
-
 Create Open Recurring Donation With Monthly Installment
     [Documentation]              This test verifies that a Recurring Donation can be created through the UI.
-    [tags]                        feature:Recurring Donations     unstable         api
+    [tags]                        feature:Recurring Donations     unstable         api      quadrant:q3
 
     Go To Page                           Details
     ...                                  Contact

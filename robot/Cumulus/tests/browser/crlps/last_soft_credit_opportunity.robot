@@ -13,7 +13,7 @@ Suite Setup     Run keywords
 ...             Setup Test Data
 Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
-***Keywords***
+*** Keywords ***
 # creates test data a contact and an opportunity for the contact
 Setup Test Data
     Setupdata   contact   ${contact1_fields}     ${opportunity_fields}
@@ -32,7 +32,7 @@ Create Crlp For Automated Soft Credit
     ...                 Enable CRLP from settings, create a setting record. Create an opportunity associated with a contact that is not primary
     ...                 Run the relevant rollup batch job and ensure that rollups are happening and displayed on the opportunity page
 
-    [tags]              feature:CRLP   unstable    api
+    [tags]              feature:CRLP   unstable    api      quadrant:q3
 
     # Create a custom lookup field requried for this particular testcase
     Create Customfield In Object Manager

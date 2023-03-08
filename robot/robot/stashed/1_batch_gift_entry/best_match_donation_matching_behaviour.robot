@@ -17,10 +17,9 @@ Suite Teardown  Run Keywords
 *** Test Cases ***
 
 Best Match Donation Matching Behaviour
-
-    [tags]  stable
-    Go To Page             Details           DataImportBatch__c         object_id=${batch}[Id]
-    Current Page Should Be      Details      DataImportBatch__c
+    [tags]                      stable      quadrant:q3
+    Go To Page                  Details     DataImportBatch__c         object_id=${batch}[Id]
+    Current Page Should Be      Details     DataImportBatch__c
     Select Value From BGE DD    Donor Type    Account
     Wait Until Keyword Succeeds          1 minute
         ...                              5 seconds
@@ -84,7 +83,7 @@ Best Match Donation Matching Behaviour
     ...                                  CloseDate=${date}
     ...                                  StageName=Prospecting
 
-***Keywords***
+*** Keywords ***
 Setup Test Data
     ${ns} =  Get NPSP Namespace Prefix
     Set Suite Variable    ${ns}
