@@ -16,7 +16,7 @@ Suite Teardown  Run Keywords
 Opportunity is Autoclosed when Overpaid
     [Documentation]    Create Open Opportunity and apply new payment of amount more than opportunity amount
     ...                and confirm that opportunity is closed when batch is processed
-    [tags]  stable
+    [tags]      stable      quadrant:q3
     ${ns} =  Get NPSP Namespace Prefix
     Set Suite Variable    ${ns}
     &{batch} =       API Create DataImportBatch
@@ -72,4 +72,3 @@ Opportunity is Autoclosed when Overpaid
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Navigate To And Validate Field Value    Close Date    contains    ${opp_date}
     Navigate To And Validate Field Value    Stage    contains    Closed Won
-
