@@ -18,8 +18,12 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
             timeout=60,
             message="custom rollup settings page did not load in 1 min",
         )
+        self.selenium.reload_page()
+        self.salesforce.wait_until_loading_is_complete()
+        self.builtin.sleep(60)
         self.builtin.log(self.selenium.get_source())
-        self.selenium.wait_until_page_contains_element("//div[@class='oneAlohaPage']", timeout=120)
+        self.selenium.wait_until_page_contains("Account: Average Gift", timeout=60)
+        # self.selenium.wait_until_page_contains_element("//div[@class='oneAlohaPage']", timeout=120)
         self.builtin.log(self.selenium.get_source())
         self.selenium.wait_until_page_contains_element("//iframe", timeout=120)
         self.selenium.select_frame("//iframe")
