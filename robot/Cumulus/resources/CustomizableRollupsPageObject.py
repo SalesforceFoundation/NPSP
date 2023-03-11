@@ -18,8 +18,15 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
             timeout=60,
             message="custom rollup settings page did not load in 1 min",
         )
-        self.npsp.wait_for_locator("frame_new", "vfFrameId", "vfFrameId")
-        self.npsp.choose_frame("vfFrameId")
+        self.builtin.log(self.selenium.get_source())
+        self.selenium.wait_until_page_contains_element("//div[@class='oneAlohaPage']", timeout=120)
+        self.builtin.log(self.selenium.get_source())
+        self.selenium.wait_until_page_contains_element("//iframe", timeout=120)
+        self.selenium.select_frame("//iframe")
+
+        # self.npsp.wait_for_locator("frame_new", "vfFrameId", "vfFrameId")
+        # self.npsp.choose_frame("vfFrameId")
+
         link = npsp_lex_locators["link-text"].format("Back to NPSP Settings")
         self.selenium.wait_until_page_contains_element(
             link, error="Current page is not a customizable rollups setting view"
