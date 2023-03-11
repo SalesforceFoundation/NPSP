@@ -10,8 +10,7 @@ from NPSP import npsp_lex_locators
 class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
 
     def navigate_to_crlpsettings(self, filter_name=None):
-        """ Click on the Navigate CRLP Button and wait for the page to load
-                """
+        """ Click on the Navigate CRLP Button and wait for the page to load """
         locator = npsp_lex_locators["id"].format("navigateCRLPs")
         self.selenium.click_element(locator)
         self.selenium.wait_until_location_contains(
@@ -19,8 +18,19 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
             timeout=60,
             message="custom rollup settings page did not load in 1 min",
         )
-        self.npsp.wait_for_locator("frame_new", "vfFrameId", "vfFrameId")
-        self.npsp.choose_frame("vfFrameId")
+        self.selenium.reload_page()
+        self.salesforce.wait_until_loading_is_complete()
+        self.builtin.sleep(60)
+        self.builtin.log(self.selenium.get_source())
+        self.selenium.wait_until_page_contains("Account: Average Gift", timeout=60)
+        # self.selenium.wait_until_page_contains_element("//div[@class='oneAlohaPage']", timeout=120)
+        self.builtin.log(self.selenium.get_source())
+        self.selenium.wait_until_page_contains_element("//iframe", timeout=120)
+        self.selenium.select_frame("//iframe")
+
+        # self.npsp.wait_for_locator("frame_new", "vfFrameId", "vfFrameId")
+        # self.npsp.choose_frame("vfFrameId")
+
         link = npsp_lex_locators["link-text"].format("Back to NPSP Settings")
         self.selenium.wait_until_page_contains_element(
             link, error="Current page is not a customizable rollups setting view"

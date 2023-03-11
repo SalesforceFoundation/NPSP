@@ -8,7 +8,7 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/NPSP.py
 Suite Setup     Run keywords
 ...             Open Test Browser
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 
 *** Variables ***

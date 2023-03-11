@@ -42,7 +42,7 @@ npsp_lex_locators={
 			'drop-down':'//div[contains(@class, "slds-card")]/header[.//span[@title="{}"]]/parent::*/div/div/div/a[contains(@class, "slds-button")]',
 			'title':'//div/h2//a[./span[text()="{}"]]',
 			'viewall':'//article[contains(@class, "slds-card slds-card_boundary")][.//span[@title="{}"]]//a[.//span[@class="view-all-label"]]',
-			'item':"//article[contains(@class, 'slds-card_boundary')][.//img][.//span[@title='{}']]//h3//a",
+			'item':"//article[contains(@class, 'slds-card_boundary')][.//img][.//span[@title='{}']]//h3//a//span",
 			'field_value': '//a[text()="{}"]/ancestor::li//div[contains(@class, "slds-item--detail")]//*[text()="{}"]',
 			'link':"//article[contains(@class, 'slds-card slds-card_boundary')][.//span[@title='{}']]//table/tbody/tr[.//td//*[text()='{}']]/th//a",
 			'dd-link':'//a[@name="{}"]',
@@ -116,7 +116,7 @@ npsp_lex_locators={
 	'related_list_items':'//article[contains(@class,"slds-card_boundary")][.//a[contains(@class, "slds-card")]/span[text() = "{}"]]//div[contains(@class, "listDisplays")]//*[text()="{}"]',
 	'span_button':'//span[text()="{}"]',
 	'modalspan_button':'//div[contains(@class,"modal-body")]//span[text()="{}"]',
-	'related_drop_down':'//div/a[contains(@class,"slds-button")]/ancestor::li/div/a',
+	'related_drop_down':"//li[contains(@class, 'forceRecordLayout')]//a[contains(text(), '{}')]/ancestor::h3[contains(@class, 'primaryField')]/following-sibling::div//a[@role='button']",
 	'span':"//span[@title='{}']",
 	'header_field_value':'//*[contains(@class, "slds-page-header__detail")][.//*[@title="{}"]]//*[text()="{}"]',
 	'header_datepicker':'//li[contains(@class, "slds-page-header__detail")][.//p[contains(@class, "slds-text-heading--label")][@title="{}"]]//*[@class="uiOutputDate"]',
@@ -126,7 +126,7 @@ npsp_lex_locators={
 	'field_lookup_value': "//a[@role='option'][.//div[@title='{}']]",
 	'field-value':"//div[contains(@class,'slds-form-element')][./label[text()='{}']]/div/span",
 	'header':'//h1//child::div/span[text()="{}"]',
-	'check_related_list_item':'//article[.//span[text() = "{}"]]/descendant::tbody//th/*/*/*/*/*/*/*/*/a/span[text()="{}"]',
+	'check_related_list_item': '//article[.//span[text() = "{}"]]/descendant::tbody//th//a//span[text()="{}"]',
 	'detail_page': {
 		'section_header':'//h3//span[text()="{}"]',
 		'address':'//h3[contains(@class, "slds-section__title")][.//span[contains(text(),"Address")]]/../..//div[contains(@class, "test-id")]/span[text()= "{}"]/../following-sibling::div//a//div[contains(@class, "slds")]',
@@ -134,6 +134,7 @@ npsp_lex_locators={
 		'field-value':{
 			'verify_field_value1':'//div[contains(@class, "forcePageBlockItem")]/div/div//span[text()="{}"]/../../div[2]/span/span[text() = "{}"]',
 			'verify_field_value2':'//force-record-layout-item//div[./span[text()="{}"]]/following-sibling::div//lightning-formatted-text[text() = "{}"]',
+			'verify_field_value3':'//records-record-layout-item//div[./span[text()="{}"]]/following-sibling::div//lightning-formatted-text[text() = "{}"]'
 		},
 		'edit_mode':{
 			'section_header':'//div[contains(@class,"forcePageBlockSectionEdit")]/h3//span[text()="{}"]',
@@ -160,7 +161,7 @@ npsp_lex_locators={
 		'field-value':'//tbody/tr[./th//a[text()="{}"]]/td[.//span[text()="{}"]]',
 	},
 	'engagement_plan':{
-		'input_box':'//fieldset[./legend[text()="{}"]]//div[@class="requiredInput"]/input',
+		'input_box':'//fieldset[./legend[text()="{}"]]//input[@aria-label="{}"]',
 		'dropdown':'//div[contains(@class,"slds-p-top_small")]/label[text()="{}"]/following-sibling::div/select',
 		'checkbox':'//div[contains(@class,"slds-p-top_small")]/label[@class="slds-checkbox"][./span/following-sibling::{}[text()="{}"]/]',
 		'button':'//div[contains(@class,"slds-button-group")][.//span[text()="toTask {}"]]/button[contains(text(),"{}")]',

@@ -32,7 +32,7 @@ Create Crlp For Automated Soft Credit
     ...                 Enable CRLP from settings, create a setting record. Create an opportunity associated with a contact that is not primary
     ...                 Run the relevant rollup batch job and ensure that rollups are happening and displayed on the opportunity page
 
-    [tags]              feature:CRLP   unstable    api      quadrant:q3
+    [tags]              feature:CRLP   unstable    api      quadrant:q3     jenkins_debug
 
     # Create a custom lookup field requried for this particular testcase
     Create Customfield In Object Manager

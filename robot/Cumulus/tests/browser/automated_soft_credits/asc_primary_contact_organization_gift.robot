@@ -20,9 +20,7 @@ Setup Test Data
     ...                 Name=${data}[account][Name] $50 donation          Amount=50    ${ns}Primary_Contact__c=${data}[contact][Id]
     Set suite variable  &{opportunity}
 
-
 *** Variables ***
-
 &{contact_fields}  Email=test@example.com
 &{account_fields}  Type=Organization
 
