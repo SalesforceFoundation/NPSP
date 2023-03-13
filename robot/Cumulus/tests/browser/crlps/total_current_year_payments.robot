@@ -53,7 +53,6 @@ Total Current Year Payments on Prior Year Pledges
     [Documentation]       Calculates Total Current Year Payments on Prior Year opportunity Pledges
     ...                   Enables CRLP settings, creates the custom fields on account and payment objects required for rollup
     ...                   Creates a filter and crlp setting to rollup the amount of current year payments on a previous year opportunity
-
     [Tags]                feature:CRLP   unstable  api      quadrant:q3
 
     # Create a Filter group and CRLP setting after checking prior records do not check if element exists
