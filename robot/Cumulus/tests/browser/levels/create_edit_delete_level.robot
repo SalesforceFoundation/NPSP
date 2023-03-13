@@ -6,7 +6,7 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/LevelsPageObject.py
 ...             robot/Cumulus/resources/NPSPSettingsPageObject.py
 Suite Setup     Open Test Browser
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 
 *** Variables ***
