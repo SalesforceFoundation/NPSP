@@ -221,6 +221,11 @@ tasks:
         options:
             update_future_releases: True
 
+    github_release:
+        options:
+            release_content: |
+                [Salesforce.org Release Notes](https://help.salesforce.com/s/articleView?id=sfdo.Release_Notes_SFDO.htm&type=5)
+
     github_release_notes:
         options:
             trial_info: "`TBD`"
@@ -769,6 +774,12 @@ tasks:
                 - "*.cls"
 
 flows:
+
+    release_production:
+        steps:
+            3:
+                task: None
+
     build_unlocked_test_package:
         steps:
             0:
