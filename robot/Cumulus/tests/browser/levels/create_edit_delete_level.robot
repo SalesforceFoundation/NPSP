@@ -6,7 +6,7 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/LevelsPageObject.py
 ...             robot/Cumulus/resources/NPSPSettingsPageObject.py
 Suite Setup     Open Test Browser
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 
 *** Variables ***
@@ -25,7 +25,7 @@ Create and edit level to verify fields
     [Documentation]                      Create a level and verify the fields on the created level details page
     ...                                  Edit the level details and update the fields. Verify the updated fields
     ...                                  are persisted on the details page.
-    [tags]                               feature:Levels  api
+    [tags]                               feature:Levels     api     quadrant:q3
 
     Go To Page                                       Listing                            Level__c
     Navigate To Level Page                           create
@@ -130,7 +130,7 @@ Create and edit level to verify fields
     Navigate To And Validate Field Value           Previous Level     contains         ${level_name}    section=Donation Information
 
 3. Delete a Level
-    [Documentation]                      Delete the Level from the levels listing page
+    [Documentation]                         Delete the Level from the levels listing page
     [tags]                                  feature:Levels   api
 
     Go To Page                              Details

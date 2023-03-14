@@ -499,12 +499,10 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def check_record_related_item(self,title,value):
         """Verifies that the given value is displayed under the related list identified by title on a record view page"""
         self.salesforce.load_related_list(title)
-        locator=npsp_lex_locators['record']['related']['item'].format(title,value)
+        locator = npsp_lex_locators['record']['related']['item'].format(title)
         self.selenium.wait_until_page_contains_element(locator)
-        actual_value=self.selenium.get_webelement(locator).text
-        assert value == actual_value, "Expected value to be {} but found {}".format(
-            value, actual_value
-        )
+        actual_value = self.selenium.get_webelement(locator).text
+        assert value == actual_value, "Expected value to be {} but found {}".format(value, actual_value)
 
 
     def select_related_dropdown(self,title):
@@ -570,7 +568,6 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         locator = npsp_lex_locators['object']['button'].format(title)
         self.selenium.wait_until_element_is_visible(locator,error="Button "+ title +" not found on the page")
         self.selenium.get_webelement(locator).click()
-
 
     def check_related_list_values(self,list_name,*args):
         """Verifies the value of custom related list"""
@@ -803,9 +800,9 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         return main_loc
 
     def wait_for_locator(self, path, *args, **kwargs):
-        """Waits for 60 sec for the specified locator"""
+        """Waits for 180 sec for the specified locator"""
         main_loc = self.get_npsp_locator(path,*args, **kwargs)
-        self.selenium.wait_until_element_is_visible(main_loc, timeout=60)
+        self.selenium.wait_until_element_is_visible(main_loc, timeout=180)
 
     def wait_for_locator_is_not_visible(self, path, *args, **kwargs):
         """Waits for 60 sec for the specified locator"""
