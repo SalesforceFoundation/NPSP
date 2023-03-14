@@ -10,8 +10,7 @@ from NPSP import npsp_lex_locators
 class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
 
     def navigate_to_crlpsettings(self, filter_name=None):
-        """ Click on the Navigate CRLP Button and wait for the page to load
-                """
+        """ Click on the Navigate CRLP Button and wait for the page to load """
         locator = npsp_lex_locators["id"].format("navigateCRLPs")
         self.selenium.click_element(locator)
         self.selenium.wait_until_location_contains(
