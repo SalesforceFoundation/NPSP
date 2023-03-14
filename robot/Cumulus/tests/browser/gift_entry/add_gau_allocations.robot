@@ -45,7 +45,7 @@ Test GAU Allocations with Default Allocations Disabled
     ...                   create a gift with contact info and add allocations more than donation amount and verify error message
     ...                   correct allocations to be less than donation amount(verifying remaining balance) and on saving opportunity
     ...                   and contact are created, GAU allocations are created for correct amounts specified on gift entry form
-    [tags]                feature:GE        unstable            api
+    [tags]                feature:GE    unstable    api     quadrant:q3
     API Modify Allocations Setting
     ...        ${NS}Default_Allocations_Enabled__c=false
     ...        ${NS}Default__c=None
@@ -98,7 +98,7 @@ Test GAU Allocations with Default Allocations Enabled
     ...                   create a gift with account info and verify default gau allocation equals donation amount, add new allocations
     ...                   with percent and amount. Verify default allocation changes to remaining amount after the two allocations
     ...                   and on saving opportunity and account are created, GAU allocations are created for all allocations correctly
-    [tags]                feature:GE        unstable          api
+    [tags]                feature:GE    unstable    api     quadrant:q3
     API Modify Allocations Setting
     ...        ${NS}Default_Allocations_Enabled__c=true
     ...        ${NS}Default__c=${DEFAULT_GAU}[Id]

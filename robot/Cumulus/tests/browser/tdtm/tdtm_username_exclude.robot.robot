@@ -6,10 +6,9 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/ContactPageObject.py
 ...             robot/Cumulus/resources/RecurringDonationsPageObject.py
 Suite Setup     Open Test Browser
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Keywords ***
-
 API Modify Trigger Handler
     [Arguments]                  ${triggerhandler_id}           &{fields}
     ${ns} =                      Get NPSP Namespace Prefix
@@ -22,10 +21,10 @@ API Modify Trigger Handler
     [return]                     &{triggerhandler}
 
 *** Test Cases ***
-
 Update a Trigger Handler to Exclude a Username
     [Documentation]    This test case verifies that when a username is added to a Trigger Handler		
     ...                record for exclusion that triggers indeed do not run for that User.
+    [Tags]              quadrant:q3
 
     # Create an Account so Trigger Handler records are created
     &{account} =                 API Create Organization Account

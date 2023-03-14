@@ -7,7 +7,7 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/LeadsPageObject.py
 
 Suite Setup     Open Test Browser
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Test Cases ***
 
