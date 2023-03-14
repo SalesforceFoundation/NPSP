@@ -8,7 +8,7 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/NPSP.py
 Suite Setup     Run keywords
 ...             Open Test Browser
-Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 
 *** Variables ***
@@ -22,7 +22,7 @@ Create Engagement Plan Template And verify save
     [Documentation]                      Create an engagement plan from the ui. Navigate to engagementplans listings view
     ...                                  View the details of the engagement plan created.
 
-    [tags]                                             feature:Engagements     unstable    api
+    [tags]                                             feature:Engagements     unstable    api      quadrant:q3
 
       Go To Page                                       Listing                            Engagement_Plan_Template__c
       Click Special Object Button                      New

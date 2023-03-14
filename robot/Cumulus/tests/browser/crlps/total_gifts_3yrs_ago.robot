@@ -20,11 +20,10 @@ Setup Test Data
     ...                                                    Field_Name=Total Gifts Three Years Ago
 
 *** Test Cases ***
-
 Calculate CRLPs for Total Gifts 3 Years Ago
     [Documentation]             Create a New rollup for Total Gifts 3 years ago by cloning an existing rollup called Total Gifts Two Years Ago
     ...                         and create an opportunity for 3 ago from current date and verify the rollup value on newly created Total Gifts Three Years Ago field
-    [tags]                      feature:CRLP   unstable    api
+    [tags]                      feature:CRLP   unstable    api      quadrant:q3
 
 # clone an existing rollup and create a new one and verify that its created
     Load Page Object            Custom   CustomRollupSettings
@@ -51,5 +50,3 @@ Calculate CRLPs for Total Gifts 3 Years Ago
     ...                                           Contact
     ...                                           object_id=${contact}[Id]
     Verify Rollup Field Value                     Total Gifts Three Years Ago         $3,000.00     section=Contact Information
-
-
