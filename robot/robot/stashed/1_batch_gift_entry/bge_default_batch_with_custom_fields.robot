@@ -19,7 +19,7 @@ ${camp_id}
 
 Create BGE Batch With Custom Fields
     #Create a BGE batch with default values and selecting different types of custom fields for Donation and Payment
-    [tags]  stable
+    [tags]  stable      quadrant:q3
     # --------------------------------
     # Create Batch With Custom Fields
     # --------------------------------
@@ -58,7 +58,7 @@ Create BGE Batch With Custom Fields
     ...    Run_Opportunity_Rollups_while_Processing__c=True
 
 Create New gift and process batch and validate
-    [tags]  stable
+    [tags]  stable      quadrant:q3
     &{contact} =     API Create Contact
     Set Suite Variable    &{contact}
     Store Session Record        Account       ${contact}[AccountId]
@@ -95,7 +95,7 @@ Create New gift and process batch and validate
 
 
 Verify Custom Fields on Payment and Donation
-    [tags]  stable
+    [tags]  stable      quadrant:q3
     ${date} =     Get Current Date    result_format=%Y-%m-%d
     ${value}    Return Locator Value    bge.value    Donation
     Click Link With Text    ${value}
@@ -123,4 +123,3 @@ Verify Custom Fields on Payment and Donation
     ...    ${org_ns}custom_picklist__c=2
     ...    ${org_ns}custom_textarea__c=this is custom batch
     ...    ${org_ns}custom_text__c=Robot
-

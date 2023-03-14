@@ -34,6 +34,7 @@ Setup Variables
 *** Test Cases ***
 
 Create Data Import Via API
+    [tags]      quadrant:q3
     &{data_import} =  API Create DataImport
     ...        ${ns}Account1_Name__c=${acc1}
     ...        ${ns}Account2_Name__c=${acc2}
@@ -62,6 +63,7 @@ Create Data Import Via API
     Click Button With Value   Close
 
 Verify Custom Fields on Account Contact and Address Objects
+    [tags]      quadrant:q3
     &{data_import_new} =     Salesforce Get  ${ns}DataImport__c  ${data_import}[Id]
     Verify Expected Values    nonns    Account    ${data_import_new}[${ns}Account1Imported__c]
     ...    Name=${acc1}
