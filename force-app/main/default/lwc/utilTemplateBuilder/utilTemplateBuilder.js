@@ -75,7 +75,7 @@ import ACCOUNT_NAME_INFO from '@salesforce/schema/Account.Name';
 import commonError from '@salesforce/label/c.commonError';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 
-import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
+import getDataImportSettings from '@salesforce/apex/GE_GiftEntryController.getDataImportSettings';
 import getGiftEntrySettings from
         '@salesforce/apex/GE_GiftEntryController.getGiftEntrySettings';
 
