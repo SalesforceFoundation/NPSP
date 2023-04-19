@@ -1337,8 +1337,8 @@ public with sharing class GE_GiftEntryController {
 
     @AuraEnabled
     public static Data_Import_Settings__c getDataImportSettings() {
-        if (!UTIL_Describe.getObjectDescribe('DataImportBatch__c').isUpdateable()) {
-            throw new AuraHandledException(Label.commonInsufficientPermissions);
+        if (!UTIL_Permissions.canRead(UTIL_Namespace.StrTokenNSPrefix('Data_Import_Settings__c'), false)) {
+            return null;
         }
 
         return UTIL_CustomSettingsFacade.getDataImportSettings();

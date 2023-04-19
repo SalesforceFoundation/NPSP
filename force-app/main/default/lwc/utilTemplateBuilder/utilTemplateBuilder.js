@@ -504,7 +504,7 @@ const setRecordValuesOnTemplate = (templateSections, fieldMappings, record) => {
 const getPageAccess = async () => {
     const dataImportSettings = await getDataImportSettings();
     const giftEntryGateSettings = await getGiftEntrySettings();
-    const isAdvancedMappingOn =
+    const isAdvancedMappingOn = dataImportSettings &&
         dataImportSettings[FIELD_MAPPING_METHOD_FIELD_INFO.fieldApiName] === ADVANCED_MAPPING;
     const isGiftEntryEnabled = giftEntryGateSettings[GIFT_ENTRY_FEATURE_GATE_INFO.fieldApiName];
     return isAdvancedMappingOn && isGiftEntryEnabled;
