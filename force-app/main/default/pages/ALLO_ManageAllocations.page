@@ -163,8 +163,8 @@
             $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function() {
                 $Lightning.createComponent("{!namespace}" + ":utilIllustration",
                     {
-                        title : "{!$Label.commonAdminPermissionErrorTitle}",
-                        message : "{!$Label.commonPermissionErrorMessage}",
+                        title : "{!JSENCODE($Label.commonAdminPermissionErrorTitle)}",
+                        message : "{!JSENCODE($Label.commonPermissionErrorMessage)}",
                         size: 'small',
                         variant: 'no-access',
                         illustrationClass: "slds-p-top_x-large slds-m-top_x-large"
@@ -194,7 +194,7 @@
                     <apex:outputPanel rendered="{!isLoading}" >
                         <div class="spinner slds-spinner_container slds-is-relative slds-m-around_xx-large slds-align_absolute-center" >
                             <div role="status" class="slds-spinner slds-spinner_medium">
-                                <span class="slds-assistive-text">{!$Label.labelMessageLoading}</span>
+                                <span class="slds-assistive-text">{!JSENCODE($Label.labelMessageLoading)}</span>
                                 <div class="slds-spinner__dot-a"></div>
                                 <div class="slds-spinner__dot-b"></div>
                             </div>

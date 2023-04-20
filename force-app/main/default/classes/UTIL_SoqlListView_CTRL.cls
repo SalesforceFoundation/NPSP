@@ -37,7 +37,7 @@
 
 public with sharing class UTIL_SoqlListView_CTRL {
 
-    public UTIL_iSoqlListViewConsumer pageController {   
+    public UTIL_iSoqlListViewConsumer pageController {
         get; 
         set {
             if (value != null) {
@@ -45,6 +45,15 @@ public with sharing class UTIL_SoqlListView_CTRL {
                 pageController.setComponentController(this);
             }
         }
+    }
+
+    public String getListViewPageInfo () {
+        String listViewPageInfo = System.Label.labelListViewPageInfo;
+        return String.format(listViewPageInfo, new List<Integer>{
+            setCon.getPageNumber(),
+            NumberOfPages,
+            NumberOfItems
+        });
     }
 
     // the set controller allows us to do paging in our pageTable
