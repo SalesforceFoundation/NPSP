@@ -432,6 +432,41 @@ public with sharing class PMT_ValidationService_TEST {
     }
 
     @IsTest
+    private static void verifyAddingPaymentToElevateWillNotRunValidation() {
+        npe01__OppPayment__c originalPayment = new npe01__OppPayment__c(
+            Id = UTIL_UnitTestData_TEST.mockId(npe01__OppPayment__c.SObjectType),
+            npe01__Payment_Amount__c = 10,
+            npe01__Paid__c = true
+        );
+
+        npe01__OppPayment__c updatedPayment = originalPayment.clone(true);
+        updatedPayment.Elevate_Payment_ID__c = 'Random';
+
+        PMT_ValidationService validationService = new PMT_ValidationService(
+            new List<npe01__OppPayment__c>{updatedPayment},
+            new List<npe01__OppPayment__c>{originalPayment},
+            TDTM_Runnable.Action.BeforeUpdate
+        );
+
+        validationService.isEnforceAccountingDataConsistency = false;
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+        .withIsIntegrationEnabled(true)
+        .withHasIntegrationPermissions(false);
+
+        PMT_ValidationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+
+        Test.startTest();
+        List<ErrorRecord> errorRecords = validationService.validate().getErrors();
+        Test.stopTest();
+
+        System.assertEquals(0, errorRecords.size(),
+            'Expecting Elevate validation should not run against newly added Elevate payment.');
+    }
+
+    @IsTest
     private static void verifyElevateRefundWillNotBeValidate() {
         npe01__OppPayment__c originalPayment = new npe01__OppPayment__c(
             Id = UTIL_UnitTestData_TEST.mockId(npe01__OppPayment__c.SObjectType),
