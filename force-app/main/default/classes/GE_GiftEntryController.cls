@@ -1335,6 +1335,15 @@ public with sharing class GE_GiftEntryController {
         }
     }
 
+    @AuraEnabled
+    public static Data_Import_Settings__c getDataImportSettings() {
+        if (!UTIL_Permissions.canRead(UTIL_Namespace.StrTokenNSPrefix('Data_Import_Settings__c'), false)) {
+            return null;
+        }
+
+        return UTIL_CustomSettingsFacade.getDataImportSettings();
+    }
+
     private static String retrieveBatchCurrencyIsoCode (Id batchId) {
         String query = new UTIL_Query()
             .withSelectFields(new Set<String>{UTIL_Currency.CURRENCY_ISO_CODE_FIELD})
