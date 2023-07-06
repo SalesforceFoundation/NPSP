@@ -45,7 +45,7 @@
                 var lkLink = lkSpan.querySelector("a");
                 lkLink.style.visibility = "";
                 lkLink.className = "";
-                lkLink.setAttribute("aria-label", "{!$Label.UTIL_InputFormFormFieldAltLabelLookup} {!$ObjectType[sObjType].fields[field].label}");
+                lkLink.setAttribute("aria-label", "{!JSENCODE($Label.UTIL_InputFormFormFieldAltLabelLookup)} {!$ObjectType[sObjType].fields[field].label}");
                 lkLink.innerHTML = "<svg " +
                     " aria-hidden=\"true\" class=\"slds-icon slds-input__icon slds-icon_x-small slds-icon-text-default\"" +
                     " viewBox=\"0 0 24 24\">" +
@@ -58,7 +58,7 @@
                 var lkLink = lkSpan.querySelector("a");
                 lkLink.style.visibility = "";
                 lkLink.className = "";
-                lkLink.setAttribute("aria-label","{!$Label.UTIL_InputFormFormFieldAltLabelDate} {!$ObjectType[sObjType].fields[field].label}");
+                lkLink.setAttribute("aria-label", "{!JSENCODE($Label.UTIL_InputFormFormFieldAltLabelDate)} {!$ObjectType[sObjType].fields[field].label}");
                 lkLink.innerHTML = "<svg " +
                     " aria-hidden=\"true\" class=\"slds-icon slds-input__icon slds-icon_x-small slds-icon-text-default\" " +
                     " width=\"52\" height=\"52\" viewBox=\"0 0 52 52\">" +

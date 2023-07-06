@@ -48,7 +48,8 @@ public with sharing class UTIL_HtmlOutput_CTRL {
         '<p' => '|para|',
         '<h1' => '|head1|',
         '<h2' => '|head2|',
-        '<h3' => '|head3|'
+        '<h3' => '|head3|',
+        '&nbsp;' => '|nonBreakingSpace|'
     };
 
     /** @description The map of allowed urls and their temporary substitution values */
