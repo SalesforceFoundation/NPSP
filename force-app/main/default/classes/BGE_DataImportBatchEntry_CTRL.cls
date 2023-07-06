@@ -343,6 +343,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     @AuraEnabled
     public static String runBatchDryRun(Id batchId, Integer numberOfRowsToReturn) {
         try {
+            checkFieldPermissions();
+
             Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
 
             List<DataImport__c> allRawDataImports = getAllDataImportRecordsForDryRunByBatchId(batchId);
