@@ -187,7 +187,11 @@ public inherited sharing class PMT_ValidationService {
     }
 
     private void validateElevatePayments(npe01__OppPayment__c payment, npe01__OppPayment__c oldPayment) {
-        if (String.isBlank(payment.Elevate_Payment_ID__c) || !config.isIntegrationEnabled() || config.hasIntegrationPermissions()) {
+        if (String.isBlank(payment.Elevate_Payment_ID__c)
+            || String.isBlank(oldPayment.Elevate_Payment_ID__c)
+            || !config.isIntegrationEnabled()
+            || config.hasIntegrationPermissions()
+        ) {
             return;
         }
 
