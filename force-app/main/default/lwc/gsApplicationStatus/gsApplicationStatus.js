@@ -21,7 +21,7 @@ export default class GsApplicationStatus extends LightningElement {
     @track isApplicationSubmitted = false;
     @track isLoading = false;
     @track img = "";
-    @track isActiveInstance = false;
+    @track isActiveInstance = true;
     applyForFreeLicensesImg = Resources + '/gsResources/Accept_Tasks_Apply_Card.png';
     checkForStatusImg = Resources + '/gsResources/gift_illustration_2.svg';
 
@@ -55,7 +55,8 @@ export default class GsApplicationStatus extends LightningElement {
             this.diffInDays = this.calculateTrialRemainingDays(result);
             this.isApplicationSubmitted = this.checkApplicationSubmitted(result);
             this.img = this.isApplicationSubmitted ?  this.checkForStatusImg : this.applyForFreeLicensesImg; 
-            this.isActiveInstance = result.trialExpirationDate == null;
+            // Disabling this component since it is causing confusion in new Trials and orgs that were converted from Trials
+            // this.isActiveInstance = result.trialExpirationDate == null;
             this.hideSpinner();
             this.learnMoreAriaLabel = `${this.labels.gsLearnMore} ${this.labels.opensInNewLink}`;
             this.applyForFreeLicensesAriaLabel = `${this.labels.gsApplyForFreeLicenses} ${this.labels.opensInNewLink}`;
