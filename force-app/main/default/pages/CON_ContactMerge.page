@@ -43,7 +43,7 @@
                     <div class="slds-m-top_medium slds-m-bottom_large slds-p-horizontal_large">  
                         <div class="slds-grid">
                             <div class="slds-col slds-size_1-of-4">
-                                <apex:outputText escape="false" value="{!$Label.conMergeSearchConText}"/>
+                                <c:UTIL_HtmlOutput html="{!$Label.conMergeSearchConText}"/>
                             </div>
                             <div class="slds-col"> 
                                 <apex:commandButton id="srchByConBtn"
