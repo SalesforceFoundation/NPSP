@@ -1,4 +1,4 @@
-minimum_cumulusci_version: 3.23.0
+minimum_cumulusci_version: 3.74.0
 project:
     name: Cumulus
     source_format: sfdx
@@ -220,6 +220,11 @@ tasks:
     github_automerge_feature:
         options:
             update_future_releases: True
+
+    github_release:
+        options:
+            release_content: |
+                Check out the Salesforce Release Notes on [Salesforce Help & Training](https://sfdc.co/bnL4Cb).
 
     github_release_notes:
         options:
@@ -769,6 +774,12 @@ tasks:
                 - "*.cls"
 
 flows:
+
+    release_production:
+        steps:
+            3:
+                task: None
+
     build_unlocked_test_package:
         steps:
             0:
