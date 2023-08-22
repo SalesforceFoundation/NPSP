@@ -428,7 +428,9 @@ public with sharing class BDE_BatchEntry_CTRL {
     public void deleteItem(sobject sobj) {
     	Savepoint sp = Database.setSavepoint();
         try {
-            delete sobj;
+            if (UTIL_Permissions.canDelete(sobj?.getSObjectType().getDescribe().name, true)) {
+                delete sobj;
+            }
             for (integer i = 0; i < itemList.size(); i++) {
                     if (itemList[i].sobj.id == sobj.id) { 
                             itemList.remove(i);
