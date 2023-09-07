@@ -119,8 +119,11 @@
                     <div class="slds-form-element">
                         <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Store_Errors_On__c.Label}" for="cbxSEO" styleClass="slds-form-element__label" />
                         <div class="slds-form-element__control">
-                            <apex:inputCheckbox value="{!stgService.stgErr.Store_Errors_On__c}" rendered="{!isEditMode}" id="cbxSEO" html-aria-describedby="{!$Component.cbxSEOHelp}" styleClass="slds-checkbox"/>
-                            <apex:inputCheckbox value="{!stgService.stgErr.Store_Errors_On__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxSEOO" html-aria-describedby="{!$Component.cbxSEOHelp}" styleClass="slds-checkbox"/>
+                            <label class="slds-checkbox">
+                                <apex:inputCheckbox value="{!stgService.stgErr.Store_Errors_On__c}" rendered="{!isEditMode}" id="cbxSEO" html-aria-describedby="{!$Component.cbxSEOHelp}" styleClass="slds-checkbox"/>
+                                <apex:inputCheckbox value="{!stgService.stgErr.Store_Errors_On__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxSEOO" html-aria-describedby="{!$Component.cbxSEOHelp}" styleClass="slds-checkbox"/>
+                                <span class="slds-checkbox_faux"></span>
+                            </label>
                             <apex:outputPanel id="cbxSEOHelp" layout="block">
                                 <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpStoreErrorsOn}" />
                             </apex:outputPanel>
@@ -129,8 +132,11 @@
                     <div class="slds-form-element">
                         <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Error_Notifications_On__c.Label}" for="cbxENO" styleClass="slds-form-element__label" />
                         <div class="slds-form-element__control">
-                            <apex:inputCheckbox value="{!stgService.stgErr.Error_Notifications_On__c}" rendered="{!isEditMode}" id="cbxENO" html-aria-describedby="{!$Component.cbxENOHelp}" styleClass="slds-checkbox" />
-                            <apex:inputCheckbox value="{!stgService.stgErr.Error_Notifications_On__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxENOO" html-aria-describedby="{!$Component.cbxENOHelp}" styleClass="slds-checkbox" />
+                            <label class="slds-checkbox">
+                                <apex:inputCheckbox value="{!stgService.stgErr.Error_Notifications_On__c}" rendered="{!isEditMode}" id="cbxENO" html-aria-describedby="{!$Component.cbxENOHelp}" styleClass="slds-checkbox" />
+                                <apex:inputCheckbox value="{!stgService.stgErr.Error_Notifications_On__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxENOO" html-aria-describedby="{!$Component.cbxENOHelp}" styleClass="slds-checkbox" />
+                                <span class="slds-checkbox_faux"></span>
+                            </label>
                             <apex:outputPanel id="cbxENOHelp" layout="block">
                                 <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpErrorNotifyOn}" />
                             </apex:outputPanel>
@@ -153,8 +159,11 @@
                    <div class="slds-form-element">
                         <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Respect_Duplicate_Rule_Settings__c.Label}" for="cbxAllowDupes" styleClass="slds-form-element__label" />
                         <div class="slds-form-element__control">
-                            <apex:inputCheckbox value="{!stgService.stgErr.Respect_Duplicate_Rule_Settings__c}" rendered="{!isEditMode}" id="cbxAllowDupes" html-aria-describedby="{!$Component.cbxAllowDupesHelp}" styleClass="slds-checkbox" />
-                            <apex:inputCheckbox value="{!stgService.stgErr.Respect_Duplicate_Rule_Settings__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxAllowDupesRO" html-aria-describedby="{!$Component.cbxAllowDupesHelp}" styleClass="slds-checkbox" />
+                            <label class="slds-checkbox">
+                                <apex:inputCheckbox value="{!stgService.stgErr.Respect_Duplicate_Rule_Settings__c}" rendered="{!isEditMode}" id="cbxAllowDupes" html-aria-describedby="{!$Component.cbxAllowDupesHelp}" styleClass="slds-checkbox" />
+                                <apex:inputCheckbox value="{!stgService.stgErr.Respect_Duplicate_Rule_Settings__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxAllowDupesRO" html-aria-describedby="{!$Component.cbxAllowDupesHelp}" styleClass="slds-checkbox" />
+                                <span class="slds-checkbox_faux"></span>
+                            </label>
                             <apex:outputPanel id="cbxAllowDupesHelp" layout="block">
                                 <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRespectDuplicateRuleSettings}" />
                             </apex:outputPanel>

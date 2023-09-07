@@ -27,7 +27,7 @@
                            $ObjectType.Level__c.fields.Source_Field__c.updateable,
                            $ObjectType.Level__c.Fields.Target__c.updateable)}" />
     <apex:form >
-        <div class="slds-scope">
+        <div class="slds-scope slds-wcag">
 
             <c:UTIL_PageHeader headerLabel="{!$ObjectType.Level__c.Label}" header="{!Level__c.Name}" icon="custom11" iconCategory="custom"
                                cancelAction="{!cancel}" saveAction="{!save}" saveAndNewAction="{!saveAndNew}" showSaveAndNewBtn="true"/>
