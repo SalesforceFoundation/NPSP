@@ -50,10 +50,13 @@
                     <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Settings__c.Fields.npe4__Allow_AutoCreated_Duplicates__c.Label}"
                         for="cbxAACD" styleClass="col-md-4 slds-form-element__label" />
                     <div class="slds-form-element__control">
-                        <apex:inputCheckbox value="{!stgService.stgRel.npe4__Allow_AutoCreated_Duplicates__c}" rendered="{!isEditMode}" id="cbxAACD"
-                            html-aria-describedby="{!$Component.cbxAACDHelp}" styleClass="slds-checkbox" />
-                        <apex:inputCheckbox value="{!stgService.stgRel.npe4__Allow_AutoCreated_Duplicates__c}" rendered="{!isReadOnlyMode}" disabled="true"
-                            id="cbxAACDO" html-aria-describedby="{!$Component.cbxAACDHelp}" styleClass="slds-checkbox" />
+                        <label class="slds-checkbox">
+                            <apex:inputCheckbox value="{!stgService.stgRel.npe4__Allow_AutoCreated_Duplicates__c}" rendered="{!isEditMode}" id="cbxAACD"
+                                html-aria-describedby="{!$Component.cbxAACDHelp}" styleClass="slds-checkbox" />
+                            <apex:inputCheckbox value="{!stgService.stgRel.npe4__Allow_AutoCreated_Duplicates__c}" rendered="{!isReadOnlyMode}" disabled="true"
+                                id="cbxAACDO" html-aria-describedby="{!$Component.cbxAACDHelp}" styleClass="slds-checkbox" />
+                            <span class="slds-checkbox_faux"></span>
+                        </label>
                         <apex:outputPanel id="cbxAACDHelp" layout="block">
                             <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRelAutoCreatedDup}" />
                         </apex:outputPanel>
@@ -64,12 +67,15 @@
                         <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Settings__c.Fields.Enable_Custom_Field_Sync__c.Label}" for="cbxCFS"
                             styleClass="col-md-4 slds-form-element__label" />
                         <div class="slds-form-element__control">
-                            <apex:inputCheckbox value="{!stgService.stgRel.Enable_Custom_Field_Sync__c}" rendered="{!isEditMode}" id="cbxCFS" html-aria-describedby="{!$Component.cbxCFSHelp}"
-                                styleClass="slds-checkbox">
-                                <apex:actionSupport event="onchange" reRender="excludedFields" status="statusLoad" />
-                            </apex:inputCheckbox>
-                            <apex:inputCheckbox value="{!stgService.stgRel.Enable_Custom_Field_Sync__c}" rendered="{!isReadOnlyMode}" disabled="true"
-                                id="cbxCFSO" html-aria-describedby="{!$Component.cbxCFSHelp}" styleClass="slds-checkbox" />
+                            <label class="slds-checkbox">
+                                <apex:inputCheckbox value="{!stgService.stgRel.Enable_Custom_Field_Sync__c}" rendered="{!isEditMode}" id="cbxCFS" html-aria-describedby="{!$Component.cbxCFSHelp}"
+                                    styleClass="slds-checkbox">
+                                    <apex:actionSupport event="onchange" reRender="excludedFields" status="statusLoad" />
+                                </apex:inputCheckbox>
+                                <apex:inputCheckbox value="{!stgService.stgRel.Enable_Custom_Field_Sync__c}" rendered="{!isReadOnlyMode}" disabled="true"
+                                    id="cbxCFSO" html-aria-describedby="{!$Component.cbxCFSHelp}" styleClass="slds-checkbox" />
+                                <span class="slds-checkbox_faux"></span>
+                            </label>
                             <apex:outputPanel id="cbxCFSHelp" layout="block">
                                 <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRelFieldSyncToggle}" />
                             </apex:outputPanel>

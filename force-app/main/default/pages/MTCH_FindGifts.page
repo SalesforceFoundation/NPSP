@@ -33,7 +33,7 @@
         }
     </style>
 
-    <div class="slds-scope">
+    <div class="slds-scope slds-wcag">
         <apex:form >
 
             <!-- PAGE HEADER -->
@@ -146,9 +146,14 @@
                     <apex:repeat value="{!potentialGifts}" var="g">
                         <tr>
                             <td>
-                                <apex:inputCheckbox value="{!selection[g.Id]}" id="cbGift">
-                                    <apex:actionSupport action="{!refresh}" event="onchange" rerender="totalSelected, totalUn" />
-                                </apex:inputCheckbox>
+                                <div class="slds-form-element__control">
+                                    <label class="slds-checkbox">
+                                        <apex:inputCheckbox value="{!selection[g.Id]}" id="cbGift">
+                                            <apex:actionSupport action="{!refresh}" event="onchange" rerender="totalSelected, totalUn" />
+                                        </apex:inputCheckbox>
+                                        <span class="slds-checkbox_faux"></span>
+                                    </label>
+                                </div>
                             </td>
                             <td><apex:outputLink value="/{!g.Id}">{!g.Name}</apex:outputLink></td>
                             <td><apex:outputField value="{!g.Account.Name}" /></td>
