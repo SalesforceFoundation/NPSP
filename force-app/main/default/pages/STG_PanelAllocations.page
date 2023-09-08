@@ -68,7 +68,8 @@
                             <apex:inputCheckbox value="{!stgService.stgAllo.Use_Fiscal_Year_for_Rollups__c}" rendered="{!isEditMode}" id="cbxUFYFR" html-aria-describedby="{!$Component.cbxUFYFRHelp}" styleClass="slds-checkbox" />
                             <apex:inputCheckbox value="{!stgService.stgAllo.Use_Fiscal_Year_for_Rollups__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxUFYFRO" html-aria-describedby="{!$Component.cbxUFYFRHelp}" styleClass="slds-checkbox" />
                         <span class="slds-checkbox_faux"></span>
-                        </label>                        <apex:outputPanel id="cbxUFYFRHelp" layout="block">
+                        </label>
+                        <apex:outputPanel id="cbxUFYFRHelp" layout="block">
                             <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpAlloFiscalYearRollups}" />
                         </apex:outputPanel>
                     </div>
