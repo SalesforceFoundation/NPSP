@@ -63,11 +63,13 @@ export default class PotentialDuplicates extends LightningElement {
     }
 
     handleToast() {
-        let messageData = [{
-            "url": this.viewDuplicatesURL,
-            "label": "View Duplicates",
-        }];
-        showToast("", this.lblTitle + " {0}", "info", "sticky", messageData);
+        if (this.duplicateCount > 0) {
+            let messageData = [{
+                "url": this.viewDuplicatesURL,
+                "label": "View Duplicates",
+            }];
+            showToast("", this.lblTitle + " {0}", "info", "sticky", messageData);
+        }
     }
 
     updateTitle() {
