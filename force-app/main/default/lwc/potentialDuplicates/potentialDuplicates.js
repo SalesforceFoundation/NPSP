@@ -86,7 +86,7 @@ export default class PotentialDuplicates extends LightningElement {
 
     generateDuplicatesURL() {
         if (this.duplicateCount > 0) {
-            this.viewDuplicatesURL = "/lightning/n/Contact_Merge?npsp__searchDuplicateId=0039A00000J8yYQQAZ";
+            this.viewDuplicatesURL = "/lightning/n/Contact_Merge?npsp__searchDuplicateId=" + this.recordId;
         }
         else {
             this.viewDuplicatesURL = '';
