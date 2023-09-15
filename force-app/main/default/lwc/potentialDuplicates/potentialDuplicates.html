@@ -1,0 +1,19 @@
+<template>
+    <template lwc:if={isEnabled}>
+
+        <lightning-card variant="narrow" icon-name="standard:merge">
+            <h1 slot="title" class="wrapped-content">{lblTitle}</h1>
+
+            <div class="slds-m-around_xxx-small" lwc:if={viewDuplicatesURL} data-qa-locator="viewDuplicatesURL">
+                <a href={viewDuplicatesURL} target="_self">View Duplicates</a>
+            </div>
+
+            <div class="slds-m-around_medium" lwc:if={error} data-qa-locator="error">
+                <span class="slds-text-color_error">{error}</span>
+            </div>
+
+        </lightning-card>
+
+
+    </template>
+</template>
