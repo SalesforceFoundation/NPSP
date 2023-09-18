@@ -11,7 +11,7 @@ import lblPotentialDuplicatesFoundMultiple from '@salesforce/label/c.potentialDu
 
 import getDuplicates from '@salesforce/apex/PotentialDuplicates.getDuplicates';
 
-export default class PotentialDuplicates extends LightningElement {
+export default class PotentialDuplicates extends NavigationMixin(LightningElement) {
 
     @api recordId;
     @api displayCard;
@@ -43,10 +43,10 @@ export default class PotentialDuplicates extends LightningElement {
     }
 
     handleDuplicates(response) {
-        console.log('handleDuplicates');
         this.duplicateCount = 0;
-        if (response && response.duplicateCount) {
-            this.duplicateCount = response.duplicateCount;
+        if (response && response.setOfMatches) {
+            this.duplicateCount = response.setOfMatches.split(',').length;
+            this.duplicateIdsParam = this.recordId + ',' + response.setOfMatches;
         }
         this.updateTitle();
         this.handleToast();
@@ -88,11 +88,22 @@ export default class PotentialDuplicates extends LightningElement {
 
     generateDuplicatesURL() {
         if (this.duplicateCount > 0) {
-            this.viewDuplicatesURL = "/lightning/n/Contact_Merge?npsp__searchDuplicateId=" + this.recordId;
+            this.viewDuplicatesURL = "/apex/CON_ContactMerge?searchIds=" + this.duplicateIdsParam;
         }
         else {
             this.viewDuplicatesURL = '';
         }
+    }
+
+    navigateToContactMerge() {
+        this[NavigationMixin.GenerateUrl]({
+            type: 'standard__webPage',
+            attributes: {
+                url: this.viewDuplicatesURL
+            }
+        }).then(generatedUrl => {
+            window.location.assign(generatedUrl);
+        });
     }
 
     get viewDuplicatesURL() {

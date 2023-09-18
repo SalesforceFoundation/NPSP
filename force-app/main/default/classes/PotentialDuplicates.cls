@@ -1,29 +1,39 @@
 public with sharing class PotentialDuplicates {
 
-    private static final String DUPLICATE_COUNT_KEY = 'duplicateCount';
+    private static final String SET_OF_MATCHES_KEY = 'setOfMatches';
 
     @AuraEnabled
     public static Map<String, Object> getDuplicates(Id recordId) {
-        Map<String, Object> duplicateCount = new Map<String, Object>{ DUPLICATE_COUNT_KEY => 0 };
+        Map<String, Object> returnParams = new Map<String, Object>{ SET_OF_MATCHES_KEY => null };
 
         try {
-            duplicateCount.put(DUPLICATE_COUNT_KEY, getDuplicateCount(recordId));
+            returnParams.put(SET_OF_MATCHES_KEY, getDuplicateList(recordId));
         }
         catch (Exception e) {
         }
 
-        return duplicateCount;
+        return returnParams;
     }
 
-    private static Integer getDuplicateCount(Id recordId) {
-        Integer duplicateCount = 0;
+    private static String getDuplicateList(Id recordId) {
+        String strSetOfMatches = '';
 
-        List<Datacloud.FindDuplicatesResult> duplicateResults =
+        Set<String> setOfMatchIds = new Set<String>();
+        List<Datacloud.FindDuplicatesResult> results =
                 Datacloud.FindDuplicatesByIds.findDuplicatesByIds(new List<Id>{recordId});
-        if (duplicateResults?.size() > 0) {
-            duplicateCount = duplicateResults[0].getDuplicateResults()[0].getMatchResults()[0].size;
+        for (Datacloud.FindDuplicatesResult findDupeResult : results) {
+            for (Datacloud.DuplicateResult dupeResult : findDupeResult.getDuplicateResults()) {
+                for (Datacloud.MatchResult matchResult : dupeResult.getMatchResults()) {
+                    for (Datacloud.MatchRecord matchRecord : matchResult.getMatchRecords()) {
+                        setOfMatchIds.add(matchRecord.getRecord().Id);
+                    }
+                }
+            }
+        }
+        for (String matchId : setOfMatchIds) {
+            strSetOfMatches += (strSetOfMatches == '' ? '' : ',') + matchId;
         }
 
-        return duplicateCount;
+        return strSetOfMatches;
     }
 }

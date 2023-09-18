@@ -185,6 +185,12 @@ public with sharing class CON_ContactMerge_CTRL {
     public Map<Id, Integer> contactCountByDuplicateRecordSetId { get; set; }
 
     /***********************************************************************************************
+     * @description A Set of Contact Ids passed into Contact Merge that can be used to 
+     * return search results
+     */
+    private Set<Id> contactIdsToSearch;
+
+    /***********************************************************************************************
     * @description Checks whether there are more records to display on next page in pagination  
     * implemented on Duplicate Record Set diplay page.
     */
@@ -466,6 +472,25 @@ public with sharing class CON_ContactMerge_CTRL {
                 //if we got any ids, use to try and enter the merge selected records page
                 if (mergeIds != null) {
                     loadMergeCandidates(mergeIds);
+                    if(!ApexPages.hasMessages()) {
+                        showDRSButton = false;
+                        showContactSearch = true;
+                    }
+                }
+            }
+            catch(StringException e){
+                ApexPages.addMessages(e);
+            }
+        }
+        //otherwise, check for a searchIds parameter, which should contain a comma separated list 
+        //of Ids to search
+        else if(ApexPages.CurrentPage().getParameters().containsKey('searchIds') && 
+            ApexPages.CurrentPage().getParameters().get('searchIds') != '') {
+            try {
+                contactIdsToSearch = new set<Id>((list<Id>)ApexPages.CurrentPage().getParameters()
+                    .get('searchIds').split(','));
+                if (contactIdsToSearch != null) {
+                    search();
                     if(!ApexPages.hasMessages()) {
                         showDRSButton = false;
                         showContactSearch = true;
@@ -917,6 +942,8 @@ public with sharing class CON_ContactMerge_CTRL {
             //build the SOSL query and execute - NOTE: * wildcard will only have effect at the
             //middle or end of the search term
             return mergeSelector.selectContactsByName(searchText);
+        } else if(contactIdsToSearch != null) {
+            return mergeSelector.selectContactsById(contactIdsToSearch);
         } else {
             return mergeSelector.selectDuplicateRecordSetById(drsRecordId, driFieldNames);
         }
