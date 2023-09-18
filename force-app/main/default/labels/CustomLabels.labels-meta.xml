@@ -16420,4 +16420,12 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <shortDescription>Label for modifications on Recurring Donations</shortDescription>
         <value>Update Recurring Donation</value>
     </labels>
+    <labels>
+        <fullName>viewDuplicates</fullName>
+        <categories>Potential Duplicates</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for View Duplicates link</shortDescription>
+        <value>View Duplicates</value>
+    </labels>
 </CustomLabels>

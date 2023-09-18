@@ -8,6 +8,7 @@ import FIELD_NAME from '@salesforce/schema/Contact.Name';
 import lblPotentialDuplicatesFoundNone from '@salesforce/label/c.potentialDuplicatesFoundNone';
 import lblPotentialDuplicatesFoundOne from '@salesforce/label/c.potentialDuplicatesFoundOne';
 import lblPotentialDuplicatesFoundMultiple from '@salesforce/label/c.potentialDuplicatesFoundMultiple';
+import lblViewDuplicates from '@salesforce/label/c.viewDuplicates';
 
 import getDuplicates from '@salesforce/apex/PotentialDuplicates.getDuplicates';
 
@@ -20,8 +21,9 @@ export default class PotentialDuplicates extends NavigationMixin(LightningElemen
     @track isEnabled = true;
     @track duplicateCount;
     @track error;
-    @track lblTitle = lblPotentialDuplicatesFoundNone;
-    @track viewDuplicatesURL;
+    lblTitle = lblPotentialDuplicatesFoundNone;
+    lblViewDuplicatesLink = lblViewDuplicates;
+    viewDuplicatesURL;
 
     @wire(getRecord, {
         recordId: '$recordId',
@@ -29,14 +31,12 @@ export default class PotentialDuplicates extends NavigationMixin(LightningElemen
     })
     wireRecordChange() {
         if (this.recordId) {
-            console.log('wireRecordChange');
             getDuplicates({ recordId: this.recordId })
                 .then(response => {
                     this.handleDuplicates(response);
                     this.error = null;
                 })
                 .catch(error => {
-                    this.schedules = null;
                     this.error = this.handleError(error);
                 });
         }
@@ -57,16 +57,15 @@ export default class PotentialDuplicates extends NavigationMixin(LightningElemen
             return error.body.message;
         } else if (error && error.name && error.message) {
             return error.message;
-        } else {
-            return "";
         }
+        return "";
     }
 
     handleToast() {
-        if (this.duplicateCount > 0) {
+        if (this.displayToast && this.duplicateCount > 0) {
             let messageData = [{
                 "url": this.viewDuplicatesURL,
-                "label": "View Duplicates",
+                "label": this.lblViewDuplicatesLink,
             }];
             showToast("", this.lblTitle + " {0}", "info", "sticky", messageData);
         }
@@ -91,26 +90,18 @@ export default class PotentialDuplicates extends NavigationMixin(LightningElemen
             this.viewDuplicatesURL = "/apex/CON_ContactMerge?searchIds=" + this.duplicateIdsParam;
         }
         else {
-            this.viewDuplicatesURL = '';
+            this.viewDuplicatesURL = "";
         }
     }
 
     navigateToContactMerge() {
         this[NavigationMixin.GenerateUrl]({
-            type: 'standard__webPage',
+            type: "standard__webPage",
             attributes: {
                 url: this.viewDuplicatesURL
             }
         }).then(generatedUrl => {
             window.location.assign(generatedUrl);
         });
-    }
-
-    get viewDuplicatesURL() {
-        return this.viewDuplicatesURL;
-    }
-
-    get lblTitle() {
-        return this.lblTitle;
     }
 }
