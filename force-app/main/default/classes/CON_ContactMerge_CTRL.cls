@@ -490,9 +490,9 @@ public with sharing class CON_ContactMerge_CTRL {
                 contactIdsToSearch = new set<Id>((list<Id>)ApexPages.CurrentPage().getParameters()
                     .get('searchIds').split(','));
                 if (contactIdsToSearch != null) {
+                    loadMergePage = true;
                     search();
                     if(!ApexPages.hasMessages()) {
-                        showDRSButton = false;
                         showContactSearch = true;
                     }
                 }
