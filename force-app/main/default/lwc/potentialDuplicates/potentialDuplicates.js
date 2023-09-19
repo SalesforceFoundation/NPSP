@@ -1,9 +1,6 @@
 import { LightningElement, api, wire, track } from 'lwc';
-import { getRecord } from 'lightning/uiRecordApi';
 import { NavigationMixin } from 'lightning/navigation';
 import { showToast } from 'c/utilCommon';
-
-import FIELD_NAME from '@salesforce/schema/Contact.Name';
 
 import lblPotentialDuplicatesFoundNone from '@salesforce/label/c.potentialDuplicatesFoundNone';
 import lblPotentialDuplicatesFoundOne from '@salesforce/label/c.potentialDuplicatesFoundOne';
@@ -25,11 +22,7 @@ export default class PotentialDuplicates extends NavigationMixin(LightningElemen
     lblViewDuplicatesLink = lblViewDuplicates;
     viewDuplicatesURL;
 
-    @wire(getRecord, {
-        recordId: '$recordId',
-        fields: [ FIELD_NAME ]
-    })
-    wireRecordChange() {
+    connectedCallback() {
         if (this.recordId) {
             getDuplicates({ recordId: this.recordId })
                 .then(response => {
@@ -48,6 +41,7 @@ export default class PotentialDuplicates extends NavigationMixin(LightningElemen
             this.duplicateCount = response.setOfMatches.split(',').length;
             this.duplicateIdsParam = this.recordId + ',' + response.setOfMatches;
         }
+        this.generateDuplicatesURL();
         this.updateTitle();
         this.handleToast();
     }
@@ -82,7 +76,6 @@ export default class PotentialDuplicates extends NavigationMixin(LightningElemen
             default:
                 this.lblTitle = lblPotentialDuplicatesFoundMultiple.replace("{0}", this.duplicateCount.toString());
         }
-        this.generateDuplicatesURL();
     }
 
     generateDuplicatesURL() {
