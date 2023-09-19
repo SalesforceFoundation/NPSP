@@ -1,4 +1,4 @@
-import { LightningElement, api, wire, track } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import { showToast } from 'c/utilCommon';
 
@@ -38,8 +38,8 @@ export default class PotentialDuplicates extends NavigationMixin(LightningElemen
     handleDuplicates(response) {
         this.duplicateCount = 0;
         if (response && response.setOfMatches) {
-            this.duplicateCount = response.setOfMatches.split(',').length;
             this.duplicateIdsParam = this.recordId + ',' + response.setOfMatches;
+            this.duplicateCount = response.setOfMatches.split(',').length;
         }
         this.generateDuplicatesURL();
         this.updateTitle();

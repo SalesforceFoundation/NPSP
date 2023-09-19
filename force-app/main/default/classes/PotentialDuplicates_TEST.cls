@@ -1,53 +1,28 @@
 @IsTest(IsParallel=false)
 private with sharing class PotentialDuplicates_TEST {
 
-    @TestSetup
-    private static void setUp() {
-
+    @IsTest
+    private static void shouldReturnNullWhenNoDuplicatesAreFound() {
+        Id recordId = UTIL_UnitTestData_TEST.mockId(Contact.getSObjectType());
+        Map<String, Object> data = PotentialDuplicates.getDuplicates(recordId);
+        System.assertEquals('', data.get('setOfMatches'),
+            'There should be no duplicates');
     }
 
     @IsTest
-    private static void shouldReturnZeroWhenNoDuplicatesAreFound() {
+    private static void shouldReturnIdsWhenDuplicatesAreFound() {
+        List<Contact> contactList = UTIL_UnitTestData_TEST.getContacts(3);
+        for(Contact c : contactList) {
+            c.FirstName = 'Test';
+            c.LastName = 'LastName';
+            c.Email = 'tester@example.com';
+        }
+        insert contactList;
 
-    }
-
-    @IsTest
-    private static void shouldReturnZeroWhenNoMatchingRulesAreActive() {
-
-    }
-
-    @IsTest
-    private static void shouldReturnOneWhenOneDuplicateIsFound() {
-
-    }
-
-    @IsTest
-    private static void shouldReturnTwoWhenTwoDuplicatesAreFound() {
-
-    }
-
-    @IsTest
-    private static void shouldDisplayToastWhenToastIsConfigured() {
-
-    }
-
-    @IsTest
-    private static void shouldNotDisplayToastWhenToastIsNotConfigured() {
-
-    }
-
-    @IsTest
-    private static void shouldDisplayCardWhenCardIsConfigured() {
-
-    }
-
-    @IsTest
-    private static void shouldNotDisplayCardWhenCardIsNotConfigured() {
-
-    }
-
-    @IsTest
-    private static void shouldDisplayErrorMessageWhenExceptionEncountered() {
-
+        Map<String, Object> data = PotentialDuplicates.getDuplicates(contactList[0].Id);
+        String setOfMatches = (String)data.get('setOfMatches');
+        System.assertNotEquals('', setOfMatches, 'Duplicate Ids should be returned');
+        Integer numberOfMatches = setOfMatches.split(',').size();
+        System.assertEquals(2, numberOfMatches, 'There should be 2 duplicates returned');
     }
 }
