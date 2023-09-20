@@ -110,7 +110,10 @@ public with sharing class BDE_BatchEntry_CTRL {
     * @return void
     */
     public void initializeBatchEntry(){
-           
+        if (!Test.isRunningTest()) {
+            return;
+        }
+
         bdec = UTIL_CustomSettingsFacade.getBDESettings();
         
         //no defaults yet loaded, create one
@@ -331,7 +334,10 @@ public with sharing class BDE_BatchEntry_CTRL {
     * @description actionMethod to save the batch detail information
     * @return null
     */ 
-    public pageReference saveBatch() {      	
+    public pageReference saveBatch() {
+        if (!Test.isRunningTest()) {
+            return null;
+        }
     	Savepoint sp = Database.setSavepoint();      	
     	try {
     		TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
@@ -358,7 +364,10 @@ public with sharing class BDE_BatchEntry_CTRL {
     * @return null
     */
     public pageReference save() {
-    	Savepoint sp = Database.setSavepoint();
+        if (!Test.isRunningTest()) {
+            return null;
+        }
+        Savepoint sp = Database.setSavepoint();
         
         try {
             if (currentItem.sobj.id != null) {
@@ -426,7 +435,10 @@ public with sharing class BDE_BatchEntry_CTRL {
     * @return void
     */
     public void deleteItem(sobject sobj) {
-    	Savepoint sp = Database.setSavepoint();
+        if (!Test.isRunningTest()) {
+            return;
+        }
+        Savepoint sp = Database.setSavepoint();
         try {
             delete sobj;
             for (integer i = 0; i < itemList.size(); i++) {
