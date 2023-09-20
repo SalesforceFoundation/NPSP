@@ -110,6 +110,8 @@ public with sharing class BDE_BatchEntry_CTRL {
     * @return void
     */
     public void initializeBatchEntry(){
+        // Module is deprecated, so method should never be called.
+        // Eliminate any security concerns without affecting test coverage.
         if (!Test.isRunningTest()) {
             return;
         }
@@ -335,6 +337,8 @@ public with sharing class BDE_BatchEntry_CTRL {
     * @return null
     */ 
     public pageReference saveBatch() {
+        // Module is deprecated, so method should never be called.
+        // Eliminate any security concerns without affecting test coverage.
         if (!Test.isRunningTest()) {
             return null;
         }
@@ -364,6 +368,8 @@ public with sharing class BDE_BatchEntry_CTRL {
     * @return null
     */
     public pageReference save() {
+        // Module is deprecated, so method should never be called.
+        // Eliminate any security concerns without affecting test coverage.
         if (!Test.isRunningTest()) {
             return null;
         }
@@ -435,6 +441,8 @@ public with sharing class BDE_BatchEntry_CTRL {
     * @return void
     */
     public void deleteItem(sobject sobj) {
+        // Module is deprecated, so method should never be called.
+        // Eliminate any security concerns without affecting test coverage.
         if (!Test.isRunningTest()) {
             return;
         }
