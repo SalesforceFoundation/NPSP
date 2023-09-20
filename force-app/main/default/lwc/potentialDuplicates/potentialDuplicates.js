@@ -1,6 +1,6 @@
 import { LightningElement, api, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
-import { showToast } from 'c/utilCommon';
+import { getCurrentNamespace, showToast } from 'c/utilCommon';
 
 import lblPotentialDuplicatesFoundNone from '@salesforce/label/c.potentialDuplicatesFoundNone';
 import lblPotentialDuplicatesFoundOne from '@salesforce/label/c.potentialDuplicatesFoundOne';
@@ -80,7 +80,10 @@ export default class PotentialDuplicates extends NavigationMixin(LightningElemen
 
     generateDuplicatesURL() {
         if (this.duplicateCount > 0) {
-            this.viewDuplicatesURL = "/apex/CON_ContactMerge?searchIds=" + this.duplicateIdsParam;
+            const contactMerge = 'CON_ContactMerge';
+            const namespace = getCurrentNamespace();
+            const contactMergePage = namespace ? `${namespace}__${contactMerge}` : contactMerge;
+            this.viewDuplicatesURL = "/apex/" + contactMergePage + "?searchIds=" + this.duplicateIdsParam;
         }
         else {
             this.viewDuplicatesURL = "";
