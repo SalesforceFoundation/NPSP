@@ -105,6 +105,26 @@ public with sharing class BDE_BatchEntry_CTRL {
                 objName = string.escapeSingleQuotes(param);
         } 
     }
+    /*********************************************************************************************************
+    * @description Initializes the batch data entry page
+    * @return void
+    */
+    public void initializeBatchEntry(){
+        BDE_BatchDataEntry bde = new BDE_BatchDataEntry(objname);
+        if (!bde.getStatusMessage().contains(bde.getFailureMessage())){
+            objname = bde.getObjectName();
+            if(objname!=null) {
+                String pluralName = UTIL_Describe.getObjectDescribe(objname).getLabelPlural();
+                pageSubtitle = pluralName;
+            }
+            else{
+                pageSubtitle = 'Batch Data Entry Home';
+            }
+        }
+        else{
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, bde.getStatusMessage()));
+        }
+    }
 
     private void requeryItem(BatchItem item)  {
     

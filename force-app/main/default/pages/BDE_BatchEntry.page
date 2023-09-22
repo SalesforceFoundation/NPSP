@@ -1,4 +1,4 @@
-<apex:page standardController="Batch__c" extensions="BDE_BatchEntry_CTRL" tabStyle="Batch_Data_Entry__tab">
+<apex:page standardController="Batch__c" extensions="BDE_BatchEntry_CTRL" tabStyle="Batch_Data_Entry__tab" action="{!initializeBatchEntry}">
 
 	<apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-3.5.0.min.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery-ui/jquery-ui-1.10.4.min.js')}"/>
@@ -10,9 +10,6 @@
 
     <script type="text/javascript" >
         var j$ = jQuery.noConflict();
-     
-        window.onunload = unloadpage;
-        
 
         function sortThis() {
             j$(".tablesorter").tablesorter(
