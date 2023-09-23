@@ -39,7 +39,7 @@
 class BDI_DataImportDeleteBTN_TEST {
 
     /** @description Error message returned when user does not have Delete permission on the SObject */
-    static String INSUFFICIENT_ACCESS_ERROR_MSG = System.Label.commonAccessErrorMessage;
+    static String INSUFFICIENT_ACCESS_ERROR_MSG = 'INSUFFICIENT_ACCESS_OR_READONLY';
 
     /** @description Static method executed before each test method is run */
     static {

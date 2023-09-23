@@ -46,32 +46,12 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
     @TestVisible
     private List<DataImport__c> dataImports;
 
-    public Boolean canRead {
-        get {
-            if(this.canRead == null) {
-                this.canRead = this.checkRead();
-            }
-            return this.canRead;
-        }
-        private set;
-    }
-
     public Boolean canDelete {
         get {
             if(this.canDelete == null) {
                 this.canDelete = this.checkDelete();
             }
             return this.canDelete;
-        }
-        private set;
-    }
-
-    public UTIL_Permissions perms {
-        get {
-            if(this.perms == null) {
-                this.perms = new UTIL_Permissions();
-            }
-            return this.perms;
         }
         private set;
     }
@@ -113,7 +93,7 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
 
     public Boolean checkRead() {
         Set<SObjectField> findFields = new Set<SObjectField>{DataImport__c.Status__c.getDescribe().getSobjectField()};
-        return perms.canRead(DataImport__c.SObjectType, findFields);
+        return UTIL_Permissions.getInstance().canRead(DataImport__c.SObjectType, findFields);
     }
 
     private void displayAccessError() {
