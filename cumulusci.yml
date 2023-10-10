@@ -232,7 +232,7 @@ tasks:
 
     is_rd2_enabled:
         description: This preflight check ensures that Enhanced Recurring Donations is enabled
-        class_path: tasks.is_rd2_enabled
+        class_path: tasks.check_rd2_enablement.is_rd2_enabled
         group: NPSP
 
     robot:
