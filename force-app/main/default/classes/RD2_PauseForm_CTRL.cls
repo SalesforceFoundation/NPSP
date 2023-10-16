@@ -143,6 +143,15 @@ public with sharing class RD2_PauseForm_CTRL {
             UTIL_Permissions.canUpdate(rdObjectName, false);
     }
 
+    private static Boolean hasFieldReadAccess(Set<String> queryFields) {
+        for (String queryField:queryFields) {
+            if (!UTIL_Permissions.canRead('npe03__Recurring_Donation__c', queryField, false)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
     * @description Query and Construct Recurring Donation Record
     * @param rdId Recurring Donation Id
@@ -170,6 +179,10 @@ public with sharing class RD2_PauseForm_CTRL {
         };
         if (UserInfo.isMultiCurrencyOrganization()) {
             queryFields.add('CurrencyIsoCode');
+        }
+
+        if (!hasFieldReadAccess(queryFields)) {
+            throwAuraHandledException(System.Label.commonAccessErrorMessage);
         }
 
         RD2_QueryService queryService = new RD2_QueryService();
@@ -256,6 +269,10 @@ public with sharing class RD2_PauseForm_CTRL {
     public static void savePause(String jsonPauseData) {
         Boolean hasScheduleChanged = false;
         try {
+            if (!hasAccess()) {
+                throwAuraHandledException(System.Label.commonAccessErrorMessage);
+            }
+
             PauseData pause = (PauseData) JSON.deserialize(jsonPauseData, PauseData.class);
 
             RD2_RecurringDonation rd = getRecurringDonation(pause.rdId);
@@ -296,9 +313,10 @@ public with sharing class RD2_PauseForm_CTRL {
     }
 
     private static UTIL_Http.Response pauseElevateRDsFor(PauseData pause) {
-        RD2_RecurringDonation rd = getRecurringDonation(pause.rdId);
 
         try {
+            RD2_RecurringDonation rd = getRecurringDonation(pause.rdId);
+
             UTIL_Http.Response response;
             if (isPauseRemoved(pause)) {
                 response = commitmentService.handleRemoveCommitmentPause(rd);
