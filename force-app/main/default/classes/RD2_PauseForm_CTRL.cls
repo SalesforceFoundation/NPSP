@@ -144,17 +144,25 @@ public with sharing class RD2_PauseForm_CTRL {
     }
 
     private static Boolean hasFieldReadAccess(Set<String> queryFields) {
+        String nameSpacedField;
+
         for (String queryField:queryFields) {
             if (queryField.contains('__r')) {
                 continue;
             }
+
             if (!queryField.contains('npe03__') && queryField.contains('__c')) {
-                if (!UTIL_Permissions.canRead('npe03__Recurring_Donation__c',
-                        UTIL_Namespace.StrTokenNSPrefix(queryField), false)) {
-                    return false;
-                }
+                nameSpacedField = UTIL_Namespace.StrTokenNSPrefix(queryField);
+            }
+            else {
+                nameSpacedField = queryField;
+            }
+
+            if (!UTIL_Permissions.canRead('npe03__Recurring_Donation__c', nameSpacedField, false)) {
+                return false;
             }
         }
+
         return true;
     }
 
