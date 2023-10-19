@@ -54,6 +54,10 @@ public with sharing class OPP_MatchingDonationsBTN_CTRL {
             //multi-currency support - get the schema map to see if we have the CurrencyIsoCode field
             SObjectField OppCurrencyField = Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode');
 
+            if (!canReadOpportunityAndOCR(OppCurrencyField)) {
+                throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
+            }
+
             //query for the current donation to create the matching one
             Opportunity oppty = Database.query('select id, name,RecordTypeId,accountId,Account.Name,Amount,closedate' + 
             (OppCurrencyField != null ? ',CurrencyIsoCode' : '') + 
@@ -103,5 +107,12 @@ public with sharing class OPP_MatchingDonationsBTN_CTRL {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
             return null;
         }
+    }
+
+    private Boolean canReadOpportunityAndOCR(SObjectField OppCurrencyField) {
+        // TODO OCR - ContactId, IsPrimary, OpportunityId
+        //      Opportunity - OppCurrencyField (if not null), Name, RecordTypeId, AccountId, Amount, CloseDate
+
+        return true;
     }
 }
