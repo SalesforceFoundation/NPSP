@@ -55,6 +55,9 @@ public with sharing class OPP_OpportunityNamingBTN_CTRL {
         if (!thisOpp.isEmpty()) {
             OPP_OpportunityNaming.refreshOppNames(thisOpp);
             try {
+                if (!UTIL_Permissions.canUpdate('Opportunity', 'Name')) {
+                    throw new AuraHandledException(System.Label.commonAccessErrorMessage);
+                }
                 update thisOpp;
                 redirect = true;
             } catch (Exception ex) {
