@@ -196,7 +196,7 @@ public with sharing class RD2_PauseForm_CTRL {
         }
 
         if (!hasFieldReadAccess(queryFields)) {
-            throwAuraHandledException(System.Label.commonAccessErrorMessage);
+            throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
         }
 
         RD2_QueryService queryService = new RD2_QueryService();
@@ -284,7 +284,7 @@ public with sharing class RD2_PauseForm_CTRL {
         Boolean hasScheduleChanged = false;
         try {
             if (!hasAccess()) {
-                throwAuraHandledException(System.Label.commonAccessErrorMessage);
+                throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
             }
 
             PauseData pause = (PauseData) JSON.deserialize(jsonPauseData, PauseData.class);
