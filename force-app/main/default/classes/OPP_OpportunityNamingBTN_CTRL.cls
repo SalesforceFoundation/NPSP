@@ -56,7 +56,7 @@ public with sharing class OPP_OpportunityNamingBTN_CTRL {
             OPP_OpportunityNaming.refreshOppNames(thisOpp);
             try {
                 if (!UTIL_Permissions.canUpdate('Opportunity', 'Name')) {
-                    throw new AuraHandledException(System.Label.commonAccessErrorMessage);
+                    throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
                 }
                 update thisOpp;
                 redirect = true;
