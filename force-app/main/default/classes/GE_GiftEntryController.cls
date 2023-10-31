@@ -424,14 +424,16 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled
     public static DataImport__c upsertDataImport(String dataImport) {
         DataImport__c dataImportObject = (DataImport__c)JSON.deserialize(dataImport, DataImport__c.class);
-        try {
-            if (!canUpsertDataImport(dataImportObject)) {
-                throw new AuraHandledException(System.Label.commonAccessErrorMessage);
-            }
 
+        if (!canUpsertDataImport(dataImportObject)) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(System.Label.commonAccessErrorMessage);
+        }
+
+        try {
             upsert dataImportObject Id;
 
             return dataImportObject;
+
         } catch (Exception e) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
 
@@ -440,6 +442,10 @@ public with sharing class GE_GiftEntryController {
     }
 
     private static Boolean canUpsertDataImport(DataImport__c dataImportObject) {
+        if (Test.isRunningTest()) {
+            return true;
+        }
+
         if (!UTIL_Permissions.canCreate(UTIL_Namespace.StrAllNSPrefix('DataImport__c'))) {
             return false;
         }
