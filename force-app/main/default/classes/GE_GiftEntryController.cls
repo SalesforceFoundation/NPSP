@@ -425,6 +425,10 @@ public with sharing class GE_GiftEntryController {
     public static DataImport__c upsertDataImport(String dataImport) {
         DataImport__c dataImportObject = (DataImport__c)JSON.deserialize(dataImport, DataImport__c.class);
         try {
+            if (!canUpsertDataImport(dataImportObject)) {
+                throw new AuraHandledException(System.Label.commonAccessErrorMessage);
+            }
+
             upsert dataImportObject Id;
 
             return dataImportObject;
@@ -433,6 +437,21 @@ public with sharing class GE_GiftEntryController {
 
             throw buildDmlException(JSONExceptionData);
         }
+    }
+
+    private static Boolean canUpsertDataImport(DataImport__c dataImportObject) {
+        if (!UTIL_Permissions.canCreate(UTIL_Namespace.StrAllNSPrefix('DataImport__c'))) {
+            return false;
+        }
+
+        for (String fieldName : dataImportObject.getPopulatedFieldsAsMap().keySet()) {
+            if (!UTIL_Permissions.canUpdate(UTIL_Namespace.StrAllNSPrefix('DataImport__c'),
+                    UTIL_Namespace.StrAllNSPrefix(fieldName), false)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /*******************************************************************************************************
@@ -1072,6 +1091,9 @@ public with sharing class GE_GiftEntryController {
                 WITH SECURITY_ENFORCED
         ];
         try {
+            if (!UTIL_Permissions.canDelete(UTIL_Namespace.StrAllNSPrefix('Form_Template__c'), false)) {
+                throw new AuraHandledException(System.Label.commonAccessErrorMessage);
+            }
             delete templates;
             for (Form_Template__c template : templates) {
                 formTemplateNames.add(template.Name);
@@ -1162,17 +1184,49 @@ public with sharing class GE_GiftEntryController {
             String description,
             String formatVersion,
             String templateJSON) {
-        if (templateJSON != null) {
+
+        try {
+            Set<String> fieldsToCheck = new Set<String>{
+                    'Name',
+                    'Description__c',
+                    'Template_JSON__c',
+                    'Format_Version__c'
+            };
+
+            if (!canUpsertFormTemplate(fieldsToCheck)) {
+                throw new AuraHandledException(System.Label.commonAccessErrorMessage);
+            }
+
             Form_Template__c templateObj = new Form_Template__c(Id = id,
                     Name = name,
                     Description__c = description,
                     Template_JSON__c = templateJSON,
                     Format_Version__c = formatVersion);
-            upsert templateObj;
+
+            if (templateJSON != null) {
+                upsert templateObj;
+            }
             return templateObj.Id;
         }
+        catch(Exception e) {
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
+            throw buildDmlException(JSONExceptionData);
+        }
+    }
 
-        return null;
+    private static Boolean canUpsertFormTemplate(Set<String> fieldsToCheck) {
+        if (!UTIL_Permissions.canCreate(UTIL_Namespace.StrAllNSPrefix('Form_Template__c'))) {
+            return false;
+        }
+
+        for (String fieldName : fieldsToCheck) {
+            if (!UTIL_Permissions.canUpdate(UTIL_Namespace.StrAllNSPrefix('Form_Template__c'),
+                    UTIL_Namespace.StrAllNSPrefix(fieldName), false)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /*******************************************************************************************************
@@ -1326,6 +1380,10 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled
     public static Gift_Entry_Settings__c getGiftEntrySettings() {
         try {
+            if (!canCreateDefaultTemplate()) {
+                throw new AuraHandledException(System.Label.commonAccessErrorMessage);
+            }
+
             GE_Template.createDefaultTemplateIfNecessary();
             Gift_Entry_Settings__c giftEntryCustomSetting = UTIL_CustomSettingsFacade.getGiftEntrySettings();
 
@@ -1333,6 +1391,22 @@ public with sharing class GE_GiftEntryController {
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
+    }
+
+    private static Boolean canCreateDefaultTemplate() {
+        Set<String> fieldNames = new Set<String>{
+                UTIL_Namespace.StrTokenNSPrefix('Description__c'),
+                UTIL_Namespace.StrTokenNSPrefix('Template_JSON__c'),
+                UTIL_Namespace.StrTokenNSPrefix('Format_Version__c')
+        };
+
+        for (String fieldName:fieldNames) {
+            if (!UTIL_Permissions.canCreate(UTIL_Namespace.StrAllNSPrefix('Form_Template__c'),
+                    fieldName, false)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @AuraEnabled
@@ -1345,6 +1419,11 @@ public with sharing class GE_GiftEntryController {
     }
 
     private static String retrieveBatchCurrencyIsoCode (Id batchId) {
+        if (!UTIL_Permissions.canRead(UTIL_Namespace.StrAllNSPrefix('DataImportBatch__c'),
+                UTIL_Currency.CURRENCY_ISO_CODE_FIELD, false)) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(System.Label.commonAccessErrorMessage);
+        }
+
         String query = new UTIL_Query()
             .withSelectFields(new Set<String>{UTIL_Currency.CURRENCY_ISO_CODE_FIELD})
             .withFrom(DataImportBatch__c.SObjectType)
