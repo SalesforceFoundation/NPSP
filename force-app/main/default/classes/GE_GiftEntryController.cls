@@ -433,7 +433,6 @@ public with sharing class GE_GiftEntryController {
             upsert dataImportObject Id;
 
             return dataImportObject;
-
         } catch (Exception e) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
 
@@ -1090,6 +1089,11 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled
     public static String [] deleteFormTemplates(String[] ids) {
         String[] formTemplateNames = new String[] {};
+
+        if (!UTIL_Permissions.canDelete(UTIL_Namespace.StrAllNSPrefix('Form_Template__c'), false)) {
+            throw new AuraHandledException(System.Label.commonAccessErrorMessage);
+        }
+
         Form_Template__c[] templates = [
                 SELECT Id, Name
                 FROM Form_Template__c
@@ -1097,9 +1101,6 @@ public with sharing class GE_GiftEntryController {
                 WITH SECURITY_ENFORCED
         ];
         try {
-            if (!UTIL_Permissions.canDelete(UTIL_Namespace.StrAllNSPrefix('Form_Template__c'), false)) {
-                throw new AuraHandledException(System.Label.commonAccessErrorMessage);
-            }
             delete templates;
             for (Form_Template__c template : templates) {
                 formTemplateNames.add(template.Name);
@@ -1191,34 +1192,29 @@ public with sharing class GE_GiftEntryController {
             String formatVersion,
             String templateJSON) {
 
-        try {
-            Set<String> fieldsToCheck = new Set<String>{
-                    'Name',
-                    'Description__c',
-                    'Template_JSON__c',
-                    'Format_Version__c'
-            };
+        Set<String> fieldsToCheck = new Set<String>{
+                'Name',
+                'Description__c',
+                'Template_JSON__c',
+                'Format_Version__c'
+        };
+        if (!canUpsertFormTemplate(fieldsToCheck)) {
+            throw new AuraHandledException(System.Label.commonAccessErrorMessage);
+        }
 
-            if (!canUpsertFormTemplate(fieldsToCheck)) {
-                throw new AuraHandledException(System.Label.commonAccessErrorMessage);
-            }
-
+        if (templateJSON != null) {
             Form_Template__c templateObj = new Form_Template__c(Id = id,
                     Name = name,
                     Description__c = description,
                     Template_JSON__c = templateJSON,
                     Format_Version__c = formatVersion);
-
-            if (templateJSON != null) {
-                upsert templateObj;
-            }
+            upsert templateObj;
             return templateObj.Id;
         }
-        catch(Exception e) {
-            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
-            throw buildDmlException(JSONExceptionData);
-        }
+
+        return null;
     }
+
 
     private static Boolean canUpsertFormTemplate(Set<String> fieldsToCheck) {
         if (!UTIL_Permissions.canCreate(UTIL_Namespace.StrAllNSPrefix('Form_Template__c'))) {
