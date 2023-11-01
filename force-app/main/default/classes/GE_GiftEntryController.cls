@@ -1086,7 +1086,6 @@ public with sharing class GE_GiftEntryController {
     * @return FormTemplateWrapper: Wrapper object of the list of deleted template names and the result
     * of the DML action
     */
-    @AuraEnabled
     public static String [] deleteFormTemplates(String[] ids) {
         String[] formTemplateNames = new String[] {};
 
@@ -1421,8 +1420,7 @@ public with sharing class GE_GiftEntryController {
     }
 
     private static String retrieveBatchCurrencyIsoCode (Id batchId) {
-        if (!UTIL_Permissions.canRead(UTIL_Namespace.StrAllNSPrefix('DataImportBatch__c'),
-                UTIL_Currency.CURRENCY_ISO_CODE_FIELD, false)) {
+        if (!UTIL_Permissions.canRead(UTIL_Namespace.StrAllNSPrefix('DataImportBatch__c'), false)) {
             UTIL_AuraEnabledCommon.throwAuraHandledException(System.Label.commonAccessErrorMessage);
         }
 
