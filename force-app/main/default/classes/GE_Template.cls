@@ -49,6 +49,11 @@ public with sharing class GE_Template {
     public static void createDefaultTemplateIfNecessary() {
         // TODO: Should also block template creation if Advanced Mapping is not enabled
         if (giftEntryIsEnabled() && !hasDefaultTemplate()) {
+
+            if (!canCreateDefaultTemplate()) {
+                UTIL_AuraEnabledCommon.throwAuraHandledException(System.Label.commonAccessErrorMessage);
+            }
+
             Form_Template__c newDefaultTemplate = buildDefaultTemplate();
             
             insert newDefaultTemplate;
@@ -58,6 +63,22 @@ public with sharing class GE_Template {
 
             update giftEntryCustomSetting;
         }
+    }
+
+    private static Boolean canCreateDefaultTemplate() {
+        Set<String> fieldNames = new Set<String>{
+                UTIL_Namespace.StrTokenNSPrefix('Description__c'),
+                UTIL_Namespace.StrTokenNSPrefix('Template_JSON__c'),
+                UTIL_Namespace.StrTokenNSPrefix('Format_Version__c')
+        };
+
+        for (String fieldName:fieldNames) {
+            if (!UTIL_Permissions.canCreate(UTIL_Namespace.StrAllNSPrefix('Form_Template__c'),
+                    fieldName, false)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

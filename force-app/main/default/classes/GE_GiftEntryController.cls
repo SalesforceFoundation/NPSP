@@ -1088,11 +1088,6 @@ public with sharing class GE_GiftEntryController {
     */
     public static String [] deleteFormTemplates(String[] ids) {
         String[] formTemplateNames = new String[] {};
-
-        if (!UTIL_Permissions.canDelete(UTIL_Namespace.StrAllNSPrefix('Form_Template__c'), false)) {
-            throw new AuraHandledException(System.Label.commonAccessErrorMessage);
-        }
-
         Form_Template__c[] templates = [
                 SELECT Id, Name
                 FROM Form_Template__c
@@ -1198,7 +1193,7 @@ public with sharing class GE_GiftEntryController {
                 'Format_Version__c'
         };
         if (!canUpsertFormTemplate(fieldsToCheck)) {
-            throw new AuraHandledException(System.Label.commonAccessErrorMessage);
+            UTIL_AuraEnabledCommon.throwAuraHandledException(System.Label.commonAccessErrorMessage);
         }
 
         if (templateJSON != null) {
@@ -1381,10 +1376,6 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled
     public static Gift_Entry_Settings__c getGiftEntrySettings() {
         try {
-            if (!canCreateDefaultTemplate()) {
-                throw new AuraHandledException(System.Label.commonAccessErrorMessage);
-            }
-
             GE_Template.createDefaultTemplateIfNecessary();
             Gift_Entry_Settings__c giftEntryCustomSetting = UTIL_CustomSettingsFacade.getGiftEntrySettings();
 
@@ -1392,22 +1383,6 @@ public with sharing class GE_GiftEntryController {
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
-    }
-
-    private static Boolean canCreateDefaultTemplate() {
-        Set<String> fieldNames = new Set<String>{
-                UTIL_Namespace.StrTokenNSPrefix('Description__c'),
-                UTIL_Namespace.StrTokenNSPrefix('Template_JSON__c'),
-                UTIL_Namespace.StrTokenNSPrefix('Format_Version__c')
-        };
-
-        for (String fieldName:fieldNames) {
-            if (!UTIL_Permissions.canCreate(UTIL_Namespace.StrAllNSPrefix('Form_Template__c'),
-                    fieldName, false)) {
-                return false;
-            }
-        }
-        return true;
     }
 
     @AuraEnabled
