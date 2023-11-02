@@ -425,14 +425,15 @@ public with sharing class GE_GiftEntryController {
     public static DataImport__c upsertDataImport(String dataImport) {
         DataImport__c dataImportObject = (DataImport__c)JSON.deserialize(dataImport, DataImport__c.class);
 
-        if (!canUpsertDataImport(dataImportObject)) {
-            UTIL_AuraEnabledCommon.throwAuraHandledException(System.Label.commonAccessErrorMessage);
-        }
-
         try {
+            if (!canUpsertDataImport(dataImportObject)) {
+                throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
+            }
             upsert dataImportObject Id;
 
             return dataImportObject;
+        } catch (UTIL_Permissions.InsufficientPermissionException e) {
+            throw new AuraHandledException(e.getMessage());
         } catch (Exception e) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
 
