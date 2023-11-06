@@ -68,6 +68,16 @@ public with sharing class ContactMergeSelector {
         set;
     }
 
+    public List<SObject> selectContactsById(Set<Id> contactIds) {
+        String queryString = new UTIL_Query()
+            .withFrom(Contact.SObjectType)
+            .withSelectFields(listStrContactField)
+            .withWhere('Id IN :contactIds')
+            .build();
+
+        return Database.query(queryString);
+    }
+
     public List<SObject> selectContactsByName(String name) {
         UTIL_Finder finder = new UTIL_Finder(Contact.SObjectType);
         finder.withSelectFields(listStrContactField)
