@@ -12699,6 +12699,30 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>A written off Payment must have a Payment Date.</value>
     </labels>
     <labels>
+        <fullName>potentialDuplicatesFoundNone</fullName>
+        <categories>Potential Duplicates</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>No duplicates found</shortDescription>
+        <value>We found no potential duplicates of this Contact.</value>
+    </labels>
+    <labels>
+        <fullName>potentialDuplicatesFoundOne</fullName>
+        <categories>Potential Duplicates</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>One potential duplicate found</shortDescription>
+        <value>We found 1 potential duplicate of this Contact.</value>
+    </labels>
+    <labels>
+        <fullName>potentialDuplicatesFoundMultiple</fullName>
+        <categories>Potential Duplicates</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Number of potential duplicates found</shortDescription>
+        <value>We found {0} potential duplicates of this Contact.</value>
+    </labels>
+    <labels>
         <fullName>psACH</fullName>
         <categories>Payment Gateway Management</categories>
         <language>en_US</language>
@@ -16395,5 +16419,13 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>true</protected>
         <shortDescription>Label for modifications on Recurring Donations</shortDescription>
         <value>Update Recurring Donation</value>
+    </labels>
+    <labels>
+        <fullName>viewDuplicates</fullName>
+        <categories>Potential Duplicates</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for View Duplicates link</shortDescription>
+        <value>View Duplicates</value>
     </labels>
 </CustomLabels>
