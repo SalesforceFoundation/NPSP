@@ -193,6 +193,10 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
     ********************************************************************************************************/
     public static integer MarkDuplicatesFromList(ID campaignId, list<CampaignMember> listCM) {
 
+        if (!UTIL_Permissions.canUpdate('CampaignMember', 'Status', false)) {
+            throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
+        }
+
         final String DUPE_STATUS_SUFFIX = System.Label.hhCmpDedupeStatus;
 
         //check for the Household Duplicate status values we need
