@@ -47,15 +47,6 @@ public with sharing class GE_LookupController {
      *
      * @return              A List<LookupResult> containing records that match the search criteria.
      */
-    @AuraEnabled
-    public static List<LookupResult> doSearch(String searchValue, String sObjectType) {
-        Boolean isSearchable = UTIL_Describe.getObjectDescribe(sObjectType).isSearchable();
-        if (isSearchable) {
-            return doSearchSOSL(searchValue, sObjectType);
-        } else {
-            return doSearchSOQL(searchValue, sObjectType);
-        }
-    }
 
     /**
      * @description Search for RecordTypes for the given SObject
@@ -89,6 +80,7 @@ public with sharing class GE_LookupController {
      *
      * @return              A List<LookupResult> containing records that match the search criteria.
      */
+    @TestVisible
     private static List<LookupResult> doSearchSOSL(String searchValue, String sObjectType) {
         String formattedValue = '\'' + String.escapeSingleQuotes(searchValue) + '\'';
         String searchTemplate = 'FIND {0} IN NAME FIELDS Returning {1} LIMIT {2}';
