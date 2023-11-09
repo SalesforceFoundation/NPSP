@@ -370,7 +370,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     */
     public PageReference calculate() {
         if (!hasFeatureAccess) {
-            getPageValidationMessages();
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.commonAccessErrorMessage));
             return null;
         }
 
@@ -498,11 +498,6 @@ public with sharing class PMT_PaymentWizard_CTRL {
                 System.Label.pmtWizardPaymentsDisabledTitle,
                 System.Label.pmtWizardPaymentsDisabled)
             );
-            return;
-        }
-
-        if (!hasFeatureAccess) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.commonAccessErrorMessage));
             return;
         }
 
@@ -674,7 +669,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     */
     public PageReference createPayments() {
         if (!hasFeatureAccess) {
-            getPageValidationMessages();
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.commonAccessErrorMessage));
             return null;
         }
 
