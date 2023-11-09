@@ -369,6 +369,11 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @return PageReference null
     */
     public PageReference calculate() {
+        if (!hasFeatureAccess) {
+            getPageValidationMessages();
+            return null;
+        }
+
         if (haveAmount || removePaidPayments) {
             // clear the list
             newPayments.clear();
@@ -496,6 +501,11 @@ public with sharing class PMT_PaymentWizard_CTRL {
             return;
         }
 
+        if (!hasFeatureAccess) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.commonAccessErrorMessage));
+            return;
+        }
+
         if (currentOpp == null) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.pmtWizardMsgNoOppFound));
             return;
@@ -577,7 +587,18 @@ public with sharing class PMT_PaymentWizard_CTRL {
     }
 
     private Set<SObjectField> opportunityFields() {
-        return new Set<SObjectField>{Opportunity.fields.Amount};
+        return new Set<SObjectField>{
+            Opportunity.fields.Name,
+            Opportunity.fields.Amount,
+            Opportunity.fields.StageName,
+            Opportunity.fields.npe01__Payments_Made__c,
+            Opportunity.fields.npe01__Amount_Outstanding__c,
+            Opportunity.fields.Description,
+            Opportunity.fields.CloseDate,
+            Opportunity.fields.npe01__Number_of_Payments__c,
+            Opportunity.fields.IsClosed,
+            Opportunity.fields.IsWon
+        };
     }
 
 
@@ -652,7 +673,12 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @return PageReference null
     */
     public PageReference createPayments() {
-    	Savepoint sp = Database.setSavepoint();
+        if (!hasFeatureAccess) {
+            getPageValidationMessages();
+            return null;
+        }
+
+        Savepoint sp = Database.setSavepoint();
         try {
             List<npe01__oppPayment__c> paymentsToDelete = new List<npe01__OppPayment__c>();
             List<npe01__OppPayment__c> existingPayments = [
