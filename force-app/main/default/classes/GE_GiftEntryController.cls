@@ -446,10 +446,6 @@ public with sharing class GE_GiftEntryController {
     }
 
     private static Boolean canUpsertDataImport(DataImport__c dataImportObject) {
-        if (Test.isRunningTest()) {
-            return true;
-        }
-
         if (!UTIL_Permissions.canCreate(UTIL_Namespace.StrAllNSPrefix('DataImport__c'))) {
             return false;
         }
@@ -457,7 +453,9 @@ public with sharing class GE_GiftEntryController {
         for (String fieldName : dataImportObject.getPopulatedFieldsAsMap().keySet()) {
             if (!UTIL_Permissions.canUpdate(UTIL_Namespace.StrAllNSPrefix('DataImport__c'),
                     UTIL_Namespace.StrAllNSPrefix(fieldName), false)) {
-                return false;
+                if (!fieldName.equalsIgnoreCase('Id')) {
+                    return false;
+                }
             }
         }
 
@@ -1194,7 +1192,8 @@ public with sharing class GE_GiftEntryController {
         Set<String> fieldsToCheck = new Set<String>{
                 'Name',
                 'Description__c',
-                'Template_JSON__c'
+                'Template_JSON__c',
+                'Format_Version__c'
         };
         if (!canUpsertFormTemplate(fieldsToCheck)) {
             throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
@@ -1204,7 +1203,8 @@ public with sharing class GE_GiftEntryController {
             Form_Template__c templateObj = new Form_Template__c(Id = id,
                     Name = name,
                     Description__c = description,
-                    Template_JSON__c = templateJSON);
+                    Template_JSON__c = templateJSON,
+                    Format_Version__c = formatVersion);
             upsert templateObj;
             return templateObj.Id;
         }
