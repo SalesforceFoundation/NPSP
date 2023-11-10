@@ -108,7 +108,6 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         initTestDataWithoutPscs();
         Test.setCurrentPage(Page.PSC_ManageSoftCredits);
         PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
-
         system.assertEquals(0, ctrl.softCredits.size());
         system.assertEquals(0, ctrl.numberOfSoftCredits);
         system.assertEquals(acc.Id, ctrl.PrimaryContactId);
@@ -133,7 +132,6 @@ public with sharing class PSC_ManageSoftCredits_TEST {
 
         system.assertEquals(600, ctrl.oppTotalSoftCredit.Amount);
         Test.startTest();
-//        ctrl.hasAccess = true;
         system.assertNotEquals(null, ctrl.save());
         Test.stopTest();
 
