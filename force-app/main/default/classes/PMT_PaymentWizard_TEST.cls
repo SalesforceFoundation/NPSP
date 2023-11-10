@@ -245,7 +245,6 @@ private class PMT_PaymentWizard_TEST {
         ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_PAYMENT);
 
         PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
-        controller.hasFeatureAccess = true;
 
         List<SelectOption> l = controller.getItems();
         l = controller.getIntervals();
@@ -331,7 +330,6 @@ private class PMT_PaymentWizard_TEST {
         ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_PAYMENT);
 
         PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
-        controller.hasFeatureAccess = true;
 
         List<SelectOption> l = controller.getItems();
         l = controller.getIntervals();
@@ -371,7 +369,6 @@ private class PMT_PaymentWizard_TEST {
         ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_PAYMENT);
 
         PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
-        controller.hasFeatureAccess = true;
 
         List<SelectOption> l = controller.getItems();
         l = controller.getIntervals();
@@ -410,7 +407,6 @@ private class PMT_PaymentWizard_TEST {
         ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_PAYMENT);
 
         PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
-        controller.hasFeatureAccess = true;
 
         List<SelectOption> l = controller.getItems();
         l = controller.getIntervals();
@@ -445,7 +441,6 @@ private class PMT_PaymentWizard_TEST {
         ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_PAYMENT);
 
         PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
-        controller.hasFeatureAccess = true;
 
         System.assertEquals(null, controller.currentOpp);
         UTIL_UnitTestData_TEST.assertPageHasError(System.Label.pmtWizardMsgNoOppFound);
@@ -465,7 +460,6 @@ private class PMT_PaymentWizard_TEST {
         ApexPages.currentPage().getParameters().put(PARAM_WTYPE, 'invalidType');
 
         PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
-        controller.hasFeatureAccess = true;
 
         System.assertEquals(null, controller.currentOpp);
         UTIL_UnitTestData_TEST.assertPageHasError(System.Label.pmtWizardMsgNoOppFound);
@@ -487,7 +481,6 @@ private class PMT_PaymentWizard_TEST {
 
         System.runAs(UTIL_UnitTestData_TEST.createStandardProfileUser()) {
             PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
-            controller.hasFeatureAccess = true;
 
             System.assertEquals(null, controller.currentOpp);
             UTIL_UnitTestData_TEST.assertPageHasError(System.Label.pmtWizardMsgNoOppFound);
@@ -590,7 +583,6 @@ private class PMT_PaymentWizard_TEST {
         ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_PAYMENT);
 
         PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
-        controller.hasFeatureAccess = true;
 
         // set values
         System.assertEquals(false, controller.haveAmount);
@@ -650,7 +642,6 @@ private class PMT_PaymentWizard_TEST {
         ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_PAYMENT);
 
         PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
-        controller.hasFeatureAccess = true;
 
         List<SelectOption> l = controller.getItems();
         l = controller.getIntervals();
