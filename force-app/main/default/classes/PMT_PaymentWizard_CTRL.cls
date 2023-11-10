@@ -543,15 +543,19 @@ public with sharing class PMT_PaymentWizard_CTRL {
     */
     private Boolean hasFeatureAccess() {
         if (hasRequiredObjectLevelAccess()) {
-            return hasAccessTo(npe01__OppPayment__c.getSObjectType(), paymentFields())
-                && hasAccessTo(Opportunity.getSObjectType(), opportunityFields());
+            return hasReadAccessTo(npe01__OppPayment__c.getSObjectType(), paymentFields())
+                && hasModifyAccessTo(npe01__OppPayment__c.getSObjectType(), paymentFields())
+                && hasReadAccessTo(Opportunity.getSObjectType(), opportunityReadFields())
+                && hasModifyAccessTo(Opportunity.getSObjectType(), opportunityModifyFields());
         }
         return false;
     }
 
-    private Boolean hasAccessTo(SObjectType sObjectType, Set<SObjectField> sObjectFields) {
-        return permissions.canRead(sObjectType, sObjectFields)
-            && permissions.canUpdate(sObjectType, sObjectFields);
+    private Boolean hasReadAccessTo(SObjectType sObjectType, Set<SObjectField> sObjectFields) {
+        return permissions.canRead(sObjectType, sObjectFields);
+    }
+    private Boolean hasModifyAccessTo(SObjectType sObjectType, Set<SObjectField> sObjectFields) {
+        return permissions.canUpdate(sObjectType, sObjectFields);
     }
 
     private Boolean hasRequiredObjectLevelAccess() {
@@ -581,7 +585,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
         };
     }
 
-    private Set<SObjectField> opportunityFields() {
+    private Set<SObjectField> opportunityReadFields() {
         return new Set<SObjectField>{
             Opportunity.fields.Name,
             Opportunity.fields.Amount,
@@ -593,6 +597,11 @@ public with sharing class PMT_PaymentWizard_CTRL {
             Opportunity.fields.npe01__Number_of_Payments__c,
             Opportunity.fields.IsClosed,
             Opportunity.fields.IsWon
+        };
+    }
+    private Set<SObjectField> opportunityModifyFields() {
+        return new Set<SObjectField>{
+            Opportunity.fields.Amount
         };
     }
 

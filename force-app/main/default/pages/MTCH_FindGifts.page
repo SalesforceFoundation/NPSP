@@ -4,6 +4,10 @@
     lightningStylesheets="true"
     docType="html-5.0">
 
+    <apex:outputPanel rendered="{!NOT(hasAccess)}">
+        <c:InsufficientPermissions />
+    </apex:outputPanel>
+
     <apex:slds />
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}"/>
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
@@ -34,7 +38,7 @@
     </style>
 
     <div class="slds-scope slds-wcag">
-        <apex:form >
+        <apex:form rendered="{!(hasAccess)}">
 
             <!-- PAGE HEADER -->
             <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="{!$ObjectType.Opportunity.label}"

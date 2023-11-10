@@ -124,7 +124,7 @@ public with sharing class HH_ManageHH_CTRL {
                 hhId = hh.Id;
 
                 if (contactId != null) {
-                    if (!UTIL_Permissions.canUpdate('npo02__Household__c','npo02__Household__c', false)) {
+                    if (!UTIL_Permissions.canUpdate('Contact','npo02__Household__c', false)) {
                         throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
                     }
                     Contact con = new Contact(Id = contactId, npo02__Household__c = hhId);
