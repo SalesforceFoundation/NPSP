@@ -294,8 +294,7 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
     }
 
     private static void validateAccessPermissions() {
-        if (!(UTIL_Permissions.canUpdate('CampaignMember', 'Status', false)) &&
-                () {
+        if (!UTIL_Permissions.canUpdate('CampaignMember', 'Status', false)) {
             throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
         }
 
