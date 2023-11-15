@@ -143,22 +143,22 @@ public with sharing class RD2_PauseForm_CTRL {
             UTIL_Permissions.canUpdate(rdObjectName, false);
     }
 
-    private static Boolean hasFieldReadAccess(Set<String> queryFields) {
-        String nameSpacedField;
+    private static Boolean hasFieldReadAccess() {
+        Set<String> fieldsToCheck = new Set<String>{
+            'StartDate__c',
+            'InstallmentFrequency__c',
+            'npe03__Installment_Period__c',
+            'npe03__Amount__c',
+            'PaymentMethod__c',
+            'Day_of_Month__c',
+            'Status__c',
+            'RecurringType__c',
+            'EndDate__c'
+        };
 
-        for (String queryField:queryFields) {
-            if (queryField.contains('__r')) {
-                continue;
-            }
-
-            if (!queryField.contains('npe03__') && queryField.contains('__c')) {
-                nameSpacedField = UTIL_Namespace.StrTokenNSPrefix(queryField);
-            }
-            else {
-                nameSpacedField = queryField;
-            }
-
-            if (!UTIL_Permissions.canRead('npe03__Recurring_Donation__c', nameSpacedField, false)) {
+        for (String queryField:fieldsToCheck) {
+            if (!UTIL_Permissions.canRead('npe03__Recurring_Donation__c',
+                    UTIL_Namespace.StrAllNSPrefix(queryField), false)) {
                 return false;
             }
         }
@@ -195,7 +195,7 @@ public with sharing class RD2_PauseForm_CTRL {
             queryFields.add('CurrencyIsoCode');
         }
 
-        if (!hasFieldReadAccess(queryFields)) {
+        if (!hasFieldReadAccess()) {
             throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
         }
 
