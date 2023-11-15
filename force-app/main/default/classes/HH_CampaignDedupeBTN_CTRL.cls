@@ -193,9 +193,7 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
     ********************************************************************************************************/
     public static integer MarkDuplicatesFromList(ID campaignId, list<CampaignMember> listCM) {
 
-        if (!UTIL_Permissions.canUpdate('CampaignMember', 'Status', false)) {
-            throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
-        }
+        validateAccessPermissions();
 
         final String DUPE_STATUS_SUFFIX = System.Label.hhCmpDedupeStatus;
 
@@ -293,6 +291,26 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
         }
 
         return returnsize;
+    }
+
+    private static void validateAccessPermissions() {
+        if (!(UTIL_Permissions.canUpdate('CampaignMember', 'Status', false)) &&
+                () {
+            throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
+        }
+
+        Set<String> cmsFields = new Set<String>{
+                'CampaignId',
+                'Label',
+                'HasResponded',
+                'SortOrder'
+        };
+        for (String cmsField : cmsFields) {
+            if (!(UTIL_Permissions.canRead('CampaignMemberStatus', cmsField, false) &&
+                    UTIL_Permissions.canCreate('CampaignMemberStatus', cmsField, false))) {
+                throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
+            }
+        }
     }
 
     /*******************************************************************************************************
