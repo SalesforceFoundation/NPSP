@@ -565,8 +565,7 @@ public with sharing class HH_Container_LCTRL {
                 'Seasonal_End_Month__c',
                 'Seasonal_End_Day__c',
                 'Geolocation__Latitude__s',
-                'Geolocation__Longitude__s',
-                'Undeliverable__c'
+                'Geolocation__Longitude__s'
         };
 
         for (String addressField : addressFields) {
