@@ -49,7 +49,6 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
     @TestVisible private String currencySymbol;
 
     /** @description Set to true if the user has the appropriate permissions to access the page */
-    @TestVisible
     public Boolean hasAccess {
         get {
             if (hasAccess == null) {
