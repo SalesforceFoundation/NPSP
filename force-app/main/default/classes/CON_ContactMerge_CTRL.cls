@@ -108,6 +108,16 @@ public with sharing class CON_ContactMerge_CTRL {
 
     public Boolean canContinueWithMerge { get;set; }
 
+    public List<FieldSetMember> fieldSetMembers {
+        get {
+            if (fieldSetMembers == null) {
+                fieldSetMembers = SObjectType.Contact.fieldSets.ContactMergeFoundFS.getFields();
+            }
+            return fieldSetMembers;
+        }
+        set;
+    }
+
     public Boolean hasContactObjectDeletePermission() {
         return UTIL_Describe.getObjectDescribe('Contact').isDeletable();
     }
@@ -923,7 +933,7 @@ public with sharing class CON_ContactMerge_CTRL {
     public PageReference search() {
         try {
             step = 2;
-            this.searchResults = wrapQueryResults(searchRecords());
+            this.searchResults = wrapQueryResults(stripInaccessibleResultFields(searchRecords()));
             
  
         } catch (exception ex) {
@@ -949,6 +959,33 @@ public with sharing class CON_ContactMerge_CTRL {
         }
     }
 
+    private List<SObject> stripInaccessibleResultFields(List<SObject> searchResults) {
+        SObjectAccessDecision accessDecision =
+                Security.stripInaccessible(AccessType.READABLE, searchResults);
+
+        Map<String, Set<String>> removedFields = accessDecision.getRemovedFields();
+        if (!removedFields.isEmpty()) {
+            List<FieldSetMember> strippedFieldSetMembers = new List<FieldSetMember>();
+            for (FieldSetMember fsMember:fieldSetMembers) {
+                Boolean fieldRemoved = false;
+                for (String field:removedFields.get('Contact')) {
+                    if (fieldRemoved) {
+                        continue;
+                    }
+                    if (fsMember.getFieldPath().contains(field)) {
+                        fieldRemoved = true;
+                    }
+                }
+                if (!fieldRemoved) {
+                    strippedFieldSetMembers.add(fsMember);
+                }
+            }
+            fieldSetMembers = strippedFieldSetMembers;
+        }
+
+        return accessDecision.getRecords();
+    }
+
     /***********************************************************************************************
     * @description Wraps the Query(SOSL and SOQL) results.
     * @param searchResults The list of SObjects to wrap.
@@ -971,6 +1008,11 @@ public with sharing class CON_ContactMerge_CTRL {
     * @return PageReference The page that it redirects to. Same page user is in.
     */
     public PageReference mergeContacts() {
+        if (!(Contact.SObjectType.getDescribe().isMergeable()) && Account.SObjectType.getDescribe().isMergeable()){
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, System.Label.commonAccessErrorMessage));
+            return null;
+        }
+
         Contact winningContact = getWinningContact();
         
         if (winningContact == null) {
