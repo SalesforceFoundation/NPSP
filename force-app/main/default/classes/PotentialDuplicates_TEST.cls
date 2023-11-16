@@ -21,8 +21,15 @@ private with sharing class PotentialDuplicates_TEST {
 
         Map<String, Object> data = PotentialDuplicates.getDuplicates(contactList[0].Id);
         String setOfMatches = (String)data.get('setOfMatches');
-        System.assertNotEquals('', setOfMatches, 'Duplicate Ids should be returned');
         Integer numberOfMatches = setOfMatches.split(',').size();
-        System.assertEquals(2, numberOfMatches, 'There should be 2 duplicates returned');
+
+        // Duplicates will not be found if encryption is enabled
+        if (sObjectType.Contact.fields.Name.isEncrypted()) {
+            System.assertEquals('', setOfMatches, 'No duplicate Ids should be returned if encryption is enabled');
+            System.assertEquals(0, numberOfMatches, 'There should be 0 duplicates returned if encryption is enabled');
+        }
+        else {
+            System.assertNotEquals('', setOfMatches, 'Duplicate Ids should be returned');
+            System.assertEquals(2, numberOfMatches, 'There should be 2 duplicates returned');        }
     }
 }
