@@ -49,7 +49,7 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
     public Boolean canDelete {
         get {
             if(this.canDelete == null) {
-               this.canDelete = this.checkDelete();
+                this.canDelete = this.checkDelete();
             }
             return this.canDelete;
         }
@@ -65,8 +65,8 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
      * @return PageReference Page specified in 'retURL' parameter or Home page
      */
     public PageReference buttonClick() {
-        if (!checkDelete()) {
-            displayDeleteError();
+        if (!checkRead() || !checkDelete()) {
+            displayAccessError();
             return null;
         }
 
@@ -91,11 +91,16 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
         return UTIL_Permissions.getInstance().canDelete(DataImport__c.SObjectType);
     }
 
-    private void displayDeleteError() {
+    public Boolean checkRead() {
+        Set<SObjectField> findFields = new Set<SObjectField>{DataImport__c.Status__c.getDescribe().getSobjectField()};
+        return UTIL_Permissions.getInstance().canRead(DataImport__c.SObjectType, findFields);
+    }
+
+    private void displayAccessError() {
         ApexPages.addMessage(new ApexPages.Message(
                 ApexPages.Severity.ERROR,
                 String.format(
-                        System.Label.exceptionDeletePermission,
+                        System.Label.commonAccessErrorMessage,
                         new List<String>{ SObjectType.DataImport__c.getLabel() })));
     }
 
@@ -138,7 +143,7 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
                 delete dataImports;
                 return close();
             } else {
-                displayDeleteError();
+                displayAccessError();
                 return null;
             }
         } catch (Exception e) {

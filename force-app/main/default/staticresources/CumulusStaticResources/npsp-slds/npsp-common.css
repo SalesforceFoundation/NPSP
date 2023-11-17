@@ -17,6 +17,7 @@ input.lookupInput {
 input.lookupInputSLDS {
     width: 100%;
     margin-right: -30px !important;
+    border-color: #747474 !important;
 }
 body .dateInput input[type="text"], .slds-vf-scope .dateInput input[type="text"] {
     margin-left: 0;
