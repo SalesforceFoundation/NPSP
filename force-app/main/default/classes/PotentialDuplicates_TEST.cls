@@ -23,7 +23,7 @@ private with sharing class PotentialDuplicates_TEST {
         String setOfMatches = (String)data.get('setOfMatches');
         Integer numberOfMatches = setOfMatches.split(',').size();
 
-        // Duplicates will not be found if encryption is enabled
+        // Duplicates will not be found if encryption is enabled / standard rules deactivated
         if (sObjectType.Contact.fields.Name.isEncrypted()) {
             System.assertEquals('', setOfMatches, 'No duplicate Ids should be returned if encryption is enabled');
         }
