@@ -146,7 +146,7 @@
     </customLabels>
     <customLabels>
         <name>Address_StateCountry_Invalid_Error</name>
-        <label>{0}&apos; no está configurado como un País válido en su organización.</label>
+        <label>{0}' no está configurado como un País válido en su organización.</label>
     </customLabels>
     <customLabels>
         <name>Address_Verification_Limit</name>
@@ -5690,7 +5690,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     </customLabels>
     <customLabels>
         <name>healthSolutionAccountRTIssue</name>
-        <label>Para cuentas Hogar, asegúrese que npe01__SYSTEM_AccountType__c es &apos;Household Account&apos; (Cuenta Hogar). Para Cuentas Uno a uno, asegúrese que npe01__SYSTEM_AccountType__c es &apos;One-to-One Individual&apos; (Uno a uno Individual). Para ambos asegurarse que npe01__SYSTEMISINDIVIDUAL__c es verdadero.</label>
+        <label>Para cuentas Hogar, asegúrese que npe01__SYSTEM_AccountType__c es 'Household Account' (Cuenta Hogar). Para Cuentas Uno a uno, asegúrese que npe01__SYSTEM_AccountType__c es 'One-to-One Individual' (Uno a uno Individual). Para ambos asegurarse que npe01__SYSTEMISINDIVIDUAL__c es verdadero.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionAutoRelFieldsMissing</name>
@@ -5846,7 +5846,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     </customLabels>
     <customLabels>
         <name>hhCmpDedupeNoReport</name>
-        <label>No puede encontrar el informe. Cree un informe con el Nombre exclusivo del informe: &apos;NPSP_Campaign_Household_Mailing_List_V2&apos;. NOTA: El tipo de informe debe ser Campañas con Contactos. Filtrar por Estado de miembro no contiene &quot;Duplicado&quot;.</label>
+        <label>No puede encontrar el informe. Cree un informe con el Nombre exclusivo del informe: 'NPSP_Campaign_Household_Mailing_List_V2'. NOTA: El tipo de informe debe ser Campañas con Contactos. Filtrar por Estado de miembro no contiene &quot;Duplicado&quot;.</label>
     </customLabels>
     <customLabels>
         <name>hhCmpDedupeStatus</name>
@@ -6451,6 +6451,18 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     <customLabels>
         <name>pmtWrittenOffPaymentDateRequired</name>
         <label>Un pago amortizado debe tener una fecha de pago.</label>
+    </customLabels>
+    <customLabels>
+        <name>potentialDuplicatesFoundNone</name>
+        <label>No se han encontrado posibles duplicados de este contacto.</label>
+    </customLabels>
+    <customLabels>
+        <name>potentialDuplicatesFoundOne</name>
+        <label>Se ha encontrado 1 posible duplicado de este contacto.</label>
+    </customLabels>
+    <customLabels>
+        <name>potentialDuplicatesFoundMultiple</name>
+        <label>Se han encontrado {0} posibles duplicados de este contacto.</label>
     </customLabels>
     <customLabels>
         <name>psACH</name>
@@ -7200,7 +7212,7 @@ Una vez el proceso esté completo al 100% podrá salir o actualizar esta página
     </customLabels>
     <customLabels>
         <name>stgHelpHealthCheck</name>
-        <label>Utilice &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelHealthCheck&apos;);return false;&quot;&gt;Comprobación de estado&lt;/a&gt; para verificar su configuración de NPSP.</label>
+        <label>Utilice &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel('idPanelHealthCheck');return false;&quot;&gt;Comprobación de estado&lt;/a&gt; para verificar su configuración de NPSP.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpIGFormat</name>
@@ -7501,7 +7513,7 @@ Para comprobar su configuración vigente, vaya a Reglas de duplicados bajo Confi
     </customLabels>
     <customLabels>
         <name>stgHelpReviewErrorLog</name>
-        <label>Revise los &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;registros de errores&lt;/a&gt; para comprobar si hay problemas.</label>
+        <label>Revise los &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel('idPanelErrorLog');return false;&quot;&gt;registros de errores&lt;/a&gt; para comprobar si hay problemas.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRollupBatchSize</name>
@@ -8349,6 +8361,10 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         <name>updateRecurringDonation</name>
         <label>Actualizar donación recurrente</label>
     </customLabels>
+    <customLabels>
+        <name>viewDuplicates</name>
+        <label>Ver duplicados</label>
+    </customLabels>
     <reportTypes>
         <name>Contacts_Only</name>
         <label>Solo contactos</label>
@@ -8358,112 +8374,48 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
         </sections>
     </reportTypes>
     <customTabs>
-        <name>NPSP_Resources</name>
-        <label>Primeros pasos</label>
-    </customTabs>
-    <customTabs>
-        <name>Contact_Merge</name>
-        <label>Combinar contacto</label>
+        <name>Batch_Data_Entry</name>
+        <label>Entrada de datos en lote</label>
     </customTabs>
     <customTabs>
         <name>Batch_Gift_Entry</name>
         <label>Entrada de regalo en lote</label>
     </customTabs>
     <customTabs>
-        <name>NPSP_Settings</name>
-        <label>Configuración de NPSP</label>
-    </customTabs>
-    <customTabs>
-        <name>Batch_Data_Entry</name>
-        <label>Entrada de datos en lote</label>
-    </customTabs>
-    <customTabs>
-        <name>GetStarted</name>
-        <label>Empezar a trabajar con NPSP - Administrador</label>
+        <name>Contact_Merge</name>
+        <label>Combinar contacto</label>
     </customTabs>
     <customTabs>
         <name>GE_Gift_Entry</name>
         <label>Entrada de regalos</label>
     </customTabs>
     <customTabs>
+        <name>GetStarted</name>
+        <label>Empezar a trabajar con NPSP - Administrador</label>
+    </customTabs>
+    <customTabs>
         <name>GetStartedEndUser</name>
         <label>Empezar a trabajar con NPSP</label>
+    </customTabs>
+    <customTabs>
+        <name>NPSP_Resources</name>
+        <label>Primeros pasos</label>
+    </customTabs>
+    <customTabs>
+        <name>NPSP_Settings</name>
+        <label>Configuración de NPSP</label>
     </customTabs>
     <customApplications>
         <name>Nonprofit_CRM</name>
         <label>Nonprofit Success Pack</label>
     </customApplications>
     <quickActions>
-        <name>New_Campaign</name>
-        <label>Nueva campaña</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Pause</name>
-        <label>Pausa</label>
-    </quickActions>
-    <quickActions>
-        <name>Account.New_Affiliation</name>
-        <label>Nueva afiliación</label>
-    </quickActions>
-    <quickActions>
         <name>Account.New_Address</name>
         <label>Nueva dirección</label>
     </quickActions>
     <quickActions>
-        <name>New_Recurring_Donation</name>
-        <label>Nueva donación recurrente</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
-        <label>Nueva oportunidad</label>
-    </quickActions>
-    <quickActions>
-        <name>Contact.New_Recurring_Donation</name>
-        <label>Nueva donación recurrente</label>
-    </quickActions>
-    <quickActions>
-        <name>npe01__OppPayment__c.Refund</name>
-        <label>Reembolso</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Quick_Update</name>
-        <label>Actualización rápida</label>
-    </quickActions>
-    <quickActions>
-        <name>npo02__Household__c.Update_Household</name>
-        <label>Actualizar hogar</label>
-    </quickActions>
-    <quickActions>
-        <name>Address__c.Update_Address</name>
-        <label>Actualizar dirección</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
-        <label>Cerrar donación recurrente</label>
-    </quickActions>
-    <quickActions>
-        <name>Contact.New_Affiliation</name>
+        <name>Account.New_Affiliation</name>
         <label>Nueva afiliación</label>
-    </quickActions>
-    <quickActions>
-        <name>Opportunity.Quick_Update</name>
-        <label>Actualización rápida</label>
-    </quickActions>
-    <quickActions>
-        <name>Contact.Quick_Update</name>
-        <label>Actualización rápida</label>
-    </quickActions>
-    <quickActions>
-        <name>Opportunity.New_Payment</name>
-        <label>Nuevo pago</label>
-    </quickActions>
-    <quickActions>
-        <name>Contact.New_Relationship</name>
-        <label>Nueva relación</label>
-    </quickActions>
-    <quickActions>
-        <name>npe01__OppPayment__c.Quick_Update</name>
-        <label>Actualización rápida</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>
@@ -8472,5 +8424,69 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
     <quickActions>
         <name>Account.Quick_Organization_Update</name>
         <label>Actualización rápida</label>
+    </quickActions>
+    <quickActions>
+        <name>Address__c.Update_Address</name>
+        <label>Actualizar dirección</label>
+    </quickActions>
+    <quickActions>
+        <name>Contact.New_Affiliation</name>
+        <label>Nueva afiliación</label>
+    </quickActions>
+    <quickActions>
+        <name>Contact.New_Recurring_Donation</name>
+        <label>Nueva donación recurrente</label>
+    </quickActions>
+    <quickActions>
+        <name>Contact.New_Relationship</name>
+        <label>Nueva relación</label>
+    </quickActions>
+    <quickActions>
+        <name>Contact.Quick_Update</name>
+        <label>Actualización rápida</label>
+    </quickActions>
+    <quickActions>
+        <name>New_Campaign</name>
+        <label>Nueva campaña</label>
+    </quickActions>
+    <quickActions>
+        <name>New_Recurring_Donation</name>
+        <label>Nueva donación recurrente</label>
+    </quickActions>
+    <quickActions>
+        <name>Opportunity.New_Payment</name>
+        <label>Nuevo pago</label>
+    </quickActions>
+    <quickActions>
+        <name>Opportunity.Quick_Update</name>
+        <label>Actualización rápida</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Quick_Update</name>
+        <label>Actualización rápida</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Refund</name>
+        <label>Reembolso</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
+        <label>Cerrar donación recurrente</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
+        <label>Nueva oportunidad</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Pause</name>
+        <label>Pausa</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Quick_Update</name>
+        <label>Actualización rápida</label>
+    </quickActions>
+    <quickActions>
+        <name>npo02__Household__c.Update_Household</name>
+        <label>Actualizar hogar</label>
     </quickActions>
 </Translations>
