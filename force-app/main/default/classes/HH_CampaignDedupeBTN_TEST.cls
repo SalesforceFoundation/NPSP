@@ -150,6 +150,7 @@ private class HH_CampaignDedupeBTN_TEST {
         Test.startTest();
         ApexPages.StandardController sc = new ApexPages.StandardController(camp);
         HH_CampaignDedupeBTN_CTRL deduper = new HH_CampaignDedupeBTN_CTRL(sc);
+        deduper.hasAccess = true;
         deduper.RunReport();
         Test.stopTest();
 
