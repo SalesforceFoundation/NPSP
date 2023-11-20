@@ -57,6 +57,29 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
     //so we inform our action method to perform the update
     private boolean updateSettingsWithID = false;
 
+    @TestVisible
+    public Boolean hasAccess {
+        get {
+            if (hasAccess == null) {
+                hasAccess = getCurrentUserHasAccess();
+            }
+            return hasAccess;
+        }
+        private set;
+    }
+
+    @TestVisible
+    private UTIL_Permissions perms {
+        get {
+            if (perms == null) {
+                perms = new UTIL_Permissions();
+            }
+
+            return perms;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description Constructor
     * @param controller StandardController to a Campaign
@@ -98,6 +121,10 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
     public PageReference RunReport(){
         Savepoint sp = Database.setSavepoint();
         try {
+            if (!hasAccess) {
+                throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
+            }
+
             string ActiveID = campaign.id;
             ActiveID = ActiveID.substring(0,15);
             string newPageUrl = '';
@@ -192,8 +219,6 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
     * @return integer the number of duplicates identified
     ********************************************************************************************************/
     public static integer MarkDuplicatesFromList(ID campaignId, list<CampaignMember> listCM) {
-
-        validateAccessPermissions();
 
         final String DUPE_STATUS_SUFFIX = System.Label.hhCmpDedupeStatus;
 
@@ -293,23 +318,23 @@ public without sharing class HH_CampaignDedupeBTN_CTRL {
         return returnsize;
     }
 
-    private static void validateAccessPermissions() {
-        if (!UTIL_Permissions.canUpdate('CampaignMember', 'Status', false)) {
-            throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
-        }
+    private Boolean getCurrentUserHasAccess() {
+        Boolean accessOK = false;
 
-        Set<String> cmsFields = new Set<String>{
-                'CampaignId',
-                'Label',
-                'HasResponded',
-                'SortOrder'
-        };
-        for (String cmsField : cmsFields) {
-            if (!(UTIL_Permissions.canRead('CampaignMemberStatus', cmsField, false) &&
-                    UTIL_Permissions.canCreate('CampaignMemberStatus', cmsField, false))) {
-                throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
+        if (UTIL_Permissions.canUpdate('CampaignMember', 'Status', false)) {
+            Set<SObjectField> cmsFields = new Set<SObjectField>{
+                CampaignMemberStatus.fields.CampaignId,
+                CampaignMemberStatus.fields.Label,
+                CampaignMemberStatus.fields.HasResponded,
+                CampaignMemberStatus.fields.SortOrder
+            };
+            if ((perms.canRead(CampaignMemberStatus.getSObjectType(), cmsFields) &&
+                    perms.canCreate(CampaignMemberStatus.getSObjectType(), cmsFields))) {
+                accessOK = true;
             }
         }
+
+        return accessOK;
     }
 
     /*******************************************************************************************************
