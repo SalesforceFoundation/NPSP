@@ -9,7 +9,7 @@
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
     <apex:form >
-    <div class="slds-scope">
+    <div class="slds-scope slds-wcag">
 
         <apex:variable var="headerSubtitle" value="{! SUBSTITUTE($Label.mtchItems, '{0}', TEXT(numberOfSoftCredits))}" />
         <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="{!$ObjectType.Opportunity.label}"
@@ -71,7 +71,10 @@
                         <apex:selectOption itemValue="false" itemLabel="{!$Label.pscManageSoftCreditsPercent}" />
                         <apex:actionSupport action="{!checkFullAndPartialCredit}" event="onchange" reRender="amountField, totalSelected, totalUn" />
                     </apex:selectRadio>
-                    <apex:inputCheckbox value="{!allowTooManySoftCredits}" id="allowTooManySoftCredits" />
+                    <label class="slds-checkbox slds-p-right_small">
+                        <apex:inputCheckbox value="{!allowTooManySoftCredits}" id="allowTooManySoftCredits" />
+                        <span class="slds-checkbox_faux"></span>
+                    </label>
                     <apex:outputLabel for="allowTooManySoftCredits" value=" {!$Label.pscManageSoftCreditsValidateTotals}" />
                 </div>
             </div> <!-- slds-grid -->

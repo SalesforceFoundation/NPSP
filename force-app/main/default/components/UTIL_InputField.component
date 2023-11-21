@@ -16,6 +16,7 @@
     <!-- NOTE: When using a variable for determining readonly or field type in combination with conditionally rendering output panels, some field values do not save -->
     <apex:variable var="ftype" value="{!$ObjectType[sObjType].fields[field].type}"/>
 
+    <div class="slds-scope slds-wcag">
     <apex:inputField id="inputX" required="{!required}" value="{!sObj[field]}" label=""
         html-aria-label="{!IF(ISBLANK(ariaLabel), $ObjectType[sObjType].fields[field].label, ariaLabel)}"
         html-aria-description="{!IF(ISBLANK(ariaDescription), '', ariaDescription)}"
@@ -27,6 +28,7 @@
                                 'slds-input')}">
         <apex:actionSupport event="onchange" action="{!actSupAction}" reRender="{!actSupReRender}" rendered="{!actSup}" status="{!actSupStatus}" immediate="{!actSupImmediate}"/>
     </apex:inputField>
+    </div>
     <!-- Javascript will add the onchange event when needed and swap out the icon for lookup fields -->
     <script type="text/javascript">
         (function() {
