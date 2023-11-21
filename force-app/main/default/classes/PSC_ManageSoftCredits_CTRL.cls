@@ -231,16 +231,32 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
         Boolean accessResult = false;
 
         SObjectType psc = Partial_Soft_Credit__c.getSObjectType();
-        if (perms.canCreate(psc) && UTIL_Permissions.canDelete(Schema.SObjectType.Partial_Soft_Credit__c.getName(), false)) {
-            Set<SObjectField> sObjectFieldsRead = new Set<SObjectField>{
+        SObjectType ocr = OpportunityContactRole.getSObjectType();
+        if (perms.canCreate(psc) && perms.canCreate(ocr) &&
+            UTIL_Permissions.canDelete(Schema.SObjectType.Partial_Soft_Credit__c.getName(), false) &&
+            UTIL_Permissions.canDelete(Schema.SObjectType.OpportunityContactRole.getName(), false)
+        ) {
+            Set<SObjectField> sObjectPSCFieldsRead = new Set<SObjectField>{
                 Partial_Soft_Credit__c.fields.Amount__c,
                 Partial_Soft_Credit__c.fields.Contact_Name__c,
                 Partial_Soft_Credit__c.fields.Contact_Role_ID__c,
                 Partial_Soft_Credit__c.fields.Role_Name__c
             };
-            Set<SObjectField> sObjectFieldsModify = sObjectFieldsRead.clone();
-            sObjectFieldsModify.remove(Partial_Soft_Credit__c.fields.Contact_Name__c);
-            if (!(perms.canRead(psc, sObjectFieldsRead) && perms.canUpdate(psc, sObjectFieldsModify))) {
+            Set<SObjectField> sObjectPSCFieldsModify = sObjectPSCFieldsRead.clone();
+            sObjectPSCFieldsModify.remove(Partial_Soft_Credit__c.fields.Contact_Name__c);
+
+            Set<SObjectField> sObjectOCRFieldsRead = new Set<SobjectField>{
+                OpportunityContactRole.fields.ContactId,
+                OpportunityContactRole.fields.OpportunityId,
+                OpportunityContactRole.fields.IsPrimary,
+                OpportunityContactRole.fields.Role
+            };
+            Set<SObjectField> sObjectOCRFieldsModify = sObjectOCRFieldsRead.clone();
+            sObjectOCRFieldsModify.remove(OpportunityContactRole.fields.OpportunityId);
+
+            if (!(perms.canRead(psc, sObjectPSCFieldsRead) && perms.canUpdate(psc, sObjectPSCFieldsModify) &&
+                  perms.canRead(ocr, sObjectOCRFieldsRead) && perms.canUpdate(ocr, sObjectOCRFieldsModify))
+            ) {
                 return accessResult;
             }
             accessResult = true;
@@ -266,6 +282,11 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
     * @return the Opportunity's detail page if success, or null if any error encountered.
     */ 
     public PageReference save() {
+        if (!hasAccess) {
+            Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.commonAccessErrorMessage));
+            return null;
+        }
+
         Map<Id, String> donors = new Map<Id, String>(); // Contact Id, Contact Name
         for (OpportunityContactRole ocr : [SELECT Id, ContactId, Contact.Name FROM OpportunityContactRole WHERE OpportunityId = :opp.Id AND IsPrimary = true]) {
             donors.put(ocr.ContactId, ocr.Contact.Name);

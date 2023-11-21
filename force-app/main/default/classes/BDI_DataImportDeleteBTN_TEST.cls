@@ -189,7 +189,7 @@ class BDI_DataImportDeleteBTN_TEST {
         testPageErrorMessageDisplayOnDeleteActionException(
             'TestDeleteAllDataImportRecordsBtnExceptionMessageDisplay',
             BDI_DataImportDeleteBTN_CTRL.ACTION_DELETE_ALL,
-            String.format(System.Label.exceptionDeletePermission, new List<String>{ SObjectType.DataImport__c.getLabel() }),
+            String.format(System.Label.commonAccessErrorMessage, new List<String>{ SObjectType.DataImport__c.getLabel() }),
             false
         );
     }
