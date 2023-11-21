@@ -38,7 +38,28 @@ public with sharing class LVL_LevelEdit_CTRL {
     /** @description holds the Level currently being edited by the page */
     public Level__c lvl {get; set;}
     private List<String> requiredFieldSetFields;
-    
+
+    public Boolean hasAccess {
+        get {
+            if (hasAccess == null) {
+                hasAccess = canWriteLevel();
+            }
+            return hasAccess;
+        }
+        private set;
+    }
+
+    private UTIL_Permissions perms {
+        get {
+            if (perms == null) {
+                perms = new UTIL_Permissions();
+            }
+
+            return perms;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description constructor for the page
     * @param controller the StandardController for the page
@@ -158,6 +179,9 @@ public with sharing class LVL_LevelEdit_CTRL {
             if (reportFieldSetErrors()) {
                 return null;
             }
+            if (!canWriteLevel()) {
+                throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
+            }
             upsert lvl;
             // now fixup lvl to be the new next level
             lvl.Id = null;
@@ -180,6 +204,9 @@ public with sharing class LVL_LevelEdit_CTRL {
         try {
             if (reportFieldSetErrors()) {
                 return null;
+            }
+            if (!canWriteLevel()) {
+                throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
             }
             upsert lvl;
             return new PageReference('/' + lvl.Id);
@@ -204,4 +231,22 @@ public with sharing class LVL_LevelEdit_CTRL {
         return hasError;
     }
 
+    private Boolean canWriteLevel() {
+        Set<SObjectField> sObjectFieldsCreate = new Set<SObjectField>{
+            Level__c.fields.Active__c,
+            Level__c.fields.Level_Field__c,
+            Level__c.fields.Maximum_Amount__c,
+            Level__c.fields.Minimum_Amount__c,
+            Level__c.fields.Name,
+            Level__c.fields.Previous_Level_Field__c,
+            Level__c.fields.Source_Field__c,
+            Level__c.fields.Target__c
+        };
+
+        if (!perms.canCreate(Level__c.SObjectType, sObjectFieldsCreate)) {
+            return false;
+        }
+
+        return true;
+    }
 }
