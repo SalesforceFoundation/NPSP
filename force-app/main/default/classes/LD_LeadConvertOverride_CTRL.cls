@@ -115,6 +115,27 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     */
     private npe01__Contacts_And_Orgs_Settings__c ContactsSettings;
 
+    public Boolean hasAccess {
+        get {
+            if (hasAccess == null) {
+                hasAccess = getCurrentUserHasAccess();
+            }
+            return hasAccess;
+        }
+        private set;
+    }
+
+    private UTIL_Permissions perms {
+        get {
+            if (perms == null) {
+                perms = new UTIL_Permissions();
+            }
+
+            return perms;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description Select options for the possible Lead Statuses
     */
@@ -871,5 +892,32 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         private Contact query() {
             return Database.query(queryString);
         }
+    }
+
+    private Boolean getCurrentUserHasAccess() {
+        Boolean accessResult = true;
+
+        SObjectType ld = Lead.getSObjectType();
+        Set<SObjectField> sObjectLeadFieldsRead = new Set<SObjectField>{
+            Lead.fields.Name,
+            Lead.fields.FirstName,
+            Lead.fields.LastName,
+            Lead.fields.Company,
+            Lead.fields.Email,
+            Lead.fields.Title,
+            Lead.fields.OwnerId,
+            Lead.fields.Status,
+            Lead.fields.CompanyStreet__c,
+            Lead.fields.CompanyCity__c,
+            Lead.fields.CompanyState__c,
+            Lead.fields.CompanyPostalCode__c,
+            Lead.fields.CompanyCountry__c
+        };
+
+        if (!perms.canRead(ld, sObjectLeadFieldsRead)) {
+            accessResult = false;
+        }
+
+        return accessResult;
     }
 }

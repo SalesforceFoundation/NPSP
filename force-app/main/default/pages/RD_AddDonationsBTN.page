@@ -3,7 +3,7 @@
     <apex:slds />
 
     <apex:form id="vfForm">
-        <div class="slds-scope">
+        <div class="slds-scope slds-wcag">
             <!-- Page Header -->
             <c:UTIL_PageHeader  showBreadcrumb="true"
                                 parentEntityLabel="{!$ObjectType.npe03__Recurring_Donation__c.labelPlural}"
