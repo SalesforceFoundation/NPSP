@@ -13,8 +13,11 @@
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npe5__Affiliations_Settings__c.Fields.npe5__Automatic_Affiliation_Creation_Turned_On__c.Label}" for="cbxAACTO" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:inputCheckbox value="{!stgService.stgAffl.npe5__Automatic_Affiliation_Creation_Turned_On__c}" rendered="{!isEditMode}" id="cbxAACTO" html-aria-describedby="{!$Component.cbxAACTOHelp}" styleClass="slds-checkbox"/>
-                    <apex:inputCheckbox value="{!stgService.stgAffl.npe5__Automatic_Affiliation_Creation_Turned_On__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxAACTOO" html-aria-describedby="{!$Component.cbxAACTOHelp}" styleClass="slds-checkbox"/>
+                    <label class="slds-checkbox">
+                        <apex:inputCheckbox value="{!stgService.stgAffl.npe5__Automatic_Affiliation_Creation_Turned_On__c}" rendered="{!isEditMode}" id="cbxAACTO" html-aria-describedby="{!$Component.cbxAACTOHelp}" styleClass="slds-checkbox"/>
+                        <apex:inputCheckbox value="{!stgService.stgAffl.npe5__Automatic_Affiliation_Creation_Turned_On__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxAACTOO" html-aria-describedby="{!$Component.cbxAACTOHelp}" styleClass="slds-checkbox"/>
+                        <span class="slds-checkbox_faux"></span>
+                    </label>
                     <apex:outputPanel id="cbxAACTOHelp" layout="block">
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpAutoAffil}" />
                     </apex:outputPanel>

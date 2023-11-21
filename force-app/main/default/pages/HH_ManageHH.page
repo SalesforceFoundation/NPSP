@@ -10,6 +10,8 @@
         <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
         <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-3.5.0.js')}"/>
 
+        <div class="slds-scope slds-wcag">
+
         <style>
             .required {
                 padding-left: 2px;
@@ -54,6 +56,7 @@
             <!-- we expose a javascript function our lightning component can call to save the vf fieldset & close the page -->
             <apex:actionFunction action="{!save}" name="saveVisualforce" rerender="panelErrors, vfForm" />
         </apex:form>
+        </div>
     </html>
 
     <script>

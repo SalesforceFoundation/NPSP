@@ -113,17 +113,28 @@ public with sharing class HH_ManageHH_CTRL {
     * @return null
     */
     public PageReference handleNewHousehold() {
-        if (hhId == null) {
-            hh = new npo02__Household__c();
-            hh.put('Name', Label.npo02.DefaultHouseholdName);    // name will get fixed up when we update the contact
-            UTIL_DMLService.insertRecord(hh);
-            hhId = hh.Id;
-            
-            if (contactId != null) {
-                Contact con = new Contact(Id = contactId, npo02__Household__c = hhId);
-                UTIL_DMLService.updateRecord(con);
+        try {
+            if (hhId == null) {
+                if (!UTIL_Permissions.canCreate('npo02__Household__c')) {
+                    throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
+                }
+                hh = new npo02__Household__c();
+                hh.put('Name', Label.npo02.DefaultHouseholdName);    // name will get fixed up when we update the contact
+                UTIL_DMLService.insertRecord(hh);
+                hhId = hh.Id;
+
+                if (contactId != null) {
+                    if (!UTIL_Permissions.canUpdate('Contact','npo02__Household__c', false)) {
+                        throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
+                    }
+                    Contact con = new Contact(Id = contactId, npo02__Household__c = hhId);
+                    UTIL_DMLService.updateRecord(con);
+                }
             }
+        } catch (Exception e) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, e.getMessage()));
         }
+
         return null;
     }
     
@@ -164,10 +175,31 @@ public with sharing class HH_ManageHH_CTRL {
     */
     public PageReference save() {
         try {
+            if (!canUpdateHousehold()) {
+                throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
+            }
             UTIL_DMLService.updateRecord(hh);
         } catch (Exception ex) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, ex.getMessage()));
         }        
         return null; 
+    }
+
+    private Boolean canUpdateHousehold() {
+        String accountToCheck = isHHAccount ? 'Account' : 'npo02__Household__c';
+        Set<String> fieldsToCheck = new Set<String>();
+        for (FieldSetMember fsMember : hhFieldSet) {
+            fieldsToCheck.add(fsMember.getFieldPath());
+        }
+        if (isHHAccount) {
+            fieldsToCheck.add('npo02__Household__c');
+        }
+        for (String fieldToCheck : fieldsToCheck) {
+            if (!UTIL_Permissions.canUpdate(accountToCheck, fieldToCheck, false)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

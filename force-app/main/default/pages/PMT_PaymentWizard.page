@@ -50,7 +50,7 @@
 
     <apex:outputPanel rendered="{!hasFeatureAccess}">
         <apex:form id="vfForm">
-            <div class="slds-scope">
+            <div class="slds-scope slds-wcag">
                 <!-- Nav -->
                 <c:UTIL_NavigateBack recordId="{!currentOpp.id}" redirect="{!redirect}"/>
 

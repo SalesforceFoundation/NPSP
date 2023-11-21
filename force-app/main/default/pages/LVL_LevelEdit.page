@@ -5,6 +5,10 @@
     lightningStylesheets="true"
     title="{!$ObjectType.Level__c.labelPlural}">
 
+    <apex:outputPanel rendered="{!NOT(hasAccess)}">
+        <c:InsufficientPermissions />
+    </apex:outputPanel>
+
     <apex:slds />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
@@ -26,8 +30,8 @@
                            $ObjectType.Level__c.fields.Previous_Level_Field__c.updateable,
                            $ObjectType.Level__c.fields.Source_Field__c.updateable,
                            $ObjectType.Level__c.Fields.Target__c.updateable)}" />
-    <apex:form >
-        <div class="slds-scope">
+    <apex:form rendered="{!(hasAccess)}">
+        <div class="slds-scope slds-wcag">
 
             <c:UTIL_PageHeader headerLabel="{!$ObjectType.Level__c.Label}" header="{!Level__c.Name}" icon="custom11" iconCategory="custom"
                                cancelAction="{!cancel}" saveAction="{!save}" saveAndNewAction="{!saveAndNew}" showSaveAndNewBtn="true"/>
