@@ -14,8 +14,11 @@
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Automatic_Campaign_Member_Management__c.Label}" for="cbxACMM" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:inputCheckbox value="{!stgService.stgCon.Automatic_Campaign_Member_Management__c}" rendered="{!isEditMode}" id="cbxACMM" html-aria-describedby="{!$Component.cbxACMMHelp}" styleClass="slds-checkbox"/>
-                    <apex:inputCheckbox value="{!stgService.stgCon.Automatic_Campaign_Member_Management__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxACMMO" html-aria-describedby="{!$Component.cbxACMMHelp}" styleClass="slds-checkbox"/>
+                    <label class="slds-checkbox">
+                        <apex:inputCheckbox value="{!stgService.stgCon.Automatic_Campaign_Member_Management__c}" rendered="{!isEditMode}" id="cbxACMM" html-aria-describedby="{!$Component.cbxACMMHelp}" styleClass="slds-checkbox"/>
+                        <apex:inputCheckbox value="{!stgService.stgCon.Automatic_Campaign_Member_Management__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxACMMO" html-aria-describedby="{!$Component.cbxACMMHelp}" styleClass="slds-checkbox"/>
+                        <span class="slds-checkbox_faux"></span>
+                    </label>
                     <apex:outputPanel id="cbxACMMHelp" layout="block">
                         <apex:outputText styleClass="slds-form-element__help" value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Automatic_Campaign_Member_Management__c.inlineHelpText}" />
                     </apex:outputPanel>

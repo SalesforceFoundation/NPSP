@@ -47,7 +47,7 @@
     <apex:slds />
     <apex:includeLightning/>
 
-    <div class="slds-scope">
+    <div class="slds-scope slds-wcag">
         <div id="gridWrapperCmp">
         </div>
     </div>
