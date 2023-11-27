@@ -146,7 +146,7 @@
     </customLabels>
     <customLabels>
         <name>Address_StateCountry_Invalid_Error</name>
-        <label>{0}' no está configurado como un País válido en su organización.</label>
+        <label>{0}&apos; no está configurado como un País válido en su organización.</label>
     </customLabels>
     <customLabels>
         <name>Address_Verification_Limit</name>
@@ -5690,7 +5690,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     </customLabels>
     <customLabels>
         <name>healthSolutionAccountRTIssue</name>
-        <label>Para cuentas Hogar, asegúrese que npe01__SYSTEM_AccountType__c es 'Household Account' (Cuenta Hogar). Para Cuentas Uno a uno, asegúrese que npe01__SYSTEM_AccountType__c es 'One-to-One Individual' (Uno a uno Individual). Para ambos asegurarse que npe01__SYSTEMISINDIVIDUAL__c es verdadero.</label>
+        <label>Para cuentas Hogar, asegúrese que npe01__SYSTEM_AccountType__c es &apos;Household Account&apos; (Cuenta Hogar). Para Cuentas Uno a uno, asegúrese que npe01__SYSTEM_AccountType__c es &apos;One-to-One Individual&apos; (Uno a uno Individual). Para ambos asegurarse que npe01__SYSTEMISINDIVIDUAL__c es verdadero.</label>
     </customLabels>
     <customLabels>
         <name>healthSolutionAutoRelFieldsMissing</name>
@@ -5846,7 +5846,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     </customLabels>
     <customLabels>
         <name>hhCmpDedupeNoReport</name>
-        <label>No puede encontrar el informe. Cree un informe con el Nombre exclusivo del informe: 'NPSP_Campaign_Household_Mailing_List_V2'. NOTA: El tipo de informe debe ser Campañas con Contactos. Filtrar por Estado de miembro no contiene &quot;Duplicado&quot;.</label>
+        <label>No puede encontrar el informe. Cree un informe con el Nombre exclusivo del informe: &apos;NPSP_Campaign_Household_Mailing_List_V2&apos;. NOTA: El tipo de informe debe ser Campañas con Contactos. Filtrar por Estado de miembro no contiene &quot;Duplicado&quot;.</label>
     </customLabels>
     <customLabels>
         <name>hhCmpDedupeStatus</name>
@@ -7212,7 +7212,7 @@ Una vez el proceso esté completo al 100% podrá salir o actualizar esta página
     </customLabels>
     <customLabels>
         <name>stgHelpHealthCheck</name>
-        <label>Utilice &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel('idPanelHealthCheck');return false;&quot;&gt;Comprobación de estado&lt;/a&gt; para verificar su configuración de NPSP.</label>
+        <label>Utilice &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelHealthCheck&apos;);return false;&quot;&gt;Comprobación de estado&lt;/a&gt; para verificar su configuración de NPSP.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpIGFormat</name>
@@ -7513,7 +7513,7 @@ Para comprobar su configuración vigente, vaya a Reglas de duplicados bajo Confi
     </customLabels>
     <customLabels>
         <name>stgHelpReviewErrorLog</name>
-        <label>Revise los &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel('idPanelErrorLog');return false;&quot;&gt;registros de errores&lt;/a&gt; para comprobar si hay problemas.</label>
+        <label>Revise los &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;registros de errores&lt;/a&gt; para comprobar si hay problemas.</label>
     </customLabels>
     <customLabels>
         <name>stgHelpRollupBatchSize</name>
