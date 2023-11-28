@@ -6458,6 +6458,18 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
         <label>Een afgeschreven Betaling moet een Betalingsdatum hebben.</label>
     </customLabels>
     <customLabels>
+        <name>potentialDuplicatesFoundNone</name>
+        <label>We hebben geen potentiële duplicaten van deze contactpersoon gevonden.</label>
+    </customLabels>
+    <customLabels>
+        <name>potentialDuplicatesFoundOne</name>
+        <label>We hebben één potentieel duplicaat van deze contactpersoon gevonden.</label>
+    </customLabels>
+    <customLabels>
+        <name>potentialDuplicatesFoundMultiple</name>
+        <label>We hebben {0} potentiële duplicaten van deze contactpersoon gevonden.</label>
+    </customLabels>
+    <customLabels>
         <name>psACH</name>
         <label>ACH (bankrekening)</label>
     </customLabels>
@@ -8152,7 +8164,7 @@ Opmerking: Het tabblad NPSP-instellingen is zichtbaar in de toepassing Nonprofit
     </customLabels>
     <customLabels>
         <name>stgNavSystem</name>
-        <label>Systeem Functies</label>
+        <label>Systeemfuncties</label>
     </customLabels>
     <customLabels>
         <name>stgNavTriggerConfig</name>
@@ -8358,6 +8370,10 @@ Opmerking: Het tabblad NPSP-instellingen is zichtbaar in de toepassing Nonprofit
         <name>updateRecurringDonation</name>
         <label>Terugkerende donatie bijwerken</label>
     </customLabels>
+    <customLabels>
+        <name>viewDuplicates</name>
+        <label>Duplicaten bekijken</label>
+    </customLabels>
     <reportTypes>
         <name>Contacts_Only</name>
         <label>Alleen Contactpersonen</label>
@@ -8367,112 +8383,48 @@ Opmerking: Het tabblad NPSP-instellingen is zichtbaar in de toepassing Nonprofit
         </sections>
     </reportTypes>
     <customTabs>
-        <name>NPSP_Resources</name>
-        <label>Introductie</label>
-    </customTabs>
-    <customTabs>
-        <name>Contact_Merge</name>
-        <label>Samenvoeging van Contactpersonen</label>
+        <name>Batch_Data_Entry</name>
+        <label>Batchgegevensinvoer</label>
     </customTabs>
     <customTabs>
         <name>Batch_Gift_Entry</name>
         <label>Batchinvoer van giften</label>
     </customTabs>
     <customTabs>
-        <name>NPSP_Settings</name>
-        <label>NPSP-Instellingen</label>
-    </customTabs>
-    <customTabs>
-        <name>Batch_Data_Entry</name>
-        <label>Batchgegevensinvoer</label>
-    </customTabs>
-    <customTabs>
-        <name>GetStarted</name>
-        <label>Aan de slag met NPSP - Beheerder</label>
+        <name>Contact_Merge</name>
+        <label>Samenvoeging van Contactpersonen</label>
     </customTabs>
     <customTabs>
         <name>GE_Gift_Entry</name>
         <label>Opgave van gift</label>
     </customTabs>
     <customTabs>
+        <name>GetStarted</name>
+        <label>Aan de slag met NPSP - Beheerder</label>
+    </customTabs>
+    <customTabs>
         <name>GetStartedEndUser</name>
         <label>Aan de slag met NPSP</label>
+    </customTabs>
+    <customTabs>
+        <name>NPSP_Resources</name>
+        <label>Introductie</label>
+    </customTabs>
+    <customTabs>
+        <name>NPSP_Settings</name>
+        <label>NPSP-Instellingen</label>
     </customTabs>
     <customApplications>
         <name>Nonprofit_CRM</name>
         <label>Nonprofit Success Pack</label>
     </customApplications>
     <quickActions>
-        <name>New_Campaign</name>
-        <label>Nieuwe Campagne</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Pause</name>
-        <label>Onderbreken</label>
-    </quickActions>
-    <quickActions>
-        <name>Account.New_Affiliation</name>
-        <label>Nieuwe Gelieerde Organisatie</label>
-    </quickActions>
-    <quickActions>
         <name>Account.New_Address</name>
         <label>Nieuw Adres</label>
     </quickActions>
     <quickActions>
-        <name>New_Recurring_Donation</name>
-        <label>Nieuwe Terugkerende Donatie</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
-        <label>Nieuwe Opportunity</label>
-    </quickActions>
-    <quickActions>
-        <name>Contact.New_Recurring_Donation</name>
-        <label>Nieuwe Terugkerende Donatie</label>
-    </quickActions>
-    <quickActions>
-        <name>npe01__OppPayment__c.Refund</name>
-        <label>Terugbetalen</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Quick_Update</name>
-        <label>Snelle Update</label>
-    </quickActions>
-    <quickActions>
-        <name>npo02__Household__c.Update_Household</name>
-        <label>Huishouden bijwerken</label>
-    </quickActions>
-    <quickActions>
-        <name>Address__c.Update_Address</name>
-        <label>Adres bijwerken</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
-        <label>Terugkerende donatie sluiten</label>
-    </quickActions>
-    <quickActions>
-        <name>Contact.New_Affiliation</name>
+        <name>Account.New_Affiliation</name>
         <label>Nieuwe Gelieerde Organisatie</label>
-    </quickActions>
-    <quickActions>
-        <name>Opportunity.Quick_Update</name>
-        <label>Snelle Update</label>
-    </quickActions>
-    <quickActions>
-        <name>Contact.Quick_Update</name>
-        <label>Snelle Update</label>
-    </quickActions>
-    <quickActions>
-        <name>Opportunity.New_Payment</name>
-        <label>Nieuwe Betaling</label>
-    </quickActions>
-    <quickActions>
-        <name>Contact.New_Relationship</name>
-        <label>Nieuwe Relatie</label>
-    </quickActions>
-    <quickActions>
-        <name>npe01__OppPayment__c.Quick_Update</name>
-        <label>Snelle Update</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>
@@ -8481,5 +8433,69 @@ Opmerking: Het tabblad NPSP-instellingen is zichtbaar in de toepassing Nonprofit
     <quickActions>
         <name>Account.Quick_Organization_Update</name>
         <label>Snelle Update</label>
+    </quickActions>
+    <quickActions>
+        <name>Address__c.Update_Address</name>
+        <label>Adres bijwerken</label>
+    </quickActions>
+    <quickActions>
+        <name>Contact.New_Affiliation</name>
+        <label>Nieuwe Gelieerde Organisatie</label>
+    </quickActions>
+    <quickActions>
+        <name>Contact.New_Recurring_Donation</name>
+        <label>Nieuwe Terugkerende Donatie</label>
+    </quickActions>
+    <quickActions>
+        <name>Contact.New_Relationship</name>
+        <label>Nieuwe Relatie</label>
+    </quickActions>
+    <quickActions>
+        <name>Contact.Quick_Update</name>
+        <label>Snelle Update</label>
+    </quickActions>
+    <quickActions>
+        <name>New_Campaign</name>
+        <label>Nieuwe Campagne</label>
+    </quickActions>
+    <quickActions>
+        <name>New_Recurring_Donation</name>
+        <label>Nieuwe Terugkerende Donatie</label>
+    </quickActions>
+    <quickActions>
+        <name>Opportunity.New_Payment</name>
+        <label>Nieuwe Betaling</label>
+    </quickActions>
+    <quickActions>
+        <name>Opportunity.Quick_Update</name>
+        <label>Snelle Update</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Quick_Update</name>
+        <label>Snelle Update</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Refund</name>
+        <label>Terugbetalen</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
+        <label>Terugkerende donatie sluiten</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
+        <label>Nieuwe Opportunity</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Pause</name>
+        <label>Onderbreken</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Quick_Update</name>
+        <label>Snelle Update</label>
+    </quickActions>
+    <quickActions>
+        <name>npo02__Household__c.Update_Household</name>
+        <label>Huishouden bijwerken</label>
     </quickActions>
 </Translations>
