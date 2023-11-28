@@ -6459,6 +6459,18 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <label>A written off Payment must have a Payment Date.</label>
     </customLabels>
     <customLabels>
+        <name>potentialDuplicatesFoundNone</name>
+        <label>We found no potential duplicates of this Contact.</label>
+    </customLabels>
+    <customLabels>
+        <name>potentialDuplicatesFoundOne</name>
+        <label>We found 1 potential duplicate of this Contact.</label>
+    </customLabels>
+    <customLabels>
+        <name>potentialDuplicatesFoundMultiple</name>
+        <label>We found {0} potential duplicates of this Contact.</label>
+    </customLabels>
+    <customLabels>
         <name>psACH</name>
         <label>ACH (bank account)</label>
     </customLabels>
@@ -8359,6 +8371,10 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <name>updateRecurringDonation</name>
         <label>Update Recurring Donation</label>
     </customLabels>
+    <customLabels>
+        <name>viewDuplicates</name>
+        <label>View Duplicates</label>
+    </customLabels>
     <reportTypes>
         <name>Contacts_Only</name>
         <label>Contacts Only</label>
@@ -8368,112 +8384,48 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         </sections>
     </reportTypes>
     <customTabs>
-        <name>NPSP_Resources</name>
-        <label>Getting Started</label>
-    </customTabs>
-    <customTabs>
-        <name>Contact_Merge</name>
-        <label>Contact Merge</label>
+        <name>Batch_Data_Entry</name>
+        <label>Batch Data Entry</label>
     </customTabs>
     <customTabs>
         <name>Batch_Gift_Entry</name>
         <label>Batch Gift Entry</label>
     </customTabs>
     <customTabs>
-        <name>NPSP_Settings</name>
-        <label>NPSP Settings</label>
-    </customTabs>
-    <customTabs>
-        <name>Batch_Data_Entry</name>
-        <label>Batch Data Entry</label>
-    </customTabs>
-    <customTabs>
-        <name>GetStarted</name>
-        <label>Get Started with NPSP - Admin</label>
+        <name>Contact_Merge</name>
+        <label>Contact Merge</label>
     </customTabs>
     <customTabs>
         <name>GE_Gift_Entry</name>
         <label>Gift Entry</label>
     </customTabs>
     <customTabs>
+        <name>GetStarted</name>
+        <label>Get Started with NPSP - Admin</label>
+    </customTabs>
+    <customTabs>
         <name>GetStartedEndUser</name>
         <label>Get Started with NPSP</label>
+    </customTabs>
+    <customTabs>
+        <name>NPSP_Resources</name>
+        <label>Getting Started</label>
+    </customTabs>
+    <customTabs>
+        <name>NPSP_Settings</name>
+        <label>NPSP Settings</label>
     </customTabs>
     <customApplications>
         <name>Nonprofit_CRM</name>
         <label>Nonprofit Success Pack</label>
     </customApplications>
     <quickActions>
-        <name>New_Campaign</name>
-        <label>New Campaign</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Pause</name>
-        <label>Pause</label>
-    </quickActions>
-    <quickActions>
-        <name>Account.New_Affiliation</name>
-        <label>New Affiliation</label>
-    </quickActions>
-    <quickActions>
         <name>Account.New_Address</name>
         <label>New Address</label>
     </quickActions>
     <quickActions>
-        <name>New_Recurring_Donation</name>
-        <label>New Recurring Donation</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
-        <label>New Opportunity</label>
-    </quickActions>
-    <quickActions>
-        <name>Contact.New_Recurring_Donation</name>
-        <label>New Recurring Donation</label>
-    </quickActions>
-    <quickActions>
-        <name>npe01__OppPayment__c.Refund</name>
-        <label>Refund</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Quick_Update</name>
-        <label>Quick Update</label>
-    </quickActions>
-    <quickActions>
-        <name>npo02__Household__c.Update_Household</name>
-        <label>Update Household</label>
-    </quickActions>
-    <quickActions>
-        <name>Address__c.Update_Address</name>
-        <label>Update Address</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
-        <label>Close Recurring Donation</label>
-    </quickActions>
-    <quickActions>
-        <name>Contact.New_Affiliation</name>
+        <name>Account.New_Affiliation</name>
         <label>New Affiliation</label>
-    </quickActions>
-    <quickActions>
-        <name>Opportunity.Quick_Update</name>
-        <label>Quick Update</label>
-    </quickActions>
-    <quickActions>
-        <name>Contact.Quick_Update</name>
-        <label>Quick Update</label>
-    </quickActions>
-    <quickActions>
-        <name>Opportunity.New_Payment</name>
-        <label>New Payment</label>
-    </quickActions>
-    <quickActions>
-        <name>Contact.New_Relationship</name>
-        <label>New Relationship</label>
-    </quickActions>
-    <quickActions>
-        <name>npe01__OppPayment__c.Quick_Update</name>
-        <label>Quick Update</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>
@@ -8482,5 +8434,69 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     <quickActions>
         <name>Account.Quick_Organization_Update</name>
         <label>Quick Update</label>
+    </quickActions>
+    <quickActions>
+        <name>Address__c.Update_Address</name>
+        <label>Update Address</label>
+    </quickActions>
+    <quickActions>
+        <name>Contact.New_Affiliation</name>
+        <label>New Affiliation</label>
+    </quickActions>
+    <quickActions>
+        <name>Contact.New_Recurring_Donation</name>
+        <label>New Recurring Donation</label>
+    </quickActions>
+    <quickActions>
+        <name>Contact.New_Relationship</name>
+        <label>New Relationship</label>
+    </quickActions>
+    <quickActions>
+        <name>Contact.Quick_Update</name>
+        <label>Quick Update</label>
+    </quickActions>
+    <quickActions>
+        <name>New_Campaign</name>
+        <label>New Campaign</label>
+    </quickActions>
+    <quickActions>
+        <name>New_Recurring_Donation</name>
+        <label>New Recurring Donation</label>
+    </quickActions>
+    <quickActions>
+        <name>Opportunity.New_Payment</name>
+        <label>New Payment</label>
+    </quickActions>
+    <quickActions>
+        <name>Opportunity.Quick_Update</name>
+        <label>Quick Update</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Quick_Update</name>
+        <label>Quick Update</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Refund</name>
+        <label>Refund</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
+        <label>Close Recurring Donation</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
+        <label>New Opportunity</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Pause</name>
+        <label>Pause</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Quick_Update</name>
+        <label>Quick Update</label>
+    </quickActions>
+    <quickActions>
+        <name>npo02__Household__c.Update_Household</name>
+        <label>Update Household</label>
     </quickActions>
 </Translations>
