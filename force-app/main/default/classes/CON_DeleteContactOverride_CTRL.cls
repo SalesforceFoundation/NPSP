@@ -269,6 +269,13 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     public PageReference deleteContact() {
         if (isDeleteContactOnly()) {
 
+            if (!(UTIL_Permissions.canDelete('Contact', false) &&
+                    UTIL_Permissions.canDelete('Opportunity', false) &&
+                    UTIL_Permissions.canDelete('npe03__Recurring_Donation__c', false)))
+            {
+                throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
+            }
+
             ContactCascadeDelete cascadeDelete = new ContactCascadeDelete(contactRecord, contactOverrideSelector);
             cascadeDelete.validate();
             cascadeDelete.deleteOpportunities();
@@ -307,6 +314,9 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         Account account =  contactOverrideSelector.getAccountRecord(accountId);
         
         try {
+            if (!UTIL_Permissions.canDelete('Account', false)) {
+                throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
+            }
             AccountCascadeDelete cascadeDelete = new AccountCascadeDelete(account, contactOverrideSelector);
             cascadeDelete.validate();
 

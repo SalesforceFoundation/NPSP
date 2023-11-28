@@ -9,7 +9,7 @@
     <apex:slds />
     
     <apex:form id="vfForm">
-        <div class="slds-scope">
+        <div class="slds-scope slds-wcag">
             
             <c:UTIL_PageHeader headerLabel="{!$ObjectType.Opportunity.Label}"
                                header="{!$Label.sendAcknowledgmentPageTitle}"

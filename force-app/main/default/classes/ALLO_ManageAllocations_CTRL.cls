@@ -52,6 +52,65 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         set;
     }
 
+    private Boolean canCreate {
+        get {
+            if (this.canCreate == null) {
+                this.canCreate = this.checkCreate();
+            }
+
+            return this.canCreate;
+        }
+        set;
+    }
+
+    private Boolean canDelete {
+        get {
+            if (this.canDelete == null) {
+                this.canDelete = this.checkDelete();
+            }
+
+            return this.canDelete;
+        }
+        set;
+    }
+
+    private Boolean canUpdate {
+        get {
+            if (this.canUpdate == null) {
+                this.canUpdate = this.checkUpdate();
+            }
+
+            return this.canUpdate;
+        }
+        set;
+    }
+
+    private Set<SObjectField> getFieldsForFLSCheck() {
+        Set<SObjectField> objectFields = new Set<SObjectField>();
+
+        objectFields.add(Allocation__c.Amount__c.getDescribe().getSobjectField());
+        objectFields.add(Allocation__c.Percent__c.getDescribe().getSobjectField());
+        objectFields.add(Allocation__c.General_Accounting_Unit__c.getDescribe().getSobjectField());
+
+        for(Schema.FieldSetMember additionalField : additionalAllocationFields) {
+            objectFields.add(additionalField.getSObjectField());
+        }
+
+        return objectFields;
+    }
+
+    private Boolean checkCreate() {
+        return UTIL_Permissions.getInstance().canCreate(Allocation__c.SObjectType, fieldsForFLSCheck);
+    }
+
+    private Boolean checkDelete() {
+        return UTIL_Permissions.getInstance().canDelete(Allocation__c.SObjectType);
+    }
+
+    private Boolean checkUpdate() {
+        return UTIL_Permissions.getInstance().canUpdate(Allocation__c.SObjectType, fieldsForFLSCheck);
+    }
+
     public String getNamespace() {
         return UTIL_Namespace.getComponentNamespace();
     }
@@ -65,6 +124,16 @@ public with sharing class ALLO_ManageAllocations_CTRL {
                 additionalAllocationFields = getAdditionalAllocationFields();
             }
             return additionalAllocationFields;
+        }
+        set;
+    }
+
+    private Set<SObjectField> fieldsForFLSCheck {
+        get {
+            if (fieldsForFLSCheck == null) {
+                fieldsForFLSCheck = getFieldsForFLSCheck();
+            }
+            return fieldsForFLSCheck;
         }
         set;
     }
@@ -295,6 +364,9 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         Savepoint sp = Database.setSavepoint(); 
         try {
             if (!allocationsToBeDeleted.isEmpty()) {
+                if (!canDelete) {
+                    UTIL_AuraEnabledCommon.throwAuraHandledException(System.Label.commonAccessErrorMessage);
+                }
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
                 delete allocationsToBeDeleted;
 
@@ -309,11 +381,17 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             }
 
             if (!listAlloForUpdate.isEmpty()) {
+                if (!canUpdate) {
+                    UTIL_AuraEnabledCommon.throwAuraHandledException(System.Label.commonAccessErrorMessage);
+                }
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
                 update listAlloForUpdate;
             }
 
             if (!listAlloForInsert.isEmpty()) {
+                if (!canCreate) {
+                    UTIL_AuraEnabledCommon.throwAuraHandledException(System.Label.commonAccessErrorMessage);
+                }
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
                 insert listAlloForInsert;
             }
@@ -354,7 +432,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             new ApexPages.Message(
                     ApexPages.Severity.WARNING,
                     String.format(
-                        System.Label.exceptionDeletePermission,
+                        System.Label.commonAccessErrorMessage,
                         new String[]{UTIL_Describe.getObjectLabel(UTIL_Namespace.StrTokenNSPrefix('Allocation__c'))})));
     
     }

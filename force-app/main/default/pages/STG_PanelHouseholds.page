@@ -129,8 +129,11 @@
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Advanced_Household_Naming__c.Label}" for="cbxAHN" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:inputCheckbox value="{!stgService.stgHH.npo02__Advanced_Household_Naming__c}" rendered="{!isEditMode}" id="cbxAHN" html-aria-describedby="{!$Component.cbxAHNHelp}" styleClass="slds-checkbox"/>
-                    <apex:inputCheckbox value="{!stgService.stgHH.npo02__Advanced_Household_Naming__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxAHNO" html-aria-describedby="{!$Component.cbxAHNHelp}" styleClass="slds-checkbox"/>
+                    <label class="slds-checkbox">
+                        <apex:inputCheckbox value="{!stgService.stgHH.npo02__Advanced_Household_Naming__c}" rendered="{!isEditMode}" id="cbxAHN" html-aria-describedby="{!$Component.cbxAHNHelp}" styleClass="slds-checkbox"/>
+                        <apex:inputCheckbox value="{!stgService.stgHH.npo02__Advanced_Household_Naming__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxAHNO" html-aria-describedby="{!$Component.cbxAHNHelp}" styleClass="slds-checkbox"/>
+                        <span class="slds-checkbox_faux"></span>
+                    </label>
                     <apex:outputPanel id="cbxAHNHelp" layout="block">
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpHHNaming}"/>
                     </apex:outputPanel>
