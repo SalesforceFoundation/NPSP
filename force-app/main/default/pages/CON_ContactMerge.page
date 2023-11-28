@@ -15,7 +15,7 @@
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}"/>
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
-    <div class="slds-scope">
+    <div class="slds-scope slds-wcag">
         <!-- PAGE HEADER -->
         <apex:form id="pgHeader">
             <c:UTIL_PageHeader headerLabel="{!$Label.conMergePageTitle}"
@@ -323,7 +323,7 @@
                                                 <apex:outputText value="{!$Label.mtchSelectCbxTitle}"/>
                                             </th>
                                             <th class="slds-text-heading_label" scope="col">Name</th>
-                                            <apex:repeat value="{!$ObjectType.Contact.FieldSets.ContactMergeFoundFS}"
+                                            <apex:repeat value="{!fieldSetMembers}"
                                                          var="field">
                                                 <th class="slds-text-heading_label" scope="col">
                                                     <apex:outputText value="{!field.label}"/>
@@ -350,7 +350,7 @@
                                                         <apex:outputText value="{!item.contactRecord.Name}"/>
                                                     </a>
                                                 </td>
-                                                <apex:repeat value="{!$ObjectType.Contact.FieldSets.ContactMergeFoundFS}"
+                                                <apex:repeat value="{!fieldSetMembers}"
                                                              var="field">
                                                     <td>
                                                         <span class="slds-truncate">

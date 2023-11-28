@@ -44,10 +44,6 @@
     .hide {
         display: none;
     }
-
-    .slds-scope .slds-button_neutral {
-        border-color: #C9C9C9;
-    }
 </style>
 
 <script>
@@ -113,7 +109,8 @@
     }
 
 </script>
-<apex:form rendered="{!isRunningUserIsAdmin}">
+<div class="slds-scope slds-wcag">
+    <apex:form rendered="{!isRunningUserIsAdmin}">
     <apex:actionFunction action="{!setPanelCurrent}" name="setPanelCurrent" rerender="nothing!" >
         <apex:param name="idPanel" assignTo="{!idPanelCurrent}" value="" />
     </apex:actionFunction>
@@ -492,5 +489,5 @@
             refresheEvent.fire();
         }
     </script>
-
+</div>
 </apex:page>

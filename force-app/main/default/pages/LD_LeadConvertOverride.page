@@ -6,6 +6,10 @@
     docType="html-5.0"
     id="pg">
 
+    <apex:outputPanel rendered="{!NOT(hasAccess)}">
+        <c:InsufficientPermissions />
+    </apex:outputPanel>
+
     <apex:slds />
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}"/>
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
@@ -15,8 +19,8 @@
         window.onload = stripDuplicateAsterisk;
     </script>
 
-    <div class="slds-scope">
-        <apex:form id="pbEdit" styleClass="slds-form_stacked">
+    <div class="slds-scope slds-wcag">
+        <apex:form id="pbEdit" styleClass="slds-form_stacked" rendered="{!(hasAccess)}">
             <div class="hide-when-modal-open">
 
                 <!-- Page Header -->
