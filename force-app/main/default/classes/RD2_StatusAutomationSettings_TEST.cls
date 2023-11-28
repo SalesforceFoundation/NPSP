@@ -56,6 +56,13 @@ private class RD2_StatusAutomationSettings_TEST {
             )
         );
 
+        String translatedLapsedStatus =
+                UTIL_Describe.getTranslatedPicklistLabel(npe03__Recurring_Donation__c.SObjectType,
+                        npe03__Recurring_Donation__c.Status__c, RD2_Constants.STATUS_LAPSED);
+        String translatedClosedStatus =
+                UTIL_Describe.getTranslatedPicklistLabel(npe03__Recurring_Donation__c.SObjectType,
+                        npe03__Recurring_Donation__c.Status__c, RD2_Constants.STATUS_CLOSED);
+
         RD2_StatusAutomationView view = RD2_StatusAutomationSettings_CTRL.getAutomationSettings();
 
         System.assertEquals(true, view.rd2Enabled, 'RD2 should be enabled');
@@ -63,13 +70,13 @@ private class RD2_StatusAutomationSettings_TEST {
             'The view state should retrieve the correct number of days for Lapsed');
         System.assertEquals(DAYS_FOR_CLOSED, view.numberOfDaysForClosed,
             'The view state should retrieve the correct number of days for Closed');
-        System.assertEquals(RD2_Constants.STATUS_LAPSED, view.lapsedStatus,
+        System.assertEquals(translatedLapsedStatus, view.lapsedStatus,
             'The view state should retrieve the correct Automation Lapsed Status');
-        System.assertEquals(RD2_Constants.STATUS_CLOSED, view.closedStatus,
+        System.assertEquals(translatedClosedStatus, view.closedStatus,
             'The view state should retrieve the correct Automation Closed Status');
-        System.assertEquals( RD2_Constants.STATUS_LAPSED, view.lapsedStatusOption[0].label,
+        System.assertEquals(translatedLapsedStatus, view.lapsedStatusOption[0].label,
             'The Lapsed status picklist option should include Lapsed Status');
-        System.assertEquals(RD2_Constants.STATUS_CLOSED, view.closedStatusOption[0].label,
+        System.assertEquals(translatedClosedStatus, view.closedStatusOption[0].label,
             'The Closed status picklist option should include Closed Status');
     }
 
