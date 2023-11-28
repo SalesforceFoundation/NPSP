@@ -6459,6 +6459,18 @@ Se preferir, você pode desativar a Entrada de doações e, em vez disso, usar a
         <label>Um pagamento abatido precisa ter uma data de pagamento.</label>
     </customLabels>
     <customLabels>
+        <name>potentialDuplicatesFoundNone</name>
+        <label>Não encontramos possíveis duplicados deste contato.</label>
+    </customLabels>
+    <customLabels>
+        <name>potentialDuplicatesFoundOne</name>
+        <label>Encontramos 1 possível duplicado deste contato.</label>
+    </customLabels>
+    <customLabels>
+        <name>potentialDuplicatesFoundMultiple</name>
+        <label>Encontramos {0} possíveis duplicados deste contato.</label>
+    </customLabels>
+    <customLabels>
         <name>psACH</name>
         <label>ACH (conta bancária)</label>
     </customLabels>
@@ -8359,6 +8371,10 @@ Nota: a guia Configurações do NPSP está visível no aplicativo Pacote de suce
         <name>updateRecurringDonation</name>
         <label>Atualizar doação recorrente</label>
     </customLabels>
+    <customLabels>
+        <name>viewDuplicates</name>
+        <label>Exibir duplicados</label>
+    </customLabels>
     <reportTypes>
         <name>Contacts_Only</name>
         <label>Somente Contatos</label>
@@ -8368,112 +8384,48 @@ Nota: a guia Configurações do NPSP está visível no aplicativo Pacote de suce
         </sections>
     </reportTypes>
     <customTabs>
-        <name>NPSP_Resources</name>
-        <label>Conceitos básicos</label>
-    </customTabs>
-    <customTabs>
-        <name>Contact_Merge</name>
-        <label>Mesclagem de contato</label>
+        <name>Batch_Data_Entry</name>
+        <label>Entrada de dados em lote</label>
     </customTabs>
     <customTabs>
         <name>Batch_Gift_Entry</name>
         <label>Entrada de doações em lote</label>
     </customTabs>
     <customTabs>
-        <name>NPSP_Settings</name>
-        <label>Configurações do NPSP</label>
-    </customTabs>
-    <customTabs>
-        <name>Batch_Data_Entry</name>
-        <label>Entrada de dados em lote</label>
-    </customTabs>
-    <customTabs>
-        <name>GetStarted</name>
-        <label>Introdução ao NPSP - Administrador</label>
+        <name>Contact_Merge</name>
+        <label>Mesclagem de contato</label>
     </customTabs>
     <customTabs>
         <name>GE_Gift_Entry</name>
         <label>Entrada de doações</label>
     </customTabs>
     <customTabs>
+        <name>GetStarted</name>
+        <label>Introdução ao NPSP - Administrador</label>
+    </customTabs>
+    <customTabs>
         <name>GetStartedEndUser</name>
         <label>Introdução ao NPSP</label>
+    </customTabs>
+    <customTabs>
+        <name>NPSP_Resources</name>
+        <label>Conceitos básicos</label>
+    </customTabs>
+    <customTabs>
+        <name>NPSP_Settings</name>
+        <label>Configurações do NPSP</label>
     </customTabs>
     <customApplications>
         <name>Nonprofit_CRM</name>
         <label>Pacote de sucesso para organizações sem fins lucrativos</label>
     </customApplications>
     <quickActions>
-        <name>New_Campaign</name>
-        <label>Nova campanha</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Pause</name>
-        <label>Pausar</label>
-    </quickActions>
-    <quickActions>
-        <name>Account.New_Affiliation</name>
-        <label>Nova afiliação</label>
-    </quickActions>
-    <quickActions>
         <name>Account.New_Address</name>
         <label>Novo endereço</label>
     </quickActions>
     <quickActions>
-        <name>New_Recurring_Donation</name>
-        <label>Nova doação recorrente</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
-        <label>Nova oportunidade</label>
-    </quickActions>
-    <quickActions>
-        <name>Contact.New_Recurring_Donation</name>
-        <label>Nova doação recorrente</label>
-    </quickActions>
-    <quickActions>
-        <name>npe01__OppPayment__c.Refund</name>
-        <label>Reembolso</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Quick_Update</name>
-        <label>Atualização rápida</label>
-    </quickActions>
-    <quickActions>
-        <name>npo02__Household__c.Update_Household</name>
-        <label>Atualizar família</label>
-    </quickActions>
-    <quickActions>
-        <name>Address__c.Update_Address</name>
-        <label>Atualizar endereço</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
-        <label>Fechar doação recorrente</label>
-    </quickActions>
-    <quickActions>
-        <name>Contact.New_Affiliation</name>
+        <name>Account.New_Affiliation</name>
         <label>Nova afiliação</label>
-    </quickActions>
-    <quickActions>
-        <name>Opportunity.Quick_Update</name>
-        <label>Atualização rápida</label>
-    </quickActions>
-    <quickActions>
-        <name>Contact.Quick_Update</name>
-        <label>Atualização rápida</label>
-    </quickActions>
-    <quickActions>
-        <name>Opportunity.New_Payment</name>
-        <label>Novo pagamento</label>
-    </quickActions>
-    <quickActions>
-        <name>Contact.New_Relationship</name>
-        <label>Novo relacionamento</label>
-    </quickActions>
-    <quickActions>
-        <name>npe01__OppPayment__c.Quick_Update</name>
-        <label>Atualização rápida</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>
@@ -8482,5 +8434,69 @@ Nota: a guia Configurações do NPSP está visível no aplicativo Pacote de suce
     <quickActions>
         <name>Account.Quick_Organization_Update</name>
         <label>Atualização rápida</label>
+    </quickActions>
+    <quickActions>
+        <name>Address__c.Update_Address</name>
+        <label>Atualizar endereço</label>
+    </quickActions>
+    <quickActions>
+        <name>Contact.New_Affiliation</name>
+        <label>Nova afiliação</label>
+    </quickActions>
+    <quickActions>
+        <name>Contact.New_Recurring_Donation</name>
+        <label>Nova doação recorrente</label>
+    </quickActions>
+    <quickActions>
+        <name>Contact.New_Relationship</name>
+        <label>Novo relacionamento</label>
+    </quickActions>
+    <quickActions>
+        <name>Contact.Quick_Update</name>
+        <label>Atualização rápida</label>
+    </quickActions>
+    <quickActions>
+        <name>New_Campaign</name>
+        <label>Nova campanha</label>
+    </quickActions>
+    <quickActions>
+        <name>New_Recurring_Donation</name>
+        <label>Nova doação recorrente</label>
+    </quickActions>
+    <quickActions>
+        <name>Opportunity.New_Payment</name>
+        <label>Novo pagamento</label>
+    </quickActions>
+    <quickActions>
+        <name>Opportunity.Quick_Update</name>
+        <label>Atualização rápida</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Quick_Update</name>
+        <label>Atualização rápida</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Refund</name>
+        <label>Reembolso</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
+        <label>Fechar doação recorrente</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
+        <label>Nova oportunidade</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Pause</name>
+        <label>Pausar</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Quick_Update</name>
+        <label>Atualização rápida</label>
+    </quickActions>
+    <quickActions>
+        <name>npo02__Household__c.Update_Household</name>
+        <label>Atualizar família</label>
     </quickActions>
 </Translations>
