@@ -186,12 +186,14 @@ public with sharing class HH_ManageHH_CTRL {
     }
 
     private Boolean canUpdateHousehold() {
+        // TODO: This whole method is potentially a HUGE source of bugs!!!
+        //       Need to thoroughly rethink this...
         String accountToCheck = isHHAccount ? 'Account' : 'npo02__Household__c';
         Set<String> fieldsToCheck = new Set<String>();
         for (FieldSetMember fsMember : hhFieldSet) {
             fieldsToCheck.add(fsMember.getFieldPath());
         }
-        if (isHHAccount) {
+        if (!isHHAccount) { // TODO: I think this is backwards...  should be if (!isHHAccount)... pending...
             fieldsToCheck.add('npo02__Household__c');
         }
         for (String fieldToCheck : fieldsToCheck) {
