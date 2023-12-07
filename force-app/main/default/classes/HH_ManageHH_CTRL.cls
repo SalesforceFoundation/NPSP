@@ -185,15 +185,33 @@ public with sharing class HH_ManageHH_CTRL {
         return null; 
     }
 
-    private Boolean canUpdateHousehold() {
-        // TODO: This whole method is potentially a HUGE source of bugs!!!
-        //       Need to thoroughly rethink this...
-        String accountToCheck = isHHAccount ? 'Account' : 'npo02__Household__c';
-        Set<String> fieldsToCheck = new Set<String>();
-        for (FieldSetMember fsMember : hhFieldSet) {
-            fieldsToCheck.add(fsMember.getFieldPath());
+    private Set<String> getFieldsToCheck() {
+        Set<String> fieldsToCheck = new Set<String>{
+                'Name',
+                'npo02__SYSTEM_CUSTOM_NAMING__c',
+                'npo02__Formal_Greeting__c',
+                'npo02__Informal_Greeting__c',
+                UTIL_Namespace.StrAllNSPrefix('Number_of_Household_Members__c')};
+
+        Boolean isHousehold = UTIL_Describe.isObjectIdThisType(hhId, 'Account');
+        if (isHousehold) {
+            fieldsToCheck.addAll(new Set<String>{
+                    'BillingStreet', 'BillingCity', 'BillingState', 'BillingPostalCode',
+                    'BillingCountry', 'BillingLatitude', 'BillingLongitude'});
+
+        } else {
+            fieldsToCheck.addAll(new Set<String>{
+                    'npo02__MailingStreet__c', 'npo02__MailingCity__c', 'npo02__MailingState__c',
+                    'npo02__MailingPostalCode__c', 'npo02__MailingCountry__c'});
         }
-        if (!isHHAccount) { // TODO: I think this is backwards...  should be if (!isHHAccount)... pending...
+
+        return fieldsToCheck;
+    }
+
+    private Boolean canUpdateHousehold() {
+        String accountToCheck = isHHAccount ? 'Account' : 'npo02__Household__c';
+        Set<String> fieldsToCheck = getFieldsToCheck();
+        if (!isHHAccount) {
             fieldsToCheck.add('npo02__Household__c');
         }
         for (String fieldToCheck : fieldsToCheck) {
