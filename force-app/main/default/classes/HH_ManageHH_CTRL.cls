@@ -215,7 +215,7 @@ public with sharing class HH_ManageHH_CTRL {
             fieldsToCheck.add('npo02__Household__c');
         }
         for (String fieldToCheck : fieldsToCheck) {
-            if (!UTIL_Permissions.canUpdate(accountToCheck, fieldToCheck, false)) {
+            if (!UTIL_Permissions.canUpdate(accountToCheck, UTIL_Namespace.StrAllNSPrefix(fieldToCheck), false)) {
                 return false;
             }
         }
