@@ -196,8 +196,13 @@ public with sharing class HH_ManageHH_CTRL {
         Boolean isHousehold = UTIL_Describe.isObjectIdThisType(hhId, 'Account');
         if (isHousehold) {
             fieldsToCheck.addAll(new Set<String>{
-                    'BillingStreet', 'BillingCity', 'BillingState', 'BillingPostalCode',
-                    'BillingCountry', 'BillingLatitude', 'BillingLongitude'});
+                    UTIL_Namespace.StrAllNSPrefix('BillingStreet'),
+                    UTIL_Namespace.StrAllNSPrefix('BillingCity'),
+                    UTIL_Namespace.StrAllNSPrefix('BillingState'),
+                    UTIL_Namespace.StrAllNSPrefix('BillingPostalCode'),
+                    UTIL_Namespace.StrAllNSPrefix('BillingCountry'),
+                    UTIL_Namespace.StrAllNSPrefix('BillingLatitude'),
+                    UTIL_Namespace.StrAllNSPrefix('BillingLongitude')});
 
         } else {
             fieldsToCheck.addAll(new Set<String>{
@@ -215,7 +220,7 @@ public with sharing class HH_ManageHH_CTRL {
             fieldsToCheck.add('npo02__Household__c');
         }
         for (String fieldToCheck : fieldsToCheck) {
-            if (!UTIL_Permissions.canUpdate(accountToCheck, UTIL_Namespace.StrAllNSPrefix(fieldToCheck), false)) {
+            if (!UTIL_Permissions.canUpdate(accountToCheck, fieldToCheck, false)) {
                 return false;
             }
         }
