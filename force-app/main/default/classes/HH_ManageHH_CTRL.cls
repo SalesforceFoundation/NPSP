@@ -113,28 +113,17 @@ public with sharing class HH_ManageHH_CTRL {
     * @return null
     */
     public PageReference handleNewHousehold() {
-        try {
-            if (hhId == null) {
-                if (!UTIL_Permissions.canCreate('npo02__Household__c')) {
-                    throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
-                }
-                hh = new npo02__Household__c();
-                hh.put('Name', Label.npo02.DefaultHouseholdName);    // name will get fixed up when we update the contact
-                UTIL_DMLService.insertRecord(hh);
-                hhId = hh.Id;
+        if (hhId == null) {
+            hh = new npo02__Household__c();
+            hh.put('Name', Label.npo02.DefaultHouseholdName);    // name will get fixed up when we update the contact
+            UTIL_DMLService.insertRecord(hh);
+            hhId = hh.Id;
 
-                if (contactId != null) {
-                    if (!UTIL_Permissions.canUpdate('Contact','npo02__Household__c', false)) {
-                        throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
-                    }
-                    Contact con = new Contact(Id = contactId, npo02__Household__c = hhId);
-                    UTIL_DMLService.updateRecord(con);
-                }
+            if (contactId != null) {
+                Contact con = new Contact(Id = contactId, npo02__Household__c = hhId);
+                UTIL_DMLService.updateRecord(con);
             }
-        } catch (Exception e) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, e.getMessage()));
         }
-
         return null;
     }
     
@@ -175,56 +164,10 @@ public with sharing class HH_ManageHH_CTRL {
     */
     public PageReference save() {
         try {
-            if (!canUpdateHousehold()) {
-                throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
-            }
             UTIL_DMLService.updateRecord(hh);
         } catch (Exception ex) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, ex.getMessage()));
         }        
         return null; 
-    }
-
-    private Set<String> getFieldsToCheck() {
-        Set<String> fieldsToCheck = new Set<String>{
-                'Name',
-                'npo02__SYSTEM_CUSTOM_NAMING__c',
-                'npo02__Formal_Greeting__c',
-                'npo02__Informal_Greeting__c',
-                UTIL_Namespace.StrAllNSPrefix('Number_of_Household_Members__c')};
-
-        Boolean isHousehold = UTIL_Describe.isObjectIdThisType(hhId, 'Account');
-        if (isHousehold) {
-            fieldsToCheck.addAll(new Set<String>{
-                    UTIL_Namespace.StrAllNSPrefix('BillingStreet'),
-                    UTIL_Namespace.StrAllNSPrefix('BillingCity'),
-                    UTIL_Namespace.StrAllNSPrefix('BillingState'),
-                    UTIL_Namespace.StrAllNSPrefix('BillingPostalCode'),
-                    UTIL_Namespace.StrAllNSPrefix('BillingCountry'),
-                    UTIL_Namespace.StrAllNSPrefix('BillingLatitude'),
-                    UTIL_Namespace.StrAllNSPrefix('BillingLongitude')});
-
-        } else {
-            fieldsToCheck.addAll(new Set<String>{
-                    'npo02__MailingStreet__c', 'npo02__MailingCity__c', 'npo02__MailingState__c',
-                    'npo02__MailingPostalCode__c', 'npo02__MailingCountry__c'});
-        }
-
-        return fieldsToCheck;
-    }
-
-    private Boolean canUpdateHousehold() {
-        String accountToCheck = isHHAccount ? 'Account' : 'npo02__Household__c';
-        Set<String> fieldsToCheck = getFieldsToCheck();
-        if (!isHHAccount) {
-            fieldsToCheck.add('npo02__Household__c');
-        }
-        for (String fieldToCheck : fieldsToCheck) {
-            if (!UTIL_Permissions.canUpdate(accountToCheck, fieldToCheck, false)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 }
