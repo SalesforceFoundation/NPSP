@@ -214,16 +214,16 @@ public with sharing class HH_ManageHH_CTRL {
     }
 
     private Boolean canUpdateHousehold() {
-        String accountToCheck = isHHAccount ? 'Account' : 'npo02__Household__c';
-        Set<String> fieldsToCheck = getFieldsToCheck();
-        if (!isHHAccount) {
-            fieldsToCheck.add('npo02__Household__c');
-        }
-        for (String fieldToCheck : fieldsToCheck) {
-            if (!UTIL_Permissions.canUpdate(accountToCheck, fieldToCheck, false)) {
-                return false;
-            }
-        }
+//        String accountToCheck = isHHAccount ? 'Account' : 'npo02__Household__c';
+//        Set<String> fieldsToCheck = getFieldsToCheck();
+//        if (!isHHAccount) {
+//            fieldsToCheck.add('npo02__Household__c');
+//        }
+//        for (String fieldToCheck : fieldsToCheck) {
+//            if (!UTIL_Permissions.canUpdate(accountToCheck, fieldToCheck, false)) {
+//                return false;
+//            }
+//        }
 
         return true;
     }
