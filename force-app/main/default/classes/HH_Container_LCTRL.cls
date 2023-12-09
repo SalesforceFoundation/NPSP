@@ -362,8 +362,8 @@ public with sharing class HH_Container_LCTRL {
     * @param listCon The list of Contacts to save
     * @return void
     */
-    @AuraEnabled
-    public static void upsertContacts(List<Contact> listCon) {
+    @TestVisible
+    private static void upsertContacts(List<Contact> listCon) {
         // Even though we are given a list of Contacts from the lightning component,
         // apex seems to treat them as generic sObjects, and thus we can't do upsert.
         // thus we will split the list into update and insert lists.
@@ -482,12 +482,11 @@ public with sharing class HH_Container_LCTRL {
     * @param listHHMerge the list of Households to merge into the winner
     * @return void
     */
-    @AuraEnabled
-    public static void mergeHouseholds(Account hhWinner, List<Account> listHHMerge) {
+    @TestVisible
+    private static void mergeHouseholds(Account hhWinner, List<Account> listHHMerge) {
         try {
             // Check object permissions
-            if (!Account.SObjectType.getDescribe().isUpdateable() ||
-                !Account.SObjectType.getDescribe().isDeletable()) {
+            if (!Account.SObjectType.getDescribe().isMergeable()) {
                     throw new System.NoAccessException(); 
                }
 
