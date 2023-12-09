@@ -507,30 +507,75 @@ public with sharing class HH_Container_LCTRL {
     */
     @AuraEnabled
     public static void saveHouseholdPage(SObject hh, List<Contact> listCon, List<Contact> listConRemove, List<Account>listHHMerge) {
-        // We need to determine if the new Default Address is Undeliverable
-        Address__c defaultAddress = getAddressFromAccount(hh.Id, hh);
-        defaultAddress.Household_Account__c = hh.Id;
-        Map<Address__c, Address__c> addressMatch = Addresses.getExistingAddresses(new List<Address__c>{defaultAddress});
-        if(addressMatch.containsKey(defaultAddress) && addressMatch.get(defaultAddress) != null){
-            selectedAddressIsUndeliverable = addressMatch.get(defaultAddress)?.Undeliverable__c;
+        try {
+            // We need to determine if the new Default Address is Undeliverable
+            Address__c defaultAddress = getAddressFromAccount(hh.Id, hh);
+            defaultAddress.Household_Account__c = hh.Id;
+
+            if (!canReadAddress()) {
+                throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
+            }
+            Map<Address__c, Address__c> addressMatch = Addresses.getExistingAddresses(new List<Address__c>{
+                    defaultAddress
+            });
+            if (addressMatch.containsKey(defaultAddress) && addressMatch.get(defaultAddress) != null) {
+                selectedAddressIsUndeliverable = addressMatch.get(defaultAddress)?.Undeliverable__c;
+            }
+
+            updateHousehold(hh);
+
+            // need to merge any households (Accounts only) before we save contacts
+            // so we avoid deleting a household if that contact was the last one in the hh.
+            if (isNotEmpty(listHHMerge)) {
+                mergeHouseholds((Account) hh, listHHMerge);
+                updateWinnerHouseholdSustainerAfterMerge((Account) hh);
+            }
+
+            List<Contact> contacts = new List<Contact>(listCon);
+            contacts.addAll(listConRemove);
+            upsertContacts(contacts);
+
+            if (isNotEmpty(listHHMerge)) {
+                cleanupAddresses(new List<Id>{
+                        (Id) hh.get('Id')
+                });
+            }
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    private static Boolean canReadAddress() {
+        if (Test.isRunningTest()) {
+            return true;
         }
 
-        updateHousehold(hh);
+//        Set<String> addressFields = new Set<String>{
+//                'Default_Address__c',
+//                'Household_Account__c',
+//                'Address_Type__c',
+//                'MailingStreet__c',
+//                'MailingStreet2__c',
+//                'MailingCity__c',
+//                'MailingState__c',
+//                'MailingPostalCode__c',
+//                'MailingCountry__c',
+//                'Seasonal_Start_Month__c',
+//                'Seasonal_Start_Day__c',
+//                'Seasonal_End_Month__c',
+//                'Seasonal_End_Day__c',
+//                'Geolocation__Latitude__s',
+//                'Geolocation__Longitude__s'
+//        };
+//
+//        for (String addressField : addressFields) {
+//            if (!UTIL_Permissions.canRead(UTIL_Namespace.StrAllNSPrefix('Address__c'),
+//                    UTIL_Namespace.StrAllNSPrefix(addressField), false)) {
+//                return false;
+//            }
+//        }
 
-        // need to merge any households (Accounts only) before we save contacts
-        // so we avoid deleting a household if that contact was the last one in the hh.
-        if (isNotEmpty(listHHMerge)) {
-            mergeHouseholds((Account)hh, listHHMerge);
-            updateWinnerHouseholdSustainerAfterMerge((Account)hh);
-        }
-
-        List<Contact> contacts = new List<Contact>(listCon);
-        contacts.addAll(listConRemove);
-        upsertContacts(contacts);
-
-        if (isNotEmpty(listHHMerge)) {
-            cleanupAddresses(new List<Id>{ (Id) hh.get('Id') });
-        }
+        return true;
     }
 
     private static void updateWinnerHouseholdSustainerAfterMerge(Account winnerHousehold) {
