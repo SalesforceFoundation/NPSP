@@ -362,8 +362,8 @@ public with sharing class HH_Container_LCTRL {
     * @param listCon The list of Contacts to save
     * @return void
     */
-    @TestVisible
-    private static void upsertContacts(List<Contact> listCon) {
+    @AuraEnabled
+    public static void upsertContacts(List<Contact> listCon) {
         // Even though we are given a list of Contacts from the lightning component,
         // apex seems to treat them as generic sObjects, and thus we can't do upsert.
         // thus we will split the list into update and insert lists.
@@ -482,11 +482,12 @@ public with sharing class HH_Container_LCTRL {
     * @param listHHMerge the list of Households to merge into the winner
     * @return void
     */
-    @TestVisible
-    private static void mergeHouseholds(Account hhWinner, List<Account> listHHMerge) {
+    @AuraEnabled
+    public static void mergeHouseholds(Account hhWinner, List<Account> listHHMerge) {
         try {
             // Check object permissions
-            if (!Account.SObjectType.getDescribe().isMergeable()) {
+            if (!Account.SObjectType.getDescribe().isUpdateable() ||
+                !Account.SObjectType.getDescribe().isDeletable()) {
                     throw new System.NoAccessException(); 
                }
 
@@ -507,66 +508,30 @@ public with sharing class HH_Container_LCTRL {
     */
     @AuraEnabled
     public static void saveHouseholdPage(SObject hh, List<Contact> listCon, List<Contact> listConRemove, List<Account>listHHMerge) {
-        try {
-            // We need to determine if the new Default Address is Undeliverable
-            Address__c defaultAddress = getAddressFromAccount(hh.Id, hh);
-            defaultAddress.Household_Account__c = hh.Id;
-
-            if (!canReadAddress()) {
-                throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
-            }
-            Map<Address__c, Address__c> addressMatch = Addresses.getExistingAddresses(new List<Address__c>{
-                    defaultAddress
-            });
-            if (addressMatch.containsKey(defaultAddress) && addressMatch.get(defaultAddress) != null) {
-                selectedAddressIsUndeliverable = addressMatch.get(defaultAddress)?.Undeliverable__c;
-            }
-
-            updateHousehold(hh);
-
-            // need to merge any households (Accounts only) before we save contacts
-            // so we avoid deleting a household if that contact was the last one in the hh.
-            if (isNotEmpty(listHHMerge)) {
-                mergeHouseholds((Account) hh, listHHMerge);
-                updateWinnerHouseholdSustainerAfterMerge((Account) hh);
-            }
-
-            List<Contact> contacts = new List<Contact>(listCon);
-            contacts.addAll(listConRemove);
-            upsertContacts(contacts);
-
-            if (isNotEmpty(listHHMerge)) {
-                cleanupAddresses(new List<Id>{
-                        (Id) hh.get('Id')
-                });
-            }
-        } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
-        }
-    }
-
-    private static Boolean canReadAddress() {
-        if (Test.isRunningTest()) {
-            return true;
+        // We need to determine if the new Default Address is Undeliverable
+        Address__c defaultAddress = getAddressFromAccount(hh.Id, hh);
+        defaultAddress.Household_Account__c = hh.Id;
+        Map<Address__c, Address__c> addressMatch = Addresses.getExistingAddresses(new List<Address__c>{defaultAddress});
+        if(addressMatch.containsKey(defaultAddress) && addressMatch.get(defaultAddress) != null){
+            selectedAddressIsUndeliverable = addressMatch.get(defaultAddress)?.Undeliverable__c;
         }
 
-        Set<String> addressFields = new Set<String>{
-                'MailingStreet__c',
-                'MailingStreet2__c',
-                'MailingCity__c',
-                'MailingState__c',
-                'MailingPostalCode__c',
-                'MailingCountry__c'
-        };
+        updateHousehold(hh);
 
-        for (String addressField : addressFields) {
-            if (!UTIL_Permissions.canRead(UTIL_Namespace.StrAllNSPrefix('Address__c'),
-                    UTIL_Namespace.StrAllNSPrefix(addressField), false)) {
-                return false;
-            }
+        // need to merge any households (Accounts only) before we save contacts
+        // so we avoid deleting a household if that contact was the last one in the hh.
+        if (isNotEmpty(listHHMerge)) {
+            mergeHouseholds((Account)hh, listHHMerge);
+            updateWinnerHouseholdSustainerAfterMerge((Account)hh);
         }
 
-        return true;
+        List<Contact> contacts = new List<Contact>(listCon);
+        contacts.addAll(listConRemove);
+        upsertContacts(contacts);
+
+        if (isNotEmpty(listHHMerge)) {
+            cleanupAddresses(new List<Id>{ (Id) hh.get('Id') });
+        }
     }
 
     private static void updateWinnerHouseholdSustainerAfterMerge(Account winnerHousehold) {
