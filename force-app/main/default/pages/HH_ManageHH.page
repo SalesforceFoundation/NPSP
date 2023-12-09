@@ -41,7 +41,6 @@
         <div id="lightning" />
         <!-- household fields section (using fieldset that Lightning does not yet support) -->
         <apex:form id="vfForm" >
-                <div>This is HH_ManageHH</div>
                 <div class="slds-grid slds-grid_align-spread slds-m-around_medium" id="fieldset">
                     <div class="slds-form_stacked" style="width:80%" >
                         <apex:variable value="{!IF(isHHAccount, 'Account', 'npo02__Household__c')}" var="objType"/>
