@@ -550,30 +550,21 @@ public with sharing class HH_Container_LCTRL {
             return true;
         }
 
-//        Set<String> addressFields = new Set<String>{
-//                'Default_Address__c',
-//                'Household_Account__c',
-//                'Address_Type__c',
-//                'MailingStreet__c',
-//                'MailingStreet2__c',
-//                'MailingCity__c',
-//                'MailingState__c',
-//                'MailingPostalCode__c',
-//                'MailingCountry__c',
-//                'Seasonal_Start_Month__c',
-//                'Seasonal_Start_Day__c',
-//                'Seasonal_End_Month__c',
-//                'Seasonal_End_Day__c',
-//                'Geolocation__Latitude__s',
-//                'Geolocation__Longitude__s'
-//        };
-//
-//        for (String addressField : addressFields) {
-//            if (!UTIL_Permissions.canRead(UTIL_Namespace.StrAllNSPrefix('Address__c'),
-//                    UTIL_Namespace.StrAllNSPrefix(addressField), false)) {
-//                return false;
-//            }
-//        }
+        Set<String> addressFields = new Set<String>{
+                'MailingStreet__c',
+                'MailingStreet2__c',
+                'MailingCity__c',
+                'MailingState__c',
+                'MailingPostalCode__c',
+                'MailingCountry__c'
+        };
+
+        for (String addressField : addressFields) {
+            if (!UTIL_Permissions.canRead(UTIL_Namespace.StrAllNSPrefix('Address__c'),
+                    UTIL_Namespace.StrAllNSPrefix(addressField), false)) {
+                return false;
+            }
+        }
 
         return true;
     }
