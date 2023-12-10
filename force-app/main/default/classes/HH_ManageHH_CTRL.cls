@@ -189,10 +189,11 @@ public with sharing class HH_ManageHH_CTRL {
         String accountToCheck = isHHAccount ? 'Account' : 'npo02__Household__c';
         Set<String> fieldsToCheck = new Set<String>();
         for (FieldSetMember fsMember : hhFieldSet) {
+            DescribeFieldResult dfr = fsMember.getSObjectField().getDescribe();
+            if (dfr.isCalculated() || !dfr.permissionable || fsMember.getFieldPath().contains('__r')) {
+                continue;
+            }
             fieldsToCheck.add(fsMember.getFieldPath());
-        }
-        if (!isHHAccount) {
-            fieldsToCheck.add('npo02__Household__c');
         }
         for (String fieldToCheck : fieldsToCheck) {
             if (!UTIL_Permissions.canUpdate(accountToCheck, fieldToCheck, false)) {
