@@ -426,13 +426,6 @@ public with sharing class GE_GiftEntryController {
         DataImport__c dataImportObject = (DataImport__c)JSON.deserialize(dataImport, DataImport__c.class);
 
         try {
-            // As currently implemented, Gift Entry already checks everything checked in canUpsertDataImport() before
-            // allowing access. As a result, canUpsertDataImport() should never return false. It is implemented solely
-            // as a defense against future modifications since it is an AuraEnabled method that could be used outside
-            // of the currently implemented flow.
-            if (!canUpsertDataImport(dataImportObject)) {
-                throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
-            }
             upsert dataImportObject Id;
 
             return dataImportObject;
@@ -443,23 +436,6 @@ public with sharing class GE_GiftEntryController {
 
             throw buildDmlException(JSONExceptionData);
         }
-    }
-
-    private static Boolean canUpsertDataImport(DataImport__c dataImportObject) {
-        if (!UTIL_Permissions.canCreate(UTIL_Namespace.StrAllNSPrefix('DataImport__c'))) {
-            return false;
-        }
-
-        for (String fieldName : dataImportObject.getPopulatedFieldsAsMap().keySet()) {
-            if (!UTIL_Permissions.canUpdate(UTIL_Namespace.StrAllNSPrefix('DataImport__c'),
-                    UTIL_Namespace.StrAllNSPrefix(fieldName), false)) {
-                if (!fieldName.equalsIgnoreCase('Id')) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
     }
 
     /*******************************************************************************************************
