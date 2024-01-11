@@ -429,8 +429,6 @@ public with sharing class GE_GiftEntryController {
             upsert dataImportObject Id;
 
             return dataImportObject;
-        } catch (UTIL_Permissions.InsufficientPermissionException e) {
-            throw new AuraHandledException(e.getMessage());
         } catch (Exception e) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
 
