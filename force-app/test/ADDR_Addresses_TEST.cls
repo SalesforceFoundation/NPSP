@@ -809,13 +809,14 @@ public with sharing class ADDR_Addresses_TEST {
         );
         insert contact;
 
-        UTIL_Finder queryByState = new UTIL_Finder(Address__c.SObjectType)
-            .withSelectFields(new List<String>{ 'Undeliverable__c' })
-            .withWhere(new UTIL_Where.FieldExpression(Address__c.MailingState__c).equals('Pennsylvania'));
-
-
-        Address__c overrideAddress = (Address__c)(queryByState.find()[0]);
-
+        Address__c overrideAddress;
+        for (Address__c addr : [SELECT Id, MailingState__c, Undeliverable__c FROM Address__c]) {
+            if (addr.MailingState__c == 'Pennsylvania') {
+                overrideAddress = addr;
+                break;
+            }
+        }
+        
         Test.startTest();
             overrideAddress.Undeliverable__c = true;
             update overrideAddress;
@@ -2232,12 +2233,14 @@ public with sharing class ADDR_Addresses_TEST {
         insert testContact;
         Test.stopTest();
 
-        UTIL_Finder queryByState = new UTIL_Finder(Address__c.SObjectType)
-            .withSelectFields(new List<String>{ 'Latest_Start_Date__c', 'Default_Address__c' })
-            .withWhere(new UTIL_Where.FieldExpression(Address__c.MailingState__c).equals('Washington'))
-            .withLimit(1);
+        Address__c testAddress;
+        for (Address__c addr : [SELECT Id, MailingState__c, Latest_Start_Date__c, Default_Address__c FROM Address__c]) {
+            if (addr.MailingState__c == 'Washington') {
+                testAddress = addr;
+                break;
+            }
+        }
 
-        Address__c testAddress = (Address__c)(queryByState.find()[0]);
         System.assertEquals(true, testAddress.Default_Address__c, 'Address should be set as the default address.');
         System.assertEquals(System.today(), testAddress.Latest_Start_Date__c, 'The default address latest start date ' +
                 'should be set to today\'s date.');
