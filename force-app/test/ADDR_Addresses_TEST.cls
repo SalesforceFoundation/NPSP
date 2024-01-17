@@ -809,10 +809,14 @@ public with sharing class ADDR_Addresses_TEST {
         );
         insert contact;
 
-        Address__c overrideAddress = [SELECT Undeliverable__c
-                                      FROM Address__c
-                                      WHERE MailingState__c = 'Pennsylvania'];
-
+        Address__c overrideAddress;
+        for (Address__c addr : [SELECT Id, MailingState__c, Undeliverable__c FROM Address__c]) {
+            if (addr.MailingState__c == 'Pennsylvania') {
+                overrideAddress = addr;
+                break;
+            }
+        }
+        
         Test.startTest();
             overrideAddress.Undeliverable__c = true;
             update overrideAddress;
@@ -2229,10 +2233,14 @@ public with sharing class ADDR_Addresses_TEST {
         insert testContact;
         Test.stopTest();
 
-        Address__c testAddress = [SELECT Latest_Start_Date__c, Default_Address__c
-                                  FROM Address__c
-                                  WHERE MailingState__c = 'Washington'
-                                  LIMIT 1];
+        Address__c testAddress;
+        for (Address__c addr : [SELECT Id, MailingState__c, Latest_Start_Date__c, Default_Address__c FROM Address__c]) {
+            if (addr.MailingState__c == 'Washington') {
+                testAddress = addr;
+                break;
+            }
+        }
+
         System.assertEquals(true, testAddress.Default_Address__c, 'Address should be set as the default address.');
         System.assertEquals(System.today(), testAddress.Latest_Start_Date__c, 'The default address latest start date ' +
                 'should be set to today\'s date.');
@@ -2548,7 +2556,6 @@ public with sharing class ADDR_Addresses_TEST {
                 MailingStreet__c, MailingCity__c, MailingState__c,
                 MailingPostalCode__c, MailingCountry__c
             FROM Address__c
-            ORDER BY MailingState__c
         ];
     }
 
