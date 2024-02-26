@@ -224,7 +224,7 @@ tasks:
     github_release:
         options:
             release_content: |
-                Check out the Salesforce Release Notes on [Salesforce Help & Training](https://sfdc.co/bnL4Cb).
+                Check out the [Salesforce Release Notes](https://sfdc.co/bnL4Cb) or [Known Issues](https://issues.salesforce.com/) for details.
 
     github_release_notes:
         options:
