@@ -84,6 +84,17 @@ public without sharing class RD2_ScheduleService {
     * @return List<RecurringDonationSchedule__c>
     */
     public List<RecurringDonationSchedule__c> buildNewSchedules(npe03__Recurring_Donation__c rd) {
+        return buildNewSchedules(rd, null);
+    }
+
+    /***
+    * @description Builds new recurring donation schedule(s) for recurring donation
+    * @param rd Recurring donation record
+    * @param nextPaymentAmount the Next Payment Amount to set on the schedule
+    * @return List<RecurringDonationSchedule__c>
+    */
+    public List<RecurringDonationSchedule__c> buildNewSchedules(npe03__Recurring_Donation__c rd,
+            Decimal nextPaymentAmount) {
         List<RecurringDonationSchedule__c> newSchedules = new List<RecurringDonationSchedule__c>();
 
         if (new RD2_RecurringDonation(rd).isClosed()) {
@@ -95,6 +106,9 @@ public without sharing class RD2_ScheduleService {
         schedule.Campaign__c = rd.npe03__Recurring_Donation_Campaign__c;
 
         schedule.InstallmentAmount__c = rd.npe03__Amount__c;
+        if(nextPaymentAmount != null) {
+            schedule.NextPaymentAmount__c = nextPaymentAmount;
+        }
         schedule.InstallmentFrequency__c = rd.InstallmentFrequency__c;
         schedule.InstallmentPeriod__c = rd.npe03__Installment_Period__c;
         schedule.PaymentMethod__c = rd.PaymentMethod__c;
@@ -149,6 +163,7 @@ public without sharing class RD2_ScheduleService {
         Date newStartDate = rd.StartDate__c;
         Boolean isClosed = new RD2_RecurringDonation(rd).isClosed();
         TDTM_Runnable.DMLWrapper scheduleChanges = new TDTM_Runnable.DMLWrapper();
+        Decimal nextPaymentAmount;
 
         //Add updated schedules
         if (schedules != null) {
@@ -171,6 +186,7 @@ public without sharing class RD2_ScheduleService {
 
                 if (!isClosed && schedule.StartDate__c <= currentDate) {
                     schedule.EndDate__c = newStartDate.addDays(-1);
+                    nextPaymentAmount = schedule.NextPaymentAmount__c;
 
                 } else if (!isClosed && schedule.StartDate__c > currentDate) {
                     schedule.EndDate__c = schedule.StartDate__c.addDays(-1);
@@ -184,10 +200,7 @@ public without sharing class RD2_ScheduleService {
         }
 
         //Add new schedules
-        List<RecurringDonationSchedule__c> newSchedules = buildNewSchedules(rd);
-        for (RecurringDonationSchedule__c newSchedule : newSchedules) {
-            newSchedule.StartDate__c = newStartDate;
-        }
+        List<RecurringDonationSchedule__c> newSchedules = buildNewSchedules(rd, nextPaymentAmount);
 
         scheduleChanges.objectsToInsert.addAll(newSchedules);
 
@@ -320,6 +333,7 @@ public without sharing class RD2_ScheduleService {
             : numInstallments;
 
         Date referenceDate = startDate == null ? currentDate : startDate;
+        Boolean setNextPaymentAmount = true;
         while (installments.size() < numInstallments) {
             Installment inst = getNextInstallment(referenceDate, schedules);
 
@@ -328,6 +342,10 @@ public without sharing class RD2_ScheduleService {
             }
 
             if (isIncludeSkipped || !inst.isSkipped) {
+                if(!inst.isSkipped && inst.nextPaymentAmount != null && setNextPaymentAmount) {
+                    inst.installmentAmount = inst.nextPaymentAmount;
+                    setNextPaymentAmount = false;
+                }
                 installments.add(inst);
             }
             referenceDate = inst.nextDonationDate.addDays(1);
@@ -965,6 +983,53 @@ public without sharing class RD2_ScheduleService {
         return nextActive;
     }
 
+    public List<RecurringDonationSchedule__c> getSchedulesWithClearedNextPaymentAmount(List<npe03__Recurring_Donation__c> rds) {
+        List<RecurringDonationSchedule__c> schedulesToUpdate = new List<RecurringDonationSchedule__c>();
+
+        for (npe03__Recurring_Donation__c rd : rds) {
+            for (RecurringDonationSchedule__c schedule : rd.RecurringDonationSchedules__r) {
+                if (schedule.NextPaymentAmount__c != null && schedule.Active__c) {
+                    schedule.NextPaymentAmount__c = null;
+                    schedulesToUpdate.add(schedule);
+                }
+            }
+        }
+
+        return schedulesToUpdate;
+    }
+
+    public List<RecurringDonationSchedule__c> setSchedulesWithNextPaymentAmount(List<npe03__Recurring_Donation__c> rds, 
+            Decimal nextPaymentAmount) {
+        Map<Id, List<RecurringDonationSchedule__c>> schedulesByRDId = getExistingSchedules(rds);
+        List<RecurringDonationSchedule__c> schedulesToUpdate = new List<RecurringDonationSchedule__c>();
+
+        for (Id rdId : schedulesByRDId.keySet()) {
+            for (RecurringDonationSchedule__c schedule : schedulesByRDId.get(rdId)) {
+                schedule.NextPaymentAmount__c = nextPaymentAmount;
+                schedulesToUpdate.add(schedule);
+            }
+        }
+
+        return schedulesToUpdate;
+    }
+
+    /**
+    * @description Get the Next Payment Amount for this Recurring Donation, if is set
+    * @param rd Recurring Donation
+    * @return Decimal Next Payment Amount
+    */
+    public Decimal getNextPaymentAmount(npe03__Recurring_Donation__c rd) {
+        List<RecurringDonationSchedule__c> rdSchedules = getExistingSchedules(rd);
+        Decimal nextPaymentAmount;
+        for (RecurringDonationSchedule__c schedule : rdSchedules) {
+            if (schedule.NextPaymentAmount__c != null) {
+                nextPaymentAmount = schedule.NextPaymentAmount__c;
+                break;
+            }
+        }
+        return nextPaymentAmount;
+    }
+
     /***
     * @description Wrapper class for Recurring Donation Installment data
     */
@@ -976,6 +1041,7 @@ public without sharing class RD2_ScheduleService {
         public Date     nextDonationDate {get; set;}
         public String   installmentPeriod {get; set;}
         public Decimal  installmentAmount {get; set;}
+        public Decimal  nextPaymentAmount {get; set;}
         public String   paymentMethod {get; set;}
         public Id       scheduleId {get; set;}
         public Boolean  isSkipped {get; set;}
@@ -987,6 +1053,7 @@ public without sharing class RD2_ScheduleService {
             endDate =               rdSchedule.EndDate__c;
             installmentPeriod =     rdSchedule.InstallmentPeriod__c;
             installmentAmount =     rdSchedule.InstallmentAmount__c;
+            nextPaymentAmount =     rdSchedule.NextPaymentAmount__c;
             paymentMethod =         rdSchedule.PaymentMethod__c;
             scheduleId =            rdSchedule.Id;
             isSkipped =             false;
@@ -1004,6 +1071,7 @@ public without sharing class RD2_ScheduleService {
         public String dayOfMonth { get; set; }
         public Date endDate { get; set; }
         public Decimal installmentAmount { get; set; }
+        public Decimal nextPaymentAmount { get; set; }
         public Integer installmentFrequency { get; set; }
         public String installmentPeriod { get; set; }
         public String paymentMethod { get; set; }
@@ -1018,6 +1086,7 @@ public without sharing class RD2_ScheduleService {
             dayOfMonth = rdSchedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ? rdSchedule.DayOfMonth__c : null;
             endDate = (rdSchedule.EndDate__c != null) ? rdSchedule.EndDate__c : rd.EndDate__c;
             installmentAmount = rdSchedule.InstallmentAmount__c;
+            nextPaymentAmount = rdSchedule.NextPaymentAmount__c;
             installmentFrequency = rdSchedule.InstallmentFrequency__c != null ? Integer.valueOf(rdSchedule.InstallmentFrequency__c) : null;
             installmentPeriod = rdSchedule.InstallmentPeriod__c;
             paymentMethod = rdSchedule.PaymentMethod__c;
@@ -1278,6 +1347,7 @@ public without sharing class RD2_ScheduleService {
                 'EndDate__c',
                 'DayOfMonth__c',
                 'InstallmentAmount__c',
+                'NextPaymentAmount__c',
                 'InstallmentFrequency__c',
                 'InstallmentPeriod__c',
                 'PaymentMethod__c',

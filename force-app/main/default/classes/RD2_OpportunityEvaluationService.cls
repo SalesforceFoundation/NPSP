@@ -453,6 +453,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 }
             }
             // TODO Handle Past Due Installment
+
         }
 
         toggleTriggerState(false);
@@ -487,6 +488,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         //in order to calculate the Current/Next Year Values
         rds = null;
 
+        List<npe03__Recurring_Donation__c> checkNextPaymentScheduleRds = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> outdatedRDs = new List<npe03__Recurring_Donation__c>();
         for (RD2_RecurringDonation rdRecord : rdRecords) {
             //revise the Year Values only since other other values such as
@@ -499,9 +501,15 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             ) {
                 outdatedRDs.add(rdRecord.getUpdate());
             }
+
+            if (rdRecord.needsNextPaymentScheduleCheck()) {
+                checkNextPaymentScheduleRds.add(rdRecord.getSObject());
+            }
         }
 
         dbService.updateRecords(outdatedRDs);
+
+        dbService.updateRecords(scheduleService.getSchedulesWithClearedNextPaymentAmount(checkNextPaymentScheduleRds));
 
         return this;
     }

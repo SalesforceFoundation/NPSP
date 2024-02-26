@@ -155,6 +155,7 @@ public class TEST_SObjectGateway {
                     StartDate__c,
                     EndDate__c,
                     InstallmentAmount__c,
+                    NextPaymentAmount__c,
                     InstallmentFrequency__c,
                     InstallmentPeriod__c,
                     PaymentMethod__c,
