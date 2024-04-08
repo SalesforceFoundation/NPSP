@@ -974,6 +974,9 @@ global with sharing class BDI_DataImportService {
                 Map<String, Schema.SObjectField> mapS = Schema.SObjectType.DataImport__c.fields.getMap();
                 listStrDataImportFields = new List<String>();
                 listStrDataImportFields.addAll(mapS.keySet());
+                listStrDataImportFields.add('NPSP_Data_Import_Batch__r.Name');
+                listStrDataImportFields.add('NPSP_Data_Import_Batch__r.Batch_Number__c');
+ 
             }
             return listStrDataImportFields;
         }
