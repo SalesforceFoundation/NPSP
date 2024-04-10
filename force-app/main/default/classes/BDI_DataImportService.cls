@@ -52,6 +52,7 @@ global with sharing class BDI_DataImportService {
     public static final String ACH_PAYMENT_METHOD = 'ACH';
     public static final String DI_WITH_RD_FIELDS_NO_RD2 = System.label.RD2_DisabledRD2Error;
     public static final String DI_WITH_RD_FIELDS_NO_ADV_MAPPING = System.label.RD2_DisabledAdvancedMappingError;
+    public static boolean isForBatchProcess = true;
 
     public BDI_MappingService mappingService;
 
@@ -90,6 +91,7 @@ global with sharing class BDI_DataImportService {
     * @return String the soql String
     */
     public static String strSoqlForDataImportProcess(List<Id> dataImportIds) {
+        isForBatchProcess = false;
         List<String> whereClauses = new List<String>{
             'Status__c != \'' + BDI_DataImport_API.bdiImported + '\'',
             'Id =: dataImportIds'
@@ -111,6 +113,7 @@ global with sharing class BDI_DataImportService {
     * @return String the soql String
     */
     public static String strSoqlForBatchProcess(Id batchId) {
+         isForBatchProcess = true;
         List<String> selectClause = new List<String>{
             String.join(listStrDataImportFields, ','),
                 DATAIMPORT_BATCH_NUMBER_FIELD
@@ -974,6 +977,10 @@ global with sharing class BDI_DataImportService {
                 Map<String, Schema.SObjectField> mapS = Schema.SObjectType.DataImport__c.fields.getMap();
                 listStrDataImportFields = new List<String>();
                 listStrDataImportFields.addAll(mapS.keySet());
+                if (isForBatchProcess == false) {
+                listStrDataImportFields.add('NPSP_Data_Import_Batch__r.Name');
+                listStrDataImportFields.add('NPSP_Data_Import_Batch__r.Batch_Number__c');
+                }
             }
             return listStrDataImportFields;
         }
