@@ -67,6 +67,9 @@ public with sharing class GiftEntryProcessorQueue implements Queueable, Database
             queueableGiftBatch.updateGiftsInChunk();
             queueableGiftBatch.preprocessRecurringGifts();
             queueableGiftBatch.processChunk(giftBatchId.value());
+        } else {
+            BDI_DataImport_BATCH batch = new BDI_DataImport_BATCH(giftBatchId.value(), false);
+            String jobId = Database.executeBatch(batch, Integer.valueOf(batch.diSettings.Batch_Size__c));
         }
 
         if (queueableGiftBatch.hasChunksToProcess()) {
