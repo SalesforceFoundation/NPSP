@@ -638,7 +638,7 @@ const nonePicklistOption = () => {
     return createPicklistOption(commonLabelNone, commonLabelNone);
 }
 
-const asyncInterval = async (callback, milliseconds, maxNumberOfIntervals = 5) => {
+const asyncInterval = async (callback, milliseconds, maxNumberOfIntervals = 20) => {
     return new Promise((resolve, reject) => {
         const intervalId = setInterval(async () => {
             if (await callback()) {
