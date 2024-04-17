@@ -1,0 +1,130 @@
+{
+  "dataTable": {
+    "columns": [
+      {
+        "fieldName": "donationDate",
+        "hideDefaultActions": true,
+        "isAccessible": true,
+        "label": "Date",
+        "sortable": false,
+        "type": "date-local",
+        "typeAttributes": {
+          "month": "2-digit",
+          "day": "2-digit"
+        }
+      },
+      {
+        "fieldName": "amount",
+        "hideDefaultActions": true,
+        "isAccessible": true,
+        "label": "Amount",
+        "sortable": false,
+        "type": "currency",
+        "typeAttributes": {
+          "currencyCode": "USD"
+        }
+      },
+      {
+        "fieldName": "paymentMethod",
+        "hideDefaultActions": true,
+        "isAccessible": true,
+        "label": "Payment Method",
+        "sortable": false,
+        "type": "text"
+      }
+    ],
+    "records": [
+      {
+        "amount": 5,
+        "donationDate": "2021-10-18",
+        "installmentNumber": 1,
+        "isSkipped": false,
+        "pauseStatus": ""
+      },
+      {
+        "amount": 5,
+        "donationDate": "2021-11-18",
+        "installmentNumber": 2,
+        "isSkipped": false,
+        "pauseStatus": ""
+      },
+      {
+        "amount": 5,
+        "donationDate": "2021-12-18",
+        "installmentNumber": 3,
+        "isSkipped": false,
+        "pauseStatus": ""
+      },
+      {
+        "amount": 5,
+        "donationDate": "2022-01-18",
+        "installmentNumber": 4,
+        "isSkipped": false,
+        "pauseStatus": ""
+      },
+      {
+        "amount": 5,
+        "donationDate": "2022-02-18",
+        "installmentNumber": 5,
+        "isSkipped": false,
+        "pauseStatus": ""
+      },
+      {
+        "amount": 5,
+        "donationDate": "2022-03-18",
+        "installmentNumber": 6,
+        "isSkipped": false,
+        "pauseStatus": ""
+      },
+      {
+        "amount": 5,
+        "donationDate": "2022-04-18",
+        "installmentNumber": 7,
+        "isSkipped": false,
+        "pauseStatus": ""
+      },
+      {
+        "amount": 5,
+        "donationDate": "2022-05-18",
+        "installmentNumber": 8,
+        "isSkipped": false,
+        "pauseStatus": ""
+      },
+      {
+        "amount": 5,
+        "donationDate": "2022-06-18",
+        "installmentNumber": 9,
+        "isSkipped": false,
+        "pauseStatus": ""
+      },
+      {
+        "amount": 5,
+        "donationDate": "2022-07-18",
+        "installmentNumber": 10,
+        "isSkipped": false,
+        "pauseStatus": ""
+      },
+      {
+        "amount": 5,
+        "donationDate": "2022-08-18",
+        "installmentNumber": 11,
+        "isSkipped": false,
+        "pauseStatus": ""
+      },
+      {
+        "amount": 5,
+        "donationDate": "2022-09-18",
+        "installmentNumber": 12,
+        "isSkipped": false,
+        "pauseStatus": ""
+      },
+      {
+        "amount": 5,
+        "donationDate": "2022-10-18",
+        "installmentNumber": 13,
+        "isSkipped": false,
+        "pauseStatus": ""
+      }
+    ]
+  }
+}
