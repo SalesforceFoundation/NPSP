@@ -622,7 +622,12 @@ global with sharing class BDI_DataImportService {
             this.listDI = flsService.getValidRecords();
 
             this.listDI = checkRDFields(listDI);
-
+            for(DataImport__c dataImport : listDI){
+                if(apexJobId!= null && dataImport.Recurring_Donation_Recurring_Type__c !=null) {
+                    dataImport.Donation_Date__c = null;
+                    dataImport.Donation_Amount__c = null;
+                }
+            }
             // do any performance optimizations to avoid unnecessary code
             disableAllOppRollups();
 
