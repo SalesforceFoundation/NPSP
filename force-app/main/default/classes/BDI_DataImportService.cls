@@ -626,7 +626,6 @@ global with sharing class BDI_DataImportService {
             for(DataImport__c dataImport : listDI){
                 if(dataImport.Recurring_Donation_Recurring_Type__c !=null) {
                     dataImport.Donation_Date__c = null;
-                    dataImport.Donation_Amount__c = null;
                 }
             }
         }
