@@ -623,13 +623,14 @@ global with sharing class BDI_DataImportService {
 
             this.listDI = checkRDFields(listDI);
 
+            if(apexJobId != null && listDI.size() > 0) {
             DataImportBatch__c batch = [SELECT Name, Batch_Number__c, Batch_Status__c, Batch_Defaults__c, 
                                         Form_Template__c, RequireTotalMatch__c, Expected_Count_of_Gifts__c, 
                                         Expected_Total_Batch_Amount__c, Batch_Table_Columns__c, LastModifiedDate 
                                         FROM DataImportBatch__c WHERE Id= :listDI[0].NPSP_Data_Import_Batch__c LIMIT 1];
             GiftBatch giftBatch = new GiftBatch(batch);
             Boolean firstInstallmentPaid = giftBatch.shouldPayFirstInstallment();
-            if(apexJobId != null) {
+            
                 for (DataImport__c dataImport : listDI) {
                     if(dataImport.Recurring_Donation_Recurring_Type__c    != null) {
                         dataImport.Donation_Date__c = null;
