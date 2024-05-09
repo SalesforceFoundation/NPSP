@@ -197,6 +197,59 @@ private class GiftEntryProcessorQueue_TEST {
         System.assertEquals(true, mockService.failGiftsInProcessingWasCalled);
     }
 
+    @IsTest
+    static void shouldUpdateDataImportBatchFieldsOnGiftBatchProcess() {
+        DataImportBatch__c giftBatch = new DataImportBatch__c();
+        insert giftBatch;
+
+        List<DataImport__c> giftsToInsert = new List<DataImport__c>();
+        giftsToInsert.addAll(buildGifts(2, BDI_DataImport_API.bdiImported, giftBatch.Id, false));
+        giftsToInsert.addAll(buildGifts(5, BDI_DataImport_API.bdiDryRunValidated, giftBatch.Id, false));
+        insert giftsToInsert;
+
+        GiftBatchForQueueable giftBatchForProcessing = new GiftBatchForQueueable(new GiftBatchId(giftBatch.Id), new GiftBatchSelector());
+        giftBatchForProcessing.chunkGiftsThatCanBeProcessed();
+        GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(giftBatchForProcessing);
+        GiftBatchServiceMock mockService = new GiftBatchServiceMock();
+        processorQueue.giftBatchService = stubFor(mockService);
+
+        Test.startTest();
+        processorQueue.execute(null);
+        Test.stopTest();
+
+        DataImportBatch__c processedGiftBatch = [SELECT Name, Batch_Status__c, Last_Processed_On__c, 
+                                                Records_Successfully_Processed__c, Records_Failed__c 
+                                                FROM DataImportBatch__c WHERE Id = :giftBatch.Id LIMIT 1];
+        System.assertEquals(5, processedGiftBatch.Records_Successfully_Processed__c, '5 gifts should be processed in this batch.');
+        System.assertEquals(0, processedGiftBatch.Records_Failed__c, '0 gifts should be failed in this batch.');
+    }
+
+    @IsTest
+    static void shouldOverrideDataImportBatchFieldsOnEmptyGiftBatchProcess() {
+        DataImportBatch__c giftBatch = new DataImportBatch__c();
+        insert giftBatch;
+
+        List<DataImport__c> giftsToInsert = new List<DataImport__c>();
+        giftsToInsert.addAll(buildGifts(2, BDI_DataImport_API.bdiImported, giftBatch.Id, false));
+        insert giftsToInsert;
+
+        GiftBatchForQueueable giftBatchForProcessing = new GiftBatchForQueueable(new GiftBatchId(giftBatch.Id), new GiftBatchSelector());
+        giftBatchForProcessing.chunkGiftsThatCanBeProcessed();
+        GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(giftBatchForProcessing);
+        GiftBatchServiceMock mockService = new GiftBatchServiceMock();
+        processorQueue.giftBatchService = stubFor(mockService);
+
+        Test.startTest();
+        processorQueue.execute(null);
+        Test.stopTest();
+
+        DataImportBatch__c processedGiftBatch = [SELECT Name, Batch_Status__c, Last_Processed_On__c, 
+                                                Records_Successfully_Processed__c, Records_Failed__c 
+                                                FROM DataImportBatch__c WHERE Id = :giftBatch.Id LIMIT 1];
+        System.assertEquals(0, processedGiftBatch.Records_Successfully_Processed__c, '0 gifts should be processed in this batch.');
+        System.assertEquals(0, processedGiftBatch.Records_Failed__c, '0 gifts should be failed in this batch.');
+    }
+
     public class GiftBatchServiceMock implements StubProvider {
         public String asyncApexJobStatus = 'COMPLETED';
         public Boolean clearLatestJobIdFromWasCalled = false;
