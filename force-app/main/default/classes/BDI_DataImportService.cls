@@ -624,11 +624,12 @@ global with sharing class BDI_DataImportService {
             this.listDI = checkRDFields(listDI);
 
             if(apexJobId != null && listDI.size() > 0) {
-            DataImportBatch__c batch = [SELECT Name, Batch_Number__c, Batch_Status__c, Batch_Defaults__c, 
+            List<DataImportBatch__c> listBatch = [SELECT Name, Batch_Number__c, Batch_Status__c, Batch_Defaults__c, 
                                         Form_Template__c, RequireTotalMatch__c, Expected_Count_of_Gifts__c, 
                                         Expected_Total_Batch_Amount__c, Batch_Table_Columns__c, LastModifiedDate 
                                         FROM DataImportBatch__c WHERE Id= :listDI[0].NPSP_Data_Import_Batch__c LIMIT 1];
-            GiftBatch giftBatch = new GiftBatch(batch);
+            if(listBatch.size() > 0 ){
+            GiftBatch giftBatch = new GiftBatch(listBatch[0]);
             Boolean firstInstallmentPaid = giftBatch.shouldPayFirstInstallment();
             
                 for (DataImport__c dataImport : listDI) {
@@ -639,6 +640,7 @@ global with sharing class BDI_DataImportService {
                         }
                     }   
                 }
+            }
             }
             // do any performance optimizations to avoid unnecessary code
             disableAllOppRollups();
