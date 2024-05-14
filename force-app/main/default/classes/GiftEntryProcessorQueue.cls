@@ -38,6 +38,7 @@ public with sharing class GiftEntryProcessorQueue implements Queueable, Database
     private final String ABORTED = 'ABORTED';
     private GiftBatchForQueueable queueableGiftBatch;
     private AsyncApexJobId queueableId;
+    private GiftBatchId giftBatchId;
 
     @TestVisible
     private GiftBatchService giftBatchService {
@@ -52,6 +53,7 @@ public with sharing class GiftEntryProcessorQueue implements Queueable, Database
 
     public GiftEntryProcessorQueue(GiftBatchForQueueable giftBatchForProcessing) {
         this.queueableGiftBatch = giftBatchForProcessing;
+        this.giftBatchId = giftBatchForProcessing.id();
     }
 
     public void execute(QueueableContext queueableContext) {
@@ -64,7 +66,10 @@ public with sharing class GiftEntryProcessorQueue implements Queueable, Database
             queueableGiftBatch.captureElevateBatches();
             queueableGiftBatch.updateGiftsInChunk();
             queueableGiftBatch.preprocessRecurringGifts();
-            queueableGiftBatch.processChunk();
+            queueableGiftBatch.processChunk(giftBatchId.value());
+        } else {
+            BDI_DataImport_BATCH batch = new BDI_DataImport_BATCH(giftBatchId.value(), false);
+            String jobId = Database.executeBatch(batch, Integer.valueOf(batch.diSettings.Batch_Size__c));
         }
 
         if (queueableGiftBatch.hasChunksToProcess()) {
