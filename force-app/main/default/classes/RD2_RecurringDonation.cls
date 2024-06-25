@@ -314,7 +314,7 @@ public inherited sharing class RD2_RecurringDonation {
                 changedFields.add(npe03__Recurring_Donation__c.ClosedReason__c);
             }
         }
-    }
+    } 
 
     /**
     * @description Sets the Number of Planned Installments to null when RecurringType is Open
