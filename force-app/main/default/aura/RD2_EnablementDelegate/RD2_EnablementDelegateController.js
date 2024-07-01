@@ -28,6 +28,13 @@
         helper.handleBatchEvent(component, event, 'v.dryRunBatch');
         helper.refreshDryRun(component);
         helper.refreshEnable(component);
+        window.setTimeout(function() {
+            var dryRunJob = component.find("dryRun2Job");
+            if (event.Hp.batchProgress.status === "Completed") {
+                dryRunJob.getElement().setAttribute('tabindex', '0');
+                dryRunJob.getElement().focus();
+            }
+        }, 0);
     },
     handleDryRunError: function (component, event, helper) {
         helper.handleBatchError(component, event, 'dryRun');
@@ -44,6 +51,13 @@
     handleMigrationStatusChange: function (component, event, helper) {
         helper.handleBatchEvent(component, event, 'v.migrationBatch');
         helper.refreshMigration(component);
+        window.setTimeout(function() {
+            var migrationJob = component.find("migrationJob");
+            if (event.Hp.batchProgress.status === "Completed") {
+                migrationJob.getElement().setAttribute('tabindex', '0');
+                migrationJob.getElement().focus();
+            }
+        }, 0);
     },
     handleMigrationError: function (component, event, helper) {
         helper.handleBatchError(component, event, 'migration');
