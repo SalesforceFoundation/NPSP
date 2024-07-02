@@ -599,5 +599,22 @@
     hideSpinner: function (component, element) {
         var spinner = component.find(element);
         $A.util.addClass(spinner, 'slds-hide');
-    }
+    },
+    /**
+     * @description: Autofocus 
+     */
+    setFocus: function (component, elementId) {
+        window.setTimeout(() => { 
+           try { var element = component.find(elementId); 
+               if (element) { 
+                   element.getElement().setAttribute('tabindex', '0'); 
+                   element.getElement().focus(); 
+                   element.getElement().setAttribute('tabindex', '-1'); 
+               } 
+           } catch (error) { 
+                   console.error('Error setting focus on element:', error); 
+
+           } 
+           }, 0); 
+   }
 })
