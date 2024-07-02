@@ -28,13 +28,16 @@
         helper.handleBatchEvent(component, event, 'v.dryRunBatch');
         helper.refreshDryRun(component);
         helper.refreshEnable(component);
-        window.setTimeout(function() {
-            var dryRunJob = component.find("dryRun2Job");
-            if (event.Hp.batchProgress.status === "Completed") {
-                dryRunJob.getElement().setAttribute('tabindex', '0');
-                dryRunJob.getElement().focus();
+        var status = event.Hp.batchProgress.status;
+        var dryRunJob = component.find("dryRunJob");
+        if (["Completed", "Aborted"].includes(status)) {
+            if(dryRunJob){
+                helper.setFocus(component, 'dryRunJob');
             }
-        }, 0);
+            else{
+                helper.setFocus(component, 'dryRun2Job');
+            }
+        }
     },
     handleDryRunError: function (component, event, helper) {
         helper.handleBatchError(component, event, 'dryRun');
@@ -51,13 +54,10 @@
     handleMigrationStatusChange: function (component, event, helper) {
         helper.handleBatchEvent(component, event, 'v.migrationBatch');
         helper.refreshMigration(component);
-        window.setTimeout(function() {
-            var migrationJob = component.find("migrationJob");
-            if (event.Hp.batchProgress.status === "Completed") {
-                migrationJob.getElement().setAttribute('tabindex', '0');
-                migrationJob.getElement().focus();
+        var status = event.Hp.batchProgress.status;
+            if (["Completed", "Aborted"].includes(status)) {
+                helper.setFocus(component, 'migrationJob');
             }
-        }, 0);
     },
     handleMigrationError: function (component, event, helper) {
         helper.handleBatchError(component, event, 'migration');
