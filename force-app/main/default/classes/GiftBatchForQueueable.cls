@@ -149,10 +149,17 @@ public inherited sharing class GiftBatchForQueueable {
 
     public void processChunk() {
         List<DataImport__c> dataImports = gifts.asDataImports();
-        BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImports, false);
+        List<Id> lstDataImportIds = new List<Id>(new Map<Id, DataImport__c>(dataImports).keySet());
+        BDI_DataImport_API.processDataImportRecords(dataImportSettings, lstDataImportIds, false);
         chunkedIds.remove(0);
     }
 
+    public void processChunk(Id batchId) {
+        List<DataImport__c> dataImports = gifts.asDataImports();
+        List<Id> lstDataImportIds = new List<Id>(new Map<Id, DataImport__c>(dataImports).keySet());
+        BDI_DataImport_API.processDataImportRecords(dataImportSettings, lstDataImportIds, false, batchId);
+        chunkedIds.remove(0);
+    }
     public void chunkGiftsThatCanBeProcessed() {
         List<SObject> results = giftsSelector.getGiftsReadyToMoveToProcessing(giftBatchId);
         if (results.size() > 0) {
