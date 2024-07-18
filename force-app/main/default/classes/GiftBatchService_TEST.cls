@@ -70,8 +70,10 @@ private class GiftBatchService_TEST {
         Test.stopTest();
 
         // Assert
-        Integer jobsCount = [SELECT count() FROM AsyncApexJob];
+        Integer jobsCount = [SELECT count() FROM AsyncApexJob WHERE JobType = 'Queueable'];
         System.assertEquals(1, jobsCount, 'Should have enqueued a job');
+        Integer batchjobsCount = [SELECT count() FROM AsyncApexJob WHERE JobType = 'BatchApex'];
+        System.assertEquals(1, batchjobsCount, 'Should have one batch apex job');
 
         Integer opportunitiesCount = [SELECT count() FROM Opportunity];
         System.assertEquals(10, opportunitiesCount, 'Should have created 10 opportunities');
