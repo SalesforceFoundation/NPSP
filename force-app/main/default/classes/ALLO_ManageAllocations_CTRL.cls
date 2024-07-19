@@ -93,6 +93,10 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         objectFields.add(Allocation__c.General_Accounting_Unit__c.getDescribe().getSobjectField());
 
         for(Schema.FieldSetMember additionalField : additionalAllocationFields) {
+            Schema.DescribeFieldResult fieldResult = additionalField.getSObjectField().getDescribe();
+            if (fieldResult.isCalculated() || !fieldResult.permissionable || additionalField.getFieldPath().contains('__r')) {
+                continue;
+            }
             objectFields.add(additionalField.getSObjectField());
         }
 
