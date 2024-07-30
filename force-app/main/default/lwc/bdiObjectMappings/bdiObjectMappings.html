@@ -67,9 +67,9 @@
                 <div class="slds-size_1-of-1 slds-m-bottom_small">
                     <div class="slds-grid slds-wrap">
                         <div class="slds-size_1-of-1 slds-m-top_x-small">
-                            <tempate if:true={isLoading}>
+                            <template if:true={isLoading}>
                                 <lightning-spinner></lightning-spinner>
-                            </tempate>
+                            </template>
                             <lightning-datatable
                                 key-field="id"
                                 data={objectMappings}
