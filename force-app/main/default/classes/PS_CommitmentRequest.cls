@@ -304,14 +304,36 @@ public inherited sharing class PS_CommitmentRequest {
             : UserInfo.getDefaultCurrency();
 
         if (isElevateScheduleFieldsChanged(rd, oldRd)) {
+            // If the schedule has a Next Payment Amount, we need to send it
+            Decimal nextPaymentAmount = scheduleService.getNextPaymentAmount(rd);
             reqBody.deactivateOldSchedules();
-            setSchedules(reqBody, scheduleService.buildNewSchedules(rd), currencyCode);
+            setSchedules(reqBody, scheduleService.buildNewSchedules(rd, nextPaymentAmount), currencyCode);
         }
 
         if (isElevateCampaignChanged(rd, oldRd)) {
             Map<String, Object> updatedMetadata = buildUpdatedProductMetadata(rd);
             reqBody.withProductMetadata(updatedMetadata);
         }
+
+        return reqBody;
+    }
+
+    /***
+    * @description Constructs the edit commitment schedule request body for the specified Recurring Donation.
+    * @param rd Recurring Donation record
+    * @param nextPaymentAmount Next Payment Amount for Active Schedules
+    * @return RequestBody
+    */
+    public RequestBody getUpdateScheduleRequestBody(npe03__Recurring_Donation__c rd, Decimal nextPaymentAmount) {
+        RequestBody reqBody = new RequestBody()
+            .withCommitmentId(rd.CommitmentId__c);
+
+        String currencyCode = UserInfo.isMultiCurrencyOrganization()
+            ? (String) rd.get('CurrencyIsoCode')
+            : UserInfo.getDefaultCurrency();
+
+        reqBody.deactivateOldSchedules();
+        setSchedules(reqBody, scheduleService.buildNewSchedules(rd, nextPaymentAmount), currencyCode);
 
         return reqBody;
     }
@@ -743,6 +765,7 @@ public inherited sharing class PS_CommitmentRequest {
      */
     public class Schedule {
         public Integer amount;
+        public Integer nextPaymentAmount;
         public String frequency;
         public Integer frequencyInterval;
         public String firstOccurrenceOnTimestamp;
@@ -766,6 +789,11 @@ public inherited sharing class PS_CommitmentRequest {
         public Schedule(RecurringDonationSchedule__c rdSchedule, Integer currencyMultiplier, Boolean isUpdate) {
             Double amount = rdSchedule.InstallmentAmount__c * currencyMultiplier;
             this.amount = amount == null ? null : Integer.valueOf(amount);
+
+            Double nextPaymentAmount = rdSchedule.NextPaymentAmount__c;
+            this.nextPaymentAmount = nextPaymentAmount == null 
+                ? null 
+                : Integer.valueOf(nextPaymentAmount * currencyMultiplier);
 
             this.frequency = frequencyByInstallmentPeriod.get(rdSchedule.InstallmentPeriod__c);
             this.frequencyInterval = rdSchedule.InstallmentFrequency__c == null

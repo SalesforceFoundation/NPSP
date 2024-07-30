@@ -55,6 +55,7 @@ private with sharing class RD2_OpportunityService_TEST {
     private static final String DAY_OF_MONTH = String.valueOf(CLOSE_DATE.day());
     private static final Decimal RD_AMOUNT = 400;
     private static final Decimal RD_NEW_AMOUNT = 100;
+    private static final Decimal NEXT_PAYMENT_AMOUNT = 500;
 
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
@@ -790,7 +791,7 @@ private with sharing class RD2_OpportunityService_TEST {
         delete new TEST_SObjectGateway.OpportunityGateway().getRecords(rd);
 
         List<npe03__Recurring_Donation__c> rds = new RD2_QueryService()
-            .getRecurringDonationsWithRelatedREcords(new Set<Id>{ rd.Id }, START_DATE);
+            .getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
 
         Exception actualException;
         try {
@@ -807,6 +808,123 @@ private with sharing class RD2_OpportunityService_TEST {
 
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No error should be created: ' + errors);
+    }
+
+    /***
+    * @description Verify that the next Opportunity uses the Next Payment Amount
+    */
+    @isTest
+    private static void shouldUseNextPaymentAmountOnNextOpp() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_QueryService queryService = new RD2_QueryService();
+        RD2_OpportunityService oppService = new RD2_OpportunityService(
+            TODAY, new RD2_DatabaseService(), new RD2_CustomFieldMapper()
+        );
+
+        setUpConfiguration();
+
+        Test.startTest();
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+        Test.stopTest();
+
+        List<npe03__Recurring_Donation__c> rds = new RD2_QueryService()
+            .getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
+
+        // Set Next Payment Amount on the schedule
+        rds[0].RecurringDonationSchedules__r[0].NextPaymentAmount__c = NEXT_PAYMENT_AMOUNT;
+        update rds[0].RecurringDonationSchedules__r[0];
+
+        oppService.updateOpportunities(rds);
+
+        rds = queryService.getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
+        rd = rds[0];
+
+        System.assertEquals(1, rd.npe03__Donations__r.size(), 'There should only be 1 Opportunity');
+
+        Opportunity nextOpportunity = rd.npe03__Donations__r[0];
+        System.assertEquals(NEXT_PAYMENT_AMOUNT, nextOpportunity.Amount, 
+            'Opportunity Amount should match Next Payment Amount: ' + NEXT_PAYMENT_AMOUNT);
+
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
+        Opportunity offCycleOpportunity = oppBuilder
+            .withCloseDate(START_DATE.addDays(10))
+            .withClosedWonStage()
+            .build();
+        insert offCycleOpportunity;
+
+        // Verify that a new Opportunity is not created and the Schedule retains Next Payment Amount
+        oppService.createOpportunities(rds);
+
+        rds = queryService.getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
+
+        System.assertEquals(NEXT_PAYMENT_AMOUNT, rds[0].RecurringDonationSchedules__r[0].NextPaymentAmount__c, 
+            'The Next Payment Amount should still be set');
+        System.assertEquals(2, rds[0].npe03__Donations__r.size(), 'There should only be 2 Opportunities');
+        System.assertEquals(1, rds[0].RecurringDonationSchedules__r.size(), 'There should be 1 schedule');
+    }
+
+    /***
+    * @description Verify that the Next Payment Amount is cleared after a Donation closes
+    */
+    @isTest
+    private static void shouldClearNextPaymentAmountWhenNextOppIsCreated() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_QueryService queryService = new RD2_QueryService();
+
+        setUpConfiguration();
+
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+        Integer monthsLeftInYear = 12 - CLOSE_DATE.month();
+        rd.CurrentYearValue__c =(RD_AMOUNT * monthsLeftInYear) + NEXT_PAYMENT_AMOUNT;
+        rd.NextYearValue__c = RD_AMOUNT * 12;
+        update rd;
+
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
+        Opportunity nextOpportunity = oppBuilder
+            .withCloseDate(CLOSE_DATE)
+            .withOpenStage()
+            .build();
+        insert nextOpportunity;
+
+        List<npe03__Recurring_Donation__c> rds = new RD2_QueryService()
+            .getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
+
+        // Set Next Payment Amount on the schedule
+        rds[0].RecurringDonationSchedules__r[0].NextPaymentAmount__c = NEXT_PAYMENT_AMOUNT;
+        update rds[0].RecurringDonationSchedules__r[0];
+
+        new RD2_OpportunityService(
+            TODAY, new RD2_DatabaseService(), new RD2_CustomFieldMapper()
+        ).updateOpportunities(rds);
+
+        rds = queryService.getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
+
+        System.assertEquals(NEXT_PAYMENT_AMOUNT, rds[0].RecurringDonationSchedules__r[0].NextPaymentAmount__c, 
+            'The Next Payment Amount should still be set');
+        System.assertEquals(1, rds[0].npe03__Donations__r.size(), 'There should only be 1 Opportunity');
+        System.assertEquals(1, rds[0].RecurringDonationSchedules__r.size(), 'There should be 1 schedule');
+
+        nextOpportunity = rds[0].npe03__Donations__r[0];
+
+        System.assertEquals(NEXT_PAYMENT_AMOUNT, nextOpportunity.Amount, 
+            'Opportunity Amount should match Next Payment Amount: ' + NEXT_PAYMENT_AMOUNT);
+
+        // Now close the Opp and make sure the Schedule is updated accordingly 
+        Test.startTest();
+        nextOpportunity.StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        update nextOpportunity;
+        Test.stopTest();
+
+        rds = queryService.getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
+
+        System.assertEquals(2, rds[0].npe03__Donations__r.size(), 'There should be 2 Opportunities');
+
+        Opportunity newOpportunity = rds[0].npe03__Donations__r[1];
+
+        System.assertEquals(RD_AMOUNT, newOpportunity.Amount, 'The new Opp Amount should be the RD Amount');
+        System.assertEquals(1, rds[0].RecurringDonationSchedules__r.size(), 'There should be 1 schedule');
+        System.assertEquals(null, rds[0].RecurringDonationSchedules__r[0].NextPaymentAmount__c, 
+            'The Next Payment Amount should be cleared');
     }
 
     /***

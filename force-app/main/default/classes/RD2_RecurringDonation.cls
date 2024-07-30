@@ -160,6 +160,24 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
+    * @description Returns True if the Next Payment Date has changed and the value has not
+    * @return Boolean True if the Next Payment Date has changed and the value has not
+    */
+    public Boolean needsNextPaymentScheduleCheck() {
+        return changedFields.contains(npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c)
+            && !currentOrNextYearValueChanged();
+    }
+
+    /**
+    * @description Returns True if the Current or Next Year Value has changed
+    * @return Boolean True if the Current or Next Year Value has changed
+    */
+    public Boolean currentOrNextYearValueChanged() {
+        return changedFields.contains(npe03__Recurring_Donation__c.CurrentYearValue__c)
+            || changedFields.contains(npe03__Recurring_Donation__c.NextYearValue__c); 
+    }
+
+    /**
     * @description Stores the Change Type in the object, then sets it to null on the Recurring Donation
     * @return RD2_RecurringDonation This record instance
     */

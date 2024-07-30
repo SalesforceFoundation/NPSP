@@ -384,10 +384,15 @@ public with sharing class RD2_OpportunityService {
             return false;
         }
 
+        Decimal installmentAmount = installment.installmentAmount;
+        if (installment.nextPaymentAmount != null) {
+            installmentAmount = installment.nextPaymentAmount;
+        }
+
         Boolean isChanged = false;
 
-        if (opp.Amount != installment.installmentAmount) {
-            opp.Amount = installment.installmentAmount;
+        if (opp.Amount != installmentAmount) {
+            opp.Amount = installmentAmount;
             isChanged = true;
         }
 
