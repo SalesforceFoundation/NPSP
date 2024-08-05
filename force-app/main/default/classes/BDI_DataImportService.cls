@@ -416,7 +416,7 @@ global with sharing class BDI_DataImportService {
     /*******************************************************************************************************
     * @description holds the Contact Service class for use during processing
     */
-    private BDI_ContactService contactService { get; private set; }
+    @TestVisible private BDI_ContactService contactService { get; private set; }
 
     /*******************************************************************************************************
     * @description holds the Additional Object Service class for use during processing
@@ -1260,6 +1260,7 @@ global with sharing class BDI_DataImportService {
     * @description importing or updating Account1 and Account2, and setting the contacts' Primary Affiliation.
     * @return void
     */
+    @TestVisible
     private void importAccounts() {
 
         // first, try to match our existing Accounts
