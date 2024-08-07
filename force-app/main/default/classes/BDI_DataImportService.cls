@@ -416,7 +416,7 @@ global with sharing class BDI_DataImportService {
     /*******************************************************************************************************
     * @description holds the Contact Service class for use during processing
     */
-    private BDI_ContactService contactService { get; private set; }
+    @TestVisible private BDI_ContactService contactService { get; private set; }
 
     /*******************************************************************************************************
     * @description holds the Additional Object Service class for use during processing
@@ -1260,6 +1260,7 @@ global with sharing class BDI_DataImportService {
     * @description importing or updating Account1 and Account2, and setting the contacts' Primary Affiliation.
     * @return void
     */
+    @TestVisible
     private void importAccounts() {
 
         // first, try to match our existing Accounts
@@ -1333,16 +1334,37 @@ global with sharing class BDI_DataImportService {
                     dataImport.Account1Imported__c = acc.Id;
                 }
             }
-            // set c1's primary affilation
+            // Set C1's fields first
             if (dataImport.Account1Imported__c != null) {
                 Contact c1 = ContactFromDi(dataImport, 1);
-                if (c1 != null && c1.Primary_Affiliation__c != dataImport.Account1Imported__c) {
-                    c1.Primary_Affiliation__c = dataImport.Account1Imported__c;
+                if (c1 != null) {
+                    updateContactFieldsForImport(c1, dataImport, 'Contact1_');
                     if (mapConIdToConUpdate.get(c1.Id) == null) {
                         mapConIdToConUpdate.put(c1.Id, c1);
                     }
                 }
             }
+        }
+
+        // Update contacts to ensure all relevant fields are updated
+        if (mapConIdToConUpdate.size() > 0) {
+            UTIL_DMLService.updateRecords(mapConIdToConUpdate.values());
+        }
+    
+        // Set C1's primary affiliation separately to avoid conflicts
+        for (DataImport__c dataImport : listDI) {
+            if (dataImport.Account1Imported__c != null) {
+                Contact c1 = ContactFromDi(dataImport, 1);
+                if (c1 != null && c1.Primary_Affiliation__c != dataImport.Account1Imported__c) {
+                    c1.Primary_Affiliation__c = dataImport.Account1Imported__c;
+                    mapConIdToConUpdate.put(c1.Id, c1);
+                }
+            }
+        }
+    
+        // Now update the Contacts again to set their Affiliations
+        if (mapConIdToConUpdate.size() > 0) {
+            UTIL_DMLService.updateRecords(mapConIdToConUpdate.values());
         }
 
         // create/update our A2's
@@ -1403,11 +1425,11 @@ global with sharing class BDI_DataImportService {
                     dataImport.Account2Imported__c = acc.Id;
                 }
             }
-            // set c2's primary affilation
+            // Set C2's fields first
             if (dataImport.Account2Imported__c != null) {
                 Contact c2 = ContactFromDi(dataImport, 2);
-                if (c2 != null && c2.Primary_Affiliation__c != dataImport.Account2Imported__c) {
-                    c2.Primary_Affiliation__c = dataImport.Account2Imported__c;
+                if (c2 != null) {
+                    updateContactFieldsForImport(c2, dataImport, 'Contact2_');
                     if (mapConIdToConUpdate.get(c2.Id) == null) {
                         mapConIdToConUpdate.put(c2.Id, c2);
                     }
@@ -1415,11 +1437,50 @@ global with sharing class BDI_DataImportService {
             }
         }
 
-        // now update the Contacts to create their Affiliations
+        // Update contacts to ensure all relevant fields are updated
+        if (mapConIdToConUpdate.size() > 0) {
+            UTIL_DMLService.updateRecords(mapConIdToConUpdate.values());
+        }
+    
+        // Set C2's primary affiliation separately to avoid conflicts
+        for (DataImport__c dataImport : listDI) {
+            if (dataImport.Account2Imported__c != null) {
+                Contact c2 = ContactFromDi(dataImport, 2);
+                if (c2 != null && c2.Primary_Affiliation__c != dataImport.Account2Imported__c) {
+                    c2.Primary_Affiliation__c = dataImport.Account2Imported__c;
+                    mapConIdToConUpdate.put(c2.Id, c2);
+                }
+            }
+        }
+        // now update the Contacts again to set their Affiliations
         if (mapConIdToConUpdate.size() > 0) {
             UTIL_DMLService.updateRecords(mapConIdToConUpdate.values());
         }
     }
+
+    private void updateContactFieldsForImport(Contact contact, DataImport__c dataImport, String contactPrefix) {
+        if (dataImport.get(contactPrefix + 'Home_Phone__c') != null) {
+            contact.HomePhone = (String) dataImport.get(contactPrefix + 'Home_Phone__c');
+        }
+        if (dataImport.get(contactPrefix + 'Work_Phone__c') != null) {
+            contact.Phone = (String) dataImport.get(contactPrefix + 'Work_Phone__c');
+        }
+        if (dataImport.get(contactPrefix + 'Mobile_Phone__c') != null) {
+            contact.MobilePhone = (String) dataImport.get(contactPrefix + 'Mobile_Phone__c');
+        }
+        if (dataImport.get(contactPrefix + 'Other_Phone__c') != null) {
+            contact.OtherPhone = (String) dataImport.get(contactPrefix + 'Other_Phone__c');
+        }
+        if (dataImport.get(contactPrefix + 'Personal_Email__c') != null) {
+            contact.Email = (String) dataImport.get(contactPrefix + 'Personal_Email__c');
+        }
+        if (dataImport.get(contactPrefix + 'Work_Email__c') != null) {
+            contact.npe01__WorkEmail__c = (String) dataImport.get(contactPrefix + 'Work_Email__c');
+        }
+        if (dataImport.get(contactPrefix + 'Alternate_Email__c') != null) {
+            contact.npe01__AlternateEmail__c = (String) dataImport.get(contactPrefix + 'Alternate_Email__c');
+        }
+    } 
 
     /*******************************************************************************************************
     * @description returns the field name of the Account CustomID field for Account1 or Account2 in the
