@@ -665,21 +665,36 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
             Address__c newAddressFromContact = contactAddressesByContact.get(contact);
             Address__c existingAddressFromContact = existingAddressesByAddress.get(newAddressFromContact);
 
-            // if found a match
-            if (contactAddressHasAddressMatch(existingAddressFromContact)) {
+            // Check if the contact has Address Override enabled
+            if (contact.is_Address_Override__c == true) {
+                // Create a new address record specific to this contact
+                Address__c newAddress = new Address__c();
+                newAddress.Household_Account__c = contact.AccountId; // Link to household/account
+                newAddress.MailingStreet__c = contact.MailingStreet;
+                newAddress.MailingCity__c = contact.MailingCity;
+                newAddress.MailingState__c = contact.MailingState;
+                newAddress.MailingPostalCode__c = contact.MailingPostalCode;
+                newAddress.MailingCountry__c = contact.MailingCountry;
+                newAddress.Default_Address__c = false; // It's not a default address
+    
+                // Add the new address to be inserted
+                contactAddressesToInsertByContact.put(contact, newAddress);
+    
+                // Link the new address to the contact's Current Address field
+                contact.Current_Address__c = newAddress.Id;
+            }
+            else if (contactAddressHasAddressMatch(existingAddressFromContact)) {
                 updateContactAddressFromExistingAddress(contact, existingAddressFromContact);
 
                 // Prevent an address that was just inserted by the BeforeInsert trigger from being udpated
                 // a second time by the AfterInsert trigger.
             }
-
-            // no match found, and its an override just for this contact
-            else if (contact.is_Address_Override__c) {
+            else {
                 // put it on the list of addresss to create now
                 contactAddressesToInsertByContact.put(contact, newAddressFromContact);
             }
         }
-
+        // Insert the new addresses created for contacts with Address Override
         insertContactAddresses(contactAddressesToInsertByContact);
     }
 
