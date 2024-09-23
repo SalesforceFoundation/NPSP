@@ -666,7 +666,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
             Address__c existingAddressFromContact = existingAddressesByAddress.get(newAddressFromContact);
 
             // Check if the contact has Address Override enabled
-            if (contact.is_Address_Override__c == true) {
+            if (contact.Is_Address_Override__c == true) {
                 // Create a new address record specific to this contact
                 Address__c newAddress = new Address__c();
                 newAddress.Household_Account__c = contact.AccountId; // Link to household/account

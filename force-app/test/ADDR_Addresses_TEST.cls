@@ -911,7 +911,7 @@ public with sharing class ADDR_Addresses_TEST {
         Test.stopTest();
 
         Address__c updatedAddress = [SELECT Default_Address__c, Undeliverable__c FROM Address__c WHERE Id = :overrideAddressToCreate.Id];
-        Contact updatedContact = [SELECT Undeliverable_Address__c,is_Address_Override__c FROM Contact WHERE Id = :contact.Id];
+        Contact updatedContact = [SELECT Undeliverable_Address__c,Is_Address_Override__c FROM Contact WHERE Id = :contact.Id];
 
         System.assert(updatedAddress.Default_Address__c, 'The test address should be a default address.');
         System.assertEquals(null, updateError, 'Updating the address undeliverable status' +
@@ -920,7 +920,7 @@ public with sharing class ADDR_Addresses_TEST {
         System.assertEquals(false, updatedContact.Undeliverable_Address__c, 'The contact with an overridden address should not have the undeliverable status applied.');
     
         // Verify the contact's address override flag is still set to true
-        System.assertEquals(true, updatedContact.is_Address_Override__c, 'The contact should retain the address override flag after the address update.');
+        System.assertEquals(true, updatedContact.Is_Address_Override__c, 'The contact should retain the address override flag after the address update.');
     }
 
     /*********************************************************************************************************

@@ -295,30 +295,23 @@ public inherited sharing class Addresses extends fflib_SObjects2 {
                 if (npspContact.hasAddressOverride()) {
                     continue;  // Skip update for contacts with address override
                 }
-                
-                // detect that the contact's current address was deleted.
-                // and if so clear any override flag so it will get the default address.
-                if (npspContact.currentAddress() == null) {
-                    npspContact.getRecord().is_Address_Override__c = false;
-                }
 
-                if (!npspContact.hasAddressOverride() ||
-                        npspContact.currentAddress() == addressToSyncToAccountsAndContacts.getId()) {
-
-                    if (npspContact.isUndeliverableMailingAddress() !=
+                if (!npspContact.hasAddressOverride()) {
+                    if(npspContact.currentAddress() == addressToSyncToAccountsAndContacts.getId()){
+                        if (npspContact.isUndeliverableMailingAddress() !=
                             addressToSyncToAccountsAndContacts.isUndeliverable()) {
-                        npspContact.setUndeliverableMailingAddress(
-                            addressToSyncToAccountsAndContacts.isUndeliverable());
+                            npspContact.setUndeliverableMailingAddress(
+                                addressToSyncToAccountsAndContacts.isUndeliverable());
 
-                        shouldUpdateContact = true;
+                            shouldUpdateContact = true;
+                        }
+
+                        if (npspContact.mailingAddressIsDifferentFrom(addressToSyncToAccountsAndContacts)) {
+                            npspContact.setCurrentAddress(addressToSyncToAccountsAndContacts);
+
+                            shouldUpdateContact = true;
+                        }
                     }
-
-                    if (npspContact.mailingAddressIsDifferentFrom(addressToSyncToAccountsAndContacts)) {
-                        npspContact.setCurrentAddress(addressToSyncToAccountsAndContacts);
-
-                        shouldUpdateContact = true;
-                    }
-
                 }
                 if (shouldUpdateContact) {
                     contactsToUpdate.add(contact);
