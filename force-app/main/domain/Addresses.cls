@@ -296,22 +296,23 @@ public inherited sharing class Addresses extends fflib_SObjects2 {
                     continue;  // Skip update for contacts with address override
                 }
 
-                if (!npspContact.hasAddressOverride()) {
-                    if(npspContact.currentAddress() == addressToSyncToAccountsAndContacts.getId()){
-                        if (npspContact.isUndeliverableMailingAddress() !=
+                if (!npspContact.hasAddressOverride() ||
+                        npspContact.currentAddress() == addressToSyncToAccountsAndContacts.getId()) {
+
+                    if (npspContact.isUndeliverableMailingAddress() !=
                             addressToSyncToAccountsAndContacts.isUndeliverable()) {
-                            npspContact.setUndeliverableMailingAddress(
-                                addressToSyncToAccountsAndContacts.isUndeliverable());
+                        npspContact.setUndeliverableMailingAddress(
+                            addressToSyncToAccountsAndContacts.isUndeliverable());
 
-                            shouldUpdateContact = true;
-                        }
-
-                        if (npspContact.mailingAddressIsDifferentFrom(addressToSyncToAccountsAndContacts)) {
-                            npspContact.setCurrentAddress(addressToSyncToAccountsAndContacts);
-
-                            shouldUpdateContact = true;
-                        }
+                        shouldUpdateContact = true;
                     }
+
+                    if (npspContact.mailingAddressIsDifferentFrom(addressToSyncToAccountsAndContacts)) {
+                        npspContact.setCurrentAddress(addressToSyncToAccountsAndContacts);
+
+                        shouldUpdateContact = true;
+                    }
+
                 }
                 if (shouldUpdateContact) {
                     contactsToUpdate.add(contact);

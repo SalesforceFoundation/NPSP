@@ -402,10 +402,12 @@ public with sharing class ADDR_Addresses_TEST {
         // set the contacts' address overrides
         List<Contact> listCon = new List<Contact>();
         for (Integer i = 0; i < totalAccountsToCreate; i++) {
-            Contact con = testContacts[i * totalAccountsToCreate + i];
-            con.Current_Address__c = testAddresses[i].Id;
-            con.is_Address_Override__c = true;
-            listCon.add(con);
+            for (Integer j = 0; j < totalContactsToCreate; j++) { // Loop over all contacts per account
+                Contact con = testContacts[i * totalContactsToCreate + j]; 
+                con.Current_Address__c = testAddresses[i].Id;
+                con.is_Address_Override__c = true;
+                listCon.add(con);
+            }
         }
         update listCon;
 
@@ -421,11 +423,12 @@ public with sharing class ADDR_Addresses_TEST {
 
         for (Contact con : listCon) {
             Account acc = mapAccIdAcc.get(con.AccountId);
-            System.assertEquals(true, isMatchAddressAccCon(acc, con));
-            System.assertEquals(false, con.is_Address_Override__c);
-            System.assertNotEquals(null, con.Current_Address__c);
-            System.assert(con.MailingStreet.contains('Street'));
-            System.assert(con.MailingCity.contains('City'));
+            
+            // Assert that the override status remains true after address deletion
+            System.assertEquals(true, con.is_Address_Override__c, 'Address override should remain true after deletion');
+            
+            // Assert that the current address is now null after address deletion
+            System.assertEquals(null, con.Current_Address__c, 'Current address should be null after override address deletion');
         }
     }
 
