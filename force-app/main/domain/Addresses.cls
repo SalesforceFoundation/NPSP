@@ -462,6 +462,7 @@ public inherited sharing class Addresses extends fflib_SObjects2 {
                         Seasonal_End_Day__c, Geolocation__Latitude__s, Geolocation__Longitude__s, Undeliverable__c
                 FROM Address__c
                 WHERE Household_Account__c IN :accountIds
+                WITH USER_MODE
                 ORDER BY Default_Address__c DESC, LastModifiedDate ASC
         ]; // ordering needed by cleanupAccountAddresses().
         for (Address__c address : allAddressesForAccountIds) {

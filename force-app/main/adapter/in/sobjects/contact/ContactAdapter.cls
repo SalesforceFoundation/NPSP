@@ -168,9 +168,17 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
         // set the mailing address for contacts who specify an address lookup or override
         List<Contact> consNeedingAddressFieldsPopulated = consWhoseAddressChanged();
         if (consNeedingAddressFieldsPopulated.size() > 0) {
-            // to avoid pushing these address changes to the HH.
-            setRecursionFlags();
-            setContactAddressFromCurrentAddress(consNeedingAddressFieldsPopulated);
+            // Add null checks before setting address fields
+            for (Contact con : consNeedingAddressFieldsPopulated) {
+                // Only proceed if MailingStreet and MailingCity are not null
+                if (con.MailingStreet != null && con.MailingCity != null) {
+                    setRecursionFlags();
+                    setContactAddressFromCurrentAddress(consNeedingAddressFieldsPopulated);
+                } else {
+                    // Gracefully handle cases where address fields are null
+                    System.debug('Skipping address update for contact with null MailingStreet or MailingCity: ' + con.Id);
+                }
+            }
             deactivateAddrRecursionFlag();
         }
 
@@ -179,7 +187,6 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
                 consWhoseAccountChangedAndDontHaveAddressOverrides();
         addressRefreshQueue.addAll(consHavingAddressOverridesRemoved());
         if (addressRefreshQueue.size() > 0) {
-            // to avoid pushing these address changes to the HH.
             setRecursionFlags();
             HouseholdMembers householdMembersForAddressRefresh =
                     new HouseholdMembers(addressRefreshQueue);
@@ -187,7 +194,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
             deactivateAddrRecursionFlag();
         }
 
-        // create any new Default Address objects
+        // create new Default Address objects if required
         Set<Contact> addressCreationQueue = getAddressCreationQueueBeforeUpdate();
         createAddressFromContactAndSetCurrentAddressLookupId(new List<Contact>(addressCreationQueue));
 
@@ -282,6 +289,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
                     SELECT Id, npe01__SYSTEM_AccountType__c, (SELECT Id FROM Addresses__r)
                     FROM Account
                     WHERE Id IN :accountIds()
+                    WITH USER_MODE
             ]);
         }
         return accountsById;
@@ -584,14 +592,35 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
         if (contactAddressesToInsertByContact.size() == 0) {
             return;
         }
-        UTIL_DMLService.insertRecords(contactAddressesToInsertByContact.values());
-        // Since we're inserting new Addresses in a Before Insert/Update scenario, set the flag to
-        // prevent the After Insert/Update Contact logic from executing when it's eventually called.
-        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
-
-        for (Contact contact : contactAddressesToInsertByContact.keySet()) {
-            Address__c contactAddress = contactAddressesToInsertByContact.get(contact);
-            contact.Current_Address__c = contactAddress.Id;
+        // Validate addresses before insertion
+        List<Address__c> validAddresses = new List<Address__c>();
+        for (Address__c addr : contactAddressesToInsertByContact.values()) {
+            if (addr.MailingStreet__c != null && addr.MailingCity__c != null) {
+                validAddresses.add(addr);
+            } else {
+                // Handle the case where the address fields are incomplete or invalid
+                System.debug('Skipping invalid address with null fields: ' + addr.Id);
+            }
+        }
+    
+        // Proceed if there are valid addresses to insert
+        if (!validAddresses.isEmpty()) {
+            UTIL_DMLService.insertRecords(validAddresses);
+    
+            // prevent recursion by setting the flag
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
+    
+            // Link the inserted addresses back to the corresponding contacts
+            for (Contact contact : contactAddressesToInsertByContact.keySet()) {
+                Address__c contactAddress = contactAddressesToInsertByContact.get(contact);
+                if (contactAddress != null && contactAddress.Id != null) {
+                    contact.Current_Address__c = contactAddress.Id;
+                } else {
+                    System.debug('Address not inserted or invalid for Contact: ' + contact.Id);
+                }
+            }
+        } else {
+            System.debug('No valid addresses to insert.');
         }
     }
 
@@ -786,6 +815,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
                 SELECT OpportunityId
                 FROM OpportunityContactRole
                 WHERE ContactId IN :winningContacts AND IsPrimary = TRUE
+                WITH USER_MODE
         ]
         ) {
             oppIds.add(ocr.OpportunityId);
@@ -941,6 +971,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
                 SELECT Id
                 FROM Account
                 WHERE Id = :contactsInstance.oldAccountIds()
+                WITH USER_MODE
         ]);
 
         for (Contact contactRecord : (List<Contact>) contactsInstance.getRecords()) {
