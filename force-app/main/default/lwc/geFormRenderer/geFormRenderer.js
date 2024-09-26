@@ -1668,7 +1668,7 @@ export default class GeFormRenderer extends LightningElement{
                 sections.forEach(section => {
                     section.elements.forEach(element => {
                         for (let key in batchDefaultsObject) {
-                            if (batchDefaultsObject.hasOwnProperty(key)) {
+                            if (batchDefaultsObject.hasOwnProperty(key) && key === element.customLabel) {
                                 const batchDefault = batchDefaultsObject[key];
                                 if (batchDefault.objectApiName === element.objectApiName &&
                                     batchDefault.fieldApiName === element.fieldApiName) {
