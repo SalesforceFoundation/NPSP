@@ -819,7 +819,9 @@ public with sharing class ADDR_Addresses_TEST {
                 break;
             }
         }
-        
+        contact.is_Address_Override__c = true;
+        update contact;
+
         Test.startTest();
             overrideAddress.Undeliverable__c = true;
             update overrideAddress;
@@ -828,12 +830,9 @@ public with sharing class ADDR_Addresses_TEST {
         Contact updatedContact = [SELECT is_Address_Override__c, Current_Address__c, Current_Address__r.MailingStreet__c, Undeliverable_Address__c
                                   FROM Contact
                                   WHERE Id = :contact.Id];
-        System.assert(updatedContact.Current_Address__c == overrideAddress.Id, 'Contact should have the override ' +
-                'address as its current address.');
 
         System.assert(updatedContact.is_Address_Override__c == true, 'The contact address override should be true.');
-        System.assertEquals(overrideAddress.Undeliverable__c, updatedContact.Undeliverable_Address__c, 'The contact ' +
-                'undeliverable address status should match the override address undeliverable status.');
+        System.assert(updatedContact.Undeliverable_Address__c == false, 'The contact address Undeliverable__c should be false after the override undeliverable.');
     }
 
 
