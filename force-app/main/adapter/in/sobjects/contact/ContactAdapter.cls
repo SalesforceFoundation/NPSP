@@ -679,9 +679,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
     
                 // Add the new address to be inserted
                 contactAddressesToInsertByContact.put(contact, newAddress);
-    
-                // Link the new address to the contact's Current Address field
-                contact.Current_Address__c = newAddress.Id;
+
             }
             else if (contactAddressHasAddressMatch(existingAddressFromContact)) {
                 updateContactAddressFromExistingAddress(contact, existingAddressFromContact);
@@ -696,6 +694,16 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
         }
         // Insert the new addresses created for contacts with Address Override
         insertContactAddresses(contactAddressesToInsertByContact);
+
+        for (Contact contact : contactAddressesToInsertByContact.keySet()) {
+            Address__c insertedAddress = contactAddressesToInsertByContact.get(contact);
+             if (insertedAddress != null && insertedAddress.Id != null) {
+                contact.Current_Address__c = insertedAddress.Id;  // Now set the address ID
+                }
+             else
+              contact.Current_Address__c = null;
+
+         }
     }
 
     private Set<Contact> getAddressCreationQueueBeforeUpdate() {
