@@ -462,7 +462,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
                 batchDefaults[formElement.label] = {
                     objectApiName: formElement.objectApiName,
                     fieldApiName: formElement.fieldApiName,
-                    value: formElement.value
+                    value: isNotEmpty(formElement.value) ? formElement.value : undefined
                 };
             }
         }
