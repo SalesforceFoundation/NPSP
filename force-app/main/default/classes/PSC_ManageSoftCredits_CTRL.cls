@@ -293,8 +293,8 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
         }
 
         List<SObject> toDelete = listSoftCreditsForDelete;
-        List<OpportunityContactRole> toUpsertContactRoles = new List<OpportunityContactRole>();
-        List<Partial_Soft_Credit__c> toUpsertPartialCredits = new List<Partial_Soft_Credit__c>();
+        List<SObject> toUpsertContactRoles = new List<SObject>();  
+        List<SObject> toUpsertPartialCredits = new List<SObject>();
         List<SoftCredit> upsertedSoftCredits = new List<SoftCredit>();
         Map<Integer, OpportunityContactRole> rollbackContactRole = new Map<Integer, OpportunityContactRole>();
         Map<Integer, Partial_Soft_Credit__c> rollbackPartialSoftCredit = new Map<Integer, Partial_Soft_Credit__c>();        
@@ -325,7 +325,7 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
                     if (sc.partial.Id != null) {
                         toDelete.add(sc.partial);
                     }
-                    toUpsertContactRoles.add(sc.contactRole);
+                    toUpsertContactRoles.add((SObject) sc.contactRole);  // Cast OpportunityContactRole to SObject before adding
 
                 } else {
                     if (sc.partial.Contact__c == null) {
@@ -340,7 +340,7 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
                         sc.partial.Opportunity__c = sc.contactRole.OpportunityId;
                     }
                     sc.partial.Role_Name__c = sc.contactRole.Role;
-                    toUpsertContactRoles.add(sc.contactRole);
+                    toUpsertContactRoles.add((SObject) sc.contactRole);  // Cast OpportunityContactRole to SObject before adding
                     upsertedSoftCredits.add(sc);
                 }
 
@@ -368,30 +368,12 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
         
         Savepoint sp = Database.setSavepoint(); 
         try {
-            delete toDelete;
-
-            upsert toUpsertContactRoles;
-
-            for (SoftCredit sc : upsertedSoftCredits) {
-                // full credits should not create a PSC
-                if (sc.fullCredit) {
-                    continue;
-                }
-
-                sc.partial.Contact_Role_ID__c = sc.contactRole.Id;
-                if (!isAmount) {
-                    sc.partial.Amount__c = convertPercentageToAmount(sc.partial.Amount__c);
-                }
-
-                toUpsertPartialCredits.add(sc.partial);
-            }
-            upsert toUpsertPartialCredits;
-            
-            if (!isAmount) {
-                for (SoftCredit sc : upsertedSoftCredits) {
-                    sc.partial.Amount__c = convertPercentageToAmount(sc.partial.Amount__c);
-                }
-            }
+            // Use helper method to delete in chunks
+            executeDMLInChunks(toDelete, 'delete');
+        
+            // Use helper method to upsert in chunks
+            executeDMLInChunks(toUpsertContactRoles, 'upsert');  // This is now using List<SObject>
+            executeDMLInChunks(new List<SObject>(toUpsertPartialCredits), 'upsert');  // This is now using List<SObject>
         
             PageReference pageRef = new PageReference('/'+opp.Id);
             pageRef.setRedirect(true);
@@ -401,15 +383,38 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
         } catch (Exception ex) {
             Database.rollback(sp);
 
-            // rollback Opportunity Contact Role and Partial Soft Credits
-            for (Integer i = 0, size = softCredits.size(); i < size; i++) {
-                softCredits[i].contactRole = rollbackContactRole.get(i);
-                softCredits[i].partial = rollbackPartialSoftCredit.get(i);
-            }
-
             Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
         }
         return null;
+    }
+
+    /*******************************************************************************************************
+    * @description Helper method to execute DML in chunks to avoid chunking error
+    */ 
+    public static void executeDMLInChunks(List<SObject> recordsToProcess, String dmlOperation) {
+        Integer chunkSize = 10; // Adjust chunk size as needed
+        List<SObject> chunk = new List<SObject>();
+
+        for (Integer i = 0; i < recordsToProcess.size(); i++) {
+            chunk.add(recordsToProcess[i]);
+
+            // Once we reach the chunk size or if it's the last record, execute the DML
+            if (chunk.size() == chunkSize || i == recordsToProcess.size() - 1) {
+                try {
+                    if (dmlOperation == 'delete') {
+                        delete chunk;  // Perform delete DML
+                    } else if (dmlOperation == 'upsert') {
+                        upsert chunk;  // Perform upsert DML
+                    }
+                } catch (DmlException ex) {
+                    System.debug('Error while performing ' + dmlOperation + ' DML: ' + ex.getMessage());
+                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
+                }
+
+                // Clear the chunk after the DML operation to prepare for the next chunk
+                chunk.clear();
+            }
+        }
     }
     
     /*******************************************************************************************************
