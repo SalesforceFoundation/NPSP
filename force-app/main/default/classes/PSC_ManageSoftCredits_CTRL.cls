@@ -416,41 +416,30 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
                 }
             }
         
-            // Step 2: Track processed record IDs to prevent duplicates
-            Set<Id> processedPartialCreditIds = new Set<Id>();  // Track processed Partial Soft Credits
-            Set<Id> processedContactRoleIds = new Set<Id>();    // Track processed Opportunity Contact Roles
-        
-            // Step 3: Upsert contact roles in chunks to avoid hitting limits
+            // Step 2: Upsert contact roles in chunks to avoid hitting limits
             if (!toUpsertContactRoles.isEmpty()) {
                 for (Integer i = 0; i < toUpsertContactRoles.size(); i += chunkSize) {
                     List<OpportunityContactRole> chunk = new List<OpportunityContactRole>();
                     for (Integer j = i; j < Math.min(i + chunkSize, toUpsertContactRoles.size()); j++) {
-                        if (!processedContactRoleIds.contains(toUpsertContactRoles[j].Id)) {
-                            processedContactRoleIds.add(toUpsertContactRoles[j].Id);  // Track this contact role ID
-                            chunk.add(toUpsertContactRoles[j]);
-                        }
+                        chunk.add(toUpsertContactRoles[j]);
                     }
                     Database.upsert(chunk, false);
                 }
             }
         
-            // Step 4: Handle soft credits (partial and full) while ensuring no duplicates
+            // Step 3: Handle soft credits (partial and full) while ensuring no duplicates
             for (SoftCredit sc : upsertedSoftCredits) {
                 if (sc.fullCredit) {
                     continue;  // Skip full credit records
                 }
-        
-                if (!processedPartialCreditIds.contains(sc.partial.Id)) {
-                    sc.partial.Contact_Role_ID__c = sc.contactRole.Id;
-                    if (!isAmount) {
-                        sc.partial.Amount__c = convertPercentageToAmount(sc.partial.Amount__c);
-                    }
-                    processedPartialCreditIds.add(sc.partial.Id);  // Track the partial soft credit ID
-                    toUpsertPartialCredits.add(sc.partial);
+                sc.partial.Contact_Role_ID__c = sc.contactRole.Id;
+                if (!isAmount) {
+                    sc.partial.Amount__c = convertPercentageToAmount(sc.partial.Amount__c);
                 }
+                toUpsertPartialCredits.add(sc.partial);
             }
         
-            // Step 5: Upsert partial soft credits in chunks to avoid hitting limits
+            // Step 4: Upsert partial soft credits in chunks to avoid hitting limits
             if (!toUpsertPartialCredits.isEmpty()) {
                 for (Integer i = 0; i < toUpsertPartialCredits.size(); i += chunkSize) {
                     List<Partial_Soft_Credit__c> chunk = new List<Partial_Soft_Credit__c>();
@@ -461,7 +450,7 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
                 }
             }
         
-            // Step 6: Ensure consistency for percentage-based soft credits
+            // Step 5: Ensure consistency for percentage-based soft credits
             if (!isAmount) {
                 for (SoftCredit sc : upsertedSoftCredits) {
                     if (!sc.fullCredit) {
@@ -470,7 +459,7 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
                 }
             }
         
-            // Step 7: Return to the Opportunity page after successful save
+            // Step 6: Return to the Opportunity page after successful save
             PageReference pageRef = new PageReference('/' + opp.Id);
             pageRef.setRedirect(true);
             pageRef.getParameters().put('t', '' + System.currentTimeMillis());  // Avoid caching issues

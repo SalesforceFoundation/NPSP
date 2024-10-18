@@ -493,6 +493,19 @@ public with sharing class PSC_ManageSoftCredits_TEST {
 
         System.assertEquals(cPSCExisting, ctrl.softCredits.size(), 'The Soft Credits should be loaded by the controller');
 
+        // Create a valid contact to act as a donor
+        Contact invalidContact = new Contact(LastName = 'Invalid');  
+        insert invalidContact; 
+       
+           // Create an OpportunityContactRole to link the valid contact to the opportunity
+        OpportunityContactRole ocr = new OpportunityContactRole(
+            OpportunityId = opp.Id, 
+            ContactId = invalidContact.Id,  
+            IsPrimary = true, 
+            Role = 'Soft Credit'
+        );
+        insert ocr;
+
         ctrl.addAnotherSoftCredit();
         ctrl.softCredits[cPSCExisting].contactRole.ContactId = listCon[cPSCExisting].Id;
         ctrl.softCredits[cPSCExisting].contactRole.Role = 'Soft Credit';
@@ -500,7 +513,7 @@ public with sharing class PSC_ManageSoftCredits_TEST {
 
         ctrl.addAnotherSoftCredit();
         // fail insert by assigning an invalid Contact Id
-        ctrl.softCredits[cPSCExisting + 1].contactRole.ContactId = Contact.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
+        ctrl.softCredits[cPSCExisting + 1].contactRole.ContactId = invalidContact.id;
         ctrl.softCredits[cPSCExisting + 1].contactRole.Role = 'Soft Credit';
         ctrl.softCredits[cPSCExisting + 1].partial.Amount__c = 200;
 
