@@ -368,36 +368,102 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
         
         Savepoint sp = Database.setSavepoint(); 
         try {
-            delete toDelete;
-
-            upsert toUpsertContactRoles;
-
-            for (SoftCredit sc : upsertedSoftCredits) {
-                // full credits should not create a PSC
-                if (sc.fullCredit) {
-                    continue;
+            Integer chunkSize = 200;
+        
+            // Step 1: Delete records that need to be removed in chunks to handle limits
+            if (!toDelete.isEmpty()) {
+                List<Partial_Soft_Credit__c> partialSoftCreditsToDelete = new List<Partial_Soft_Credit__c>();
+                List<OpportunityContactRole> contactRolesToDelete = new List<OpportunityContactRole>();
+        
+                for (SObject record : toDelete) {
+                    if (record instanceof Partial_Soft_Credit__c) {
+                        partialSoftCreditsToDelete.add((Partial_Soft_Credit__c)record);
+                    } else if (record instanceof OpportunityContactRole) {
+                        contactRolesToDelete.add((OpportunityContactRole)record);
+                    }
                 }
-
+        
+                // Perform deletion of Partial_Soft_Credit__c in chunks
+                for (Integer i = 0; i < partialSoftCreditsToDelete.size(); i += chunkSize) {
+                    List<Partial_Soft_Credit__c> chunk = new List<Partial_Soft_Credit__c>();
+                    for (Integer j = i; j < Math.min(i + chunkSize, partialSoftCreditsToDelete.size()); j++) {
+                        chunk.add(partialSoftCreditsToDelete[j]);
+                    }
+                    Database.DeleteResult[] deleteResults = Database.delete(chunk, false);
+                    for (Database.DeleteResult result : deleteResults) {
+                        if (!result.isSuccess()) {
+                            for (Database.Error error : result.getErrors()) {
+                                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Delete Error (Partial Soft Credits): ' + error.getMessage()));
+                            }
+                        }
+                    }
+                }
+        
+                // Perform deletion of OpportunityContactRole in chunks
+                for (Integer i = 0; i < contactRolesToDelete.size(); i += chunkSize) {
+                    List<OpportunityContactRole> chunk = new List<OpportunityContactRole>();
+                    for (Integer j = i; j < Math.min(i + chunkSize, contactRolesToDelete.size()); j++) {
+                        chunk.add(contactRolesToDelete[j]);
+                    }
+                    Database.DeleteResult[] deleteResults = Database.delete(chunk, false);
+                    for (Database.DeleteResult result : deleteResults) {
+                        if (!result.isSuccess()) {
+                            for (Database.Error error : result.getErrors()) {
+                                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Delete Error (Contact Roles): ' + error.getMessage()));
+                            }
+                        }
+                    }
+                }
+            }
+        
+            // Step 2: Upsert contact roles in chunks to avoid hitting limits
+            if (!toUpsertContactRoles.isEmpty()) {
+                for (Integer i = 0; i < toUpsertContactRoles.size(); i += chunkSize) {
+                    List<OpportunityContactRole> chunk = new List<OpportunityContactRole>();
+                    for (Integer j = i; j < Math.min(i + chunkSize, toUpsertContactRoles.size()); j++) {
+                        chunk.add(toUpsertContactRoles[j]);
+                    }
+                    Database.upsert(chunk, false);
+                }
+            }
+        
+            // Step 3: Handle soft credits (partial and full) while ensuring no duplicates
+            for (SoftCredit sc : upsertedSoftCredits) {
+                if (sc.fullCredit) {
+                    continue;  // Skip full credit records
+                }
                 sc.partial.Contact_Role_ID__c = sc.contactRole.Id;
                 if (!isAmount) {
                     sc.partial.Amount__c = convertPercentageToAmount(sc.partial.Amount__c);
                 }
-
                 toUpsertPartialCredits.add(sc.partial);
             }
-            upsert toUpsertPartialCredits;
-            
-            if (!isAmount) {
-                for (SoftCredit sc : upsertedSoftCredits) {
-                    sc.partial.Amount__c = convertPercentageToAmount(sc.partial.Amount__c);
+        
+            // Step 4: Upsert partial soft credits in chunks to avoid hitting limits
+            if (!toUpsertPartialCredits.isEmpty()) {
+                for (Integer i = 0; i < toUpsertPartialCredits.size(); i += chunkSize) {
+                    List<Partial_Soft_Credit__c> chunk = new List<Partial_Soft_Credit__c>();
+                    for (Integer j = i; j < Math.min(i + chunkSize, toUpsertPartialCredits.size()); j++) {
+                        chunk.add(toUpsertPartialCredits[j]);
+                    }
+                    Database.upsert(chunk, false);
                 }
             }
         
-            PageReference pageRef = new PageReference('/'+opp.Id);
+            // Step 5: Ensure consistency for percentage-based soft credits
+            if (!isAmount) {
+                for (SoftCredit sc : upsertedSoftCredits) {
+                    if (!sc.fullCredit) {
+                        sc.partial.Amount__c = convertPercentageToAmount(sc.partial.Amount__c);
+                    }
+                }
+            }
+        
+            // Step 6: Return to the Opportunity page after successful save
+            PageReference pageRef = new PageReference('/' + opp.Id);
             pageRef.setRedirect(true);
-            pageRef.getParameters().put('t',''+(System.currentTimeMillis()));
+            pageRef.getParameters().put('t', '' + System.currentTimeMillis());  // Avoid caching issues
             return pageRef;
-
         } catch (Exception ex) {
             Database.rollback(sp);
 
