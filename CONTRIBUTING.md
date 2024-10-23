@@ -18,4 +18,4 @@ Instead, please post all questions and issues directly in the Nonprofit Hub of t
 Please follow our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 # License
-By contributing your code, you agree to license your contribution under the terms of our project [LICENSE](LICENSE.txt) and to sign the [Salesforce CLA](https://cla.salesforce.com/sign-cla)
+By contributing your code, you agree to license your contribution under the terms of our project [LICENSE](LICENSE) and to sign the [Salesforce CLA](https://cla.salesforce.com/sign-cla)
