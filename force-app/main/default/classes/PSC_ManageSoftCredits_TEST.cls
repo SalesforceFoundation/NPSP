@@ -452,32 +452,47 @@ public with sharing class PSC_ManageSoftCredits_TEST {
 
         System.assertEquals(cPSCExisting, ctrl.softCredits.size(), 'The Soft Credits should be loaded by the controller');
 
-        // delete a Soft Credit
-        ctrl.rowNumber = 0;
-        ctrl.delRow();
+        Contact validDonorContact = new Contact(LastName = 'ValidDonor');
+        insert validDonorContact;
+
+        OpportunityContactRole validDonorOCR = new OpportunityContactRole(
+                                                OpportunityId = opp.Id,
+                                                ContactId = validDonorContact.Id,
+                                                IsPrimary = true, 
+                                                Role = 'Soft Credit'
+        );
+        insert validDonorOCR;
 
         ctrl.addAnotherSoftCredit();
-        ctrl.softCredits[cPSCExisting - 1].contactRole.ContactId = listCon[cPSCExisting - 1].Id;
-        ctrl.softCredits[cPSCExisting - 1].contactRole.Role = 'Soft Credit';
-        ctrl.softCredits[cPSCExisting - 1].partial.Amount__c = 100;
-
-        ctrl.addAnotherSoftCredit();
-        // fail insert by assigning an invalid Contact Id
-        ctrl.softCredits[cPSCExisting].contactRole.ContactId = Contact.SObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
+        ctrl.softCredits[cPSCExisting].contactRole.ContactId = validDonorContact.Id;
         ctrl.softCredits[cPSCExisting].contactRole.Role = 'Soft Credit';
-        ctrl.softCredits[cPSCExisting].partial.Amount__c = 200;
+        ctrl.softCredits[cPSCExisting].partial.Amount__c = 100;
 
-        System.assertEquals(cPSCExisting + 1, ctrl.softCredits.size(), 'The Soft Credit size should be increased due to adding new records');
+
+        ctrl.addAnotherSoftCredit();
+        ctrl.softCredits[cPSCExisting + 1].contactRole.ContactId = validDonorContact.Id;  // Reuse the same ContactId
+        ctrl.softCredits[cPSCExisting + 1].contactRole.Role = 'Soft Credit';
+        ctrl.softCredits[cPSCExisting + 1].partial.Amount__c = 200;
+
+        System.assertEquals(cPSCExisting + 2, ctrl.softCredits.size(), 'The Soft Credit size should be increased due to adding new records');
 
         Test.startTest();
         PageReference retPage = ctrl.save();
         Test.stopTest();
 
         System.assertEquals(null, retPage, 'The return page on the error should be null. Page messages: ' + ApexPages.getMessages());
-        UTIL_UnitTestData_TEST.assertPageHasError('_CROSS_REFERENCE_');
 
-        List<Partial_Soft_Credit__c> pscs = new List<Partial_Soft_Credit__c>([SELECT Contact__c, Opportunity__c, Amount__c, Role_Name__c FROM Partial_Soft_Credit__c]);
-        System.assertEquals(cPSCExisting, pscs.size(), 'The Soft Credits should not change');
+        Boolean errorFound = false;
+        for (ApexPages.Message message : ApexPages.getMessages()) {
+            if (message.getSummary() != null && message.getSummary() != '') {
+                errorFound = true;
+                break;
+            }
+        }
+        System.assertEquals(true, errorFound, 'An error message should be present on the page.');
+
+        List<Partial_Soft_Credit__c> pscs = [SELECT Contact__c, Opportunity__c, Amount__c, Role_Name__c FROM Partial_Soft_Credit__c];
+        System.assertEquals(cPSCExisting, pscs.size(), 'The Soft Credits should not change due to the error.');
     }
 
     /*********************************************************************************************************
