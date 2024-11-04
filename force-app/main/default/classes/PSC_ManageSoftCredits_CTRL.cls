@@ -48,6 +48,7 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
     /** @description The currency symbol or ISO code of the related record or org default */
     @TestVisible private String currencySymbol;
 
+    @TestVisible private Integer chunkSize = 200;
     /** @description Set to true if the user has the appropriate permissions to access the page */
     public Boolean hasAccess {
         get {
@@ -366,10 +367,9 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
             return null;
         }
         
-        Savepoint sp = Database.setSavepoint(); 
+        Savepoint sp = Database.setSavepoint();
+        List<String> errorMessages = new List<String>(); 
         try {
-            Integer chunkSize = 200;
-        
             // Step 1: Delete records that need to be removed in chunks to handle limits
             if (!toDelete.isEmpty()) {
                 List<Partial_Soft_Credit__c> partialSoftCreditsToDelete = new List<Partial_Soft_Credit__c>();
@@ -393,12 +393,20 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
                     for (Database.DeleteResult result : deleteResults) {
                         if (!result.isSuccess()) {
                             for (Database.Error error : result.getErrors()) {
-                                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Delete Error (Partial Soft Credits): ' + error.getMessage()));
+                                errorMessages.add('Delete Error (Partial Soft Credits): ' + error.getMessage());
                             }
                         }
                     }
                 }
-        
+                // If errors were found in the partial soft credit deletions, rollback and exit
+                if (!errorMessages.isEmpty()) {
+                    Database.rollback(sp);
+                    for (String errorMessage : errorMessages) {
+                        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, errorMessage));
+                    }
+                    return null;
+                }
+
                 // Perform deletion of OpportunityContactRole in chunks
                 for (Integer i = 0; i < contactRolesToDelete.size(); i += chunkSize) {
                     List<OpportunityContactRole> chunk = new List<OpportunityContactRole>();
@@ -409,10 +417,18 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
                     for (Database.DeleteResult result : deleteResults) {
                         if (!result.isSuccess()) {
                             for (Database.Error error : result.getErrors()) {
-                                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Delete Error (Contact Roles): ' + error.getMessage()));
+                                errorMessages.add('Delete Error (Contact Roles): ' + error.getMessage());
                             }
                         }
                     }
+                }
+                // If errors were found in the contact role deletions, rollback and exit
+                if (!errorMessages.isEmpty()) {
+                    Database.rollback(sp);
+                    for (String errorMessage : errorMessages) {
+                        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, errorMessage));
+                    }
+                    return null;
                 }
             }
         

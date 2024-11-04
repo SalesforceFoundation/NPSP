@@ -647,4 +647,117 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         }
     }
 
+    @isTest
+    private static void testBulkOperationsWithVariousErrorHandling() {
+        initTestDataWithPscs();
+        Test.setCurrentPage(Page.PSC_ManageSoftCredits);
+        PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
+    
+        System.assertEquals(cPSCExisting, ctrl.softCredits.size(), 'The Soft Credits should be loaded by the controller');
+        
+        // Insert valid contact as donor
+        Contact validDonorContact = new Contact(LastName = 'ValidDonor');
+        insert validDonorContact;
+    
+        // Create a primary donor OpportunityContactRole
+        OpportunityContactRole validDonorOCR = new OpportunityContactRole(
+            OpportunityId = opp.Id, 
+            ContactId = validDonorContact.Id,  
+            IsPrimary = true, 
+            Role = 'Soft Credit'
+        );
+        insert validDonorOCR;
+    
+        // Bulk Insert Test with Various Errors
+        ctrl.addAnotherSoftCredit();
+        ctrl.softCredits[cPSCExisting].contactRole.ContactId = validDonorContact.Id;
+        ctrl.softCredits[cPSCExisting].contactRole.Role = 'Soft Credit';
+        ctrl.softCredits[cPSCExisting].partial.Amount__c = 100;
+    
+        ctrl.addAnotherSoftCredit();
+        ctrl.softCredits[cPSCExisting + 1].contactRole.ContactId = null; // Simulate invalid Contact ID by setting it to null
+        ctrl.softCredits[cPSCExisting + 1].contactRole.Role = 'Soft Credit';
+        ctrl.softCredits[cPSCExisting + 1].partial.Amount__c = 200;
+    
+        ctrl.addAnotherSoftCredit();
+        ctrl.softCredits[cPSCExisting + 2].contactRole.ContactId = validDonorContact.Id;
+        ctrl.softCredits[cPSCExisting + 2].contactRole.Role = null; // Missing Role
+        ctrl.softCredits[cPSCExisting + 2].partial.Amount__c = 300;
+    
+        ctrl.addAnotherSoftCredit();
+        ctrl.softCredits[cPSCExisting + 3].contactRole.ContactId = validDonorContact.Id;
+        ctrl.softCredits[cPSCExisting + 3].contactRole.Role = 'Soft Credit';
+        ctrl.softCredits[cPSCExisting + 3].partial.Amount__c = null; // Missing Amount
+    
+        System.assertEquals(cPSCExisting + 4, ctrl.softCredits.size(), 'Soft Credit size should be increased due to adding new records');
+    
+        // Test bulk insert handling: Run save and check for error handling
+        Test.startTest();
+        PageReference retPage = ctrl.save();
+        Test.stopTest();
+    
+        System.assertEquals(null, retPage, 'The return page on the error should be null. Page messages: ' + ApexPages.getMessages());
+    
+        // Assert that an error message is present due to bulk insert issues
+        Boolean errorFound = false;
+        for (ApexPages.Message message : ApexPages.getMessages()) {
+            if (message.getSummary() != null && message.getSummary() != '') {
+                errorFound = true;
+                break;
+            }
+        }
+        System.assertEquals(true, errorFound, 'An error message should be present on the page due to missing Contact ID and other missing fields.');
+    
+        // Bulk Update Test with Various Errors
+        ctrl.softCredits[0].partial.Amount__c = 150; // Valid update
+        ctrl.softCredits[1].partial.Amount__c = 250; // Valid update
+        ctrl.softCredits[2].partial.Contact__c = null; // Simulate missing ContactId in update
+        ctrl.softCredits[3].contactRole.Role = null; // Missing role in update
+    
+      
+        retPage = ctrl.save();
+        System.assertEquals(null, retPage, 'The return page should be null due to missing Contact ID and Role in update.');
+    
+        // Verify no partial changes were committed due to error
+        List<Partial_Soft_Credit__c> pscsAfterUpdate = [SELECT Contact__c, Opportunity__c, Amount__c, Role_Name__c FROM Partial_Soft_Credit__c];
+        System.assertEquals(cPSCExisting, pscsAfterUpdate.size(), 'The Soft Credits should not change due to error in bulk update.');
+    
+        // Bulk Delete Test with Various Errors
+        ctrl.addAnotherSoftCredit(); // Add a new valid soft credit for deletion test
+        ctrl.softCredits[cPSCExisting + 4].contactRole.ContactId = validDonorContact.Id;
+        ctrl.softCredits[cPSCExisting + 4].contactRole.Role = 'Soft Credit';
+        ctrl.softCredits[cPSCExisting + 4].partial.Amount__c = 50;
+    
+        if (ctrl.softCredits.size() > 0) {
+            ctrl.rowNumber = 0;
+            ctrl.delRow(); // Valid deletion
+        }
+        if (ctrl.softCredits.size() > cPSCExisting + 4) {
+            ctrl.rowNumber = cPSCExisting + 4;
+            ctrl.delRow(); // Valid deletion
+        }
+        if (ctrl.softCredits.size() > cPSCExisting + 3) {
+            ctrl.rowNumber = cPSCExisting + 3;
+            ctrl.delRow(); // Invalid deletion (missing required fields)
+        }
+    
+        // Trigger save with deletions and capture result
+        retPage = ctrl.save();
+    
+        // Check for errors related to deletions (if any)
+        Boolean deleteErrorFound = false;
+        for (ApexPages.Message message : ApexPages.getMessages()) {
+            if (message.getSummary() != null && message.getSummary().contains('Delete Error')) {
+                deleteErrorFound = true;
+                break;
+            }
+        }
+    
+        // Assert that deletions handled correctly
+        System.assertEquals(false, deleteErrorFound, 'No error should occur for valid deletions.');
+    
+        // Final Verification: Ensure soft credit count is consistent
+        List<Partial_Soft_Credit__c> finalPscs = [SELECT Contact__c, Opportunity__c, Amount__c, Role_Name__c FROM Partial_Soft_Credit__c];
+        System.assertEquals(cPSCExisting, finalPscs.size(), 'Final count should match the original due to errors rolling back changes.');
+    }    
 }
