@@ -626,9 +626,9 @@ global with sharing class BDI_DataImportService {
             if (apexJobId != null && listDI.size() > 0) {
                 List<DataImportBatch__c> listBatch = [SELECT Name, Batch_Number__c, Batch_Status__c, Batch_Defaults__c, 
                                             Form_Template__c, RequireTotalMatch__c, Expected_Count_of_Gifts__c, 
-                                            Expected_Total_Batch_Amount__c, Batch_Table_Columns__c, LastModifiedDate 
+                                            Expected_Total_Batch_Amount__c, Batch_Table_Columns__c, LastModifiedDate, GiftBatch__c 
                                             FROM DataImportBatch__c WHERE Id= :listDI[0].NPSP_Data_Import_Batch__c LIMIT 1];
-                if (listBatch.size() > 0 ) {
+                if (listBatch.size() > 0 && listBatch[0].GiftBatch__c) {
                     GiftBatch giftBatch = new GiftBatch(listBatch[0]);
                     Boolean firstInstallmentPaid = giftBatch.shouldPayFirstInstallment();
 
