@@ -46,7 +46,7 @@ private class GiftEntryProcessorQueue_TEST {
             BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
         UTIL_CustomSettingsFacade.setDataImportSettings(dataImportSettings);
 
-        DataImportBatch__c giftBatch = new DataImportBatch__c();
+        DataImportBatch__c giftBatch = new DataImportBatch__c(GiftBatch__c = true);
         insert giftBatch;
 
         List<DataImport__c> giftsToInsert = new List<DataImport__c>();
