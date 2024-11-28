@@ -1,7 +1,6 @@
 <template>
-    <div class="container">
-        <h2 class="slds-text-heading_medium">{title}</h2>
-        <div class="resource-list">
+    <lightning-card title={title}>
+        <div class="resource-list slds-p-horizontal_small">
             <template for:each={resources} for:item="resource" for:index="index">
                 <div class="resource-item" key={resource.id} >
                     <div class="label">
@@ -13,5 +12,5 @@
                 </div>
             </template>
         </div>
-    </div>
+    </lightning-card>
 </template>
