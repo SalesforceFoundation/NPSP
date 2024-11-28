@@ -1668,7 +1668,7 @@ export default class GeFormRenderer extends LightningElement{
                 sections.forEach(section => {
                     section.elements.forEach(element => {
                         for (let key in batchDefaultsObject) {
-                            if (batchDefaultsObject.hasOwnProperty(key)) {
+                            if (batchDefaultsObject.hasOwnProperty(key) && key === element.customLabel) {
                                 const batchDefault = batchDefaultsObject[key];
                                 if (batchDefault.objectApiName === element.objectApiName &&
                                     batchDefault.fieldApiName === element.fieldApiName) {
@@ -2651,6 +2651,11 @@ export default class GeFormRenderer extends LightningElement{
             ? this.CUSTOM_LABELS.geTextUpdating
             : this.CUSTOM_LABELS.geTextSaving;
         delete dataImportFromFormState[apiNameFor(PAYMENT_AUTHORIZE_TOKEN)];
+        Object.keys(dataImportFromFormState).forEach((field)=>{
+            if(dataImportFromFormState[field] === undefined) {
+                dataImportFromFormState[field] = null;
+            }
+        })
         const upsertResponse = await upsertDataImport({
             dataImport: JSON.stringify(dataImportFromFormState)
         });
