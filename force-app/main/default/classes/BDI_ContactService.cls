@@ -55,12 +55,12 @@ public with sharing class BDI_ContactService {
     /*******************************************************************************************************
     * @description cached map to get Contact1 for a DI
     */
-    private Map<Id, Contact> mapDIIdToC1;
+    @TestVisible private Map<Id, Contact> mapDIIdToC1;
 
     /*******************************************************************************************************
     * @description cached map to get Contact2 for a DI
     */
-    private Map<Id, Contact> mapDIIdToC2;
+    @TestVisible private Map<Id, Contact> mapDIIdToC2;
 
     /*******************************************************************************************************
     * @description map that holds multiple DIKeys for each Contact
