@@ -26,6 +26,7 @@ import {
 } from 'c/utilCommon';
 import GeLabelService from 'c/geLabelService';
 import psPaymentGateway from '@salesforce/label/c.psPaymentGateway';
+import geRD2FirstInstallmentPaid from '@salesforce/label/c.geRD2FirstInstallmentPaid';
 
 import getAllFormTemplates from '@salesforce/apex/GE_GiftEntryController.getAllFormTemplates';
 import getDonationMatchingValues from '@salesforce/apex/GE_GiftEntryController.getDonationMatchingValues';
@@ -131,8 +132,8 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         if (this.isEditMode && this._allowRecurringDonations) {
             let batchLevelDefaults =
                 JSON.parse(this.dataImportBatchRecord.fields[DATA_IMPORT_BATCH_DEFAULTS_INFO.fieldApiName].value);
-            return batchLevelDefaults['First installment paid'] ? 
-                batchLevelDefaults['First installment paid'].value : 
+            return batchLevelDefaults[geRD2FirstInstallmentPaid] ? 
+                batchLevelDefaults[geRD2FirstInstallmentPaid].value : 
                 false;
         }
 
