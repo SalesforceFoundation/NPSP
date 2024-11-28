@@ -149,13 +149,13 @@ public inherited sharing class HouseholdMembers implements IHouseholdMembers {
                 }
                 if (!npspAddress.isEqualToIncludingAddressType(npspMatchingAddress, true)) {
                     npspMatchingAddress.copyFrom(npspAddress);
-                    if (!npspContact.hasAddressOverride() && !npspMatchingAddress.isDefault()) {
+                    if (!npspContact.hasAddressOverride() && !npspMatchingAddress.isDefault() && !isSeasonalAddress(npspMatchingAddress.getRecord())) {
                         npspMatchingAddress.setAsDefault();
                     }
                     addressUpdated = true;
                 }
                 // exact match. we aren't specifying override, so the address should become the new hh default address
-                else if (!npspContact.hasAddressOverride() && !npspMatchingAddress.isDefault()) {
+                else if (!npspContact.hasAddressOverride() && !npspMatchingAddress.isDefault() && !isSeasonalAddress(npspMatchingAddress.getRecord())) {
                     npspMatchingAddress.setAsDefault();
                     addressUpdated = true;
                 }
@@ -164,7 +164,9 @@ public inherited sharing class HouseholdMembers implements IHouseholdMembers {
                 }
             } else {
                 // no match, not an override, make it a new default hh address
-                npspAddress.setAsDefault();
+                if (!isSeasonalAddress(npspAddress.getRecord())) {
+                    npspAddress.setAsDefault();
+                }
                 npspAddress.setUndeliverable(npspContact.isUndeliverableMailingAddress());
                 addressesToInsert.add(npspAddress.getRecord());
             }
@@ -179,6 +181,11 @@ public inherited sharing class HouseholdMembers implements IHouseholdMembers {
             dmlWrapper.objectsToInsert.addAll((List<SObject>) addressesToInsert);
         }
         TDTM_TriggerHandler.processDML(dmlWrapper);
+    }
+
+    private Boolean isSeasonalAddress(Address__c address) {
+        return address.Seasonal_Start_Day__c != null && address.Seasonal_Start_Month__c != null &&
+               address.Seasonal_End_Day__c != null && address.Seasonal_End_Month__c != null;
     }
 
     private Boolean shouldUpdateAddressUndeliverableStatusFromContact(NPSP_Contact npspContact) {
