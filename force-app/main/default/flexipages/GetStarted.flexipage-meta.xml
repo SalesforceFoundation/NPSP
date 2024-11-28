@@ -24,7 +24,7 @@
         <name>region1</name>
         <type>Region</type>
     </flexiPageRegions>
-    <flexiPageRegions>
+    <!-- <flexiPageRegions>
         <itemInstances>
             <componentInstance>
                 <componentName>gsApplicationStatus</componentName>
@@ -33,7 +33,7 @@
         </itemInstances>
         <name>region2</name>
         <type>Region</type>
-    </flexiPageRegions>
+    </flexiPageRegions> -->
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
@@ -45,7 +45,7 @@
                 <identifier>gsResources</identifier>
             </componentInstance>
         </itemInstances>
-        <name>region3</name>
+        <name>region2</name>
         <type>Region</type>
     </flexiPageRegions>
     <masterLabel>Get Started</masterLabel>
