@@ -651,7 +651,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
         //     mark the new address as default
         //     put it on dmlWrapper
         //
-
+        // Map to hold the contact-to-address mapping
         Map<Contact, Address__c> contactAddressesByContact = getContactAddressesByContact(contacts);
 
         // look for duplicates for our proposed new addresses
@@ -665,22 +665,56 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
             Address__c newAddressFromContact = contactAddressesByContact.get(contact);
             Address__c existingAddressFromContact = existingAddressesByAddress.get(newAddressFromContact);
 
-            // if found a match
-            if (contactAddressHasAddressMatch(existingAddressFromContact)) {
+            // Check if the contact's address fields are intentionally set to null
+            Boolean isAddressFieldsNull = String.isBlank(contact.MailingStreet) &&
+                                      String.isBlank(contact.MailingCity) &&
+                                      String.isBlank(contact.MailingPostalCode) &&
+                                      String.isBlank(contact.MailingState) &&
+                                      String.isBlank(contact.MailingCountry);
+
+            // If all address fields are null, clear the Current_Address__c field and continue
+            if (isAddressFieldsNull) {
+                contact.Current_Address__c = null;
+                continue;  // Skip address creation for this contact
+            }
+            
+            // Check if the contact has Address Override enabled
+            if (contact.Is_Address_Override__c == true) {
+                // Create a new address record specific to this contact
+                Address__c newAddress = new Address__c();
+                newAddress.Household_Account__c = contact.AccountId; // Link to household/account
+                newAddress.MailingStreet__c = contact.MailingStreet;
+                newAddress.MailingCity__c = contact.MailingCity;
+                newAddress.MailingState__c = contact.MailingState;
+                newAddress.MailingPostalCode__c = contact.MailingPostalCode;
+                newAddress.MailingCountry__c = contact.MailingCountry;
+                newAddress.Default_Address__c = false; // It's not a default address
+    
+                // Add the new address to be inserted
+                contactAddressesToInsertByContact.put(contact, newAddress);
+
+            }
+            else if (contactAddressHasAddressMatch(existingAddressFromContact)) {
                 updateContactAddressFromExistingAddress(contact, existingAddressFromContact);
 
                 // Prevent an address that was just inserted by the BeforeInsert trigger from being udpated
                 // a second time by the AfterInsert trigger.
             }
-
-            // no match found, and its an override just for this contact
-            else if (contact.is_Address_Override__c) {
+            else {
                 // put it on the list of addresss to create now
                 contactAddressesToInsertByContact.put(contact, newAddressFromContact);
             }
         }
-
+        // Insert the new addresses created for contacts with Address Override
         insertContactAddresses(contactAddressesToInsertByContact);
+
+        // Update the Current_Address__c field for each contact after the address insertion
+        for (Contact contact : contactAddressesToInsertByContact.keySet()) {
+            Address__c insertedAddress = contactAddressesToInsertByContact.get(contact);
+            if (insertedAddress != null && insertedAddress.Id != null) {
+                contact.Current_Address__c = insertedAddress.Id;  // Set the address ID after insertion
+            }
+        }
     }
 
     private Set<Contact> getAddressCreationQueueBeforeUpdate() {
