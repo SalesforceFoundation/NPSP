@@ -124,7 +124,8 @@ public class CRLP_RollupQueueable implements System.Queueable {
         if (objType == Account.SObjectType || objType == Contact.SObjectType) {
             // If the summary record has more child opportunities and possibly payments than can be handled in
             // this queueable (non-async job), remove it from this processing queue
-            Integer maxOppsToAllow = (MAX_ATTACHED_OPPS_FOR_QUEUABLE / summaryRecords.size());
+            Integer divisor = summaryRecords.size() > 0 ? summaryRecords.size() : 1;
+            Integer maxOppsToAllow = (MAX_ATTACHED_OPPS_FOR_QUEUABLE / divisor);
             if (includeChildPayments) {
                 // If there are payment rollups, then assume at least one payment per opp, which effectively cuts
                 // the max number of records that can be queried in half
