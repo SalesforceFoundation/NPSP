@@ -47,7 +47,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     private GiftTemplate giftTemplate;
 
     private Boolean shouldPayFirstInstallment = false;
-    private static final String AllowFirstInstallmentPaid = Label.get('', 'geRD2FirstInstallmentPaid', UserInfo.getLanguage());
+    private static final String AllowFirstInstallmentPaid = Label.get(null, 'geRD2FirstInstallmentPaid', UserInfo.getLanguage());
 
     @TestVisible
     private GiftBatchSelector giftBatchSelector {
