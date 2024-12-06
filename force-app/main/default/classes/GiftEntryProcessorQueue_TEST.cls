@@ -110,6 +110,90 @@ private class GiftEntryProcessorQueue_TEST {
             'Should have the correct amount');
     }
 
+    @isTest
+    static void shouldCreateRDWhenGiftBatchHasRecurringGiftCsvImport() {
+        // Arrange
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dataImportSettings.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dataImportSettings.Default_Data_Import_Field_Mapping_Set__c =
+            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        UTIL_CustomSettingsFacade.setDataImportSettings(dataImportSettings);
+
+        DataImportBatch__c giftBatch = new DataImportBatch__c();
+        insert giftBatch;
+
+        List<DataImport__c> giftsToInsert = new List<DataImport__c>();
+        giftsToInsert.add(new DataImport__c(
+            Recurring_Donation_Installment_Period__c = 'Monthly',
+            Recurring_Donation_Effective_Date__c = Date.today(),
+            Recurring_Donation_Recurring_Type__c = 'Open',
+            Recurring_Donation_Installment_Frequency__c = 1,
+            Recurring_Donation_Day_of_Month__c = '5',
+            Recurring_Donation_Amount__c = 33.00,
+            Donation_Amount__c = 50.00,
+            Recurring_Donation_Date_Established__c = Date.today(),
+            Donation_Date__c = Date.today(),
+            NPSP_Data_Import_Batch__c = giftBatch.Id,
+            Contact1_Lastname__c = 'Dummy Last Name',
+            Donation_Donor__c = 'Contact1'
+        ));
+        insert giftsToInsert;
+
+        GiftBatchForQueueable giftBatchForProcessing = new GiftBatchForQueueable(new GiftBatchId(giftBatch.Id), new GiftBatchSelector());
+        giftBatchForProcessing.chunkGiftsThatCanBeProcessed();
+        GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(giftBatchForProcessing);
+
+        // Act
+        Test.startTest();
+        processorQueue.execute(null);
+        Test.stopTest();
+
+        // Assert
+        npe03__Recurring_Donation__c[] resultingRDs =
+            [SELECT Id,
+                npe03__Amount__c,
+                npe03__Installment_Period__c,
+                RecurringType__c,
+                StartDate__c,
+                npe03__Date_Established__c,
+                Day_of_Month__c
+            FROM npe03__Recurring_Donation__c];
+
+        System.assertEquals(1, resultingRDs.size(),
+            'Should result in one recurring donation record');
+        System.assertEquals(33.00, resultingRDs[0].npe03__Amount__c,
+            'Should have the correct amount');
+        System.assertEquals(Date.today(), resultingRDs[0].npe03__Date_Established__c,
+            'Should have the correct date established');
+        System.assertEquals('Monthly', resultingRDs[0].npe03__Installment_Period__c,
+            'Should have the correct installment period');
+        System.assertEquals('Open', resultingRDs[0].RecurringType__c,
+            'Should have the correct recurring type');
+        System.assertEquals('5', resultingRDs[0].Day_of_Month__c,
+            'Should have the correct day of month');
+
+        Opportunity[] resultingOpportunities =
+            [SELECT Id,
+                Amount,
+                CloseDate,
+                StageName,
+                npe03__Recurring_Donation__c
+            FROM Opportunity ORDER BY CloseDate ASC];
+        System.assertEquals(2, resultingOpportunities.size(),
+            'Should result in one opportunity record');
+        System.assertEquals(resultingRDs[0].Id, resultingOpportunities[0].npe03__Recurring_Donation__c,
+            'Resulting opportunity should look up to the recurring donation');
+        System.assertEquals(50.00, resultingOpportunities[0].Amount,
+            'First Opp should have the correct Amount');
+        System.assertEquals(Date.today(), resultingOpportunities[0].CloseDate,
+            'First Opp should have the correct Close Date');
+        System.assertEquals(33.00, resultingOpportunities[1].Amount,
+            'Second Opp should have the correct Amount');
+        System.assertEquals('Pledged', resultingOpportunities[1].StageName,
+            'Second Opp should have the correct Stage');
+    }
+
     @IsTest
     static void shouldCreate20OpportunitiesAndFail10GiftsIn1Chunk() {
         // Arrange
