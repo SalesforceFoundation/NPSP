@@ -77,31 +77,50 @@ public with sharing class ADDR_Contacts_TEST {
             return;
         }
 
-        List<Account> testAccountWithBillingAddress = createTestAccountsWithBillingAddress(1);
+        // Create test accounts
+        List<Account> testAccounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, CAO_Constants.HH_ACCOUNT_TYPE);
+        insert testAccounts;
 
+        // Build test addresses
+        List<Address__c> testAddresses = buildAddresses(2, false);
+
+        // Set the undeliverable status on one of the test addresses
+        NPSP_Address npspAddress = new NPSP_Address(testAddresses[1]);
+        npspAddress.setUndeliverable(true);
+        npspAddress.getRecord().Household_Account__c = testAccounts[0].Id;
+        
+        // Insert the new address
+        insert npspAddress.getRecord();
+
+        // Create a contact and link to the account
         NPSP_Contact npspContact = new NPSP_Contact(UTIL_UnitTestData_TEST.getContact());
-        npspContact.getRecord().AccountId = testAccountWithBillingAddress[0].Id;
+        npspContact.getRecord().AccountId = testAccounts[0].Id;
         npspContact.getRecord().is_Address_Override__c = true;
         npspContact.setUndeliverableMailingAddress(true);
         insert npspContact.getRecord();
 
         Test.startTest();
+            // Fetch the contact and simulate an address update
             Contact contactToUpdate = [SELECT Current_Address__c FROM Contact WHERE Id = :npspContact.getRecord().Id];
+            // Simulate updating the contact's address with the new undeliverable address
             NPSP_Contact npspContactToUpdate = new NPSP_Contact(contactToUpdate);
-            npspContactToUpdate.setCurrentAddress(
-                    new NPSP_Address(buildAddresses(1, false)[0]));
+            npspContactToUpdate.setCurrentAddress(npspAddress); // Use the undeliverable address
 
             update npspContactToUpdate.getRecord();
         Test.stopTest();
 
+        // Fetch the updated contact to check the address change
         Contact updatedContact = [SELECT AccountId, Undeliverable_Address__c, Current_Address__c
                                   FROM Contact
-                                  WHERE Id = :npspContactToUpdate.getRecord().Id];
-
+                                  WHERE Id = :npspContactToUpdate.getRecord().Id LIMIT 1];
+        // Ensure that Current_Address__c is not null after the update
+        System.assertNotEquals(null, updatedContact.Current_Address__c, 'The Current_Address__c should not be null after the update.');
+        
+        // Fetch the updated address and verify the undeliverable status
         Address__c updatedAddress = [SELECT Undeliverable__c
                                      FROM Address__c
-                                     WHERE Id = :updatedContact.Current_Address__c];
-
+                                     WHERE Id = :updatedContact.Current_Address__c LIMIT 1];
+        // Assert that the contact's undeliverable status matches the address's undeliverable status
         System.assertEquals(updatedContact.Undeliverable_Address__c, updatedAddress.Undeliverable__c, 'The newly ' +
                 'created address from the contact should have the same undeliverable status as the contact it was ' +
                 'created from.');

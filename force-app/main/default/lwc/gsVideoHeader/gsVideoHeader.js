@@ -20,12 +20,10 @@ export default class gsVideoHeader extends LightningElement {
     */
     get imgSrc() {
         return `background-image:url(${this.backgroundUrl});
-                background-size: contain;
+                background-size: cover;
                 background-repeat: no-repeat;
-                width: 100%;
-                height: 0;
-                padding-top: 42%;
-                position: relative`;
+                background-position: center center;
+                padding-top: 42%`;
     }
 
     get title() {

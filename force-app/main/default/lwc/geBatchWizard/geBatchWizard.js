@@ -278,8 +278,8 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         this.formSections.forEach(section => {
             if (section.elements) {
                 section.elements.forEach(element => {
-                    if (batchLevelDefaults[element.fieldApiName]) {
-                        element.value = batchLevelDefaults[element.fieldApiName].value;
+                    if (batchLevelDefaults[element.customLabel]) {
+                        element.value = batchLevelDefaults[element.customLabel].value;
                     }
                 });
             }
@@ -459,11 +459,16 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
             if (dataImportBatch.apiName === formElement.objectApiName) {
                 dataImportBatch.fields[formElement.fieldApiName] = formElement.value;
             } else {
-                batchDefaults[formElement.fieldApiName] = {
+                const fieldElementData = {
                     objectApiName: formElement.objectApiName,
                     fieldApiName: formElement.fieldApiName,
-                    value: formElement.value
+                    value: isNotEmpty(formElement.value) ? formElement.value : undefined
                 };
+                if (formElement.fieldApiName === 'AllowFirstInstallment__f'){
+                    batchDefaults[formElement.fieldApiName] = fieldElementData;
+                } else {
+                    batchDefaults[formElement.label] = fieldElementData;
+                }
             }
         }
 

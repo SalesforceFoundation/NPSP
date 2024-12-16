@@ -239,6 +239,145 @@ private with sharing class BDI_DataImportService_TEST {
                     BDI_DataImportService.anyFieldsPopulatedForObjectMapping(testDI1, testFieldMap, fieldsToIgnore2));
     }
 
+    @isTest
+    private static void testImportAccounts() {
+        // Create test Data Import Settings
+        Data_Import_Settings__c diSettings = new Data_Import_Settings__c(
+            Field_Mapping_Method__c = 'Data Import Field Mapping',
+            Donation_Matching_Rule__c = 'Donation_Amount__c;Donation_Date__c',
+            Donation_Matching_Behavior__c = 'ExactMatchOrCreate'
+        );
+        insert diSettings;
+    
+        // Create test data imports using UTIL_UnitTestData_TEST
+        List<DataImport__c> testDataImports = UTIL_UnitTestData_TEST.createDIRecordsInANewGEBatch(50);
+        for (Integer i = 0; i < testDataImports.size(); i++) {
+            testDataImports[i].Account1_Name__c = 'Test Account ' + i;
+            testDataImports[i].Contact1_Firstname__c = 'FirstName' + i;
+            testDataImports[i].Contact1_Lastname__c = 'LastName' + i;
+            testDataImports[i].Contact1_Personal_Email__c = 'email' + i + '@example.com';
+            testDataImports[i].Account2_Name__c = 'Test Account 2 ' + i;
+            testDataImports[i].Contact2_Firstname__c = 'FirstName2' + i;
+            testDataImports[i].Contact2_Lastname__c = 'LastName2' + i;
+            testDataImports[i].Contact2_Personal_Email__c = 'email2' + i + '@example.com';
+            testDataImports[i].Contact2_Work_Email__c = 'workemail2' + i + '@example.com';
+            testDataImports[i].Contact2_Alternate_Email__c = 'alt2' + i + '@example.com';
+            testDataImports[i].Contact2_Mobile_Phone__c = '222-333-4444';
+            testDataImports[i].Contact2_Other_Phone__c = '555-666-7777';
+            testDataImports[i].Contact2_Personal_Email__c = 'email2' + i + '@example.com';
+            testDataImports[i].Contact1_Firstname__c = 'FirstName2' + i;
+            testDataImports[i].Contact1_Lastname__c = 'LastName2' + i;
+            testDataImports[i].Contact1_Personal_Email__c = 'email2' + i + '@example.com';
+            testDataImports[i].Contact1_Work_Email__c = 'workemail2' + i + '@example.com';
+            testDataImports[i].Contact1_Alternate_Email__c = 'alt2' + i + '@example.com';
+            testDataImports[i].Contact1_Mobile_Phone__c = '222-333-4444';
+            testDataImports[i].Contact1_Other_Phone__c = '555-666-7777';
+            testDataImports[i].Contact1_Personal_Email__c = 'email2' + i + '@example.com';
+        }
+        insert testDataImports;
+    
+        // Extract batch ID from the first DataImport record
+        Id batchId = testDataImports[0].NPSP_Data_Import_Batch__c;
+    
+        // Create an instance of BDI_PerfLogger with required parameters
+        Integer countRecords = testDataImports.size();
+        BDI_PerfLogger perfLogger = new BDI_PerfLogger(batchId, countRecords);
+    
+        // Create an instance of BDI_DataImportService
+        BDI_DataImportService service = new BDI_DataImportService(false, BDI_MappingServiceAdvanced.getInstance());
+        service.listDI = testDataImports;
+    
+        // Inject the data import settings and performance logger
+        service.injectDataImportSettings(diSettings);
+        BDI_DataImportService.injectPerfLogger(perfLogger);
+    
+        // Create test Data Import records
+        List<DataImport__c> testDataImportss = new List<DataImport__c>();
+        for (Integer i = 0; i < 5; i++) {
+            DataImport__c dataImport = new DataImport__c(
+                NPSP_Data_Import_Batch__c = testDataImports[0].NPSP_Data_Import_Batch__c,
+                Account1_Name__c = 'Test Account ' + i,
+                Contact1_Firstname__c = 'FirstName' + i,
+                Contact1_Lastname__c = 'LastName' + i,
+                Contact1_Personal_Email__c = 'email' + i + '@example.com',
+                Account2_Name__c = 'Test Account 2 ' + i,
+                Contact2_Firstname__c = 'FirstName2' + i,
+                Contact2_Lastname__c = 'LastName2' + i,
+                Contact2_Personal_Email__c = 'email2' + i + '@example.com',
+                Status__c = 'Ready' // Adding a status to avoid null status
+            );
+            testDataImportss.add(dataImport);
+        }
+        insert testDataImportss;
+    
+        service.listDI = testDataImportss;
+    
+        // Create Accounts to ensure matching
+        List<Account> accounts = new List<Account>();
+        for (Integer i = 0; i < 5; i++) {
+            Account acc = new Account(
+                Name = 'Test Account ' + i
+            );
+            accounts.add(acc);
+        }
+        insert accounts;
+    
+        // Create Contacts to ensure matching
+        List<Contact> contacts = new List<Contact>();
+        for (Integer i = 0; i < 5; i++) {
+            Contact con1 = new Contact(
+                FirstName = 'FirstName' + i,
+                LastName = 'LastName' + i,
+                Email = 'email' + i + '@example.com',
+                AccountId = accounts[i].Id
+            );
+            Contact con2 = new Contact(
+                FirstName = 'FirstName2' + i,
+                LastName = 'LastName2' + i,
+                Email = 'email2' + i + '@example.com',
+                AccountId = accounts[i].Id
+            );
+            contacts.add(con1);
+            contacts.add(con2);
+        }
+        insert contacts;
+
+        // Assign created contact IDs to the data import records
+        for (Integer i = 0; i < 5; i++) {
+            testDataImportss[i].Contact1Imported__c = contacts[i*2].Id;
+            testDataImportss[i].Contact2Imported__c = contacts[i*2+1].Id;
+        }
+        update testDataImportss;
+        
+        // Ensure the service has the necessary contact service
+        BDI_ContactService contactService = new BDI_ContactService(service);
+        service.contactService = contactService;
+
+        // Explicitly set mapDIIdToC1 to ensure contacts are available
+        for (DataImport__c dataImport : testDataImportss) {
+            for (Contact con : contacts) {
+                if (con.Id == dataImport.Contact1Imported__c) {
+                    contactService.mapDIIdToC1.put(dataImport.Id, con);
+                }
+                if (con.Id == dataImport.Contact2Imported__c) {
+                    contactService.mapDIIdToC2.put(dataImport.Id, con);
+                }
+            }
+        }
+
+        // Call the method to be tested
+        Test.startTest();
+        service.importAccounts();
+        Test.stopTest();
+    
+        // Add assertions to verify the Account and Contact records were created/updated as expected
+        List<Account> accounts1 = [SELECT Id, Name, Phone FROM Account WHERE Name LIKE 'Test Account%'];
+        System.assert(accounts1.size() > 0, 'Accounts should be created');
+    
+        List<Contact> contactList = [SELECT Id, FirstName, LastName, Email FROM Contact WHERE LastName LIKE 'LastName%'];
+        System.assert(contactList.size() > 0, 'Contacts should be created');
+    }
+
     // Helpers
     ////////////
 

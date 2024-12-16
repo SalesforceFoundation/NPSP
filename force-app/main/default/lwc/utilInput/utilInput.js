@@ -58,7 +58,8 @@ export default class utilInput extends LightningElement {
         return {
             objectApiName: this.objectApiName,
             fieldApiName: this.fieldApiName,
-            value: this.fieldValue
+            value: this.fieldValue,
+            label: this.uiLabel
         };
     }
 
