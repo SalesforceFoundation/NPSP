@@ -1,4 +1,4 @@
 .THIS .removeBtn:hover, .THIS .removeBtn:focus, .THIS .removeBtn.is-selected {
     background: none;
-    border: 0;
+    border: none;
 }

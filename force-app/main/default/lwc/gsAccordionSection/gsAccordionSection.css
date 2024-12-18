@@ -19,7 +19,7 @@
     position: absolute;
     height: calc(100% - 90px);
     width: 2px;
-    background: #d3d3d3;
+    background: var(--slds-g-color-disabled-container-2, #d3d3d3);
     display: flex;
     justify-content: flex-end;
     flex-direction: column;
@@ -29,7 +29,7 @@
 
 .slds-media.info.open .border .gap {
     width: 2px;
-    background-color: white;
+    background-color: var(--slds-g-color-disabled-container-1, white);
     height: 8rem;
 }
 

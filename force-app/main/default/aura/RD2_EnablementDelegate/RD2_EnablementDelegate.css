@@ -5,15 +5,15 @@
 }
 .THIS .disabledEdit {
     pointer-events: none;
-    color: #706e6b;
+    color: var(--slds-g-color-on-surface-1, #706e6b);
     cursor: default;
 }
 .THIS .styleButton:disabled {
-    color: #706e6b;
+    color: var(--slds-g-color-on-surface-1, #706e6b);
 }
 .THIS .activeIcon svg {
-    fill: #006dcc;
+    fill: var(--slds-g-color-accent-2, #006dcc);
 }
 .THIS .successIcon svg {
-    fill: rgb(94, 180, 255);
+    fill: var(--slds-g-color-brand-base-70, rgb(94, 180, 255));
 }

@@ -5,9 +5,9 @@
 }
 .THIS .disabledEdit {
     pointer-events: none;
-    color: #706e6b;
+    color: var(--slds-g-color-on-surface-1, #706e6b);
     cursor: default;
 }
 .THIS .activeIcon svg {
-    fill: #006dcc;
+    fill: var(--slds-g-color-accent-2, #006dcc);
 }
