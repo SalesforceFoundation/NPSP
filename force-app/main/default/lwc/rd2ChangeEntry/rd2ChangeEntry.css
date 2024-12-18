@@ -1,3 +1,3 @@
 .slds-theme_error {
-    background: #ba0517;
+    background: var(--slds-g-color-error-base-40, #ba0517);
 }

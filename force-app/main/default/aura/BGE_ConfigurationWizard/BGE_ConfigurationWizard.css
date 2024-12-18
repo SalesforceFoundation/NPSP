@@ -1,5 +1,5 @@
 .THIS.slds-tabs_card {
-    background: white;
+    background: var(--slds-g-color-disabled-container-1, white);
 }
 
 /*link-like behaviors*/
