@@ -105,7 +105,7 @@
                 <div class="slds-p-bottom_small">
                     <div class="slds-grid">
                         <div class="slds-col slds-text-heading_label slds-p-around_x-small">{!$Label.npo02.HouseholdMembers}</div>
-                        <div class="slds-col slds-text-align_right slds-p-around_x-small">
+                        <div class="slds-col slds-p-around_x-small">
                             <!-- the autocomplete component for finding and adding contacts -->
                             <c:HH_AutoComplete aura:id="HHAutoComplete" hhId="{!v.hhId}"
                                                namespacePrefix="{!v.namespacePrefix}"
