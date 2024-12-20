@@ -4,7 +4,7 @@
 /*margin is for view mode indentation*/
 .THIS .slds-form-element__label{
     margin-left: .5rem;
-    font-size: 13px;
+    font-size: var(--slds-g-font-size-base, 13px);
 }
 .THIS .slds-form-element__icon{
     margin-left: .2rem;
