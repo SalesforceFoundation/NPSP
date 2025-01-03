@@ -1,12 +1,11 @@
-.slds-card_extension {
-    box-shadow: none var(--slds-g-sizing-border-2, 2px) var(--slds-g-sizing-border-2, 2px) none var(--slds-g-color-neutral-base-90, #ddd);
-    border: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-neutral-base-90, rgb(221, 219, 218));
-}
-
 .slds-card_extension-widget {
     background-color: var(--slds-g-color-surface-3, #ECEBEA);
 }
 
 .vertical-align-center {
     margin: auto 0;
+}
+
+.input-padding {
+    padding: 0 4px 4px 4px;
 }

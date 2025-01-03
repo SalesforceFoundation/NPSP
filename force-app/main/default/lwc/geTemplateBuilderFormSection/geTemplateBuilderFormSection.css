@@ -1,12 +1,9 @@
 .slds-card_extension {
-    box-shadow: none var(--slds-g-sizing-border-2, 2px) var(--slds-g-sizing-border-2, 2px) none var(--slds-g-color-neutral-base-90, #ddd);
     border: var(--slds-g-radius-border-1, 2px) solid var(--slds-g-color-neutral-base-90, rgb(221, 219, 218));
-    transition: box-shadow 0.3s cubic-bezier(.25,.8,.25,1);
 }
 
 .slds-card_extension:hover {
     cursor: pointer;
-    box-shadow: none var(--slds-g-sizing-border-3, 3px) var(--slds-g-sizing-border-3, 3px) var(--slds-g-color-neutral-base-90, #ddd), none var(--slds-g-sizing-border-3, 3px) var(--slds-g-sizing-border-3, 3px) var(--slds-g-color-neutral-base-90, #ddd);
 }
 
 .slds-card_extension_active {
@@ -21,6 +18,7 @@
     border: var(--slds-g-radius-border-4, 1rem) solid transparent;
     border-right-color: var(--slds-g-color-brand-base-60, #1589ee);
     border-top-color: var(--slds-g-color-brand-base-60, #1589ee);
+    border-top-right-radius: var(--slds-g-radius-border-2, 0.25rem);
 }
 
 .slds-icon_container_extension {

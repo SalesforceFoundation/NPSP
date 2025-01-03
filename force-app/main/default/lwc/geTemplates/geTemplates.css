@@ -1,7 +1,4 @@
 .slds-card_extension {
     background: var(--slds-g-color-disabled-container-1, #fff);
-    border: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-neutral-base-90, #dddbda);
-    border-radius: var(--slds-g-radius-border-2, .25rem);
     background-clip: padding-box;
-    box-shadow: none var(--slds-g-sizing-border-2, 2px) var(--slds-g-sizing-border-2, 2px) none var(--slds-g-color-neutral-base-90, #ddd);
 }
