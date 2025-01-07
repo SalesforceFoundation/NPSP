@@ -30,9 +30,9 @@
     text-align: center;
     vertical-align: middle;
     justify-content: center;
-    border: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-1, var(--lwc-colorBorder, rgb(221, 219, 218)));
+    /* border: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-1, var(--lwc-colorBorder, rgb(221, 219, 218))); */
     transition: border .15s linear;
-    border-color: var(--slds-g-color-border-1, var(--lwc-colorBorder, rgb(221, 219, 218)));
+    /* border-color: var(--slds-g-color-border-1, var(--lwc-colorBorder, rgb(221, 219, 218))); */
     background-color: var(--slds-g-color-surface-container-1, var(--lwc-colorBackgroundAlt, rgb(255, 255, 255)));
 }
 
@@ -42,6 +42,12 @@
     margin: 0;
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
+    border-radius: inherit;
+}
+
+.bottom-button {
+    border-bottom-left-radius: var(--slds-c-card-radius-border,var(--slds-s-container-radius-border, var(--slds-g-radius-border-2)));
+    border-bottom-right-radius: var(--slds-c-card-radius-border,var(--slds-s-container-radius-border, var(--slds-g-radius-border-2)));
 }
 
 .slds-border_extension-bottom {
@@ -52,4 +58,8 @@
     background-color: var(--slds-g-color-surface-container-1, var(--lwc-colorBackgroundAlt, rgb(255, 255, 255)));
     color:  var(--slds-g-color-neutral-base-90, rgb(221, 219, 218));
     cursor: default;
+}
+
+.slds-card.slds-card_boundary {
+    border-color: var(--slds-g-color-border-1, var(--lwc-colorBorder, rgb(221, 219, 218)));
 }

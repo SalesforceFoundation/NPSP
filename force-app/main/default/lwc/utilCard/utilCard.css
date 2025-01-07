@@ -1,3 +1,9 @@
-.slds-card_extension_active {
+.slds-card.slds-card_boundary.slds-card_extension_active {
     border: var(--slds-g-radius-border-1, 2px) solid var(--slds-g-color-brand-base-60, #1589ee);
+}
+.slds-card.slds-card_boundary {
+    border-color: var(--slds-g-color-border-1, var(--lwc-colorBorder, rgb(221, 219, 218)));
+}
+.slds-card__footer {
+    display: block;
 }
