@@ -28,3 +28,9 @@
 .slds-icon_extension svg {
     fill: var(--slds-g-color-on-accent-1, #ffffff);
 }
+
+.picker-icon {
+    position: absolute;
+    top: 3px;
+    left: -1px;
+}

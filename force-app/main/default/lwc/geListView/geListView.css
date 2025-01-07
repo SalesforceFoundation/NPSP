@@ -9,3 +9,7 @@
     background: none;
     border-bottom: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-neutral-base-90, var(--lwc-colorBorderSeparatorAlt, rgb(221, 219, 218)));
 }
+
+.table-container {
+    border: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-1, var(--lwc-colorBorder, rgb(221, 219, 218)));
+}
