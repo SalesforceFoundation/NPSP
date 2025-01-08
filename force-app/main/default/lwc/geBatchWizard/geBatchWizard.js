@@ -459,11 +459,16 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
             if (dataImportBatch.apiName === formElement.objectApiName) {
                 dataImportBatch.fields[formElement.fieldApiName] = formElement.value;
             } else {
-                batchDefaults[formElement.label] = {
+                const fieldElementData = {
                     objectApiName: formElement.objectApiName,
                     fieldApiName: formElement.fieldApiName,
                     value: isNotEmpty(formElement.value) ? formElement.value : undefined
                 };
+                if (formElement.fieldApiName === 'AllowFirstInstallment__f'){
+                    batchDefaults[formElement.fieldApiName] = fieldElementData;
+                } else {
+                    batchDefaults[formElement.label] = fieldElementData;
+                }
             }
         }
 
