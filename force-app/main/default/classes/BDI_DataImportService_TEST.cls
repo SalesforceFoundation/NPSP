@@ -321,6 +321,12 @@ private with sharing class BDI_DataImportService_TEST {
             accounts.add(acc);
         }
         insert accounts;
+        
+        // Store Account IDs for assertion
+        Set<Id> createdAccountIds = new Set<Id>();
+        for (Account acc : accounts) {
+            createdAccountIds.add(acc.Id);
+        }
     
         // Create Contacts to ensure matching
         List<Contact> contacts = new List<Contact>();
@@ -342,6 +348,11 @@ private with sharing class BDI_DataImportService_TEST {
         }
         insert contacts;
 
+        // Store Contact IDs for assertion
+        Set<Id> createdContactIds = new Set<Id>();
+        for (Contact con : contacts) {
+            createdContactIds.add(con.Id);
+        }
         // Assign created contact IDs to the data import records
         for (Integer i = 0; i < 5; i++) {
             testDataImportss[i].Contact1Imported__c = contacts[i*2].Id;
@@ -370,12 +381,12 @@ private with sharing class BDI_DataImportService_TEST {
         service.importAccounts();
         Test.stopTest();
     
-        // Add assertions to verify the Account and Contact records were created/updated as expected
-        List<Account> accounts1 = [SELECT Id, Name, Phone FROM Account WHERE Name LIKE 'Test Account%'];
-        System.assert(accounts1.size() > 0, 'Accounts should be created');
-    
-        List<Contact> contactList = [SELECT Id, FirstName, LastName, Email FROM Contact WHERE LastName LIKE 'LastName%'];
-        System.assert(contactList.size() > 0, 'Contacts should be created');
+        // Assertions using IDs
+        List<Account> fetchedAccounts = [SELECT Id, Name FROM Account WHERE Id IN :createdAccountIds];
+        System.assertEquals(createdAccountIds.size(), fetchedAccounts.size(), 'Accounts should be created and fetched using Ids');
+
+        List<Contact> fetchedContacts = [SELECT Id, FirstName, LastName, Email FROM Contact WHERE Id IN :createdContactIds];
+        System.assertEquals(createdContactIds.size(), fetchedContacts.size(), 'Contacts should be created and fetched using Ids');
     }
 
     // Helpers
