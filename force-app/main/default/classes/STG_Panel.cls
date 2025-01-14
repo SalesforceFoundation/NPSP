@@ -125,7 +125,8 @@ public with sharing virtual class STG_Panel {
     */
     public Boolean isDisplayingRD2UpgradePage {
         get {
-            return isDisplayingRD2UpgradePage();
+            return true;
+            // return isDisplayingRD2UpgradePage();
         } private set;
     }
 

@@ -84,7 +84,7 @@
     font-size: var(--slds-g-font-size-base, 13px);
     font-weight: bold;
     letter-spacing: 0;
-    line-height: 120px;
+    line-height: 20px;
     min-width: 10rem;
     flex: 1 0 0;
  }
