@@ -27,13 +27,13 @@
 }
 
 .experienceTitle {
-    font-weight: var(--lwc-fontWeightBold,700);
-    color: var(--lwc-colorTextLabel,#5A5A5A);
+    font-weight: var(--slds-g-font-weight-7, var(--lwc-fontWeightBold,700));
+    color: var(--slds-g-color-on-surface-3, var(--lwc-colorTextLabel,#5A5A5A));
     font-family: var(--lwc-fontFamily,Work Sans);
 }
 
 legend.slds-form-element__legend.slds-form-element__label {
-    font-size: 120%;
+    font-size: var(--slds-g-font-scale-1, 14px);
     white-space: nowrap;
 }
 
