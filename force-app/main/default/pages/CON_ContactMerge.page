@@ -73,6 +73,12 @@
                    causing unwanted spaces to appear in output. this fixes that */
                 display: inline-flex;
             }
+            /* Tooltip hover effect */
+            .slds-icon_container:hover .slds-popover_tooltip {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
         </style>
         <apex:variable var="step1class" value="{!IF(step == 1, 'slds-is-current', 'slds-is-complete')}"/>
         <apex:variable
@@ -175,7 +181,7 @@
                                             {!$objectType.DuplicateRecordSet.fields.LastModifiedDate.label}
                                         </th>
                                         <th class="slds-text-heading_label" scope="col">
-                                            {!$objectType.DuplicateRecordSet.fields.DuplicateRuleId.label}
+                                            {!SUBSTITUTE($objectType.DuplicateRecordSet.fields.DuplicateRuleId.label, ' ID', '')}
                                         </th>
                                         <th class="slds-text-heading_label" scope="col">
                                             {!$Label.commonContactCount}
@@ -207,9 +213,40 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                <span class="slds-truncate">
-                                                    <apex:outputField value="{!drs.DuplicateRuleId}"/>
-                                                </span>
+                                                <div>
+                                                    <apex:outputPanel rendered="{!NOT(duplicateRuleStatusMap[drs.DuplicateRuleId])}" 
+                                                        styleClass="slds-m-right_xx-small"
+                                                        layout="inline-block">
+                                                        <div style="display: inline-flex; align-items: center; position: relative;">
+                                                            <!-- Gray "i" Icon -->
+                                                            <span class="slds-icon_container slds-button slds-button_icon"
+                                                                style="cursor: pointer; position: relative;">
+                                                                <svg class="slds-button__icon slds-icon_x-small slds-icon-text-default" aria-hidden="true">
+                                                                    <use href="/_slds/icons/utility-sprite/svg/symbols.svg#info"></use>
+                                                                </svg>
+                                                                <!-- Tooltip -->
+                                                                <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom"
+                                                                    role="tooltip"
+                                                                    style="position: absolute;
+                                                                            color: white;
+                                                                            padding: 8px 8px;
+                                                                            top: -50px;
+                                                                            left: 50%;
+                                                                            transform: translateX(-50%);
+                                                                            white-space: nowrap;
+                                                                            transition: opacity 0.2s ease;
+                                                                            display: none;
+                                                                            visibility: hidden;
+                                                                            opacity: 0;">
+                                                                    Duplicate rule is inactive.
+                                                                </div>
+                                                            </span>
+                                                        </div>
+                                                    </apex:outputPanel>
+                                                    <span class="slds-truncate">
+                                                        <apex:outputField value="{!drs.DuplicateRuleId}"/>
+                                                    </span>
+                                                </div>
                                             </td>
                                             <td>
                                                 <span class="slds-truncate">
@@ -603,5 +640,28 @@
                 }
             }
         }
+        document.addEventListener("DOMContentLoaded", function () {
+            const infoIcons = document.querySelectorAll(".slds-icon_container");
+
+            infoIcons.forEach(icon => {
+                const tooltip = icon.querySelector(".slds-popover_tooltip");
+
+                if (tooltip) {
+                    icon.addEventListener("mouseenter", function () {
+                        tooltip.style.display = "block";  
+                        tooltip.style.visibility = "visible";
+                        tooltip.style.opacity = "1";
+                    });
+
+                    icon.addEventListener("mouseleave", function () {
+                        tooltip.style.opacity = "0";
+                        tooltip.style.visibility = "hidden";
+                        setTimeout(() => {
+                            tooltip.style.display = "none"; 
+                        }, 200);
+                    });
+                }
+            });
+        });
     </script>
 </apex:page>
