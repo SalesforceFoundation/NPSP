@@ -2653,7 +2653,9 @@ export default class GeFormRenderer extends LightningElement{
         delete dataImportFromFormState[apiNameFor(PAYMENT_AUTHORIZE_TOKEN)];
         const dataImportfieldsInfo = this.dataImportObjectInfo?.data?.fields || {};
         Object.keys(dataImportFromFormState).forEach((field)=>{
-            if (dataImportfieldsInfo[field]?.dataType !== 'Boolean') {
+            if (dataImportfieldsInfo[field]?.dataType === 'Boolean' && dataImportFromFormState[field] === undefined) {
+                dataImportFromFormState[field] = false;
+            } else{
                 dataImportFromFormState[field] ??= null;
             }
         });
