@@ -2655,7 +2655,7 @@ export default class GeFormRenderer extends LightningElement{
         Object.keys(dataImportFromFormState).forEach((field)=>{
             if (dataImportfieldsInfo[field]?.dataType === 'Boolean' && dataImportFromFormState[field] === undefined) {
                 dataImportFromFormState[field] = false;
-            } else{
+            } else {
                 dataImportFromFormState[field] ??= null;
             }
         });
