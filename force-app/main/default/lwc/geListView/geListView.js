@@ -287,14 +287,12 @@ export default class geListView extends LightningElement {
 
         this.isLoading = false;
 
-        console.log('Test 1');
         let style = document.createElement('style');
         style.innerText = '.slds-table_header-fixed_container{border: 1px solid red;}';
         let dt = this.template.querySelector('lightning-datatable');
         if(dt) {
             dt.appendChild(style);
         }
-        console.log('Test 2');
     }
 
     /*******************************************************************************
