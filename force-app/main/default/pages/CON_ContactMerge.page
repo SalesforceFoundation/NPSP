@@ -219,8 +219,9 @@
                                                         layout="inline-block">
                                                         <div style="display: inline-flex; align-items: center; position: relative;">
                                                             <!-- Gray "i" Icon -->
-                                                            <span class="slds-icon_container slds-button slds-button_icon"
-                                                                style="cursor: pointer; position: relative;">
+                                                            <button class="slds-icon_container slds-button slds-button_icon"
+                                                                style="cursor: pointer; position: relative;"
+                                                                tabindex="0">
                                                                 <svg class="slds-button__icon slds-icon_x-small slds-icon-text-default" aria-hidden="true">
                                                                     <use href="/_slds/icons/utility-sprite/svg/symbols.svg#info"></use>
                                                                 </svg>
@@ -240,7 +241,7 @@
                                                                             opacity: 0;">
                                                                     Duplicate rule is inactive.
                                                                 </div>
-                                                            </span>
+                                                            </button>
                                                         </div>
                                                     </apex:outputPanel>
                                                     <span class="slds-truncate">
@@ -658,6 +659,20 @@
                         tooltip.style.visibility = "hidden";
                         setTimeout(() => {
                             tooltip.style.display = "none"; 
+                        }, 200);
+                    });
+                    // Keyboard focus event (focus and blur)
+                    icon.addEventListener("focus", function () {
+                        tooltip.style.display = "block";
+                        tooltip.style.visibility = "visible";
+                        tooltip.style.opacity = "1";
+                    });
+
+                    icon.addEventListener("blur", function () {
+                        tooltip.style.opacity = "0";
+                        tooltip.style.visibility = "hidden";
+                        setTimeout(() => {
+                            tooltip.style.display = "none";
                         }, 200);
                     });
                 }
