@@ -219,7 +219,7 @@
                                                         layout="inline-block">
                                                         <div style="display: inline-flex; align-items: center; position: relative;">
                                                             <!-- Gray "i" Icon -->
-                                                            <button class="slds-icon_container slds-button slds-button_icon"
+                                                            <span class="slds-icon_container slds-button slds-button_icon"
                                                                 style="cursor: pointer; position: relative;"
                                                                 tabindex="0">
                                                                 <svg class="slds-button__icon slds-icon_x-small slds-icon-text-default" aria-hidden="true">
@@ -241,7 +241,7 @@
                                                                             opacity: 0;">
                                                                     Duplicate rule is inactive.
                                                                 </div>
-                                                            </button>
+                                                            </span>
                                                         </div>
                                                     </apex:outputPanel>
                                                     <span class="slds-truncate">
