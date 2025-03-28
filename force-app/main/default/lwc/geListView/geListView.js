@@ -286,6 +286,13 @@ export default class geListView extends LightningElement {
             });
 
         this.isLoading = false;
+
+        let style = document.createElement('style');
+        style.innerText = '.slds-table_header-fixed_container{border: 1px solid red;}';
+        let dt = this.template.querySelector('lightning-datatable');
+        if(dt) {
+            dt.appendChild(style);
+        }
     }
 
     /*******************************************************************************

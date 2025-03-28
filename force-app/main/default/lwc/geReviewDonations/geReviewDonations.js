@@ -80,18 +80,6 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
         return this.opportunities && this.opportunities.length > 0;
     }
 
-    get reviewDonationsComputedClass() {
-        let baseClass = ['slds-box', 'slds-theme_shade', 'slds-m-bottom_small'];
-
-        if (this.hasSelectedDonation) {
-            baseClass.push('slds-box_extension-2');
-        } else {
-            baseClass.push('slds-box_extension');
-        }
-
-        return baseClass.join(' ');
-    }
-
     get isUpdatingPayment() {
         return this._donationType === PAYMENT.objectApiName;
     }

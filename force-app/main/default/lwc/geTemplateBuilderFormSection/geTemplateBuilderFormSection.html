@@ -21,14 +21,14 @@
                 <lightning-button-icon icon-name="utility:settings"
                                        alternative-text={labelGeAssistiveFormFieldsSectionEdit}
                                        onclick={handleEditFormSection}
-                                       class="slds-m-left_xxx-small"
+                                       class="slds-m-left_xx-small"
                                        data-qa-locator={qaLocatorSectionSettings}>
                 </lightning-button-icon>
                 <lightning-button-icon icon-name="utility:chevronup"
                                        alternative-text={labelGeBuilderAssistiveSectionUp}
                                        onclick={handleFormSectionUp}
                                        data-section-id={formSection.id}
-                                       class="slds-m-left_xxx-small"
+                                       class="slds-m-left_xx-small"
                                        disabled={isFirst}
                                        data-id="up"
                                        data-qa-locator={qaLocatorSectionUp}>
@@ -37,7 +37,7 @@
                                        alternative-text={labelGeBuilderAssistiveSectionDown}
                                        onclick={handleFormSectionDown}
                                        data-section-id={formSection.id}
-                                       class="slds-m-left_xxx-small"
+                                       class="slds-m-left_xx-small"
                                        disabled={isLast}
                                        data-id="down"
                                        data-qa-locator={qaLocatorSectionDown}>
@@ -49,6 +49,7 @@
                     <lightning-icon alternative-text={CUSTOM_LABELS.geAssistiveActiveSection}
                                     icon-name="utility:check"
                                     variant="inverse"
+                                    class="picker-icon"
                                     size="x-small">
                     </lightning-icon>
                 </span>
