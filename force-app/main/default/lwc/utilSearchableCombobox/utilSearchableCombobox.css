@@ -4,10 +4,10 @@
     transform: translateY(0);
     clip: rect(0px, 2000px, 2000px, -10px);
     transition: opacity .2s ease-in-out,transform .2s ease-in-out,clip .2s ease-in-out;
-    border: 1px solid rgb(221, 219, 218);
-    border-radius: 4px;
-    background-color: rgb(255, 255, 255);
-    box-shadow: 0 2px 7px rgba(0, 0, 0, .07);
+    border: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-neutral-base-90, rgb(221, 219, 218));
+    border-radius: var(--slds-g-radius-border-2, 4px);
+    background-color: var(--slds-g-color-disabled-container-1, rgb(255, 255, 255));
+    box-shadow: none var(--slds-g-sizing-border-2, 2px) var(--slds-g-sizing-border-4, 4px) var(--slds-g-color-neutral-base-90, #ddd);
     z-index: 7000;
     overflow: hidden;
     overflow-y: auto;
@@ -24,6 +24,6 @@
 }
 
 .custom-search-result-box > p:hover {
-    background-color: rgb(243, 242, 242);
+    background-color: var(--slds-g-color-surface-2, rgb(243, 242, 242));
     cursor: pointer;
 }
