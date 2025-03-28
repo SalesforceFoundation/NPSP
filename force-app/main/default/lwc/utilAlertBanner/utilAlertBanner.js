@@ -1,7 +1,7 @@
 import { LightningElement, api } from 'lwc';
 import { isEmpty } from 'c/utilCommon';
 
-const defaultClass = 'slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_';
+const defaultClass = 'slds-notify_alert slds-theme_';
 
 export default class AlertBanner extends LightningElement {
     /**

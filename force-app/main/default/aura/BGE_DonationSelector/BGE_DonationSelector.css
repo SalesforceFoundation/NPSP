@@ -16,12 +16,12 @@
 
 /*color for selected card border*/
 .THIS .selectedDonationCard {
-    border: 2px solid rgb(21, 137, 238);
+    border: var(--slds-g-radius-border-1, 2px) solid var(--slds-g-color-brand-base-60, rgb(21, 137, 238));
 }
 
 /*shade selected check icon*/
 .THIS .selectedCheckmark  > lightning-primitive-icon > svg {
-    fill: rgb(21, 137, 238);
+    fill: var(--slds-g-color-accent-1, rgb(21, 137, 238));
 }
 
 /*prevent card header from truncating long opp or payment names*/
