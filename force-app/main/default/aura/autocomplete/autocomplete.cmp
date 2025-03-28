@@ -33,39 +33,43 @@
     <aura:registerEvent name="newFocussedElement" type="c:HH_NewFocussedElement"/>
     <aura:registerEvent name="reachFooter" type="c:HH_ReachFooter"/>
     
-    <div class="slds" aura:id="autocomplete">
+    <div class="slds-combobox_container" aura:id="autocomplete">
         <div
-             class="{!'slds-lookup ' + (and(!empty(v.value), !empty(v.displayValue)) ? 'slds-has-selection' : '')}"
+             class="{!'' + (and(!empty(v.value), !empty(v.displayValue)) ? 'slds-has-selection' : '')}"
              data-select="single"
              data-scope="single"
              data-typeahead="true">
-            <div class="slds-form-element">
+            <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click">
                 <aura:if isTrue="{!!empty(v.label)}">
                     <span class="slds-form-element__label slds-float_left" id="inputLabel" >{!v.label}</span>
                 </aura:if>
                 <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right" onfocusin="{!c.handleFocusInput}" aria-labelledby="inputLabel">
-                    <lightning:icon iconName="utility:search" 
-                        class="slds-input__icon slds-icon-text-default" size="x-small"/>
                     <ui:inputText aura:id="input"
-                                  class="{!'slds-input ' + (and(!empty(v.value), !empty(v.displayValue)) ? 'slds-hide' : '')}"
+                                  class="{!'slds-combobox__input slds-input ' + (and(!empty(v.value), !empty(v.displayValue)) ? 'slds-hide' : '')}"
                                   placeholder="{!v.placeholder}"
                                   value="{!v.displayValue}"
                                   updateOn="keyup"
                                   keyup="{!c.handleKeypressOnInput}"
                                   />
+                    <span class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right">
+                        <lightning:icon iconName="utility:search"
+                                    class="slds-icon slds-icon slds-icon_x-small slds-icon-text-default"
+                                    size="x-small"
+                                    />
+                    </span>
                 </div>
             </div>
 
-            <div class="{!'slds-lookup__menu' + (v.isListVisible ? ' slds-show' : ' slds-hide')}" role="listbox" aura:id="list" tabindex="-1" onfocusin="{!c.handleListFocus}" onfocusout="{!c.handleListBlur}" onfocus="{!c.handleListFocus}" onblur="{!c.handleListBlur}">
-                <aura:if isTrue="{!v.showListHeader}">
-                    <div class="slds-lookup__item">
-                        <span>
-                            <lightning:icon iconName="utility:search" class="slds-icon-text-default" size="small"/>
-                            &quot;{!v.keyword}&quot; {!if(!empty(v.searchContext), v.searchContext, '')}
-                        </span>
-                    </div>
-                </aura:if>
-                <ul aura:id="ullist" tabindex="-1" class="slds-lookup__list">
+            <div class="{!'slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid' + (v.isListVisible ? ' slds-show' : ' slds-hide')}" role="listbox" aura:id="list" tabindex="-1" onfocusin="{!c.handleListFocus}" onfocusout="{!c.handleListBlur}" onfocus="{!c.handleListFocus}" onblur="{!c.handleListBlur}">
+                <ul aura:id="ullist" tabindex="-1" class="slds-listbox slds-listbox_vertical">
+                    <aura:if isTrue="{!v.showListHeader}">
+                        <li class="slds-listbox__item">
+                            <span class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_term">
+                                <lightning:icon iconName="utility:search" class="slds-media__figure slds-listbox__option-icon" size="small"/>
+                                &quot;{!v.keyword}&quot; {!if(!empty(v.searchContext), v.searchContext, '')}
+                            </span>
+                        </li>
+                    </aura:if>
                     <aura:if isTrue="{!v.showLoadingIndicator}">
                         {!v.loadingIndicator}
                     </aura:if>
@@ -75,10 +79,10 @@
                             {!v.emptyListContent}
                         </aura:set>
                     </aura:if>
+                    <aura:if isTrue="{!v.showListFooter}">
+                        {!v.listFooter}
+                    </aura:if>
                 </ul>
-                <aura:if isTrue="{!v.showListFooter}">
-                    {!v.listFooter}
-                </aura:if>
             </div>
         </div>
     </div>

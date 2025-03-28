@@ -4,7 +4,7 @@
             <div class="slds-grid slds-grid_vertical-align-end">
                 <template if:false={isWidget}>
                     <div class="slds-size_5-of-12 slds-p-right_small">
-                        <lightning-input class="slds-truncate"
+                        <lightning-input class="slds-truncate input-padding"
                                          data-name="customLabel"
                                          field-level-help={labelHelpText}
                                          label={field.label}
@@ -35,7 +35,7 @@
                             </c-util-input>
                         </template>
                     </div>
-                    <div class="slds-size_1-of-12 slds-p-left_large slds-p-bottom_x-small">
+                    <div class="slds-size_1-of-12 slds-p-left_large slds-p-bottom_small">
                         <template if:true={showRequiredCheckbox}>
                             <lightning-input aria-label={labelGeAssistiveRequireField}
                                              aria-describedby="requiredCheckboxDescription"

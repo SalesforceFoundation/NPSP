@@ -10,20 +10,20 @@
 }
 
 .credit-card-container {
-    border: 1px solid var(--lwc-colorBorder, rgb(216, 221, 230));
-    border-radius: 0.25rem;
+    border: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-1, var(--lwc-colorBorder, rgb(216, 221, 230)));
+    border-radius: var(--slds-g-radius-border-2, 0.25rem);
     min-height: 5rem;
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: none var(--slds-g-sizing-border-2, 2px) var(--slds-g-sizing-border-2, 2px) none var(--slds-g-color-neutral-base-90, #ddd);
 }
 
 .credit-card-header {
-    background-color: var(--lwc-colorBackgroundShade, rgb(224, 229, 238));
+    background-color: var(--slds-g-color-surface-2, var(--lwc-colorBackgroundShade, rgb(224, 229, 238)));
     font-weight: bold;
 }
 
 .hide-card-button {
-    font-size: 0.8125rem;
-    font-weight: 500;
+    font-size: var(--slds-g-font-size-base, 0.8125rem);
+    font-weight: normal;
 }
 
 .fade-in {

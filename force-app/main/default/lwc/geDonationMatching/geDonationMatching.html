@@ -6,15 +6,15 @@
                 <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
             </template>
 
-            <lightning-layout-item class="slds-p-horizontal_small"
+            <lightning-layout-item class="slds-p-around_small"
                                    size="12">
                 <p class="slds-text-body_regular">
                     {CUSTOM_LABELS.geBodyMatchingSelectRecord}
-                    <button class="slds-button slds-p-left_xx-small"
+                    <a class="slds-p-left_xx-small"
                             onclick={handleNewOpportunity}
                             data-qa-locator={qaLocatorNewOpportunity}>
                         {CUSTOM_LABELS.geButtonMatchingNewOpportunity}
-                    </button>
+                    </a>
                 </p>
             </lightning-layout-item>
 
