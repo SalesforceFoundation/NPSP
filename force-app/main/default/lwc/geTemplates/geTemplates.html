@@ -51,7 +51,7 @@
                     <template if:false={isLoading}>
                         <div class="slds-grid slds-wrap slds-m-bottom_large slds-p-bottom_large">
                             <div class="slds-size_1-of-1 slds-p-around_medium">
-                                <div class="slds-card slds-card_extension">
+                                <div class="slds-card slds-card_extension slds-card_boundary">
                                     <c-ge-list-view data-id={batchesListViewName}
                                                     list-name={batchesListViewName}
                                                     object-api-name={dataImportBatchObjectApiName}
@@ -81,7 +81,7 @@
                     <template if:false={isLoading}>
                         <div class="slds-grid slds-wrap slds-m-bottom_large slds-p-bottom_large">
                             <div class="slds-size_1-of-1 slds-p-around_medium">
-                                <div class="slds-card slds-card_extension">
+                                <div class="slds-card slds-card_extension slds-card_boundary">
                                     <c-ge-list-view data-id={templatesListViewName}
                                                     list-name={templatesListViewName}
                                                     object-api-name={formTemplateObjectApiName}

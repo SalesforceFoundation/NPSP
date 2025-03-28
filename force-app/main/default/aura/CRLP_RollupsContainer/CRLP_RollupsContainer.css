@@ -5,7 +5,7 @@
     padding: .25em 0em .25em 0em;
     line-height: 19.5px;
     text-align: left;
-    font-size: 13px;
+    font-size: var(--slds-g-font-size-base, 13px);
     background-color: transparent;
 }
 /*lightning table links hover*/
