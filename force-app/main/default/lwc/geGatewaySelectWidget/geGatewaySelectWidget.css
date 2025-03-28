@@ -17,6 +17,6 @@
 }
 
 .expand-collapse-link {
-    font-size: 0.8125rem;
-    font-weight: 500;
+    font-size: var(--slds-g-font-size-base, 0.8125rem);
+    font-weight: bold;
 }

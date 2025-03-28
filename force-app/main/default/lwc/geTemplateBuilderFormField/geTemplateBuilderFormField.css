@@ -1,12 +1,11 @@
-.slds-card_extension {
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.10);
-    border: 1px solid rgb(221, 219, 218);
-}
-
 .slds-card_extension-widget {
-    background-color: #ECEBEA;
+    background-color: var(--slds-g-color-surface-3, #ECEBEA);
 }
 
 .vertical-align-center {
     margin: auto 0;
+}
+
+.input-padding {
+    padding: 0 4px 4px 4px;
 }
