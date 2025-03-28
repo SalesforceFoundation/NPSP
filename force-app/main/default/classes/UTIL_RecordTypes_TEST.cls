@@ -47,9 +47,10 @@ public class UTIL_RecordTypes_TEST {
 
         // check against queried rectypes
         List<RecordType> oppRTs = [
-            SELECT Id, toLabel(Recordtype.Name) FROM RecordType
+            SELECT Id, toLabel(Recordtype.Name), DeveloperName FROM RecordType
             WHERE IsActive = True
             AND SobjectType = 'Opportunity'
+            ORDER BY DeveloperName ASC
             LIMIT 1
         ];
         if (!oppRTs.isEmpty()) {

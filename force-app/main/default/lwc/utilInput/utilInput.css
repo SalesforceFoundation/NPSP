@@ -1,3 +1,11 @@
 .slds-form-element_hidden label {
     display: none;
 }
+
+.input-padding {
+    padding-bottom: 4px;
+}
+
+.combo-adjust {
+    top: -4px;
+}

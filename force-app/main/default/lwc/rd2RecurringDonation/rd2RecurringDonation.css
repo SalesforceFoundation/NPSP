@@ -14,7 +14,7 @@
     display: inline;
 }
 .slds-table_header-fixed tbody tr:first-child td, .table_top{
-    border-top: var(--lwc-borderWidthThin,1px) solid var(--lwc-colorBorder,rgb(229, 229, 229));
+    border-top: var(--slds-g-sizing-border-1, var(--lwc-borderWidthThin,1px)) solid var(--slds-g-color-border-1, var(--lwc-colorBorder,rgb(229, 229, 229)));
 }
 .viewMore{
     display: none;
