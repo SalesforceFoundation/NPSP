@@ -195,7 +195,7 @@ export default class utilInput extends LightningElement {
         } else if (this.variant === LABEL_STACKED) {
             return 'slds-form-element slds-form-element_stacked';
         } else if (this.variant === LABEL_HIDDEN) {
-            return 'slds-form-element slds-form-element_hidden';
+            return 'slds-form-element slds-form-element_hidden combo-adjust';
         }
     }
 
