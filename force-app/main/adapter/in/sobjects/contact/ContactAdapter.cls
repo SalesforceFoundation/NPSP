@@ -681,13 +681,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
             // Check if the contact has Address Override enabled
             if (contact.Is_Address_Override__c == true) {
                 // Create a new address record specific to this contact
-                Address__c newAddress = new Address__c();
-                newAddress.Household_Account__c = contact.AccountId; // Link to household/account
-                newAddress.MailingStreet__c = contact.MailingStreet;
-                newAddress.MailingCity__c = contact.MailingCity;
-                newAddress.MailingState__c = contact.MailingState;
-                newAddress.MailingPostalCode__c = contact.MailingPostalCode;
-                newAddress.MailingCountry__c = contact.MailingCountry;
+                Address__c newAddress = new NPSP_Address(contact).getRecord();
                 newAddress.Default_Address__c = false; // It's not a default address
     
                 // Add the new address to be inserted
