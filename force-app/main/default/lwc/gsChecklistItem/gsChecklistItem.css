@@ -1,7 +1,7 @@
 .item-card {
     position: relative;
     min-height: 185px;
-    border: 1px solid lightgray;
+    border: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-1, lightgray);
     width: 100%;
     margin: 1.5rem 0;
     padding: 18px;
@@ -16,7 +16,7 @@
     grid-column: 1/ 2;
     padding-left: 6px;
     padding-right: 24px;
-    border-right: 1px solid lightgray;
+    border-right: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-1, lightgray);
 }
 
 .item-card .card-image img {
@@ -38,29 +38,29 @@
     right: 0;
     height: 14px;
     width: 266.91px;
-    color: #706E6B;
+    color: var(--slds-g-color-on-surface-1, #706E6B);
     font-family: "Salesforce Sans";
-    font-size: 12.98px;
+    font-size: var(--slds-g-font-size-base, 13px);
     letter-spacing: 0;
     line-height: 19.97px;
     text-align: right;
 }
 
 .item-card .card-content .content-title {
-    color: #3E3E3C;
+    color: var(--slds-g-color-info-1, #3E3E3C);
     font-family: "Salesforce Sans";
-    font-size: 12.98px;
+    font-size: var(--slds-g-font-size-base, 13px);
     font-weight: bold;
     letter-spacing: 0;
-    line-height: 19.97px;
+    line-height: 20px;
 }
 
 .item-card .card-content .content-text {
-    color: #3E3E3C;
+    color: var(--slds-g-color-info-1, #3E3E3C);
     font-family: "Salesforce Sans";
-    font-size: 12.98px;
+    font-size: var(--slds-g-font-size-base, 13px);
     letter-spacing: 0;
-    line-height: 19.97px;
+    line-height: 20px;
     padding-right: 3rem;
  }
 
@@ -69,7 +69,7 @@
     left: -38px;
     top: calc(50% - 10px);
     outline: white 5px solid;
-    background: white;
+    background: var(--slds-g-color-disabled-container-1, white);
     outline-offset: 0;
  }
 
@@ -79,12 +79,12 @@
  }
 
  .item-card .card-content .content-footer a {
-    color: #006DCC;
+    color: var(--slds-g-color-accent-2, #006DCC);
     font-family: "Salesforce Sans";
-    font-size: 12.98px;
+    font-size: var(--slds-g-font-size-base, 13px);
     font-weight: bold;
     letter-spacing: 0;
-    line-height: 19.97px;
+    line-height: 20px;
     min-width: 10rem;
     flex: 1 0 0;
  }

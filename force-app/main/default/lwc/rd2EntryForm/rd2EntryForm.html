@@ -10,15 +10,16 @@
     >
         <div class="slds-modal__container">
             <header class="slds-modal__header slds-clearfix">
-                <lightning-button-icon
-                    class="slds-modal__close"
-                    title={customLabels.closeButtonLabel}
-                    icon-name="utility:close"
-                    icon-class="slds-button_icon-inverse"
-                    onclick={handleCancel}
-                    onkeydown={handleClosedButtonTrapFocus}
-                    data-id="closeButton">
-                </lightning-button-icon>
+                <button class="slds-button slds-button_icon slds-modal__close closeIcon">
+                    <lightning-icon
+                        title={customLabels.closeButtonLabel}
+                        icon-name="utility:close"
+                        size="small"
+                        onclick={handleCancel}
+                        onkeydown={handleClosedButtonTrapFocus}
+                        data-id="closeButton">
+                    </lightning-icon>
+                </button>
                 <h2
                     class="slds-text-heading_medium slds-hyphenate header-string slds-p-top_large slds-p-horizontal_medium" id="modal-heading-01">
                     <template if:false={isExperienceSite}>{headerLabel}</template>

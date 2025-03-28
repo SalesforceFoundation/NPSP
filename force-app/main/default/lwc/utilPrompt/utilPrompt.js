@@ -25,7 +25,7 @@ export default class utilPrompt extends LightningElement {
     @api confirmButtonTitle;
     @api hasBackDrop;
     @api position;
-    _themeClass = 'slds-modal__header slds-theme_alert-texture ';
+    _themeClass = 'slds-modal__header ';
 
     get promptTheme() {
        switch (this.variant) {

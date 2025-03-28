@@ -1,10 +1,10 @@
 <aura:component extends="c:autocompleteOption" >
     <aura:registerEvent name="keypressEvent" type="c:HH_KeypressEvent"/>
     <aura:handler event="c:HH_NewFocussedElement" action="{!c.handleNewFocussedElement}"/>
-    <li class="slds-lookup__item" role="listitem" tabindex="0" onkeydown="{!c.handleKeyPress}" id="{!v.value.Id}" onclick="{!c.handleClick}" data-qa-locator="{!'Add ' + v.value.Name}">
+    <li class="slds-listbox__item" role="listitem" tabindex="0" onkeydown="{!c.handleKeyPress}" id="{!v.value.Id}" onclick="{!c.handleClick}" data-qa-locator="{!'Add ' + v.value.Name}">
         <span role="option">
-            <div class="slds-media slds-tile slds-hint-parent">
-                <div class="slds-media__figure">
+            <div class="slds-media slds-tile slds-hint-parent slds-listbox__option slds-listbox__option_entity">
+                <div class="slds-media__figure slds-listbox__option-icon">
                     <lightning:icon iconName="{!'standard:' + (!empty(v.value.HHId__c) ? 'household' : 'contact')}"
                         class="slds-icon_small" size="small"/>
                 </div>
@@ -15,7 +15,7 @@
                             class="slds-shrink-none" size="large"
                             alternativeText="{!$Label.npo02.Add + ' ' + v.value.Name}" ariaLabel="{!$Label.npo02.Add + ' ' + v.value.Name}" />
                     </div>
-                    <div class="slds-tile__detail slds-text-body_small">
+                    <div class="slds-tile__detail slds-text-body_small slds-listbox__option-text slds-listbox__option-text_entity">
                         <ul>
                             <aura:if isTrue="{!v.value.npo02__Household__r.Name != null}" >
                                 <li>{!v.value.npo02__Household__r.Name}</li>

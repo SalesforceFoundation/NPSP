@@ -122,7 +122,7 @@
                         <aura:if isTrue="{!greaterthan(v.batchInfo.recordCount,0)}">
                             <lightning:layout horizontalAlign="center">
                                 <lightning:layoutItem size="12" class="slds-grid slds-grid_align-center slds-p-bottom_medium">
-                                    <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
+                                    <div class="slds-notify_alert slds-theme_warning" role="alert">
                                         <span class="slds-assistive-text">{!$Label.c.PageMessagesWarning}</span>
                                         <lightning:icon iconName="utility:warning" alternativeText="warning" class="iconContainer"/>
                                         <h2>
@@ -169,7 +169,7 @@
                         <aura:if isTrue="{!greaterthan(v.batchInfo.recordCount,0)}">
                             <lightning:layout horizontalAlign="center">
                                 <lightning:layoutItem size="12" class="slds-grid slds-grid_align-center slds-p-bottom_medium">
-                                    <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
+                                    <div class="slds-notify_alert slds-theme_warning" role="alert">
                                         <span class="slds-assistive-text">{!$Label.c.PageMessagesWarning}</span>
                                         <lightning:icon iconName="utility:warning" alternativeText="warning" class="iconContainer"/>
                                         <h2>
@@ -269,7 +269,7 @@
                             <aura:if isTrue="{!greaterthan(v.batchInfo.recordCount,0)}">
                                 <lightning:layout horizontalAlign="center">
                                     <lightning:layoutItem size="12" class="slds-grid slds-grid_align-center slds-p-bottom_medium">
-                                        <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
+                                        <div class="slds-notify_alert slds-theme_warning" role="alert">
                                             <span class="slds-assistive-text">{!$Label.c.PageMessagesWarning}</span>
                                             <lightning:icon iconName="utility:warning" alternativeText="warning" class="iconContainer"/>
                                             <h2>

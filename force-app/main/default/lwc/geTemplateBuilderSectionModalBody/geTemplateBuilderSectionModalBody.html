@@ -51,7 +51,9 @@
                      class="slds-section__content">
                     <template if:true={hasRequiredFields}>
                         <c-util-page-level-message title={CUSTOM_LABELS.geWarningFormFieldsModalDeleteSection}
-                                                   variant="warning">
+                                                   variant="warning"
+                                                   icon-size="small"
+                                                   icon-name="utility:warning">
                         </c-util-page-level-message>
                     </template>
                     <template if:false={hasRequiredFields}>

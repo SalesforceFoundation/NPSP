@@ -82,7 +82,7 @@
 
         <!--START TOAST-->
         <div class="slds-notify_container slds-float_left">
-            <div class="{! 'slds-notify slds-notify_toast slds-theme_' + v.toastStatus + ' ' + v.toastHideClass}"
+            <div class="{! 'slds-notify_toast slds-theme_' + v.toastStatus + ' ' + v.toastHideClass}"
                  role="alert">
                 <lightning:icon iconName="{!'utility:' + v.toastStatus}" class="slds-p-right_small" variant="inverse"
                                 size="small" alternativeText="{!v.notificationText.alternativeText}"/>
@@ -127,7 +127,7 @@
         <!-- START ACCESS DISABLED MESSAGE -->
         <aura:if isTrue="{! !and(v.isCRLPEnabled, v.isSystemAdminUser)}">
             <div class="slds-p-around_medium">
-                <div class="slds-notify slds-notify_toast slds-theme_warning">
+                <div class="slds-notify_toast slds-theme_warning">
                     <lightning:icon iconName="utility:block_visitor" class="slds-p-right_small" variant="inverse"
                                     size="small" alternativeText="{!v.notificationText.alternativeText}"/>
                     <div class="slds-notify__content">
