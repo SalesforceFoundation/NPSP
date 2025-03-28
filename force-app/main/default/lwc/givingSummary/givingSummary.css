@@ -3,9 +3,9 @@
 }
 
 .lifetime .bolder .SMALL {
-    border-bottom: 10px;
+    border-bottom: var(--slds-g-radius-border-3, 8px);
 }
 
 .bold-title{
-    font-weight: 700;
+    font-weight: bold;
 }

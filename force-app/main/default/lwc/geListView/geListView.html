@@ -54,16 +54,18 @@
         </c-util-stencil>
     </template>
     <template if:false={isLoading}>
-        <lightning-datatable key-field="id"
-                             data={recordsToDisplay}
-                             columns={columns}
-                             hide-checkbox-column
-                             onrowaction={handleRowAction}
-                             sorted-by={sortedBy}
-                             sorted-direction={sortedDirection}
-                             onsort={handleColumnSorting}
-                             data-qa-locator={qaLocatorDatatable}>
-        </lightning-datatable>
+        <div class="table-container">
+            <lightning-datatable key-field="id"
+                                data={recordsToDisplay}
+                                columns={columns}
+                                hide-checkbox-column
+                                onrowaction={handleRowAction}
+                                sorted-by={sortedBy}
+                                sorted-direction={sortedDirection}
+                                onsort={handleColumnSorting}
+                                data-qa-locator={qaLocatorDatatable}>
+            </lightning-datatable>
+        </div>
     </template>
 
     <slot></slot>

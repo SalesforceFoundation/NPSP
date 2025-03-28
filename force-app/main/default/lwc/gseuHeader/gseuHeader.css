@@ -1,14 +1,14 @@
 .title {
-    font-size: 32pt;
-    color: var(--lwc-colorTextLabel);
+    font-size: var(--slds-g-font-scale-8, 42px);
+    color: var(--slds-g-color-on-surface-3, var(--lwc-colorTextLabel));
     font-weight: lighter;
 }
 
 .length {
     margin-top: 5px;
-    font-size: 20pt;
+    font-size: var(--slds-g-font-scale-5, 24px);
     font-weight: lighter;
-    color: var(--lwc-colorTextLabel);
+    color: var(--slds-g-color-on-surface-3, var(--lwc-colorTextLabel));
 }
 
 .labelContainer {
