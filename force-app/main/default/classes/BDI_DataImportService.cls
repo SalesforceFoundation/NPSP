@@ -2266,7 +2266,7 @@ global with sharing class BDI_DataImportService {
 
         for (String diField : diFieldToTargetFieldMap.keySet()){
             // Set the is populated flag to true if the field should not be ignored, and it does have a value in the DI
-            Boolean shouldAddPopulatedField = !fieldsToIgnore.contains(diField.toLowerCase()) && di.get(diField) != null;
+            Boolean shouldAddPopulatedField = !fieldsToIgnore.contains(diField.toLowerCase()) && di.get(diField) != null && di.get(diField) != false;
             if (shouldAddPopulatedField) {
                 isPopulated = true;
                 break;

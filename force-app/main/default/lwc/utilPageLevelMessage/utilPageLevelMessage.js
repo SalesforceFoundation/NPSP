@@ -47,7 +47,7 @@ export default class utilPageLevelMessage extends LightningElement {
     }
 
     get notificationClass() {
-        let classNames = "slds-notify slds-notify_extension slds-notify_toast ";
+        let classNames = "slds-notify_extension slds-notify_toast ";
         switch (this.variant) {
             case SUCCESS:
                 classNames += THEME_SUCCESS;

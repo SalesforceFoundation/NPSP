@@ -9,7 +9,7 @@
     <template if:false={isWidget}>
         <template if:true={isLightningRichText}>
             <lightning-input-rich-text aria-label="default value"
-                                       class="slds-p-horizontal_xx-small"
+                                       class="slds-p-horizontal_xx-small input-padding"
                                        data-id='inputComponent'
                                        data-name="defaultValue"
                                        formats={richTextFormats}
@@ -30,7 +30,7 @@
                                 data-id='inputComponent'
                                 label={uiLabel}
                                 required={isRequired}
-                                class="slds-m-around_none"
+                                class="slds-m-around_none input-padding"
                                 data-name="defaultValue"
                                 onfocusout={handleValueChange}
                                 onclick={stopPropagation}
@@ -49,6 +49,7 @@
                                 options={picklistValues}
                                 data-qa-locator={qaLocatorPicklist}
                                 required={isRequired}
+                                class="combo-adjust"
                                 variant={variant}>
             </lightning-combobox>
         </template>
@@ -59,7 +60,7 @@
                              label={uiLabel}
                              required={isRequired}
                              checked={fieldValue}
-                             class="slds-m-top_small"
+                             class="slds-m-top_small input-padding"
                              data-name="defaultValue"
                              onchange={handleValueChange}
                              onclick={stopPropagation}
@@ -82,7 +83,7 @@
                                                onchange={handleValueChange}
                                                required={isRequired}
                                                variant='label-hidden'
-                                               class="help-text-hidden"
+                                               class="help-text-hidden input-padding"
                                                value={fieldValue}
                                                data-qa-locator={qaLocatorLookup}>
                         </lightning-input-field>
@@ -96,7 +97,7 @@
                              data-id='inputComponent'
                              label={uiLabel}
                              required={isRequired}
-                             class="slds-m-around_none"
+                             class="slds-m-around_none input-padding"
                              data-name="defaultValue"
                              onchange={handleValueChange}
                              onclick={stopPropagation}
@@ -113,7 +114,7 @@
                              data-id='inputComponent'
                              label={uiLabel}
                              required={isRequired}
-                             class="slds-m-around_none"
+                             class="slds-m-around_none input-padding"
                              data-name="defaultValue"
                              onfocusout={handleValueChange}
                              onclick={stopPropagation}

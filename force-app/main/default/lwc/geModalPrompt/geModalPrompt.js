@@ -13,7 +13,7 @@ export default class geModalPrompt extends LightningElement {
         let allowedVariants = ['warning', 'shade', 'inverse', 'alt-inverse', 
             'success', 'info', 'error', 'offline', 'default'];
 
-        let baseClass = ['slds-box', 'slds-theme_alert-texture', 'slds-box_extension'];
+        let baseClass = ['slds-box', 'slds-box_extension'];
 
         if (isEmpty(this.variant) || !allowedVariants.includes(this.variant)) {
             baseClass.push('slds-theme_default');
