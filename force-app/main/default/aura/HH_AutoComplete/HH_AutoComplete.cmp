@@ -29,27 +29,21 @@
         </aura:set>
 
         <aura:set attribute="listFooter">
-            <div class="slds-lookup__item">
-                <ul class="slds-lookup__list">
-                    <li id="newContact" class="slds-lookup__item" tabindex="0" onclick="{!c.handleNewContact}" onkeydown="{!c.handleKeyPress}" role="listitem"  data-qa-locator="newContact">
-                        <span role="option">
-                            <div class="slds-media slds-tile slds-hint-parent">
-                                <div class="slds-media__figure">
-                                    <lightning:icon iconName="utility:add"
-                                        class="slds-icon_x-small" size="small"/>
-                                </div>
-                                <div class="slds-media__body">
-                                    <div class="slds-tile__detail slds-text-body_small">
-                                        <ul>
-                                            <li><ui:outputText value="{!$Label.npo02.NewContact}" /></li>
-                                        </ul>
-                                    </div>
-                                </div>
+            <li id="newContact" class="slds-listbox__item" tabindex="0" onclick="{!c.handleNewContact}" onkeydown="{!c.handleKeyPress}" role="listitem"  data-qa-locator="newContact">
+                <span role="option">
+                    <div class="slds-media slds-tile slds-hint-parent slds-listbox__option slds-listbox__option_entity">
+                        <div class="slds-media__figure slds-listbox__option-icon">
+                            <lightning:icon iconName="utility:add"
+                                class="slds-media__figure slds-listbox__option-icon slds-icon_container" size="small"/>
+                        </div>
+                        <div class="slds-media__body">
+                            <div class="slds-text-body_small slds-listbox__option-text slds-listbox__option-text_entity">
+                                <ui:outputText value="{!$Label.npo02.NewContact}" />
                             </div>
-                        </span>
-                    </li>
-                </ul>
-            </div>
+                        </div>
+                    </div>
+                </span>
+            </li>
         </aura:set>
         
         <aura:set attribute="loadingIndicator">

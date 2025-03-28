@@ -362,7 +362,7 @@ export default class rd2StatusMappingSettings extends LightningElement {
     * @description Toast message notification formatting
     */
     get notificationClass() {
-        let classNames = 'slds-notify slds-notify_extension slds-notify_toast ';
+        let classNames = 'slds-notify_extension slds-notify_toast ';
         switch (this.message.variant) {
             case toastVariant.SUCCESS:
                 classNames += 'slds-theme_success';

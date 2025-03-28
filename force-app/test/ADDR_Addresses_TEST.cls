@@ -2560,6 +2560,7 @@ public with sharing class ADDR_Addresses_TEST {
                 MailingStreet__c, MailingCity__c, MailingState__c,
                 MailingPostalCode__c, MailingCountry__c
             FROM Address__c
+            ORDER BY Name DESC
         ];
     }
 

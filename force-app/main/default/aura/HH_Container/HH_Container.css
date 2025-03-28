@@ -9,6 +9,6 @@
 
 .THIS .required {
     padding-left: 2px;
-    color: red;
-    font-weight: 700;
+    color: var(--slds-g-color-error-base-50, red);
+    font-weight: bold;
 }

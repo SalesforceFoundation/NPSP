@@ -113,7 +113,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
         if (this.field.elementType === WIDGET) {
             return 'slds-size_1-of-12 vertical-align-center'
         } else {
-            return 'slds-size_1-of-12 slds-p-bottom_x-small';
+            return 'slds-size_1-of-12 slds-p-bottom_small';
         }
     }
 
