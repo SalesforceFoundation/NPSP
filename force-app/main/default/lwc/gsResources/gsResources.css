@@ -1,6 +1,6 @@
 .resource-list .resource-item {
     height: 80px;
-    border-top: solid 1px  #DDDBDA;
+    border-top: solid var(--slds-g-sizing-border-1, 1px)  var(--slds-g-color-neutral-base-90, #DDDBDA);
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -17,7 +17,7 @@
 }
 
 .link > a {
-    color: #006DCC;
+    color: var(--slds-g-color-accent-2, #006DCC);
 }
 
 .label {
@@ -25,8 +25,8 @@
 }
 
 .label > span, .container .link > a  {
-    font-size: 15px;
-    font-weight: 400;
+    font-size: var(--slds-g-font-scale-1, 14px);
+    font-weight: normal;
 }
 
 @media(max-width: 1345px) {

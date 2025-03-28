@@ -6,7 +6,7 @@
     <aura:registerEvent name="optionSelected" type="c:autocompleteSelectListOption"/>
 
     <aura:attribute name="body" type="Aura.Component[]">
-        <li class="slds-lookup__item">
+        <li class="slds-listbox__item">
             <ui:button class="slds-button" press="{!c.handleClick}">
                 <aura:if isTrue="{!and(!empty(v.iconSprite), !empty(v.iconName))}">
                     <lightning:icon iconName="{!v.iconSprite + ':' + v.iconName}" size="small"/>
