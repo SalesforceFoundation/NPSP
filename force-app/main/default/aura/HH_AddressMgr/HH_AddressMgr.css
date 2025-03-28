@@ -1,5 +1,5 @@
 .THIS li.selected {
-    background-color: token(colorBackgroundRowSelected);
+    background-color: var(--slds-s-table-row-color-background-selected, token(colorBackgroundRowSelected));
 }
 
 .THIS .slds-modal__container {
