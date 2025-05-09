@@ -46,8 +46,8 @@
 }
 
 .bottom-button {
-    border-bottom-left-radius: var(--slds-c-card-radius-border,var(--slds-s-container-radius-border, var(--slds-g-radius-border-2)));
-    border-bottom-right-radius: var(--slds-c-card-radius-border,var(--slds-s-container-radius-border, var(--slds-g-radius-border-2)));
+    border-bottom-left-radius: var(--slds-c-card-radius-border,var(--slds-s-container-radius-border, var(--slds-g-radius-border-2, .25rem)));
+    border-bottom-right-radius: var(--slds-c-card-radius-border,var(--slds-s-container-radius-border, var(--slds-g-radius-border-2, .25rem)));
 }
 
 .slds-border_extension-bottom {
