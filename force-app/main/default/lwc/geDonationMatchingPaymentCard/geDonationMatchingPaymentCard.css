@@ -43,8 +43,8 @@
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
     border: none;
-    border-bottom-left-radius: var(--slds-c-card-radius-border,var(--slds-s-container-radius-border, var(--slds-g-radius-border-2)));
-    border-bottom-right-radius: var(--slds-c-card-radius-border,var(--slds-s-container-radius-border, var(--slds-g-radius-border-2)));
+    border-bottom-left-radius: var(--slds-c-card-radius-border,var(--slds-s-container-radius-border, var(--slds-g-radius-border-2, .25rem)));
+    border-bottom-right-radius: var(--slds-c-card-radius-border,var(--slds-s-container-radius-border, var(--slds-g-radius-border-2, .25rem)));
 }
 
 .slds-card.slds-card_boundary {
