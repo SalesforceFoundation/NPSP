@@ -408,11 +408,7 @@ public inherited sharing class NPSP_Address implements IAddress {
         if (String.isBlank(countryCode)) {
             return;
         }
-
-        if (String.isEmpty(address.MailingCountry__c)) {
-            address.MailingCountry__c = orgConfig.validCountriesByCode().get(countryCode
-                    .toUpperCase());
-        }
+        address.MailingCountry__c = orgConfig.validCountriesByCode().get(countryCode.toUpperCase());
     }
 
     /*******************************************************************************************************
