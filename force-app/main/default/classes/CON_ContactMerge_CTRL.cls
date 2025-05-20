@@ -264,6 +264,11 @@ public with sharing class CON_ContactMerge_CTRL {
     */
     public Map<Id, String> ariaNameMap { get; private set; }
 
+        /***********************************************************************************************
+    * @description Map to store Contact Duplicate Rule Ids and status
+    */
+    public Map<Id, Boolean> duplicateRuleStatusMap { get; set; }
+
     /***********************************************************************************************
     * @description List of readonly fields
     */
@@ -442,6 +447,11 @@ public with sharing class CON_ContactMerge_CTRL {
         showDRSButton = true;
         loadMergePage = false;
         showDRS = false;
+        duplicateRuleStatusMap = new Map<Id, Boolean>();
+
+        for (DuplicateRule duplicateRule : [SELECT Id, isActive FROM DuplicateRule WHERE SObjectType = 'Contact']) {
+            duplicateRuleStatusMap.put(duplicateRule.Id, duplicateRule.isActive);
+        }
 
         if (!hasContactObjectDeletePermission()) {
             canContinueWithMerge = false;
