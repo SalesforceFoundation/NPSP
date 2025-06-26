@@ -39,6 +39,12 @@ public without sharing class HouseholdNamingService {
 
     private HouseholdSettings settings = new HouseholdSettings();
 
+    /*******************************************************************************************************
+    * @description flag to track if HouseholdNamingService is currently processing to prevent
+    * duplicate processing in the same transaction context
+    */
+    private static Boolean isProcessingHouseholdNaming = false;
+
     @TestVisible
     private ContactSelector contactSelector {
         get {
@@ -116,27 +122,33 @@ public without sharing class HouseholdNamingService {
     * @return void
     */
     public void updateHouseholdNameAndMemberCount(List<Id> householdOrAccountIds) {
-        if (isHouseholdNamingDisabled) {
+        if (isHouseholdNamingDisabled || isProcessingHouseholdNaming) {
             return;
         }
-        //we need this turned on to prevent recursive triggering on household creation
-        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
+        
+        isProcessingHouseholdNaming = true;
+        try {
+            //we need this turned on to prevent recursive triggering on household creation
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
 
-        List<SObject> householdsOrAccounts = householdsOrAccountsFor(householdOrAccountIds);
-        Map<Id, List<Contact>> membersByHouseholdId =
-                getHouseholdMembersByHouseholdId(householdOrAccountIds);
-        if (settings.isAdvancedHouseholdNaming()) {
-            setHouseholdNameFieldValues(householdsOrAccounts, membersByHouseholdId);
+            List<SObject> householdsOrAccounts = householdsOrAccountsFor(householdOrAccountIds);
+            Map<Id, List<Contact>> membersByHouseholdId =
+                    getHouseholdMembersByHouseholdId(householdOrAccountIds);
+            if (settings.isAdvancedHouseholdNaming()) {
+                setHouseholdNameFieldValues(householdsOrAccounts, membersByHouseholdId);
+            }
+            setNumberOfHouseholdMembers(householdsOrAccounts, membersByHouseholdId);
+
+            if (isListOfAccountIds(householdsOrAccounts)) {
+                setAllMembersDeceasedFlag(householdsOrAccounts, membersByHouseholdId);
+            }
+
+            unitOfWork.save();
+
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
+        } finally {
+            isProcessingHouseholdNaming = false;
         }
-        setNumberOfHouseholdMembers(householdsOrAccounts, membersByHouseholdId);
-
-        if (isListOfAccountIds(householdsOrAccounts)) {
-            setAllMembersDeceasedFlag(householdsOrAccounts, membersByHouseholdId);
-        }
-
-        unitOfWork.save();
-
-        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
     }
 
     private Boolean isListOfAccountIds(List<SObject> householdsOrAccounts) {
