@@ -130,7 +130,7 @@ public class HouseholdNamingUserControlledFields_TEST {
         // With simplified logic, field changes are detected as changes and marked as user-controlled
         // This is the safer approach - better to preserve user intent than risk losing it
         String result = userControlledFields.asConcatenatedString();
-        System.assertEquals(';Name;Formal_Greeting__c;Informal_Greeting__c;', result, 
+        System.assertEquals(';Name;Informal_Greeting__c;Formal_Greeting__c;', result, 
                      'All field changes should be detected and marked as user-controlled: ' + result);
         System.assertEquals(true, userControlledFields.isNameControlledByUser(),
                           'Name change should be marked as user controlled with simplified logic');

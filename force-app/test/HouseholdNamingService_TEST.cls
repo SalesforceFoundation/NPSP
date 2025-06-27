@@ -975,13 +975,13 @@ public class HouseholdNamingService_TEST {
         // This should set the SYSTEM_CUSTOM_NAMING field to indicate name is user-controlled
         String customName = 'My Custom Family Name';
         household.Name = customName;
-        household.npo02__SYSTEM_CUSTOM_NAMING__c = ';Name;'; // User has taken control of the Name field
+        household.npo02__SYSTEM_CUSTOM_NAMING__c = 'Name'; // User has taken control of the Name field
         update household;
         
         // Verify the custom name was set
         household = [SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c FROM Account WHERE Id = :household.Id];
         System.assertEquals(customName, household.Name, 'Custom name should be preserved');
-        System.assertEquals(';Name;', household.npo02__SYSTEM_CUSTOM_NAMING__c, 
+        System.assertEquals('Name', household.npo02__SYSTEM_CUSTOM_NAMING__c, 
                      'SYSTEM_CUSTOM_NAMING should indicate name is user-controlled: ' + household.npo02__SYSTEM_CUSTOM_NAMING__c);
         
         // Now simulate subsequent updates that should NOT revert the name
@@ -997,7 +997,7 @@ public class HouseholdNamingService_TEST {
         household = [SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c FROM Account WHERE Id = :household.Id];
         System.assertEquals(customName, household.Name, 
                           'Custom name should persist after updates, but was: ' + household.Name);
-        System.assertEquals(';Name;', household.npo02__SYSTEM_CUSTOM_NAMING__c, 
+        System.assertEquals('Name', household.npo02__SYSTEM_CUSTOM_NAMING__c, 
                      'SYSTEM_CUSTOM_NAMING should still indicate name is user-controlled: ' + household.npo02__SYSTEM_CUSTOM_NAMING__c);
     }
 
