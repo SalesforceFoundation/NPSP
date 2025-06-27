@@ -918,7 +918,7 @@ public class HouseholdNamingService_TEST {
         System.assertEquals(1, service.actualExecutionCount, 
                           'Only one execution should have been processed due to the flag');
         System.assertEquals(3, service.totalCallCount, 
-                          'Both calls should have been made to the method');
+                          'All expected total calls should have been made to the method');
     }
 
     /*********************************************************************************************************
