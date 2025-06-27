@@ -885,7 +885,7 @@ public class HouseholdNamingService_TEST {
         the second call should be prevented by the flag.
     **********************************************************************************************************/
     @isTest
-    private static void testActualDoubleExecutionPrevention() {
+    private static void testDoubleExecutionPreventionFlag() {
         UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
         UTIL_UnitTestData_TEST.setupHHNamingSettings();
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c(
@@ -907,10 +907,10 @@ public class HouseholdNamingService_TEST {
         List<Id> householdIds = new List<Id>{ household.Id };
         
         // Reset test counters and verify they start at 0
-        service.testTotalCallCount = 0;
-        service.testExecutionCount = 0;
-        System.assertEquals(0, service.testTotalCallCount, 'Total call counter should start at 0');
-        System.assertEquals(0, service.testExecutionCount, 'Execution counter should start at 0');
+        HouseholdNamingService.testTotalCallCount = 0;
+        HouseholdNamingService.testExecutionCount = 0;
+        System.assertEquals(0, HouseholdNamingService.testTotalCallCount, 'Total call counter should start at 0');
+        System.assertEquals(0, HouseholdNamingService.testExecutionCount, 'Execution counter should start at 0');
         
         // Call the service multiple times - only first should execute
         service.updateHouseholdNameAndMemberCount(householdIds);
@@ -918,13 +918,13 @@ public class HouseholdNamingService_TEST {
         service.updateHouseholdNameAndMemberCount(householdIds);
         
         // Verify all calls were made but only one execution occurred
-        System.assertEquals(3, service.testTotalCallCount, 
+        System.assertEquals(3, HouseholdNamingService.testTotalCallCount, 
                           'All three calls should have been made to the method');
-        System.assertEquals(1, service.testExecutionCount, 
+        System.assertEquals(1, HouseholdNamingService.testExecutionCount, 
                           'Only one execution should have occurred due to the flag');
         
         // Verify flag is set to prevent subsequent calls
-        System.assertEquals(true, service.isProcessingHouseholdNaming, 
+        System.assertEquals(true, HouseholdNamingService.isProcessingHouseholdNaming, 
                           'Flag should be true to prevent subsequent calls');
         
         Test.stopTest();
