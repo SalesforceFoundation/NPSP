@@ -872,7 +872,7 @@ public class HouseholdNamingService_TEST {
                      'SYSTEM_CUSTOM_NAMING should not be corrupted by double execution, was: ' + household.npo02__SYSTEM_CUSTOM_NAMING__c);
         
         // Verify the household name was still automatically generated
-        System.assert(household.Name.contains('Contact'), 
+        System.assertEquals('Contact Test Household', household.Name, 
                      'Household name should still be auto-generated: ' + household.Name);
     }
 
