@@ -46,6 +46,14 @@ public without sharing class HouseholdNamingService {
     @TestVisible
     private static Boolean isProcessingHouseholdNaming = false;
 
+    /*******************************************************************************************************
+    * @description counters to track method calls and executions for testing purposes only
+    */
+    @TestVisible
+    private static Integer testTotalCallCount = 0;
+    @TestVisible
+    private static Integer testExecutionCount = 0;
+
     @TestVisible
     private ContactSelector contactSelector {
         get {
@@ -123,11 +131,21 @@ public without sharing class HouseholdNamingService {
     * @return void
     */
     public void updateHouseholdNameAndMemberCount(List<Id> householdOrAccountIds) {
+        // Increment total call counter for testing purposes
+        if (Test.isRunningTest()) {
+            testTotalCallCount++;
+        }
+        
         if (isHouseholdNamingDisabled || isProcessingHouseholdNaming) {
             return;
         }
         
         isProcessingHouseholdNaming = true;
+        
+        // Increment execution counter for testing purposes
+        if (Test.isRunningTest()) {
+            testExecutionCount++;
+        }
         try {
             //we need this turned on to prevent recursive triggering on household creation
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);

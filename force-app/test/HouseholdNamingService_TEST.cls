@@ -879,7 +879,7 @@ public class HouseholdNamingService_TEST {
     /*********************************************************************************************************
     @description
         Test that demonstrates the double execution prevention flag works properly.
-        Uses a test wrapper class to count actual method executions.
+        Uses a test-only counter to verify only one execution occurs.
     verify:
         When updateHouseholdNameAndMemberCount is called twice in the same transaction,
         the second call should be prevented by the flag.
@@ -903,42 +903,31 @@ public class HouseholdNamingService_TEST {
         Account household = [SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, 
                            npo02__Informal_Greeting__c FROM Account WHERE Id = :con.AccountId];
         
-        // Create a testable version that tracks execution count
-        TestableHouseholdNamingService service = new TestableHouseholdNamingService();
+        HouseholdNamingService service = new HouseholdNamingService();
         List<Id> householdIds = new List<Id>{ household.Id };
         
-        // Call the service twice - second call should be prevented
+        // Reset test counters and verify they start at 0
+        service.testTotalCallCount = 0;
+        service.testExecutionCount = 0;
+        System.assertEquals(0, service.testTotalCallCount, 'Total call counter should start at 0');
+        System.assertEquals(0, service.testExecutionCount, 'Execution counter should start at 0');
+        
+        // Call the service multiple times - only first should execute
         service.updateHouseholdNameAndMemberCount(householdIds);
         service.updateHouseholdNameAndMemberCount(householdIds);
         service.updateHouseholdNameAndMemberCount(householdIds);
+        
+        // Verify all calls were made but only one execution occurred
+        System.assertEquals(3, service.testTotalCallCount, 
+                          'All three calls should have been made to the method');
+        System.assertEquals(1, service.testExecutionCount, 
+                          'Only one execution should have occurred due to the flag');
+        
+        // Verify flag is set to prevent subsequent calls
+        System.assertEquals(true, service.isProcessingHouseholdNaming, 
+                          'Flag should be true to prevent subsequent calls');
         
         Test.stopTest();
-        
-        // Verify that only one execution of naming actually processed
-        System.assertEquals(1, service.actualExecutionCount, 
-                          'Only one execution should have been processed due to the flag');
-        System.assertEquals(3, service.totalCallCount, 
-                          'All expected total calls should have been made to the method');
-    }
-
-    /*********************************************************************************************************
-    * @description Test wrapper class that tracks execution counts for HouseholdNamingService
-    */
-    private class TestableHouseholdNamingService extends HouseholdNamingService {
-        public Integer totalCallCount = 0;
-        public Integer actualExecutionCount = 0;
-        
-        public override void updateHouseholdNameAndMemberCount(List<Id> householdOrAccountIds) {
-            totalCallCount++;
-            
-            // Check if we would be blocked by the flag
-            if (!isHouseholdNamingDisabled && !isProcessingHouseholdNaming) {
-                actualExecutionCount++;
-            }
-            
-            // Call the parent method
-            super.updateHouseholdNameAndMemberCount(householdOrAccountIds);
-        }
     }
 
 
