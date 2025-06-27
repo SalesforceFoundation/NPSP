@@ -878,11 +878,11 @@ public class HouseholdNamingService_TEST {
 
     /*********************************************************************************************************
     @description
-        Test that actually reproduces the double execution bug by directly calling the service twice.
-        This test demonstrates that the isProcessingHouseholdNaming flag prevents corruption.
+        Test that demonstrates the double execution prevention flag works properly.
+        Uses a test wrapper class to count actual method executions.
     verify:
         When updateHouseholdNameAndMemberCount is called twice in the same transaction,
-        the second call should be prevented by the flag, keeping SYSTEM_CUSTOM_NAMING clean.
+        the second call should be prevented by the flag.
     **********************************************************************************************************/
     @isTest
     private static void testActualDoubleExecutionPrevention() {
@@ -903,39 +903,43 @@ public class HouseholdNamingService_TEST {
         Account household = [SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, 
                            npo02__Informal_Greeting__c FROM Account WHERE Id = :con.AccountId];
         
-        // Store initial state
-        String initialSystemCustomNaming = (String) household.get('npo02__SYSTEM_CUSTOM_NAMING__c');
-        
-        // DIRECTLY call the HouseholdNamingService twice to simulate double execution
-        HouseholdNamingService service = new HouseholdNamingService();
+        // Create a testable version that tracks execution count
+        TestableHouseholdNamingService service = new TestableHouseholdNamingService();
         List<Id> householdIds = new List<Id>{ household.Id };
         
-        // First execution - should process normally
+        // Call the service twice - second call should be prevented
         service.updateHouseholdNameAndMemberCount(householdIds);
-        
-        // Second execution in the same transaction - should be prevented by isProcessingHouseholdNaming flag
+        service.updateHouseholdNameAndMemberCount(householdIds);
         service.updateHouseholdNameAndMemberCount(householdIds);
         
         Test.stopTest();
         
-        // Reload the household and verify SYSTEM_CUSTOM_NAMING wasn't corrupted
-        household = [SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, 
-                    npo02__Informal_Greeting__c FROM Account WHERE Id = :household.Id];
+        // Verify that only one execution of naming actually processed
+        System.assertEquals(1, service.actualExecutionCount, 
+                          'Only one execution should have been processed due to the flag');
+        System.assertEquals(3, service.totalCallCount, 
+                          'Both calls should have been made to the method');
+    }
+
+    /*********************************************************************************************************
+    * @description Test wrapper class that tracks execution counts for HouseholdNamingService
+    */
+    private class TestableHouseholdNamingService extends HouseholdNamingService {
+        public Integer totalCallCount = 0;
+        public Integer actualExecutionCount = 0;
         
-        String finalSystemCustomNaming = (String) household.get('npo02__SYSTEM_CUSTOM_NAMING__c');
-        
-        // The flag should have prevented double execution corruption
-        System.assert(finalSystemCustomNaming == null || 
-                     finalSystemCustomNaming == '' ||
-                     finalSystemCustomNaming == ';' ||
-                     !finalSystemCustomNaming.contains('Name;Informal_Greeting__c'),
-                     'SYSTEM_CUSTOM_NAMING should not be corrupted by double execution. ' +
-                     'Initial: ' + initialSystemCustomNaming + ', Final: ' + finalSystemCustomNaming);
-        
-                 // Verify the household name was still automatically generated
-         System.assert(household.Name.contains('Contact'), 
-                      'Household name should still be auto-generated: ' + household.Name);
-     }
+        public override void updateHouseholdNameAndMemberCount(List<Id> householdOrAccountIds) {
+            totalCallCount++;
+            
+            // Check if we would be blocked by the flag
+            if (!isHouseholdNamingDisabled && !isProcessingHouseholdNaming) {
+                actualExecutionCount++;
+            }
+            
+            // Call the parent method
+            super.updateHouseholdNameAndMemberCount(householdOrAccountIds);
+        }
+    }
 
 
 

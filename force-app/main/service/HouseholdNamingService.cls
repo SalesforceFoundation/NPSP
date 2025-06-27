@@ -43,6 +43,7 @@ public without sharing class HouseholdNamingService {
     * @description flag to track if HouseholdNamingService is currently processing to prevent
     * duplicate processing in the same transaction context
     */
+    @TestVisible
     private static Boolean isProcessingHouseholdNaming = false;
 
     @TestVisible
