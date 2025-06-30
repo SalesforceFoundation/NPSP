@@ -139,4 +139,47 @@ public class HouseholdNamingUserControlledFields_TEST {
         System.assertEquals(true, userControlledFields.isInformalGreetingControlledByUser(),
                           'Informal greeting change should be marked as user controlled with simplified logic');
     }
+
+    /*********************************************************************************************************
+    @description
+        Test asConcatenatedString() method handles double semicolons and edge cases correctly
+    verify:
+        The method should clean up double semicolons and ensure proper formatting
+    **********************************************************************************************************/
+    @isTest
+    private static void testAsConcatenatedStringCleanup() {
+        Test.startTest();
+        
+        // Test double semicolon cleanup - this simulates the bug scenario
+        HouseholdNamingUserControlledFields fields1 = new HouseholdNamingUserControlledFields(';;Name;;Formal_Greeting__c;;');
+        String result1 = fields1.asConcatenatedString();
+        System.assertEquals(';Name;Formal_Greeting__c;', result1, 
+                          'Double semicolons should be cleaned up: ' + result1);
+        
+        // Test triple semicolon cleanup
+        HouseholdNamingUserControlledFields fields2 = new HouseholdNamingUserControlledFields(';;;Name;;;');
+        String result2 = fields2.asConcatenatedString();
+        System.assertEquals(';Name;', result2, 
+                          'Triple semicolons should be cleaned up: ' + result2);
+        
+        // Test string without trailing semicolon gets one added
+        HouseholdNamingUserControlledFields fields3 = new HouseholdNamingUserControlledFields('Name;Formal_Greeting__c');
+        String result3 = fields3.asConcatenatedString();
+        System.assertEquals('Name;Formal_Greeting__c;', result3, 
+                          'Missing trailing semicolon should be added: ' + result3);
+        
+        // Test empty string handling
+        HouseholdNamingUserControlledFields fields4 = new HouseholdNamingUserControlledFields('');
+        String result4 = fields4.asConcatenatedString();
+        System.assertEquals(';', result4, 
+                          'Empty string should result in single semicolon: ' + result4);
+        
+        // Test already properly formatted string remains unchanged
+        HouseholdNamingUserControlledFields fields5 = new HouseholdNamingUserControlledFields(';Name;Formal_Greeting__c;');
+        String result5 = fields5.asConcatenatedString();
+        System.assertEquals(';Name;Formal_Greeting__c;', result5, 
+                          'Properly formatted string should remain unchanged: ' + result5);
+        
+        Test.stopTest();
+    }
 } 
