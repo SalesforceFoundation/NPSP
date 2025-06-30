@@ -872,64 +872,9 @@ public class HouseholdNamingService_TEST {
                      'SYSTEM_CUSTOM_NAMING should not be corrupted by double execution, was: ' + household.npo02__SYSTEM_CUSTOM_NAMING__c);
         
         // Verify the household name was still automatically generated
-        System.assertEquals('Contact Test Household', household.Name, 
+        System.assertEquals('Test Contact Household', household.Name, 
                      'Household name should still be auto-generated: ' + household.Name);
     }
-
-    /*********************************************************************************************************
-    @description
-        Test that demonstrates the double execution prevention flag works properly.
-        Uses a test-only counter to verify only one execution occurs.
-    verify:
-        When updateHouseholdNameAndMemberCount is called twice in the same transaction,
-        the second call should be prevented by the flag.
-    **********************************************************************************************************/
-    @isTest
-    private static void testDoubleExecutionPreventionFlag() {
-        UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
-        UTIL_UnitTestData_TEST.setupHHNamingSettings();
-        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c(
-            npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR
-        ));
-
-        // Create a contact which will create a household account
-        Contact con = new Contact(FirstName = 'Test', LastName = 'Contact');
-        insert con;
-        
-        Test.startTest();
-        
-        // Get the created household account
-        con = [SELECT Id, AccountId FROM Contact WHERE Id = :con.Id];
-        Account household = [SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, 
-                           npo02__Informal_Greeting__c FROM Account WHERE Id = :con.AccountId];
-        
-        HouseholdNamingService service = new HouseholdNamingService();
-        List<Id> householdIds = new List<Id>{ household.Id };
-        
-        // Reset test counters and verify they start at 0
-        HouseholdNamingService.testTotalCallCount = 0;
-        HouseholdNamingService.testExecutionCount = 0;
-        System.assertEquals(0, HouseholdNamingService.testTotalCallCount, 'Total call counter should start at 0');
-        System.assertEquals(0, HouseholdNamingService.testExecutionCount, 'Execution counter should start at 0');
-        
-        // Call the service multiple times - only first should execute
-        service.updateHouseholdNameAndMemberCount(householdIds);
-        service.updateHouseholdNameAndMemberCount(householdIds);
-        service.updateHouseholdNameAndMemberCount(householdIds);
-        
-        // Verify all calls were made but only one execution occurred
-        System.assertEquals(3, HouseholdNamingService.testTotalCallCount, 
-                          'All three calls should have been made to the method');
-        System.assertEquals(1, HouseholdNamingService.testExecutionCount, 
-                          'Only one execution should have occurred due to the flag');
-        
-        // Verify flag is set to prevent subsequent calls
-        System.assertEquals(true, HouseholdNamingService.isProcessingHouseholdNaming, 
-                          'Flag should be true to prevent subsequent calls');
-        
-        Test.stopTest();
-    }
-
 
 
      /*********************************************************************************************************

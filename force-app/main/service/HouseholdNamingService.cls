@@ -39,20 +39,7 @@ public without sharing class HouseholdNamingService {
 
     private HouseholdSettings settings = new HouseholdSettings();
 
-    /*******************************************************************************************************
-    * @description flag to track if HouseholdNamingService is currently processing to prevent
-    * duplicate processing in the same transaction context
-    */
-    @TestVisible
-    private static Boolean isProcessingHouseholdNaming = false;
 
-    /*******************************************************************************************************
-    * @description counters to track method calls and executions for testing purposes only
-    */
-    @TestVisible
-    private static Integer testTotalCallCount = 0;
-    @TestVisible
-    private static Integer testExecutionCount = 0;
 
     @TestVisible
     private ContactSelector contactSelector {
@@ -131,43 +118,28 @@ public without sharing class HouseholdNamingService {
     * @return void
     */
     public void updateHouseholdNameAndMemberCount(List<Id> householdOrAccountIds) {
-        // Increment total call counter for testing purposes
-        if (Test.isRunningTest()) {
-            testTotalCallCount++;
-        }
-        
-        if (isHouseholdNamingDisabled || isProcessingHouseholdNaming) {
+        if (isHouseholdNamingDisabled) {
             return;
         }
         
-        isProcessingHouseholdNaming = true;
-        
-        // Increment execution counter for testing purposes
-        if (Test.isRunningTest()) {
-            testExecutionCount++;
+        //we need this turned on to prevent recursive triggering on household creation
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
+
+        List<SObject> householdsOrAccounts = householdsOrAccountsFor(householdOrAccountIds);
+        Map<Id, List<Contact>> membersByHouseholdId =
+                getHouseholdMembersByHouseholdId(householdOrAccountIds);
+        if (settings.isAdvancedHouseholdNaming()) {
+            setHouseholdNameFieldValues(householdsOrAccounts, membersByHouseholdId);
         }
-        try {
-            //we need this turned on to prevent recursive triggering on household creation
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
+        setNumberOfHouseholdMembers(householdsOrAccounts, membersByHouseholdId);
 
-            List<SObject> householdsOrAccounts = householdsOrAccountsFor(householdOrAccountIds);
-            Map<Id, List<Contact>> membersByHouseholdId =
-                    getHouseholdMembersByHouseholdId(householdOrAccountIds);
-            if (settings.isAdvancedHouseholdNaming()) {
-                setHouseholdNameFieldValues(householdsOrAccounts, membersByHouseholdId);
-            }
-            setNumberOfHouseholdMembers(householdsOrAccounts, membersByHouseholdId);
-
-            if (isListOfAccountIds(householdsOrAccounts)) {
-                setAllMembersDeceasedFlag(householdsOrAccounts, membersByHouseholdId);
-            }
-
-            unitOfWork.save();
-
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
-        } finally {
-            isProcessingHouseholdNaming = false;
+        if (isListOfAccountIds(householdsOrAccounts)) {
+            setAllMembersDeceasedFlag(householdsOrAccounts, membersByHouseholdId);
         }
+
+        unitOfWork.save();
+
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
     }
 
     private Boolean isListOfAccountIds(List<SObject> householdsOrAccounts) {
