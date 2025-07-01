@@ -155,7 +155,7 @@ public class HouseholdNamingService_TEST {
             WHERE Id = :insertlist[0].Id];
         system.assertEquals('LastName0 ' +  system.label.npo02.DefaultHouseholdName, con.npo02__household__r.Name);
         system.assertEquals('FirstName0',con.npo02__household__r.npo02__Informal_Greeting__c);
-        system.assert(con.npo02__household__r.npo02__Formal_Greeting__c.endsWith('FirstName0 LastName0'));
+        system.assert(con.npo02__household__r.npo02__Formal_greeting__c.endsWith('FirstName0 LastName0'));
 
     }
 
@@ -937,6 +937,67 @@ public class HouseholdNamingService_TEST {
                           'Custom name should persist after updates, but was: ' + household.Name);
         System.assertEquals('Name', household.npo02__SYSTEM_CUSTOM_NAMING__c, 
                      'SYSTEM_CUSTOM_NAMING should still indicate name is user-controlled: ' + household.npo02__SYSTEM_CUSTOM_NAMING__c);
+    }
+
+    /*********************************************************************************************************
+    @description
+        Test that when household naming is user-controlled, changing contact names does not trigger 
+        automatic household renaming
+    verify:
+        When SYSTEM_CUSTOM_NAMING indicates user control, household names should not change even when
+        the related contact names are updated
+    **********************************************************************************************************/
+    @isTest
+    private static void testContactNameChangeDoesNotAffectUserControlledHouseholdName() {
+        UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
+        UTIL_UnitTestData_TEST.setupHHNamingSettings();
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c(
+            npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR
+        ));
+
+        // Create a contact which will create a household account
+        Contact con = new Contact(FirstName = 'John', LastName = 'Doe');
+        insert con;
+        
+        Test.startTest();
+        
+        // Get the created household account
+        con = [SELECT Id, AccountId FROM Contact WHERE Id = :con.Id];
+        Account household = [SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c FROM Account WHERE Id = :con.AccountId];
+        
+        // Simulate user manually setting a custom household name and marking it as user-controlled
+        String customName = 'The Doe Family Estate';
+        household.Name = customName;
+        household.npo02__SYSTEM_CUSTOM_NAMING__c = 'Name'; // User controls the Name field
+        update household;
+        
+        // Verify the custom name and control flag are set
+        household = [SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c FROM Account WHERE Id = :household.Id];
+        System.assertEquals(customName, household.Name, 'Custom name should be set');
+        System.assertEquals('Name', household.npo02__SYSTEM_CUSTOM_NAMING__c, 'Name should be marked as user-controlled');
+        
+        // Now change the contact's name - this would normally trigger household renaming
+        con.FirstName = 'Jane';
+        con.LastName = 'Smith';
+        update con;
+        
+        // Trigger household naming service explicitly to simulate what would happen in real scenarios
+        HouseholdNamingService service = new HouseholdNamingService();
+        service.updateHouseholdNameAndMemberCount(new List<Id>{ household.Id });
+        
+        Test.stopTest();
+        
+        // Verify the household name DID NOT change despite the contact name change
+        household = [SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c FROM Account WHERE Id = :household.Id];
+        System.assertEquals(customName, household.Name, 
+                          'Household name should remain unchanged when user-controlled, even after contact name change. Was: ' + household.Name);
+        System.assertEquals('Name', household.npo02__SYSTEM_CUSTOM_NAMING__c, 
+                          'SYSTEM_CUSTOM_NAMING should still indicate user control');
+        
+        // Verify the contact name did change
+        con = [SELECT Id, FirstName, LastName FROM Contact WHERE Id = :con.Id];
+        System.assertEquals('Jane', con.FirstName, 'Contact first name should have changed');
+        System.assertEquals('Smith', con.LastName, 'Contact last name should have changed');
     }
 
     // Helpers
