@@ -41,19 +41,30 @@ public inherited sharing class HouseholdNamingUserControlledFields {
     private SObject oldRecord;
 
     public HouseholdNamingUserControlledFields(String str) {
-        this.value = str == null ? ';' : str + ';';
+        // Ensure that double semicolons are not allowed when defining the user controlled naming fields.
+        // This will only add a new semicolon if the previous string does not already end with one.
+        this.value = str == null ? ';' : (str.endsWith(';') ? str : str + ';');
     }
 
     public HouseholdNamingUserControlledFields(SObject household, SObject oldRecord) {
-        this.value = userControlledNamingFieldsFor(household) == null ? ';' :
-                userControlledNamingFieldsFor(household) + ';';
+        // Ensure that double semicolons are not allowed when defining the user controlled naming fields.
+        // This will only add a new semicolon if the previous string does not already end with one.
+        String existingValue = userControlledNamingFieldsFor(household);
+        this.value = existingValue == null ? ';' : (existingValue.endsWith(';') ? existingValue : existingValue + ';');
         this.household = household;
         this.oldRecord = oldRecord;
         buildUserControlledNamingString();
     }
 
     public String asConcatenatedString() {
-        return this.value;
+        // Clean up any double semicolons that might have been added due to multiple executions in the same transaction.
+        // This is more for legacy cleanup if double semicolons were allowed previously that have broken custom naming.
+        String result = this.value.replaceAll(';;+', ';');
+        // Ensure it ends with exactly one semicolon if it doesn't already
+        if (!result.endsWith(';')) {
+            result += ';';
+        }
+        return result;
     }
 
     public Boolean isInformalGreetingControlledByUser() {
@@ -102,6 +113,8 @@ public inherited sharing class HouseholdNamingUserControlledFields {
             appendName();
         }
     }
+
+
 
     private Boolean isReplaceable(String fieldApiName) {
         String fieldValue = (String) household.get(fieldApiName);
