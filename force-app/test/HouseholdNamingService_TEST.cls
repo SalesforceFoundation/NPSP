@@ -155,7 +155,7 @@ public class HouseholdNamingService_TEST {
             WHERE Id = :insertlist[0].Id];
         system.assertEquals('LastName0 ' +  system.label.npo02.DefaultHouseholdName, con.npo02__household__r.Name);
         system.assertEquals('FirstName0',con.npo02__household__r.npo02__Informal_Greeting__c);
-        system.assert(con.npo02__household__r.npo02__Formal_Greeting__c.endsWith('FirstName0 LastName0'));
+        system.assert(con.npo02__household__r.npo02__Formal_greeting__c.endsWith('FirstName0 LastName0'));
 
     }
 
@@ -814,6 +814,191 @@ public class HouseholdNamingService_TEST {
         System.assertEquals(false, updatedAccount.All_Members_Deceased__c, 'All Members Deceased should be false.');
     }
 
+    /*********************************************************************************************************
+    @description
+        Test that HouseholdNamingService handles double execution gracefully without incorrectly
+        updating the SYSTEM_CUSTOM_NAMING field. This tests the fix for the lead conversion bug
+        where triggered flows cause the service to run twice.
+    verify:
+        When the service runs twice in the same context, the SYSTEM_CUSTOM_NAMING field
+        should not be incorrectly updated with user-controlled field names.
+    **********************************************************************************************************/
+    @isTest
+    private static void testDoubleExecutionDoesNotCorruptSystemCustomNamingField() {
+        UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
+        UTIL_UnitTestData_TEST.setupHHNamingSettings();
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c(
+            npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR
+        ));
+
+        // Create a contact which will create a household account
+        Contact con = new Contact(FirstName = 'Test', LastName = 'Contact');
+        insert con;
+        
+        Test.startTest(); // Start test after data setup
+        
+        // Get the created household account
+        con = [SELECT Id, AccountId FROM Contact WHERE Id = :con.Id];
+        System.assertNotEquals(null, con.AccountId, 'Contact should have an associated Account');
+        
+        Account household = [SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, 
+                           npo02__Informal_Greeting__c FROM Account WHERE Id = :con.AccountId];
+        
+        // Verify initial state - SYSTEM_CUSTOM_NAMING should be null or empty
+        System.assert(household.npo02__SYSTEM_CUSTOM_NAMING__c == null || 
+                     household.npo02__SYSTEM_CUSTOM_NAMING__c == '' ||
+                     household.npo02__SYSTEM_CUSTOM_NAMING__c == ';', 
+                     'Initial SYSTEM_CUSTOM_NAMING should be null/empty, was: ' + household.npo02__SYSTEM_CUSTOM_NAMING__c);
+        
+        // Simulate the double execution scenario by updating a non-naming field
+        // This mimics what happens during lead conversion with triggered flows
+        household.Phone = '555-1234';
+        update household;
+        
+        // Simulate second execution by updating another non-naming field
+        household.Website = 'www.example.com';
+        update household;
+        
+        Test.stopTest();
+        
+        // Reload the household and verify SYSTEM_CUSTOM_NAMING wasn't corrupted
+        household = [SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, 
+                    npo02__Informal_Greeting__c FROM Account WHERE Id = :household.Id];
+        
+        // SYSTEM_CUSTOM_NAMING should still be null/empty/default, not contain field names like ";Name;Informal_Greeting__c"
+        System.assert(household.npo02__SYSTEM_CUSTOM_NAMING__c == null || 
+                     household.npo02__SYSTEM_CUSTOM_NAMING__c == '' ||
+                     household.npo02__SYSTEM_CUSTOM_NAMING__c == ';',
+                     'SYSTEM_CUSTOM_NAMING should not be corrupted by double execution, was: ' + household.npo02__SYSTEM_CUSTOM_NAMING__c);
+        
+        // Verify the household name was still automatically generated
+        System.assertEquals('Test Contact Household', household.Name, 
+                     'Household name should still be auto-generated: ' + household.Name);
+    }
+
+
+     /*********************************************************************************************************
+     @description
+         Test that manually setting a household name and unchecking "Auto name" works correctly
+        and persists even after subsequent updates. This tests the fix for the regression bug.
+    verify:
+        When a user manually sets a household name and the SYSTEM_CUSTOM_NAMING field indicates
+        the name is user-controlled, subsequent updates should not revert to automatic naming.
+    **********************************************************************************************************/
+    @isTest
+    private static void testManualHouseholdNamePersistsAfterUpdates() {
+        UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
+        UTIL_UnitTestData_TEST.setupHHNamingSettings();
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c(
+            npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR
+        ));
+
+        // Create a contact which will create a household account
+        Contact con = new Contact(FirstName = 'John', LastName = 'Doe');
+        insert con;
+        
+        Test.startTest(); // Start test after data setup
+        
+        // Get the created household account
+        con = [SELECT Id, AccountId FROM Contact WHERE Id = :con.Id];
+        System.assertNotEquals(null, con.AccountId, 'Contact should have an associated Account');
+        
+        Account household = [SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c, 
+                           npo02__Informal_Greeting__c FROM Account WHERE Id = :con.AccountId];
+        
+        String originalAutoName = household.Name;
+        System.assert(originalAutoName.contains('Doe'), 'Initial name should be auto-generated: ' + originalAutoName);
+        
+        // Simulate user manually changing the name and unchecking "Auto name"
+        // This should set the SYSTEM_CUSTOM_NAMING field to indicate name is user-controlled
+        String customName = 'My Custom Family Name';
+        household.Name = customName;
+        household.npo02__SYSTEM_CUSTOM_NAMING__c = 'Name'; // User has taken control of the Name field
+        update household;
+        
+        // Verify the custom name was set
+        household = [SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c FROM Account WHERE Id = :household.Id];
+        System.assertEquals(customName, household.Name, 'Custom name should be preserved');
+        System.assertEquals('Name', household.npo02__SYSTEM_CUSTOM_NAMING__c, 
+                     'SYSTEM_CUSTOM_NAMING should indicate name is user-controlled: ' + household.npo02__SYSTEM_CUSTOM_NAMING__c);
+        
+        // Now simulate subsequent updates that should NOT revert the name
+        household.Phone = '555-5678';  
+        update household;
+        
+        household.Website = 'www.test.com';
+        update household;
+        
+        Test.stopTest();
+        
+        // Verify the custom name persisted through the updates
+        household = [SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c FROM Account WHERE Id = :household.Id];
+        System.assertEquals(customName, household.Name, 
+                          'Custom name should persist after updates, but was: ' + household.Name);
+        System.assertEquals('Name', household.npo02__SYSTEM_CUSTOM_NAMING__c, 
+                     'SYSTEM_CUSTOM_NAMING should still indicate name is user-controlled: ' + household.npo02__SYSTEM_CUSTOM_NAMING__c);
+    }
+
+    /*********************************************************************************************************
+    @description
+        Test that when household naming is user-controlled, changing contact names does not trigger 
+        automatic household renaming
+    verify:
+        When SYSTEM_CUSTOM_NAMING indicates user control, household names should not change even when
+        the related contact names are updated
+    **********************************************************************************************************/
+    @isTest
+    private static void testContactNameChangeDoesNotAffectUserControlledHouseholdName() {
+        UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
+        UTIL_UnitTestData_TEST.setupHHNamingSettings();
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c(
+            npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR
+        ));
+
+        // Create a contact which will create a household account
+        Contact con = new Contact(FirstName = 'John', LastName = 'Doe');
+        insert con;
+        
+        Test.startTest();
+        
+        // Get the created household account
+        con = [SELECT Id, AccountId FROM Contact WHERE Id = :con.Id];
+        Account household = [SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c FROM Account WHERE Id = :con.AccountId];
+        
+        // Simulate user manually setting a custom household name and marking it as user-controlled
+        String customName = 'The Doe Family Estate';
+        household.Name = customName;
+        household.npo02__SYSTEM_CUSTOM_NAMING__c = 'Name'; // User controls the Name field
+        update household;
+        
+        // Verify the custom name and control flag are set
+        household = [SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c FROM Account WHERE Id = :household.Id];
+        System.assertEquals(customName, household.Name, 'Custom name should be set');
+        System.assertEquals('Name', household.npo02__SYSTEM_CUSTOM_NAMING__c, 'Name should be marked as user-controlled');
+        
+        // Now change the contact's name - this would normally trigger household renaming
+        con.FirstName = 'Jane';
+        con.LastName = 'Smith';
+        update con;
+        
+        // Trigger household naming service explicitly to simulate what would happen in real scenarios
+        HouseholdNamingService service = new HouseholdNamingService();
+        service.updateHouseholdNameAndMemberCount(new List<Id>{ household.Id });
+        
+        Test.stopTest();
+        
+        // Verify the household name DID NOT change despite the contact name change
+        household = [SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c FROM Account WHERE Id = :household.Id];
+        System.assertEquals(customName, household.Name, 
+                          'Household name should remain unchanged when user-controlled, even after contact name change. Was: ' + household.Name);
+        System.assertEquals('Name', household.npo02__SYSTEM_CUSTOM_NAMING__c, 
+                          'SYSTEM_CUSTOM_NAMING should still indicate user control');
+        
+        // Verify the contact name did change
+        con = [SELECT Id, FirstName, LastName FROM Contact WHERE Id = :con.Id];
+        System.assertEquals('Jane', con.FirstName, 'Contact first name should have changed');
+        System.assertEquals('Smith', con.LastName, 'Contact last name should have changed');
+    }
 
     // Helpers
     ////////////
