@@ -38,7 +38,8 @@
 public without sharing class HouseholdNamingService {
 
     private HouseholdSettings settings = new HouseholdSettings();
-    private static Boolean isNamingServiceExecuted = false;
+
+
 
     @TestVisible
     private ContactSelector contactSelector {
@@ -120,6 +121,7 @@ public without sharing class HouseholdNamingService {
         if (isHouseholdNamingDisabled) {
             return;
         }
+        
         //we need this turned on to prevent recursive triggering on household creation
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
 
@@ -420,36 +422,10 @@ public without sharing class HouseholdNamingService {
     }
 
     public void setCustomNamingField(List<SObject> records, Map<Id, SObject> oldMap) {
-        if (isNamingServiceExecuted) {
-            return;
-        }
-        isNamingServiceExecuted = true;
-
         for (SObject household : records) {
             SObject oldRecord = oldMap.get(household.Id);
-            // Update only if manual changes are detected in the relevant fields
-            if (manualChangesDetected(household, oldRecord)) {
-                setCustomNamingStringValue(household, oldRecord); // Populate the custom naming field
-            } else {
-                household.put('npo02__SYSTEM_CUSTOM_NAMING__c', null);
-            }
+            setCustomNamingStringValue(household, oldRecord);
         }
-    }
-
-    private Boolean manualChangesDetected(SObject household, SObject oldRecord) {
-        // Detect changes in fields that impact the custom naming logic
-        return hasFieldChanged(household, oldRecord, 'npo02__Formal_Greeting__c') ||
-               hasFieldChanged(household, oldRecord, 'npo02__Informal_Greeting__c') ||
-               hasFieldChanged(household, oldRecord, 'Name');
-    }
-    
-    private Boolean hasFieldChanged(SObject current, SObject oldRecord, String fieldApiName) {
-        if (oldRecord == null) {
-            return true; // Treat as changed if no old record exists
-        }
-        Object currentValue = current.get(fieldApiName);
-        Object oldValue = oldRecord.get(fieldApiName);
-        return currentValue != oldValue; // Compare values for change
     }
 
     public void setNameAndGreetingsToReplacementText(List<SObject> records) {
@@ -561,13 +537,8 @@ public without sharing class HouseholdNamingService {
     private void setCustomNamingStringValue(SObject household, SObject oldRecord) {
         HouseholdNamingUserControlledFields userControlledNamingFields =
                 new HouseholdNamingUserControlledFields(household, oldRecord);
-        String concatenatedValue = userControlledNamingFields.asConcatenatedString();
-    
-        if (!String.isBlank(concatenatedValue)) {
-            household.put('npo02__SYSTEM_CUSTOM_NAMING__c', concatenatedValue); // Populate field
-        } else {
-            household.put('npo02__SYSTEM_CUSTOM_NAMING__c', null); // Clear the field if no value is needed
-        }
+        household.put('npo02__SYSTEM_CUSTOM_NAMING__c',
+                userControlledNamingFields.asConcatenatedString());
     }
 
     private String namingOverridesFor(SObject household) {
