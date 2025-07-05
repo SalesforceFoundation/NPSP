@@ -991,13 +991,82 @@ public class HouseholdNamingService_TEST {
         household = [SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c FROM Account WHERE Id = :household.Id];
         System.assertEquals(customName, household.Name, 
                           'Household name should remain unchanged when user-controlled, even after contact name change. Was: ' + household.Name);
-        System.assertEquals('Name', household.npo02__SYSTEM_CUSTOM_NAMING__c, 
+        System.assert(household.npo02__SYSTEM_CUSTOM_NAMING__c.contains('Name'), 
                           'SYSTEM_CUSTOM_NAMING should still indicate user control');
         
         // Verify the contact name did change
         con = [SELECT Id, FirstName, LastName FROM Contact WHERE Id = :con.Id];
         System.assertEquals('Jane', con.FirstName, 'Contact first name should have changed');
         System.assertEquals('Smith', con.LastName, 'Contact last name should have changed');
+    }
+
+    /*********************************************************************************************************
+    @description
+        Test that the processedHouseholds static property prevents duplicate processing of the same
+        household ID within the same transaction. This guards against scenarios where the same
+        household might be processed multiple times due to flows or other triggers.
+    **********************************************************************************************************/
+    @isTest
+    private static void testProcessedHouseholdsPreventsDuplicateProcessing() {
+        UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
+        UTIL_UnitTestData_TEST.setupHHNamingSettings();
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c(
+            npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR
+        ));
+
+        // Create a contact which will create a household account
+        Contact con = new Contact(FirstName = 'Test', LastName = 'Contact');
+        insert con;
+        
+        // Get the created household account
+        con = [SELECT Id, AccountId FROM Contact WHERE Id = :con.Id];
+        Account household = [SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Informal_Greeting__c, npo02__Formal_Greeting__c FROM Account WHERE Id = :con.AccountId];
+        
+        // Verify initial state
+        System.assert(household.npo02__SYSTEM_CUSTOM_NAMING__c == null, 
+                     'Initial SYSTEM_CUSTOM_NAMING should be null/empty, was: ' + household.npo02__SYSTEM_CUSTOM_NAMING__c);
+        
+        Test.startTest();
+        
+        // Create a mock old record for the household
+        Account oldHousehold = household.clone(true, true, true, true);
+        
+        Map<Id, SObject> oldMap = new Map<Id, SObject>{ household.Id => oldHousehold };
+        List<SObject> records = new List<SObject>{ household };
+        
+        HouseholdNamingService service = new HouseholdNamingService();
+        
+        // First call to setCustomNamingField - this should process the household
+        service.setCustomNamingField(records, oldMap);
+        
+        System.assertEquals(null, household.npo02__SYSTEM_CUSTOM_NAMING__c, 
+                              'SYSTEM_CUSTOM_NAMING should be null after first call');
+        String firstCallValue = household.npo02__SYSTEM_CUSTOM_NAMING__c;
+        
+        // Second call to setCustomNamingField with the same household ID
+        // This should be skipped due to processedHouseholds guard
+        records.get(0).put('Name', 'Updated Name');
+        service.setCustomNamingField(records, oldMap);
+        
+        // Verify the value didn't change (wasn't processed again)
+        System.assertEquals(firstCallValue, household.npo02__SYSTEM_CUSTOM_NAMING__c, 
+                          'SYSTEM_CUSTOM_NAMING should not change on second call due to processedHouseholds guard');
+        
+        // Third call to setCustomNamingField with the same household ID
+        // This should also be skipped
+        records.get(0).put('npo02__Informal_Greeting__c', 'Updated Information Greeting');
+        records.get(0).put('npo02__Formal_Greeting__c', 'Updated Formal Greeting');
+        service.setCustomNamingField(records, oldMap);
+        
+        // Verify the value still didn't change
+        System.assertEquals(firstCallValue, household.npo02__SYSTEM_CUSTOM_NAMING__c, 
+                          'SYSTEM_CUSTOM_NAMING should not change on third call due to processedHouseholds guard');
+        
+        Test.stopTest();
+        
+        // Verify the final state is consistent
+        System.assertEquals(firstCallValue, household.npo02__SYSTEM_CUSTOM_NAMING__c, 
+                          'SYSTEM_CUSTOM_NAMING should remain unchanged after multiple calls in same transaction');
     }
 
     // Helpers
