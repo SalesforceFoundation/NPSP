@@ -39,7 +39,12 @@ public without sharing class HouseholdNamingService {
 
     private HouseholdSettings settings = new HouseholdSettings();
 
-
+    /** -----------------------------------------------------------------
+     * Guard set – holds every Household/Account Id we have already
+     * processed *in this Apex transaction*.  Automatically clears at the
+     * end of the transaction, so we stay batch-safe and test-safe.
+     * ---------------------------------------------------------------- */
+    private static Set<Id> processedHouseholds = new Set<Id>();
 
     @TestVisible
     private ContactSelector contactSelector {
@@ -534,12 +539,24 @@ public without sharing class HouseholdNamingService {
         return fieldValue == null || fieldValue == '' || fieldValue == nameReplacementText();
     }
 
-    private void setCustomNamingStringValue(SObject household, SObject oldRecord) {
-        HouseholdNamingUserControlledFields userControlledNamingFields =
-                new HouseholdNamingUserControlledFields(household, oldRecord);
-        household.put('npo02__SYSTEM_CUSTOM_NAMING__c',
-                userControlledNamingFields.asConcatenatedString());
-    }
+    public void setCustomNamingStringValue(SObject household, SObject oldRecord) {
+        /* -------------------------------------------------------------
+         *   Skip if this Household was already handled earlier in the
+         *   same transaction (e.g., the second DML fired by a flow).
+         * ----------------------------------------------------------- */
+        if (processedHouseholds.contains(household.Id)) {
+            return;
+        }
+        processedHouseholds.add(household.Id);
+        
+        HouseholdNamingUserControlledFields userControlled =
+            new HouseholdNamingUserControlledFields(household, oldRecord);
+    
+        household.put(
+            'npo02__SYSTEM_CUSTOM_NAMING__c',
+            userControlled.asConcatenatedString()
+        );
+    }    
 
     private String namingOverridesFor(SObject household) {
         return (String) household.get
