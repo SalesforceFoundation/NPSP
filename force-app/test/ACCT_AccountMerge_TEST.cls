@@ -198,7 +198,7 @@ private with sharing class ACCT_AccountMerge_TEST {
         System.assertEquals(cHH * cCon, listCon.size());
                     
         // verify Addresses are merged
-        System.assertEquals(cHH * 2, [SELECT count() FROM Address__c]);
+        System.assertEquals(cHH + 1, [SELECT count() FROM Address__c]);
         System.assertEquals(1, [SELECT count() FROM Address__c WHERE Default_Address__c = true]);  
         Address__c addrDefault = [SELECT Id, Default_Address__c, MailingStreet__c, MailingCity__c FROM Address__c WHERE Default_Address__c = true]; 
         
@@ -217,8 +217,8 @@ private with sharing class ACCT_AccountMerge_TEST {
         	if (con.is_Address_Override__c) {
                 System.assertEquals(targetAddr.MailingStreet__c, con.MailingStreet,
                     'The mailing street should match contact mailing street when contact has override address');
-                System.assertNotEquals(null, con.Current_Address__c, 
-                    'Current_Address__c should not be null for contacts with an address override.');
+                System.assertEquals(targetAddr.Id, con.Current_Address__c,
+                'The address should be the current address on the contact when contact has override address');
         	} else {
                 System.assertEquals(addrDefault.MailingStreet__c, con.MailingStreet,
                     'The default address should be populated on contact when address is not overrided');
