@@ -674,7 +674,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
             }
 
             // no match found, and its an override just for this contact
-            else if (contact.is_Address_Override__c) { {
+            else if (contact.is_Address_Override__c) {
                 // put it on the list of addresss to create now
                 contactAddressesToInsertByContact.put(contact, newAddressFromContact);
             }
