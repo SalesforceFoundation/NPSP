@@ -284,6 +284,7 @@
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelErrorNotifNav"><a href="#" onclick="ShowPanel('idPanelErrorNotif');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavErrorNotify}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelTDTMNav"><a href="#" onclick="ShowPanel('idPanelTDTM');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavTriggerConfig}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelDataImportAdvancedMappingNav"><a href="#" onclick="ShowPanel('idPanelDataImportAdvancedMapping');return false;" class="slds-grow slds-m-left_large">{!$Label.bdiAdvancedMapping}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelGatewayManagementNav" data-qa-locator="elevate gateway management setting"><a href="#" onclick="ShowPanel('idPanelGatewayManagement');return false;" class="slds-grow slds-m-left_large"> Elevate Gateway Management</a></li>
                             </ul>
                         </ul>
                     </nav>
