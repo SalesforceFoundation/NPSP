@@ -292,8 +292,10 @@ public inherited sharing class Addresses extends fflib_SObjects2 {
                 NPSP_Contact npspContact = new NPSP_Contact(contact);
 
                 Boolean shouldUpdateContact= false;
-                if (npspContact.hasAddressOverride()) {
-                    continue;  // Skip update for contacts with address override
+                // detect that the contact's current address was deleted.
+                // and if so clear any override flag so it will get the default address.
+                if (npspContact.currentAddress() == null) {
+                    npspContact.getRecord().is_Address_Override__c = false;
                 }
 
                 if (!npspContact.hasAddressOverride() ||
