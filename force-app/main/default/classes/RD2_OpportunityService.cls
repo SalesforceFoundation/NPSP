@@ -272,9 +272,10 @@ public with sharing class RD2_OpportunityService {
                 Opportunity opp = record.getOpportunity();
                 if (record.hasInstallment()) {
                     installmentByOppId.put(opp.Id, record.getInstallment());
-                    isOpenOppMatched = true;
-
-                } else {
+                    isOpenOppMatched = earliestUnmatchedInstallment == null;
+                }
+                if (!record.hasInstallment() || earliestUnmatchedInstallment != null) {
+                    // If there is an earlier unmatched installment when updating schedules, force this Opportunity to use it 
                     earliestUnmatchedOpp = getEarliestOpportunity(record.getOpportunity(), earliestUnmatchedOpp);
                 }
 
@@ -292,6 +293,10 @@ public with sharing class RD2_OpportunityService {
                 Opportunity updatedOpp = updateOpportunity(earliestUnmatchedOpp, earliestUnmatchedInstallment, rd);
                 if (updatedOpp != null) {
                     updatedOppById.put(updatedOpp.Id, updatedOpp);
+                    installmentByOppId.put(updatedOpp.Id, earliestUnmatchedInstallment);
+                    // Clear the earliest unmatched records so they don't get used again
+                    earliestUnmatchedOpp = null;
+                    earliestUnmatchedInstallment = null;
                 }
             }
         }

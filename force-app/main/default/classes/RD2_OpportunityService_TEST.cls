@@ -810,6 +810,65 @@ private with sharing class RD2_OpportunityService_TEST {
     }
 
     /***
+    * @description Verify that past Open Opportunities do not prevent updating of current Open Opportunity when unpausing
+    */
+    @isTest
+    private static void shouldMatchOpenOppWhenInstallmentMatches() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        setUpConfiguration();
+
+        Test.startTest();
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+        Test.stopTest();
+
+        // Create 3 Past Opps, 1 Closed, 2 Open. Including Open Opps in the matching is what caused this bug.
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        Opportunity originalOpp = opps[0];
+        Date firstOppDate = originalOpp.CloseDate;
+        Opportunity openPastOpp1 = originalOpp.clone();
+        Opportunity openPastOpp2 = originalOpp.clone();
+        Opportunity closedOpp = originalOpp.clone();
+        openPastOpp1.CloseDate = firstOppDate.addMonths(-1);
+        openPastOpp2.CloseDate = firstOppDate.addMonths(-2);
+        closedOpp.CloseDate = firstOppDate.addMonths(-3);
+        closedOpp.StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        
+        List<Opportunity> oppList = new List<Opportunity>{ closedOpp, openPastOpp1, openPastOpp2 };
+        insert oppList;
+
+        // Pause for 2 Installments
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, START_DATE, START_DATE.addMonths(2));
+
+        List<npe03__Recurring_Donation__c> rds = new RD2_QueryService()
+            .getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
+
+        new RD2_OpportunityService(
+            START_DATE, new RD2_DatabaseService(), new RD2_CustomFieldMapper()
+        ).updateOpportunities(rds, new Set<Id>{ rd.Id });
+
+        opps = oppGateway.getRecords(rd);
+        System.assertEquals(firstOppDate.addMonths(2), opps[0].CloseDate, 'During pause, CloseDate should be StartDate plus 2 months');
+        
+        // Remove the Pause
+        RecurringDonationSchedule__c schedule = [SELECT Id, StartDate__c, EndDate__c FROM RecurringDonationSchedule__c WHERE IsPause__c = true][0];
+        schedule.StartDate__c = START_DATE.addMonths(-5);
+        schedule.EndDate__c = START_DATE.addMonths(-5);
+        update schedule;
+
+        rds = new RD2_QueryService()
+            .getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, START_DATE);
+
+        new RD2_OpportunityService(
+            START_DATE, new RD2_DatabaseService(), new RD2_CustomFieldMapper()
+        ).updateOpportunities(rds, new Set<Id>{ rd.Id });
+
+        // This was previously incorret, the Installment would not get updated because of the past Open Opportunites being included in matching
+        opps = oppGateway.getRecords(rd);
+        System.assertEquals(firstOppDate, opps[0].CloseDate, 'After unpause, CloseDate should be StartDate again');
+    }
+
+    /***
     * @description Verifies Account and Primary Contact are changed on future opened Opportunity
     * when related Recurring Donation donor Organization and Contact are changed.
     * Existing Closed Won/Lost, and past opened Opportunities should not be updated.
