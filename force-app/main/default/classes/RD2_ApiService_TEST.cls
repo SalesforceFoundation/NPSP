@@ -101,6 +101,7 @@ private class RD2_ApiService_TEST {
         }
 
         System.assertEquals(1, currentCount, 'There should be one current schedule: ' + apiSchedules);
+        System.assertNotEquals(null, SfdoInstrumentationService.instance, 'The Instrumentation Service Instance should have been instantiated');
     }
 
     /**
@@ -136,7 +137,9 @@ private class RD2_ApiService_TEST {
         System.assertNotEquals(null, actualException, 'An exception should have been thrown for a missing parameter');
         System.assert(actualException.getMessage().contains(CallableApiParameters.PARAM_RECORD_IDS),
             'The exception should reference the missing parameter by name');
-    }
+        System.assertEquals(null, SfdoInstrumentationService.instance, 
+            'The Instrumentation Service Instance should not have been instantiated');
+        }
 
     /**
      * @description Validate an exception thrown if the RecordIds parameter contains a non Set<Id> value
@@ -160,7 +163,9 @@ private class RD2_ApiService_TEST {
         System.assertNotEquals(null, actualException, 'An exception should have been thrown for a missing parameter');
         System.assert(actualException.getMessage().contains(CallableApiParameters.PARAM_RECORD_IDS),
             'The exception should reference the missing parameter by name');
-    }
+        System.assertEquals(null, SfdoInstrumentationService.instance,
+            'The Instrumentation Service Instance should not have been instantiated');
+        }
 
     /**
      * @description Validate an empty schedule response from the rd2.queryschedules API call
@@ -356,6 +361,7 @@ private class RD2_ApiService_TEST {
 
         System.assertEquals(installmentCount, installmentsByRd.get(rd.Id).size(),
             'Number of installments should match when start and end date are default: ' + installmentsByRd.values());
+        System.assertNotEquals(null, SfdoInstrumentationService.instance, 'The Instrumentation Service Instance should have been instantiated');
     }
 
     /**
@@ -391,6 +397,8 @@ private class RD2_ApiService_TEST {
 
         System.assertEquals(pausedCount, installmentsByRd.get(rd.Id).size(),
             pausedCount + ' Recurring donation installments should be returned when there is a three month pause');
+
+        System.assertNotEquals(null, SfdoInstrumentationService.instance, 'The Instrumentation Service Instance should have been instantiated');
     }
 
     @IsTest
@@ -421,6 +429,7 @@ private class RD2_ApiService_TEST {
             'Response should have set isSucess to true');
         System.assertEquals('OK', pauseObjectsByIdOut.values()[0].error,
             'The error status should be OK');
+        System.assertNotEquals(null, SfdoInstrumentationService.instance, 'The Instrumentation Service Instance should have been instantiated');
     }
 
     @IsTest
