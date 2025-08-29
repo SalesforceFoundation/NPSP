@@ -165,6 +165,12 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     @TestVisible
     private Integer recordsFailed = 0;
 
+    /***
+    * @description Count of new installment Opportunities created
+    */
+    @TestVisible
+    private Integer recordsCreated = 0;
+
     /**
      * @description Contains current date value so the batch can be executed for a 
      * date referenced in past, today or a future date. Regardless of the value, the current date
@@ -230,13 +236,20 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
             TDTM_Config_API.disableAllRollupTriggers();
         }
 
+        // Instantiate new database service instance for each batch and pass it to the evaluation service
+        // so that the records created/failed counts are not reset to 0 by other processes running in the same transaction
+        // It needs to return those counts to this batch class to capturing in the CustomSettings object as well as the instrumentation service
+        RD2_DatabaseService dbService = new RD2_DatabaseService();
+
         RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService()
             .withBatchContext()
             .withRds(UTIL_SObject.extractIds(rds))
             .withCurrentDate(currentDate)
+            .withDatabaseService(dbService)
             .evaluateOpportunities();
         
-        recordsFailed += evalService.getRecordsFailed();
+        recordsFailed += dbService.getRecordsFailed();
+        recordsCreated += dbService.getRecordsCreated();
     }
 
     /**
@@ -269,6 +282,20 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     public void finish(Database.BatchableContext context) {
         RD2_Settings.getInstance()
             .saveLatestBatchResults(context.getJobId(), recordsProcessed, recordsFailed);
+
+        if (recordsCreated > 0 || recordsFailed > 0 || recordsProcessed > 0) {
+            SfdoInstrumentationService.getInstance().log(
+                SfdoInstrumentationEnum.Feature.EnhancedRecurringDonations,
+                SfdoInstrumentationEnum.Component.Batch,
+                SfdoInstrumentationEnum.Action.ProcessedCount,
+                new Map<String, Object>{ 
+                    'RD Records Processed' => recordsProcessed, 
+                    'RD Records Failed' => recordsFailed, 
+                    'Opportunity Records Created ' => recordsCreated 
+                },
+                recordsCreated
+            );
+        }
     }
 
     /**
