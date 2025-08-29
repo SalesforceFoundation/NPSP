@@ -68,7 +68,8 @@ public with sharing class SfdoInstrumentationEnum {
         LegacyRollups,
         PaymentServices,
         LeadConversion,
-        RecordMerge
+        RecordMerge,
+        ContactMerge
     }
 
     /**
@@ -134,6 +135,9 @@ public with sharing class SfdoInstrumentationEnum {
         /* API Operations */
         Pause,
         QuerySchedules,
-        QueryInstallments
+        QueryInstallments,
+        /* Contact Merge Operations */
+        DuplicateRecordSetResultCount,
+        ContactMergeResultCount
     }
 }
