@@ -69,7 +69,8 @@ public with sharing class SfdoInstrumentationEnum {
         PaymentServices,
         LeadConversion,
         RecordMerge,
-        ContactMerge
+        ContactMerge,
+        ManageHousehold
     }
 
     /**
@@ -138,6 +139,12 @@ public with sharing class SfdoInstrumentationEnum {
         QueryInstallments,
         /* Contact Merge Operations */
         DuplicateRecordSetResultCount,
-        ContactMergeResultCount
+        ContactMergeResultCount,
+        /* Manage Household Operations */
+        HouseholdContactNamingExclusionsUpdated,
+        HouseholdNamingSettingsUpdated,
+        HouseholdMerged,
+        HouseholdMemberAdded,
+        HouseholdAddressChanged
     }
 }

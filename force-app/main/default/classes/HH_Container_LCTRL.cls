@@ -422,6 +422,14 @@ public with sharing class HH_Container_LCTRL {
         } finally {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
         }
+
+        if (listInsert.size() > 0) {
+            SfdoInstrumentationService.getInstance().log(
+                SfdoInstrumentationEnum.Feature.ManageHousehold, 
+                    SfdoInstrumentationEnum.Component.Page, 
+                    SfdoInstrumentationEnum.Action.HouseholdMemberAdded, 
+                    listInsert.size());
+        }
     }
 
     /*******************************************************************************************************
@@ -496,6 +504,12 @@ public with sharing class HH_Container_LCTRL {
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
+
+        SfdoInstrumentationService.getInstance().log(
+            SfdoInstrumentationEnum.Feature.ManageHousehold, 
+            SfdoInstrumentationEnum.Component.Page, 
+            SfdoInstrumentationEnum.Action.HouseholdMerged, 
+            listHHMerge.size());
     }
 
     /*******************************************************************************************************
@@ -542,6 +556,21 @@ public with sharing class HH_Container_LCTRL {
             }
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
+        }
+
+        try {
+            if (UTIL_Describe.isObjectIdThisType(hh.Id, 'Account')) {
+                // Query the updated household and compare the value of SYSTEM_CUSTOM_NAMING__c with the old value
+                Account updatedHousehold = [SELECT npo02__SYSTEM_CUSTOM_NAMING__c FROM Account WHERE Id = :hh.Id LIMIT 1];
+                if (updatedHousehold.npo02__SYSTEM_CUSTOM_NAMING__c != (string) hh.get('npo02__SYSTEM_CUSTOM_NAMING__c')) {
+                    SfdoInstrumentationService.getInstance().log(
+                        SfdoInstrumentationEnum.Feature.ManageHousehold, 
+                        SfdoInstrumentationEnum.Component.Page, 
+                        SfdoInstrumentationEnum.Action.HouseholdNamingSettingsUpdated, 1);
+                }
+            }
+        } catch (Exception e) {
+            // ignore errors for instrumentation
         }
     }
 
@@ -647,14 +676,23 @@ public with sharing class HH_Container_LCTRL {
         try {
             // update naming exclusions field based on exclusion checkboxes
             NamingExclusions namingExclusions = new NamingExclusions(listCon);
-            namingExclusions.synchronize();
+            Integer namingExclusionsCount = namingExclusions.synchronize();
 
             HouseholdSettings householdSettings = new HouseholdSettings();
             if (!householdSettings.isAdvancedHouseholdNaming()) {
                 return hh;
             }
 
+            if (namingExclusionsCount > 0) {
+                SfdoInstrumentationService.getInstance().log(
+                    SfdoInstrumentationEnum.Feature.ManageHousehold, 
+                    SfdoInstrumentationEnum.Component.Page, 
+                    SfdoInstrumentationEnum.Action.HouseholdContactNamingExclusionsUpdated, 
+                    namingExclusionsCount);        
+            }
+
             HouseholdNamingService householdNamingService = new HouseholdNamingService();
+            // TODO: Add instrumentation for the setNameFieldValuesOnHousehold method (Any Naming Override options changed on the page)
             householdNamingService.setNameFieldValuesOnHousehold(
                     hh,
                     new HouseholdName(new HouseholdMembers(listCon)));

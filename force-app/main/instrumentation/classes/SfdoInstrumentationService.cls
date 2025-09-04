@@ -39,6 +39,38 @@ public inherited sharing class SfdoInstrumentationService {
     @TestVisible
     private static SfdoInstrumentationService instance;
 
+    @TestVisible
+    private static LastCallData lastCallData;
+    
+    class LastCallData {        
+        public String lastFeatureName;
+        public String lastComponentName;
+        public String lastActionName;
+        public Integer lastValue;
+        public Map<String, Object> lastContext;
+    }
+
+    private static void setLastCallData(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Integer value) {
+        LastCallData lastCallData = new LastCallData();
+        lastCallData.lastFeatureName = featureName?.name();
+        lastCallData.lastComponentName = componentName?.name();
+        lastCallData.lastActionName = actionName?.name();
+        lastCallData.lastValue = value;
+    }
+    private static void setLastCallData(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context) {
+        LastCallData lastCallData = new LastCallData();
+        lastCallData.lastFeatureName = featureName?.name();
+        lastCallData.lastComponentName = componentName?.name();
+        lastCallData.lastActionName = actionName?.name();
+        lastCallData.lastContext = context;
+    }
+    private static void setLastCallData(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName) {
+        LastCallData lastCallData = new LastCallData();
+        lastCallData.lastFeatureName = featureName?.name();
+        lastCallData.lastComponentName = componentName?.name();
+        lastCallData.lastActionName = actionName?.name();
+    }
+
     /**
      * @description Return a singleton instance of this class
      */
@@ -48,7 +80,7 @@ public inherited sharing class SfdoInstrumentationService {
         }
         return instance;
     }
-
+    
     // =============================================================================================================================
     // Primary Logging signatures that accept only valid defined Enums for Feature/Component/Action
     // =============================================================================================================================
@@ -61,6 +93,7 @@ public inherited sharing class SfdoInstrumentationService {
      */
     public void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context) { 
         SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name(), context);
+        setLastCallData(featureName, componentName, actionName, context);
     }
 
     /**
@@ -72,6 +105,7 @@ public inherited sharing class SfdoInstrumentationService {
      */
     public void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context, Integer value) { 
         SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name(), context, value);
+        setLastCallData(featureName, componentName, actionName, value);
     }
 
     /**
@@ -82,6 +116,7 @@ public inherited sharing class SfdoInstrumentationService {
      */
     public void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Integer value) { 
         SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name(), value);
+        setLastCallData(featureName, componentName, actionName, value);
     }
 
     /**
@@ -91,6 +126,7 @@ public inherited sharing class SfdoInstrumentationService {
      */
     public void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName) {
         SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name());
+        setLastCallData(featureName, componentName, actionName);
     }
 
     // =============================================================================================================================
