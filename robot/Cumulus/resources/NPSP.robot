@@ -34,7 +34,7 @@ API Create Contact
     ...                  LastName=${last_name}
     ...                  &{fields}
     &{contact} =     Salesforce Get  Contact  ${contact_id}
-    [return]         &{contact}
+    RETURN         &{contact}
 
 API Modify Contact
     [Documentation]  This keyword is used to update an existing contact by passing contact id and apifieldname and value.
@@ -50,7 +50,7 @@ API Modify Contact
     ...              select=Id,FirstName,LastName,Email
     ...              Id=${contact_id}
     &{contact} =  Get From List  ${records}  0
-    [return]         &{contact}
+    RETURN         &{contact}
 
 API Modify Recurring Donation
     [Documentation]  This keyword is used to update an existing recurring donation record by passing id and
@@ -67,7 +67,7 @@ API Modify Recurring Donation
     ...              select=${ns}StartDate__c,npe03__Amount__c
     ...              Id=${rd_id}
     &{rd} =          Get From List  ${records}  0
-    [return]         &{rd}
+    RETURN         &{rd}
 
 API Create Campaign
     [Documentation]  If no arguments are passed, this keyword will create a new campaign with just Name
@@ -81,7 +81,7 @@ API Create Campaign
     ...                  Name=${name}
     ...                  &{fields}
     &{campaign} =     Salesforce Get  Campaign  ${campaign_id}
-    [return]         &{campaign}
+    RETURN         &{campaign}
 
 API Create Opportunity
     [Documentation]  Creates opportunity of specified type for specified account. Opportunity details can be passed as key, value pairs
@@ -105,7 +105,7 @@ API Create Opportunity
     ...               npe01__Do_Not_Automatically_Create_Payment__c=true
     ...               &{fields}
     &{opportunity} =     Salesforce Get  Opportunity  ${opp_id}
-    [return]         &{opportunity}
+    RETURN         &{opportunity}
 
 API Create Organization Account
     [Documentation]  If no arguments are passed, this keyword will create an account of type organization with just Name
@@ -121,7 +121,7 @@ API Create Organization Account
     ...                  RecordTypeId=${rt_id}
     ...                  &{fields}
     &{account} =     Salesforce Get  Account  ${account_id}
-    [return]         &{account}
+    RETURN         &{account}
 
 API Create Primary Affiliation
     [Documentation]  Creates a primary affiliation for a contact with specified account
@@ -168,7 +168,7 @@ API Create Relationship
     ...                  npe4__Status__c=Current
     ...                  &{fields}
     &{relation} =     Salesforce Get  npe4__Relationship__c  ${rel_id}
-    [return]         &{relation}
+    RETURN         &{relation}
 
 API Create Recurring Donation
     [Documentation]         Creates a recurring donation with specified fields.This keyword returns the recurring donation dictonary when called
@@ -180,7 +180,7 @@ API Create Recurring Donation
     ${recurring_id} =  Salesforce Insert  npe03__Recurring_Donation__c
     ...                &{fields}
     &{recurringdonation} =           Salesforce Get     npe03__Recurring_Donation__c  ${recurring_id}
-    [return]           &{recurringdonation}
+    RETURN           &{recurringdonation}
 
 API Create Payment
     [Documentation]   Creates a payment record for the specified opportunity record with given parameters passed
@@ -189,7 +189,7 @@ API Create Payment
     ...               npe01__Opportunity__c=${opportunity}
     ...               &{fields}
     &{payment} =      Salesforce Get  npe01__OppPayment__c  ${pay_id}
-    [return]          &{payment}
+    RETURN          &{payment}
 
 API Query Installment
     [Documentation]         Queries for record on opportunity object using recurring donation id, installment and other specified fields
@@ -205,7 +205,7 @@ API Query Installment
     ...                npe03__Recurring_Donation__c=${id}
     ...                ${ns}Recurring_Donation_Installment_Name__c=${installment}
     ...                &{fields}
-    [return]           @{object}
+    RETURN           @{object}
 
 API Create GAU
     [Documentation]  If no arguments are passed, this keyword will create a GAU with Name
@@ -220,7 +220,7 @@ API Create GAU
     ...               Name=${name}
     ...               &{fields}
     &{gau} =     Salesforce Get  ${ns}General_Accounting_Unit__c  ${gau_id}
-    [return]         &{gau}
+    RETURN         &{gau}
 
 API Create GAU Allocation
     [Documentation]  Creates GAU allocations for a specified opportunity. Pass either Amount or Percentage for Allocation
@@ -236,7 +236,7 @@ API Create GAU Allocation
     ...              ${ns}Opportunity__c=${opp_id}
     ...              &{fields}
     &{gau_alloc} =   Salesforce Get  ${ns}Allocation__c  ${all_id}
-    [return]         &{gau_alloc}
+    RETURN         &{gau_alloc}
 
 API Modify Allocations Setting
     [Documentation]     Can be used to modify either Default Allocations or Payment Allocations.
@@ -251,7 +251,7 @@ API Modify Allocations Setting
     Salesforce Update  ${ns}Allocations_Settings__c     ${setting}[Id]
     ...                 &{fields}
     &{alloc_setting} =  Salesforce Get  ${ns}Allocations_Settings__c  ${setting}[Id]
-    [return]            &{alloc_setting}
+    RETURN            &{alloc_setting}
 
 API Create DataImportBatch
     [Documentation]     Creates a batch gift entry batch with specified key,value pairs and return the batch record when keyword is called.
@@ -265,7 +265,7 @@ API Create DataImportBatch
     ...                  Name=${name}
     ...                  &{fields}
     &{batch} =     Salesforce Get  ${ns}DataImportBatch__c  ${batch_id}
-    [return]         &{batch}
+    RETURN         &{batch}
 
 API Create DataImport
     [Documentation]     Creates a data import with specified key,value pairs and return the data import record when keyword is called.
@@ -277,7 +277,7 @@ API Create DataImport
     ${dataimport_id} =  Salesforce Insert  ${ns}DataImport__c
     ...                 &{fields}
     &{data_import} =    Salesforce Get  ${ns}DataImport__c  ${dataimport_id}
-    [return]            &{data_import}
+    RETURN            &{data_import}
 
 API Query Opportunity For Recurring Donation
     [Arguments]        ${id}                      &{fields}
@@ -286,7 +286,7 @@ API Query Opportunity For Recurring Donation
     ...                select=Id
     ...                npe03__Recurring_Donation__c=${id}
     ...                &{fields}
-    [return]           @{object}
+    RETURN           @{object}
 
 # Validate Batch Process When CRLP Unchecked
 #     [Documentation]              Validates that all the Rollup Donations Batch processes complete successfully when CRLPs is disabled
@@ -481,7 +481,7 @@ API Query Recurrring Donation Settings For RD2 Enablement
     @{record} =        Salesforce Query      npe03__Recurring_Donations_Settings__c
     ...                select=${ns}IsRecurringDonations2Enabled__c
     &{rd2_enabled} =                 Get From List  ${record}  0
-    [return]           ${rd2_enabled}[${ns}IsRecurringDonations2Enabled__c]
+    RETURN           ${rd2_enabled}[${ns}IsRecurringDonations2Enabled__c]
 
 Enable RD2
     [Documentation]           Checks if Rd2 settings are already enabled and then run the scripts to enable RD2
@@ -514,7 +514,7 @@ API Get Id
     ...                         select=Id
     ...                         &{fields}
     &{Id} =                 Get From List  ${records}  0
-    [return]                ${Id}[Id]
+    RETURN                ${Id}[Id]
 
 Enable Gift Entry
     [Documentation]    This keyword enables advanced mapping(prerequisite) and gift entry if not already enabled.
@@ -531,7 +531,7 @@ API Query Record
     ...                &{fields}
     &{Id} =            Get From List  ${records}  0
     &{myrecord} =      Salesforce Get  ${object_name}  ${Id}[Id]
-    [return]           &{myrecord}
+    RETURN           &{myrecord}
 
 API Check And Enable Gift Entry
     [Documentation]    Checks through API if Advanced Mapping and Gift Entry are already enabled. If yes then does nothing.
@@ -561,7 +561,7 @@ API Create Lead
     ${lead_id} =        Salesforce Insert  Lead
     ...                 &{fields}
     &{lead} =           Salesforce Get  Lead  ${lead_id}
-    [return]            &{lead}
+    RETURN            &{lead}
 
 Create Gift Entry Batch
     [Documentation]     Creates a new gift entry batch using the template specified and with given name

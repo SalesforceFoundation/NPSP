@@ -35,8 +35,10 @@ from BaseObjects import BaseNPSPPage
 from locators_55 import npsp_lex_locators as locators_55
 from locators_54 import npsp_lex_locators as locators_54
 from locators_53 import npsp_lex_locators as locators_53
+from locators_64 import npsp_lex_locators as locators_64
 
 locators_by_api_version = {
+    64.0: locators_64,  # summer '25
     55.0: locators_55,  # summer '22
     54.0: locators_54,  # spring '22
     53.0: locators_53   # winter '22
