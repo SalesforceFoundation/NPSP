@@ -44,7 +44,7 @@ Add New Address to Household
     Click Button                         Manage Household
     Current Page Should Be               Custom                             ManageHousehold
     Select Frame And Click Element       accessibility title
-    ...                                  span_button
+    ...                                  button-with-text
     ...                                  Change Address
     Change Address Using                 Enter a new address               Street=123 Dummy Street
     ...                                                                    City=Tracy
@@ -56,7 +56,8 @@ Add New Address to Household
     ...                                 Contact
     ...                                 object_id=${contact1}[Id]
 
-    cumulusci.robotframework.Salesforce.Scroll Element Into View            text:Mailing Address
+    # cumulusci.robotframework.Salesforce.Scroll Element Into View            text:Mailing Address
+    Current Page Should Be              Details                             Contact
     Verify Address Details              Mailing Address
     ...                                 contains
     ...                                 &{Address}
@@ -64,8 +65,9 @@ Add New Address to Household
     Go To Page                          Listing                             Account
     Click Link                          link=${contact1}[LastName] Household
     Select Tab                          Details
-    cumulusci.robotframework.Salesforce.Scroll Element Into View            text:Billing Address
 
-    verify address details              Billing Address
+    # cumulusci.robotframework.Salesforce.Scroll Element Into View            text:Billing Address
+    Current Page Should Be              Details                             Account
+    Verify Address Details              Billing Address
     ...                                 contains
     ...                                 &{Address}

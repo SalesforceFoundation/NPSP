@@ -32,8 +32,8 @@ class ManageHouseholdPage(BaseNPSPPage, BasePage):
          Supported option is (Enter A new Address)
         """
         if option.lower() == "enter a new address":
-           locator=npsp_lex_locators['button-title'].format("Enter a new address")
-           self.selenium.click_button(locator)
+           locator=npsp_lex_locators['button-text-span'].format("Enter a new address")
+           self.selenium.click_element(locator)
            self.npsp.populate_modal_form(**kwargs)
            self.selenium.click_button("Set Address")
            self.selenium.click_button("Save")

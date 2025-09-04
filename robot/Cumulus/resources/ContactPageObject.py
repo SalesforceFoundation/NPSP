@@ -23,7 +23,7 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
             by verifying that the url contains '/view'
         """
         self.selenium.wait_until_location_contains("/view", timeout=60, message="Detail page did not load in 1 min")
-        self.selenium.location_should_contain("/lightning/r/Contact/",message="Current page is not a Contact record detail view")
+        self.selenium.location_should_contain("/lightning/r/Contact/", message="Current page is not a Contact record detail view")
         self.selenium.wait_until_page_contains("Contact Details")
 
     def update_field_value(self,field_name,old_value,new_value):
@@ -47,7 +47,7 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
         """ Identifies the value and performs the specified action requested
             Currently added logic for Delete. In the future can be extended for Edit
         """
-        drop_down = npsp_lex_locators['opportunities_dropdown'].format(1)
+        drop_down = npsp_lex_locators['locate_dropdown'].format(1)
         self.selenium.set_focus_to_element(drop_down)
         self.selenium.wait_until_element_is_visible(drop_down)
         self.selenium.click_element(drop_down)

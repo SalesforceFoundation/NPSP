@@ -39,7 +39,7 @@ Create Engagement Plan Template And verify save
      ${ns} =  Get NPSP Namespace Prefix
      Save Current Record ID For Deletion             ${ns}Engagement_Plan_Template__c
      Go To Page                                      Listing                             Engagement_Plan_Template__c
-     Click Link                                      link=${name}
+     Click Link                                      ${name}
      Check Field Value                               Engagement Plan Template Name       ${name}
      Select Tab                                      Related
      Check Related List Values                       Engagement Plan Tasks               ${task1}  ${task2}

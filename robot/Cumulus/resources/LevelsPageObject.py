@@ -39,7 +39,7 @@ class LevelListPage(BaseNPSPPage, ListingPage):
             self.npsp.click_special_object_button("New")
 
         if mode.lower() == "edit":
-            drop_down = npsp_lex_locators['opportunities_dropdown'].format(1)
+            drop_down = npsp_lex_locators['locate_dropdown'].format(1)
             self.selenium.set_focus_to_element(drop_down)
             self.selenium.wait_until_element_is_visible(drop_down)
             self.selenium.click_element(drop_down)

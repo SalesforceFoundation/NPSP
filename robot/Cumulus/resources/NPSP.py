@@ -243,7 +243,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         for index, element in enumerate(list_ele):
             if element.text == value:
                 drop_down = npsp_lex_locators['locate_dropdown'].format(index + 1)
-                self.selenium.get_webelement(drop_down).click()
+                self.selenium.driver.find_element_by_xpath(drop_down).click()
                 self.selenium.wait_until_page_contains("Delete")
 
     def select_related_row(self, value):
@@ -1162,8 +1162,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def change_view_to(self,view_name):
         """Selects a different view for the object records in listing page"""
         locator=npsp_lex_locators['object_dd']
-        view=npsp_lex_locators['link'].format(view_name,view_name)
-        self.selenium.wait_until_page_contains("List Views")
+        view=npsp_lex_locators['gift_entry']['lookup-option'].format(view_name)
+        # self.selenium.wait_until_page_contains("List Views")
         self.selenium.wait_until_element_is_visible(locator,30)
         try:
             self.selenium.get_webelement(locator).click()
@@ -1171,8 +1171,9 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             self.selenium.execute_javascript("window.scrollBy(0,100)")
             ele = self.selenium.driver.find_element_by_xpath(locator)
             self.selenium.driver.execute_script('arguments[0].click()', ele)
-        element = self.selenium.driver.find_element_by_xpath(view)
-        self.selenium.driver.execute_script('arguments[0].click()', element)
+        self.selenium.get_webelement(view).click()
+        # element = self.selenium.driver.find_element_by_xpath(view)
+        # self.selenium.driver.execute_script('arguments[0].click()', element)
         self.selenium.wait_until_page_contains(view_name)
 
     @capture_screenshot_on_error
@@ -1634,7 +1635,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.click_element(locator)
         time.sleep(1)
         self.selenium.wait_until_page_contains(title)
-        link_locator=npsp_lex_locators['custom_objects']['actions-link'].format(title,title)
+        link_locator=npsp_lex_locators['custom_objects']['option'].format(title)
         self.selenium.click_link(link_locator)
 
     def get_url_formatted_object_name(self,name):
