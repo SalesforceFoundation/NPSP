@@ -39,49 +39,31 @@ describe('c-application-status', () => {
     });
 
     /**
-     * @description testing 15 days left and no application
+     * @description testing that component does not render when isActiveInstance is true
      * Asserts:
-     *     * button is apply for free licenses
-     *     * 15 days trial org remaining
-     *     * Img is the one that correponds with the this state
+     *     * No content is rendered in the shadow DOM
+     *     * Container div is not present
      */
-    it('shows apply button and shows 15 days left when application is not applied', () => {
+    it('does not render when isActiveInstance is true', async () => {
         getApplicationStatus.mockResolvedValue(NOT_APPLIED_EXPIRATION_DATE_15_DAYS);
         const element = createElement('c-gs-application-status', {is: GsApplicationStatus});
         document.body.appendChild(element);
-        return flushPromises().
-        then(() => {
-            const button = element.shadowRoot.querySelector('.slds-button');
-            expect(button.innerHTML).toBe('c.gsApplyForFreeLicenses');
-            const daysLeft = element.shadowRoot.querySelector(".daysLeft");
-            expect(daysLeft.innerHTML).toContain('15');
-            const img = element.shadowRoot.querySelector('img').getAttribute('src');
-            expect(img).toBe('CumulusStaticResources/gsResources/Accept_Tasks_Apply_Card.png');
-
-        })
         
-    });
-
-    /**
-     * @description testing 15 days left and application
-     * Asserts:
-     *     * button is apply for free licenses
-     *     * 15 days trial org remaining
-     *     * Img is the one that correponds with the this state
-     */
-    it('shows check status button and shows 15 days left when application is not applied', () => {
-        getApplicationStatus.mockResolvedValue(APPLIED_EXPIRATION_DATE_15_DAYS);
-        const element = createElement('c-gs-application-status', {is: GsApplicationStatus});
-        document.body.appendChild(element);
-        return flushPromises().
-        then(() => {
-            const button = element.shadowRoot.querySelector('.slds-button');
-            expect(button.innerHTML).toBe('c.gsCheckStatus');
-            const daysLeft = element.shadowRoot.querySelector(".daysLeft");
-            expect(daysLeft.innerHTML).toContain('15');
-            const img = element.shadowRoot.querySelector('img').getAttribute('src');
-            expect(img).toBe('CumulusStaticResources/gsResources/gift_illustration_2.svg');
-        })
+        await flushPromises();
+        // Since isActiveInstance defaults to true, the component should not render
+        const container = element.shadowRoot.querySelector('.container');
+        expect(container).toBeNull();
         
+        // Verify no buttons are rendered
+        const button = element.shadowRoot.querySelector('.slds-button');
+        expect(button).toBeNull();
+        
+        // Verify no images are rendered
+        const img = element.shadowRoot.querySelector('img');
+        expect(img).toBeNull();
+        
+        // Verify no days left text is rendered
+        const daysLeft = element.shadowRoot.querySelector('.daysLeft');
+        expect(daysLeft).toBeNull();
     });
 });
