@@ -32,7 +32,7 @@ Add Existing Contact to Existing Household through Manage Household Page
     ...                                  From the manage household page's lookup field, try to find and add exisitng contact, contact#2
     ...                                  Verify the new address persists under both Mailing and Billing address details.
 
-    [tags]                               feature:Manage Households  unstable   api
+    [tags]                               feature:Manage Households  api
 
 
     Go To Page                           Details

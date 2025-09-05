@@ -35,7 +35,7 @@ Add New Address to Household
     ...                                  Verify the new address persists under both Mailing and Billing address details
     ...                                  Verify Same address should be present on Account and Contacts
 
-    [tags]                               feature:Manage Households  unstable   api
+    [tags]                               feature:Manage Households  api
 
     Go To Page                           Details
     ...                                  Account
@@ -63,7 +63,7 @@ Add New Address to Household
     ...                                 &{Address}
 
     Go To Page                          Listing                             Account
-    Click Link                          link=${contact1}[LastName] Household
+    Click Link With Spantext            ${contact1}[LastName] Household
     Select Tab                          Details
 
     # cumulusci.robotframework.Salesforce.Scroll Element Into View            text:Billing Address

@@ -327,6 +327,9 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         """Verifies a specified related list has specified value(doesn't work if the list is in table format)"""
         self.salesforce.load_related_list(list_name)
         locator=npsp_lex_locators['related_list_items'].format(list_name,value)
+        # header_locator=npsp_lex_locators['related_list_header'].format(list_name)
+        # self.selenium.page_should_contain_element(header_locator)
+        # locator=npsp_lex_locators['related_list_items_no_header'].format(value)
         self.selenium.page_should_contain_element(locator)
 
     def click_span_button(self,title):
@@ -384,6 +387,9 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
         locator= npsp_lex_locators['detail_page']['address'].format(field)
         street, city, country = self.selenium.get_webelements(locator)
+        self.builtin.log(f"Element street: {street.text}")
+        self.builtin.log(f"Element city: {city.text}")
+        self.builtin.log(f"Element country: {country.text}")
 
         status = None
         for key, value in kwargs.items():
@@ -398,21 +404,21 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def validate_checkboxes(self,name,checkbox_title):
         """validates all 3 checkboxes for contact on manage hh page and returns locator for the checkbox thats required"""
 
-        locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"fauxCBInformal")
+        locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"Informal Greeting")
         self.selenium.page_should_contain_element(locator)
 
-        locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"fauxCBFormal")
+        locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"Formal Greeting")
         self.selenium.page_should_contain_element(locator)
 
-        locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"fauxCBExName")
+        locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"Household Name")
         self.selenium.page_should_contain_element(locator)
 
         if checkbox_title == "Informal Greeting":
-            locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"fauxCBInformal")
+            locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"Informal Greeting")
         elif checkbox_title == "Formal Greeting":
-            locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"fauxCBFormal")
+            locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"Formal Greeting")
         elif checkbox_title.capitalize() == "Household Name":
-            locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"fauxCBExName")
+            locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"Household Name")
         return locator
 
     def check_field_value(self, title, value):

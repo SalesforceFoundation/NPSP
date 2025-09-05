@@ -86,7 +86,7 @@ npsp_lex_locators={
 	'desktop_rendered': 'css: div.desktop.container.oneOne.oneAppLayoutHost[data-aura-rendered-by]',
 	'loading_box': 'css: div.auraLoadingBox.oneLoadingBox',
 	'contacts_actions_dropdown_menu': 'css: a.slds-grid--align-center[aria-expanded="true"]',
-	'household_lookup_dropdown_menu': 'css: div.slds-show',
+	'household_lookup_dropdown_menu': '//div[contains(@class, "slds-show")]',
 	'spinner': 'css: div.slds-spinner',
 	'Delete_opportunity_modal_button': 'css: div.forceModalActionContainer button.uiButton--brand',
 	'modal_field':"//div[contains(@class, 'lookupInput')][./label[contains(text(), '{}')]]/div//span[@class='lookupInput']/input",
@@ -97,7 +97,7 @@ npsp_lex_locators={
 	'locating_delete_dropdown':'//tbody//a[text()= "{}"]/../../following-sibling::td/span//div/a/lightning-icon',
 	'related_name':'//tbody/tr/td/a[contains(@class,"forceOutputLookup")]',
 	'rel_loc_dd':'//tbody/tr[{}]/td[4]//lightning-primitive-icon',
-	'delete_icon':'//*[contains(@class,"slds-form-element")][./label[text()="{}"]]//input[@placeholder="{}"]/following-sibling::div/button',
+	'delete_icon':'//*[contains(@class,"slds-form-element")][./label[text()="{}"]]//input[@placeholder="{}"]/parent::div/parent::div/following-sibling::div/button',
 	'delete_icon_record':'//label[contains(text() ,"{}")]/following::input[@placeholder = "{}"]/following-sibling::div/child::button[@title="Clear Selection"]',
 	'aff_list':'//div[@role="tablist"]/following::div[@class = "container forceRelatedListSingleContainer"][7]/article/div[@class="slds-card__body"]/div/div/div/div/div/div/div/table/tbody/tr/td[1]',
 	'aff_status':'//table[contains(@class,"slds-table")]/tbody/tr[./td//a[text()="{}"]]/td[@data-label="Relationship Explanation"]',
@@ -117,6 +117,8 @@ npsp_lex_locators={
 	'account_list':'//tbody/tr/th[.//span]/descendant::span[text()="{}"]',
 	'dd_options':'//*[@id="p3"]/option[text()="{}"]',
 	'related_list_items':'//article[contains(@class,"slds-card_boundary")][.//a[contains(@class, "slds-card")]/span[text() = "{}"]]//div[contains(@class, "listDisplays")]//*[text()="{}"]',
+	'related_list_header':'//article[contains(@class,"slds-card_boundary")]//h1[text() = "{}"]',
+	'related_list_items_no_header':'//div[contains(@class, "listDisplays")]//*[text()="{}"]',
 	'span_button':'//span[text()="{}"]',
 	'modalspan_button':'//div[contains(@class,"modal-body")]//span[text()="{}"]',
 	'related_drop_down':"//li[contains(@class, 'forceRecordLayout')]//a[contains(text(), '{}')]/ancestor::h3[contains(@class, 'primaryField')]/following-sibling::div//a[@role='button']",
@@ -128,7 +130,7 @@ npsp_lex_locators={
 	'field': "//div[contains(@class, 'uiInput')][.//label[contains(@class, 'uiLabel')][.//span[text()='{}']]]//input",
 	'field_lookup_value': "//a[@role='option'][.//div[@title='{}']]",
 	'field-value':"//div[contains(@class,'slds-form-element')][./label[text()='{}']]/div/span",
-	'header':'//h1//child::div/span[text()="{}"]',
+	'header':'//h1//lightning-formatted-text[text()="{}"]',
 	'check_related_list_item': '//article[.//span[text() = "{}"]]/descendant::tbody//th//a//span[text()="{}"]',
 	'detail_page': {
 		'section_header':'//h3//span[text()="{}"]',
@@ -147,10 +149,10 @@ npsp_lex_locators={
 	'manage_hh_page':{
 		'address_link':'//h4[text()="{}"]',
 		'address':'//div[contains(@class, "uiInput")][.//label[contains(@class, "uiLabel")]/span[text()="{}"]]/',
-		'mhh_checkbox':'//*[@id="SortCanvas"]/li//a[text()="{}"]/ancestor::div[contains(@class, "slds-card__header")]/following-sibling::div[contains(@class,"slds-card__body")]//form//div//label/span[@id = "{}"]',
+		'mhh_checkbox':'//*[@id="SortCanvas"]/li//a[text()="{}"]/ancestor::div[contains(@class, "slds-card__header")]/following-sibling::div[contains(@class,"slds-card__body")]//form//div//label/span[text()="{}"]',
 		'button':'//*[text()="{}"]',
 		'more_actions_btn': "//lightning-button-menu/button",
-		'add_contact_option':'//li/span[text()="{}"]',
+		'add_contact_option':'//li//span[text()="{}"]',
 		'lookup':'//div[./span[text()="{}"]]//input',
 	},
 	'opportunity':{
@@ -179,7 +181,7 @@ npsp_lex_locators={
 	},
 	'custom_objects':{
 		'actions-link':'//a[@title="{}" or @name="{}"]',
-		'option':'//a/span[text()="{}"]'
+		'option':'//a//span[text()="{}"]'
 	},
 	'payments':{
 		'date_loc':"//*[@id='pmtTable']/tbody/tr/td[3]/div//input",
