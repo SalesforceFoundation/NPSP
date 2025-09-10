@@ -967,7 +967,8 @@ public class CON_ContactMerge_TEST {
     }
 
     private static User getReadOnlyUser() {
-        return [SELECT Id FROM User WHERE Profile.Name = :UTIL_UnitTestData_TEST.PROFILE_READONLY_USER LIMIT 1];
+        return [SELECT Id FROM User WHERE Profile.Name = :UTIL_UnitTestData_TEST.PROFILE_READONLY_USER
+                                    AND IsActive = TRUE LIMIT 1];
     }
 
     private static void selectSearchResults(List<CON_ContactMerge_CTRL.ContactWrapper> searchResults) {

@@ -52,7 +52,7 @@ private class GE_LookupController_TEST {
         Test.setFixedSearchResults(new List<Id>{accounts[0].Id});
 
         Test.startTest();
-        List<GE_LookupController.LookupResult> results = GE_LookupController.doSearch('test', 'Account');
+        List<GE_LookupController.LookupResult> results = GE_LookupController.doSearchSOSL('test', 'Account');
         Test.stopTest();
 
         System.assertNotEquals(null, results, 'Expected results to not be null.');
@@ -66,7 +66,7 @@ private class GE_LookupController_TEST {
     @IsTest
     static void testSearchNoResults() {
         Test.startTest();
-        List<GE_LookupController.LookupResult> results = GE_LookupController.doSearch('test', 'Account');
+        List<GE_LookupController.LookupResult> results = GE_LookupController.doSearchSOSL('test', 'Account');
         Test.stopTest();
 
         System.assertNotEquals(null, results, 'Expected results to not be null.');

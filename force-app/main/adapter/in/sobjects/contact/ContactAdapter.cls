@@ -651,7 +651,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
         //     mark the new address as default
         //     put it on dmlWrapper
         //
-
+        // Map to hold the contact-to-address mapping
         Map<Contact, Address__c> contactAddressesByContact = getContactAddressesByContact(contacts);
 
         // look for duplicates for our proposed new addresses
@@ -665,7 +665,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
             Address__c newAddressFromContact = contactAddressesByContact.get(contact);
             Address__c existingAddressFromContact = existingAddressesByAddress.get(newAddressFromContact);
 
-            // if found a match
+
             if (contactAddressHasAddressMatch(existingAddressFromContact)) {
                 updateContactAddressFromExistingAddress(contact, existingAddressFromContact);
 
@@ -679,7 +679,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
                 contactAddressesToInsertByContact.put(contact, newAddressFromContact);
             }
         }
-
+        
         insertContactAddresses(contactAddressesToInsertByContact);
     }
 

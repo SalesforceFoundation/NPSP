@@ -1,4 +1,4 @@
-minimum_cumulusci_version: 3.23.0
+minimum_cumulusci_version: 3.74.0
 project:
     name: Cumulus
     source_format: sfdx
@@ -221,13 +221,18 @@ tasks:
         options:
             update_future_releases: True
 
+    github_release:
+        options:
+            release_content: |
+                Check out the [Salesforce Release Notes](https://sfdc.co/bnL4Cb) or [Known Issues](https://issues.salesforce.com/) for details.
+
     github_release_notes:
         options:
             trial_info: "`TBD`"
 
     is_rd2_enabled:
         description: This preflight check ensures that Enhanced Recurring Donations is enabled
-        class_path: tasks.is_rd2_enabled
+        class_path: tasks.check_rd2_enablement.is_rd2_enabled
         group: NPSP
 
     robot:
@@ -769,6 +774,12 @@ tasks:
                 - "*.cls"
 
 flows:
+
+    release_production:
+        steps:
+            3:
+                task: None
+
     build_unlocked_test_package:
         steps:
             0:

@@ -32,7 +32,7 @@
     </apex:outputPanel>
 
     <apex:outputPanel rendered="{!isRunningUserIsAdmin}">
-        <div class="slds-scope">
+        <div class="slds-scope slds-wcag">
             <div class="slds-m-around_large">
                 <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRD2Enablement}" />
             </div>

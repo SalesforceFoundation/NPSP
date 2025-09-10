@@ -52,8 +52,11 @@
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Always_Rollup_to_Primary_Contact__c.Label}" for="cbxARPC" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:inputCheckbox value="{!stgService.stgHH.npo02__Always_Rollup_to_Primary_Contact__c}" rendered="{!isEditMode}" id="cbxARPC" html-aria-describedby="{!$Component.cbxARPCHelp}" styleClass="slds-checkbox"/>
-                    <apex:inputCheckbox value="{!stgService.stgHH.npo02__Always_Rollup_to_Primary_Contact__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxARPCO" html-aria-describedby="{!$Component.cbxARPCHelp}" styleClass="slds-checkbox"/>
+                    <label class="slds-checkbox">
+                        <apex:inputCheckbox value="{!stgService.stgHH.npo02__Always_Rollup_to_Primary_Contact__c}" rendered="{!isEditMode}" id="cbxARPC" html-aria-describedby="{!$Component.cbxARPCHelp}" styleClass="slds-checkbox"/>
+                        <apex:inputCheckbox value="{!stgService.stgHH.npo02__Always_Rollup_to_Primary_Contact__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxARPCO" html-aria-describedby="{!$Component.cbxARPCHelp}" styleClass="slds-checkbox"/>
+                    <span class="slds-checkbox_faux"></span>
+                    </label>
                     <apex:outputPanel id="cbxARPCHelp" layout="block">
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRollupPrimaryContact}" />
                     </apex:outputPanel>
@@ -79,8 +82,11 @@
             <div class="slds-form-element" style="{!IF(!stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:block', 'display:none')}">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Enable_Soft_Credit_Rollups__c.Label}" for="cbxESCR" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:inputCheckbox value="{!stgService.stgHH.npo02__Enable_Soft_Credit_Rollups__c}" rendered="{!isEditMode}" id="cbxESCR" html-aria-describedby="{!$Component.cbxESCRHelp}" styleClass="slds-checkbox"/>
-                    <apex:inputCheckbox value="{!stgService.stgHH.npo02__Enable_Soft_Credit_Rollups__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxESCRO" html-aria-describedby="{!$Component.cbxESCRHelp}" styleClass="slds-checkbox"/>
+                    <label class="slds-checkbox">
+                        <apex:inputCheckbox value="{!stgService.stgHH.npo02__Enable_Soft_Credit_Rollups__c}" rendered="{!isEditMode}" id="cbxESCR" html-aria-describedby="{!$Component.cbxESCRHelp}" styleClass="slds-checkbox"/>
+                        <apex:inputCheckbox value="{!stgService.stgHH.npo02__Enable_Soft_Credit_Rollups__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxESCRO" html-aria-describedby="{!$Component.cbxESCRHelp}" styleClass="slds-checkbox"/>
+                    <span class="slds-checkbox_faux"></span>
+                    </label>
                     <apex:outputPanel id="cbxESCRHelp" layout="block">
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpEnableSoftCreditRollups}" />
                     </apex:outputPanel>
@@ -105,8 +111,11 @@
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Contact_Roles_On__c.Label}" for="cbxHCRO" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:inputCheckbox value="{!stgService.stgHH.npo02__Household_Contact_Roles_On__c}" rendered="{!isEditMode}" id="cbxHCRO" html-aria-describedby="{!$Component.cbxHCROHelp}" styleClass="slds-checkbox" />
-                    <apex:inputCheckbox value="{!stgService.stgHH.npo02__Household_Contact_Roles_On__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxHCROO" html-aria-describedby="{!$Component.cbxHCROHelp}" styleClass="slds-checkbox" />
+                    <label class="slds-checkbox">
+                        <apex:inputCheckbox value="{!stgService.stgHH.npo02__Household_Contact_Roles_On__c}" rendered="{!isEditMode}" id="cbxHCRO" html-aria-describedby="{!$Component.cbxHCROHelp}" styleClass="slds-checkbox" />
+                        <apex:inputCheckbox value="{!stgService.stgHH.npo02__Household_Contact_Roles_On__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxHCROO" html-aria-describedby="{!$Component.cbxHCROHelp}" styleClass="slds-checkbox" />
+                    <span class="slds-checkbox_faux"></span>
+                    </label>
                     <apex:outputPanel id="cbxHCROHelp" layout="block">
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpHHOCROn}" />
                     </apex:outputPanel>

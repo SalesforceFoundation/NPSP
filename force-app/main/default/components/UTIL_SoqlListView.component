@@ -51,12 +51,8 @@
                             <apex:outputText rendered="{!setCon.HasNext}" value=" | " />
                             <apex:commandLink action="{!setCon.last}" rerender="panelData" status="statusLoad" >{!$Label.labelListViewLast}</apex:commandlink>
                             <apex:outputText value="" />
-                            <apex:outputText value="{!$Label.labelListViewPageInfo}" escape="false" >
-                                <apex:param value="{!setCon.PageNumber}" />
-                                <apex:param value="{!NumberOfPages}" />
-                                <apex:param value="{!NumberOfItems}" />
-                            </apex:outputText> 
-                        </apex:panelGrid>  
+                            <c:UTIL_HtmlOutput html="{!listViewPageInfo}" />
+                        </apex:panelGrid>
                     </td>
                     <td style="vertical-align:middle; text-align:right;" >
                         <apex:repeat value="{!listAlphaFilters}" var="a" > 
@@ -138,11 +134,7 @@
                     <apex:outputText rendered="{!setCon.HasNext}" value=" | " />
                     <apex:commandLink action="{!setCon.last}" rerender="panelData" status="statusLoad" >{!$Label.labelListViewLast}</apex:commandlink>
                     <apex:outputText value="" />
-                    <apex:outputText value="{!$Label.labelListViewPageInfo}" escape="false" >
-                        <apex:param value="{!setCon.PageNumber}" />
-                        <apex:param value="{!NumberOfPages}" />
-                        <apex:param value="{!NumberOfItems}" />
-                    </apex:outputText> 
+                    <c:UTIL_HtmlOutput html="{!listViewPageInfo}" />
                     <apex:outputText value="" />
                     <apex:commandLink action="{!showMoreRecordsPerPage}" rerender="panelData" status="statusLoad" >{!$Label.labelShowMore}</apex:commandlink>                   
                 </apex:panelGrid> 

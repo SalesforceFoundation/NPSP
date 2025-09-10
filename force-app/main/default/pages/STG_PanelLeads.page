@@ -13,8 +13,11 @@
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Default_Opp_on_Convert__c.Label}" for="cbxDOC" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:inputCheckbox value="{!stgService.stgCon.npe01__Default_Opp_on_Convert__c}" rendered="{!isEditMode}" id="cbxDOC" html-aria-describedby="{!$Component.cbxDOCHelp}" styleClass="slds-checkbox"/>
-                    <apex:inputCheckbox value="{!stgService.stgCon.npe01__Default_Opp_on_Convert__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxDOCO" html-aria-describedby="{!$Component.cbxDOCHelp}" styleClass="slds-checkbox"/>
+                    <label class="slds-checkbox">
+                        <apex:inputCheckbox value="{!stgService.stgCon.npe01__Default_Opp_on_Convert__c}" rendered="{!isEditMode}" id="cbxDOC" html-aria-describedby="{!$Component.cbxDOCHelp}" styleClass="slds-checkbox"/>
+                        <apex:inputCheckbox value="{!stgService.stgCon.npe01__Default_Opp_on_Convert__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxDOCO" html-aria-describedby="{!$Component.cbxDOCHelp}" styleClass="slds-checkbox"/>
+                        <span class="slds-checkbox_faux"></span>
+                    </label>
                     <apex:outputPanel id="cbxDOCHelp" layout="block">
                         <c:UTIL_HtmlOutput html="{!$Label.stgHelpLeadConvert}" hasLink="true" styleClass="slds-form-element__help" />
                     </apex:outputPanel>

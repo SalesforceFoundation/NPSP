@@ -1,0 +1,13 @@
+<template>
+    <template lwc:if={displayCard}>
+        <lightning-card variant="narrow" icon-name="standard:merge">
+            <h1 slot="title" class="wrapped-content">{lblTitle}</h1>
+            <p class="slds-var-m-left_xx-large" lwc:if={viewDuplicatesURL} data-qa-locator="viewDuplicatesURL">
+                <a class="slds-var-m-left_xx-small" onclick={navigateToContactMerge}>{lblViewDuplicatesLink}</a>
+            </p>
+            <p class="slds-var-m-left_xx-large" lwc:if={error} data-qa-locator="error">
+                <span class="slds-text-color_error">{error}</span>
+            </p>
+        </lightning-card>
+    </template>
+</template>

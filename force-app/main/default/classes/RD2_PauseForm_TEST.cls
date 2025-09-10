@@ -111,6 +111,7 @@ public with sharing class RD2_PauseForm_TEST {
     private static void shouldNotReturnPauseDataWhenUserDoesNotHaveCreateAndEditPermissions() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ScheduleService.currentDate = START_DATE;
+        String errorMessage;
 
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
         RecurringDonationSchedule__c pauseSchedule = createPauseSchedule(rd.Id);
@@ -119,13 +120,15 @@ public with sharing class RD2_PauseForm_TEST {
         System.runAs(readOnlyUser) {
             RD2_ScheduleService.currentDate = pauseSchedule.StartDate__c.addDays(1);
 
-            RD2_PauseForm_CTRL.PauseData pause = getPauseData(rd.Id);
-            System.assertEquals(false, pause.hasAccess, 'The user should not have access: ' + pause);
-            System.assertEquals(null, pause.isRDClosed, 'The Recurring Donation closed status should not be specified');
-            System.assertEquals(null, pause.startDate, 'The Pause Start Date should not be set');
-            System.assertEquals(null, pause.resumeAfterDate, 'The Pause Resume After Date should not be set');
-            System.assertEquals(null, pause.pausedReason, 'The Paused Reason should not be initialized');
+            RD2_PauseForm_CTRL.PauseData pause;
+            try {
+                pause = getPauseData(rd.Id);
+            } catch (AuraHandledException e) {
+                errorMessage = e.getMessage();
+            }
         }
+        System.assertEquals(System.Label.commonAccessErrorMessage, errorMessage,
+                'Message should be "' + System.Label.commonAccessErrorMessage + '"');
     }
 
     /****

@@ -55,8 +55,9 @@
     <lightning:layout horizontalAlign="spread" multipleRows="true" class="slds-hide" aura:id="enablementDisabled">
         <lightning:layoutItem padding="horizontal-large" size="10">
             <div class="slds-illustration slds-illustration_large">
-                <br /><br />
-                <img src="/img/chatter/OpenRoad.svg" class="slds-illustration__svg" alt="OpenRoad" />
+                <div class="slds-m-vertical_medium">
+                    <img src="/img/chatter/OpenRoad.svg" class="slds-illustration__svg" alt="OpenRoad" />
+                </div>
                 <div class="slds-text-longform">
                     <h3 class="slds-text-heading_medium">{!$Label.c.RD2_EnablementDisabledHeader}</h3>
                     <p>
@@ -77,7 +78,9 @@
 
         <lightning:layoutItem padding="horizontal-large" class="slds-p-top_large" size="12">
             <lightning:layout multipleRows="true">
-                <h2 class="title slds-text-heading_small">{!$Label.c.RD2_EnablementPrepTitle}</h2>
+                <lightning:layoutItem size="12">
+                    <h2 class="title slds-text-heading_small">{!$Label.c.RD2_EnablementPrepTitle}</h2>
+                </lightning:layoutItem>
                 <lightning:layoutItem class="slds-p-top_small" size="12">
                     <lightning:formattedRichText class="slds-text-longform"
                         value="{!$Label.c.RD2_EnablementPrepIntro}" />

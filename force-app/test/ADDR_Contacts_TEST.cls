@@ -86,7 +86,9 @@ public with sharing class ADDR_Contacts_TEST {
         insert npspContact.getRecord();
 
         Test.startTest();
+            // Fetch the contact and simulate an address update
             Contact contactToUpdate = [SELECT Current_Address__c FROM Contact WHERE Id = :npspContact.getRecord().Id];
+            // Simulate updating the contact's address with the new undeliverable address
             NPSP_Contact npspContactToUpdate = new NPSP_Contact(contactToUpdate);
             npspContactToUpdate.setCurrentAddress(
                     new NPSP_Address(buildAddresses(1, false)[0]));
@@ -94,14 +96,16 @@ public with sharing class ADDR_Contacts_TEST {
             update npspContactToUpdate.getRecord();
         Test.stopTest();
 
+        // Fetch the updated contact to check the address change
         Contact updatedContact = [SELECT AccountId, Undeliverable_Address__c, Current_Address__c
                                   FROM Contact
                                   WHERE Id = :npspContactToUpdate.getRecord().Id];
-
+       
+        // Fetch the updated address and verify the undeliverable status
         Address__c updatedAddress = [SELECT Undeliverable__c
                                      FROM Address__c
-                                     WHERE Id = :updatedContact.Current_Address__c];
-
+                                    WHERE Id = :updatedContact.Current_Address__c];
+        // Assert that the contact's undeliverable status matches the address's undeliverable status
         System.assertEquals(updatedContact.Undeliverable_Address__c, updatedAddress.Undeliverable__c, 'The newly ' +
                 'created address from the contact should have the same undeliverable status as the contact it was ' +
                 'created from.');

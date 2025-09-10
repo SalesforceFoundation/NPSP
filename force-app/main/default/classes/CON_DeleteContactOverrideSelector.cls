@@ -75,7 +75,7 @@ public with sharing class CON_DeleteContactOverrideSelector {
     }
 
     public Account getAccountRecord(Id accountId) {
-        return  [SELECT Id, Name FROM Account WHERE Id = :accountId];
+        return  [SELECT Id, Name FROM Account WHERE Id = :accountId WITH SECURITY_ENFORCED];
     }
 
     public List<Case> getCasesRelatedToContact(Id contactId) {
@@ -83,6 +83,7 @@ public with sharing class CON_DeleteContactOverrideSelector {
             SELECT CaseNumber, ContactId
             FROM Case
             WHERE ContactId = :contactId
+            WITH SECURITY_ENFORCED
         ];
     }
 
@@ -91,6 +92,7 @@ public with sharing class CON_DeleteContactOverrideSelector {
             SELECT CaseNumber, AccountId
             FROM Case
             WHERE AccountId = :accountId
+            WITH SECURITY_ENFORCED
         ];
     }
 
@@ -99,6 +101,7 @@ public with sharing class CON_DeleteContactOverrideSelector {
             SELECT Name, AccountId, Primary_Contact__c, Primary_Contact__r.AccountId, IsWon, IsClosed
             FROM Opportunity
             WHERE Primary_Contact__c = :contactId
+            WITH SECURITY_ENFORCED
         ];
     }
 
@@ -107,6 +110,7 @@ public with sharing class CON_DeleteContactOverrideSelector {
             SELECT Name, AccountId, IsWon, IsClosed
             FROM Opportunity
             WHERE AccountId = :accountId
+            WITH SECURITY_ENFORCED
         ];
     }
 
@@ -115,6 +119,7 @@ public with sharing class CON_DeleteContactOverrideSelector {
             SELECT Name, npe03__Contact__c
             FROM npe03__Recurring_Donation__c
             WHERE npe03__Contact__c = :contactId
+            WITH SECURITY_ENFORCED
         ];
     }
 }

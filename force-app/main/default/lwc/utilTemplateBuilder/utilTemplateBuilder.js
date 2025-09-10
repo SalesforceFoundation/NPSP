@@ -75,7 +75,7 @@ import ACCOUNT_NAME_INFO from '@salesforce/schema/Account.Name';
 import commonError from '@salesforce/label/c.commonError';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 
-import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
+import getDataImportSettings from '@salesforce/apex/GE_GiftEntryController.getDataImportSettings';
 import getGiftEntrySettings from
         '@salesforce/apex/GE_GiftEntryController.getGiftEntrySettings';
 
@@ -504,7 +504,7 @@ const setRecordValuesOnTemplate = (templateSections, fieldMappings, record) => {
 const getPageAccess = async () => {
     const dataImportSettings = await getDataImportSettings();
     const giftEntryGateSettings = await getGiftEntrySettings();
-    const isAdvancedMappingOn =
+    const isAdvancedMappingOn = dataImportSettings &&
         dataImportSettings[FIELD_MAPPING_METHOD_FIELD_INFO.fieldApiName] === ADVANCED_MAPPING;
     const isGiftEntryEnabled = giftEntryGateSettings[GIFT_ENTRY_FEATURE_GATE_INFO.fieldApiName];
     return isAdvancedMappingOn && isGiftEntryEnabled;

@@ -158,6 +158,28 @@ global with sharing class BDI_DataImport_API {
         return apexJobId;
     }
 
+    global static Id processDataImportRecords(Data_Import_Settings__c diSettings,
+                                                List<Id> dataImportIds,
+                                                Boolean isDryRun, Id batchId) {
+        Id apexJobId;
+        if (dataImportIds != null && dataImportIds.size() > 0) {
+            // Use configured data import settings if none provided.
+            if (diSettings == null) {
+                diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+            }
+            Savepoint sp = Database.setSavepoint();
+            try {
+                BDI_DataImport_BATCH batch = new BDI_DataImport_BATCH(batchId, dataImportIds, new BDI_DataImportService(isDryRun, BDI_DataImportService.getDefaultMappingService()));
+                apexJobId = Database.executeBatch(batch, integer.valueOf(diSettings.Batch_Size__c));
+            } catch (Exception ex) {
+                Database.rollback(sp);
+                ex.setMessage(System.label.bdiAPISelectedError + ' ' + ex.getMessage());
+                throw ex;
+            }
+        }
+        return apexJobId;
+    }
+
     /*******************************************************************************************************
     * @description The return result object for each batch that is provided to processDataImportBatches()
     */

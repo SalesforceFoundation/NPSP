@@ -45,9 +45,6 @@ public with sharing class MTCH_FindGifts_CTRL {
     /* @description the list of potential opportunities in the top section of the page */
     public List<Opportunity> potentialGifts {get; private set;}
 
-    /* @description the list of potential opportunities in the bottom search section of the page */
-    public List<Opportunity> potentialGifts2 {get; private set;}
-
     /* @description a map that specifies which opps are checked on to be included in the match */
     public Map<Id, Boolean> selection {get; set;}
 
@@ -60,6 +57,29 @@ public with sharing class MTCH_FindGifts_CTRL {
     /** @description The currency symbol or ISO code of the related record or org default */
     @TestVisible
     private String currencySymbol;
+
+    @TestVisible
+    public Boolean hasAccess {
+        get {
+            if (hasAccess == null) {
+                hasAccess = getCurrentUserHasAccess();
+            }
+            return hasAccess;
+        }
+        private set;
+    }
+
+    @TestVisible
+    private UTIL_Permissions perms {
+        get {
+            if (perms == null) {
+                perms = new UTIL_Permissions();
+            }
+
+            return perms;
+        }
+        set;
+    }
 
     /*******************************************************************************************************
     * @description constructor for the page
@@ -306,6 +326,11 @@ public with sharing class MTCH_FindGifts_CTRL {
     * @return PageReference url of opp if save success, otherwise null if failure so errors displayed on page.
     */
     public PageReference saveAndClose(){
+        if (!hasAccess) {
+            Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.commonAccessErrorMessage));
+            return null;
+        }
+
         if (saveChanges()) {
             return new PageReference('/'+opp.Id);
         }
@@ -334,6 +359,10 @@ public with sharing class MTCH_FindGifts_CTRL {
     * @return null
     */
     public PageReference searchMore() {
+        if (!hasAccess) {
+            Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.commonAccessErrorMessage));
+            return null;
+        }
 
         if (searchFieldsWrapper.AccountId == null &&
             searchFieldsWrapper.ReportsToId == null &&
@@ -426,6 +455,63 @@ public with sharing class MTCH_FindGifts_CTRL {
             }
             return closedWonStages;
         } set;
+    }
+
+    private Boolean getCurrentUserHasAccess() {
+        Boolean accessResult = false;
+
+        SObjectType opp = Opportunity.getSObjectType();
+        SObjectType psc = Partial_Soft_Credit__c.getSObjectType();
+        SObjectType ocr = OpportunityContactRole.getSObjectType();
+
+        if (UTIL_Permissions.canDelete(Schema.SObjectType.Partial_Soft_Credit__c.getName(), false) &&
+            UTIL_Permissions.canCreate(Schema.SObjectType.Partial_Soft_Credit__c.getName(), false) &&
+            UTIL_Permissions.canDelete(Schema.SObjectType.OpportunityContactRole.getName(), false)
+        ) {
+            Set<SObjectField> sObjectPSCFieldsRead = new Set<SObjectField>{
+                    Partial_Soft_Credit__c.fields.Contact__c,
+                    Partial_Soft_Credit__c.fields.Contact_Role_ID__c,
+                    Partial_Soft_Credit__c.fields.Opportunity__c,
+                    Partial_Soft_Credit__c.fields.Role_Name__c
+            };
+            Set<SObjectField> sObjectPSCFieldsCreate = new Set<SObjectField>{
+                    Partial_Soft_Credit__c.fields.Amount__c,
+                    Partial_Soft_Credit__c.fields.Contact__c,
+                    Partial_Soft_Credit__c.fields.Role_Name__c,
+                    Partial_Soft_Credit__c.fields.Opportunity__c
+            };
+            Set<SObjectField> sObjectOCRFieldsRead = new Set<SObjectField>{
+                    OpportunityContactRole.fields.ContactId,
+                    OpportunityContactRole.fields.IsPrimary
+            };
+            Set<SObjectField> sObjectOppFieldsRead = new Set<SObjectField>{
+                    Opportunity.fields.AccountId,
+                    Opportunity.fields.Amount,
+                    Opportunity.fields.CloseDate,
+                    Opportunity.fields.Matching_Gift__c,
+                    Opportunity.fields.Matching_Gift_Account__c,
+                    Opportunity.fields.Name,
+                    Opportunity.fields.Primary_Contact__c,
+                    Opportunity.fields.StageName
+            };
+            Set<SObjectField> sObjectOppFieldsModify = new Set<SObjectField>{
+                    Opportunity.fields.Matching_Gift__c,
+                    Opportunity.fields.Matching_Gift_Account__c,
+                    Opportunity.fields.Matching_Gift_Status__c
+            };
+
+            if (!(perms.canRead(psc, sObjectPSCFieldsRead) &&
+                  perms.canCreate(psc, sObjectPSCFieldsCreate) &&
+                  perms.canRead(ocr, sObjectOCRFieldsRead) &&
+                  perms.canRead(opp, sObjectOppFieldsRead) &&
+                  perms.canUpdate(opp, sObjectOppFieldsModify))
+            ) {
+                return accessResult;
+            }
+            accessResult = true;
+        }
+
+        return accessResult;
     }
 
 }

@@ -10,14 +10,7 @@
 
     <script type="text/javascript" >
         var j$ = jQuery.noConflict();
-     
-        window.onunload = unloadpage;
-        
-        function unloadpage(){
-            saveBatch();
-        }            
-     
-     
+
         function sortThis() {
             j$(".tablesorter").tablesorter(
             {
@@ -31,7 +24,6 @@
             var formId = "{!$Component.recInfo}";
             var nextIndex;
 
-//          j$(".btnSave").focus( function(event) {j$(".fadeMe").fadeIn();});
             j$(".formClass").fadeTo('fast', 1);
             
             j$(".editLink, .delLink").click( function(event) {
@@ -42,10 +34,6 @@
                 j$(".formClass").fadeTo('fast', .2);
             });
 
-            j$(".btnSave").click( function(event) {
-                j$(".formClass").fadeTo('fast', .2);
-                saveDefaults();
-            }); 
             
             // Turn checkboxes into 'pushpin' buttons
             j$(".defaultCheckbox").button();
@@ -58,7 +46,6 @@
                     if (i==0) theInput.focus();
                 }
             });
-            j$(".btnSave").attr('tabIndex', nextIndex);
 
             // Adjust 'pushpin' placement to accomodate required field divs
             j$("div.requiredInput").each(function(i, requiredInputDiv) {
@@ -235,11 +222,9 @@
 
         <apex:form styleClass="formClass" >
             <apex:pageBlock mode="edit" rendered="{!displayBatchSection}" >
-                <apex:actionFunction name="saveBatch" action="{!saveBatch}" />
                 <apex:outputpanel id="batchinfo">
                     <apex:pageBlockSection columns="2" title="Batch Summary" >
                         <apex:repeat value="{!$ObjectType.Batch__c.FieldSets.BatchDetailView}" var="b">
-                            <apex:inputField value="{!batch[b]}" style="width:200px;" onChange="saveBatch();"/>
                         </apex:repeat>
                         <apex:PageBlockSectionItem id="batchsizefield">
                             <apex:OutputLabel for="itemcountfield" value="Batch Size" />
@@ -254,7 +239,6 @@
             <apex:pageBlock mode="edit" rendered="{!displayRecInfoSection}" id="pbEdit" >
                 <apex:pageMessages />
                 <apex:pageBlockButtons location="bottom" >
-                    <apex:commandButton value="Save" action="{!save}" styleclass="btnSave" rerender="recInfo,recList,pbEdit,itemCount,batchinfo" oncomplete="resetDefaults();" />
                     <apex:commandButton value="Clear" action="{!clear}" immediate="true" rerender="recInfo" oncomplete="getSetUp();" />
                 </apex:pageBlockButtons>
                 <apex:pageBlockSection title="Record Information" id="recInfo" columns="2" >
@@ -288,7 +272,6 @@
                                 <apex:facet name="header">Action</apex:facet>
                                 <apex:commandLink value="edit" action="{!item.editItem}" styleclass="editLink" immediate="true" rerender="recInfo" onclick="rememberDefaults();" oncomplete="resetSticky();" />
                                 &nbsp;|&nbsp;
-                                <apex:commandLink styleclass="delLink" value="del" action="{!item.deleteItem}" immediate="true" rerender="recList,itemCount,batchinfo"  oncomplete="resetDefaults();" />&nbsp;|&nbsp;
                                 <apex:outputLink value="/{!item.sobj.Id}" target="_blank">view</apex:outputLink>
                             </apex:column>
                             <apex:repeat var="fieldname" value="{!listFieldList}" >

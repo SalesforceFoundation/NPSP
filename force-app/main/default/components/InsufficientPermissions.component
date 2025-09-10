@@ -148,8 +148,12 @@
             </g>
         </svg>
         <div class="slds-text-longform">
-            <h3 class="slds-text-heading_medium">{!$Label.commonAdminPermissionErrorTitle}</h3>
-            <p class="slds-text-body_regular">{!$Label.commonPermissionErrorMessage}</p>
+            <h3 class="slds-text-heading_medium">
+                <c:UTIL_HtmlOutput html="{!$Label.commonAdminPermissionErrorTitle}" />
+            </h3>
+            <p class="slds-text-body_regular">
+                <c:UTIL_HtmlOutput html="{!$Label.commonPermissionErrorMessage}" />
+            </p>
         </div>
     </div>
 </apex:component>

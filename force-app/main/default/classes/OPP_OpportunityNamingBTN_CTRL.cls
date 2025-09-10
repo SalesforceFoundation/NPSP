@@ -53,8 +53,11 @@ public with sharing class OPP_OpportunityNamingBTN_CTRL {
         list<Opportunity> thisOpp = new list<Opportunity>{(Opportunity)ctrl.getRecord()};
 
         if (!thisOpp.isEmpty()) {
-            OPP_OpportunityNaming.refreshOppNames(thisOpp);
             try {
+                if (!UTIL_Permissions.canUpdate('Opportunity', 'Name', false)) {
+                    throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
+                }
+                OPP_OpportunityNaming.refreshOppNames(thisOpp);
                 update thisOpp;
                 redirect = true;
             } catch (Exception ex) {

@@ -14,12 +14,11 @@
 
             <header id="modal-heading-01-field-mapping-ui" class="slds-modal__header">
 
-                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                <button class="slds-button slds-button_icon slds-modal__close closeIcon"
                         title={customLabels.bdiBtnClose}>
                     <lightning-icon
                         icon-name="utility:close"
                         alternative-text={customLabels.bdiBtnClose}
-                        variant="inverse"
                         size="small"
                         onclick={handleCloseModal}>
                     </lightning-icon>
@@ -27,12 +26,12 @@
                 </button>
 
                 <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
-                    <tempate if:true={isModalModeNew}>
+                    <template if:true={isModalModeNew}>
                         {customLabels.stgBtnNew}
-                    </tempate>
-                    <tempate if:false={isModalModeNew}>
+                    </template>
+                    <template if:false={isModalModeNew}>
                         {customLabels.stgBtnEdit}
-                    </tempate>
+                    </template>
                     &nbsp;{objectMapping.MasterLabel} {customLabels.bdiFieldMapping}
                 </h2>
 

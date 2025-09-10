@@ -58,7 +58,8 @@ export default class utilInput extends LightningElement {
         return {
             objectApiName: this.objectApiName,
             fieldApiName: this.fieldApiName,
-            value: this.fieldValue
+            value: this.fieldValue,
+            label: this.uiLabel
         };
     }
 
@@ -194,7 +195,7 @@ export default class utilInput extends LightningElement {
         } else if (this.variant === LABEL_STACKED) {
             return 'slds-form-element slds-form-element_stacked';
         } else if (this.variant === LABEL_HIDDEN) {
-            return 'slds-form-element slds-form-element_hidden';
+            return 'slds-form-element slds-form-element_hidden combo-adjust';
         }
     }
 

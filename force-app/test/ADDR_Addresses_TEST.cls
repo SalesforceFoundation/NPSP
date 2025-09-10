@@ -809,9 +809,13 @@ public with sharing class ADDR_Addresses_TEST {
         );
         insert contact;
 
-        Address__c overrideAddress = [SELECT Undeliverable__c
-                                      FROM Address__c
-                                      WHERE MailingState__c = 'Pennsylvania'];
+        Address__c overrideAddress;
+        for (Address__c addr : [SELECT Id, MailingState__c, Undeliverable__c FROM Address__c]) {
+            if (addr.MailingState__c == 'Pennsylvania') {
+                overrideAddress = addr;
+                break;
+            }
+        }
 
         Test.startTest();
             overrideAddress.Undeliverable__c = true;
@@ -821,9 +825,9 @@ public with sharing class ADDR_Addresses_TEST {
         Contact updatedContact = [SELECT is_Address_Override__c, Current_Address__c, Current_Address__r.MailingStreet__c, Undeliverable_Address__c
                                   FROM Contact
                                   WHERE Id = :contact.Id];
-        System.assert(updatedContact.Current_Address__c == overrideAddress.Id, 'Contact should have the override ' +
-                'address as its current address.');
 
+        System.assert(updatedContact.Current_Address__c == overrideAddress.Id,
+            'Contact should have the override address as its current address.');
         System.assert(updatedContact.is_Address_Override__c == true, 'The contact address override should be true.');
         System.assertEquals(overrideAddress.Undeliverable__c, updatedContact.Undeliverable_Address__c, 'The contact ' +
                 'undeliverable address status should match the override address undeliverable status.');
@@ -912,9 +916,8 @@ public with sharing class ADDR_Addresses_TEST {
         System.assert(updatedAddress.Default_Address__c, 'The test address should be a default address.');
         System.assertEquals(null, updateError, 'Updating the address undeliverable status' +
             'should not result in an error.');
-        System.assertEquals(updatedAddress.Undeliverable__c, updatedContact.Undeliverable_Address__c, 'The contact ' +
-                'undeliverable address status should match the address undeliverable status.');
-
+        System.assertEquals(updatedAddress.Undeliverable__c, updatedContact.Undeliverable_Address__c,
+            'The contact undeliverable address status should match the address undeliverable status.');
     }
 
     /*********************************************************************************************************
@@ -2229,10 +2232,14 @@ public with sharing class ADDR_Addresses_TEST {
         insert testContact;
         Test.stopTest();
 
-        Address__c testAddress = [SELECT Latest_Start_Date__c, Default_Address__c
-                                  FROM Address__c
-                                  WHERE MailingState__c = 'Washington'
-                                  LIMIT 1];
+        Address__c testAddress;
+        for (Address__c addr : [SELECT Id, MailingState__c, Latest_Start_Date__c, Default_Address__c FROM Address__c]) {
+            if (addr.MailingState__c == 'Washington') {
+                testAddress = addr;
+                break;
+            }
+        }
+
         System.assertEquals(true, testAddress.Default_Address__c, 'Address should be set as the default address.');
         System.assertEquals(System.today(), testAddress.Latest_Start_Date__c, 'The default address latest start date ' +
                 'should be set to today\'s date.');
@@ -2548,7 +2555,7 @@ public with sharing class ADDR_Addresses_TEST {
                 MailingStreet__c, MailingCity__c, MailingState__c,
                 MailingPostalCode__c, MailingCountry__c
             FROM Address__c
-            ORDER BY MailingState__c
+            ORDER BY Name DESC
         ];
     }
 

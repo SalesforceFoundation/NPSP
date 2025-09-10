@@ -737,6 +737,9 @@ private class BDI_AdditionalObjectService_TEST {
     */
     
     @isTest static void shouldCreateParentAdditionalObjects() {
+
+        Test.StartTest();
+
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
         dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
         dis.Default_Data_Import_Field_Mapping_Set__c = 
@@ -793,6 +796,7 @@ private class BDI_AdditionalObjectService_TEST {
         bdiMsAdv.fieldMappingsByObjMappingDevName.put(testObjMapping.DeveloperName,honoreeFieldMappings);
 
         bdiDIS.process(null, dis, diRecords);
+        Test.stopTest();
         
         DataImport__c testDataImportAResult;
         DataImport__c testDataImportBResult;
@@ -1256,12 +1260,15 @@ private class BDI_AdditionalObjectService_TEST {
     */
     @isTest
     static void dynamicParentAdditionalObjectsShouldBeCreated() {
+
+        Test.StartTest();
+
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
         dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
         dis.Default_Data_Import_Field_Mapping_Set__c = 
             BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
         UTIL_CustomSettingsFacade.setDataImportSettings(dis);
-
+        
         DataImport__c[] diRecords = Database.query(BDI_DataImportService.strSoqlForBatchProcess(null));
 
         BDI_DataImportService bdiDIS = 
@@ -1371,6 +1378,7 @@ private class BDI_AdditionalObjectService_TEST {
         }
 
         bdiDIS.process(null, dis, diRecords);
+        Test.stopTest();
         
         DataImport__c testDataImportAResult;
         DataImport__c testDataImportBResult;

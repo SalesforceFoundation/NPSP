@@ -153,6 +153,10 @@ public class BDI_ManageAdvancedMappingCtrl {
      */
     @AuraEnabled
     public static AdvancedMappingObjectData getAdvancedMappingObjectData () {
+        if (!isAdminUser(UserInfo.getUserId())) {
+            throw new AuraHandledException(Label.commonInsufficientPermissions);
+        }
+
         return new AdvancedMappingObjectData(getObjectMappings(), getObjectOptions());
     }
 

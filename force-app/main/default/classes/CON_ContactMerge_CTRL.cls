@@ -108,6 +108,16 @@ public with sharing class CON_ContactMerge_CTRL {
 
     public Boolean canContinueWithMerge { get;set; }
 
+    public List<FieldSetMember> fieldSetMembers {
+        get {
+            if (fieldSetMembers == null) {
+                fieldSetMembers = SObjectType.Contact.fieldSets.ContactMergeFoundFS.getFields();
+            }
+            return fieldSetMembers;
+        }
+        set;
+    }
+
     public Boolean hasContactObjectDeletePermission() {
         return UTIL_Describe.getObjectDescribe('Contact').isDeletable();
     }
@@ -183,6 +193,12 @@ public with sharing class CON_ContactMerge_CTRL {
      * @description Map of DRS record Ids to count of Contacts in that set
      */
     public Map<Id, Integer> contactCountByDuplicateRecordSetId { get; set; }
+
+    /***********************************************************************************************
+     * @description A Set of Contact Ids passed into Contact Merge that can be used to 
+     * return search results
+     */
+    private Set<Id> contactIdsToSearch;
 
     /***********************************************************************************************
     * @description Checks whether there are more records to display on next page in pagination  
@@ -468,6 +484,25 @@ public with sharing class CON_ContactMerge_CTRL {
                     loadMergeCandidates(mergeIds);
                     if(!ApexPages.hasMessages()) {
                         showDRSButton = false;
+                        showContactSearch = true;
+                    }
+                }
+            }
+            catch(StringException e){
+                ApexPages.addMessages(e);
+            }
+        }
+        //otherwise, check for a searchIds parameter, which should contain a comma separated list 
+        //of Ids to search
+        else if(ApexPages.CurrentPage().getParameters().containsKey('searchIds') && 
+            ApexPages.CurrentPage().getParameters().get('searchIds') != '') {
+            try {
+                contactIdsToSearch = new set<Id>((list<Id>)ApexPages.CurrentPage().getParameters()
+                    .get('searchIds').split(','));
+                if (contactIdsToSearch != null) {
+                    loadMergePage = true;
+                    search();
+                    if(!ApexPages.hasMessages()) {
                         showContactSearch = true;
                     }
                 }
@@ -898,7 +933,7 @@ public with sharing class CON_ContactMerge_CTRL {
     public PageReference search() {
         try {
             step = 2;
-            this.searchResults = wrapQueryResults(searchRecords());
+            this.searchResults = wrapQueryResults(stripInaccessibleResultFields(searchRecords()));
             
  
         } catch (exception ex) {
@@ -917,9 +952,38 @@ public with sharing class CON_ContactMerge_CTRL {
             //build the SOSL query and execute - NOTE: * wildcard will only have effect at the
             //middle or end of the search term
             return mergeSelector.selectContactsByName(searchText);
+        } else if(contactIdsToSearch != null) {
+            return mergeSelector.selectContactsById(contactIdsToSearch);
         } else {
             return mergeSelector.selectDuplicateRecordSetById(drsRecordId, driFieldNames);
         }
+    }
+
+    private List<SObject> stripInaccessibleResultFields(List<SObject> searchResults) {
+        SObjectAccessDecision accessDecision =
+                Security.stripInaccessible(AccessType.READABLE, searchResults);
+
+        Map<String, Set<String>> removedFields = accessDecision.getRemovedFields();
+        if (!removedFields.isEmpty()) {
+            List<FieldSetMember> strippedFieldSetMembers = new List<FieldSetMember>();
+            for (FieldSetMember fsMember:fieldSetMembers) {
+                Boolean fieldRemoved = false;
+                for (String field:removedFields.get('Contact')) {
+                    if (fieldRemoved) {
+                        continue;
+                    }
+                    if (fsMember.getFieldPath().contains(field)) {
+                        fieldRemoved = true;
+                    }
+                }
+                if (!fieldRemoved) {
+                    strippedFieldSetMembers.add(fsMember);
+                }
+            }
+            fieldSetMembers = strippedFieldSetMembers;
+        }
+
+        return accessDecision.getRecords();
     }
 
     /***********************************************************************************************
@@ -944,6 +1008,11 @@ public with sharing class CON_ContactMerge_CTRL {
     * @return PageReference The page that it redirects to. Same page user is in.
     */
     public PageReference mergeContacts() {
+        if (!(Contact.SObjectType.getDescribe().isMergeable()) && Account.SObjectType.getDescribe().isMergeable()){
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, System.Label.commonAccessErrorMessage));
+            return null;
+        }
+
         Contact winningContact = getWinningContact();
         
         if (winningContact == null) {

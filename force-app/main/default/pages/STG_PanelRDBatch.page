@@ -9,7 +9,7 @@
 
         <apex:outputPanel>
             <div class="slds-text-body_small slds-m-around_medium">
-                <apex:outputText value="{!pageDescription}" escape="false" />
+                <c:UTIL_HtmlOutput html="{!pageDescription}" />
             </div>
             <c:UTIL_PageMessages />
             <apex:outputPanel rendered="{!and(isReadOnlyMode, not(isRunningBatch))}">

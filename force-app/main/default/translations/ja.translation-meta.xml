@@ -6450,6 +6450,18 @@
         <label>取消対象の支払には [支払日] が必要です。</label>
     </customLabels>
     <customLabels>
+        <name>potentialDuplicatesFoundNone</name>
+        <label>この取引先責任者の潜在的な重複はありません。</label>
+    </customLabels>
+    <customLabels>
+        <name>potentialDuplicatesFoundOne</name>
+        <label>この取引先責任者の潜在的な重複が 1 件あります。</label>
+    </customLabels>
+    <customLabels>
+        <name>potentialDuplicatesFoundMultiple</name>
+        <label>この取引先責任者の潜在的な重複が {0} 件あります。</label>
+    </customLabels>
+    <customLabels>
         <name>psACH</name>
         <label>ACH (銀行口座)</label>
     </customLabels>
@@ -8349,6 +8361,10 @@
         <name>updateRecurringDonation</name>
         <label>継続支援を更新</label>
     </customLabels>
+    <customLabels>
+        <name>viewDuplicates</name>
+        <label>重複を表示</label>
+    </customLabels>
     <reportTypes>
         <name>Contacts_Only</name>
         <label>取引先責任者のみ</label>
@@ -8358,112 +8374,48 @@
         </sections>
     </reportTypes>
     <customTabs>
-        <name>NPSP_Resources</name>
-        <label>はじめよう</label>
-    </customTabs>
-    <customTabs>
-        <name>Contact_Merge</name>
-        <label>取引先責任者のマージ</label>
+        <name>Batch_Data_Entry</name>
+        <label>バッチデータエントリ</label>
     </customTabs>
     <customTabs>
         <name>Batch_Gift_Entry</name>
         <label>バッチ支援エントリ</label>
     </customTabs>
     <customTabs>
-        <name>NPSP_Settings</name>
-        <label>NPSP 設定</label>
-    </customTabs>
-    <customTabs>
-        <name>Batch_Data_Entry</name>
-        <label>バッチデータエントリ</label>
-    </customTabs>
-    <customTabs>
-        <name>GetStarted</name>
-        <label>NPSP の使用開始 - 管理</label>
+        <name>Contact_Merge</name>
+        <label>取引先責任者のマージ</label>
     </customTabs>
     <customTabs>
         <name>GE_Gift_Entry</name>
         <label>支援エントリ</label>
     </customTabs>
     <customTabs>
+        <name>GetStarted</name>
+        <label>NPSP の使用開始 - 管理</label>
+    </customTabs>
+    <customTabs>
         <name>GetStartedEndUser</name>
         <label>NPSP の使用開始</label>
+    </customTabs>
+    <customTabs>
+        <name>NPSP_Resources</name>
+        <label>はじめよう</label>
+    </customTabs>
+    <customTabs>
+        <name>NPSP_Settings</name>
+        <label>NPSP 設定</label>
     </customTabs>
     <customApplications>
         <name>Nonprofit_CRM</name>
         <label>Nonprofit Success Pack</label>
     </customApplications>
     <quickActions>
-        <name>New_Campaign</name>
-        <label>新規キャンペーン</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Pause</name>
-        <label>一時停止</label>
-    </quickActions>
-    <quickActions>
-        <name>Account.New_Affiliation</name>
-        <label>新規アフィリエーション</label>
-    </quickActions>
-    <quickActions>
         <name>Account.New_Address</name>
         <label>新しい住所</label>
     </quickActions>
     <quickActions>
-        <name>New_Recurring_Donation</name>
-        <label>新規継続支援</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
-        <label>新規商談</label>
-    </quickActions>
-    <quickActions>
-        <name>Contact.New_Recurring_Donation</name>
-        <label>新規継続支援</label>
-    </quickActions>
-    <quickActions>
-        <name>npe01__OppPayment__c.Refund</name>
-        <label>返金</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Quick_Update</name>
-        <label>クイック更新</label>
-    </quickActions>
-    <quickActions>
-        <name>npo02__Household__c.Update_Household</name>
-        <label>世帯を更新</label>
-    </quickActions>
-    <quickActions>
-        <name>Address__c.Update_Address</name>
-        <label>住所を更新</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
-        <label>継続支援を完了</label>
-    </quickActions>
-    <quickActions>
-        <name>Contact.New_Affiliation</name>
+        <name>Account.New_Affiliation</name>
         <label>新規アフィリエーション</label>
-    </quickActions>
-    <quickActions>
-        <name>Opportunity.Quick_Update</name>
-        <label>クイック更新</label>
-    </quickActions>
-    <quickActions>
-        <name>Contact.Quick_Update</name>
-        <label>クイック更新</label>
-    </quickActions>
-    <quickActions>
-        <name>Opportunity.New_Payment</name>
-        <label>新規支払</label>
-    </quickActions>
-    <quickActions>
-        <name>Contact.New_Relationship</name>
-        <label>新規リレーション</label>
-    </quickActions>
-    <quickActions>
-        <name>npe01__OppPayment__c.Quick_Update</name>
-        <label>クイック更新</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>
@@ -8472,5 +8424,69 @@
     <quickActions>
         <name>Account.Quick_Organization_Update</name>
         <label>クイック更新</label>
+    </quickActions>
+    <quickActions>
+        <name>Address__c.Update_Address</name>
+        <label>住所を更新</label>
+    </quickActions>
+    <quickActions>
+        <name>Contact.New_Affiliation</name>
+        <label>新規アフィリエーション</label>
+    </quickActions>
+    <quickActions>
+        <name>Contact.New_Recurring_Donation</name>
+        <label>新規継続支援</label>
+    </quickActions>
+    <quickActions>
+        <name>Contact.New_Relationship</name>
+        <label>新規リレーション</label>
+    </quickActions>
+    <quickActions>
+        <name>Contact.Quick_Update</name>
+        <label>クイック更新</label>
+    </quickActions>
+    <quickActions>
+        <name>New_Campaign</name>
+        <label>新規キャンペーン</label>
+    </quickActions>
+    <quickActions>
+        <name>New_Recurring_Donation</name>
+        <label>新規継続支援</label>
+    </quickActions>
+    <quickActions>
+        <name>Opportunity.New_Payment</name>
+        <label>新規支払</label>
+    </quickActions>
+    <quickActions>
+        <name>Opportunity.Quick_Update</name>
+        <label>クイック更新</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Quick_Update</name>
+        <label>クイック更新</label>
+    </quickActions>
+    <quickActions>
+        <name>npe01__OppPayment__c.Refund</name>
+        <label>返金</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
+        <label>継続支援を完了</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
+        <label>新規商談</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Pause</name>
+        <label>一時停止</label>
+    </quickActions>
+    <quickActions>
+        <name>npe03__Recurring_Donation__c.Quick_Update</name>
+        <label>クイック更新</label>
+    </quickActions>
+    <quickActions>
+        <name>npo02__Household__c.Update_Household</name>
+        <label>世帯を更新</label>
     </quickActions>
 </Translations>

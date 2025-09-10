@@ -2152,15 +2152,15 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Message displayed on a successful migration</shortDescription>
-        <value>&lt;b&gt;Upgrade process complete!&lt;/b&gt;&lt;br/&gt;
-        &lt;br/&gt;Before your organization starts using Enhanced Recurring Donations:&lt;br/&gt;
-        &lt;ul&gt;&lt;li&gt;Turn on workflows, processes, validation rules and triggers that you disabled prior to upgrade.&lt;/li&gt;
+        <value>&lt;h4&gt;Upgrade process complete!&lt;/h4&gt;
+        &lt;p&gt;Before your organization starts using Enhanced Recurring Donations:&lt;/p&gt;
+        &lt;ul&gt;&lt;li&gt;Turn on workflows, processes, validation rules, and triggers that you disabled prior to upgrade.&lt;/li&gt;
         &lt;li&gt;Assign the Enhanced Recurring Donations page layout to all user profiles and remove the old Recurring Donations page layout.&lt;/li&gt;
         &lt;li&gt;Assign the NPSP Recurring Donation Lightning record page as the Org Default.&lt;/li&gt;
         &lt;li&gt;Assign the RD2_VisualizeScheduleController Apex class to your custom profiles.&lt;/li&gt;
         &lt;li&gt;Adjust field-level security for Recurring Donations fields as necessary for your profiles and permission sets.&lt;/li&gt;
         &lt;li&gt;Adjust Recurring Donations reports to work with Enhanced Recurring Donations.&lt;/li&gt;
-        &lt;li&gt;Educate your staff about Enhanced Recurring Donations.&lt;/li&gt;</value>
+        &lt;li&gt;Educate your staff about Enhanced Recurring Donations.&lt;/li&gt;&lt;/ul&gt;</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMigrationErrorMessage</fullName>
@@ -12699,6 +12699,30 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>A written off Payment must have a Payment Date.</value>
     </labels>
     <labels>
+        <fullName>potentialDuplicatesFoundNone</fullName>
+        <categories>Potential Duplicates</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>No duplicates found</shortDescription>
+        <value>We found no potential duplicates of this Contact.</value>
+    </labels>
+    <labels>
+        <fullName>potentialDuplicatesFoundOne</fullName>
+        <categories>Potential Duplicates</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>One potential duplicate found</shortDescription>
+        <value>We found 1 potential duplicate of this Contact.</value>
+    </labels>
+    <labels>
+        <fullName>potentialDuplicatesFoundMultiple</fullName>
+        <categories>Potential Duplicates</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Number of potential duplicates found</shortDescription>
+        <value>We found {0} potential duplicates of this Contact.</value>
+    </labels>
+    <labels>
         <fullName>psACH</fullName>
         <categories>Payment Gateway Management</categories>
         <language>en_US</language>
@@ -16395,5 +16419,13 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>true</protected>
         <shortDescription>Label for modifications on Recurring Donations</shortDescription>
         <value>Update Recurring Donation</value>
+    </labels>
+    <labels>
+        <fullName>viewDuplicates</fullName>
+        <categories>Potential Duplicates</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for View Duplicates link</shortDescription>
+        <value>View Duplicates</value>
     </labels>
 </CustomLabels>

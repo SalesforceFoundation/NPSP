@@ -1,7 +1,7 @@
 <apex:page standardController="Account" extensions="CRLP_RecalculateBTN_CTRL" action="{!buttonClick}" >
 
     <apex:slds />
-    <div class="slds-scope">
+    <div class="slds-scope slds-wcag">
         <apex:form id="pgHeader">
             <c:UTIL_PageHeader showBreadcrumb="true"
                                parentEntityLabel="{! $ObjectType.Account.labelPlural }" parentAction="/A01"

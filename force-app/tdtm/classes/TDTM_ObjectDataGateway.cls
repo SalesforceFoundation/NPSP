@@ -66,13 +66,18 @@ public without sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGa
      **/
     public static List<SObject> getClassesToCallForObject(String objectName, TDTM_Runnable.Action action) {   
         String strAction = action.Name();
-        String currUserName = UserInfo.getUserName();
+        String currUserName;
+        try{
+            currUserName = UserInfo.getUserName();
+        }catch(Exception e){
+            currUserName = null;
+        }
         List<SObject> listClasses = new List<Sobject>();
         for (Trigger_Handler__c th : listTH) {
             Set<String> excludedUserNames = (th.Usernames_to_Exclude__c != null ?
                     new Set<String>(th.Usernames_to_Exclude__c.toLowerCase().split(';')) : new Set<String>());
             if (th.Object__c == objectName && th.Trigger_Action__c != null && th.Trigger_Action__c.contains(strAction) && th.Active__c == true
-                    && !excludedUserNames.contains(currUserName.toLowerCase())) {
+                    && (currUserName != null && !excludedUserNames.contains(currUserName.toLowerCase()))) {
                 listClasses.add(th);
             }
         }

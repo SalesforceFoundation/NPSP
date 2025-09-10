@@ -15,7 +15,7 @@
         }
     </style>
     <body>
-    <div class="slds-scope">
+    <div class="slds-scope slds-wcag">
         <div class="slds-tabs_default">
             <apex:outputPanel layout="block" rendered="{!$Site.Name == ''}">
             <ul class="slds-tabs_default__nav" role="tablist">

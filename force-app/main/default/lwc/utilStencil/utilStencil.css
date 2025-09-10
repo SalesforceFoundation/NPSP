@@ -1,15 +1,15 @@
 td.stencil {
-    border-left: 1px solid rgb(221, 219, 218);
+    border-left: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-neutral-base-90, rgb(221, 219, 218));
 }
 
 td:first-child {
-    border-left: 1px solid transparent;
+    border-left: var(--slds-g-sizing-border-1, 1px) solid transparent;
 }
 
 td.stencil div {
     height: 6px;
     margin: 13px auto;
-    border-radius: 1rem;
-    background: rgb(243, 242, 242);
+    border-radius: var(--slds-g-radius-border-4, 1rem);
+    background: var(--slds-g-color-surface-2, rgb(243, 242, 242));
     width: 75%;
 }

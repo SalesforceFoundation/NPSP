@@ -54,7 +54,7 @@
                         <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Class__c.Label}" for="tbxC" styleClass="slds-form-element__label"
                         />
                         <div class="slds-form-element__control">
-                            <apex:inputField value="{!thNew.Class__c}" required="false" id="tbxC" html-aria-describedby="{!$Component.tbxCHelp}" styleClass="fslds-input"
+                            <apex:inputField value="{!thNew.Class__c}" required="false" id="tbxC" html-aria-describedby="{!$Component.tbxCHelp}" styleClass="slds-input"
                             />
                             <apex:outputPanel id="tbxCHelp" layout="block">
                                 <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpTHClass}" />

@@ -424,6 +424,7 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled
     public static DataImport__c upsertDataImport(String dataImport) {
         DataImport__c dataImportObject = (DataImport__c)JSON.deserialize(dataImport, DataImport__c.class);
+
         try {
             upsert dataImportObject Id;
 
@@ -1062,7 +1063,6 @@ public with sharing class GE_GiftEntryController {
     * @return FormTemplateWrapper: Wrapper object of the list of deleted template names and the result
     * of the DML action
     */
-    @AuraEnabled
     public static String [] deleteFormTemplates(String[] ids) {
         String[] formTemplateNames = new String[] {};
         Form_Template__c[] templates = [
@@ -1162,6 +1162,17 @@ public with sharing class GE_GiftEntryController {
             String description,
             String formatVersion,
             String templateJSON) {
+
+        Set<String> fieldsToCheck = new Set<String>{
+                'Name',
+                'Description__c',
+                'Template_JSON__c',
+                'Format_Version__c'
+        };
+        if (!canUpsertFormTemplate(fieldsToCheck)) {
+            throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
+        }
+
         if (templateJSON != null) {
             Form_Template__c templateObj = new Form_Template__c(Id = id,
                     Name = name,
@@ -1173,6 +1184,22 @@ public with sharing class GE_GiftEntryController {
         }
 
         return null;
+    }
+
+
+    private static Boolean canUpsertFormTemplate(Set<String> fieldsToCheck) {
+        if (!UTIL_Permissions.canCreate(UTIL_Namespace.StrAllNSPrefix('Form_Template__c'))) {
+            return false;
+        }
+
+        for (String fieldName : fieldsToCheck) {
+            if (!UTIL_Permissions.canUpdate(UTIL_Namespace.StrAllNSPrefix('Form_Template__c'),
+                    UTIL_Namespace.StrAllNSPrefix(fieldName), false)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /*******************************************************************************************************
@@ -1335,7 +1362,24 @@ public with sharing class GE_GiftEntryController {
         }
     }
 
+    @AuraEnabled
+    public static Data_Import_Settings__c getDataImportSettings() {
+        if (!UTIL_Permissions.canRead(UTIL_Namespace.StrTokenNSPrefix('Data_Import_Settings__c'), false)) {
+            return null;
+        }
+
+        return UTIL_CustomSettingsFacade.getDataImportSettings();
+    }
+
     private static String retrieveBatchCurrencyIsoCode (Id batchId) {
+        // As currently implemented, Gift Entry already verifies edit access to DataImportBatch__c before allowing
+        // access. As a result, a permission error should never be encountered here. It is implemented solely as a
+        // defense against future modifications since it is called by an AuraEnabled method that could be used
+        // outside of the currently implemented flow.
+        if (!UTIL_Permissions.canRead(UTIL_Namespace.StrAllNSPrefix('DataImportBatch__c'), false)) {
+            throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonAccessErrorMessage);
+        }
+
         String query = new UTIL_Query()
             .withSelectFields(new Set<String>{UTIL_Currency.CURRENCY_ISO_CODE_FIELD})
             .withFrom(DataImportBatch__c.SObjectType)

@@ -47,7 +47,10 @@ public with sharing class  ACCT_ViewOverride_CTRL {
     public ACCT_ViewOverride_CTRL (ApexPages.StandardController controller)
     {
         //get the account with the npe01__one2oneContact__c field for use in the rederict if necessary
-        List <Account> accounts = [select id, npe01__one2oneContact__c, npe01__SYSTEM_AccountType__c from Account where id = :ApexPages.currentPage().getParameters().get('id')];
+        // WITH SECURITY_ENFORCED isn't really necessary, but it won't hurt anything and should pass automated
+        // security checks
+        List <Account> accounts = [select id, npe01__one2oneContact__c, npe01__SYSTEM_AccountType__c
+            from Account where id = :ApexPages.currentPage().getParameters().get('id') WITH SECURITY_ENFORCED];
         if (accounts.size() > 0)
         {
             account = accounts[0];

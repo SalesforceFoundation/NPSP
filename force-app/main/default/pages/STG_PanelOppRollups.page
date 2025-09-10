@@ -26,8 +26,11 @@
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Use_Fiscal_Year_for_Rollups__c.Label}" for="cbxUFYFR" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:inputCheckbox value="{!stgService.stgHH.npo02__Use_Fiscal_Year_for_Rollups__c}" rendered="{!isEditMode}" id="cbxUFYFR" html-aria-describedby="{!$Component.cbxUFYFRHelp}" styleClass="slds-checkbox" />
-                    <apex:inputCheckbox value="{!stgService.stgHH.npo02__Use_Fiscal_Year_for_Rollups__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxUFYFRO" html-aria-describedby="{!$Component.cbxUFYFRHelp}" styleClass="slds-checkbox" />
+                    <label class="slds-checkbox">
+                        <apex:inputCheckbox value="{!stgService.stgHH.npo02__Use_Fiscal_Year_for_Rollups__c}" rendered="{!isEditMode}" id="cbxUFYFR" html-aria-describedby="{!$Component.cbxUFYFRHelp}" styleClass="slds-checkbox" />
+                        <apex:inputCheckbox value="{!stgService.stgHH.npo02__Use_Fiscal_Year_for_Rollups__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxUFYFRO" html-aria-describedby="{!$Component.cbxUFYFRHelp}" styleClass="slds-checkbox" />
+                        <span class="slds-checkbox_faux"></span>
+                    </label>
                     <apex:outputPanel id="cbxUFYFRHelp" layout="block">
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpFiscalYearRollups}" />
                     </apex:outputPanel>

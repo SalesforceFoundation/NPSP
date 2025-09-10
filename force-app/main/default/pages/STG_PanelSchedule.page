@@ -198,8 +198,11 @@
             <div class="slds-form-element" style="{!IF(isACMEnabled, 'display:block', 'display:none')}">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.Use_Dated_Conversion_Rates__c.Label}" for="cbxDatedConv" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:inputCheckbox value="{!stgService.stgHH.Use_Dated_Conversion_Rates__c}" rendered="{!isEditMode}" id="cbxDatedConv" html-aria-describedby="{!$Component.cbxDatedConvHelp}" styleClass="slds-checkbox"/>
-                    <apex:inputCheckbox value="{!stgService.stgHH.Use_Dated_Conversion_Rates__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxDatedConvOff" html-aria-describedby="{!$Component.cbxDatedConvHelp}" styleClass="slds-checkbox"/>
+                    <label class="slds-checkbox">
+                        <apex:inputCheckbox value="{!stgService.stgHH.Use_Dated_Conversion_Rates__c}" rendered="{!isEditMode}" id="cbxDatedConv" html-aria-describedby="{!$Component.cbxDatedConvHelp}" styleClass="slds-checkbox"/>
+                        <apex:inputCheckbox value="{!stgService.stgHH.Use_Dated_Conversion_Rates__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxDatedConvOff" html-aria-describedby="{!$Component.cbxDatedConvHelp}" styleClass="slds-checkbox"/>
+                        <span class="slds-checkbox_faux"></span>
+                    </label>
                     <apex:outputPanel id="cbxDatedConvHelp" layout="block">
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpUseDatedConvRates}"/>
                     </apex:outputPanel>
@@ -208,8 +211,11 @@
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.Error_Settings__c.Fields.Don_t_Auto_Schedule_Default_NPSP_Jobs__c.Label}" for="cbxDASDNJ" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:inputCheckbox value="{!stgService.stgErr.Don_t_Auto_Schedule_Default_NPSP_Jobs__c}" rendered="{!isEditMode}" id="cbxDASDNJ" html-aria-describedby="{!$Component.cbxDASDNJHelp}" styleClass="slds-checkbox"/>
-                    <apex:inputCheckbox value="{!stgService.stgErr.Don_t_Auto_Schedule_Default_NPSP_Jobs__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxDOCO" html-aria-describedby="{!$Component.cbxDASDNJHelp}" styleClass="slds-checkbox"/>
+                    <label class="slds-checkbox">
+                        <apex:inputCheckbox value="{!stgService.stgErr.Don_t_Auto_Schedule_Default_NPSP_Jobs__c}" rendered="{!isEditMode}" id="cbxDASDNJ" html-aria-describedby="{!$Component.cbxDASDNJHelp}" styleClass="slds-checkbox"/>
+                        <apex:inputCheckbox value="{!stgService.stgErr.Don_t_Auto_Schedule_Default_NPSP_Jobs__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxDOCO" html-aria-describedby="{!$Component.cbxDASDNJHelp}" styleClass="slds-checkbox"/>
+                        <span class="slds-checkbox_faux"></span>
+                    </label>
                     <apex:outputPanel id="cbxDASDNJHelp" layout="block">
                         <c:UTIL_HtmlOutput html="{!$Label.stgDontAutoScheduleHelpText}" styleClass="slds-form-element__help" />
                     </apex:outputPanel>

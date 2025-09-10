@@ -10,7 +10,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <apex:form id="theForm">
-        <div class="slds-scope">
+        <div class="slds-scope slds-wcag">
             <div class="slds-spinner_container" style="z-index:999;position:fixed;display:none;" id="divLoading">
                 <div class="slds-spinner_brand slds-spinner slds-spinner_medium" style="position:fixed;top:30%;" aria-hidden="false" role="alert">
                     <div class="slds-spinner__dot-a"></div>
