@@ -54,6 +54,8 @@ public with sharing class HH_Container_LCTRL {
             && UTIL_Permissions.canUpdate(addressObject, undeliverableField, false);
     private static Boolean selectedAddressIsUndeliverable = false;
 
+    private static String originalHouseholdCustomNameSetting = null;
+
     /*******************************************************************************************************
     * @description trick the packaging spider to pickup references to custom labels only used by our
     * lightning components.
@@ -107,7 +109,11 @@ public with sharing class HH_Container_LCTRL {
                 .withSelectFields(getHouseholdSelectFields(isHousehold, soqlFromObject))
                 .withFrom(soqlFromObject)
                 .withWhere('Id = :householdId');
-            return Database.query(query.build());
+            SObject hh = Database.query(query.build());
+            if (isHousehold) {
+                originalHouseholdCustomNameSetting = (String) hh.get('npo02__SYSTEM_CUSTOM_NAMING__c');
+            }
+            return hh;
 
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
@@ -338,7 +344,7 @@ public with sharing class HH_Container_LCTRL {
     private static void addContactMiddleNameField(Set<String> fieldNames) {        
         if (UTIL_Describe.isMiddleNameEnabled()) {
             fieldNames.add('MiddleName');
-        }        
+        }
     }
 
     /*******************************************************************************************************
@@ -560,9 +566,7 @@ public with sharing class HH_Container_LCTRL {
 
         try {
             if (UTIL_Describe.isObjectIdThisType(hh.Id, 'Account')) {
-                // Query the updated household and compare the value of SYSTEM_CUSTOM_NAMING__c with the old value
-                Account updatedHousehold = [SELECT npo02__SYSTEM_CUSTOM_NAMING__c FROM Account WHERE Id = :hh.Id LIMIT 1];
-                if (updatedHousehold.npo02__SYSTEM_CUSTOM_NAMING__c != (string) hh.get('npo02__SYSTEM_CUSTOM_NAMING__c')) {
+                if (originalHouseholdCustomNameSetting != (string) hh.get('npo02__SYSTEM_CUSTOM_NAMING__c')) {
                     SfdoInstrumentationService.getInstance().log(
                         SfdoInstrumentationEnum.Feature.ManageHousehold, 
                         SfdoInstrumentationEnum.Component.Page, 
@@ -657,6 +661,7 @@ public with sharing class HH_Container_LCTRL {
     * @return Boolean True if the Account Type is Household Account or another type 
     * except One-to-One Individual and Bucket Individual Account types
     */
+    @TestVisible
     private static Boolean isHouseholdOrOrganization(Account acc) {
         return acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE ||
             (
