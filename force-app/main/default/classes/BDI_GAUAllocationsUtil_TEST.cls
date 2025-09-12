@@ -569,11 +569,11 @@ public with sharing class BDI_GAUAllocationsUtil_TEST {
 
         // This test record should not trigger errors for existing Opportunity GAU Allocations because
         // the only allocation is the default allocation.
+        // Purposely not providing a DonationImportStatus__c to test matching functionality
         DataImport__c testDI1 = new DataImport__c(Donation_Donor__c = 'Account1',
                                                     Donation_Amount__c = 120,
                                                     Account1Imported__c = acct1.Id,
                                                     DonationImported__c = oppt1.Id,
-                                                    DonationImportStatus__c = Label.bdiMatchedByUser,
                                                     PaymentImported__c = pymt1.Id,
                                                     PaymentImportStatus__c = System.Label.bdiMatchedByUser,
                                                     GAU_Allocation_1_GAU__c = gau1.Id,
@@ -639,8 +639,10 @@ public with sharing class BDI_GAUAllocationsUtil_TEST {
         // Confirm that GAU 1 and 2 allocations exist.
         System.assertNotEquals(null, allocGAU1);
         System.assertEquals(50, allocGAU1.Percent__c);
+        System.assertEquals(60, allocGAU1.Amount__c);
         System.assertNotEquals(null, allocGAU2);
         System.assertEquals(50, allocGAU2.Percent__c);
+        System.assertEquals(60, allocGAU2.Amount__c);
         // There should be no GAU 3 allocation since it is the default and should have been removed.
         System.assertEquals(null, allocGAU3);
 

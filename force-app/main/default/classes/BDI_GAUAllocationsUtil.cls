@@ -225,6 +225,7 @@ public with sharing class BDI_GAUAllocationsUtil {
                             || di.PaymentImportStatus__c == System.label.bdiUpdated
                             || di.DonationImportStatus__c == System.label.bdiCreated
                             || di.DonationImportStatus__c == System.label.bdiMatchedByUser
+                            || di.DonationImportStatus__c == System.label.bdiMatchedId
                             || di.DonationImportStatus__c == System.label.bdiMatched)) {
 
                     opptIdsForAllocProcessing.add(di.DonationImported__c);

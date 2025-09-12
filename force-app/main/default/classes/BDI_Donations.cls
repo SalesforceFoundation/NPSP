@@ -201,6 +201,12 @@ public class BDI_Donations {
                     );
                     dataImport.PaymentImportStatus__c = Label.bdiCreated;
                 } else {
+                    // if we have a matched opp, but the import status is null, set it to user matched
+                    if (dataImport.DonationImported__c != null && dataImport.DonationImportStatus__c == null) {
+                        dataImport.DonationImportStatus__c = System.label.bdiMatchedByUser;
+                        dataImportsToUpdate.add(dataImport);
+                    }
+
                     // Validate our desired matching behavior (exact match, best match, new, etc.) unless its a Elevate
                     // Payment that was not matched in the first place.
                     if (!isElevatePaymentDI(dataImport) && !isValidMatchBehavior(dataImport, matchBehavior)) {
