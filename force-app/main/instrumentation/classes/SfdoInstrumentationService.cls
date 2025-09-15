@@ -64,6 +64,15 @@ public inherited sharing class SfdoInstrumentationService {
         }
         
         // Constructor with feature, component, action, and context
+        public LastCallData(String featureName, String componentName, String actionName, Map<String, Object> context, Integer value) {
+            this.lastFeatureName = featureName;
+            this.lastComponentName = componentName;
+            this.lastActionName = actionName;
+            this.lastContext = context;
+            this.lastValue = value;
+        }
+        
+        // Constructor with feature, component, action, and context
         public LastCallData(String featureName, String componentName, String actionName, Map<String, Object> context) {
             this.lastFeatureName = featureName;
             this.lastComponentName = componentName;
@@ -113,7 +122,7 @@ public inherited sharing class SfdoInstrumentationService {
      */
     public void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context, Integer value) { 
         SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name(), context, value);
-        lastCallData = new LastCallData(featureName?.name(), componentName?.name(), actionName?.name(), value);
+        lastCallData = new LastCallData(featureName?.name(), componentName?.name(), actionName?.name(), context, value);
     }
 
     /**
@@ -161,7 +170,7 @@ public inherited sharing class SfdoInstrumentationService {
      */
     public void log(SfdoInstrumentationEnum.Feature featureName, SObjectType objType, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context, Integer value) { 
         SfdoLogUtils.log(featureName?.name(), String.valueOf(objType), actionName?.name(), context, value);
-        lastCallData = new LastCallData(featureName?.name(), String.valueOf(objType), actionName?.name(), value);
+        lastCallData = new LastCallData(featureName?.name(), String.valueOf(objType), actionName?.name(), context, value);
     }
 
     /**
