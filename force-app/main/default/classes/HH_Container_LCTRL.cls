@@ -571,6 +571,7 @@ public with sharing class HH_Container_LCTRL {
                         SfdoInstrumentationEnum.Feature.ManageHousehold, 
                         SfdoInstrumentationEnum.Component.Page, 
                         SfdoInstrumentationEnum.Action.HouseholdNamingSettingsUpdated, 1);
+                    originalHouseholdCustomNameSetting = (String) hh.get('npo02__SYSTEM_CUSTOM_NAMING__c');
                 }
             }
         } catch (Exception e) {
@@ -686,14 +687,6 @@ public with sharing class HH_Container_LCTRL {
             HouseholdSettings householdSettings = new HouseholdSettings();
             if (!householdSettings.isAdvancedHouseholdNaming()) {
                 return hh;
-            }
-
-            if (namingExclusionsCount > 0) {
-                SfdoInstrumentationService.getInstance().log(
-                    SfdoInstrumentationEnum.Feature.ManageHousehold, 
-                    SfdoInstrumentationEnum.Component.Page, 
-                    SfdoInstrumentationEnum.Action.HouseholdContactNamingExclusionsUpdated, 
-                    namingExclusionsCount);        
             }
 
             HouseholdNamingService householdNamingService = new HouseholdNamingService();
