@@ -90,7 +90,7 @@ public class CON_ContactMerge_TEST {
     }
 
     @IsTest
-    private static void searchReturnsNoResultsWhenNoMatchesFound() {
+    private static void searchReturnsNoResultsWhenNoMatchesFoundAndNoInstrumentation() {
         CON_ContactMerge_CTRL controller = getControllerForSearch();
         controller.showContactSearch = true;
         controller.searchText = 'test';
@@ -100,6 +100,7 @@ public class CON_ContactMerge_TEST {
         Test.stopTest();
 
         System.assert(controller.searchResults.isEmpty(), 'Search results returned from controller should be empty.');
+        System.assertEquals(null, SfdoInstrumentationService.instance, 'The Instrumentation Service Instance should not have been instantiated because there were no DuplicateRecordSet rerults');
     }
 
     @IsTest
@@ -771,7 +772,9 @@ public class CON_ContactMerge_TEST {
     }
 
     @IsTest
-    private static void testSelectDRRecord() {
+    private static void testSelectDRRecordWithInstrumentation() {
+
+        System.assertEquals(null, SfdoInstrumentationService.instance, 'The Instrumentation Service Instance should not have been instantiated');
 
         Test.startTest();
         getDuplicateSetOfRecords(3);
@@ -784,6 +787,8 @@ public class CON_ContactMerge_TEST {
         controller.search();
         System.assertEquals(controller.step, 2);
         System.assertNotEquals(controller.searchResults.size(), 0 ,'Contact Not found');
+        System.assertNotEquals(null, SfdoInstrumentationService.instance, 'The Instrumentation Service Instance should have been instantiated');
+
         Test.stopTest();
     }
 
