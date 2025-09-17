@@ -64,6 +64,12 @@ public inherited sharing class RD2_ApiService {
             schedulesByRdId.put(rd.Id, schedules);
         }
 
+        SfdoInstrumentationService.getInstance().log(
+            SfdoInstrumentationEnum.Feature.EnhancedRecurringDonations,
+            SfdoInstrumentationEnum.Component.API,
+            SfdoInstrumentationEnum.Action.QuerySchedules,
+            schedulesByRdId.size());
+
         return JSON.serialize(schedulesByRdId);
     }
 
@@ -213,6 +219,12 @@ public inherited sharing class RD2_ApiService {
             installmentsByRdId.put(rd.Id, installments);
         }
 
+        SfdoInstrumentationService.getInstance().log(
+            SfdoInstrumentationEnum.Feature.EnhancedRecurringDonations,
+            SfdoInstrumentationEnum.Component.API,
+            SfdoInstrumentationEnum.Action.QueryInstallments,
+            installmentsByRdId.size());
+
         return JSON.serialize(installmentsByRdId);
     }
 
@@ -262,7 +274,16 @@ public inherited sharing class RD2_ApiService {
     public String pause(Map<Id, PauseObject> pauseData) {
         validateEnvironment(pauseData.size());
 
-        return JSON.serialize(handlePauseRequests(pauseData));
+        Integer startingDmlRows = Limits.getDmlRows();
+        String response = JSON.serialize(handlePauseRequests(pauseData));
+
+        SfdoInstrumentationService.getInstance().log(
+            SfdoInstrumentationEnum.Feature.EnhancedRecurringDonations,
+            SfdoInstrumentationEnum.Component.API,
+            SfdoInstrumentationEnum.Action.Pause,
+            Limits.getDmlRows() - startingDmlRows);
+
+        return response;
     }
 
     private void validateEnvironment(Integer recordsCount) {

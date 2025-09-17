@@ -54,6 +54,8 @@ public with sharing class HH_Container_LCTRL {
             && UTIL_Permissions.canUpdate(addressObject, undeliverableField, false);
     private static Boolean selectedAddressIsUndeliverable = false;
 
+    private static String originalHouseholdCustomNameSetting = null;
+
     /*******************************************************************************************************
     * @description trick the packaging spider to pickup references to custom labels only used by our
     * lightning components.
@@ -107,7 +109,11 @@ public with sharing class HH_Container_LCTRL {
                 .withSelectFields(getHouseholdSelectFields(isHousehold, soqlFromObject))
                 .withFrom(soqlFromObject)
                 .withWhere('Id = :householdId');
-            return Database.query(query.build());
+            SObject hh = Database.query(query.build());
+            if (isHousehold) {
+                originalHouseholdCustomNameSetting = (String) hh.get('npo02__SYSTEM_CUSTOM_NAMING__c');
+            }
+            return hh;
 
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
@@ -338,7 +344,7 @@ public with sharing class HH_Container_LCTRL {
     private static void addContactMiddleNameField(Set<String> fieldNames) {        
         if (UTIL_Describe.isMiddleNameEnabled()) {
             fieldNames.add('MiddleName');
-        }        
+        }
     }
 
     /*******************************************************************************************************
@@ -422,6 +428,14 @@ public with sharing class HH_Container_LCTRL {
         } finally {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
         }
+
+        if (listInsert.size() > 0) {
+            SfdoInstrumentationService.getInstance().log(
+                SfdoInstrumentationEnum.Feature.ManageHousehold, 
+                    SfdoInstrumentationEnum.Component.Page, 
+                    SfdoInstrumentationEnum.Action.HouseholdMemberAdded, 
+                    listInsert.size());
+        }
     }
 
     /*******************************************************************************************************
@@ -496,6 +510,12 @@ public with sharing class HH_Container_LCTRL {
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
+
+        SfdoInstrumentationService.getInstance().log(
+            SfdoInstrumentationEnum.Feature.ManageHousehold, 
+            SfdoInstrumentationEnum.Component.Page, 
+            SfdoInstrumentationEnum.Action.HouseholdMerged, 
+            listHHMerge.size());
     }
 
     /*******************************************************************************************************
@@ -542,6 +562,20 @@ public with sharing class HH_Container_LCTRL {
             }
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
+        }
+
+        try {
+            if (UTIL_Describe.isObjectIdThisType(hh.Id, 'Account')) {
+                if (originalHouseholdCustomNameSetting != (string) hh.get('npo02__SYSTEM_CUSTOM_NAMING__c')) {
+                    SfdoInstrumentationService.getInstance().log(
+                        SfdoInstrumentationEnum.Feature.ManageHousehold, 
+                        SfdoInstrumentationEnum.Component.Page, 
+                        SfdoInstrumentationEnum.Action.HouseholdNamingSettingsUpdated, 1);
+                    originalHouseholdCustomNameSetting = (String) hh.get('npo02__SYSTEM_CUSTOM_NAMING__c');
+                }
+            }
+        } catch (Exception e) {
+            // ignore errors for instrumentation
         }
     }
 
@@ -628,6 +662,7 @@ public with sharing class HH_Container_LCTRL {
     * @return Boolean True if the Account Type is Household Account or another type 
     * except One-to-One Individual and Bucket Individual Account types
     */
+    @TestVisible
     private static Boolean isHouseholdOrOrganization(Account acc) {
         return acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE ||
             (
@@ -647,7 +682,7 @@ public with sharing class HH_Container_LCTRL {
         try {
             // update naming exclusions field based on exclusion checkboxes
             NamingExclusions namingExclusions = new NamingExclusions(listCon);
-            namingExclusions.synchronize();
+            Integer namingExclusionsCount = namingExclusions.synchronize();
 
             HouseholdSettings householdSettings = new HouseholdSettings();
             if (!householdSettings.isAdvancedHouseholdNaming()) {
@@ -655,6 +690,7 @@ public with sharing class HH_Container_LCTRL {
             }
 
             HouseholdNamingService householdNamingService = new HouseholdNamingService();
+            // TODO: Add instrumentation for the setNameFieldValuesOnHousehold method (Any Naming Override options changed on the page)
             householdNamingService.setNameFieldValuesOnHousehold(
                     hh,
                     new HouseholdName(new HouseholdMembers(listCon)));
