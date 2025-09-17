@@ -40,6 +40,7 @@ public without sharing class RD2_DatabaseService {
 
     private ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
     private Set<Id> failedRDIds = new Set<Id>();
+    private Integer createdRecordsCount = 0;
 
     /***
     * @description Creates specified records
@@ -54,7 +55,10 @@ public without sharing class RD2_DatabaseService {
         List<Database.SaveResult> saveResults = Database.insert(records, false);
         handleErrors(saveResults, records);
 
-        return getSuccessIds(saveResults);
+        Set<Id> successIds = getSuccessIds(saveResults);
+        createdRecordsCount += successIds.size();
+
+        return successIds;
     }
 
     /***
@@ -166,4 +170,11 @@ public without sharing class RD2_DatabaseService {
         return failedRDIds.size();
     }
 
+    /***
+    * @description Returns number of new installment Opportunities created
+    * @return Integer
+    */
+    public Integer getRecordsCreated() {
+        return createdRecordsCount;
+    }
 }

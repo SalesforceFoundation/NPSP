@@ -69,34 +69,42 @@ public with sharing class SfdoInstrumentationService_TEST {
             SfdoInstrumentationEnum.Feature.Donations, 
             SfdoInstrumentationEnum.Component.Page,
             SfdoInstrumentationEnum.Action.Open);
+        assertLastCallData(SfdoInstrumentationEnum.Feature.Donations, SfdoInstrumentationEnum.Component.Page, SfdoInstrumentationEnum.Action.Open);
     }
 
     @IsTest
     private static void shouldInstrumentActionWithValue() {
+        Integer value = System.currentTimeMillis().intValue();
         SfdoInstrumentationService.getInstance().log(
             SfdoInstrumentationEnum.Feature.CustomizableRollups, 
             SfdoInstrumentationEnum.Component.Batch,
             SfdoInstrumentationEnum.Action.Duration, 
-            System.currentTimeMillis().intValue());
+            value);
+        assertLastCallData(SfdoInstrumentationEnum.Feature.CustomizableRollups, SfdoInstrumentationEnum.Component.Batch, SfdoInstrumentationEnum.Action.Duration, value);
     }
 
     @IsTest
     private static void shouldInstrumentActionWithContextMap() {
+        Map<String, Long> context = new Map<String, Long>{ 'Test' => System.currentTimeMillis()};
         SfdoInstrumentationService.getInstance().log(
             SfdoInstrumentationEnum.Feature.Donations, 
             SfdoInstrumentationEnum.Component.Queueable,
             SfdoInstrumentationEnum.Action.Save, 
-            new Map<String, Long>{ 'Test' => System.currentTimeMillis()});
+            context);
+        assertLastCallData(SfdoInstrumentationEnum.Feature.Donations, SfdoInstrumentationEnum.Component.Queueable, SfdoInstrumentationEnum.Action.Save, context);
     }
 
     @IsTest
     private static void shouldInstrumentActionWithMapAndValue() {
+        Integer value = System.currentTimeMillis().intValue();
+        Map<String, Long> context = new Map<String, Long>{ 'Test' => System.currentTimeMillis()};
         SfdoInstrumentationService.getInstance().log(
             SfdoInstrumentationEnum.Feature.Allocations, 
             SfdoInstrumentationEnum.Component.Future,
             SfdoInstrumentationEnum.Action.ProcessedCount, 
-            new Map<String, Long>{ 'Test' => System.currentTimeMillis()},
-            System.currentTimeMillis().intValue());
+            context,
+            value);
+        assertLastCallData(SfdoInstrumentationEnum.Feature.Allocations, SfdoInstrumentationEnum.Component.Future, SfdoInstrumentationEnum.Action.ProcessedCount, context, value);
     }
 
     @IsTest
@@ -106,16 +114,19 @@ public with sharing class SfdoInstrumentationService_TEST {
             Account.getSObjectType(),
             SfdoInstrumentationEnum.Action.AfterInsert, 
             1);
+        assertLastCallData(SfdoInstrumentationEnum.Feature.TDTM, Account.getSObjectType(), SfdoInstrumentationEnum.Action.AfterInsert, 1);
     }
 
     @IsTest
     private static void shouldInstrumentActionWithSObjectAndContextMap() {
+        Map<String, Long> context = new Map<String, Long>{ 'Test' => System.currentTimeMillis()};
         SfdoInstrumentationService.getInstance().log(
             SfdoInstrumentationEnum.Feature.TDTM, 
             General_Accounting_Unit__c.getSObjectType(),
             SfdoInstrumentationEnum.Action.BeforeUpdate, 
-            new Map<String, Long>{ 'Test' => System.currentTimeMillis()},
+            context,
             25);
+        assertLastCallData(SfdoInstrumentationEnum.Feature.TDTM, General_Accounting_Unit__c.getSObjectType(), SfdoInstrumentationEnum.Action.BeforeUpdate, context, 25);
     }
 
     @IsTest
@@ -124,18 +135,70 @@ public with sharing class SfdoInstrumentationService_TEST {
             SfdoInstrumentationEnum.Feature.RecordMerge, 
             Contact.getSObjectType(),
             SfdoInstrumentationEnum.Action.Dml_Merge);
+        assertLastCallData(SfdoInstrumentationEnum.Feature.RecordMerge, Contact.getSObjectType(), SfdoInstrumentationEnum.Action.Dml_Merge);
     }
 
     @IsTest
     private static void shouldInstrumentActionWithSObjectContextMap() {
+        Map<String, Long> context = new Map<String, Long>{ 'Test' => System.currentTimeMillis()};
         SfdoInstrumentationService.getInstance().log(
             SfdoInstrumentationEnum.Feature.Donations, 
             Opportunity.getSObjectType(),
             SfdoInstrumentationEnum.Action.Open,
-            new Map<String, Long>{ 'Test' => System.currentTimeMillis()});
+            context);
+        assertLastCallData(SfdoInstrumentationEnum.Feature.Donations, Opportunity.getSObjectType(), SfdoInstrumentationEnum.Action.Open, context);
     }
 
     // ================================================================================================
+
+    static void assertLastCallData(SfdoInstrumentationEnum.Feature feature, SfdoInstrumentationEnum.Component component, SfdoInstrumentationEnum.Action action, Integer value) {
+        System.assertEquals(feature.name(), SfdoInstrumentationService.lastCallData.lastFeatureName);
+        System.assertEquals(component.name(), SfdoInstrumentationService.lastCallData.lastComponentName);
+        System.assertEquals(action.name(), SfdoInstrumentationService.lastCallData.lastActionName);
+        System.assertEquals(value, SfdoInstrumentationService.lastCallData.lastValue);
+    }
+    static void assertLastCallData(SfdoInstrumentationEnum.Feature feature, SfdoInstrumentationEnum.Component component, SfdoInstrumentationEnum.Action action, Map<String, Long> context) {
+        System.assertEquals(feature.name(), SfdoInstrumentationService.lastCallData.lastFeatureName);
+        System.assertEquals(component.name(), SfdoInstrumentationService.lastCallData.lastComponentName);
+        System.assertEquals(action.name(), SfdoInstrumentationService.lastCallData.lastActionName);
+        System.assertEquals(context, SfdoInstrumentationService.lastCallData.lastContext);
+    }
+    static void assertLastCallData(SfdoInstrumentationEnum.Feature feature, SfdoInstrumentationEnum.Component component, SfdoInstrumentationEnum.Action action, Map<String, Long> context, Integer value) {
+        System.assertEquals(feature.name(), SfdoInstrumentationService.lastCallData.lastFeatureName);
+        System.assertEquals(component.name(), SfdoInstrumentationService.lastCallData.lastComponentName);
+        System.assertEquals(action.name(), SfdoInstrumentationService.lastCallData.lastActionName);
+        System.assertEquals(context, SfdoInstrumentationService.lastCallData.lastContext);
+        System.assertEquals(value, SfdoInstrumentationService.lastCallData.lastValue);
+    }
+    static void assertLastCallData(SfdoInstrumentationEnum.Feature feature, SfdoInstrumentationEnum.Component component, SfdoInstrumentationEnum.Action action) {
+        System.assertEquals(feature.name(), SfdoInstrumentationService.lastCallData.lastFeatureName);
+        System.assertEquals(component.name(), SfdoInstrumentationService.lastCallData.lastComponentName);
+        System.assertEquals(action.name(), SfdoInstrumentationService.lastCallData.lastActionName);
+    }
+    static void assertLastCallData(SfdoInstrumentationEnum.Feature feature, SObjectType objType, SfdoInstrumentationEnum.Action action) {
+        System.assertEquals(feature.name(), SfdoInstrumentationService.lastCallData.lastFeatureName);
+        System.assertEquals(String.valueOf(objType), SfdoInstrumentationService.lastCallData.lastComponentName);
+        System.assertEquals(action.name(), SfdoInstrumentationService.lastCallData.lastActionName);
+    }
+    static void assertLastCallData(SfdoInstrumentationEnum.Feature feature, SObjectType objType, SfdoInstrumentationEnum.Action action, Integer value) {
+        System.assertEquals(feature.name(), SfdoInstrumentationService.lastCallData.lastFeatureName);
+        System.assertEquals(String.valueOf(objType), SfdoInstrumentationService.lastCallData.lastComponentName);
+        System.assertEquals(action.name(), SfdoInstrumentationService.lastCallData.lastActionName);
+        System.assertEquals(value, SfdoInstrumentationService.lastCallData.lastValue);
+    }
+    static void assertLastCallData(SfdoInstrumentationEnum.Feature feature, SObjectType objType, SfdoInstrumentationEnum.Action action, Map<String, Long> context, Integer value) {
+        System.assertEquals(feature.name(), SfdoInstrumentationService.lastCallData.lastFeatureName);
+        System.assertEquals(String.valueOf(objType), SfdoInstrumentationService.lastCallData.lastComponentName);
+        System.assertEquals(action.name(), SfdoInstrumentationService.lastCallData.lastActionName);
+        System.assertEquals(context, SfdoInstrumentationService.lastCallData.lastContext);
+        System.assertEquals(value, SfdoInstrumentationService.lastCallData.lastValue);
+    }
+    static void assertLastCallData(SfdoInstrumentationEnum.Feature feature, SObjectType objType, SfdoInstrumentationEnum.Action action, Map<String, Long> context) {
+        System.assertEquals(feature.name(), SfdoInstrumentationService.lastCallData.lastFeatureName);
+        System.assertEquals(String.valueOf(objType), SfdoInstrumentationService.lastCallData.lastComponentName);
+        System.assertEquals(action.name(), SfdoInstrumentationService.lastCallData.lastActionName);
+        System.assertEquals(context, SfdoInstrumentationService.lastCallData.lastContext);
+    }
 
     static void initServiceMock() {
         SfdoInstrumentationServiceMock serviceMock = new SfdoInstrumentationServiceMock();

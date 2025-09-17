@@ -39,6 +39,55 @@ public inherited sharing class SfdoInstrumentationService {
     @TestVisible
     private static SfdoInstrumentationService instance;
 
+    @TestVisible
+    private static LastCallData lastCallData;
+    
+    class LastCallData {        
+        public String lastFeatureName;
+        public String lastComponentName;
+        public String lastActionName;
+        public Integer lastValue;
+        public Map<String, Object> lastContext;
+        
+        // Default constructor
+        public LastCallData(String featureName, String componentName) {
+            this.lastFeatureName = featureName;
+            this.lastComponentName = componentName;
+        }
+        
+        // Constructor with feature, component, action, and value
+        public LastCallData(String featureName, String componentName, String actionName, Integer value) {
+            this.lastFeatureName = featureName;
+            this.lastComponentName = componentName;
+            this.lastActionName = actionName;
+            this.lastValue = value;
+        }
+        
+        // Constructor with feature, component, action, and context
+        public LastCallData(String featureName, String componentName, String actionName, Map<String, Object> context, Integer value) {
+            this.lastFeatureName = featureName;
+            this.lastComponentName = componentName;
+            this.lastActionName = actionName;
+            this.lastContext = context;
+            this.lastValue = value;
+        }
+        
+        // Constructor with feature, component, action, and context
+        public LastCallData(String featureName, String componentName, String actionName, Map<String, Object> context) {
+            this.lastFeatureName = featureName;
+            this.lastComponentName = componentName;
+            this.lastActionName = actionName;
+            this.lastContext = context;
+        }
+        
+        // Constructor with feature, component, and action only
+        public LastCallData(String featureName, String componentName, String actionName) {
+            this.lastFeatureName = featureName;
+            this.lastComponentName = componentName;
+            this.lastActionName = actionName;
+        }
+    }
+
     /**
      * @description Return a singleton instance of this class
      */
@@ -48,7 +97,7 @@ public inherited sharing class SfdoInstrumentationService {
         }
         return instance;
     }
-
+    
     // =============================================================================================================================
     // Primary Logging signatures that accept only valid defined Enums for Feature/Component/Action
     // =============================================================================================================================
@@ -61,6 +110,7 @@ public inherited sharing class SfdoInstrumentationService {
      */
     public void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context) { 
         SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name(), context);
+        lastCallData = new LastCallData(featureName?.name(), componentName?.name(), actionName?.name(), context);
     }
 
     /**
@@ -72,6 +122,7 @@ public inherited sharing class SfdoInstrumentationService {
      */
     public void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context, Integer value) { 
         SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name(), context, value);
+        lastCallData = new LastCallData(featureName?.name(), componentName?.name(), actionName?.name(), context, value);
     }
 
     /**
@@ -82,6 +133,7 @@ public inherited sharing class SfdoInstrumentationService {
      */
     public void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Integer value) { 
         SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name(), value);
+        lastCallData = new LastCallData(featureName?.name(), componentName?.name(), actionName?.name(), value);
     }
 
     /**
@@ -91,6 +143,7 @@ public inherited sharing class SfdoInstrumentationService {
      */
     public void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName) {
         SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name());
+        lastCallData = new LastCallData(featureName?.name(), componentName?.name(), actionName?.name());
     }
 
     // =============================================================================================================================
@@ -105,6 +158,7 @@ public inherited sharing class SfdoInstrumentationService {
      */
     public void log(SfdoInstrumentationEnum.Feature featureName, SObjectType objType, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context) { 
         SfdoLogUtils.log(featureName?.name(), String.valueOf(objType), actionName?.name(), context);
+        lastCallData = new LastCallData(featureName?.name(), String.valueOf(objType), actionName?.name(), context);
     }
 
     /**
@@ -116,6 +170,7 @@ public inherited sharing class SfdoInstrumentationService {
      */
     public void log(SfdoInstrumentationEnum.Feature featureName, SObjectType objType, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context, Integer value) { 
         SfdoLogUtils.log(featureName?.name(), String.valueOf(objType), actionName?.name(), context, value);
+        lastCallData = new LastCallData(featureName?.name(), String.valueOf(objType), actionName?.name(), context, value);
     }
 
     /**
@@ -126,6 +181,7 @@ public inherited sharing class SfdoInstrumentationService {
      */
     public void log(SfdoInstrumentationEnum.Feature featureName, SObjectType objType, SfdoInstrumentationEnum.Action actionName, Integer value) { 
         SfdoLogUtils.log(featureName?.name(), String.valueOf(objType), actionName?.name(), value);
+        lastCallData = new LastCallData(featureName?.name(), String.valueOf(objType), actionName?.name(), value);
     }
 
     /**
@@ -135,6 +191,7 @@ public inherited sharing class SfdoInstrumentationService {
      */
     public void log(SfdoInstrumentationEnum.Feature featureName, SObjectType objType, SfdoInstrumentationEnum.Action actionName) {
         SfdoLogUtils.log(featureName?.name(), String.valueOf(objType), actionName?.name());
+        lastCallData = new LastCallData(featureName?.name(), String.valueOf(objType), actionName?.name());
     }
 
     // =============================================================================================================================
