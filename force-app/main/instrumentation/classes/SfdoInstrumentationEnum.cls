@@ -68,7 +68,9 @@ public with sharing class SfdoInstrumentationEnum {
         LegacyRollups,
         PaymentServices,
         LeadConversion,
-        RecordMerge
+        RecordMerge,
+        ContactMerge,
+        ManageHousehold
     }
 
     /**
@@ -92,7 +94,8 @@ public with sharing class SfdoInstrumentationEnum {
         Account_SoftCredit,
         AccountContact_SoftCredit,
         GAU_HardCredit,
-        RD_HardCredit
+        RD_HardCredit,
+        API
     }
 
     /**
@@ -129,6 +132,19 @@ public with sharing class SfdoInstrumentationEnum {
         AfterUndelete,
         /* Others */
         Validation,
-        Verification
+        Verification,
+        /* API Operations */
+        Pause,
+        QuerySchedules,
+        QueryInstallments,
+        /* Contact Merge Operations */
+        DuplicateRecordSetResultCount,
+        ContactMergeResultCount,
+        /* Manage Household Operations */
+        HouseholdContactNamingExclusionsUpdated,
+        HouseholdNamingSettingsUpdated,
+        HouseholdMerged,
+        HouseholdMemberAdded,
+        HouseholdAddressChanged
     }
 }

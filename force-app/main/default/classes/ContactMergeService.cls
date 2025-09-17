@@ -191,6 +191,12 @@ public class ContactMergeService {
             delete loserAccountsToBeDeleted;
         }
 
+        SfdoInstrumentationService.getInstance().log(
+            SfdoInstrumentationEnum.Feature.ContactMerge, 
+            SfdoInstrumentationEnum.Component.Page, 
+            SfdoInstrumentationEnum.Action.ContactMergeResultCount, 
+            losers.size() + 1);
+
         successfulMerge = true;
         return successfulMerge;
     }
