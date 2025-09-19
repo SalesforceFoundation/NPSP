@@ -163,9 +163,22 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
             } // ladder
         } // scope
 
+        SfdoInstrumentationService.getInstance().log(
+            SfdoInstrumentationEnum.Feature.Levels, 
+            SfdoInstrumentationEnum.Component.Batch, 
+            SfdoInstrumentationEnum.Action.Dml_Update,
+            new Map<String, String>{ 'Target Object' => sObjectName },
+            recordsById.size());
+
         update recordsById.values();
         if (!newEngagementPlans.isEmpty()) {
             insert newEngagementPlans;
+            SfdoInstrumentationService.getInstance().log(
+                SfdoInstrumentationEnum.Feature.EngagementPlans, 
+                SfdoInstrumentationEnum.Component.Batch, 
+                SfdoInstrumentationEnum.Action.Dml_Update,
+                new Map<String, String>{ 'Target Object' => sObjectName },
+                newEngagementPlans.size());
         }
         if (!errorsCreatingEngagementPlans.isEmpty()) {
             insert errorsCreatingEngagementPlans;
