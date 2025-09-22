@@ -216,6 +216,15 @@ public with sharing class ADDR_Addresses_TEST {
         for (Address__c addr : listAddr) {
             System.assertEquals('Other', addr.Address_Type__c);
         }
+
+        System.assertEquals(SfdoInstrumentationEnum.Feature.Addresses.name(), SfdoInstrumentationService.lastCallData.lastFeatureName,
+            'The Instrumentation LastFeatureName should be Addresses');
+        System.assertEquals(SfdoInstrumentationEnum.Component.TriggerAction.name(), SfdoInstrumentationService.lastCallData.lastComponentName,
+            'The Instrumentation LastComponentName should be TriggerAction');
+        System.assertEquals(SfdoInstrumentationEnum.Action.Dml_Insert.name(), SfdoInstrumentationService.lastCallData.lastActionName,
+            'The Instrumentation LastActionName should be DmlInsert');
+        System.assertEquals(totalContactsToCreate, SfdoInstrumentationService.lastCallData.lastValue,
+            'The Instrumentation LastValue should be ' + totalContactsToCreate);
     }
 
     /*********************************************************************************************************

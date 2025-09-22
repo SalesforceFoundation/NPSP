@@ -42,6 +42,7 @@ public with sharing class SfdoInstrumentationEnum {
         TDTM,
         ErrorHandling,
         Addresses,
+        SeasonalAddresses,
         GetStarted,
         AccountModelConversion,
         Settings,
