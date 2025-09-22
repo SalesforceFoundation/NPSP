@@ -434,6 +434,7 @@ public with sharing class HH_Container_LCTRL {
                 SfdoInstrumentationEnum.Feature.ManageHousehold, 
                     SfdoInstrumentationEnum.Component.Page, 
                     SfdoInstrumentationEnum.Action.HouseholdMemberAdded, 
+                    new Map<String, String>{ 'SourceClass' => 'HH_Container_LCTRL' },
                     listInsert.size());
         }
     }
@@ -515,6 +516,7 @@ public with sharing class HH_Container_LCTRL {
             SfdoInstrumentationEnum.Feature.ManageHousehold, 
             SfdoInstrumentationEnum.Component.Page, 
             SfdoInstrumentationEnum.Action.HouseholdMerged, 
+            new Map<String, String>{ 'SourceClass' => 'HH_Container_LCTRL' },
             listHHMerge.size());
     }
 
@@ -570,7 +572,9 @@ public with sharing class HH_Container_LCTRL {
                     SfdoInstrumentationService.getInstance().log(
                         SfdoInstrumentationEnum.Feature.ManageHousehold, 
                         SfdoInstrumentationEnum.Component.Page, 
-                        SfdoInstrumentationEnum.Action.HouseholdNamingSettingsUpdated, 1);
+                        SfdoInstrumentationEnum.Action.HouseholdNamingSettingsUpdated,
+                        new Map<String, String>{ 'SourceClass' => 'HH_Container_LCTRL' },
+                        1);
                     originalHouseholdCustomNameSetting = (String) hh.get('npo02__SYSTEM_CUSTOM_NAMING__c');
                 }
             }
