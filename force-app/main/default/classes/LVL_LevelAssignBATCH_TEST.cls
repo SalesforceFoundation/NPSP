@@ -239,7 +239,7 @@ private class LVL_LevelAssignBATCH_TEST {
             'The Instrumentation LastFeatureName should be EngagementPlans');
         System.assertEquals(1, SfdoInstrumentationService.lastCallData.lastValue,
             'The Instrumentation LastValue should be 1');
-        System.assertEquals(new Map<String, String>{ 'Target Object' => 'Contact' }, SfdoInstrumentationService.lastCallData.lastContext,
+        System.assertEquals(new Map<String, String>{ 'SourceClass' => 'LVL_LevelAssign_BATCH', 'Target Object' => 'Contact' }, SfdoInstrumentationService.lastCallData.lastContext,
             'The Instrumentation LastContext should be Contact');
 
         Levels_Settings__c levelSettings = Levels_Settings__c.getInstance();
@@ -278,7 +278,7 @@ private class LVL_LevelAssignBATCH_TEST {
             'The Instrumentation LastComponentName should be Batch');
         System.assertEquals(CONTACT_COUNT-1, SfdoInstrumentationService.lastCallData.lastValue,
             'The Instrumentation LastValue should be 7');
-        System.assertEquals(new Map<String, String>{ 'Target Object' => 'Contact' }, SfdoInstrumentationService.lastCallData.lastContext,
+        System.assertEquals(new Map<String, String>{ 'SourceClass' => 'LVL_LevelAssign_BATCH', 'Target Object' => 'Contact' }, SfdoInstrumentationService.lastCallData.lastContext,
             'The Instrumentation LastContext should be Contact');
 
         Contact conZero = [SELECT Id, npo02__LastMembershipLevel__c FROM Contact WHERE Id = :contacts[0].Id];
