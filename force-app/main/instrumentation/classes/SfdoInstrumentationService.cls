@@ -215,12 +215,12 @@ public inherited sharing class SfdoInstrumentationService {
      */
     private static String getRequestQuiddity() {
         try {
-        Request reqInfo = Request.getCurrent();
+            Request reqInfo = Request.getCurrent();
             String currentRequestId = reqInfo.getRequestId();
             Quiddity currentType = reqInfo.getQuiddity();
             return currentType.name();
         } catch (Exception e) {
-            return null;
+            return '(error)';
         }
     }
 
@@ -229,12 +229,15 @@ public inherited sharing class SfdoInstrumentationService {
      * @return Map<String, Object>
      */
     private static Map<String, Object> applyRequestQuiddity(Map<String, Object> context) {
-        if (context == null) {
-            context = new Map<String, Object>();
-        } else {
-            context = new Map<String, Object>(context);
+        try {
+            if (context == null) {
+                context = new Map<String, Object>();
+            } else {
+                context = new Map<String, Object>(context);
+            }
+            context.put('RequestQuiddity', requestQuiddity);
+        } catch (Exception e) {
         }
-        context.put('RequestQuiddity', requestQuiddity);
         return context;
     }
     /**

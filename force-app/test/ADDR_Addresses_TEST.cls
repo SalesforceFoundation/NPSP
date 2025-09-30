@@ -185,6 +185,9 @@ public with sharing class ADDR_Addresses_TEST {
 
         npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
 
+        // disable household naming so that its instrumentation doesn't interfere with the test
+        UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming(); 
+
         testContacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(totalContactsToCreate);
         for (Contact con : testContacts) {
             con.MailingStreet = 'new street';
