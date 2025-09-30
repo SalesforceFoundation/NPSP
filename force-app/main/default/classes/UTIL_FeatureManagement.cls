@@ -55,12 +55,14 @@ public with sharing class UTIL_FeatureManagement {
      */
     public void setPackageIntegerValue(String apiName, Integer value) {
         System.FeatureManagement.setPackageIntegerValue(apiName, value);
-        SfdoInstrumentationService.getInstance().log(
-            SfdoInstrumentationEnum.Feature.FeatureManagement, 
-            SfdoInstrumentationEnum.Component.API, 
-            SfdoInstrumentationEnum.Action.Post, 
-            new Map<String, Object>{ 'FeatureManagementName' => apiName, 'DataType' => 'Integer' },
-            value);
+        if (value != null && value != -1) {
+            SfdoInstrumentationService.getInstance().log(
+                SfdoInstrumentationEnum.Feature.FeatureManagement, 
+                SfdoInstrumentationEnum.Component.API, 
+                SfdoInstrumentationEnum.Action.Post, 
+                new Map<String, Object>{ 'FeatureManagementName' => apiName, 'DataType' => 'Integer' },
+                value);
+        }
     }
 
     /**
@@ -93,7 +95,6 @@ public with sharing class UTIL_FeatureManagement {
             SfdoInstrumentationEnum.Feature.FeatureManagement, 
             SfdoInstrumentationEnum.Component.API, 
             SfdoInstrumentationEnum.Action.Post, 
-            new Map<String, Object>{ 'FeatureManagementName' => apiName, 'DataType' => 'Date', 'Value' => value },
-            -1);
+            new Map<String, Object>{ 'FeatureManagementName' => apiName, 'DataType' => 'Date', 'Value' => value });
     }
 }
