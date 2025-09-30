@@ -291,7 +291,8 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
                 new Map<String, Object>{ 
                     'RD Records Processed' => recordsProcessed, 
                     'RD Records Failed' => recordsFailed, 
-                    'Opportunity Records Created ' => recordsCreated 
+                    'Opportunity Records Created ' => recordsCreated,
+                    'SourceClass' => 'RD2_OpportunityEvaluation_BATCH'
                 },
                 recordsCreated
             );

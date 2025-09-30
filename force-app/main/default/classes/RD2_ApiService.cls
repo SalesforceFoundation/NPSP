@@ -68,6 +68,7 @@ public inherited sharing class RD2_ApiService {
             SfdoInstrumentationEnum.Feature.EnhancedRecurringDonations,
             SfdoInstrumentationEnum.Component.API,
             SfdoInstrumentationEnum.Action.QuerySchedules,
+            new Map<String, String>{ 'SourceClass' => 'RD2_ApiService' },
             schedulesByRdId.size());
 
         return JSON.serialize(schedulesByRdId);
@@ -223,6 +224,7 @@ public inherited sharing class RD2_ApiService {
             SfdoInstrumentationEnum.Feature.EnhancedRecurringDonations,
             SfdoInstrumentationEnum.Component.API,
             SfdoInstrumentationEnum.Action.QueryInstallments,
+            new Map<String, String>{ 'SourceClass' => 'RD2_ApiService' },
             installmentsByRdId.size());
 
         return JSON.serialize(installmentsByRdId);
@@ -281,6 +283,7 @@ public inherited sharing class RD2_ApiService {
             SfdoInstrumentationEnum.Feature.EnhancedRecurringDonations,
             SfdoInstrumentationEnum.Component.API,
             SfdoInstrumentationEnum.Action.Pause,
+            new Map<String, String>{ 'SourceClass' => 'RD2_ApiService' },
             Limits.getDmlRows() - startingDmlRows);
 
         return response;
