@@ -572,6 +572,10 @@ private class RD2_ApiService_TEST {
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
         RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, CURRENT_DATE.addMonths(1), CURRENT_DATE.addMonths(2));
+        
+        rd.Status__c = RD2_Constants.STATUS_PAUSED;
+        update rd;
+        rd = rdGateway.getRecords()[0];
 
         Map<Id, RD2_ApiService.PauseObject> pauseObjectsByIdIn =
             new Map<Id, RD2_ApiService.PauseObject>{
@@ -581,7 +585,11 @@ private class RD2_ApiService_TEST {
         RD2_ApiService apiService = new RD2_ApiService();
         String response = apiService.pause(pauseObjectsByIdIn);
         Test.stopTest();
-
+        
+        npe03__Recurring_Donation__c updatedRd = rdGateway.getRecords()[0];
+       
+        System.assertEquals(RD2_Constants.STATUS_ACTIVE, updatedRd.Status__c,
+        'The status should be active');
         Map<Id, RD2_ApiService.PauseObject> pauseObjectsByIdOut =
             (Map<Id, RD2_ApiService.PauseObject>) JSON.deserialize(response, Map<Id, RD2_ApiService.PauseObject>.class);
 
@@ -595,6 +603,57 @@ private class RD2_ApiService_TEST {
             'The error status should be OK');
     }
 
+    @IsTest
+    private static void shouldUnPausedRDWhenMultiplePauseScheduleExistInThePast() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService.currentDate = CURRENT_DATE;
+
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+
+        //The pause schedule in the past
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, CURRENT_DATE.addMonths(-3), CURRENT_DATE.addMonths(-2));
+
+        //The current active pause schedule
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, CURRENT_DATE.addMonths(-2), CURRENT_DATE.addMonths(3));
+        
+        rd.Status__c = RD2_Constants.STATUS_PAUSED;
+        update rd;
+        rd = rdGateway.getRecords()[0];
+
+        Map<Id, RD2_ApiService.PauseObject> pauseObjectsByIdIn =
+            new Map<Id, RD2_ApiService.PauseObject>{
+                rd.Id => createUnPauseObject(true) };
+
+        Test.startTest();
+        RD2_ApiService apiService = new RD2_ApiService();
+        String response = apiService.pause(pauseObjectsByIdIn);
+        Test.stopTest();
+        
+        npe03__Recurring_Donation__c updatedRd = rdGateway.getRecords()[0];
+       
+        System.assertEquals(RD2_Constants.STATUS_ACTIVE, updatedRd.Status__c,
+            'The status should be active');
+        Map<Id, RD2_ApiService.PauseObject> pauseObjectsByIdOut =
+            (Map<Id, RD2_ApiService.PauseObject>) JSON.deserialize(response, Map<Id, RD2_ApiService.PauseObject>.class);
+
+        List<RecurringDonationSchedule__c> pauseSchedules = getPauseSchedules(rd);
+        System.assertEquals(2, pauseSchedules.size(), 'There should be 2 pause schedule');
+        
+        System.assertEquals(CURRENT_DATE.addMonths(-3), pauseSchedules[0].StartDate__c,
+            'The already passed scheduled pause schedule should stay unchanged');
+        System.assertEquals(CURRENT_DATE.addMonths(-2), pauseSchedules[0].EndDate__c,
+            'The already passed pause schedule should stay unchanged');
+
+        System.assertEquals(CURRENT_DATE.addMonths(-2), pauseSchedules[1].StartDate__c,
+            'The active paused  schedule start date should stay unchanged');
+        System.assertEquals(CURRENT_DATE.addDays(-1), pauseSchedules[1].EndDate__c,
+            'The active paused schedule should be deactivate');
+
+        System.assertEquals(true, pauseObjectsByIdOut.values()[0].isSuccess,
+            'Response should have set isSucess to true');
+        System.assertEquals('OK', pauseObjectsByIdOut.values()[0].error,
+            'The error status should be OK');
+    }
     @IsTest
     private static void shouldPermitNewStartAndEndDateForPausedRecurringDonation() {
         String statusReason = 'random Reason';

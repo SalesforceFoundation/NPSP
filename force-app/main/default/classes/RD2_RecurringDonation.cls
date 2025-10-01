@@ -474,13 +474,14 @@ public inherited sharing class RD2_RecurringDonation {
             : rd.npe03__Paid_Amount__c;
     }
 
-    public RecurringDonationSchedule__c getPauseSchedule() {
+    public RecurringDonationSchedule__c getActivePauseSchedule(Date currentDate, RD2_ScheduleService.PauseScheduleHandler pauseScheduleHandler) {
         if (!hasSchedule()) {
             return null;
         }
 
         for (RecurringDonationSchedule__c rdSchedule : rd.RecurringDonationSchedules__r) {
-            if (rdSchedule.IsPause__c && rdSchedule.StartDate__c <= rdSchedule.EndDate__c) {
+
+            if (pauseScheduleHandler.isActivePause(rdSchedule, currentDate)) {
                 return rdSchedule;
             }
         }

@@ -385,7 +385,10 @@ public inherited sharing class RD2_ApiService {
     }
 
     private RecurringDonationSchedule__c deactivatePauseSchedule(RD2_RecurringDonation recurringDonation) {
-        RecurringDonationSchedule__c schedule = recurringDonation.getPauseSchedule();
+        RecurringDonationSchedule__c schedule = recurringDonation.getActivePauseSchedule(
+            RD2_ScheduleService.currentDate,
+            new RD2_ScheduleService.PauseScheduleHandler()
+        );
 
         if (schedule == null) {
             return null;
