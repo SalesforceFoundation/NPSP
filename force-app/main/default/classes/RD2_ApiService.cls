@@ -328,7 +328,7 @@ public inherited sharing class RD2_ApiService {
             }
 
             List<RecurringDonationSchedule__c> updatedSchedules = deactivatePauseSchedules(rdRecord);
-            if (updatedSchedules != null && !updatedSchedules.isEmpty) {
+            if (updatedSchedules != null && !updatedSchedules.isEmpty()) {
                 schedulesToUpdate.addAll(updatedSchedules);
             }
 
