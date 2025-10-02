@@ -42,12 +42,6 @@ public with sharing class UTIL_FeatureManagement {
      */
     public void setPackageBooleanValue(String apiName, Boolean value) {
         System.FeatureManagement.setPackageBooleanValue(apiName, value);
-        SfdoInstrumentationService.getInstance().log(
-            SfdoInstrumentationEnum.Feature.FeatureManagement, 
-            SfdoInstrumentationEnum.Component.API, 
-            SfdoInstrumentationEnum.Action.Post, 
-            new Map<String, Object>{ 'FeatureManagementName' => apiName, 'DataType' => 'Boolean' },
-            value ? 1 : 0);
     }
 
     /**
@@ -55,14 +49,6 @@ public with sharing class UTIL_FeatureManagement {
      */
     public void setPackageIntegerValue(String apiName, Integer value) {
         System.FeatureManagement.setPackageIntegerValue(apiName, value);
-        if (value != null && value != -1) {
-            SfdoInstrumentationService.getInstance().log(
-                SfdoInstrumentationEnum.Feature.FeatureManagement, 
-                SfdoInstrumentationEnum.Component.API, 
-                SfdoInstrumentationEnum.Action.Post, 
-                new Map<String, Object>{ 'FeatureManagementName' => apiName, 'DataType' => 'Integer' },
-                value);
-        }
     }
 
     /**
@@ -91,10 +77,5 @@ public with sharing class UTIL_FeatureManagement {
      */
     public void setPackageDateValue(String apiName, Date value) {
         System.FeatureManagement.setPackageDateValue(apiName, value);
-        SfdoInstrumentationService.getInstance().log(
-            SfdoInstrumentationEnum.Feature.FeatureManagement, 
-            SfdoInstrumentationEnum.Component.API, 
-            SfdoInstrumentationEnum.Action.Post, 
-            new Map<String, Object>{ 'FeatureManagementName' => apiName, 'DataType' => 'Date', 'Value' => value });
     }
 }

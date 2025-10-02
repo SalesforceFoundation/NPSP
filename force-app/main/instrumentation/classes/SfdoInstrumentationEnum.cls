@@ -72,8 +72,7 @@ public with sharing class SfdoInstrumentationEnum {
         RecordMerge,
         ContactMerge,
         ManageHousehold,
-        HouseholdNaming,
-        FeatureManagement
+        HouseholdNaming
     }
 
     /**
@@ -107,7 +106,6 @@ public with sharing class SfdoInstrumentationEnum {
      * Note that some Action names are defined to to avoid conflict with Apex internal types (ex: Insert, Delete, etc.)
      */
     public enum Action {
-        Post,  
         /* Page Operations*/
         Open,
         Save,
