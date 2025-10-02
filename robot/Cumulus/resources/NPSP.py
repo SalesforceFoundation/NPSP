@@ -1177,6 +1177,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             self.selenium.execute_javascript("window.scrollBy(0,100)")
             ele = self.selenium.driver.find_element_by_xpath(locator)
             self.selenium.driver.execute_script('arguments[0].click()', ele)
+        self.selenium.wait_until_element_is_visible(view,10)
         self.selenium.get_webelement(view).click()
         # element = self.selenium.driver.find_element_by_xpath(view)
         # self.selenium.driver.execute_script('arguments[0].click()', element)
@@ -1286,6 +1287,9 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         time.sleep(2)
         self.npsp.click_button_with_value(value)
         time.sleep(1)
+
+    def get_next_year(self):
+        return datetime.now().year + 1
 
     def setupdata(self, name, contact_data=None, opportunity_data=None, account_data=None, payment_data=None, engagement_data=None,
                   recurringdonation_data=None, gau_data=None):

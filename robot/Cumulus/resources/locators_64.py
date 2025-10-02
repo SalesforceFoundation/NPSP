@@ -15,7 +15,8 @@ npsp_lex_locators={
 	'app_launcher':{
 		'select-option':'//span/mark[text()="{}"]',
 	},
-	'object_dd':'//div[contains(@class,"slds-page-header__name-switcher")]',
+	'object_dd':'//lst-list-view-picker',
+	'lookup-option':'//li//lightning-base-combobox-item[@data-value="{}"]',
 	'main-header':{
 		"header_text": "//h1/div/span",
 		"header_text_spl": "//h1//lightning-formatted-text",
@@ -93,7 +94,7 @@ npsp_lex_locators={
 	'name':'//tbody/tr/th/span//a//span',
 	'select_name':'//tbody//a[text()= "{}"]',
 	'opportunities_dropdown':"css:a.slds-button.slds-button--icon-border-filled",
-	'locate_dropdown':'//tbody/tr[{}]//force-aura-action-wrapper//a',
+	'locate_dropdown':'//tbody/tr[{}]//lightning-button-menu//button',
 	'locating_delete_dropdown':'//tbody//a[text()= "{}"]/../../following-sibling::td/span//div/a/lightning-icon',
 	'related_name':'//tbody/tr/td/a[contains(@class,"forceOutputLookup")]',
 	'rel_loc_dd':'//tbody/tr[{}]/td[4]//lightning-primitive-icon',
@@ -111,6 +112,7 @@ npsp_lex_locators={
 		'check_phone':'//div[contains(@class, "slds-form-element__label")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]/descendant::lightning-formatted-phone/a[text()="{}"]',
 		'check_address':'//div[contains(@class, "slds-form-element__label")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]/descendant::lightning-formatted-address/a/div[text()="{}"]',
 		'check_numbers':'//div[contains(@class, "slds-form-element__label")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]/descendant::lightning-formatted-number[text()="{}"]',
+		'check_email':'//div[contains(@class, "slds-form-element__label")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]/descendant::lightning-formatted-email/a[text()="{}"]',
 	},
 	'check_field':'//div[contains(@class, "forcePageBlockItem")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]/span/div//a',
 	'check_field_spl':'//div[contains(@class, "slds-form-element__label")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]//a',
