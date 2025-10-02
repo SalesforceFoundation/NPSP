@@ -327,8 +327,10 @@ public inherited sharing class RD2_ApiService {
                 continue;
             }
 
-            List<RecurringDonationSchedule__c> updatedSchedules = deactivatePauseSchedule(rdRecord);
-            schedulesToUpdate.addAll(updatedSchedules);
+            List<RecurringDonationSchedule__c> updatedSchedules = deactivatePauseSchedules(rdRecord);
+            if (updatedSchedules != null && !updatedSchedules.isEmpty) {
+                schedulesToUpdate.addAll(updatedSchedules);
+            }
 
 
             if (!pauseInfo.unPause) {
@@ -383,9 +385,9 @@ public inherited sharing class RD2_ApiService {
         );
     }
 
-    private List<RecurringDonationSchedule__c> deactivatePauseSchedule(RD2_RecurringDonation recurringDonation) {
+    private List<RecurringDonationSchedule__c> deactivatePauseSchedules(RD2_RecurringDonation recurringDonation) {
         RD2_ScheduleService.PauseScheduleHandler pauseScheduleHandler = new RD2_ScheduleService.PauseScheduleHandler();
-        
+
         List<RecurringDonationSchedule__c> schedules = recurringDonation.getActiveOrFuturePauseSchedules(
             RD2_ScheduleService.currentDate,
             pauseScheduleHandler
