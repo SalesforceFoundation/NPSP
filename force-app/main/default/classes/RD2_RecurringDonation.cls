@@ -474,10 +474,6 @@ public inherited sharing class RD2_RecurringDonation {
             : rd.npe03__Paid_Amount__c;
     }
 
-    public RecurringDonationSchedule__c getActivePauseSchedule(Date currentDate, RD2_ScheduleService.PauseScheduleHandler pauseScheduleHandler) {
-    return null;
-    }
-
     public List<RecurringDonationSchedule__c> getActiveOrFuturePauseSchedules(Date currentDate, RD2_ScheduleService.PauseScheduleHandler pauseScheduleHandler) {
         List<RecurringDonationSchedule__c> activeOrFuturePauseSchedules = new List<RecurringDonationSchedule__c>();
 
