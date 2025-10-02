@@ -327,10 +327,9 @@ public inherited sharing class RD2_ApiService {
                 continue;
             }
 
-            RecurringDonationSchedule__c updateSchedule = deactivatePauseSchedule(rdRecord);
-            if (updateSchedule != null) {
-                schedulesToUpdate.add(updateSchedule);
-            }
+            List<RecurringDonationSchedule__c> updatedSchedules = deactivatePauseSchedule(rdRecord);
+            schedulesToUpdate.addAll(updatedSchedules);
+
 
             if (!pauseInfo.unPause) {
                 schedulesToInsert.add(createPauseSchedule(pauseInfo, rdId));
@@ -384,19 +383,19 @@ public inherited sharing class RD2_ApiService {
         );
     }
 
-    private RecurringDonationSchedule__c deactivatePauseSchedule(RD2_RecurringDonation recurringDonation) {
-        RecurringDonationSchedule__c schedule = recurringDonation.getActivePauseSchedule(
+    private List<RecurringDonationSchedule__c> deactivatePauseSchedule(RD2_RecurringDonation recurringDonation) {
+        RD2_ScheduleService.PauseScheduleHandler pauseScheduleHandler = new RD2_ScheduleService.PauseScheduleHandler();
+        
+        List<RecurringDonationSchedule__c> schedules = recurringDonation.getActiveOrFuturePauseSchedules(
             RD2_ScheduleService.currentDate,
-            new RD2_ScheduleService.PauseScheduleHandler()
+            pauseScheduleHandler
         );
 
-        if (schedule == null) {
-            return null;
+        for (RecurringDonationSchedule__c schedule : schedules) {
+            pauseScheduleHandler.deactivatePauseSchedule(schedule);
         }
 
-        new RD2_ScheduleService.PauseScheduleHandler().deactivatePauseSchedule(schedule);
-
-        return schedule;
+        return schedules;
     }
 
     private Set<Id> insertPauseSchedules(Map<Id, PauseObject> pauseData, List<RecurringDonationSchedule__c> schedules) {

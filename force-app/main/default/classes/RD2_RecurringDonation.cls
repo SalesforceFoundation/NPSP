@@ -475,18 +475,21 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     public RecurringDonationSchedule__c getActivePauseSchedule(Date currentDate, RD2_ScheduleService.PauseScheduleHandler pauseScheduleHandler) {
-        if (!hasSchedule()) {
-            return null;
-        }
+    return null;
+    }
 
-        for (RecurringDonationSchedule__c rdSchedule : rd.RecurringDonationSchedules__r) {
+    public List<RecurringDonationSchedule__c> getActiveOrFuturePauseSchedules(Date currentDate, RD2_ScheduleService.PauseScheduleHandler pauseScheduleHandler) {
+        List<RecurringDonationSchedule__c> activeOrFuturePauseSchedules = new List<RecurringDonationSchedule__c>();
 
-            if (pauseScheduleHandler.isActivePause(rdSchedule, currentDate)) {
-                return rdSchedule;
+        if (rd.RecurringDonationSchedules__r != null && hasSchedule()) {   
+            for (RecurringDonationSchedule__c rdSchedule : rd.RecurringDonationSchedules__r) {
+                if (pauseScheduleHandler.isActivePause(rdSchedule, currentDate)) {
+                    activeOrFuturePauseSchedules.add(rdSchedule);
+                }
             }
         }
 
-        return null;
+        return activeOrFuturePauseSchedules;
     }
 
     public String paymentMethod() {

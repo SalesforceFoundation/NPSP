@@ -611,10 +611,15 @@ private class RD2_ApiService_TEST {
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
         //The pause schedule in the past
-        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, CURRENT_DATE.addMonths(-3), CURRENT_DATE.addMonths(-2));
+        RecurringDonationSchedule__c pastSchedule = RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, CURRENT_DATE.addMonths(-3), CURRENT_DATE.addMonths(-2));
 
         //The current active pause schedule
         RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, CURRENT_DATE.addMonths(-2), CURRENT_DATE.addMonths(3));
+
+        //multiple future active pause schedule
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, CURRENT_DATE.addMonths(3), CURRENT_DATE.addMonths(4));
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, CURRENT_DATE.addMonths(5), CURRENT_DATE.addMonths(6));
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, CURRENT_DATE.addMonths(7), CURRENT_DATE.addMonths(8));
         
         rd.Status__c = RD2_Constants.STATUS_PAUSED;
         update rd;
@@ -637,18 +642,21 @@ private class RD2_ApiService_TEST {
             (Map<Id, RD2_ApiService.PauseObject>) JSON.deserialize(response, Map<Id, RD2_ApiService.PauseObject>.class);
 
         List<RecurringDonationSchedule__c> pauseSchedules = getPauseSchedules(rd);
-        System.assertEquals(2, pauseSchedules.size(), 'There should be 2 pause schedule');
+        System.assertEquals(5, pauseSchedules.size(), 'There should be 5 pause schedules');
         
-        System.assertEquals(CURRENT_DATE.addMonths(-3), pauseSchedules[0].StartDate__c,
-            'The already passed scheduled pause schedule should stay unchanged');
-        System.assertEquals(CURRENT_DATE.addMonths(-2), pauseSchedules[0].EndDate__c,
-            'The already passed pause schedule should stay unchanged');
+        for (RecurringDonationSchedule__c pauseSchedule : pauseSchedules) {
+            if (pauseSchedule.Id == pastSchedule.Id) {
+                System.assertEquals(CURRENT_DATE.addMonths(-3), pauseSchedule.StartDate__c,
+                    'The already passed scheduled pause schedule should stay unchanged');
+                System.assertEquals(CURRENT_DATE.addMonths(-2), pauseSchedule.EndDate__c,
+                    'The already passed pause schedule should stay unchanged');
+                continue;
+            }
 
-        System.assertEquals(CURRENT_DATE.addMonths(-2), pauseSchedules[1].StartDate__c,
-            'The active paused  schedule start date should stay unchanged');
-        System.assertEquals(CURRENT_DATE.addDays(-1), pauseSchedules[1].EndDate__c,
-            'The active paused schedule should be deactivate');
-
+            System.assertEquals(CURRENT_DATE.addDays(-1), pauseSchedule.EndDate__c,
+            'The pause schedule should be deactivate');
+        }
+       
         System.assertEquals(true, pauseObjectsByIdOut.values()[0].isSuccess,
             'Response should have set isSucess to true');
         System.assertEquals('OK', pauseObjectsByIdOut.values()[0].error,
