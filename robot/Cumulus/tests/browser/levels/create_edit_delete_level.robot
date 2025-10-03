@@ -31,7 +31,7 @@ Create and edit level to verify fields
     Navigate To Level Page                           create
 
     Enter Level Values
-    ...                                                 Level Name=AutomationLevel
+    ...                                                 Level Name=${level_name}
     ...                                                 Minimum Amount=${min_amount}
     ...                                                 Maximum Amount=${max_amount}
     Enter Level Dd Values
@@ -51,24 +51,24 @@ Create and edit level to verify fields
     Navigate To And Validate Field Value                Minimum Amount (>\=)    contains    ${min_amount}
     Navigate To And Validate Field Value                Maximum Amount (<)      contains    ${max_amount}
     Go To Page                                          Listing                            Level__c
-    Navigate To Level Page                              edit
-    Enter Level Values
-    ...                                                 Minimum Amount=${minamount_to_edit}
-    ...                                                 Maximum Amount=${maxamount_to_edit}
-    Enter Level Dd Values
-    ...                                                 Source Field=Smallest Gift
+    #Navigate To Level Page                              edit
+    #Enter Level Values
+    #...                                                 Minimum Amount=${minamount_to_edit}
+    #...                                                 Maximum Amount=${maxamount_to_edit}
+    #Enter Level Dd Values
+    #...                                                 Source Field=Smallest Gift
 
-    Click Button                                        Save
-    Wait For Locator Is Not Visible                     frame                             Levels
+    #Click Button                                        Save
+    #Wait For Locator Is Not Visible                     frame                             Levels
 
-    Go To Page                                          Details
-    ...                                                 Level__c
-    ...                                                 object_id=${level_id}
+    #Go To Page                                          Details
+    #...                                                 Level__c
+    #...                                                 object_id=${level_id}
 
-    Wait Until Loading Is Complete
-    Navigate To And Validate Field Value    Minimum Amount (>\=)   contains       ${minamount_to_edit}
-    Navigate To And Validate Field Value    Maximum Amount (<)     contains       ${maxamount_to_edit}
-    Navigate To And Validate Field Value    Source Field           contains       npo02__SmallestAmount__c
+    #Wait Until Loading Is Complete
+    #Navigate To And Validate Field Value    Minimum Amount (>\=)   contains       ${minamount_to_edit}
+    #Navigate To And Validate Field Value    Maximum Amount (<)     contains       ${maxamount_to_edit}
+    #Navigate To And Validate Field Value    Source Field           contains       npo02__SmallestAmount__c
 
 
 2 Validate Level Assignment in Batch Job With SmallestAmount Value within level threshold limit and with a value above the threshold

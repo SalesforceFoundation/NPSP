@@ -1646,7 +1646,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         time.sleep(1)
         self.selenium.wait_until_page_contains(title)
         link_locator=npsp_lex_locators['custom_objects']['option'].format(title)
-        self.selenium.click_link(link_locator)
+        self.selenium.click_element(link_locator)
 
     def get_url_formatted_object_name(self,name):
         """Returns a map with BaseURl and the namespace formatted object name"""
