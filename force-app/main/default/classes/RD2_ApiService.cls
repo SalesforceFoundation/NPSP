@@ -332,7 +332,6 @@ public inherited sharing class RD2_ApiService {
                 schedulesToUpdate.addAll(updatedSchedules);
             }
 
-
             if (!pauseInfo.unPause) {
                 schedulesToInsert.add(createPauseSchedule(pauseInfo, rdId));
             }

@@ -589,7 +589,7 @@ private class RD2_ApiService_TEST {
         npe03__Recurring_Donation__c updatedRd = rdGateway.getRecords()[0];
        
         System.assertEquals(RD2_Constants.STATUS_ACTIVE, updatedRd.Status__c,
-        'The status should be active');
+            'The status should be active');
         Map<Id, RD2_ApiService.PauseObject> pauseObjectsByIdOut =
             (Map<Id, RD2_ApiService.PauseObject>) JSON.deserialize(response, Map<Id, RD2_ApiService.PauseObject>.class);
 
@@ -611,7 +611,9 @@ private class RD2_ApiService_TEST {
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
         //The pause schedule in the past
-        RecurringDonationSchedule__c pastSchedule = RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, CURRENT_DATE.addMonths(-3), CURRENT_DATE.addMonths(-2));
+        RecurringDonationSchedule__c pastSchedule = RD2_ScheduleService_TEST.createPauseSchedule(
+            rd.Id, CURRENT_DATE.addMonths(-3), CURRENT_DATE.addMonths(-2)
+        );
 
         //The current active pause schedule
         RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, CURRENT_DATE.addMonths(-2), CURRENT_DATE.addMonths(3));
@@ -652,7 +654,7 @@ private class RD2_ApiService_TEST {
             }
 
             System.assertEquals(CURRENT_DATE.addDays(-1), pauseSchedule.EndDate__c,
-            'The pause schedule should be deactivate');
+                'The pause schedule should be deactivate');
         }
        
         Map<Id, RD2_ApiService.PauseObject> pauseObjectsByIdOut =
@@ -702,7 +704,9 @@ private class RD2_ApiService_TEST {
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
         //The pause schedule in the past
-        RecurringDonationSchedule__c pastSchedule = RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, CURRENT_DATE.addMonths(-3), CURRENT_DATE.addMonths(-2));
+        RecurringDonationSchedule__c pastSchedule = RD2_ScheduleService_TEST.createPauseSchedule(
+            rd.Id, CURRENT_DATE.addMonths(-3), CURRENT_DATE.addMonths(-2)
+        );
 
         //multiple future active pause schedule
         RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, CURRENT_DATE.addMonths(3), CURRENT_DATE.addMonths(4));
