@@ -723,13 +723,10 @@ private class RD2_ApiService_TEST {
         System.assertEquals(RD2_Constants.STATUS_ACTIVE, updatedRd.Status__c,
             'The status should be active');
 
-        List<RecurringDonationSchedule__c> allSchedules = scheduleGateway.getRecords(rd);
-
-        List<RecurringDonationSchedule__c> pauseSchedules = getPauseSchedules(rd);
         Integer activeScheduleCounter = 0;
         Integer pauseScheduleCounter = 0;
 
-        for (RecurringDonationSchedule__c schedule : allSchedules) {
+        for (RecurringDonationSchedule__c schedule : scheduleGateway.getRecords(rd)) {
             if (!schedule.IsPause__c) {
                 activeScheduleCounter++;
                 System.assertEquals(null, schedule.EndDate__c,
