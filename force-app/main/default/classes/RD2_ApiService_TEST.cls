@@ -724,7 +724,8 @@ private class RD2_ApiService_TEST {
             'The status should be active');
 
         List<RecurringDonationSchedule__c> pauseSchedules = getPauseSchedules(rd);
-        System.assertEquals(4, pauseSchedules.size(), 'There should be 5 pause schedules');
+        System.assertEquals(4, pauseSchedules.size(),
+            'There should be 4 pause schedules, 1 from the past and 3 in the future');
         
         for (RecurringDonationSchedule__c pauseSchedule : pauseSchedules) {
             if (pauseSchedule.Id == pastSchedule.Id) {
