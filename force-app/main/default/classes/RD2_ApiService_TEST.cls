@@ -737,7 +737,7 @@ private class RD2_ApiService_TEST {
             }
 
             System.assertEquals(CURRENT_DATE.addDays(-1), pauseSchedule.EndDate__c,
-            'The pause schedule should be deactivate');
+                'The pause schedule should be deactivate');
         }
        
         Map<Id, RD2_ApiService.PauseObject> pauseObjectsByIdOut =
