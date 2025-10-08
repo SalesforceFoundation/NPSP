@@ -185,6 +185,9 @@ public with sharing class ADDR_Addresses_TEST {
 
         npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
 
+        // disable household naming so that its instrumentation doesn't interfere with the test
+        UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming(); 
+
         testContacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(totalContactsToCreate);
         for (Contact con : testContacts) {
             con.MailingStreet = 'new street';
@@ -216,6 +219,15 @@ public with sharing class ADDR_Addresses_TEST {
         for (Address__c addr : listAddr) {
             System.assertEquals('Other', addr.Address_Type__c);
         }
+
+        System.assertEquals(SfdoInstrumentationEnum.Feature.Addresses.name(), SfdoInstrumentationService.lastCallData.lastFeatureName,
+            'The Instrumentation LastFeatureName should be Addresses');
+        System.assertEquals(SfdoInstrumentationEnum.Component.TriggerAction.name(), SfdoInstrumentationService.lastCallData.lastComponentName,
+            'The Instrumentation LastComponentName should be TriggerAction');
+        System.assertEquals(SfdoInstrumentationEnum.Action.Dml_Insert.name(), SfdoInstrumentationService.lastCallData.lastActionName,
+            'The Instrumentation LastActionName should be DmlInsert');
+        System.assertEquals(totalContactsToCreate, SfdoInstrumentationService.lastCallData.lastValue,
+            'The Instrumentation LastValue should be ' + totalContactsToCreate);
     }
 
     /*********************************************************************************************************

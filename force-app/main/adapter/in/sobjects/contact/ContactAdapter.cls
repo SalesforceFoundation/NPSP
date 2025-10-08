@@ -593,6 +593,13 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
             Address__c contactAddress = contactAddressesToInsertByContact.get(contact);
             contact.Current_Address__c = contactAddress.Id;
         }
+
+        SfdoInstrumentationService.getInstance().log(
+            SfdoInstrumentationEnum.Feature.Addresses, 
+            SfdoInstrumentationEnum.Component.TriggerAction, 
+            SfdoInstrumentationEnum.Action.Dml_Insert,
+            new Map<String, String>{ 'SourceClass' => 'ContactAdapter' },
+            contactAddressesToInsertByContact.size());
     }
 
     private void updateContactAddressFromExistingAddress(Contact contact, Address__c existingAddressFromContact) {
