@@ -122,6 +122,7 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
                 SfdoInstrumentationEnum.Feature.LegacyRecurringDonations,
                 SfdoInstrumentationEnum.Component.TriggerAction,
                 SfdoInstrumentationEnum.Action.Create,
+                new Map<String, String>{ 'SourceClass' => 'RD_RecurringDonations_TDTM' },
                 newlist.size());
         }
 

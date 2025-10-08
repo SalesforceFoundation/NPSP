@@ -91,6 +91,11 @@ public inherited sharing class HouseholdService {
         set;
     }
 
+    // Track these for instrumentation
+    private Integer numHouseholdNamesSet = 0;
+    private Integer numFormalGreetingsSet = 0;
+    private Integer numInformalGreetingsSet = 0;
+
     public Set<String> fieldsUsedForHouseholdNaming() {
         return householdNamingServiceInst.getHouseholdNamingContactFields();
     }
@@ -395,6 +400,30 @@ public inherited sharing class HouseholdService {
                 );
             }
         }
+
+        if (accountsToInsert.size() > 0 && (numHouseholdNamesSet > 0 || numFormalGreetingsSet > 0 || numInformalGreetingsSet > 0)) {
+            Map<String, Object> context = new Map<String, Object>{ 
+                'SourceClass' => 'HouseholdService'
+            };
+            if (numHouseholdNamesSet > 0) {
+                context.put('Household Names Updated', numHouseholdNamesSet);
+            }
+            if (numFormalGreetingsSet > 0) {
+                context.put('Formal Greetings Updated', numFormalGreetingsSet);
+            }
+            if (numInformalGreetingsSet > 0) {
+                context.put('Informal Greetings Updated', numInformalGreetingsSet);
+            }
+            SfdoInstrumentationService.getInstance().log(
+                SfdoInstrumentationEnum.Feature.HouseholdNaming, 
+                SfdoInstrumentationEnum.Component.TriggerAction, 
+                SfdoInstrumentationEnum.Action.HouseholdNamesUpdated, 
+                context,
+                accountsToInsert.size());
+            numHouseholdNamesSet = 0;
+            numFormalGreetingsSet = 0;
+            numInformalGreetingsSet = 0;
+        }
     }
 
     private void insertNewHouseholds(List<Account> accountsToInsert, List<Contact> contactRecords) {
@@ -494,10 +523,13 @@ public inherited sharing class HouseholdService {
                             contactRecord
                     }));
             accountRecord.Name = householdName.asName();
+            numHouseholdNamesSet++;
             accountRecord.npo02__Formal_Greeting__c =
                     householdName.asFormalGreeting();
+            if (accountRecord.npo02__Formal_Greeting__c != null) numFormalGreetingsSet++;
             accountRecord.npo02__Informal_Greeting__c =
                     householdName.asInformalGreeting();
+            if (accountRecord.npo02__Informal_Greeting__c != null) numInformalGreetingsSet++;
         } else {
             accountRecord.Name =
                     Households.strNameHHAccountForContact(contactRecord);

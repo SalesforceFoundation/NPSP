@@ -54,11 +54,13 @@ public without sharing class SfdoInstrumentationMock_TEST {
     @TestVisible
     private class MockService implements StubProvider {
 
+        public List<LastCallData> lastCallStack = new List<LastCallData>();
+
         public SfdoInstrumentationEnum.Feature feature;
         public SfdoInstrumentationEnum.Component component;
         public SfdoInstrumentationEnum.Action actionName;
         public Integer value;
-        public Map<String,String> context;
+        public Map<String,Object> context;
 
         public Object handleMethodCall(Object stubbedObject, String stubbedMethodName,
                 Type returnType, List<Type> paramTypes, List<String> paramNames,
@@ -68,17 +70,41 @@ public without sharing class SfdoInstrumentationMock_TEST {
                 this.feature = (SfdoInstrumentationEnum.Feature) params[0];
                 this.component = (SfdoInstrumentationEnum.Component)params[1];
                 this.actionName = (SfdoInstrumentationEnum.Action)params[2];
+                this.value = null;
+                this.context = null;
 
                 for (Integer n=3; n<params.size(); n++) {
                     if (paramNames[n] == 'value') {
                         this.value =  (Integer)params[n];
                     } else if (paramNames[n] == 'context') {
-                        this.context =  (Map<String,String>)params[n];
+                        this.context =  (Map<String,Object>)params[n];
                     } 
                 }
+                this.lastCallStack.add(new LastCallData(this.feature, this.component, this.actionName, this.context, this.value));
             }
             return null;
         }
     }
 
+    /**
+    * @description Class to store the last call data for all instrumentation calls, allow for deeper validation
+    */
+    @TestVisible
+    private class LastCallData {
+
+        public LastCallData(SfdoInstrumentationEnum.Feature feature, SfdoInstrumentationEnum.Component component, 
+                SfdoInstrumentationEnum.Action actionName, Map<String,Object> context, Integer value) {
+            this.feature = feature;
+            this.component = component;
+            this.actionName = actionName;
+            this.value = value;
+            this.context = context;
+        }
+    
+        public SfdoInstrumentationEnum.Feature feature;
+        public SfdoInstrumentationEnum.Component component;
+        public SfdoInstrumentationEnum.Action actionName;
+        public Integer value;
+        public Map<String,Object> context;
+    }
 }
