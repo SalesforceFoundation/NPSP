@@ -94,7 +94,7 @@ npsp_lex_locators={
 	'name':'//tbody/tr/th/span//a//span',
 	'select_name':'//tbody//a[text()= "{}"]',
 	'opportunities_dropdown':"css:a.slds-button.slds-button--icon-border-filled",
-	'locate_dropdown':'//tbody/tr[{}]//lst-list-view-row-level-action//a',
+	'locate_dropdown':'//tbody/tr[{}]//lst-list-view-row-level-action//button',
 	'locating_delete_dropdown':'//tbody//a[text()= "{}"]/../../following-sibling::td/span//div/a/lightning-icon',
 	'related_name':'//tbody/tr/td/a[contains(@class,"forceOutputLookup")]',
 	'rel_loc_dd':'//tbody/tr[{}]/td[4]//lightning-primitive-icon',
@@ -180,7 +180,7 @@ npsp_lex_locators={
 	'levels':{
 		'id':'//input[contains(@id,"{}")]',
 		'select':'//select[contains(@id,"{}")]',
-		'action_button':'//div[contains(@class,"forceActionLink")][text()="{}"]',
+		'action_button':'//a[contains(@class,"highlightButton")][@title="{}"]',
 	},
 	'custom_objects':{
 		'actions-link':'//a[@title="{}" or @name="{}"]',
