@@ -42,6 +42,7 @@ public with sharing class SfdoInstrumentationEnum {
         TDTM,
         ErrorHandling,
         Addresses,
+        SeasonalAddresses,
         GetStarted,
         AccountModelConversion,
         Settings,
@@ -70,7 +71,8 @@ public with sharing class SfdoInstrumentationEnum {
         LeadConversion,
         RecordMerge,
         ContactMerge,
-        ManageHousehold
+        ManageHousehold,
+        HouseholdNaming
     }
 
     /**
@@ -145,6 +147,7 @@ public with sharing class SfdoInstrumentationEnum {
         HouseholdNamingSettingsUpdated,
         HouseholdMerged,
         HouseholdMemberAdded,
-        HouseholdAddressChanged
+        HouseholdAddressChanged,
+        HouseholdNamesUpdated
     }
 }
