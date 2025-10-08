@@ -79,6 +79,11 @@ public without sharing class HouseholdNamingService {
         set;
     }
 
+    // Track these for instrumentation
+    private Integer numHouseholdNamesSet = 0;
+    private Integer numFormalGreetingsSet = 0;
+    private Integer numInformalGreetingsSet = 0;
+    
     /*******************************************************************************************************
     * @description turns off household naming in the current execution context.  provided for other
     * components, like Batch Data Import, to momentarily turn off the household naming logic.  there is no
@@ -143,6 +148,31 @@ public without sharing class HouseholdNamingService {
         }
 
         unitOfWork.save();
+
+        // Instrumentation
+        if (numHouseholdNamesSet > 0 || numFormalGreetingsSet > 0 || numInformalGreetingsSet > 0) {
+            Map<String, Object> context = new Map<String, Object>{ 
+                'SourceClass' => 'HouseholdNamingService'
+            };
+            if (numHouseholdNamesSet > 0) {
+                context.put('Household Names Updated', numHouseholdNamesSet);
+            }
+            if (numFormalGreetingsSet > 0) {
+                context.put('Formal Greetings Updated', numFormalGreetingsSet);
+            }
+            if (numInformalGreetingsSet > 0) {
+                context.put('Informal Greetings Updated', numInformalGreetingsSet);
+            }
+            SfdoInstrumentationService.getInstance().log(
+                SfdoInstrumentationEnum.Feature.HouseholdNaming, 
+                SfdoInstrumentationEnum.Component.TriggerAction, 
+                SfdoInstrumentationEnum.Action.HouseholdNamesUpdated, 
+                context,
+                householdsOrAccounts.size());
+            numHouseholdNamesSet = 0;
+            numFormalGreetingsSet = 0;
+            numInformalGreetingsSet = 0;
+        }
 
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
     }
@@ -448,6 +478,7 @@ public without sharing class HouseholdNamingService {
             unitOfWork.registerDirty(new List<SObject>{
                     household
             });
+            numHouseholdNamesSet++;
         }
 
         if (!namingOverrides.isFormalGreetingControlledByUser() &&
@@ -456,6 +487,7 @@ public without sharing class HouseholdNamingService {
             unitOfWork.registerDirty(new List<SObject>{
                     household
             });
+            numFormalGreetingsSet++;
         }
         if (!namingOverrides.isInformalGreetingControlledByUser() &&
                 informalGreetingNeedsUpdate(household, householdName)) {
@@ -463,6 +495,7 @@ public without sharing class HouseholdNamingService {
             unitOfWork.registerDirty(new List<SObject>{
                     household
             });
+            numInformalGreetingsSet++;
         }
     }
 
