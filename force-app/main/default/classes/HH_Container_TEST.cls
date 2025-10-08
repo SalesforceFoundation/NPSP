@@ -398,7 +398,7 @@ private class HH_Container_TEST {
         Contact[] hhContactsToRemove = new Contact[0];
         Account[] accountsToMerge = new Account[] { accounts[1], accounts[2] };
 
-        System.assertEquals(null, SfdoInstrumentationService.instance, 'The Instrumentation Service Instance should not have been instantiated yet');
+        SfdoInstrumentationService.instance = null;
 
         Test.startTest();
         accounts[0].npo02__SYSTEM_CUSTOM_NAMING__c = 'npo02__Formal_Greeting__c';

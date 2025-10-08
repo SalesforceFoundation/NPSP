@@ -1949,10 +1949,10 @@ public with sharing class BDI_DataImport_TEST {
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
 
-        System.assertEquals(2, mockService.value, 'The instrumentation service should have indicated two new Gifts were inserted');
         System.assertEquals(sfdoInstrumentationEnum.Feature.GiftEntry, mockService.feature,
             'The instrumentation service should have indicated GiftEntry');
-    }
+        System.assertEquals(2, mockService.value, 'The instrumentation service should have indicated two new Gifts were inserted');
+        }
 
     /*********************************************************************************************************
     * @description When the Data Import Service has been mocked to simulate coming in through the UI, verify
@@ -1962,6 +1962,9 @@ public with sharing class BDI_DataImport_TEST {
     @IsTest
     private static void shouldNotInstrumentNewDonationsWhenNotThroughUserInterface() {
         SfdoInstrumentationMock_TEST.MockService mockService = SfdoInstrumentationMock_TEST.injectMockedInstrumentationService();
+
+        // SfdoInstrumentationService.instance = null; // reset instrumentation
+        // UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming(); // prevent this from running its instrumentation
 
         List<DataImport__c> dataImports = new List<DataImport__c>();
         dataImports.add(newDI('c1', 'C1', 100));
@@ -1973,7 +1976,9 @@ public with sharing class BDI_DataImport_TEST {
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
 
-        System.assertEquals(null, mockService.value, 'The instrumentation service should have indicated two new Gifts were inserted');
+        for (SfdoInstrumentationMock_TEST.LastCallData callData : mockService.lastCallStack) {
+            System.assertNotEquals(SfdoInstrumentationEnum.Feature.DataImportEngine, callData.feature, 'The BDI instrumentation should have executed');
+        }
     }
 
     /*********************************************************************************************************

@@ -107,6 +107,7 @@ public with sharing class ContactMergeSelector {
             SfdoInstrumentationEnum.Feature.ContactMerge, 
             SfdoInstrumentationEnum.Component.Page, 
             SfdoInstrumentationEnum.Action.DuplicateRecordSetResultCount, 
+            new Map<String, String>{ 'SourceClass' => 'ContactMergeSelector' },
             results.size());
 
         return results;

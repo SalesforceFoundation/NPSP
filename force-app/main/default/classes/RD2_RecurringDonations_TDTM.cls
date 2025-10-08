@@ -150,6 +150,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
                 SfdoInstrumentationEnum.Feature.EnhancedRecurringDonations,
                 SfdoInstrumentationEnum.Component.TriggerAction,
                 SfdoInstrumentationEnum.Action.Create,
+                new Map<String, String>{ 'SourceClass' => 'RD2_RecurringDonations_TDTM' },
                 rds.size());
         }
 

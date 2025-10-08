@@ -379,6 +379,7 @@ global with sharing class BDI_DataImportService {
             sfdoInstrumentationEnum.Feature.GiftEntry,
             sfdoInstrumentationEnum.Component.Page,
             sfdoInstrumentationEnum.Action.Save,
+            new Map<String, String>{ 'SourceClass' => 'BDI_DataImportService' },
             insertedGifts);
     }
 

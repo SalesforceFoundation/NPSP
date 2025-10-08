@@ -35,6 +35,9 @@
 public inherited sharing class Addresses extends fflib_SObjects2 {
 
     private Map<Id, Address__c> oldMap;
+    private static SfdoInstrumentationEnum.Action triggerAction;
+    private static Integer triggerCount;
+    private static Boolean isSeasonalAddressBatchMode = false;
 
     @TestVisible
     private TDTM_Runnable.DmlWrapper dmlWrapperLocal {
@@ -70,10 +73,12 @@ public inherited sharing class Addresses extends fflib_SObjects2 {
 
     public Addresses(List<Address__c> addresses) {
         super(addresses, Address__c.SObjectType);
+        triggerCount = addresses.size();
     }
 
     public Addresses(List<Address__c> addresses, List<Address__c> oldList) {
         super(addresses, Address__c.SObjectType);
+        triggerCount = addresses.size();
         this.oldMap = oldList == NULL ?
                 new Map<Id, Address__c>() :
                 new Map<Id, Address__c>(oldList);
@@ -86,6 +91,7 @@ public inherited sharing class Addresses extends fflib_SObjects2 {
     }
 
     public void onAfterInsert() {
+        triggerAction = SfdoInstrumentationEnum.Action.AfterInsert;
         syncAddressesForAccountsAndContacts(addressChangesToSyncToHouseholdAccountsAndContacts(),
                 dmlWrapperLocal, false);
 
@@ -110,7 +116,7 @@ public inherited sharing class Addresses extends fflib_SObjects2 {
     }
 
     public void onAfterUpdate() {
-
+        triggerAction = SfdoInstrumentationEnum.Action.AfterUpdate;
         if (addressChangesToSyncToHouseholdAccountsAndContacts().size() > 0) {
             syncAddressesForAccountsAndContacts(addressChangesToSyncToHouseholdAccountsAndContacts(),
                 dmlWrapperLocal, false);
@@ -134,6 +140,7 @@ public inherited sharing class Addresses extends fflib_SObjects2 {
     }
 
     public void onAfterDelete() {
+        triggerAction = SfdoInstrumentationEnum.Action.AfterDelete;
         Map<Id, Address__c> addressesByAccountId = addressesByAccountId();
         if (!addressesByAccountId.isEmpty()) {
             clearAddressesForEachAccount(addressesByAccountId);
@@ -206,6 +213,19 @@ public inherited sharing class Addresses extends fflib_SObjects2 {
             dmlWrapper.objectsToUpdate.addAll((List<SObject>)addressAndRelationshipsToUpdate.contactsToUpdate);
         }
 
+        if ((isSeasonalAddressBatchMode || triggerAction != null) && dmlWrapper.objectsToUpdate.size() > 0) {
+            SfdoInstrumentationService.getInstance().log(
+                isSeasonalAddressBatchMode ? SfdoInstrumentationEnum.Feature.SeasonalAddresses : SfdoInstrumentationEnum.Feature.Addresses, 
+                isSeasonalAddressBatchMode ? SfdoInstrumentationEnum.Component.Batch : SfdoInstrumentationEnum.Component.TriggerAction, 
+                isSeasonalAddressBatchMode ? SfdoInstrumentationEnum.Action.Dml_Update : triggerAction,
+                new Map<String, Object>{ 
+                    'AccountsToUpdate' => addressAndRelationshipsToUpdate.accountsToUpdate.size(),
+                    'ContactsToUpdate' => addressAndRelationshipsToUpdate.contactsToUpdate.size(),
+                    'AddressesToUpdate' => addressAndRelationshipsToUpdate.addressesToUpdate.size(),
+                    'SourceClass' => 'Addresses'
+                },
+                triggerCount);
+        }
 
         return householdInfoByAccountId;
     }
@@ -787,6 +807,9 @@ public inherited sharing class Addresses extends fflib_SObjects2 {
             return;
         }
 
+        isSeasonalAddressBatchMode = true;
+        triggerCount = listAcc.size();
+
         Map<Id, Address__c> mapAccIdAddr = new Map<Id, Address__c>();
         for (Account acc : listAcc) {
             mapAccIdAddr.put(acc.Id, null);
@@ -828,6 +851,8 @@ public inherited sharing class Addresses extends fflib_SObjects2 {
         syncAddressesForAccountsAndContacts(mapAccIdAddr, dmlWrapper, false);
         TDTM_TriggerHandler.processDML(dmlWrapper);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
+
+        isSeasonalAddressBatchMode = false;
     }
 
     /*******************************************************************************************************
