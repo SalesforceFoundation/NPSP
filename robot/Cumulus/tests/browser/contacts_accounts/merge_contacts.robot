@@ -27,7 +27,7 @@ ${EMAIL2}  user2@example.com
 
 *** Test Cases ***
 
-Add New related Contact to Household With Different LastName
+Merge Two Contacts with Same LastName
     [Documentation]                         Create two contacts using the backend API. Navigate to the 
     ...                                     Contact Merge page and merge the contacts
     [tags]                                  feature:Contacts And Accounts   unit
