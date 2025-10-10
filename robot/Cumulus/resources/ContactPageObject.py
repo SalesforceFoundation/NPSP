@@ -1,5 +1,7 @@
+import time
 from cumulusci.robotframework.pageobjects import ListingPage
 from cumulusci.robotframework.pageobjects import DetailPage
+from cumulusci.robotframework.pageobjects import BasePage
 from cumulusci.robotframework.pageobjects import pageobject
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
@@ -13,6 +15,49 @@ class ContactListingPage(BaseNPSPPage, ListingPage):
         """Clicks on Delete Account button inside the iframe"""
         self.selenium.wait_until_location_contains("/delete", message="Account delete page did not load in 30 seconds")
         self.npsp.select_frame_and_click_element("vfFrameId","button","Delete Account")
+
+@pageobject("Custom", "ContactMerge")
+class ContactMergePage(BaseNPSPPage, BasePage):
+    object_name = "Contact_Merge"
+
+    def navigate_to_contact_merge_page(self, filter_name=None):
+        """To go to Contact Merge page"""
+        url_template = "{root}/lightning/n/{object}"
+        url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=self.object_name)
+        self.selenium.go_to(url)
+        self.salesforce.wait_until_loading_is_complete()
+        self.npsp.wait_for_locator("frame","accessibility title")
+        self.npsp.choose_frame("accessibility title")
+
+    def click_search_contacts_button(self,search_value):
+        """Clicks on Search Contacts button"""
+        locator=npsp_lex_locators['id'].format("contactMergePage:pgHeader:srchByConBtn")
+        self.selenium.click_element(locator)
+        self.selenium.wait_until_page_contains("Enter search text to find duplicate Contacts")
+        search_locator=npsp_lex_locators['placeholder'].format("Search Contacts")
+        self.salesforce._populate_field(search_locator, search_value)
+        self.npsp.click_button_with_value("Search")
+
+    def select_contact_checkbox(self,contact_number):
+        """Clicks on Contact Row Selection Checkbox"""
+        locator=npsp_lex_locators['contact_merge']['select_contact_checkbox'].format(contact_number)
+        self.selenium.click_element(locator)
+        time.sleep(1)
+
+    def click_next_button(self):
+        """Clicks on Next button"""
+        locator=npsp_lex_locators['button'].format("Next")
+        self.selenium.click_element(locator)
+        self.selenium.wait_until_page_contains("Selected Contacts")
+
+    def click_merge_button(self):
+        """Clicks on Merge button"""
+        locator=npsp_lex_locators['button-text'].format("Merge")
+        self.selenium.click_element(locator)
+        time.sleep(1)
+        locator=npsp_lex_locators['contact_merge']['merge_modal_button']
+        self.selenium.click_element(locator)
+        self.selenium.wait_until_page_contains("Contact Details")
 
 @pageobject("Details", "Contact")
 class ContactDetailPage(BaseNPSPPage, DetailPage):

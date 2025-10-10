@@ -148,7 +148,10 @@ npsp_lex_locators={
 			'section_header':'//div[contains(@class,"forcePageBlockSectionEdit")]/h3//span[text()="{}"]',
 		},
 	},
-	
+	'contact_merge':{
+		'select_contact_checkbox':'//tr[@class="searchResultRow"][{}]//label[@class="slds-checkbox"]',
+		'merge_modal_button':'//div[contains(@class,"slds-modal__footer")]//input[@value="Merge"]',
+	},
 	'manage_hh_page':{
 		'address_link':'//h4[text()="{}"]',
 		'address':'//div[contains(@class, "uiInput")][.//label[contains(@class, "uiLabel")]/span[text()="{}"]]/',
