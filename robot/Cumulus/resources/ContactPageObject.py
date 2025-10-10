@@ -26,8 +26,8 @@ class ContactMergePage(BaseNPSPPage, BasePage):
         url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=self.object_name)
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
-        self.npsp.wait_for_locator("frame","accessibility title")
-        self.npsp.choose_frame("accessibility title")
+        self.selenium.wait_until_page_contains_element("//iframe", timeout=120)
+        self.selenium.select_frame("//iframe")
 
     def click_search_contacts_button(self,search_value):
         """Clicks on Search Contacts button"""
