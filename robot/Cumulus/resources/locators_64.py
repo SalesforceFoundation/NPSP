@@ -109,6 +109,7 @@ npsp_lex_locators={
 		'check_value':'//div[contains(@class, "forcePageBlockItem") or contains(@class, "slds-form-element_stacked")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]//*[text()="{}"]',
 		'check_text_value':'//div[contains(@class, "slds-form-element__label")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]/descendant::lightning-formatted-text',
 		'check_status':'//div[contains(@class, "slds-form-element__label")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]/descendant::lightning-formatted-text[text()="{}"]',
+		'check_name':'//div[contains(@class, "slds-form-element__label")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]/descendant::lightning-formatted-name[text()="{}"]',
 		'check_phone':'//div[contains(@class, "slds-form-element__label")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]/descendant::lightning-formatted-phone/a[text()="{}"]',
 		'check_address':'//div[contains(@class, "slds-form-element__label")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]/descendant::lightning-formatted-address/a/div[text()="{}"]',
 		'check_numbers':'//div[contains(@class, "slds-form-element__label")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]/descendant::lightning-formatted-number[text()="{}"]',
@@ -151,6 +152,7 @@ npsp_lex_locators={
 	'contact_merge':{
 		'select_contact_checkbox':'//tr[@class="searchResultRow"][{}]//label[@class="slds-checkbox"]',
 		'merge_modal_button':'//div[contains(@class,"slds-modal__footer")]//input[@value="Merge"]',
+		'merge_page_radio':'//label[@class="slds-radio"]//span[contains(text(),"{}")]/ancestor::label',
 	},
 	'manage_hh_page':{
 		'address_link':'//h4[text()="{}"]',

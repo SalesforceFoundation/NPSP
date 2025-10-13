@@ -50,6 +50,11 @@ class ContactMergePage(BaseNPSPPage, BasePage):
         self.selenium.click_element(locator)
         self.selenium.wait_until_page_contains("Selected Contacts")
 
+    def click_radio_button(self,field_value):
+        """Clicks on Radio Button With Provided Field Value"""
+        locator=npsp_lex_locators['contact_merge']['merge_page_radio'].format(field_value)
+        self.selenium.click_element(locator)
+
     def click_merge_button(self):
         """Clicks on Merge button"""
         locator=npsp_lex_locators['button-text'].format("Merge")

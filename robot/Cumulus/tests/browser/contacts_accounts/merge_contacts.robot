@@ -14,11 +14,13 @@ Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 Setup Test Data
     ${first_name} =       Generate Random String
     Set suite variable    ${first_name}
+    ${first_name2} =       Generate Random String
+    Set suite variable    ${first_name2}
     ${last_name} =        Generate Random String
     Set suite variable    ${last_name}
-    &{contact1} =         API Create Contact    Email=${EMAIL1}     LastName=${last_name}
+    &{contact1} =         API Create Contact    Email=${EMAIL1}     LastName=${last_name}   FirstName=${first_name}
     Set suite variable    &{contact1}
-    &{contact2} =         API Create Contact    Email=${EMAIL2}     LastName=${last_name}
+    &{contact2} =         API Create Contact    Email=${EMAIL2}     LastName=${last_name}   FirstName=${first_name2}
     Set suite variable    &{contact2}
 
 *** Variables ***
@@ -38,4 +40,6 @@ Merge Two Contacts with Same LastName
     Select Contact Checkbox                 1
     Select Contact Checkbox                 2
     Click Next Button
+    Click Radio Button                      ${first_name}
     Click Merge Button
+    Navigate To And Validate Field Value    Name            contains        ${first_name} ${last_name}

@@ -94,7 +94,7 @@ Create Household With additional details
     Verify Record                         ${first_name2} ${last_name2}
     Verify Record                         ${first_name1} ${last_name1}
     Click Link With Spantext              ${first_name1} ${last_name1}
-    # Current Page Should Be                Details                               Contact
+    Current Page Should Be                Details                               Contact
     ${contact_id1} =                      Save Current Record ID For Deletion   Contact
     &{contact1}                           Verify Record Is Created In Database  Contact                        ${contact_id1}
     Store Session Record                  Account                               ${contact1}[AccountId]
