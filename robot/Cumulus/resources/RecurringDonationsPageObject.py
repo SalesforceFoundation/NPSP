@@ -189,43 +189,6 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         | ...	                  Paused Reason=Card Expired
         | ...	                  Date=${date}     """
         for key, value in kwargs.items():
-           if key in ("Paused Reason"):
-              locator = npsp_lex_locators["erd"]["modal_dropdown_selector"].format(key)
-              selection_value = npsp_lex_locators["erd"]["modal_selection_value"].format(value)
-              if self.npsp.check_if_element_exists(locator):
-                  self.selenium.set_focus_to_element(locator)
-                  self.selenium.wait_until_element_is_visible(locator)
-                  self.salesforce.scroll_element_into_view(locator)
-                  self.salesforce._jsclick(locator)
-                  self.selenium.wait_until_element_is_visible(selection_value)
-                  self.selenium.click_element(selection_value)
-              else:
-                  self.builtin.log(f"Element {key} not present")
-           elif key in ("Date"):
-               for v in value:
-                  checkbox =  npsp_lex_locators["erd"]["pause_date_checkbox"].format(v)
-                  time.sleep(1)
-                  if (checkbox.is_selected() == False):
-                    self.selenium.click_element(checkbox)
-                  else:
-                    self.builtin.log("This checkbox is already in the expected status", "WARN")
-           else:
-               raise Exception("Key not supported expected keys <Paused Reason> or <Date>")
-           
-        btnlocator = npsp_lex_locators["button-with-text"].format("Save")
-        self.salesforce.scroll_element_into_view(btnlocator)
-        self.selenium.click_element(btnlocator)
-        self.salesforce.wait_until_modal_is_closed()
-
-
-    @capture_screenshot_on_error
-    def populate_pause_modal(self,**kwargs):
-        """ Populate the values in the pause recurring donation modal
-		based on the key value pair options in the kwargs passed as parameter
-		| Populate Pause Modal
-        | ...	                  Paused Reason=Card Expired
-        | ...	                  Date=${date}     """
-        for key, value in kwargs.items():
             if key in ("Paused Reason"):
                 locator = npsp_lex_locators["erd"]["modal_dropdown_selector"].format(key)
                 selection_value = npsp_lex_locators["erd"]["modal_selection_value"].format(value)

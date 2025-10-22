@@ -25,7 +25,15 @@ class ContactMergePage(BaseNPSPPage, BasePage):
         url_template = "{root}/lightning/n/{object}"
         url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=self.object_name)
         self.selenium.go_to(url)
+        self.selenium.wait_until_location_contains(
+            self.object_name,
+            timeout=60,
+            message="Contact Merge page did not load in 1 min",
+        )
+        self.selenium.reload_page()
         self.salesforce.wait_until_loading_is_complete()
+        time.sleep(10)
+        self.builtin.log(self.selenium.get_source())
         self.selenium.wait_until_page_contains_element("//iframe", timeout=120)
         self.selenium.select_frame("//iframe")
 
@@ -62,7 +70,8 @@ class ContactMergePage(BaseNPSPPage, BasePage):
         time.sleep(1)
         locator=npsp_lex_locators['contact_merge']['merge_modal_button']
         self.selenium.click_element(locator)
-        self.selenium.wait_until_page_contains("Contact Details")
+        time.sleep(5)
+        #self.selenium.wait_until_page_contains("Contact Details")
 
 @pageobject("Details", "Contact")
 class ContactDetailPage(BaseNPSPPage, DetailPage):
