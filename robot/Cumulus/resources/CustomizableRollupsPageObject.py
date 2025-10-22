@@ -25,6 +25,7 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
         self.selenium.wait_until_page_contains("Account: Average Gift", timeout=60)
         # self.selenium.wait_until_page_contains_element("//div[@class='oneAlohaPage']", timeout=120)
         self.builtin.log(self.selenium.get_source())
+        self.selenium.unselect_frame()
         self.selenium.wait_until_page_contains_element("//iframe", timeout=120)
         self.selenium.select_frame("//iframe")
 

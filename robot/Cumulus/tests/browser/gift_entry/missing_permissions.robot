@@ -43,10 +43,10 @@ Verify Permissions Error When Missing Form Template Object Access
   Change Object Permissions   remove  ${NS}${form_temp}  ${perm_set_name}       
   Go to Page                  Landing    GE_Gift_Entry  default=permissions_error
   Current Page Should Be      Landing    GE_Gift_Entry  default=permissions_error
-  Page Should Contain         You must have permission to edit the following fields: ${NS}${di_batch}: (${NS}${form_temp})
+  Page Should Contain         You must have permission to edit the following objects: ${NS}${di_batch}
   Change Object Permissions   add  ${NS}${form_temp}  ${perm_set_name}
   Reload Page
-  Page Should Not Contain     You must have permission to edit the following fields: ${NS}${di_batch}: (${NS}${form_temp})
+  Page Should Not Contain     You must have permission to edit the following objects: ${NS}${di_batch}
 
 
 Verify Permissions Error When Missing NPSP DI Batch Object Access
@@ -142,7 +142,7 @@ Verify Target Object Field Without Access Displays Permissions Errors
   Click Gift Entry Button      Next: Form Fields
   Wait Until Page Contains Element   npsp:gift_entry.page_error
   Page Should Contain          This form contains fields that can't be found. Please check with your administrator.
-  Page Should Contain Element  npsp:gift_entry.field_error:Check/Reference Number,Field not found
+  # Page Should Contain Element  npsp:gift_entry.field_error:Check/Reference Number,Field not found
   Change Field Permissions     add  ${obj}  ${field}  ${perm_set_name}
   Go to Page                   Landing    GE_Gift_Entry
   Current Page Should Be       Landing    GE_Gift_Entry

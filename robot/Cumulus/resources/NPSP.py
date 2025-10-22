@@ -771,6 +771,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         frames = self.selenium.get_webelements(locator)
         self.selenium.capture_page_screenshot()
         print(f'list of frames {frames}')
+        self.selenium.unselect_frame()
         for frame in frames:
             print(f'inside for loop for {frame}')
             self.selenium.capture_page_screenshot()

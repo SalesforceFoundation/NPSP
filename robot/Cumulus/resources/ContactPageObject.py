@@ -32,8 +32,7 @@ class ContactMergePage(BaseNPSPPage, BasePage):
         )
         self.selenium.reload_page()
         self.salesforce.wait_until_loading_is_complete()
-        time.sleep(10)
-        self.builtin.log(self.selenium.get_source())
+        self.selenium.unselect_frame()
         self.selenium.wait_until_page_contains_element("//iframe", timeout=120)
         self.selenium.select_frame("//iframe")
 
@@ -140,6 +139,7 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
     def verify_rollup_field_value(self,field_name,value,section=None):
         """Verifies if the given rollup field contains given value
         if it doesn't, then recalculates rollup and performs refresh"""
+        self.selenium.unselect_frame()
         try :
             self.npsp.navigate_to_and_validate_field_value(field_name,"contains",value,section)
             self.builtin.log("Found rollup value on the page on initial try")
