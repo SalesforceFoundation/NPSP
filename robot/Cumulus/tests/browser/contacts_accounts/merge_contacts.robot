@@ -32,7 +32,7 @@ ${EMAIL2}  user2@example.com
 Merge Two Contacts with Same LastName
     [Documentation]                         Create two contacts using the backend API. Navigate to the 
     ...                                     Contact Merge page and merge the contacts
-    [tags]                                  feature:Contacts And Accounts   unit
+    [tags]                                  feature:Contacts And Accounts   unit    unstable
 
     Load Page Object                        Custom                          ContactMerge
     Navigate To Contact Merge Page

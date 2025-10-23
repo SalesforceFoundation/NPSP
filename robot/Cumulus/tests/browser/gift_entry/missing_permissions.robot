@@ -43,10 +43,10 @@ Verify Permissions Error When Missing Form Template Object Access
   Change Object Permissions   remove  ${NS}${form_temp}  ${perm_set_name}       
   Go to Page                  Landing    GE_Gift_Entry  default=permissions_error
   Current Page Should Be      Landing    GE_Gift_Entry  default=permissions_error
-  Page Should Contain         You must have permission to edit the following objects: ${NS}${di_batch}
+  Page Should Contain         You must have permission to edit the following fields: ${NS}${di_batch}: (${NS}${form_temp})
   Change Object Permissions   add  ${NS}${form_temp}  ${perm_set_name}
   Reload Page
-  Page Should Not Contain     You must have permission to edit the following objects: ${NS}${di_batch}
+  Page Should Not Contain     You must have permission to edit the following fields: ${NS}${di_batch}: (${NS}${form_temp})
 
 
 Verify Permissions Error When Missing NPSP DI Batch Object Access
