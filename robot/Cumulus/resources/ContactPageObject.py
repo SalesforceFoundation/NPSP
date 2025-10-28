@@ -164,5 +164,5 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
         self.selenium.wait_until_element_is_visible(locator)
         self.selenium.click_element(locator)
         self.selenium.wait_until_page_contains("Relationships Viewer")
-        link_locator=npsp_lex_locators['custom_objects']['actions-link'].format("Relationships_Viewer","Relationships_Viewer")
-        self.selenium.click_link(link_locator)
+        link_locator=npsp_lex_locators['custom_objects']['option'].format("Relationships Viewer")
+        self.selenium.click_element(link_locator)

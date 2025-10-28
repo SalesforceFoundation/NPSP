@@ -36,7 +36,7 @@ npsp_lex_locators={
 		'flexipage_edit_form': 'css: force-record-layout-item.slds-is-editing',
 		'list':"//div[contains(@class,'forcePageBlockSectionRow')]/div[contains(@class,'forcePageBlockItem')]/div[contains(@class,'slds-hint-parent')]/div[@class='slds-form-element__control']/div[.//span[text()='{}']][//div[contains(@class,'uiMenu')]//a[@class='select']]",
 		'rdlist':"//label[text()='{}']/following-sibling::div//div[contains(@class,'slds-dropdown-trigger') and @role='combobox']",
-		'flexipage-list':'//lightning-combobox[./label[text()="{}"]]//input[contains(@class,"combobox__input")]',
+		'flexipage-list':'//lightning-combobox//label[text()="{}"]/ancestor::div[1]//button[contains(@class,"slds-combobox__input")]',
 		'dropdown':"//div[@class='select-options']/ul[@class='scrollable']/li[@class='uiMenuItem uiRadioMenuItem']/a[contains(text(),'{}')]",
 		'related': {
 			'button':"//article[contains(@class, 'slds-card slds-card_boundary')][.//img][.//span[@title='{}']]//*[text()='{}']",
@@ -101,9 +101,9 @@ npsp_lex_locators={
 	'delete_icon':'//*[contains(@class,"slds-form-element")][./label[text()="{}"]]//input[@placeholder="{}"]/parent::div/parent::div/following-sibling::div/button',
 	'delete_icon_record':'//label[contains(text() ,"{}")]/following::input[@placeholder = "{}"]/following-sibling::div/child::button[@title="Clear Selection"]',
 	'aff_list':'//div[@role="tablist"]/following::div[@class = "container forceRelatedListSingleContainer"][7]/article/div[@class="slds-card__body"]/div/div/div/div/div/div/div/table/tbody/tr/td[1]',
-	'aff_status':'//table[contains(@class,"slds-table")]/tbody/tr[./td//a[text()="{}"]]/td[@data-label="Relationship Explanation"]',
+	'aff_status':'//table[contains(@class,"slds-table")]/tbody//td//a//span[text()="{}"]/ancestor::tr//td[@data-label="Relationship Explanation"]',
 	'relationship_status':'//lightning-formatted-text[contains(text(),"is")]',
-	'aff_id':'//table[contains(@class,"slds-table")]/tbody/tr[./td//a[text()="{}"]]/th//a',
+	'aff_id':'//table[contains(@class,"slds-table")]/tbody//td//a//span[text()="{}"]',
 	'click_aff_id':'//table[contains(@class,"forceRecordLayout")]/tbody/tr/th/div/a[text()="{}"]',
 	'confirm': {
 		'check_value':'//div[contains(@class, "forcePageBlockItem") or contains(@class, "slds-form-element_stacked")][.//span[text()="{}"]]//following-sibling::div[.//span[contains(@class, "test-id__field-value")]]//*[text()="{}"]',
@@ -180,7 +180,7 @@ npsp_lex_locators={
 		'button':'//div[contains(@class,"slds-button-group")][.//span[text()="toTask {}"]]/button[contains(text(),"{}")]',
 		'check_eng_plan':'//h2/a/span[@title="{}"]//ancestor::div[contains(@class, "slds-card__header slds-grid")]/following-sibling::div//tbody/tr/th/div/a',
 		'dd':'//h2/a/span[@title="{}"]//ancestor::div[contains(@class,"slds-card__header slds-grid")]/following-sibling::div//tbody/tr/th/div/a/ancestor::th/following-sibling::td//lightning-primitive-icon',
-		'tasks':'//div[contains(@class,"slds-section__content")]/ul/li//a[text()="{}"]',
+		'tasks':'//div[contains(@class,"slds-section__content")]//a[text()="{}"]',
 	},
 	'levels':{
 		'id':'//input[contains(@id,"{}")]',
