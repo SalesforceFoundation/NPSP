@@ -33,6 +33,7 @@ class DataImportPage(BaseNPSPPage, ListingPage):
 
     def begin_data_import_process_and_verify_status(self,batch,status):
         """On the DI page, clicks the Begin Data Import Process button and waits for specified status to display """
+        self.selenium.unselect_frame()
         self.npsp.wait_for_locator("frame","accessibility title")
         self.npsp.select_frame_and_click_element("accessibility title","button","Begin Data Import Process")
         self.npsp.wait_for_batch_to_process(batch,status)

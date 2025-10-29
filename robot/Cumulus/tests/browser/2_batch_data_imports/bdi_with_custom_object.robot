@@ -43,7 +43,7 @@ Create Data Import Record
     ...        ${org_ns}CO1_Text__c=Robot Automation
     ...        ${org_ns}CO1_textarea__c=This is custom object data created via Automation
     ...        ${org_ns}CO1_url__c=robot.#23@xyz.com 
-    [return]   &{data_import}
+    RETURN   &{data_import}
 
     
 *** Test Cases ***

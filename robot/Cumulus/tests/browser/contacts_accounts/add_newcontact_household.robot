@@ -44,7 +44,7 @@ Add New related Contact to Household With Different LastName
     Click Modal Button                      Save
     Wait Until Modal Is Closed
     Go To Page                              Listing                                 Contact
-    Click Link                              link= ${first_name} ${last_name}
+    Click Link                              ${first_name} ${last_name}
     Current Page Should Be                  Details                                 Contact
     ${contact_id2} =                        Save Current Record ID For Deletion     Contact
     &{contact2}                             Verify Record Is Created In Database    Contact                                 ${contact_id2}

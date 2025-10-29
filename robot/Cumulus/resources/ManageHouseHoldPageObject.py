@@ -32,8 +32,8 @@ class ManageHouseholdPage(BaseNPSPPage, BasePage):
          Supported option is (Enter A new Address)
         """
         if option.lower() == "enter a new address":
-           locator=npsp_lex_locators['button-title'].format("Enter a new address")
-           self.selenium.click_button(locator)
+           locator=npsp_lex_locators['button-text-span'].format("Enter a new address")
+           self.selenium.click_element(locator)
            self.npsp.populate_modal_form(**kwargs)
            self.selenium.click_button("Set Address")
            self.selenium.click_button("Save")
@@ -55,13 +55,18 @@ class ManageHouseholdPage(BaseNPSPPage, BasePage):
         lookup_ele=npsp_lex_locators['household_lookup_dropdown_menu']
         self.selenium.wait_until_element_is_visible(lookup_ele)
 
-        if option.lower() in ("new", "existing"):
-            new_contact_locator=npsp_lex_locators['manage_hh_page']['add_contact_option'].format("New Contact")
-            new_contact_btn=npsp_lex_locators['button-title'].format("New Contact")
-            self.selenium.wait_until_element_is_visible(new_contact_locator)
+        new_contact_locator=npsp_lex_locators['manage_hh_page']['add_contact_option'].format("New Contact")
+        new_contact_btn=npsp_lex_locators['button-text'].format("New Contact")
+        self.selenium.wait_until_element_is_visible(new_contact_locator)
+
+        if option.lower() in ("new"):
             self.selenium.click_element(new_contact_locator)
             self.selenium.wait_until_element_is_visible(new_contact_btn)
             self.selenium.click_button(new_contact_btn)
+        elif option.lower() in ("existing"):
+            button_title = "Add {}".format(value)
+            add_contact_locator=npsp_lex_locators['button-title'].format(button_title)
+            self.selenium.click_element(add_contact_locator)
         else:
             print("Invalid option")
 
@@ -74,13 +79,13 @@ class ManageHouseholdPage(BaseNPSPPage, BasePage):
          Select the option for name display settings for each of the contact in the household
          provided options (Household Name/ Formal Greeting/Informal Greeting)
         """
-        self.npsp.choose_frame("accessibility title")
+        self.npsp.choose_frame("Manage Household")
         loc=self.npsp.validate_checkboxes(contact,option)
         self.selenium.double_click_element(loc)
         self.selenium.unselect_frame()
 
     def save_changes_made_for_manage_household(self):
-        self.npsp.choose_frame("accessibility title")
+        self.npsp.choose_frame("Manage Household")
         self.selenium.click_button("Save")
         self.selenium.unselect_frame()
 

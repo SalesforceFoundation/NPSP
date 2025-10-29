@@ -33,7 +33,7 @@ Create Data Import Record
     ...        ${ns}Donation_Date__c=${date}
     ...        ${ns}Donation_Donor__c=Contact1
     ...        ${org_ns}CO2_currency__c=500
-    [return]   &{data_import}
+    RETURN   &{data_import}
 
 Create Data Import with GAU Details
     &{data_import} =  API Create DataImport
@@ -43,7 +43,7 @@ Create Data Import with GAU Details
     ...        ${ns}Donation_Date__c=${date}
     ...        ${ns}Donation_Donor__c=Contact1
     ...        ${ns}GAU_Allocation_1_Percent__c=50
-    [return]   &{data_import}
+    RETURN   &{data_import}
 
 *** Test Cases ***
 Verify Donation Creation Fails on Incorrect Data and Reprocess

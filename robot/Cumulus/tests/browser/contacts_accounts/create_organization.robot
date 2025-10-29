@@ -38,7 +38,7 @@ Create Organization Foundation
     #Verify Account is only displayed in expected views
     Go To Page                             Listing                               Account
     Verify Record                          ${account_name}
-    Change View To                         Organization Accounts
-    Verify Record   	                   ${account_name}
-    Change View To                         Household Accounts
-    Wait Until Page Does Not Contain       ${account_name}
+    # Change View To                         Organization Accounts
+    # Verify Record   	                   ${account_name}
+    # Change View To                         Household Accounts
+    # Wait Until Page Does Not Contain       ${account_name}

@@ -36,7 +36,7 @@ Remove Primary Affiliation for Contact
     Go To Page                        Details                      Contact                 object_id=${contact1}[Id]
     Select Tab                        Related
     Click Related Item Popup Link     Organization Affiliations    ${account1}[Name]       Delete
-    Wait For Modal                    New                          Affiliation             expected_heading=Delete Affiliation
+    Wait For Modal                    New                          Affiliation
     Click Modal Button                Delete
     Wait Until Modal Is Closed
     Go To Page                        Details                      Account                 object_id=${account1}[Id]

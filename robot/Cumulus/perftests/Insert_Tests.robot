@@ -27,7 +27,7 @@ Insert 200 Contacts
     @{objects}=     run keyword if    ${IncludeAddress}        Get 200 Contacts With Address
     ...                ELSE                     Get 200 Contacts Without Address
     Salesforce Collection Insert  ${objects}
-    [return]    ${objects}
+    RETURN    ${objects}
 
 Insert 200 Opportunities
     [Arguments]     ${IncludePayment}
@@ -39,7 +39,7 @@ Insert 200 Opportunities
     Set Suite Variable      ${COUNTER}   ${COUNTER + 1}
     @{objects}=     Get 200 Opportunities   ${accounts}     ${IncludePayment}
     Salesforce Collection Insert  ${objects}
-    [return]    ${objects}
+    RETURN    ${objects}
 
 Insert 200 Non-NPSP Contacts
     [Documentation]     Generate and Insert 200 Accounts and Contacts with all NPSP triggers disabled.
@@ -70,7 +70,7 @@ Insert 200 Non-NPSP Contacts
     END
     Salesforce Collection Insert    ${contacts}
 
-    [return]    ${contacts}
+    RETURN    ${contacts}
 
 ## =============================================================================================
 ## Data Creation Keywords:
@@ -97,7 +97,7 @@ Get 200 Opportunities
         ${account_id}=  Set Variable    ${account}[Id]
         set to dictionary   ${object}   AccountId   ${account_id}
     END
-    [return]    ${objects}
+    RETURN    ${objects}
 
 Get 200 Contacts With Address
     [Documentation]     Generate 200 Contact records with a Mailing Address
@@ -114,7 +114,7 @@ Get 200 Contacts With Address
         ...  Phone={{fake.phone_number}}
         ...  Title=${random}
         ...  Email=${timestamp}+{{number}}@${random}-{{number}}.com
-    [return]    ${objects}
+    RETURN    ${objects}
 
 Get 200 Contacts Without Address
     [Documentation]     Generate 200 Contact records without a Mailing Address
@@ -127,7 +127,7 @@ Get 200 Contacts Without Address
         ...  Phone={{fake.phone_number}}
         ...  Title=${random}
         ...  Email=${timestamp}+{{number}}@${random}-{{number}}.com
-    [return]    ${objects}
+    RETURN    ${objects}
 
 ## =============================================================================================
 ## Helper Keywords
