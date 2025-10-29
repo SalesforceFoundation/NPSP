@@ -19,6 +19,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=object_name)
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
+        self.selenium.unselect_frame()
         self.npsp.wait_for_locator("frame","accessibility title")
         self.npsp.choose_frame("accessibility title")
 
@@ -151,6 +152,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
     def enable_advanced_mapping_if_not_enabled(self):
         """Checks if advanced mapping is Enabled and enables if not enabled"""
         locator=npsp_lex_locators['id'].format("navigateAdvancedMapping")
+        self.selenium.unselect_frame()
         if self.npsp.check_if_element_exists(locator):
             ele=self.selenium.get_webelement(locator)
             classname=ele.get_attribute("class")
