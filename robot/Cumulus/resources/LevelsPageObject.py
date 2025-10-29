@@ -30,6 +30,7 @@ class LevelListPage(BaseNPSPPage, ListingPage):
         self.selenium.wait_until_location_contains("/list",timeout=60, message="Records list view did not load in 1 min")
         self.selenium.location_should_contain("Level__c",message="Current page is not Level List view")
 
+    @capture_screenshot_on_error
     def navigate_to_level_page(self,mode):
         """
         Navigate to create level or edit level mode from the list page based on the mode specified
@@ -39,12 +40,13 @@ class LevelListPage(BaseNPSPPage, ListingPage):
             self.npsp.click_special_object_button("New")
 
         if mode.lower() == "edit":
-            drop_down = npsp_lex_locators['opportunities_dropdown'].format(1)
+            drop_down = npsp_lex_locators['locate_dropdown'].format(1)
             self.selenium.set_focus_to_element(drop_down)
             self.selenium.wait_until_element_is_visible(drop_down)
             self.selenium.click_element(drop_down)
             self.selenium.wait_until_page_contains("Edit")
-            self.selenium.click_link("Edit")
+            edit_button = npsp_lex_locators['levels']['action_button'].format("Edit")
+            self.selenium.click_element(edit_button)
 
         self.npsp.wait_for_locator('frame','accessibility title')
         self.npsp.choose_frame('accessibility title')

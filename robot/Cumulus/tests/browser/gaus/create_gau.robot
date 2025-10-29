@@ -25,4 +25,4 @@ Create GAU and Verify
      ${gau_name}                       Get Main Header
      Go To Page                        Listing
      ...                               General_Accounting_Unit__c
-     Click Link                        link=${gau_name}
+     Click Link With Spantext          ${gau_name}
