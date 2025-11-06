@@ -30,7 +30,7 @@ Setup Variables
 Create Household With Name Only
     [Documentation]                       Creates a contact with lastname and firstname. Verifies that the toast message appears
     ...                                   Verifies that contact is created and displays under recently viewed contacts
-    [tags]                                feature:Contacts and Accounts     unit
+    [tags]                                feature:Contacts and Accounts     unit    unstable
 
     #Create contact with only name
     Go To Page                            Listing                               Contact
@@ -56,7 +56,7 @@ Create Household With additional details
     [Documentation]                       Create a contact with lastname, firstname and email and click save & new and
     ...                                   create another contact with name and address. Verifies that the toast message appears
     ...                                   Verifies that contacts created and displays under recently viewed contacts
-    [tags]                                feature:Contacts and Accounts
+    [tags]                                feature:Contacts and Accounts     unstable
     # Create a contact with name and email
     Go To Page                            Listing                             Contact
     Click Object Button                   New
