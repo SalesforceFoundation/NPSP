@@ -61,18 +61,20 @@ private class RD2_ApiService_Extended_TEST {
         insert contact;
 
         // Create multiple recurring donations for testing
-        insert getEnhancedRecurringDonationBuilder(contact.Id)
+        npe03__Recurring_Donation__c rd1 = getEnhancedRecurringDonationBuilder(contact.Id)
             .build();
         
-        insert getEnhancedRecurringDonationBuilder(contact.Id)
+        npe03__Recurring_Donation__c rd2 = getEnhancedRecurringDonationBuilder(contact.Id)
             .withAmount(200)
             .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH)
             .build();
-            
-        insert getEnhancedRecurringDonationBuilder(contact.Id)
+
+        npe03__Recurring_Donation__c rd3 = getEnhancedRecurringDonationBuilder(contact.Id)
             .withAmount(150)
             .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_WEEKLY)
             .build();
+
+        insert new List<npe03__Recurring_Donation__c>{rd1, rd2, rd3};
     }
 
     // ===== HIGH PRIORITY TEST SCENARIOS =====
