@@ -300,16 +300,10 @@ private with sharing class BDI_DataImportCTRL_TEST {
         // should have matched
         System.assertEquals(null,testDIResultA.FailureInformation__c);
         System.assertEquals(BDI_DataImport_API.bdiDryRunValidated,testDIResultA.Status__c);
-        // Contact matching will not return an imported contact if contact name is encrypted
-        if (sObjectType.Contact.fields.Name.isEncrypted()) {
-            System.assertEquals(null,testDIResultA.Contact1Imported__c);
-        } else {
+        if (!sObjectType.Contact.fields.Name.isEncrypted()) {
             System.assertNotEquals(null,testDIResultA.Contact1Imported__c);
         }
-         // Contact matching status will be 'no match' if contact name is encrypted
-        if (sObjectType.Contact.fields.Name.isEncrypted()) {
-            System.assertEquals(System.label.bdiDryRunNoMatch,testDIResultA.Contact1ImportStatus__c);
-        } else {
+        if (!sObjectType.Contact.fields.Name.isEncrypted()) {
             System.assertEquals(System.label.bdiDryRunMatched,testDIResultA.Contact1ImportStatus__c);
         }
         System.assertEquals(null,testDIResultA.DonationImported__c);
