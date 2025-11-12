@@ -162,6 +162,5 @@
     <pluralLabel>AutoNumbers</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
-    <startsWith>Vowel</startsWith>
     <visibility>Protected</visibility>
 </CustomObject>
