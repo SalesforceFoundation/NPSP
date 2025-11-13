@@ -101,7 +101,16 @@ public with sharing class ContactMergeSelector {
                 .withSelectFields(listStrContactField)
                 .withWhere(whereString)
                 .build();
-        return Database.query(queryString);
+        List<SObject> results = Database.query(queryString);
+
+        SfdoInstrumentationService.getInstance().log(
+            SfdoInstrumentationEnum.Feature.ContactMerge, 
+            SfdoInstrumentationEnum.Component.Page, 
+            SfdoInstrumentationEnum.Action.DuplicateRecordSetResultCount, 
+            new Map<String, String>{ 'SourceClass' => 'ContactMergeSelector' },
+            results.size());
+
+        return results;
     }
 
     public List<Account> getAccountsFor(Set<Id> accountIds) {

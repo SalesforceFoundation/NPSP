@@ -39,6 +39,58 @@ public inherited sharing class SfdoInstrumentationService {
     @TestVisible
     private static SfdoInstrumentationService instance;
 
+    @TestVisible
+    private static LastCallData lastCallData;
+
+    @TestVisible
+    private static String requestQuiddity = getRequestQuiddity();
+    
+    class LastCallData {        
+        public String lastFeatureName;
+        public String lastComponentName;
+        public String lastActionName;
+        public Integer lastValue;
+        public Map<String, Object> lastContext;
+        
+        // Default constructor
+        public LastCallData(String featureName, String componentName) {
+            this.lastFeatureName = featureName;
+            this.lastComponentName = componentName;
+        }
+        
+        // Constructor with feature, component, action, and value
+        public LastCallData(String featureName, String componentName, String actionName, Integer value) {
+            this.lastFeatureName = featureName;
+            this.lastComponentName = componentName;
+            this.lastActionName = actionName;
+            this.lastValue = value;
+        }
+        
+        // Constructor with feature, component, action, and context
+        public LastCallData(String featureName, String componentName, String actionName, Map<String, Object> context, Integer value) {
+            this.lastFeatureName = featureName;
+            this.lastComponentName = componentName;
+            this.lastActionName = actionName;
+            this.lastContext = context;
+            this.lastValue = value;
+        }
+        
+        // Constructor with feature, component, action, and context
+        public LastCallData(String featureName, String componentName, String actionName, Map<String, Object> context) {
+            this.lastFeatureName = featureName;
+            this.lastComponentName = componentName;
+            this.lastActionName = actionName;
+            this.lastContext = context;
+        }
+        
+        // Constructor with feature, component, and action only
+        public LastCallData(String featureName, String componentName, String actionName) {
+            this.lastFeatureName = featureName;
+            this.lastComponentName = componentName;
+            this.lastActionName = actionName;
+        }
+    }
+
     /**
      * @description Return a singleton instance of this class
      */
@@ -48,7 +100,7 @@ public inherited sharing class SfdoInstrumentationService {
         }
         return instance;
     }
-
+    
     // =============================================================================================================================
     // Primary Logging signatures that accept only valid defined Enums for Feature/Component/Action
     // =============================================================================================================================
@@ -60,7 +112,9 @@ public inherited sharing class SfdoInstrumentationService {
      * @param context Map of additional content as context to include in the log (DO NOT INCLUDE PII or NON-GPDR COMPLIANT DATA)
      */
     public void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context) { 
+        context = applyRequestQuiddity(context);
         SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name(), context);
+        lastCallData = new LastCallData(featureName?.name(), componentName?.name(), actionName?.name(), context);
     }
 
     /**
@@ -71,7 +125,9 @@ public inherited sharing class SfdoInstrumentationService {
      * @param value Duration or other value to include in the log
      */
     public void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context, Integer value) { 
+        context = applyRequestQuiddity(context);
         SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name(), context, value);
+        lastCallData = new LastCallData(featureName?.name(), componentName?.name(), actionName?.name(), context, value);
     }
 
     /**
@@ -81,7 +137,9 @@ public inherited sharing class SfdoInstrumentationService {
      * @param value Duration or other value to include in the log
      */
     public void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Integer value) { 
-        SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name(), value);
+        Map<String, Object> context = applyRequestQuiddity(null);
+        SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name(), context, value);
+        lastCallData = new LastCallData(featureName?.name(), componentName?.name(), actionName?.name(), context, value);
     }
 
     /**
@@ -90,7 +148,9 @@ public inherited sharing class SfdoInstrumentationService {
      * @param actionName String - define the action of the feature or component
      */
     public void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName) {
-        SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name());
+        Map<String, Object> context = applyRequestQuiddity(null);
+        SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name(), context);
+        lastCallData = new LastCallData(featureName?.name(), componentName?.name(), actionName?.name(), context);
     }
 
     // =============================================================================================================================
@@ -104,7 +164,9 @@ public inherited sharing class SfdoInstrumentationService {
      * @param context Map of additional content as context to include in the log (DO NOT INCLUDE PII or NON-GPDR COMPLIANT DATA)
      */
     public void log(SfdoInstrumentationEnum.Feature featureName, SObjectType objType, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context) { 
+        context = applyRequestQuiddity(context);
         SfdoLogUtils.log(featureName?.name(), String.valueOf(objType), actionName?.name(), context);
+        lastCallData = new LastCallData(featureName?.name(), String.valueOf(objType), actionName?.name(), context);
     }
 
     /**
@@ -115,7 +177,9 @@ public inherited sharing class SfdoInstrumentationService {
      * @param value Duration or other value to include in the log
      */
     public void log(SfdoInstrumentationEnum.Feature featureName, SObjectType objType, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context, Integer value) { 
+        context = applyRequestQuiddity(context);
         SfdoLogUtils.log(featureName?.name(), String.valueOf(objType), actionName?.name(), context, value);
+        lastCallData = new LastCallData(featureName?.name(), String.valueOf(objType), actionName?.name(), context, value);
     }
 
     /**
@@ -125,7 +189,9 @@ public inherited sharing class SfdoInstrumentationService {
      * @param value Duration or other value to include in the log
      */
     public void log(SfdoInstrumentationEnum.Feature featureName, SObjectType objType, SfdoInstrumentationEnum.Action actionName, Integer value) { 
-        SfdoLogUtils.log(featureName?.name(), String.valueOf(objType), actionName?.name(), value);
+        Map<String, Object> context = applyRequestQuiddity(null);
+        SfdoLogUtils.log(featureName?.name(), String.valueOf(objType), actionName?.name(), context, value);
+        lastCallData = new LastCallData(featureName?.name(), String.valueOf(objType), actionName?.name(), context, value);
     }
 
     /**
@@ -134,13 +200,46 @@ public inherited sharing class SfdoInstrumentationService {
      * @param actionName String - define the action of the feature or component
      */
     public void log(SfdoInstrumentationEnum.Feature featureName, SObjectType objType, SfdoInstrumentationEnum.Action actionName) {
-        SfdoLogUtils.log(featureName?.name(), String.valueOf(objType), actionName?.name());
+        Map<String, Object> context = applyRequestQuiddity(null);
+        SfdoLogUtils.log(featureName?.name(), String.valueOf(objType), actionName?.name(), context);
+        lastCallData = new LastCallData(featureName?.name(), String.valueOf(objType), actionName?.name(), context);
     }
 
     // =============================================================================================================================
     // Helper Methods
     // =============================================================================================================================
 
+    /**
+     * @description Retrieve the Quiddity of the current request
+     * @return String
+     */
+    private static String getRequestQuiddity() {
+        try {
+            Request reqInfo = Request.getCurrent();
+            String currentRequestId = reqInfo.getRequestId();
+            Quiddity currentType = reqInfo.getQuiddity();
+            return currentType.name();
+        } catch (Exception e) {
+            return '(error)';
+        }
+    }
+
+    /**
+     * @description Always add the Request Quiddity to the context map
+     * @return Map<String, Object>
+     */
+    private static Map<String, Object> applyRequestQuiddity(Map<String, Object> context) {
+        try {
+            if (context == null) {
+                context = new Map<String, Object>();
+            } else {
+                context = new Map<String, Object>(context);
+            }
+            context.put('RequestQuiddity', requestQuiddity);
+        } catch (Exception e) {
+        }
+        return context;
+    }
     /**
      * @description Retrieve the Action Enum for a specific TriggerHandler Event Type
      * @param  thisAction thisAction

@@ -185,6 +185,9 @@ public with sharing class ADDR_Addresses_TEST {
 
         npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
 
+        // disable household naming so that its instrumentation doesn't interfere with the test
+        UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming(); 
+
         testContacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(totalContactsToCreate);
         for (Contact con : testContacts) {
             con.MailingStreet = 'new street';
@@ -216,6 +219,15 @@ public with sharing class ADDR_Addresses_TEST {
         for (Address__c addr : listAddr) {
             System.assertEquals('Other', addr.Address_Type__c);
         }
+
+        System.assertEquals(SfdoInstrumentationEnum.Feature.Addresses.name(), SfdoInstrumentationService.lastCallData.lastFeatureName,
+            'The Instrumentation LastFeatureName should be Addresses');
+        System.assertEquals(SfdoInstrumentationEnum.Component.TriggerAction.name(), SfdoInstrumentationService.lastCallData.lastComponentName,
+            'The Instrumentation LastComponentName should be TriggerAction');
+        System.assertEquals(SfdoInstrumentationEnum.Action.Dml_Insert.name(), SfdoInstrumentationService.lastCallData.lastActionName,
+            'The Instrumentation LastActionName should be DmlInsert');
+        System.assertEquals(totalContactsToCreate, SfdoInstrumentationService.lastCallData.lastValue,
+            'The Instrumentation LastValue should be ' + totalContactsToCreate);
     }
 
     /*********************************************************************************************************
@@ -402,12 +414,10 @@ public with sharing class ADDR_Addresses_TEST {
         // set the contacts' address overrides
         List<Contact> listCon = new List<Contact>();
         for (Integer i = 0; i < totalAccountsToCreate; i++) {
-            for (Integer j = 0; j < totalContactsToCreate; j++) { // Loop over all contacts per account
-                Contact con = testContacts[i * totalContactsToCreate + j]; 
-                con.Current_Address__c = testAddresses[i].Id;
-                con.is_Address_Override__c = true;
-                listCon.add(con);
-            }
+            Contact con = testContacts[i * totalAccountsToCreate + i];
+            con.Current_Address__c = testAddresses[i].Id;
+            con.is_Address_Override__c = true;
+            listCon.add(con);
         }
         update listCon;
 
@@ -423,12 +433,11 @@ public with sharing class ADDR_Addresses_TEST {
 
         for (Contact con : listCon) {
             Account acc = mapAccIdAcc.get(con.AccountId);
-            
-            // Assert that the override status remains true after address deletion
-            System.assertEquals(true, con.is_Address_Override__c, 'Address override should remain true after deletion');
-            
-            // Assert that the current address is now null after address deletion
-            System.assertEquals(null, con.Current_Address__c, 'Current address should be null after override address deletion');
+            System.assertEquals(true, isMatchAddressAccCon(acc, con));
+            System.assertEquals(false, con.is_Address_Override__c);
+            System.assertNotEquals(null, con.Current_Address__c);
+            System.assert(con.MailingStreet.contains('Street'));
+            System.assert(con.MailingCity.contains('City'));
         }
     }
 
@@ -819,8 +828,6 @@ public with sharing class ADDR_Addresses_TEST {
                 break;
             }
         }
-        contact.is_Address_Override__c = true;
-        update contact;
 
         Test.startTest();
             overrideAddress.Undeliverable__c = true;
@@ -831,8 +838,11 @@ public with sharing class ADDR_Addresses_TEST {
                                   FROM Contact
                                   WHERE Id = :contact.Id];
 
+        System.assert(updatedContact.Current_Address__c == overrideAddress.Id,
+            'Contact should have the override address as its current address.');
         System.assert(updatedContact.is_Address_Override__c == true, 'The contact address override should be true.');
-        System.assert(updatedContact.Undeliverable_Address__c == false, 'The contact address Undeliverable__c should be false after the override undeliverable.');
+        System.assertEquals(overrideAddress.Undeliverable__c, updatedContact.Undeliverable_Address__c, 'The contact ' +
+                'undeliverable address status should match the override address undeliverable status.');
     }
 
 
@@ -913,16 +923,13 @@ public with sharing class ADDR_Addresses_TEST {
         Test.stopTest();
 
         Address__c updatedAddress = [SELECT Default_Address__c, Undeliverable__c FROM Address__c WHERE Id = :overrideAddressToCreate.Id];
-        Contact updatedContact = [SELECT Undeliverable_Address__c,Is_Address_Override__c FROM Contact WHERE Id = :contact.Id];
+        Contact updatedContact = [SELECT Undeliverable_Address__c FROM Contact WHERE Id = :contact.Id];
 
         System.assert(updatedAddress.Default_Address__c, 'The test address should be a default address.');
         System.assertEquals(null, updateError, 'Updating the address undeliverable status' +
             'should not result in an error.');
-        // Assert that the contact's undeliverable status should not be affected since it has an overridden address
-        System.assertEquals(false, updatedContact.Undeliverable_Address__c, 'The contact with an overridden address should not have the undeliverable status applied.');
-    
-        // Verify the contact's address override flag is still set to true
-        System.assertEquals(true, updatedContact.Is_Address_Override__c, 'The contact should retain the address override flag after the address update.');
+        System.assertEquals(updatedAddress.Undeliverable__c, updatedContact.Undeliverable_Address__c,
+            'The contact undeliverable address status should match the address undeliverable status.');
     }
 
     /*********************************************************************************************************

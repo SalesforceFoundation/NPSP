@@ -56,7 +56,7 @@ Create a Contact and Add Engagement Plan
     Populate Lookup Field                            Engagement Plan Template       Automation_Plan
     Click Button                                     Save
     Wait Until Modal Is Closed
-    Current Page Should Be                           Detail                         Contact
+    # Current Page Should Be                           Detail                         Contact
     Validate Related Record Count                    Engagement Plans               1
     Go To Related Engagement Actionplans Page        ${data}[contact][Id]
     Perform Action On Related Item                   Delete

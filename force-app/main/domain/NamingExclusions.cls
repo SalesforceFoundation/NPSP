@@ -47,7 +47,12 @@ public inherited sharing class NamingExclusions {
                 new Map<Id, Contact>(oldMap) : new Map<Id, Contact>();
     }
 
-    public void synchronize() {
+    /**
+     * @description Synchronizes the naming exclusions for the contacts
+     * @return Integer The number of contacts that had naming exclusions synchronized
+     */
+    public Integer synchronize() {
+        Integer count = 0;
         for (Contact con : contacts) {
             INamingExclusionsString exclusionsAsString =
                     new HouseholdNamingExclusionsString(con);
@@ -57,8 +62,10 @@ public inherited sharing class NamingExclusions {
                 mergeExclusions(exclusionsAsBooleans, exclusionsAsString);
                 setExclusionsStringFor(con, exclusionsAsString.value());
                 setExclusionsCheckboxes(con, exclusionsAsBooleans);
+                count++;
             }
         }
+        return count;
     }
 
     private void setExclusionsStringFor(Contact contact, String val) {

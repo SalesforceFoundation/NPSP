@@ -27,7 +27,7 @@ ${EMAIL1}       user1@automation.com
 *** Test Cases ***
 
 Add New Contact to Existing Household
-    [tags]                              feature:Manage Households   unstable    api
+    [tags]                              feature:Manage Households   api
     Go To Page                          Details
     ...                                 Account
     ...                                 object_id=${contact}[AccountId]

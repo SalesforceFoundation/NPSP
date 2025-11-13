@@ -117,12 +117,15 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
 
         insert new List<Opportunity>{oldOpp, newOpp};
 
-        runBatch(new RD2_OpportunityEvaluation_BATCH(batchRunDate));
+        RD2_OpportunityEvaluation_BATCH oppBatch = new RD2_OpportunityEvaluation_BATCH(batchRunDate);
+        runBatch(oppBatch);
 
         assertBatchJobIteration(0);
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(2, opps.size(), 'No new Opp should be created: ' + opps);
+        System.assertEquals(0, oppBatch.recordsFailed);
+        System.assertEquals(0, oppBatch.recordsCreated);
     }
 
     /**
@@ -353,10 +356,19 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'An Opp should exist: ' + opps);
 
-        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
+        SfdoInstrumentationService.instance = null; // Reset the instance to null before starting the batch
+        System.assertEquals(null, SfdoInstrumentationService.instance, 'The Instrumentation Service Instance should not have been instantiated');
+
+        // In a unit test context, the Batch instance isn't retaining the recordsCreated/recordsFailed counts
+        // The best we can do is to check the instrumentation service instance exists
+        // and rely on the other check that an Opp was created.
+        RD2_OpportunityEvaluation_BATCH oppBatch = new RD2_OpportunityEvaluation_BATCH(today);
+        runBatch(oppBatch);
 
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
         System.assertEquals(2, oppById.size(), 'New Opp should be created: ' + oppById.values());
+
+        System.assertNotEquals(null, SfdoInstrumentationService.instance, 'The Instrumentation Service Instance should have been instantiated');
 
         System.assertEquals(prevCloseDate, oppById.remove(opps[0].Id).CloseDate,
             'Close Date should be unchanged for the existing Opp');
@@ -649,7 +661,11 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
             'Current Year Value should be calculated to include installments for the rest of the year');
         System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
             'Next Year Value should be calculated for the next year projected installments');
+
+        System.assertEquals(1, batch.recordsFailed, 'The batch service should have captured that Records Failed is 1');
+        System.assertEquals(0, batch.recordsCreated, 'The batch service should have captured that Records Created is 0');
     }
+    
 
     /**
     * @description Ensures that when the DisableRollupsWhenCreatingInstallments__c flag is NOT set
@@ -1369,6 +1385,9 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
     private static RD2_OpportunityEvaluation_BATCH executeAndFinishBatch(Id rdId, Date today) {
         UTIL_BatchJobService_TEST.MockBatchableContext batchContext = new UTIL_BatchJobService_TEST.MockBatchableContext();
         RD2_OpportunityEvaluation_BATCH batch = new RD2_OpportunityEvaluation_BATCH(today);
+
+        SfdoInstrumentationService.instance = null; // Reset the instance to null before starting the batch
+        System.assertEquals(null, SfdoInstrumentationService.instance, 'The Instrumentation Service Instance should not have been instantiated');
 
         batch.execute(batchContext, rdGateway.getRecords(new Set<Id>{ rdId }));
         batch.finish(batchContext);

@@ -1,5 +1,7 @@
+import time
 from cumulusci.robotframework.pageobjects import ListingPage
 from cumulusci.robotframework.pageobjects import DetailPage
+from cumulusci.robotframework.pageobjects import BasePage
 from cumulusci.robotframework.pageobjects import pageobject
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
@@ -14,6 +16,62 @@ class ContactListingPage(BaseNPSPPage, ListingPage):
         self.selenium.wait_until_location_contains("/delete", message="Account delete page did not load in 30 seconds")
         self.npsp.select_frame_and_click_element("vfFrameId","button","Delete Account")
 
+@pageobject("Custom", "ContactMerge")
+class ContactMergePage(BaseNPSPPage, BasePage):
+    object_name = "Contact_Merge"
+
+    def navigate_to_contact_merge_page(self, filter_name=None):
+        """To go to Contact Merge page"""
+        url_template = "{root}/lightning/n/{object}"
+        url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=self.object_name)
+        self.selenium.go_to(url)
+        self.selenium.wait_until_location_contains(
+            self.object_name,
+            timeout=60,
+            message="Contact Merge page did not load in 1 min",
+        )
+        self.selenium.reload_page()
+        self.salesforce.wait_until_loading_is_complete()
+        self.selenium.unselect_frame()
+        self.selenium.wait_until_page_contains_element("//iframe", timeout=120)
+        self.selenium.select_frame("//iframe")
+
+    def click_search_contacts_button(self,search_value):
+        """Clicks on Search Contacts button"""
+        locator=npsp_lex_locators['id'].format("contactMergePage:pgHeader:srchByConBtn")
+        self.selenium.click_element(locator)
+        self.selenium.wait_until_page_contains("Enter search text to find duplicate Contacts")
+        search_locator=npsp_lex_locators['placeholder'].format("Search Contacts")
+        self.salesforce._populate_field(search_locator, search_value)
+        self.npsp.click_button_with_value("Search")
+
+    def select_contact_checkbox(self,contact_number):
+        """Clicks on Contact Row Selection Checkbox"""
+        locator=npsp_lex_locators['contact_merge']['select_contact_checkbox'].format(contact_number)
+        self.selenium.click_element(locator)
+        time.sleep(1)
+
+    def click_next_button(self):
+        """Clicks on Next button"""
+        locator=npsp_lex_locators['button'].format("Next")
+        self.selenium.click_element(locator)
+        self.selenium.wait_until_page_contains("Selected Contacts")
+
+    def click_radio_button(self,field_value):
+        """Clicks on Radio Button With Provided Field Value"""
+        locator=npsp_lex_locators['contact_merge']['merge_page_radio'].format(field_value)
+        self.selenium.click_element(locator)
+
+    def click_merge_button(self):
+        """Clicks on Merge button"""
+        locator=npsp_lex_locators['button-text'].format("Merge")
+        self.selenium.click_element(locator)
+        time.sleep(1)
+        locator=npsp_lex_locators['contact_merge']['merge_modal_button']
+        self.selenium.click_element(locator)
+        time.sleep(5)
+        #self.selenium.wait_until_page_contains("Contact Details")
+
 @pageobject("Details", "Contact")
 class ContactDetailPage(BaseNPSPPage, DetailPage):
     object_name = "Contact"
@@ -23,7 +81,7 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
             by verifying that the url contains '/view'
         """
         self.selenium.wait_until_location_contains("/view", timeout=60, message="Detail page did not load in 1 min")
-        self.selenium.location_should_contain("/lightning/r/Contact/",message="Current page is not a Contact record detail view")
+        self.selenium.location_should_contain("/lightning/r/Contact/", message="Current page is not a Contact record detail view")
         self.selenium.wait_until_page_contains("Contact Details")
 
     def update_field_value(self,field_name,old_value,new_value):
@@ -47,7 +105,7 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
         """ Identifies the value and performs the specified action requested
             Currently added logic for Delete. In the future can be extended for Edit
         """
-        drop_down = npsp_lex_locators['opportunities_dropdown'].format(1)
+        drop_down = npsp_lex_locators['locate_dropdown'].format(1)
         self.selenium.set_focus_to_element(drop_down)
         self.selenium.wait_until_element_is_visible(drop_down)
         self.selenium.click_element(drop_down)
@@ -81,6 +139,7 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
     def verify_rollup_field_value(self,field_name,value,section=None):
         """Verifies if the given rollup field contains given value
         if it doesn't, then recalculates rollup and performs refresh"""
+        self.selenium.unselect_frame()
         try :
             self.npsp.navigate_to_and_validate_field_value(field_name,"contains",value,section)
             self.builtin.log("Found rollup value on the page on initial try")
@@ -105,5 +164,5 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
         self.selenium.wait_until_element_is_visible(locator)
         self.selenium.click_element(locator)
         self.selenium.wait_until_page_contains("Relationships Viewer")
-        link_locator=npsp_lex_locators['custom_objects']['actions-link'].format("Relationships_Viewer","Relationships_Viewer")
-        self.selenium.click_link(link_locator)
+        link_locator=npsp_lex_locators['custom_objects']['option'].format("Relationships Viewer")
+        self.selenium.click_element(link_locator)

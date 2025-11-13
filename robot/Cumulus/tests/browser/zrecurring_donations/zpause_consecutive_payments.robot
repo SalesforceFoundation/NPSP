@@ -35,9 +35,12 @@ Setup Test Data
         ...                                                         ${NS}PaymentMethod__c=Check
 
         Setupdata   contact         ${contact1_fields}             recurringdonation_data=${recurringdonation_fields}
-        ${PAUSE_DATES}=                               Create List           01/01/2024       01/01/2026
+        ${NEXT_YEAR} =	        Get Next Year
+        ${2_YEARS_AHEAD} =      Evaluate        ${NEXT_YEAR} + 1
+        ${3_YEARS_AHEAD} =      Evaluate        ${NEXT_YEAR} + 2
+        ${PAUSE_DATES}=                               Create List           01/01/${NEXT_YEAR}       01/01/${3_YEARS_AHEAD}
         Set suite variable          @{pause_dates}
-        ${PAUSE_DATES_VALIDATE}=                      Create List           01/01/2024       01/01/2025     01/01/2026
+        ${PAUSE_DATES_VALIDATE}=                      Create List           01/01/${NEXT_YEAR}       01/01/${2_YEARS_AHEAD}       01/01/${3_YEARS_AHEAD}
         Set suite variable          @{pause_dates_validate}
 
 

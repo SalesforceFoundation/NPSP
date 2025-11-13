@@ -35,8 +35,11 @@ from BaseObjects import BaseNPSPPage
 from locators_55 import npsp_lex_locators as locators_55
 from locators_54 import npsp_lex_locators as locators_54
 from locators_53 import npsp_lex_locators as locators_53
+from locators_64 import npsp_lex_locators as locators_64
 
 locators_by_api_version = {
+    65.0: locators_64,  # winter '26
+    64.0: locators_64,  # summer '25
     55.0: locators_55,  # summer '22
     54.0: locators_54,  # spring '22
     53.0: locators_53   # winter '22
@@ -241,7 +244,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         for index, element in enumerate(list_ele):
             if element.text == value:
                 drop_down = npsp_lex_locators['locate_dropdown'].format(index + 1)
-                self.selenium.get_webelement(drop_down).click()
+                self.selenium.driver.find_element_by_xpath(drop_down).click()
                 self.selenium.wait_until_page_contains("Delete")
 
     def select_related_row(self, value):
@@ -325,6 +328,9 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         """Verifies a specified related list has specified value(doesn't work if the list is in table format)"""
         self.salesforce.load_related_list(list_name)
         locator=npsp_lex_locators['related_list_items'].format(list_name,value)
+        # header_locator=npsp_lex_locators['related_list_header'].format(list_name)
+        # self.selenium.page_should_contain_element(header_locator)
+        # locator=npsp_lex_locators['related_list_items_no_header'].format(value)
         self.selenium.page_should_contain_element(locator)
 
     def click_span_button(self,title):
@@ -382,6 +388,9 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
         locator= npsp_lex_locators['detail_page']['address'].format(field)
         street, city, country = self.selenium.get_webelements(locator)
+        self.builtin.log(f"Element street: {street.text}")
+        self.builtin.log(f"Element city: {city.text}")
+        self.builtin.log(f"Element country: {country.text}")
 
         status = None
         for key, value in kwargs.items():
@@ -396,21 +405,21 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def validate_checkboxes(self,name,checkbox_title):
         """validates all 3 checkboxes for contact on manage hh page and returns locator for the checkbox thats required"""
 
-        locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"fauxCBInformal")
+        locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"Informal Greeting")
         self.selenium.page_should_contain_element(locator)
 
-        locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"fauxCBFormal")
+        locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"Formal Greeting")
         self.selenium.page_should_contain_element(locator)
 
-        locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"fauxCBExName")
+        locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"Household Name")
         self.selenium.page_should_contain_element(locator)
 
         if checkbox_title == "Informal Greeting":
-            locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"fauxCBInformal")
+            locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"Informal Greeting")
         elif checkbox_title == "Formal Greeting":
-            locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"fauxCBFormal")
+            locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"Formal Greeting")
         elif checkbox_title.capitalize() == "Household Name":
-            locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"fauxCBExName")
+            locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"Household Name")
         return locator
 
     def check_field_value(self, title, value):
@@ -763,6 +772,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         frames = self.selenium.get_webelements(locator)
         self.selenium.capture_page_screenshot()
         print(f'list of frames {frames}')
+        self.selenium.unselect_frame()
         for frame in frames:
             print(f'inside for loop for {frame}')
             self.selenium.capture_page_screenshot()
@@ -1160,8 +1170,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def change_view_to(self,view_name):
         """Selects a different view for the object records in listing page"""
         locator=npsp_lex_locators['object_dd']
-        view=npsp_lex_locators['link'].format(view_name,view_name)
-        self.selenium.wait_until_page_contains("List Views")
+        view=npsp_lex_locators['gift_entry']['lookup-option'].format(view_name)
+        # self.selenium.wait_until_page_contains("List Views")
         self.selenium.wait_until_element_is_visible(locator,30)
         try:
             self.selenium.get_webelement(locator).click()
@@ -1169,8 +1179,10 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             self.selenium.execute_javascript("window.scrollBy(0,100)")
             ele = self.selenium.driver.find_element_by_xpath(locator)
             self.selenium.driver.execute_script('arguments[0].click()', ele)
-        element = self.selenium.driver.find_element_by_xpath(view)
-        self.selenium.driver.execute_script('arguments[0].click()', element)
+        self.selenium.wait_until_element_is_visible(view,10)
+        self.selenium.get_webelement(view).click()
+        # element = self.selenium.driver.find_element_by_xpath(view)
+        # self.selenium.driver.execute_script('arguments[0].click()', element)
         self.selenium.wait_until_page_contains(view_name)
 
     @capture_screenshot_on_error
@@ -1277,6 +1289,9 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         time.sleep(2)
         self.npsp.click_button_with_value(value)
         time.sleep(1)
+
+    def get_next_year(self):
+        return datetime.now().year + 1
 
     def setupdata(self, name, contact_data=None, opportunity_data=None, account_data=None, payment_data=None, engagement_data=None,
                   recurringdonation_data=None, gau_data=None):
@@ -1632,8 +1647,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.click_element(locator)
         time.sleep(1)
         self.selenium.wait_until_page_contains(title)
-        link_locator=npsp_lex_locators['custom_objects']['actions-link'].format(title,title)
-        self.selenium.click_link(link_locator)
+        link_locator=npsp_lex_locators['custom_objects']['option'].format(title)
+        self.selenium.click_element(link_locator)
 
     def get_url_formatted_object_name(self,name):
         """Returns a map with BaseURl and the namespace formatted object name"""

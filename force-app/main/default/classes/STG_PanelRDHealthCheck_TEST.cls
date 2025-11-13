@@ -49,6 +49,11 @@ private class STG_PanelRDHealthCheck_TEST {
      */
     @IsTest
     private static void shouldValidateLegacyRecurringDonationsConfig() {
+        if (isRD2MetadataDeployed()) {
+            // don't run this if RD2 metadata is already deployed
+            return;
+        }
+
         configureLegacyRDSettings();
 
         STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
@@ -69,6 +74,11 @@ private class STG_PanelRDHealthCheck_TEST {
      */
     @IsTest
     private static void shouldValidateLegacyWithCustomInstallmentPeriods() {
+        if (isRD2MetadataDeployed()) {
+            // don't run this if RD2 metadata is already deployed
+            return;
+        }
+
         npe03__Custom_Installment_Settings__c customInstallment = new npe03__Custom_Installment_Settings__c(
             npe03__Increment__c = 'Weeks',
             npe03__Value__c = 2,
@@ -146,6 +156,7 @@ private class STG_PanelRDHealthCheck_TEST {
     @IsTest
     private static void shouldValidateLegacyPeriodPicklistEntries() {
         if (isRD2MetadataDeployed()) {
+            // don't run this if RD2 metadata is already deployed
             return;
         }
 

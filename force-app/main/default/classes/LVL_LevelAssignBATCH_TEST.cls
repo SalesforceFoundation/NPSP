@@ -44,6 +44,9 @@ private class LVL_LevelAssignBATCH_TEST {
     private static Level__c lvlPlatinum { get; set; }
     private static Level__c lvlAcctZinc { get; set; }
 
+    private static final Integer CONTACT_COUNT = 8;
+    private static final Integer ACCOUNT_COUNT = 2;
+
     /*********************************************************************************************************
     * @description creates Bronze, Silver, and Gold Level records for test code to use.
     */
@@ -161,7 +164,7 @@ private class LVL_LevelAssignBATCH_TEST {
     private static DateTime dtCon6Modified { get; set;  }
 
     private static void createTestContacts(String uniqueCounter) {
-        contacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(8);
+        contacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(CONTACT_COUNT);
         for (Contact c : contacts) {
             c.LastName += uniqueCounter;
         }
@@ -199,7 +202,7 @@ private class LVL_LevelAssignBATCH_TEST {
     */
     private static List<Account> accounts { get; set; }
     private static void createTestAccounts(String uniqueCounter) {
-        accounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(2, null);
+        accounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(ACCOUNT_COUNT, null);
         for (Account a : accounts) {
             a.Name += uniqueCounter;
         }
@@ -232,6 +235,16 @@ private class LVL_LevelAssignBATCH_TEST {
 
         verifyContactLevels();
 
+        System.assertEquals(SfdoInstrumentationEnum.Feature.EngagementPlans.name(), SfdoInstrumentationService.lastCallData.lastFeatureName,
+            'The Instrumentation LastFeatureName should be EngagementPlans');
+        System.assertEquals(1, SfdoInstrumentationService.lastCallData.lastValue,
+            'The Instrumentation LastValue should be 1');
+        // System.assertEquals(true, new Map<String, String>{ 'SourceClass' => 'LVL_LevelAssign_BATCH', 'Target Object' => 'Contact' }, SfdoInstrumentationService.lastCallData.lastContext,
+        System.assertEquals('LVL_LevelAssign_BATCH', SfdoInstrumentationService.lastCallData.lastContext.get('SourceClass'),
+            'The Instrumentation LastContext should be LVL_Batch');
+        System.assertEquals('Contact', SfdoInstrumentationService.lastCallData.lastContext.get('Target Object'),
+            'The Instrumentation LastContext should be Contact');
+
         Levels_Settings__c levelSettings = Levels_Settings__c.getInstance();
         System.assertEquals(null, levelSettings.LastJobStartTimeAccount__c,
             'The LastJobStartTimeAccount__c should not be populated');
@@ -261,6 +274,17 @@ private class LVL_LevelAssignBATCH_TEST {
         Test.startTest();
         Database.executeBatch(batch);
         Test.stopTest();
+
+        System.assertEquals(SfdoInstrumentationEnum.Feature.Levels.name(), SfdoInstrumentationService.lastCallData.lastFeatureName,
+            'The Instrumentation LastFeatureName should be Levels');
+        System.assertEquals(SfdoInstrumentationEnum.Component.Batch.name(), SfdoInstrumentationService.lastCallData.lastComponentName,
+            'The Instrumentation LastComponentName should be Batch');
+        System.assertEquals(CONTACT_COUNT-1, SfdoInstrumentationService.lastCallData.lastValue,
+            'The Instrumentation LastValue should be 7');
+        System.assertEquals('LVL_LevelAssign_BATCH', SfdoInstrumentationService.lastCallData.lastContext.get('SourceClass'),
+            'The Instrumentation LastContext should be LVL_Batch');
+        System.assertEquals('Contact', SfdoInstrumentationService.lastCallData.lastContext.get('Target Object'),
+            'The Instrumentation LastContext should be Contact');
 
         Contact conZero = [SELECT Id, npo02__LastMembershipLevel__c FROM Contact WHERE Id = :contacts[0].Id];
         System.assertEquals(null, conZero.npo02__LastMembershipLevel__c);

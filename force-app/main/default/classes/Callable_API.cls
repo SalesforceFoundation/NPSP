@@ -96,7 +96,7 @@ global with sharing class Callable_API implements System.Callable {
                 String oppStage = paramService.getString(CallableApiParameters.PARAM_OPPORTUNITY_STAGE);
                 return OPP_StageMappingUtil.determineOppStateFromOppStage(oppStage);
 
-            } when 'crlp.getdefinitionsforrolluptype' {
+            } when 'crlp.getdefinitionsforrolluptype' { // internal use only, deprecated
                 String rollupType = paramService.getString(CallableApiParameters.PARAM_ROLLUP_TYPE);
 
                 CRLP_ApiService crlpApiSvc = new CRLP_ApiService();
@@ -104,7 +104,7 @@ global with sharing class Callable_API implements System.Callable {
 
                 return JSON.serialize(response, true);
 
-            } when 'crlp.executerollups' {
+            } when 'crlp.executerollups' { // internal use only, deprecated
                 Id parentId = paramService.getString(CallableApiParameters.PARAM_ROLLUP_PARENTID);
                 String rollupType = paramService.getString(CallableApiParameters.PARAM_ROLLUP_TYPE);
                 List<CRLP_Rollup> rollupDefs = paramService.getRollupDefinitions(CallableApiParameters.PARAM_ROLLUP_DEFS);
@@ -120,7 +120,7 @@ global with sharing class Callable_API implements System.Callable {
                 CRLP_ApiService crlpApiSvc = new CRLP_ApiService();
                 return crlpApiSvc.isCrlpEnabled();
 
-            } when 'err.dispatchaction' {
+            } when 'err.dispatchaction' { // internal use only
                 // This method is to be used only by Salesforce.org apps and is subject to change at any time. Do NOT call this method.
                 // If you do so, your functionality can break without any warning or liability from Salesforce.
                
