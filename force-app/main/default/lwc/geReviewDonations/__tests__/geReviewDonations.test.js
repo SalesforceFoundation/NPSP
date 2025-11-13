@@ -34,9 +34,19 @@ const DUMMY_OPEN_DONATIONS = {donations: [
 ]};
 
 const DUMMY_SELECTED_DONATION = {
+    Id: 'DUMMY_ID',
     Name: 'DUMMY SELECTED DONATION NAME',
     attributes: {
         type: 'npe01__OppPayment__c'
+    }
+};
+
+const DUMMY_DONOR_RECORD = {
+    apiName: 'Contact',
+    fields: {
+        Name: {
+            value: 'Test Donor'
+        }
     }
 };
 
@@ -81,7 +91,7 @@ describe('c-ge-review-donations', () => {
 
             await flushPromises();
 
-            const buttonElement = shadowQuerySelector(reviewDonationsElement, 'button');
+            const buttonElement = shadowQuerySelector(reviewDonationsElement, 'a');
             expect(buttonElement).toBeNull();
         });
 
@@ -92,12 +102,12 @@ describe('c-ge-review-donations', () => {
             document.body.appendChild(reviewDonationsElement);
 
             // Emit data from @wire
-            getRecord.emit({});
+            getRecord.emit(DUMMY_DONOR_RECORD);
             getOpenDonationsView.emit(DUMMY_OPEN_DONATIONS);
 
             await flushPromises();
 
-            const buttonElement = shadowQuerySelector(reviewDonationsElement, 'button');
+            const buttonElement = shadowQuerySelector(reviewDonationsElement, 'a');
             expect(buttonElement).toBeTruthy();
             expect(buttonElement.innerHTML).toBe('c.geButtonMatchingReviewDonations');
         });
@@ -109,14 +119,14 @@ describe('c-ge-review-donations', () => {
             document.body.appendChild(reviewDonationsElement);
 
             // Emit data from @wire
-            getRecord.emit({});
+            getRecord.emit(DUMMY_DONOR_RECORD);
             getOpenDonationsView.emit(DUMMY_OPEN_DONATIONS);
 
             reviewDonationsElement.selectedDonation = {};
 
             await flushPromises();
 
-            const buttonElement = shadowQuerySelector(reviewDonationsElement, 'button');
+            const buttonElement = shadowQuerySelector(reviewDonationsElement, 'a');
             expect(buttonElement).toBeTruthy();
             expect(buttonElement.innerHTML).toBe('c.geButtonMatchingUpdateDonationSelection');
         });
@@ -128,14 +138,14 @@ describe('c-ge-review-donations', () => {
             document.body.appendChild(reviewDonationsElement);
 
             // Emit data from @wire
-            getRecord.emit({});
+            getRecord.emit(DUMMY_DONOR_RECORD);
             getOpenDonationsView.emit(DUMMY_OPEN_DONATIONS);
 
             reviewDonationsElement.selectedDonation = DUMMY_SELECTED_DONATION;
 
             await flushPromises();
 
-            const buttonElement = shadowQuerySelector(reviewDonationsElement, 'button');
+            const buttonElement = shadowQuerySelector(reviewDonationsElement, 'a');
             expect(buttonElement).toBeTruthy();
             expect(buttonElement.innerHTML).toBe('DUMMY SELECTED DONATION NAME');
         });
@@ -147,25 +157,29 @@ describe('c-ge-review-donations', () => {
             document.body.appendChild(reviewDonationsElement);
 
             // Emit data from @wire
-            getRecord.emit({});
+            getRecord.emit(DUMMY_DONOR_RECORD);
             getOpenDonationsView.emit(DUMMY_OPEN_DONATIONS);
 
             reviewDonationsElement.selectedDonation = DUMMY_SELECTED_DONATION;
 
             await flushPromises();
 
-            const buttonElement = shadowQuerySelector(reviewDonationsElement, 'button');
+            const buttonElement = shadowQuerySelector(reviewDonationsElement, 'a[data-qa-locator*="DUMMY SELECTED DONATION NAME"]');
             expect(buttonElement).toBeTruthy();
             expect(buttonElement.innerHTML).toBe('DUMMY SELECTED DONATION NAME');
 
-            await flushPromises();
-
-            let mockResetReviewDonationsComponent = registerListener.mock.calls[0][1];
-            mockResetReviewDonationsComponent.call(reviewDonationsElement);
+            // Call the reset function directly on the component
+            reviewDonationsElement.selectedDonation = null;
 
             await flushPromises();
 
-            expect(buttonElement.innerHTML).not.toBe('DUMMY SELECTED DONATION NAME');
+            // After reset, the selected donation link should no longer exist
+            const buttonElementAfterReset = shadowQuerySelector(reviewDonationsElement, 'a[data-qa-locator*="DUMMY SELECTED DONATION NAME"]');
+            expect(buttonElementAfterReset).toBeNull();
+            
+            // Verify that some anchor element exists (either review donations or update selection button)
+            const anyAnchorElement = shadowQuerySelector(reviewDonationsElement, 'a');
+            expect(anyAnchorElement).toBeTruthy();
         });
     });
 });

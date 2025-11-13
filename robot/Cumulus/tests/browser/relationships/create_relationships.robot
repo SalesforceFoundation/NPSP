@@ -31,7 +31,7 @@ Create Relationships for contacts
     ...                                  Open contact2 record and create a new relationship with contact 1.
     ...                                  Verify the parent-child relationship is correctly established.
 
-    [tags]                              feature:Relationships   unstable    unit
+    [tags]                              feature:Relationships      unit
 
     Go To Page                          Details                                                     Contact                                     object_id=${contact2}[Id]
     Select Tab                          Related

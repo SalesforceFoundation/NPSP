@@ -28,9 +28,9 @@
         helper.handleBatchEvent(component, event, 'v.dryRunBatch');
         helper.refreshDryRun(component);
         helper.refreshEnable(component);
-        var status = event.Hp.batchProgress.status;
+        var status = (event.Hp && event.Hp.batchProgress) ? event.Hp.batchProgress.status : undefined;
         var dryRunJob = component.find("dryRunJob");
-        if (["Completed", "Aborted"].includes(status)) {
+        if (status && ["Completed", "Aborted"].includes(status)) {
             if(dryRunJob){
                 helper.setFocus(component, 'dryRunJob');
             }
@@ -54,10 +54,10 @@
     handleMigrationStatusChange: function (component, event, helper) {
         helper.handleBatchEvent(component, event, 'v.migrationBatch');
         helper.refreshMigration(component);
-        var status = event.Hp.batchProgress.status;
-            if (["Completed", "Aborted"].includes(status)) {
-                helper.setFocus(component, 'migrationJob');
-            }
+        var status = (event.Hp && event.Hp.batchProgress) ? event.Hp.batchProgress.status : undefined;
+        if (status && ["Completed", "Aborted"].includes(status)) {
+            helper.setFocus(component, 'migrationJob');
+        }
     },
     handleMigrationError: function (component, event, helper) {
         helper.handleBatchError(component, event, 'migration');

@@ -64,6 +64,13 @@ public inherited sharing class RD2_ApiService {
             schedulesByRdId.put(rd.Id, schedules);
         }
 
+        SfdoInstrumentationService.getInstance().log(
+            SfdoInstrumentationEnum.Feature.EnhancedRecurringDonations,
+            SfdoInstrumentationEnum.Component.API,
+            SfdoInstrumentationEnum.Action.QuerySchedules,
+            new Map<String, String>{ 'SourceClass' => 'RD2_ApiService' },
+            schedulesByRdId.size());
+
         return JSON.serialize(schedulesByRdId);
     }
 
@@ -213,6 +220,13 @@ public inherited sharing class RD2_ApiService {
             installmentsByRdId.put(rd.Id, installments);
         }
 
+        SfdoInstrumentationService.getInstance().log(
+            SfdoInstrumentationEnum.Feature.EnhancedRecurringDonations,
+            SfdoInstrumentationEnum.Component.API,
+            SfdoInstrumentationEnum.Action.QueryInstallments,
+            new Map<String, String>{ 'SourceClass' => 'RD2_ApiService' },
+            installmentsByRdId.size());
+
         return JSON.serialize(installmentsByRdId);
     }
 
@@ -262,7 +276,17 @@ public inherited sharing class RD2_ApiService {
     public String pause(Map<Id, PauseObject> pauseData) {
         validateEnvironment(pauseData.size());
 
-        return JSON.serialize(handlePauseRequests(pauseData));
+        Integer startingDmlRows = Limits.getDmlRows();
+        String response = JSON.serialize(handlePauseRequests(pauseData));
+
+        SfdoInstrumentationService.getInstance().log(
+            SfdoInstrumentationEnum.Feature.EnhancedRecurringDonations,
+            SfdoInstrumentationEnum.Component.API,
+            SfdoInstrumentationEnum.Action.Pause,
+            new Map<String, String>{ 'SourceClass' => 'RD2_ApiService' },
+            Limits.getDmlRows() - startingDmlRows);
+
+        return response;
     }
 
     private void validateEnvironment(Integer recordsCount) {
@@ -306,9 +330,9 @@ public inherited sharing class RD2_ApiService {
                 continue;
             }
 
-            RecurringDonationSchedule__c updateSchedule = deactivatePauseSchedule(rdRecord);
-            if (updateSchedule != null) {
-                schedulesToUpdate.add(updateSchedule);
+            List<RecurringDonationSchedule__c> updatedSchedules = deactivatePauseSchedules(rdRecord);
+            if (updatedSchedules != null && !updatedSchedules.isEmpty()) {
+                schedulesToUpdate.addAll(updatedSchedules);
             }
 
             if (!pauseInfo.unPause) {
@@ -363,16 +387,19 @@ public inherited sharing class RD2_ApiService {
         );
     }
 
-    private RecurringDonationSchedule__c deactivatePauseSchedule(RD2_RecurringDonation recurringDonation) {
-        RecurringDonationSchedule__c schedule = recurringDonation.getPauseSchedule();
+    private List<RecurringDonationSchedule__c> deactivatePauseSchedules(RD2_RecurringDonation recurringDonation) {
+        RD2_ScheduleService.PauseScheduleHandler pauseScheduleHandler = new RD2_ScheduleService.PauseScheduleHandler();
 
-        if (schedule == null) {
-            return null;
+        List<RecurringDonationSchedule__c> schedules = recurringDonation.getActiveOrFuturePauseSchedules(
+            RD2_ScheduleService.currentDate,
+            pauseScheduleHandler
+        );
+
+        for (RecurringDonationSchedule__c schedule : schedules) {
+            pauseScheduleHandler.deactivatePauseSchedule(schedule);
         }
 
-        new RD2_ScheduleService.PauseScheduleHandler().deactivatePauseSchedule(schedule);
-
-        return schedule;
+        return schedules;
     }
 
     private Set<Id> insertPauseSchedules(Map<Id, PauseObject> pauseData, List<RecurringDonationSchedule__c> schedules) {

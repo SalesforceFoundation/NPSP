@@ -31,7 +31,7 @@ Create and edit level to verify fields
     Navigate To Level Page                           create
 
     Enter Level Values
-    ...                                                 Level Name=AutomationLevel
+    ...                                                 Level Name=${level_name}
     ...                                                 Minimum Amount=${min_amount}
     ...                                                 Maximum Amount=${max_amount}
     Enter Level Dd Values
@@ -57,10 +57,8 @@ Create and edit level to verify fields
     ...                                                 Maximum Amount=${maxamount_to_edit}
     Enter Level Dd Values
     ...                                                 Source Field=Smallest Gift
-
     Click Button                                        Save
     Wait For Locator Is Not Visible                     frame                             Levels
-
     Go To Page                                          Details
     ...                                                 Level__c
     ...                                                 object_id=${level_id}

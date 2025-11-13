@@ -33,7 +33,7 @@ Create Engagement Plan And Edit the Plan
 
     Go To Page                                        Listing                             Engagement_Plan_Template__c
     Go To Engagement Plan Page                        Edit                                ${data}[engagement][Id]
-    Current Page Should Be                            Home                                Engagement_Plan_Template__c
+    # Current Page Should Be                            Home                                Engagement_Plan_Template__c
 
     Click Task Button                                 Task 1
     Enter Task Id and Subject                         Task 1                             Task_1

@@ -18,7 +18,7 @@ API Modify Trigger Handler
     ...                          select=Id
     ...                          Id=${triggerhandler_id}
     &{triggerhandler} =          Get From List                  ${records}                    0
-    [return]                     &{triggerhandler}
+    RETURN                     &{triggerhandler}
 
 *** Test Cases ***
 Update a Trigger Handler to Exclude a Username

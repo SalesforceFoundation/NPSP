@@ -363,6 +363,14 @@ public inherited sharing class Households extends fflib_SObjects2 {
 
             if (mapConAddrInsertNow.size() > 0) {
                 UTIL_DMLService.insertRecords(mapConAddrInsertNow.values());
+
+                SfdoInstrumentationService.getInstance().log(
+                    SfdoInstrumentationEnum.Feature.Addresses, 
+                    SfdoInstrumentationEnum.Component.TriggerAction, 
+                    SfdoInstrumentationEnum.Action.Dml_Insert,
+                    new Map<String, String>{ 'SourceClass' => 'Households' },
+                    mapConAddrInsertNow.size());        
+
                 // Since we're inserting new Addresses in a Before Insert/Update scenario, set the flag to
                 // prevent the After Insert/Update Contact logic from executing when it's eventually called.
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);

@@ -2103,8 +2103,9 @@ private class RD2_OpportunityEvaluationService_TEST {
         insert rd;
         RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, pauseStartDate, pauseEndDate);
 
+        RD2_OpportunityEvaluationService oppService = new RD2_OpportunityEvaluationService();
         Test.startTest();
-        new RD2_OpportunityEvaluationService()
+        oppService
             .withRds(new Set<Id>{ rd.Id })
             .withCurrentDate(today.addDays(1))
             .evaluateOpportunities();
@@ -2113,6 +2114,9 @@ private class RD2_OpportunityEvaluationService_TEST {
         rd = rdGateway.getRecord(rd.Id);
         List<Opportunity> installments = oppGateway.getRecords(rd);
         Set<Datetime> installmentsClosedDate = UTIL_SObject.extractDatetime(installments, Opportunity.CloseDate);
+
+        System.assertEquals(1, oppService.getRecordsCreated(), 'The service should have captured that Records Created is 1');
+        System.assertEquals(0, oppService.getRecordsFailed(), 'The service should have captured that Records Failed is 0');
 
         System.assert(installmentsClosedDate.contains(pauseEndDate.addMonths(1)),
             'An installment with close date after pause shuold be created');

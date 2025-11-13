@@ -301,6 +301,16 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
+     * @description Sets database service
+     * @param dbService Database service
+     * @return RD2_OpportunityEvaluationService The service instance
+     */
+    public RD2_OpportunityEvaluationService withDatabaseService(RD2_DatabaseService dbService) {
+        this.dbService = dbService;
+        return this;
+    }
+
+    /**
      * @description Sets current date.
      * It also synchronizes the passed in current date with the RD Schedule service date.
      *
@@ -349,6 +359,14 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      */
     public Integer getRecordsFailed() {
         return dbService.getRecordsFailed();
+    }
+
+    /**
+     * @description Returns number of new installment Opportunities created
+     * @return Integer
+     */
+    public Integer getRecordsCreated() {
+        return dbService.getRecordsCreated();
     }
 
     /**
@@ -459,7 +477,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         commitmentBulkService
             .withCommitments(updateElevateRds)
             .processCommitments();
-    
+
         oppService
             .createOpportunities(newOppRDs)
             .updateOpportunities(updateOppRDs, rdIdsWhereScheduleChanged)

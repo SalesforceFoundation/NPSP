@@ -398,8 +398,16 @@ private class HH_Container_TEST {
         Contact[] hhContactsToRemove = new Contact[0];
         Account[] accountsToMerge = new Account[] { accounts[1], accounts[2] };
 
+        SfdoInstrumentationService.instance = null;
+
         Test.startTest();
+        accounts[0].npo02__SYSTEM_CUSTOM_NAMING__c = 'npo02__Formal_Greeting__c';
         HH_Container_LCTRL.saveHouseholdPage(accounts[0], hhContacts, hhContactsToRemove, accountsToMerge);
+
+        System.assertNotEquals(null, SfdoInstrumentationService.instance, 'The Instrumentation Service Instance should have been instantiated');
+        System.assertEquals(SfdoInstrumentationEnum.Action.HouseholdNamingSettingsUpdated.name(), SfdoInstrumentationService.lastCallData?.lastActionName, 
+            'The Last Call Data should have been set');
+
         Test.stopTest();
 
         Account[] actualAccounts = getAccounts();
@@ -959,5 +967,75 @@ private class HH_Container_TEST {
                 BillingState, BillingPostalCode, BillingCountry, Sustainer__c
             FROM Account
         ];
+    }
+
+    /*********************************************************************************************************
+    * @description Tests isDeletable() method with various scenarios
+    * verify:
+    *   - Returns true for objects that are deletable
+    *   - Returns false for objects that are not deletable
+    *   - Handles invalid object names gracefully
+    **********************************************************************************************************/
+    @IsTest
+    static void testIsDeletable() {
+        Test.startTest();
+        
+        // Test with valid deletable objects
+        System.assertEquals(true, HH_Container_LCTRL.isDeletable('Contact'), 
+            'Contact should be deletable');
+        System.assertEquals(true, HH_Container_LCTRL.isDeletable('Account'), 
+            'Account should be deletable');
+        System.assertEquals(true, HH_Container_LCTRL.isDeletable(UTIL_Namespace.StrTokenNSPrefix('Address__c')), 
+            'Address__c should be deletable');
+        
+        // Test with non-deletable objects (if any exist in the org)
+        // Note: Most standard objects are deletable, but we can test the method behavior
+        
+        // Test with invalid object name - should throw AuraHandledException
+        try {
+            HH_Container_LCTRL.isDeletable('InvalidObject__c');
+            System.assert(false, 'Expected AuraHandledException for invalid object');
+        } catch (AuraHandledException e) {
+            System.assertNotEquals(null, e.getMessage(), 'Exception should have a message');
+        }
+        
+        // Test with null parameter - should throw AuraHandledException
+        try {
+            HH_Container_LCTRL.isDeletable(null);
+            System.assert(false, 'Expected AuraHandledException for null object');
+        } catch (AuraHandledException e) {
+            System.assertNotEquals(null, e.getMessage(), 'Exception should have a message');
+        }
+        
+        Test.stopTest();
+    }
+
+    /*********************************************************************************************************
+    * @description Tests isHouseholdOrOrganization() method indirectly through cleanupAddresses()
+    * verify:
+    *   - Only Household Account and Organization Account types are processed for cleanup
+    *   - One-to-One Individual and Bucket Individual Account types are excluded
+    **********************************************************************************************************/
+    @IsTest
+    static void testIsHouseholdOrOrganization() {
+        // Create test accounts with different account types
+        Map<Account, Boolean> accountTypeMap = new Map<Account, Boolean>{
+            new Account(
+                Name = 'Test Household',
+                npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE
+            ) => True,
+            new Account(
+                Name = 'Test One-to-One',
+                npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE
+            ) => False,
+            new Account(
+                Name = 'Test Bucket',
+                npe01__SYSTEM_AccountType__c = CAO_Constants.BUCKET_ORGANIZATION_TYPE
+            ) => False
+        };
+        
+        for (Account acc : accountTypeMap.keySet()) {
+            System.assertEquals(accountTypeMap.get(acc), HH_Container_LCTRL.isHouseholdOrOrganization(acc));
+        }        
     }
 }

@@ -55,7 +55,9 @@ class GiftEntryLandingPage(BaseNPSPPage, BasePage):
         locator=npsp_lex_locators["gift_entry"]["button"].format(title)
         self.selenium.wait_until_page_contains_element(locator)
         self.salesforce.scroll_element_into_view(locator)
-        self.selenium.click_element(locator)
+        # self.selenium.click_element(locator)
+        element = self.selenium.driver.find_element_by_xpath(locator)
+        self.selenium.driver.execute_script('arguments[0].click()', element)
 
 
     def select_template_action(self,name,action):

@@ -132,6 +132,7 @@ public with sharing class EP_EngagementPlans_TDTM extends TDTM_Runnable {
                 SfdoInstrumentationEnum.Feature.EngagementPlans,
                 SfdoInstrumentationEnum.Component.TriggerAction,
                 SfdoInstrumentationEnum.Action.Create,
+                new Map<String, String>{ 'SourceClass' => 'EP_EngagementPlans_TDTM' },
                 engagementPlans.size());
         }
 
