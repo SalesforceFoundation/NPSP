@@ -113,7 +113,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         // Validate that the one Contact whose Household record was owned by an inactive User
         // is now owned by the same owner as the Contact.
         Contact inactiveOwnedContact = [SELECT Id, OwnerId, Account.OwnerId, Owner.IsActive, npo02__Household__r.Owner.IsActive
-            FROM Contact WHERE Id = :cons[49].Id LIMIT 1];
+            FROM Contact WHERE Id = :cons[randomIndex].Id LIMIT 1];
         System.assertEquals(false, inactiveOwnedContact.npo02__Household__r.Owner.IsActive, 'Household owner should be inactive');
         System.assertEquals(true, inactiveOwnedContact.Owner.IsActive, 'Contact owner should be active');
         System.assertEquals(inactiveOwnedContact.OwnerId, inactiveOwnedContact.Account.OwnerId, 'Household Account Owner should match the Contact owner');
