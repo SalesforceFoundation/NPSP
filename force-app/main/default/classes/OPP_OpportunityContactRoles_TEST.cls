@@ -565,7 +565,8 @@ private class OPP_OpportunityContactRoles_TEST {
         Test.stopTest();
 
         List<Opportunity> queryOpp = [SELECT Id, Notification_Recipient_Name__c, Honoree_Name__c FROM Opportunity WHERE Id = :opp.id];
-        System.assertEquals(queryCon[1].Name, queryOpp[0].Honoree_Name__c, 'Honoree Name should be populated.');
+        String honoreeName = [SELECT Name FROM Contact WHERE Id = :householdMembers[0].Id].Name;
+        System.assertEquals(honoreeName, queryOpp[0].Honoree_Name__c, 'Honoree Name should be populated.');
 
         List<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id ORDER BY ContactId];
         System.assertEquals(3, queryOCR.size(), 'Three Opportunity Contact Roles should be created.');
