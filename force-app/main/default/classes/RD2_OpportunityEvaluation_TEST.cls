@@ -1355,6 +1355,50 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
             'The batch should be set to Custom Setting Recurring_Donation_Batch_Size__c value');
     }
 
+    /***
+    * @description Verifies the batch job creates an Opp with correct CloseDate when
+    * DayOfMonth=31 (converted to Last_Day), StartDate is in February, and the batch
+    * runs on day 31 of a subsequent month. The next donation date should not skip a month.
+    * Regression test for W-19306508.
+    */
+    @IsTest
+    private static void shouldNotSkipMonthForNextOppWhenBatchRunsOnDay31WithFebStart() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        final Date startDate = Date.newInstance(2021, 2, 1);
+        RD2_ScheduleService.currentDate = startDate;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withStartDate(startDate)
+            .withDayOfMonth('31')
+            .withCalculateNextDonationDate()
+            .build();
+        insert rd;
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'An Opp should be created on insert');
+        System.assertEquals(Date.newInstance(2021, 2, 28), opps[0].CloseDate,
+            'First Opp CloseDate should be Feb 28 (last day of Feb)');
+
+        final Date batchRunDate = Date.newInstance(2021, 7, 31);
+        RD2_ScheduleService.currentDate = batchRunDate;
+
+        runBatch(new RD2_OpportunityEvaluation_BATCH(batchRunDate));
+
+        assertBatchJobIteration(1);
+
+        rd = rdGateway.getRecord(rd.Id);
+        opps = oppGateway.getRecords(rd);
+
+        System.assertEquals(2, opps.size(), 'A second Opp should be created by the batch');
+
+        Opportunity newOpp = opps[0].CloseDate > opps[1].CloseDate ? opps[0] : opps[1];
+        System.assertEquals(batchRunDate, newOpp.CloseDate,
+            'New Opp CloseDate should be July 31, not skip to August 31');
+        System.assertEquals(batchRunDate, rd.npe03__Next_Payment_Date__c,
+            'Next Payment Date should be July 31');
+    }
+
     // Helpers
     //////////////
 
