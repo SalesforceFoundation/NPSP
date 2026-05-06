@@ -543,24 +543,16 @@ public without sharing class RD2_ScheduleService {
 
         Date adjusted = addDateUnits(firstValid, (unitsBetween / adjustedFrequency) * adjustedFrequency, schedule.InstallmentPeriod__c);
 
-        if (adjusted < referenceDate) {
-            adjusted = addDateUnits(adjusted, adjustedFrequency, schedule.InstallmentPeriod__c);
+        if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY && schedule.DayOfMonth__c != null) {
+            adjusted = adjustToTargetDayOfMonth(adjusted, schedule);
         }
 
-        if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
-            if (schedule.DayOfMonth__c == null) {
-                return adjusted;
+        if (adjusted < referenceDate) {
+            adjusted = addDateUnits(adjusted, adjustedFrequency, schedule.InstallmentPeriod__c);
+
+            if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY && schedule.DayOfMonth__c != null) {
+                adjusted = adjustToTargetDayOfMonth(adjusted, schedule);
             }
-            Integer nextDayOfMonth;
-            if (schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY ||
-                Integer.valueOf(schedule.DayOfMonth__c) > Date.daysInMonth(adjusted.year(), adjusted.month()))
-            {
-                nextDayOfMonth = Date.daysInMonth(adjusted.year(),adjusted.month());
-            }
-            else {
-                nextDayOfMonth = Integer.valueOf(schedule.DayOfMonth__c);
-            }
-            adjusted = Date.newInstance(adjusted.year(), adjusted.month(), nextDayOfMonth);
         }
 
         if (
@@ -618,6 +610,24 @@ public without sharing class RD2_ScheduleService {
         }
 
         return adjustedDate;
+    }
+
+    /***
+    * @description Adjusts a date to the target day of month for the schedule.
+    * @param adjusted Date to adjust
+    * @param schedule Recurring Donation Schedule record
+    * @return Date
+    */
+    private Date adjustToTargetDayOfMonth(Date adjusted, RecurringDonationSchedule__c schedule) {
+        Integer nextDayOfMonth;
+        if (schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY ||
+            Integer.valueOf(schedule.DayOfMonth__c) > Date.daysInMonth(adjusted.year(), adjusted.month()))
+        {
+            nextDayOfMonth = Date.daysInMonth(adjusted.year(), adjusted.month());
+        } else {
+            nextDayOfMonth = Integer.valueOf(schedule.DayOfMonth__c);
+        }
+        return Date.newInstance(adjusted.year(), adjusted.month(), nextDayOfMonth);
     }
 
     /***
