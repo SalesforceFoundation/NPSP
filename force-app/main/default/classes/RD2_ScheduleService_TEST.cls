@@ -1755,6 +1755,44 @@ public with sharing class RD2_ScheduleService_TEST {
     }
 
     /***
+    * @description Verifies visualized installments are not skipped when DayOfMonth=31,
+    * StartDate is in February, and visualization starts from a late day in March.
+    * The first installment shown should be Mar 31, not skip to Apr 30.
+    * Regression test for W-19306508.
+    */
+    @isTest
+    private static void shouldNotSkipInstallmentInVisualizationWhenStartInFebAndViewedFromDay29() {
+        final Date startDate = Date.newInstance(2021, 2, 1);
+        final Date viewDate = Date.newInstance(2021, 3, 29);
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(viewDate);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStartDate(startDate)
+            .withDayOfMonth('31')
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        List<RecurringDonationSchedule__c> schedules = new RD2_QueryService()
+            .getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, startDate)[0].RecurringDonationSchedules__r;
+
+        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(
+            viewDate, 3, schedules);
+
+        System.assertEquals(3, installments.size(), 'Should return 3 installments');
+        System.assertEquals(Date.newInstance(2021, 3, 31), installments[0].nextDonationDate,
+            'First visualized installment should be March 31, not skip to April');
+        System.assertEquals(Date.newInstance(2021, 4, 30), installments[1].nextDonationDate,
+            'Second installment should be April 30');
+        System.assertEquals(Date.newInstance(2021, 5, 31), installments[2].nextDonationDate,
+            'Third installment should be May 31');
+    }
+
+    /***
     * @description Verifies visualization works as expected across short month with day of month > days in short month
     */
     @isTest
