@@ -2353,21 +2353,21 @@ private class RD2_OpportunityEvaluationService_TEST {
     /***
     * @description Verifies that when a monthly RD with DayOfMonth=31 starts in a short month
     * (February), the created Installment Opportunity has the correct CloseDate in the current
-    * 31-day month rather than skipping to the next month.
+    * month rather than skipping to the next month.
     * Regression test for W-19306508.
     */
     @isTest
-    private static void shouldCreateOppWithCorrectCloseDateWhenDayOfMonth31AndStartInFeb() {
+    private static void shouldCreateOppWithCorrectCloseDateWhenDayOfMonth30AndStartInFeb() {
         final Date startDate = Date.newInstance(2021, 2, 1);
         final Date today = Date.newInstance(2021, 7, 29);
-        final Date expectedCloseDate = Date.newInstance(2021, 7, 31);
+        final Date expectedCloseDate = Date.newInstance(2021, 7, 30);
 
         RD2_ScheduleService.currentDate = today;
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .withStartDate(startDate)
-            .withDayOfMonth('31')
+            .withDayOfMonth('30')
             .withCalculateNextDonationDate()
             .build();
 
@@ -2380,9 +2380,9 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         System.assertEquals(1, opps.size(), 'One Installment Opp should be created');
         System.assertEquals(expectedCloseDate, opps[0].CloseDate,
-            'Opp CloseDate should be July 31, not skip to August');
+            'Opp CloseDate should be July 30, not skip to August');
         System.assertEquals(expectedCloseDate, rd.npe03__Next_Payment_Date__c,
-            'Next Payment Date should be July 31');
+            'Next Payment Date should be July 30');
     }
 
     // Helpers

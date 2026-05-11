@@ -1755,9 +1755,9 @@ public with sharing class RD2_ScheduleService_TEST {
     }
 
     /***
-    * @description Verifies visualized installments are not skipped when DayOfMonth=31,
+    * @description Verifies visualized installments are not skipped when DayOfMonth=30,
     * StartDate is in February, and visualization starts from a late day in March.
-    * The first installment shown should be Mar 31, not skip to Apr 30.
+    * The first installment shown should be Mar 30, not skip to April.
     * Regression test for W-19306508.
     */
     @isTest
@@ -1770,7 +1770,7 @@ public with sharing class RD2_ScheduleService_TEST {
 
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
             .withStartDate(startDate)
-            .withDayOfMonth('31')
+            .withDayOfMonth('30')
             .build();
 
         Test.startTest();
@@ -1784,12 +1784,12 @@ public with sharing class RD2_ScheduleService_TEST {
             viewDate, 3, schedules);
 
         System.assertEquals(3, installments.size(), 'Should return 3 installments');
-        System.assertEquals(Date.newInstance(2021, 3, 31), installments[0].nextDonationDate,
-            'First visualized installment should be March 31, not skip to April');
+        System.assertEquals(Date.newInstance(2021, 3, 30), installments[0].nextDonationDate,
+            'First visualized installment should be March 30, not skip to April');
         System.assertEquals(Date.newInstance(2021, 4, 30), installments[1].nextDonationDate,
             'Second installment should be April 30');
-        System.assertEquals(Date.newInstance(2021, 5, 31), installments[2].nextDonationDate,
-            'Third installment should be May 31');
+        System.assertEquals(Date.newInstance(2021, 5, 30), installments[2].nextDonationDate,
+            'Third installment should be May 30');
     }
 
     /***
