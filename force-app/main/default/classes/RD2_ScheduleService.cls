@@ -524,45 +524,69 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-    * @description Calculates the next donation date >= referenced date
+    * @description Calculates the next donation date that is on or after the given reference date.
+    *
+    * Algorithm:
+    * 1. Compute the first valid donation date from the schedule's start date (honoring DayOfMonth).
+    * 2. If that date already meets or exceeds the reference date, return it immediately.
+    * 3. Otherwise, use arithmetic to fast-forward close to the reference date in one step:
+    *    compute how many period-units (months/days/years) lie between the first valid date and
+    *    the reference date, then jump forward by the largest multiple of the installment frequency
+    *    that fits (integer division, so the result is <= referenceDate).
+    * 4. For monthly schedules, snap the result to the correct DayOfMonth (handles short months
+    *    and "Last_Day").
+    * 5. If the jump landed before the reference date (due to integer division truncation),
+    *    advance by one more installment period and re-snap for monthly.
+    * 6. For yearly schedules that started on the last day of a short month (e.g. Feb 29),
+    *    ensure the result also lands on the last day of its month.
+    *
     * @param schedule Recurring Donation Schedule record
     * @param referenceDate Reference date used to calculate next donation date. It can be today or a future projected date.
-    * @return Date The Next Donation Date
+    * @return Date The Next Donation Date on or after referenceDate
     */
     public Date getNextDonationDateGreaterThan(RecurringDonationSchedule__c schedule, Date referenceDate) {
+        // Step 1: Determine the earliest possible donation date from the schedule start
         Date firstValid = getFirstPossibleDonationDateFromStart(schedule);
 
+        // Step 2: If the first valid date already satisfies >= referenceDate, no calculation needed
         if (firstValid >= referenceDate) {
             return firstValid;
         }
 
+        // Step 3: Fast-forward using arithmetic instead of iterating period by period.
+        // For weekly schedules, frequency is measured in days (e.g. every 2 weeks = 14 days).
+        // For monthly/yearly, frequency is in those native units (e.g. every 3 months = 3).
         Integer adjustedFrequency =
             (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY ? DAYS_IN_WEEK : 1) * Integer.valueOf(schedule.InstallmentFrequency__c);
 
+        // Compute how many period-units (months, days, or years) separate firstValid from referenceDate
         Integer unitsBetween = getDateUnitsBetweenDates(firstValid, schedule.InstallmentPeriod__c, referenceDate);
 
+        // Jump forward by the largest whole number of installment cycles that fits.
+        // Integer division truncates, so this lands on or just before the referenceDate.
         Date adjusted = addDateUnits(firstValid, (unitsBetween / adjustedFrequency) * adjustedFrequency, schedule.InstallmentPeriod__c);
 
+        // Step 4: For monthly schedules, addMonths may land on the wrong day of month
+        // (e.g. Jan 31 + 1 month = Feb 28, but DayOfMonth is "31" aka last day).
+        // Snap to the correct target day within the landed month.
+        if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY && schedule.DayOfMonth__c != null) {
+            adjusted = adjustToTargetDayOfMonth(adjusted, schedule);
+        }
+
+        // Step 5: If integer division truncation caused us to land before the referenceDate,
+        // advance exactly one more installment period and re-snap for monthly.
         if (adjusted < referenceDate) {
             adjusted = addDateUnits(adjusted, adjustedFrequency, schedule.InstallmentPeriod__c);
+
+            if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY && schedule.DayOfMonth__c != null) {
+                adjusted = adjustToTargetDayOfMonth(adjusted, schedule);
+            }
         }
 
-        if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
-            if (schedule.DayOfMonth__c == null) {
-                return adjusted;
-            }
-            Integer nextDayOfMonth;
-            if (schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY ||
-                Integer.valueOf(schedule.DayOfMonth__c) > Date.daysInMonth(adjusted.year(), adjusted.month()))
-            {
-                nextDayOfMonth = Date.daysInMonth(adjusted.year(),adjusted.month());
-            }
-            else {
-                nextDayOfMonth = Integer.valueOf(schedule.DayOfMonth__c);
-            }
-            adjusted = Date.newInstance(adjusted.year(), adjusted.month(), nextDayOfMonth);
-        }
-
+        // Step 6: Yearly edge case — if the schedule started on the last day of a short month
+        // (e.g. Feb 29 in a leap year), addYears may land on a different day (Feb 28).
+        // Detect this by checking if the start day equals the last day of the adjusted month,
+        // and if so, correct to the actual last day of the target month.
         if (
             schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_YEARLY &&
             schedule.StartDate__c.day() != adjusted.day() &&
@@ -618,6 +642,24 @@ public without sharing class RD2_ScheduleService {
         }
 
         return adjustedDate;
+    }
+
+    /***
+    * @description Adjusts a date to the target day of month for the schedule.
+    * @param adjusted Date to adjust
+    * @param schedule Recurring Donation Schedule record
+    * @return Date
+    */
+    private Date adjustToTargetDayOfMonth(Date adjusted, RecurringDonationSchedule__c schedule) {
+        Integer nextDayOfMonth;
+        if (schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY ||
+            Integer.valueOf(schedule.DayOfMonth__c) > Date.daysInMonth(adjusted.year(), adjusted.month()))
+        {
+            nextDayOfMonth = Date.daysInMonth(adjusted.year(), adjusted.month());
+        } else {
+            nextDayOfMonth = Integer.valueOf(schedule.DayOfMonth__c);
+        }
+        return Date.newInstance(adjusted.year(), adjusted.month(), nextDayOfMonth);
     }
 
     /***

@@ -354,6 +354,173 @@ public with sharing class RD2_ScheduleService_TEST {
     }
 
     /***
+    * @description Verifies next donation date is not skipped when DayOfMonth=31,
+    * StartDate is in February (28 days), and referenceDate is before end of target month.
+    * Regression test for W-19306508.
+    */
+    @isTest
+    private static void shouldNotSkipMonthWhenStartInFebAndDayOfMonth31() {
+        final Date startDate = Date.newInstance(2021, 2, 1);
+        Date today = Date.newInstance(2021, 7, 29);
+        Date nextDonationDate = Date.newInstance(2021, 7, 31);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStartDate(startDate)
+            .withDayOfMonth('31')
+            .build();
+
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd),
+            'Next Donation Date should be July 31, not skip to August');
+    }
+
+    /***
+    * @description Verifies next donation date when referenceDate equals the expected
+    * donation date (July 31) for a DayOfMonth=31 RD starting in February.
+    * Regression test for W-19306508.
+    */
+    @isTest
+    private static void shouldReturnSameDateWhenRefDateEqualsDayOfMonth31() {
+        final Date startDate = Date.newInstance(2021, 2, 1);
+        Date today = Date.newInstance(2021, 7, 31);
+        Date nextDonationDate = Date.newInstance(2021, 7, 31);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStartDate(startDate)
+            .withDayOfMonth('31')
+            .build();
+
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd),
+            'Next Donation Date should be July 31 when referenceDate is July 31');
+    }
+
+    /***
+    * @description Verifies next donation date advances to next month when referenceDate
+    * is past the current month's donation date.
+    * Regression test for W-19306508.
+    */
+    @isTest
+    private static void shouldAdvanceToNextMonthWhenRefDatePastDayOfMonth31() {
+        final Date startDate = Date.newInstance(2021, 2, 1);
+        Date today = Date.newInstance(2021, 8, 1);
+        Date nextDonationDate = Date.newInstance(2021, 8, 31);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStartDate(startDate)
+            .withDayOfMonth('31')
+            .build();
+
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd),
+            'Next Donation Date should be Aug 31 when referenceDate is Aug 1');
+    }
+
+    /***
+    * @description Verifies next donation date is not skipped when DayOfMonth=31 and
+    * StartDate is in April (30 days), and batch runs on last day of a 31-day month.
+    * Regression test for W-19306508.
+    */
+    @isTest
+    private static void shouldNotSkipMonthWhenStartInAprilAndDayOfMonth31() {
+        final Date startDate = Date.newInstance(2021, 4, 1);
+        Date today = Date.newInstance(2021, 7, 31);
+        Date nextDonationDate = Date.newInstance(2021, 7, 31);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStartDate(startDate)
+            .withDayOfMonth('31')
+            .build();
+
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd),
+            'Next Donation Date should be July 31 when starting in April');
+    }
+
+    /***
+    * @description Verifies next donation date is not skipped when DayOfMonth=Last_Day and
+    * StartDate is in June (30 days), and batch runs on last day of a 31-day month.
+    * Regression test for W-19306508.
+    */
+    @isTest
+    private static void shouldNotSkipMonthWhenStartInJuneAndDayOfMonthLastDay() {
+        final Date startDate = Date.newInstance(2021, 6, 1);
+        Date today = Date.newInstance(2021, 7, 31);
+        Date nextDonationDate = Date.newInstance(2021, 7, 31);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStartDate(startDate)
+            .withDayOfMonth(RD2_Constants.DAY_OF_MONTH_LAST_DAY)
+            .build();
+
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd),
+            'Next Donation Date should be July 31 when using Last_Day starting in June');
+    }
+
+    /***
+    * @description Verifies next donation date is not skipped when DayOfMonth=30 and
+    * StartDate is in February (28 days).
+    * Regression test for W-19306508.
+    */
+    @isTest
+    private static void shouldNotSkipMonthWhenStartInFebAndDayOfMonth30() {
+        final Date startDate = Date.newInstance(2021, 2, 1);
+        Date today = Date.newInstance(2021, 7, 29);
+        Date nextDonationDate = Date.newInstance(2021, 7, 30);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStartDate(startDate)
+            .withDayOfMonth('30')
+            .build();
+
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd),
+            'Next Donation Date should be July 30 when starting in Feb with DayOfMonth 30');
+    }
+
+    /***
+    * @description Verifies next donation date is not skipped when DayOfMonth=Last_Day and
+    * StartDate is in February.
+    * Regression test for W-19306508.
+    */
+    @isTest
+    private static void shouldNotSkipMonthWhenStartInFebAndDayOfMonthLastDay() {
+        final Date startDate = Date.newInstance(2021, 2, 1);
+        Date today = Date.newInstance(2021, 7, 29);
+        Date nextDonationDate = Date.newInstance(2021, 7, 31);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStartDate(startDate)
+            .withDayOfMonth(RD2_Constants.DAY_OF_MONTH_LAST_DAY)
+            .build();
+
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd),
+            'Next Donation Date should be July 31 when using Last_Day starting in Feb');
+    }
+
+    /***
+    * @description Non-regression: Verifies normal DayOfMonth (15) is not affected by
+    * the fix for W-19306508. Day 15 never exceeds any month's length.
+    */
+    @isTest
+    private static void shouldNotAffectNormalDayOfMonth15WithFebStart() {
+        final Date startDate = Date.newInstance(2021, 2, 1);
+        Date today = Date.newInstance(2021, 7, 20);
+        Date nextDonationDate = Date.newInstance(2021, 8, 15);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStartDate(startDate)
+            .withDayOfMonth('15')
+            .build();
+
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd),
+            'Next Donation Date should be Aug 15 for normal DayOfMonth');
+    }
+
+    /***
     * @description Verifies next donation date for monthly donation when donation falls in current month.
     */
     @isTest
@@ -1585,6 +1752,44 @@ public with sharing class RD2_ScheduleService_TEST {
         };
 
         testAndAssertVisualizedInstallments(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, startDate, dayOfMonth, nextDonationDateByIndex);
+    }
+
+    /***
+    * @description Verifies visualized installments are not skipped when DayOfMonth=30,
+    * StartDate is in February, and visualization starts from a late day in March.
+    * The first installment shown should be Mar 30, not skip to April.
+    * Regression test for W-19306508.
+    */
+    @isTest
+    private static void shouldNotSkipInstallmentInVisualizationWhenStartInFebAndViewedFromDay29() {
+        final Date startDate = Date.newInstance(2021, 2, 1);
+        final Date viewDate = Date.newInstance(2021, 3, 29);
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(viewDate);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStartDate(startDate)
+            .withDayOfMonth('30')
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        List<RecurringDonationSchedule__c> schedules = new RD2_QueryService()
+            .getRecurringDonationsWithRelatedRecords(new Set<Id>{ rd.Id }, startDate)[0].RecurringDonationSchedules__r;
+
+        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(
+            viewDate, 3, schedules);
+
+        System.assertEquals(3, installments.size(), 'Should return 3 installments');
+        System.assertEquals(Date.newInstance(2021, 3, 30), installments[0].nextDonationDate,
+            'First visualized installment should be March 30, not skip to April');
+        System.assertEquals(Date.newInstance(2021, 4, 30), installments[1].nextDonationDate,
+            'Second installment should be April 30');
+        System.assertEquals(Date.newInstance(2021, 5, 30), installments[2].nextDonationDate,
+            'Third installment should be May 30');
     }
 
     /***
