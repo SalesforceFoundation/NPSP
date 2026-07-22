@@ -19,11 +19,11 @@
         box-shadow: none;
     }
 
-    div.slds-tree__item button.chevronright, div.slds-tree__item.collapsed button.chevrondown {
+    div.slds-tree__item button .chevronright, div.slds-tree__item.collapsed button .chevrondown {
         display: none;
     }
 
-    div.slds-tree__item button.chevrondown, div.slds-tree__item.collapsed button.chevronright {
+    div.slds-tree__item button .chevrondown, div.slds-tree__item.collapsed button .chevronright {
         display: inline-block;
     }
 
@@ -52,11 +52,21 @@
     if (idPanelCurrent == '') idPanelCurrent = 'idPanelHome';
 
     // page init function
+    function syncAriaExpanded() {
+        j$('#mynavbar .slds-tree__branch button[aria-expanded]').each(function() {
+            var isCollapsed = j$(this).closest('.slds-tree__branch').hasClass('collapsed');
+            j$(this).attr('aria-expanded', isCollapsed ? 'false' : 'true');
+        });
+    }
+
     j$(function () {
         var cl = j$('#mynavbar').collapsibleList('.slds-tree__branch', {search: false, animate: false});
         // start with slds-tree-container all collapsed.  couldn't figure out how to call collapseAllHeaders(),
         // but submitting the click on all li's does the trick!
         j$('div',cl).trigger('click');
+        j$('#mynavbar .slds-tree__branch').on('click', function() {
+            syncAriaExpanded();
+        });
         ShowPanel(idPanelCurrent);
     });
 
@@ -131,13 +141,14 @@
                         <ul id="mynavbar" class="slds-tree slds-list_vertical slds-has-block-links-space" role="tree" aria-labelledby="treeheading" aria-activedescendant="tree0-node0" >
                             <!-- People -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelConHomeNav">
-                                <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevronright">
-                                    <c:UTIL_SLDS_Icon icon="chevronright" iconCategory="utility" size="xx-small" fillColor="inherit" />
+                                <button class="slds-button slds-button_icon-bare slds-m-right_x-small"
+                                    aria-label="{!$Label.stgNavPeople}"
+                                    aria-expanded="false"
+                                    aria-controls="idPanelConHomeNavGroup">
+                                    <span class="chevronright"><c:UTIL_SLDS_Icon icon="chevronright" iconCategory="utility" size="xx-small" fillColor="inherit" /></span>
+                                    <span class="chevrondown"><c:UTIL_SLDS_Icon icon="chevrondown" iconCategory="utility" size="xx-small" fillColor="inherit" /></span>
                                 </button>
-                                <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevrondown">
-                                    <c:UTIL_SLDS_Icon icon="chevrondown" iconCategory="utility" size="xx-small" fillColor="inherit" />
-                                </button>
-                                <a id="tree0-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavPeople}</a>
+                                <a id="tree0-node0-link" aria-hidden="true" tabindex="-1">{!$Label.stgNavPeople}</a>
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree0-node0-link">
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelConNav"><a href="#" onclick="ShowPanel('idPanelCon');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavAccountModel}</a></li>
@@ -147,13 +158,14 @@
                             </ul>
                             <!-- Relationships -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelConnectionsNav">
-                                <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevronright">
-                                    <c:UTIL_SLDS_Icon icon="chevronright" iconCategory="utility" size="xx-small" fillColor="inherit" />
+                                <button class="slds-button slds-button_icon-bare slds-m-right_x-small"
+                                    aria-label="{!$Label.stgNavRelationships}"
+                                    aria-expanded="false"
+                                    aria-controls="idPanelConnectionsNavGroup">
+                                    <span class="chevronright"><c:UTIL_SLDS_Icon icon="chevronright" iconCategory="utility" size="xx-small" fillColor="inherit" /></span>
+                                    <span class="chevrondown"><c:UTIL_SLDS_Icon icon="chevrondown" iconCategory="utility" size="xx-small" fillColor="inherit" /></span>
                                 </button>
-                                <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevrondown">
-                                    <c:UTIL_SLDS_Icon icon="chevrondown" iconCategory="utility" size="xx-small" fillColor="inherit" />
-                                </button>
-                                <a id="tree1-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavRelationships}</a>
+                                <a id="tree1-node0-link" aria-hidden="true" tabindex="-1">{!$Label.stgNavRelationships}</a>
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree1-node0-link">
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelAfflNav"><a href="#" onclick="ShowPanel('idPanelAffl');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavAffiliations}</a></li>
@@ -163,13 +175,14 @@
                             </ul>
                             <!-- Donations -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelDonationsNav">
-                                <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevronright">
-                                    <c:UTIL_SLDS_Icon icon="chevronright" iconCategory="utility" size="xx-small" fillColor="inherit" />
+                                <button class="slds-button slds-button_icon-bare slds-m-right_x-small"
+                                    aria-label="{!$Label.stgNavDonations}"
+                                    aria-expanded="false"
+                                    aria-controls="idPanelDonationsNavGroup">
+                                    <span class="chevronright"><c:UTIL_SLDS_Icon icon="chevronright" iconCategory="utility" size="xx-small" fillColor="inherit" /></span>
+                                    <span class="chevrondown"><c:UTIL_SLDS_Icon icon="chevrondown" iconCategory="utility" size="xx-small" fillColor="inherit" /></span>
                                 </button>
-                                <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevrondown">
-                                    <c:UTIL_SLDS_Icon icon="chevrondown" iconCategory="utility" size="xx-small" fillColor="inherit" />
-                                </button>
-                                <a id="tree2-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavDonations}</a>
+                                <a id="tree2-node0-link" aria-hidden="true" tabindex="-1">{!$Label.stgNavDonations}</a>
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree2-node0-link" >
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppNamingNav"><a href="#" onclick="ShowPanel('idPanelOppNaming');return false;" class="slds-grow slds-m-left_large">{!$Label.stgLabelOppNamingSettings}</a></li>
@@ -188,13 +201,14 @@
                             <!-- Recurring Donations -->
 
                             <div class="slds-tree__branch slds-tree__item" id="idPanelRecDonationsNav">
-                                <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevronright">
-                                    <c:UTIL_SLDS_Icon icon="chevronright" iconCategory="utility" size="xx-small" fillColor="inherit" />
+                                <button class="slds-button slds-button_icon-bare slds-m-right_x-small"
+                                    aria-label="{!$Label.stgNavRecurringDonations}"
+                                    aria-expanded="false"
+                                    aria-controls="idPanelRecDonationsNavGroup">
+                                    <span class="chevronright"><c:UTIL_SLDS_Icon icon="chevronright" iconCategory="utility" size="xx-small" fillColor="inherit" /></span>
+                                    <span class="chevrondown"><c:UTIL_SLDS_Icon icon="chevrondown" iconCategory="utility" size="xx-small" fillColor="inherit" /></span>
                                 </button>
-                                <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevrondown">
-                                    <c:UTIL_SLDS_Icon icon="chevrondown" iconCategory="utility" size="xx-small" fillColor="inherit" />
-                                </button>
-                                <a id="tree3-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavRecurringDonations}</a>
+                                <a id="tree3-node0-link" aria-hidden="true" tabindex="-1">{!$Label.stgNavRecurringDonations}</a>
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree3-node0-link">
                                 <li role="treeitem" aria-level="2" id="idPanelRD2EnablementNav"
@@ -247,13 +261,14 @@
 
                             <!-- Bulk Data Processes -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelBulkProcesses">
-                                <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevronright">
-                                    <c:UTIL_SLDS_Icon icon="chevronright" iconCategory="utility" size="xx-small" fillColor="inherit" />
+                                <button class="slds-button slds-button_icon-bare slds-m-right_x-small"
+                                    aria-label="{!$Label.stgNavBulkProcesses}"
+                                    aria-expanded="false"
+                                    aria-controls="idPanelBulkProcessesGroup">
+                                    <span class="chevronright"><c:UTIL_SLDS_Icon icon="chevronright" iconCategory="utility" size="xx-small" fillColor="inherit" /></span>
+                                    <span class="chevrondown"><c:UTIL_SLDS_Icon icon="chevrondown" iconCategory="utility" size="xx-small" fillColor="inherit" /></span>
                                 </button>
-                                <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevrondown">
-                                    <c:UTIL_SLDS_Icon icon="chevrondown" iconCategory="utility" size="xx-small" fillColor="inherit" />
-                                </button>
-                                <a id="tree4-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavBulkProcesses}</a>
+                                <a id="tree4-node0-link" aria-hidden="true" tabindex="-1">{!$Label.stgNavBulkProcesses}</a>
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree4-node0-link">
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelScheduleNav"><a href="#" onclick="ShowPanel('idPanelSchedule');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavBatchProcessSettings}</a></li>
@@ -270,13 +285,14 @@
                             </ul>
                             <!-- System Tools -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelSystemNav">
-                                <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevronright">
-                                    <c:UTIL_SLDS_Icon icon="chevronright" iconCategory="utility" size="xx-small" fillColor="inherit" />
+                                <button class="slds-button slds-button_icon-bare slds-m-right_x-small"
+                                    aria-label="{!$Label.stgNavSystem}"
+                                    aria-expanded="false"
+                                    aria-controls="idPanelSystemNavGroup">
+                                    <span class="chevronright"><c:UTIL_SLDS_Icon icon="chevronright" iconCategory="utility" size="xx-small" fillColor="inherit" /></span>
+                                    <span class="chevrondown"><c:UTIL_SLDS_Icon icon="chevrondown" iconCategory="utility" size="xx-small" fillColor="inherit" /></span>
                                 </button>
-                                <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevrondown">
-                                    <c:UTIL_SLDS_Icon icon="chevrondown" iconCategory="utility" size="xx-small" fillColor="inherit" />
-                                </button>
-                                <a id="tree5-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavSystem}</a>
+                                <a id="tree5-node0-link" aria-hidden="true" tabindex="-1">{!$Label.stgNavSystem}</a>
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree5-node0-link">
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelHealthCheckNav"><a href="#" onclick="ShowPanel('idPanelHealthCheck');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavHealthCheck}</a></li>
