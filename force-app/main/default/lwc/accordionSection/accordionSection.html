@@ -10,15 +10,16 @@
                     class="slds-align_absolute-center slds-m-vertical_x-small"
                 >
                     <button
-                        aria-label={title}
+                        aria-label={buttonAriaLabel}
                         onclick={handleToggle}
                         aria-controls="accordion-details"
-                        aria-expanded={isOpen}
+                        aria-expanded={ariaExpanded}
                         class="slds-align-middle slds-text-link_reset slds-button"
                     >
                         <lightning-icon
                             icon-name={toggleIcon}
                             alternative-text={toggleInstructions}
+                            aria-hidden="true"
                             size="x-small"
                         ></lightning-icon>
                     </button>
@@ -27,6 +28,9 @@
                 <!--CLICKABLE SECTION-->
                 <lightning-layout-item
                     onclick={handleToggle}
+                    onkeydown={handleClickableKeydown}
+                    role="button"
+                    tabindex="0"
                     flexibility="auto"
                     class="slds-grid_vertical-align-center clickable-header"
                 >
