@@ -523,7 +523,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             dataImportBatch.GiftBatch__c = true;
             dataImportBatch.Process_Using_Scheduled_Job__c = false;
 
-            upsert dataImportBatch;
+            Database.upsert(dataImportBatch, AccessLevel.USER_MODE);
 
             recordDetails.id = dataImportBatch.Id;
 
