@@ -388,7 +388,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     @AuraEnabled
     public static String updateAndDryRunRow(Id batchId, DataImport__c dataImport) {
         try {
-            Database.update(dataImport);
+            Database.update(dataImport, AccessLevel.USER_MODE);
             return runSingleDryRun(dataImport.Id, batchId);
         } catch (Exception ex) {
             String saveErrorMessage = String.format(Label.CRLP_SaveError, 
