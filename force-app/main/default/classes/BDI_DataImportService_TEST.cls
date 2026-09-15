@@ -210,13 +210,16 @@ private with sharing class BDI_DataImportService_TEST {
         DataImport__c testDI1 = new DataImport__c(Donation_Amount__c = 10, 
                                                     Donation_Date__c = System.Date.today(), 
                                                     Account1_name__c = null);
-        DataImport__c testDI2 = new DataImport__c(Contact1_lastname__c = 'TestGuy');
+        DataImport__c testDI2 = new DataImport__c(Contact1_lastname__c = 'TestGuy',
+                                                    Contact1_Consent_Opt_In__c = false);
+        DataImport__c testDI3 = new DataImport__c(Contact1_Consent_Opt_In__c = true);
 
         // Using varied capitalizations for the test data to make sure the forcing to lowercase is working correctly.
         Map<String,String> testFieldMap = new Map<String,String>{'donation_amount__c' =>'amount',
                                                                 'Donation_Date__c' => 'closedate',
                                                                 'donation_stage__c' => 'stagename',
-                                                                'account1_Name__c' => 'Name'};
+                                                                'account1_Name__c' => 'Name',
+                                                                'Contact1_Consent_Opt_In__c' => 'In_Kind_Donor_Declared_Value__c'};
         String[] fieldsToIgnore1 = new String[]{'Donation_Amount__c'};
         String[] fieldsToIgnore2 = new String[]{'Donation_Amount__c','Donation_Date__c'};
 
@@ -237,6 +240,9 @@ private with sharing class BDI_DataImportService_TEST {
         // Should be false because both populated fields are now being ignored
         System.assertEquals(false, 
                     BDI_DataImportService.anyFieldsPopulatedForObjectMapping(testDI1, testFieldMap, fieldsToIgnore2));
+
+        // Should be true because the mapped checkbox is checked
+        System.assertEquals(true, BDI_DataImportService.anyFieldsPopulatedForObjectMapping(testDI3, testFieldMap));
     }
 
     @isTest
