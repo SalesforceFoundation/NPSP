@@ -13,7 +13,7 @@
             </div>
         </div>
     </div>
-    <div class="slds-grid">
+    <div class="slds-grid slds-wrap">
         <div class="slds-col_padded slds-size_4-of-12">
             <div class="slds-text-heading_medium slds-m-bottom_medium">
                 {!$Label.stgTools}
