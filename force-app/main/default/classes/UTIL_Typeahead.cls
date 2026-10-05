@@ -36,6 +36,36 @@
 public with sharing class UTIL_Typeahead {
 
     /*******************************************************************************************************
+    * @description Allow-list pattern for filterClause: one or more "field operator literal" comparisons
+    * joined by AND/OR. Quoted literals cannot contain a single quote, so a caller cannot break out of the
+    * literal to inject additional SOSL/SOQL syntax.
+    ********************************************************************************************************/
+    private static final Pattern FILTER_CLAUSE_PATTERN = Pattern.compile(
+        '(?i)^\\s*[a-z_][a-z0-9_]*\\s*(=|!=|<>|<=|>=|<|>|like)\\s*(\'[^\']*\'|-?\\d+(\\.\\d+)?|true|false|null)' +
+        '(\\s+(and|or)\\s+[a-z_][a-z0-9_]*\\s*(=|!=|<>|<=|>=|<|>|like)\\s*(\'[^\']*\'|-?\\d+(\\.\\d+)?|true|false|null))*\\s*$'
+    );
+
+    private static final Pattern FILTER_CLAUSE_SPLIT = Pattern.compile('(?i)\\s+(?:and|or)\\s+');
+    private static final Pattern FILTER_FIELD_TOKEN = Pattern.compile('(?i)^\\s*([a-z_][a-z0-9_]*)\\s*(?:=|!=|<>|<=|>=|<|>|like)');
+
+    public class InvalidFilterClauseException extends Exception {}
+
+    /*******************************************************************************************************
+    * @description Confirms every field referenced in an already syntax-validated filterClause actually
+    * exists on sObjectName, using the same describe-driven validation UTIL_Where/UTIL_Describe use
+    * elsewhere for dynamic SOQL. Guards against field names that are syntactically valid but bogus.
+    ********************************************************************************************************/
+    private static Boolean allFilterClauseFieldsAreValid(String filterClause, String sObjectName) {
+        for (String clause : FILTER_CLAUSE_SPLIT.split(filterClause)) {
+            Matcher fieldMatcher = FILTER_FIELD_TOKEN.matcher(clause);
+            if (!fieldMatcher.find() || !UTIL_Describe.isValidField(sObjectName, fieldMatcher.group(1))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /*******************************************************************************************************
     * @description Searches the database (using SOSL) for the records that meet the criteria.
     * @param queryString (SearchQuery) The word of phrase to search for.
     * @param objectName (FieldSpec - ObjectTypeName) The SObjects for search. If not specified, Contact will be used.
@@ -69,9 +99,14 @@ public with sharing class UTIL_Typeahead {
 	    String sLimit = (recordLimit == null || recordLimit == 0 || recordLimit >= 2000) ? '' : 
 	        ( ' LIMIT ' + String.valueOf(recordLimit));
 	    
-	    // can't escape the filter clause
-	    String sWhere = (filterClause == null || filterClause == '') ? '' : 
-	        ( ' WHERE ' + filterClause );
+	    String sWhere = '';
+	    if (filterClause != null && filterClause != '') {
+	        if (!FILTER_CLAUSE_PATTERN.matcher(filterClause).matches() ||
+	            !allFilterClauseFieldsAreValid(filterClause, sObjectName)) {
+	            throw new InvalidFilterClauseException('Invalid filterClause.');
+	        }
+	        sWhere = ' WHERE ' + filterClause;
+	    }
 	
 	    list<list<sObject>> results = Search.query(
 	        'FIND \'' + sQuery + '*\'' + sInFields + 
