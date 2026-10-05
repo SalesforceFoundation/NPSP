@@ -79,6 +79,7 @@
                     </div>
                 </div>
             </apex:outputPanel>
+            <div class="slds-scrollable_x">
             <table class="slds-table slds-table_bordered">
                 <thead>
                     <tr class="slds-text-heading_label">
@@ -125,5 +126,6 @@
                     </apex:repeat>
                 </tbody>
             </table>
+            </div>
     </apex:form>
 </apex:page>
