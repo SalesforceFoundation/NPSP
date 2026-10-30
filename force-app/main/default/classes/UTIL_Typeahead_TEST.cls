@@ -56,4 +56,45 @@ public with sharing class UTIL_Typeahead_TEST {
 	    system.assertEquals('Test Account', accts[0].get('Name'));
 	    system.assertEquals('Another Account', accts[1].get('Name'));
     }
+
+    private static testMethod void testValidFilterClauseIsAccepted() {
+	    Test.setFixedSearchResults(new list<Id>());
+
+	    Test.startTest();
+	    list<sObject> accts = UTIL_Typeahead.searchRecords(
+	        'test', 'Account', null, null, 'Name = \'Test Account\' AND BillingCity = \'Test City\'', 'Id', null
+	    );
+	    Test.stopTest();
+
+	    system.assertEquals(0, accts.size());
+    }
+
+    private static testMethod void testNonexistentFieldInFilterClauseIsRejected() {
+	    Boolean threwException = false;
+
+	    try {
+	        UTIL_Typeahead.searchRecords(
+	            'test', 'Account', null, null, 'NotARealField__c = \'x\'', 'Id', null
+	        );
+	    } catch (UTIL_Typeahead.InvalidFilterClauseException e) {
+	        threwException = true;
+	    }
+
+	    system.assertEquals(true, threwException, 'A filterClause referencing a nonexistent field should be rejected.');
+    }
+
+    private static testMethod void testInjectedFilterClauseIsRejected() {
+	    Boolean threwException = false;
+
+	    try {
+	        UTIL_Typeahead.searchRecords(
+	            'test', 'Account', null, null,
+	            'Name = \'\' OR Name LIKE \'%\') RETURNING Contact(Id) --', 'Id', null
+	        );
+	    } catch (UTIL_Typeahead.InvalidFilterClauseException e) {
+	        threwException = true;
+	    }
+
+	    system.assertEquals(true, threwException, 'An unsafe filterClause should be rejected.');
+    }
 }

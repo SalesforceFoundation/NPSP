@@ -44,6 +44,12 @@
     .hide {
         display: none;
     }
+
+    /* Contain horizontal overflow of wide panels to the content column so the sidebar and headings don't scroll with it (WCAG Reflow) */
+    .slds .content {
+        min-width: 0;
+        overflow-x: auto;
+    }
 </style>
 
 <script>
